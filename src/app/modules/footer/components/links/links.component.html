@@ -1,0 +1,58 @@
+<div (window:resize)="onResize($event)">
+    <ng-container *ngIf="innerWidth>=450">
+
+        <div class="site-footer__widget footer-links">
+            <h5 class="footer-links__title">{{ header }}</h5>
+            <ul class="footer-links__list">
+                <li *ngFor="let link of links" class="footer-links__item">
+
+                    <a *ngIf="header=='Mi Cuenta'" (click)="validarCuenta(link)" class="footer-links__link pointer">{{ link.label }}</a>
+                    <a *ngIf="header!=='Mi Cuenta' && link.url" [routerLink]="link.url" class="footer-links__link">
+                        <button *ngIf="link.label=='Contacto'" class="btn btn-secondary mt-1"> <i class="far fa-envelope"></i> {{ link.label }} </button>
+                        <div *ngIf="link.label !='Contacto'">{{ link.label }}</div>
+                    </a>
+
+                    <a *ngIf="link.link" target="_blank" [rel]="link?.rel" [href]="link.link" class="footer-links__link">{{ link.label }}</a>
+
+                </li>
+                <li class="footer-links__item">
+                    <a *ngIf="header=='Mi Cuenta' && usuario" href="/mi-cuenta/login" class="footer-links__link pointer">Cerrar
+                Sesión</a>
+                </li>
+            </ul>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="innerWidth<450">
+        <div class="site-footer__widget footer-links">
+            <h5 class="footer-links__title">{{ header }}</h5>
+            <ul class="footer-links__list">
+                <li *ngFor="let link of links" class="footer-links__item">
+
+                    <a *ngIf="header=='Mi Cuenta'" style="border-bottom: 1px solid #fff7f72b; text-align: 'justify';" (click)="validarCuenta(link)" class="footer-links__link pointer">
+                        <font style="margin-left: 20px;">{{ link.label }}</font>
+                    </a>
+
+                    <a *ngIf="header!=='Mi Cuenta' && link.url" style="border-bottom: 1px solid #fff7f72b; text-align: 'justify';" [routerLink]="link.url" class="footer-links__link">
+
+                        <div *ngIf="link.label !='Contacto'"><i class="fas fa-link" style="margin-left: 10px;"></i>
+                            <font style="margin-left: 10px;">{{ link.label }}</font>
+                        </div>
+                    </a> 
+                    <div *ngIf="header!=='Mi Cuenta' && link.url && link.label=='Contacto'" style="margin-top: 1rem;">
+                       
+                        <a *ngIf="header!=='Mi Cuenta' && link.url && link.label=='Contacto'" [routerLink]="link.url" >
+                            <button class="btn btn-secondary mt-1"> <i class="far fa-envelope"></i>  {{ link.label }} </button>
+                        </a>
+                    </div>
+                  
+                    <a *ngIf="link.link" target="_blank" [rel]="link?.rel" [href]="link.link" class="footer-links__link">{{ link.label }}</a>
+
+                </li>
+                <li class="footer-links__item">
+                    <a *ngIf="header=='Mi Cuenta' && usuario" href="/mi-cuenta/login" class="footer-links__link pointer">Cerrar
+                Sesión</a>
+                </li>
+            </ul>
+        </div>
+    </ng-container>
+</div>

@@ -1,0 +1,34 @@
+<app-block-slideshow *ngIf="galeria && !isB2B" [withDepartments]="false"></app-block-slideshow>
+
+<app-buttons-slideshow *ngIf="!isB2B"></app-buttons-slideshow>
+
+<app-product-slideshow *ngIf="isB2B"></app-product-slideshow>
+
+<!-- <div *ngIf="cajaConceptos" (window:resize)="onResize($event)">
+  <app-block-concepts></app-block-concepts>
+</div> -->
+
+<!-- <ng-container *ngIf="banner">
+  <div *ngFor="let banner of banners">
+    <div class="container-fluid" style="padding: 0px; margin-top: 5px">
+      <a [href]="banner.url" [target]="banner.target">
+        <ng-container *ngIf="innerWidth > 768">
+          <img [src]="banner.image_full" [alt]="banner.alt" width="100%" />
+        </ng-container>
+        <ng-container *ngIf="innerWidth <= 768 && innerWidth > 425">
+          <img [src]="banner.image_tablet" [alt]="banner.alt" width="100%" />
+        </ng-container>
+        <ng-container *ngIf="innerWidth <= 425">
+          <img [src]="banner.image_mobile" [alt]="banner.alt" width="100%" />
+        </ng-container>
+      </a>
+    </div>
+  </div>
+</ng-container> -->
+
+<app-block-brands *ngIf="marcas && isB2B" [brands]="brands"></app-block-brands>
+
+<app-page-home *ngIf="!isB2B"></app-page-home>
+<div *ngIf="marcas && !isB2B" class="container" style="background-color: white; padding: 20px">
+  <app-block-brands-b2c *ngIf="marcas && !isB2B" [brands]="brandsB2c"></app-block-brands-b2c>
+</div>
