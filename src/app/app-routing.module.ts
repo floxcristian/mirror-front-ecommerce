@@ -5,21 +5,21 @@ import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 // import { MetaModule } from '@ngx-meta/core';
 
 const routes: Routes = [
-    {
-        path: '',
-        loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
-    }
+  {
+    path: '',
+    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
+  },
 ];
 
 @NgModule({
-    imports: [
-        RouterModule.forRoot(routes, {
-            scrollPositionRestoration: 'top',
-            anchorScrolling: 'enabled',
-            preloadingStrategy: PreloadAllModules
-        }),
-        // MetaModule.forRoot()
-    ],
-    exports: [RouterModule]
+  imports: [
+    RouterModule.forRoot(routes, {
+      scrollPositionRestoration: 'top',
+      anchorScrolling: 'enabled',
+      preloadingStrategy: PreloadAllModules,
+    }),
+    // MetaModule.forRoot()
+  ],
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

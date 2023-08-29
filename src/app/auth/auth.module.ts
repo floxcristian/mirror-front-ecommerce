@@ -29,11 +29,12 @@ import { WidgetsModule } from '../modules/widgets/widgets.module';
 // import { PageCyberComponent } from './../pages/page-cyber/page-cyber.component';
 // import { PageMesAniversarioComponent } from '../pages/page-mes-aniversario/page-mes-aniversario.component';
 import { LayoutComponent } from '../layout/layout.component';
-// import { RegistroOkModalComponent } from '../pages/components/registro-ok-modal/registro-ok-modal.component';
 import { B2bComponent } from '../layout/b2b/b2b.component';
 import { B2cComponent } from '../layout/b2c/b2c.component';
-// import { VerificarpagoComponent } from './pages/verificarpago/verificarpago.component';
-// import { PageCiberdayFormComponent } from './pages/page-ciberday-form/page-ciberday-form.component';
+import { VerificarpagoComponent } from './pages/verificarpago/verificarpago.component';
+import { PageCiberdayFormComponent } from './pages/page-ciberday-form/page-ciberday-form.component';
+import { RegistroOkModalComponent } from '../pages/components/registro-ok-modal/registro-ok-modal.component';
+import { RouterModule } from '@angular/router';
 // import { FooterB2cModule } from '../modules/footer-b2c/footer-b2c.module';
 // import { PageHomeCmsModule } from '../modules/page-home-cms/page-home-cms.module';
 // import { PageDevolucionesComponent } from '../pages/page-devoluciones/page-devoluciones.component';
@@ -43,55 +44,56 @@ import { B2cComponent } from '../layout/b2c/b2c.component';
 // import { PageMesDelCamionero23Component } from '../pages/page-mes-del-camionero23/page-mes-del-camionero23.component';
 
 @NgModule({
-    declarations: [
-        // pages
-        // PageHomeOneComponent,
-        // PageNotFoundComponent,
-        // PageRegistroComponent,
-        // PageSpecialsComponent,
-        // PageMesDelCamioneroComponent,
-        // PageMesAniversarioComponent,
-        // RegistroOkModalComponent,
-        B2bComponent,
-        B2cComponent,
-        // RegistroOkModalComponent,
-        LayoutComponent,
-        // VerificarpagoComponent,
-        // PageCiberdayFormComponent,
-        // PageCyberComponent,
-        // PageDevolucionesComponent,
-        // DevolucionOkModalComponent,
-        // PageConcursoGiftcardComponent,
-        // ConcursoGiftcardOkModalComponent,
-        // PageMesDelCamionero23Component
-    ],
-    imports: [
-        CommonModule,
-        AuthRoutingModule,
+  declarations: [
+    PageCiberdayFormComponent,
+    // pages
+    // PageHomeOneComponent,
+    // PageNotFoundComponent,
+    // PageRegistroComponent,
+    // PageSpecialsComponent,
+    // PageMesDelCamioneroComponent,
+    // PageMesAniversarioComponent,
+    RegistroOkModalComponent,
+    B2bComponent,
+    B2cComponent,
+    LayoutComponent,
+    VerificarpagoComponent,
 
-        ReactiveFormsModule,
-        FormsModule,
-        LocalStorageModule.forRoot({
-            prefix: 'ImplementosB2B',
-            storageType: 'localStorage'
-        }),
-        // modules (third-party)
-        ToastrModule.forRoot(),
-        // modules
-        // BlocksModule,
-        // HeaderModule,
-        // HeaderB2bModule,
-        FooterModule,
-        // FooterB2cModule,
-        // MobileModule,
-        SharedModule,
-        // CatalogoModule,
-        WidgetsModule,
-        HttpClientModule,
-        BsDropdownModule.forRoot(),
-        ModalModule,
-        TooltipModule.forRoot(),
-        // PageHomeCmsModule,
-    ],
+    // PageCyberComponent,
+    // PageDevolucionesComponent,
+    // DevolucionOkModalComponent,
+    // PageConcursoGiftcardComponent,
+    // ConcursoGiftcardOkModalComponent,
+    // PageMesDelCamionero23Component
+  ],
+  imports: [
+    AuthRoutingModule,
+    RouterModule,
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    /*LocalStorageModule.forRoot({
+      prefix: 'ImplementosB2B',
+      storageType: 'localStorage',
+    }),*/
+    // modules (third-party)
+    ToastrModule.forRoot(),
+    // modules
+    // BlocksModule,
+    // HeaderModule,
+    // HeaderB2bModule,
+    FooterModule,
+    // FooterB2cModule,
+    // MobileModule,
+
+    // CatalogoModule,
+    WidgetsModule,
+    HttpClientModule,
+    BsDropdownModule.forRoot(),
+    ModalModule,
+    TooltipModule.forRoot(),
+    // PageHomeCmsModule,
+    SharedModule,
+  ],
 })
-export class AuthModule { }
+export class AuthModule {}
