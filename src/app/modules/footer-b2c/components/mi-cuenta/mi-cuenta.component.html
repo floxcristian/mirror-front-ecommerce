@@ -1,0 +1,43 @@
+<div *ngIf="screenWidth >= 1025">
+    <h6 class="font-weight-bold pl-3">Mi cuenta</h6>
+    <hr class="my-2" style="background-color: #646462" />
+
+    <div>
+        <ul>
+            <li class="pl-3" *ngFor="let link of links">
+                <span class="link" (click)="validarCuenta(link)">{{ link.label }}</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="pl-3">
+        <!-- <img src="../../../../../assets/images/mutual_01.png" style="width: 60px" /> -->
+        <picture>
+            <source srcset="assets/images/mutual_01.webp" type="image/webp" />
+            <source srcset="assets/images/mutual_01.png" type="image/png" />
+            <img src="assets/images/mutual_01.png" style="width: 60px" alt="mutual" />
+        </picture>
+    </div>
+</div>
+<div *ngIf="screenWidth < 1025">
+    <div class="col-sm-12" data-toggle="collapse" data-target="#account" [attr.aria-expanded]="terminos"
+        aria-controls="account">
+        <div class="row">
+            <div class="col-8 d-flex justify-content-start">
+                <h5 class="font-weight-bold text-center">Mi cuenta</h5>
+            </div>
+            <div class="col-4 d-flex justify-content-end">
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+        </div>
+    </div>
+    <hr class="my-2" style="background-color: #646462" />
+    <div class="collapse multi-collapse" [ngClass]="terminos ? 'show' : ''" id="account">
+        <ul>
+            <li class="pl-3" *ngFor="let link of links">
+                <span class="link" (click)="validarCuenta(link)">{{ link.label }}</span>
+            </li>
+        </ul>
+        <hr class="my-2" style="background-color: #646462" />
+    </div>
+</div>

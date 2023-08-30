@@ -1,0 +1,42 @@
+@media screen and (max-width: 425px) {
+  .listado {
+    position: relative;
+    bottom: 75px;
+    left: -10px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .listado {
+    left: 285px;
+    bottom: 98px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .listado {
+    left: 230px;
+  }
+}
+
+.no-hidden {
+  position: fixed;
+  bottom: 20px;
+  right: 10px;
+  height: auto;
+  visibility: visible;
+  z-index: 1000;
+}
+.layout-switcher__button {
+  border-color: #005db9 !important;
+  background: white !important;
+  fill: #005db9 !important;
+  color: #005db9 !important;
+}
+
+.layout-switcher__button:hover {
+  border-color: #e2e2e2 !important;
+  background: #005db9 !important;
+  fill: #005db9 !important;
+  color: white !important;
+}

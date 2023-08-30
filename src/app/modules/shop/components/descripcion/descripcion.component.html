@@ -1,0 +1,61 @@
+<div class="card shadow-none pt-sm-0" *ngIf="ficha.length === 0">
+  <div class="w-100 text-center mt-2">
+    <h5>Sin descripción</h5>
+  </div>
+</div>
+<ng-container *ngIf="ficha.length > 0">
+  <div class="card shadow-none pt-sm-0">
+    <img src="{{ ficha[0].data }}" class="img-fluid" alt="Responsive image" />
+
+    <div class="card-body px-0">
+      <div
+        *ngIf="ficha[1].tipo == 'texto'"
+        [innerHTML]="ficha[1].data"
+        class="mt-3 text-justify"
+      ></div>
+
+      <ng-container *ngIf="!showDescription">
+        <hr />
+        <div
+          class="d-flex justify-content-center align-content-center"
+          style="margin-top: 20px"
+        >
+          <button class="btn btn-secondary" (click)="mostarDescripcion()">
+            Detalle de la Descripción
+          </button>
+        </div>
+      </ng-container>
+      <div [ngClass]="showDescription ? 'show' : 'hide'">
+        <hr />
+        <ng-container *ngFor="let item of ficha | slice : 2 : ficha.length - 1">
+          <div class="row" style="margin-bottom: 10px">
+            <div *ngIf="item.tipo == 'texto'" class="col-sm-12">
+              <div [innerHTML]="item.data" class="mt-2 text-justify"></div>
+            </div>
+
+            <div *ngIf="item.tipo == 'imagen'" class="col-sm-12 text-center">
+              <img
+                class="img-thumbnail"
+                src="{{ item.data }}"
+                class="img-fluid"
+                style="width: 50%"
+                alt="Responsive image"
+              />
+            </div>
+          </div>
+          <hr />
+        </ng-container>
+      </div>
+      <ng-container *ngIf="showDescription">
+        <div
+          class="d-flex justify-content-center align-content-center"
+          style="margin-top: 20px"
+        >
+          <button class="btn btn-secondary" (click)="mostarDescripcion()">
+            Ocultar Descripción
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>

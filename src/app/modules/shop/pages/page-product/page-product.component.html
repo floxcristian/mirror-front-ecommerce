@@ -1,0 +1,358 @@
+<div class="container">
+    <div class="mt-2">
+        <app-page-header class="page-header-white" [breadcrumbs]="this.breadcrumbs" [class]="'container'">
+        </app-page-header>
+    </div>
+</div>
+<ng-container *ngIf="layout !== 'sidebar'">
+    <div>
+        <div class="container">
+            <div class="card pt-2">
+                <app-product [product]="product" [origen]="origen" [layout]="layout" [stock]="stock"
+                    [recommendedProducts]="recommendedProducts"
+                    (comentarioGuardado)="comentarios.cargaTodo(); comentariosMobile.cargaTodo()"
+                    (leerComentarios)="abrirTabEvaluacion()"></app-product>
+
+                <div id="ancla"></div>
+                <!-- DESKTOP y TABLET -->
+                <div class="d-none d-sm-block">
+                    <ul class="nav mb-3 mt-5 justify-content-center justify-content-lg-start" id="tabs">
+                        <li class="nav-item mr-5"
+                            [ngStyle]="{ display: descripcionDesktop?.visible && descripcionMobile?.visible ? 'list-item' : 'none' }">
+                            <a class="nav-link"
+                                [class.active]="descripcionDesktop?.visible && descripcionMobile?.visible"
+                                id="descripcion-tab" data-toggle="tab" href="#descripcion" role="tab"
+                                aria-controls="descripcion"
+                                [attr.aria-selected]="descripcionDesktop?.visible && descripcionMobile?.visible ? true : false">
+                                Descripción<br />
+                            </a>
+                            <div class="w-100"></div>
+                        </li>
+                        <li class="nav-item mr-5">
+                            <a class="nav-link" id="detallesTecnicos-tab" data-toggle="tab" href="#detallesTecnicos"
+                                [class.active]="!descripcionDesktop?.visible || !descripcionMobile?.visible" role="tab"
+                                aria-controls="detallesTecnicos" aria-selected="false">Detalles Técnicos</a>
+                            <div class="w-100"></div>
+                        </li>
+                        <!-- <ng-container *ngIf="user.user_role != 'temp' && user.user_role != 'compradorb2c'">
+              <li class="nav-item mr-5">
+                <a class="nav-link" id="evaluacion-tab" data-toggle="tab" href="#stock" role="tab" aria-controls="stock"
+                  aria-selected="false">Stock</a>
+                <div class="w-100"></div>
+              </li>
+            </ng-container> -->
+
+                        <li class="nav-item mr-5">
+                            <a class="nav-link" id="evaluacion-tab" data-toggle="tab" href="#evaluacion" role="tab"
+                                aria-controls="evaluacion" aria-selected="false">Evaluación</a>
+                            <div class="w-100"></div>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content border-0" id="myTabContent">
+                        <div class="tab-pane fade"
+                            [class.show]="descripcionDesktop?.visible && descripcionMobile?.visible"
+                            [class.active]="descripcionDesktop?.visible && descripcionMobile?.visible" id="descripcion"
+                            role="tabpanel" aria-labelledby="descripcion-tab">
+                            <app-descripcion #descripcionDesktop [sku]="product?.sku"> </app-descripcion>
+                        </div>
+
+                        <ng-container *ngIf="user.user_role != 'temp' && user.user_role != 'compradorb2c'">
+                            <div class="tab-pane fade"
+                                [class.show]="descripcionDesktop?.visible && descripcionMobile?.visible"
+                                [class.active]="descripcionDesktop?.visible && descripcionMobile?.visible" id="stock"
+                                role="tabpanel" aria-labelledby="descripcion-tab">
+                                <app-product-stock #stockDesktop [sku]="product?.sku"> </app-product-stock>
+                            </div>
+                        </ng-container>
+                        <div class="tab-pane fade"
+                            [class.show]="!descripcionDesktop?.visible || !descripcionMobile?.visible"
+                            [class.active]="!descripcionDesktop?.visible || !descripcionMobile?.visible"
+                            id="detallesTecnicos" role="tabpanel" aria-labelledby="detallesTecnicos-tab">
+                            <app-detalle-tecnicos [producto]="product"></app-detalle-tecnicos>
+                        </div>
+                        <div class="tab-pane fade" id="evaluacion" role="tabpanel" aria-labelledby="evaluacion-tab">
+                            <app-comentarios #comentarios [producto]="product"></app-comentarios>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MOBILE -->
+                <div class="d-block d-sm-none mt-4">
+                    <div class="accordion" id="accordionExample">
+                        <div id="headingOne"
+                            [ngStyle]="{ display: descripcionDesktop?.visible && descripcionMobile?.visible ? '' : 'none' }">
+                            <h6 class="d-flex justify-content-between align-items-center font-weight-normal mb-0">
+                                <div>Descripción</div>
+                                <button class="btn btn-link btn-sm collapsed" type="button" data-toggle="collapse"
+                                    data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"
+                                    (click)="controlaChevron(0)">
+                                    <i style="color: #dfdfdf"
+                                        class="fas fa-chevron-{{ acordion[0].abierto ? 'down' : 'up' }} fa-lg"></i>
+                                </button>
+                            </h6>
+                        </div>
+
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
+                            data-parent="#accordionExample"
+                            [ngStyle]="{ display: descripcionDesktop?.visible && descripcionMobile?.visible ? '' : 'none' }">
+                            <app-descripcion #descripcionMobile [sku]="product?.sku"> </app-descripcion>
+                        </div>
+                        <hr />
+                        <div id="headingTwo">
+                            <h6 class="d-flex justify-content-between font-weight-normal mb-0">
+                                <div>Detalles Técnicos</div>
+                                <button class="btn btn-link btn-sm collapsed" type="button" data-toggle="collapse"
+                                    data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"
+                                    (click)="controlaChevron(1)">
+                                    <i style="color: #dfdfdf"
+                                        class="fas fa-chevron-{{ acordion[1].abierto ? 'down' : 'up' }} fa-lg"></i>
+                                </button>
+                            </h6>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+                            data-parent="#accordionExample">
+                            <app-detalle-tecnicos [producto]="product"></app-detalle-tecnicos>
+                        </div>
+                        <hr />
+                        <div id="headingThree">
+                            <h6 class="d-flex justify-content-between font-weight-normal mb-0">
+                                <div>Evaluación</div>
+                                <button class="btn btn-link btn-sm collapsed" type="button" data-toggle="collapse"
+                                    data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"
+                                    (click)="controlaChevron(2)">
+                                    <i style="color: #dfdfdf"
+                                        class="fas fa-chevron-{{ acordion[2].abierto ? 'down' : 'up' }} fa-lg"></i>
+                                </button>
+                            </h6>
+                        </div>
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                            data-parent="#accordionExample">
+                            <app-comentarios #comentariosMobile [producto]="product"></app-comentarios>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- Matriz -->
+                <div class="mt-3" *ngIf="matrixProducts?.length>0 && isB2B">
+                    <div class="d-flex flex-column align-items-center mb-3">
+                        <div class="text-center" style="
+                text-align: center;
+                font-size: 39px;
+                font-weight: 900;
+                line-height: 53px;
+                font-style: normal;
+                border-radius: 0px;
+                letter-spacing: 0px;
+                color: #0d61bb;
+                margin-bottom: -20px;
+              ">
+                            Artículos equivalentes
+                        </div>
+                    </div>
+                    <div class="products-view px-sm-3 mx-sm-3 mx-xl-5" style="margin-top: 15px">
+                        <div class="products-view__list products-list" [class.mx-0]="isB2B" data-layout="grid-5-full"
+                            data-with-features="false">
+                            <owl-carousel-o class="carouselFicha" [options]="carouselOptions" appOwlPreventClick>
+                                <div *ngFor="let item of matrixProducts" class="products-list__item">
+                                    <ng-template carouselSlide>
+                                        <app-product-card-b2b *ngIf="isB2B" [product]="item"
+                                            [origen]="[origen[0], origen[1], origen[2], 'matriz']">
+                                        </app-product-card-b2b>
+                                        <!-- <app-product-card-b2c-ficha *ngIf="!isB2B" [product]="item"
+                                            [origen]="[origen[0], origen[1], origen[2], 'matriz']">
+                                        </app-product-card-b2c-ficha> -->
+                                    </ng-template>
+                                </div>
+                                <div *ngIf="matrixProducts.length < 4">
+                                    <ng-template carouselSlide
+                                        *ngFor="let item of relleno | slice: 0:4 - matrixProducts.length">
+                                        <div class="d-flex w-100"></div>
+                                    </ng-template>
+                                </div>
+                            </owl-carousel-o>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mix de productos -->
+                <div class="mt-3">
+                    <div class="d-flex flex-column align-items-center mb-3">
+                        <div class="text-center" style="
+                text-align: center;
+                font-size: 39px;
+                font-weight: 900;
+                line-height: 53px;
+                font-style: normal;
+                border-radius: 0px;
+                letter-spacing: 0px;
+                color: #0d61bb;
+                margin-bottom: -20px;
+              ">
+                            También podría interesarte
+                        </div>
+                    </div>
+
+                    <div class="products-view px-sm-3 mx-sm-3 mx-xl-5" style="margin-top: 15px">
+                        <div class="products-view__list products-list" [class.mx-0]="isB2B" data-layout="grid-5-full"
+                            data-with-features="false">
+                            <owl-carousel-o class="carouselFicha" [options]="carouselOptions" appOwlPreventClick>
+                                <div *ngFor="let item of mixProducts" class="products-list__item">
+                                    <ng-template carouselSlide>
+                                        <app-product-card-b2b *ngIf="isB2B" [product]="item"
+                                            [origen]="[origen[0], origen[1], origen[2], 'matriz']">
+                                        </app-product-card-b2b>
+                                        <app-product-card-b2c-ficha *ngIf="!isB2B" [product]="item"
+                                            [origen]="[origen[0], origen[1], origen[2], 'matriz']">
+                                        </app-product-card-b2c-ficha>
+                                    </ng-template>
+                                </div>
+                                <div *ngIf="mixProducts.length < 4">
+                                    <ng-template carouselSlide
+                                        *ngFor="let item of relleno | slice: 0:4 - mixProducts.length">
+                                        <div class="d-flex w-100"></div>
+                                    </ng-template>
+                                </div>
+                            </owl-carousel-o>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Relacionados -->
+    <!-- Recomendados -->
+    <!-- <ng-container *ngIf="matrixProducts?.length>0">
+        <div class="shop-layout shop-layout--sidebar--{{ sidebarPosition }}">
+            <div class="shop-layout__content container">
+
+                <div class="products-view">
+                    <div class="products-view__list products-list" data-layout="grid-5-full"
+                        data-with-features="false">
+                        <div class="products-list__body w-100">
+                            <div *ngFor="let item of matrixProducts" class="products-list__item">
+                                <app-product-card-b2b *ngIf="isB2B" [product]="item"
+                                    [origen]="[origen[0],origen[1],origen[2], 'matriz']">
+                                </app-product-card-b2b>
+                                <app-product-card-b2c *ngIf="!isB2B" [product]="item"
+                                    [origen]="[origen[0],origen[1],origen[2], 'matriz']">
+                                </app-product-card-b2c>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </ng-container> -->
+
+    <!-- Relacionados -->
+    <!-- <app-block-header *ngIf="relatedProducts?.length>0" [header]="'Comprados juntos habitualmente'">
+    </app-block-header>
+    <ng-container *ngIf="relatedProducts?.length>0">
+        <div class="shop-layout shop-layout--sidebar--{{ sidebarPosition }}">
+            <div class="shop-layout__content container">
+
+                <div class="products-view">
+                    <div class="products-view__list products-list" data-layout="grid-5-full" data-with-features="false">
+                        <div class="products-list__body w-100">
+                            <div *ngFor="let item of relatedProducts" class="products-list__item">
+                                <app-product-card-b2b *ngIf="isB2B"
+                                    [origen]="[origen[0],origen[1], origen[2],'relacionados']" [product]="item">
+                                </app-product-card-b2b>
+                                <app-product-card-b2c *ngIf="!isB2B"
+                                    [origen]="[origen[0],origen[1], origen[2],'relacionados']" [product]="item">
+                                </app-product-card-b2c>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </ng-container> -->
+
+    <!-- Recomendados -->
+
+    <!-- <app-block-header *ngIf="recommendedProducts?.length>0" [header]="'Te podría interesar'"></app-block-header>
+    <ng-container *ngIf="recommendedProducts?.length>0">
+
+        <div class="shop-layout shop-layout--sidebar--{{ sidebarPosition }} mb-5">
+            <div class="shop-layout__content container">
+                <div class="products-view">
+                    <div class="products-view__list products-list" data-layout="grid-5-full" data-with-features="false">
+                        <div class="products-list__body w-100"> -->
+    <!-- <app-widget-products  [vertical]="false" [products]="recommendedProducts"></app-widget-products> -->
+
+    <!-- <div *ngFor="let item of recommendedProducts" class="products-list__item">
+                                <app-product-card-b2b *ngIf="isB2B" [product]="item"
+                                    [origen]="[origen[0],origen[1], origen[2], 'recomendados']">
+                                </app-product-card-b2b>
+                                <app-product-card-b2c *ngIf="!isB2B" [product]="item"
+                                    [origen]="[origen[0],origen[1], origen[2], 'recomendados']">
+                                </app-product-card-b2c>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </ng-container> -->
+
+    <!-- Populares en mobile-->
+
+    <!-- <app-block-header *ngIf="popularProducts?.length>0" [header]="'Productos Populares'"></app-block-header>
+    <ng-container *ngIf="popularProducts?.length>0">
+
+        <div class="shop-layout shop-layout--sidebar--{{ sidebarPosition }} mb-5">
+            <div class="shop-layout__content container">
+                <div class="products-view">
+                    <div class="products-view__list products-list" data-layout="grid-5-full" data-with-features="false">
+                        <div class="products-list__body w-100"> -->
+    <!-- <app-widget-products  [vertical]="false" [products]="recommendedProducts"></app-widget-products> -->
+
+    <!-- <div *ngFor="let item of popularProducts" class="products-list__item">
+                                <app-product-card-b2b *ngIf="isB2B" [product]="item"
+                                    [origen]="[origen[0],origen[1], origen[2], 'recomendados']"></app-product-card-b2b>
+                                <app-product-card-b2c *ngIf="!isB2B" [product]="item"
+                                    [origen]="[origen[0],origen[1], origen[2], 'recomendados']"></app-product-card-b2c>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </ng-container> -->
+
+    <div style="margin-bottom: 170px !important"></div>
+</ng-container>
+
+<ng-container *ngIf="product">
+    <div itemscope itemtype="http://schema.org/Product">
+        <meta itemprop="name" [content]="product.nombre | capitalizeFirst" />
+        <meta itemprop="brand" [content]="product.marca" />
+        <meta itemprop="description" [content]="product.descripcion | capitalizeFirst" />
+        <meta itemprop="productID" [content]="product.sku" />
+        <meta itemprop="link" [content]="'https//www.implementos.cl/inicio/productos/ficha/' + product.sku" />
+        <meta itemprop="image_link" [content]="root.getUrlImagenMiniatura(product)" />
+        <div itemprop="value" itemscope itemtype="http://schema.org/PropertyValue">
+            <meta itemprop="value" [content]="product.categoria" />
+        </div>
+        <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+            <link *ngIf="!product?.stock" itemprop="availability" href="http://schema.org/InStock" content="inStock" />
+            <link itemprop="condition" href="http://schema.org/NewCondition" content="new" />
+            <meta itemprop="price" [content]="product?.precio?.precio" />
+            <meta itemprop="priceCurrency" content="CLP" />
+        </div>
+    </div>
+</ng-container>

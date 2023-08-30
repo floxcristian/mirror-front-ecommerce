@@ -1,0 +1,97 @@
+<div class="mobilemenu" [ngClass]="{ 'mobilemenu--open': isOpen }">
+  <div class="mobilemenu__backdrop" (click)="mobilemenu.close()"></div>
+  <div class="mobilemenu__body">
+    <div style="margin-bottom: 5px"></div>
+
+    <div class="mobilemenu__content">
+      <div class="d-flex flex-wrap">
+        <div class="col pr-0" style="white-space: nowrap">
+          <b> Tienda Actual:</b>
+          <button
+            class="btn btn-secondary ml-2 py-1 px-2"
+            style="border-radius: 10px; height: auto"
+            (click)="abrirModalTiendas()"
+          >
+            <h6 class="mb-0">
+              <i class="fas fa-map-marked-alt mr-2 pt-1"></i
+              >{{ tiendaSeleccionada.zona }}
+            </h6>
+          </button>
+          <button
+            class="btn btn-outline-secondary btn-sm ml-2 float-right"
+            style="border-radius: 0px"
+            (click)="close_movilMenu()"
+          >
+            <i
+              class="fas fa-times"
+              style="font-size: 18px; color: rgb(1, 1, 10)"
+            ></i>
+          </button>
+        </div>
+      </div>
+      <div class="d-flex flex-wrap" *ngIf="isB2B">
+        <div class="col" style="white-space: nowrap">
+          <b> Enviar a:</b>
+          <button
+            class="btn btn-secondary ml-3 py-1 px-2"
+            style="border-radius: 10px; height: auto"
+            (click)="modificarDireccionDespacho()"
+          >
+            <h6 class="mb-0" *ngIf="isVacio(direccion)">Sin dirección...</h6>
+            <h6 class="mb-0" *ngIf="!isVacio(direccion)">
+              <i class="fas fa-map-marked-alt mr-2 pt-1"></i
+              >{{
+                ((direccion.calle + " " + direccion.numero).length > 20
+                  ? (direccion.calle + " " + direccion.numero).substring(
+                      0,
+                      20
+                    ) + "..."
+                  : direccion.calle + " " + direccion.numero
+                ) | titlecase
+              }}
+            </h6>
+          </button>
+        </div>
+      </div>
+      <div class="d-flex flex-wrap mt-2">
+        <div class="col-sm-10">
+          <span class="mr-3">Venta Telefónica </span>
+          <i
+            class="footer-contacts__icon fas fa-phone center"
+            style="font-weight: 700"
+          ></i>
+          <a href="tel:800330088" style="font-weight: 700; color: black"
+            >800 330 088</a
+          >
+        </div>
+      </div>
+      <div class="mobile-links__divider"></div>
+      <!-- <app-mobile-links [links]="accountLinks" (itemClick)="onItemClick($event)"></app-mobile-links> -->
+      <div class="mobile-links__divider mb-2"></div>
+      <app-mobile-categorias
+        [links]="items"
+        (itemClick)="mobilemenu.close()"
+        [titulo]="'Categorias'"
+      >
+      </app-mobile-categorias>
+      <div class="mobile-links__divider"></div>
+      <app-mobile-links
+        [links]="links"
+        (itemClick)="onItemClick($event)"
+      ></app-mobile-links>
+    </div>
+  </div>
+</div>
+
+<ng-template #modalLogin>
+  <app-header-login
+    [linkRegister]="true"
+    (muestraLogin)="verifySession($event)"
+  >
+  </app-header-login>
+</ng-template>
+
+<app-modal-stores
+  (template)="estableceModalTienda($event)"
+  [modalRef]="modalRefTienda"
+></app-modal-stores>

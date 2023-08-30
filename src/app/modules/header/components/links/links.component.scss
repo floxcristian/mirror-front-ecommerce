@@ -1,0 +1,45 @@
+.nav-links__item:hover > a span{
+    background: none;
+}
+
+.nav-links__item--with-submenu > a span{
+    padding-right: 1.6875rem;
+    font-size: 1rem;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal; 
+    letter-spacing: normal;
+    text-align: left;
+    color: #cfcfcf;
+}
+
+.nav-links__item:hover > a span{
+    padding-right: 1.6875rem;
+    font-size: 1rem;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;   
+    letter-spacing: normal;
+    text-align: left;
+    color: #fff;
+}
+.nav-links__item > a svg{
+    fill: #cfcfcf !important;
+}
+
+
+.megamenu__item > a{
+ color: #fff !important;
+ padding: 0.9375rem !important; 
+
+}
+
+
+// .nav-links__item > a > span{
+//     padding: 0 0.875rem;
+// }
+
+.nav-links__list{
+    margin-left: -0.875rem;
+}
+

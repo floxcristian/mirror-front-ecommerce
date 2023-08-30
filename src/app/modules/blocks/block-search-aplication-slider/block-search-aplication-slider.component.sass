@@ -1,0 +1,41 @@
+$break-small: 320px
+$break-tablet: 768px
+$break-large: 1200px
+    
+.container-searh-aplication
+    position: absolute
+    z-index: 10
+    top: 20%
+    left: 0
+    right: 0
+
+.container-searh-aplication h1 
+    font-size: 3.5rem
+    color: #fff
+    text-transform: uppercase
+
+.subtitle
+    color: #fff
+    font-size: 1.2rem
+    text-transform: uppercase
+    margin-bottom: 0
+
+select 
+    border: 0
+    height: calc(1.7em + .95rem + 2px)
+    text-transform: uppercase
+    padding-left: 1.2rem
+    color: #6c757d
+
+.btn    
+     height: calc(1.7em + .95rem + 2px)
+
+@media (min-width: $break-small) and (max-width: $break-tablet)
+    .container-searh-aplication
+        top: 5%
+    .container-searh-aplication h1 
+        font-size: 1.5rem    
+    .subtitle
+        display: none
+
+

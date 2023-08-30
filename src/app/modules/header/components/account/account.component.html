@@ -1,0 +1,106 @@
+<div
+  class="indicator indicator--trigger--click"
+  appDropdown="indicator--opened"
+  #menuUser="appDropdown"
+>
+  <span
+    *ngIf="tipo === 'b2c'"
+    class="indicator__button flex-column"
+    style="cursor: pointer"
+    (click)="$event.preventDefault(); cerrarBienvenida(); menuUser.toggle()"
+  >
+    <span class="indicator__area fa">
+      <img
+        src="../../../../../assets/svg/08.svg"
+        style="width: 35px; height: 40px"
+      />
+    </span>
+    <span
+      class="icon-title mt-1"
+      *ngIf="this.usuario == null || this.usuario.login_temp == true"
+    >
+      Mi Cuenta
+    </span>
+    <span
+      class="icon-title mt-1"
+      *ngIf="this.usuario != null && this.usuario.login_temp == false"
+    >
+      {{ usuario.first_name | capitalizeFirst : true }}
+      {{ usuario.last_name | capitalizeFirst : true }}
+    </span>
+  </span>
+
+  <span
+    *ngIf="tipo === 'b2b'"
+    class="indicator__button"
+    style="cursor: pointer"
+    (click)="$event.preventDefault(); cerrarBienvenida(); menuUser.toggle()"
+  >
+    <span class="indicator__area">
+      <i class="far fa-user-circle"></i>
+    </span>
+    <span
+      class="icon-title mt-1"
+      *ngIf="this.usuario == null || this.usuario.login_temp == true"
+    >
+      Ingresar
+    </span>
+    <span
+      class="icon-title mt-1"
+      style="font-size: 0.95rem"
+      *ngIf="this.usuario != null && this.usuario.login_temp == false"
+    >
+      Hola!
+      <strong>{{ usuario.first_name | capitalizeFirst : true }}</strong></span
+    >
+  </span>
+
+  <div
+    class="indicator__dropdown"
+    [ngStyle]="{ top: tipo === 'b2b' ? '70px' : '100%' }"
+  >
+    <ng-container *ngIf="mostrarMenu && !mostrarBienvenida">
+      <app-header-menu layout="topbar" [items]="linkMiCuenta">
+      </app-header-menu>
+    </ng-container>
+    <ng-container *ngIf="!mostrarMenu">
+      <app-header-login
+        (muestraLogin)="cambiaElementosMenu($event)"
+        [linkRegister]="true"
+      >
+      </app-header-login>
+    </ng-container>
+    <div
+      *ngIf="mostrarMenu && mostrarBienvenida"
+      class="alert-session card p-4 mt-4"
+    >
+      <p class="font-weight-bold title-sesion">
+        Bienvenido
+        <span *ngIf="this.usuario != null">
+          {{ usuario.first_name | capitalizeFirst : true }}
+          {{ usuario.last_name | capitalizeFirst : true }}
+        </span>
+      </p>
+      <p class="font-weight-bold">
+        Se han cargado tus precios especiales de {{ usuario?.company }}
+      </p>
+      <p class="text-gray-2 subtitle mb-2">
+        Recuerda que puedes ingresar a tu cuenta para:
+      </p>
+      <ul class="text-gray-2 subtitle pl-4">
+        <li>Ver historial de pedidos</li>
+        <li>Mis listas guardadas</li>
+        <li>Chat con mi vendedor</li>
+        <li>Y mucho más</li>
+      </ul>
+
+      <button
+        name="cerrar"
+        class="btn btn-link"
+        (click)="menuUser.toggle(); cerrarBienvenida()"
+      >
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,11 @@
-import { Component, PLATFORM_ID, Inject, AfterViewInit, Input, HostListener } from '@angular/core';
+import {
+  Component,
+  PLATFORM_ID,
+  Inject,
+  AfterViewInit,
+  Input,
+  HostListener,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RootService } from '../../shared/services/root.service';
 import { Title } from '@angular/platform-browser';
@@ -9,10 +16,10 @@ import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-b2c',
   templateUrl: './b2c.component.html',
-  styleUrls: ['./b2c.component.scss']
+  styleUrls: ['./b2c.component.scss'],
 })
 export class B2cComponent implements AfterViewInit {
-  headerLayout!: string;
+  headerLayout!: 'classic' | 'compact';
   // isBrowser = false;  // No se utiliza
   loadingPage = true;
 
@@ -26,9 +33,15 @@ export class B2cComponent implements AfterViewInit {
     private canonicalService: CanonicalService
   ) {
     this.innerWidth = window.innerWidth;
-    this.route.data.subscribe(data => (this.headerLayout = data['headerLayout']));
-    this.root.path = this.router.createUrlTree(['./'], { relativeTo: route }).toString();
-    this.titleService.setTitle('Implementos - Repuestos para Camiones, Buses y Remolques');
+    this.route.data.subscribe(
+      (data) => (this.headerLayout = data['headerLayout'])
+    );
+    this.root.path = this.router
+      .createUrlTree(['./'], { relativeTo: route })
+      .toString();
+    this.titleService.setTitle(
+      'Implementos - Repuestos para Camiones, Buses y Remolques'
+    );
 
     if (isPlatformBrowser(this.platformId)) {
       this.canonicalService.setCanonicalURL(location.href);
@@ -36,7 +49,9 @@ export class B2cComponent implements AfterViewInit {
     }
 
     if (isPlatformServer(this.platformId)) {
-      this.canonicalService.setCanonicalURL(environment.canonical + this.router.url);
+      this.canonicalService.setCanonicalURL(
+        environment.canonical + this.router.url
+      );
     }
   }
 
@@ -55,7 +70,7 @@ export class B2cComponent implements AfterViewInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event:any) {
+  onResize(event: any) {
     this.innerWidth = window.innerWidth;
   }
 }

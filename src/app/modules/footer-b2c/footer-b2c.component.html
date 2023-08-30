@@ -1,0 +1,213 @@
+<div class="mb-1" [hidden]="HideFooter() ? true : false">
+    <div class="container" style="background-color: white; padding-bottom: 50px">
+        <div class="row justify-content-center">
+            <div class="col-3" *ngIf="screenWidth >= 1025" style="cursor: pointer"
+                [routerLink]="['/sitio/politicas/cambios-devolucion']">
+                <div class="row">
+                    <div class="col-4">
+                        <img src="../../../../../assets/svg/11.svg" style="width: 80px; height: 80px"
+                            alt="devoliciones" />
+                    </div>
+
+                    <div class="col-8 d-flex flex-column justify-content-center align-items-start"
+                        style="color: #094cac">
+                        <span>Cambios y</span>
+                        <span class="font-weight-bold">DEVOLUCIONES</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3" *ngIf="screenWidth >= 500 && screenWidth < 1025" style="cursor: pointer"
+                [routerLink]="['/sitio/politicas/cambios-devolucion']">
+                <div class="row">
+                    <div class="col-12">
+                        <img src="../../../../../assets/svg/11.svg" style="width: 80px; height: 80px"
+                            alt="devoliciones" />
+                    </div>
+
+                    <div class="col-12 d-flex flex-column justify-content-center align-items-start"
+                        style="color: #094cac">
+                        <span>Cambios y</span>
+                        <span class="font-weight-bold">DEVOLUCIONES</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12" *ngIf="screenWidth < 500"
+                style="cursor: pointer; margin-left: 10px; margin-bottom: 15px"
+                [routerLink]="['/sitio/politicas/cambios-devolucion']">
+                <div class="row">
+                    <div class="col-4 d-flex justify-content-end">
+                        <img src="../../../../../assets/svg/11.svg" style="width: 80px; height: 80px"
+                            alt="devoliciones" />
+                    </div>
+
+                    <div class="col-8 d-flex flex-column justify-content-center" style="color: #094cac">
+                        <span>Cambios y</span>
+                        <span class="font-weight-bold">DEVOLUCIONES</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3" *ngIf="screenWidth >= 1025" style="cursor: pointer" [routerLink]="['/sitio/tiendas']">
+                <div class="row">
+                    <div class="col-4">
+                        <img src="../../../../../assets/svg/12.svg" style="width: 70px; height: 80px" alt="tiendas" />
+                    </div>
+                    <div class="col-8 d-flex flex-column justify-content-center align-items-start"
+                        style="color: #094cac">
+                        <span>Nuestras</span>
+                        <span class="font-weight-bold">TIENDAS</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3" *ngIf="screenWidth >= 500 && screenWidth < 1025" style="cursor: pointer"
+                [routerLink]="['/sitio/tiendas']">
+                <div class="row">
+                    <div class="col-12">
+                        <img src="../../../../../assets/svg/12.svg" style="width: 70px; height: 70px" alt="tiendas" />
+                    </div>
+                    <div class="col-12 d-flex flex-column justify-content-center align-items-start"
+                        style="color: #094cac">
+                        <span>Nuestras</span>
+                        <span class="font-weight-bold">TIENDAS</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12" *ngIf="screenWidth < 500" style="cursor: pointer; margin-left: 0px; margin-bottom: 15px"
+                [routerLink]="['/sitio/tiendas']">
+                <div class="row">
+                    <div class="col-4 d-flex justify-content-end">
+                        <img src="../../../../../assets/svg/12.svg" style="width: 70px; height: 70px" alt="tiendas" />
+                    </div>
+                    <div class="col-8 d-flex flex-column justify-content-center" style="color: #094cac">
+                        <span>Nuestras</span>
+                        <span class="font-weight-bold">TIENDAS</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3" *ngIf="screenWidth >= 1025" style="cursor: pointer">
+                <a href="/catalogos/listado-catalogos" target="_blank">
+                    <div class="row">
+                        <div class="col-4">
+                            <img src="../../../../../assets/svg/13.svg" style="width: 70px; height: 70px"
+                                alt="catalogos" />
+                        </div>
+                        <div class="col-8 d-flex flex-column justify-content-center align-items-start"
+                            style="color: #094cac">
+                            <span>Nuestros</span>
+                            <span class="font-weight-bold">CATÁLOGOS</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-3" *ngIf="screenWidth >= 500 && screenWidth < 1025" style="cursor: pointer">
+                <a href="/catalogos/listado-catalogos" target="_blank">
+                    <div class="row">
+                        <div class="col-12">
+                            <img src="../../../../../assets/svg/13.svg" style="width: 70px; height: 70px"
+                                alt="catalogos" />
+                        </div>
+                        <div class="col-12 d-flex flex-column justify-content-center align-items-start"
+                            style="color: #094cac">
+                            <span>Nuestros</span>
+                            <span class="font-weight-bold">CATÁLOGOS</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12" *ngIf="screenWidth < 500"
+                style="cursor: pointer; margin-left: 0px; margin-bottom: 10px">
+                <a href="/catalogos/listado-catalogos" target="_blank">
+                    <div class="row">
+                        <div class="col-4 d-flex justify-content-end">
+                            <img src="../../../../../assets/svg/13.svg" style="width: 70px; height: 70px"
+                                alt="catalogos" />
+                        </div>
+                        <div class="col-8 d-flex flex-column justify-content-center" style="color: #094cac">
+                            <span>Nuestros</span>
+                            <span class="font-weight-bold">CATÁLOGOS</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="newsletter position-relative" [hidden]="HideFooter() ? true : false">
+    <picture>
+        <source srcset="../../../../../assets/images/banners/Banner-implementos_01.webp" type="image/webp" />
+        <source srcset="../../../../../assets/images/banners/Banner-implementos_01.png" type="image/png" />
+        <img src="../../../../../assets/images/banners/Banner-implementos_01.png" class="bg" alt="newsletter" />
+    </picture>
+    <!-- <img src="../../../../../assets/images/banners/Banner-implementos_01.png" class="bg" /> -->
+    <div class="container position-absolute">
+        <div *ngIf="screenWidth >= 600" class="d-flex flex-column offset-5 col-7 align-items-center">
+            <div class="text-center titulo">NEWSLETTER</div>
+            <div class="text-center">Suscríbete y mantente informado acerca de nuestras ofertas, noticias y eventos.
+            </div>
+            <div class="formulario d-flex w-100 mt-3">
+                <input class="col" name="correo" placeholder="Ingresar correo" aria-label="correo" type="text"
+                    autocomplete="off" />
+                <button type="button">Regitrarse</button>
+            </div>
+            <div class="mt-2 align-self-end"><input type="checkbox" /> *Aceptar <span
+                    style="text-decoration:underline">Términos y condiciones</span>
+            </div>
+        </div>
+        <div *ngIf="screenWidth < 600" class="d-flex flex-column col-sm-12 align-items-center">
+            <div class="text-center titulo">NEWSLETTER</div>
+            <div class="text-center">Suscríbete y mantente informado acerca de nuestras ofertas, noticias y eventos.
+            </div>
+            <div class="formulario_mobile d-flex w-100 mt-3">
+                <input class="col" name="correo" placeholder="Ingresar correo" aria-label="correo" type="text"
+                    autocomplete="off" />
+            </div>
+            <div class="formulario_mobile d-flex w-100 mt-3">
+                <button type="button">Regitrarse</button>
+            </div>
+            <div class="mt-2 align-self-end"><input type="checkbox" /> *Aceptar <span
+                    style="text-decoration: underline;">Términos y condiciones</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="site-footer" *ngIf="screenWidth >= 1025" [hidden]="HideFooter() ? true : false">
+    <div class="container">
+        <div class="py-3">
+            <div class="row m-0">
+                <div class="col-custom pr-0">
+                    <app-sobre-nosotros></app-sobre-nosotros>
+                </div>
+                <div class="col-custom px-0">
+                    <app-holding-epysa></app-holding-epysa>
+                </div>
+                <div class="col-custom d-none d-lg-block px-0">
+                    <app-mi-cuenta></app-mi-cuenta>
+                </div>
+                <div class="col pl-0">
+                    <app-contactanos></app-contactanos>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12 font-weight-bold" style="font-size: 0.8rem">
+                Implementos es la red de repuestos, insumos y accesorios para camiones, buses y remolques más grande del
+                país.
+            </div>
+        </div>
+    </div>
+
+    <div style="height: 30px; background-color: #000"></div>
+</div>
+
+<div class="site-footer" *ngIf="screenWidth < 1025" [hidden]="HideFooter() ? true : false">
+    <app-fotter-site-mobile>-</app-fotter-site-mobile>
+</div>
+
+<div class="row" [hidden]="HideFooter2() ? true : false">
+    <div class="footer_implementos col-sm-12 d-flex justify-content-end align-items-center">
+        <a [routerLink]="['/', 'inicio']">
+            <img height="80px" [src]="logoSrc" alt="logo-implementos" class="lazyload" />
+        </a>
+    </div>
+</div>

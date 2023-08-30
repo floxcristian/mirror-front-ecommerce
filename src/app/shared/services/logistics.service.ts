@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { ArticuloResponse } from '../interfaces/articulos.response';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LogisticsService {
   private urlApi = environment.apiImplementosLogistica;
@@ -17,20 +17,24 @@ export class LogisticsService {
 
   constructor(private http: HttpClient) {}
 
-  obtieneDireccionesCliente(clienteRut:any) {
-    return this.http.get(this.urlApi + `direccionescliente?rut=${clienteRut}&tipo=2`);
+  obtieneDireccionesCliente(clienteRut: any) {
+    return this.http.get(
+      this.urlApi + `direccionescliente?rut=${clienteRut}&tipo=2`
+    );
   }
-  obtieneDespachoProducto(data:any) {
+  obtieneDespachoProducto(data: any) {
     return this.http.post(this.urlApi + `despachoProducto`, data);
   }
 
-  obtieneDespachos(data:any) {
+  obtieneDespachos(data: any) {
     return this.http.post(this.urlApi + `despachocarro2`, data);
   }
 
-  obtienRetiro(data:any) {
-    //let consulta:any=this.http.post(this.urlApi + `retirocarro`, data);
-    let consulta: any = this.http.post(environment.apiImplementosLogistica + `retirocarro`, data);
+  obtienRetiro(data: any) {
+    let consulta: any = this.http.post(
+      environment.apiImplementosLogistica + `retirocarro`,
+      data
+    );
     return consulta;
   }
 
@@ -38,16 +42,24 @@ export class LogisticsService {
     return this.http.get(this.urlApi + `direccionestiendas`);
   }
 
-  obtieneDespachoCompleto(params:any) {
-    return this.http.get(environment.apiImplementosLogistica + `productosRetiro`, { params });
+  obtieneDespachoCompleto(params: any) {
+    return this.http.get(
+      environment.apiImplementosLogistica + `productosRetiro`,
+      { params }
+    );
   }
 
-  obtieneDireccionesTiendaRetiro(params:any) {
-    return this.http.get(environment.apiImplementosLogistica + `tiendasretiroomni`, { params });
+  obtieneDireccionesTiendaRetiro(params: any) {
+    return this.http.get(
+      environment.apiImplementosLogistica + `tiendasretiroomni`,
+      { params }
+    );
   }
 
   obtieneEstadoOV(OV: string) {
-    let consulta: any = this.http.get(environment.apiImplementosLogistica + 'prestador-seguimiento/' + OV);
+    let consulta: any = this.http.get(
+      environment.apiImplementosLogistica + 'prestador-seguimiento/' + OV
+    );
     return consulta;
   }
 
@@ -55,13 +67,13 @@ export class LogisticsService {
     return this.http.get(this.urlApi + `comunas`);
   }
 
-  guardarDireccionCliente(data:any) {
+  guardarDireccionCliente(data: any) {
     this.direccion$.next(data);
   }
 
   obtenerTiendas() {
     return this.http.get(this.urlApi + `tiendas`).pipe(
-      map(r => {
+      map((r) => {
         this.storesSubject.next(r);
         return r;
       })
@@ -72,49 +84,69 @@ export class LogisticsService {
   }
 
   ReciboEnvio(guia_despacho: string) {
-    let consulta: any = this.http.get(environment.apiImplementosLogistica + 'receptorGD/SAMEX/' + guia_despacho);
+    let consulta: any = this.http.get(
+      environment.apiImplementosLogistica + 'receptorGD/SAMEX/' + guia_despacho
+    );
     return consulta;
   }
 
   obtieneOvEspera(sucursal: string) {
     let consulta: any = this.http.get(
-      environment.apiOms + `propagandaTV/esperaClienteEnTienda?tvLocation=${sucursal}&fakeData=0`
+      environment.apiOms +
+        `propagandaTV/esperaClienteEnTienda?tvLocation=${sucursal}&fakeData=0`
     );
     return consulta;
   }
 
   async saveStatusTv(objSave: any) {
-    const respuesta: any = await this.http.post(`${environment.urlScreen}SetScreenactiva`, objSave).toPromise();
+    const respuesta: any = await this.http
+      .post(`${environment.urlScreen}SetScreenactiva`, objSave)
+      .toPromise();
     return respuesta;
   }
 
-  obtenerGrupoDespacho(id_carro:any, comuna:any) {
-    let consulta: any = this.http.get(environment.apiPromesa + 'domicilio/' + id_carro + '/' + comuna);
+  obtenerGrupoDespacho(id_carro: any, comuna: any) {
+    let consulta: any = this.http.get(
+      environment.apiPromesa + 'domicilio/' + id_carro + '/' + comuna
+    );
     return consulta;
   }
 
-  obtenerMultiDespachos(data:any) {
-    let consulta: any = this.http.post(environment.apiImplementosLogistica + 'despachocarro3/', data);
+  obtenerMultiDespachos(data: any) {
+    let consulta: any = this.http.post(
+      environment.apiImplementosLogistica + 'despachocarro3/',
+      data
+    );
     return consulta;
   }
 
   articulos(search: string = ''): Observable<ArticuloResponse> {
-    return this.http.get<ArticuloResponse>(`${environment.apiImplementosLogistica}articulos?search=${search}`).pipe(
-      map(response => {
-        response.data = response.data.map((articulo:any) => {
-          try {
-            articulo.image = articulo.images[0][150].length > 0 ? articulo.images[0][150][0] : '';
-          } catch (e) {
-            articulo.image =
-              articulo.images.hasOwnProperty(150) && articulo.images[150].length > 0 ? articulo.images[150][0] : '';
-          }
-          if (!articulo.image) {
-            articulo.image = '/assets/images/products/no-image-listado-2.jpg';
-          }
-          return articulo;
-        });
-        return response;
-      })
-    );
+    return this.http
+      .get<ArticuloResponse>(
+        `${environment.apiImplementosLogistica}articulos?search=${search}`
+      )
+      .pipe(
+        map((response) => {
+          response.data = response.data.map((articulo: any) => {
+            try {
+              articulo.image =
+                articulo.images[0][150].length > 0
+                  ? articulo.images[0][150][0]
+                  : '';
+            } catch (e) {
+              articulo.image =
+                articulo.images.hasOwnProperty(150) &&
+                articulo.images[150].length > 0
+                  ? articulo.images[150][0]
+                  : '';
+            }
+            if (!articulo.image) {
+              articulo.image = '/assets/images/products/no-image-listado-2.jpg';
+            }
+            return articulo;
+          });
+          return response;
+        })
+      );
   }
 }

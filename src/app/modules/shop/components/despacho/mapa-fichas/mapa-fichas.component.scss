@@ -1,0 +1,19 @@
+#map {
+    height: 350px;
+    width: 100%;
+}
+
+.list-group {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.list-group-item.active {
+    z-index: 2;
+    color: #fff;
+    background-color: #0063b9;
+    border-color: #0063b9;
+}

@@ -1,0 +1,126 @@
+<div class="search d-flex align-items-center w-100">
+
+    <div class="search__form col p-0 mr-3">
+        <div class="indicator indicator--trigger--click position-relative dropdown-search col p-0"
+            appDropdown="indicator--opened" #menuSearch="appDropdown">
+            <input [(ngModel)]="textToSearch" (click)="menuSearch.open()" (keydown)="reset()"
+                (keyup.enter)="buscar(); menuSearch.toggle(); blurInput()" [formControl]="searchControl"
+                class="search__input" name="search" placeholder="¿Qué buscas?" aria-label="Site search" type="text"
+                autocomplete="off" (focus)="focusInput()"
+                [ngStyle]="{ 'z-index': isFocusedInput ? '1001' : 'unset' }" />
+
+            <button name="clear" type="button" class="search__button clear__button"
+                (click)="textToSearch = '';blurInput()" [ngStyle]="{ 'z-index': isFocusedInput ? '1001' : 'unset' }">
+                <i class="fa-regular fa-xmark fa-lg"></i>
+            </button>
+            <button name="buscar" class="search__button" type="button"
+                (click)="buscar(); menuSearch.toggle(); blurInput()"
+                [ngStyle]="{ 'z-index': isFocusedInput ? '1001' : 'unset' }">
+                <img src="../../../../../assets/svg/10.svg" style="width: 20px" alt="search" />
+            </button>
+
+            <div class="indicator__dropdown">
+                <div *ngIf="productosEncontrados.length == 0 && textToSearch.length > 0 && buscando == false"
+                    class="products-list-search">
+                    <div class="item item-no-found">
+                        <span> No se encontraron coincidencias para </span>
+                        <span class="font-weight-bold">
+                            <font color="blue">{{ textToSearch | capitalizeFirst }}</font>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="productosEncontrados?.length > 0 && !mostrarCargando">
+                    <div class="col-12 mb-2">
+                        <div class="row css-categorias">
+                            <div class="col-12" *ngIf="sugerencias?.length > 1"
+                                style="border-bottom: 1px solid #094cac">
+                                <div class="products-list-search" *ngIf="sugerencias.length > 0">
+                                    <div class="item">
+                                        <a (click)="texto = sugerencias[0].sugerencia" class="px-0"
+                                            [routerLink]="['/', 'inicio', 'productos', sugerencias[0].sugerencia]">
+                                            <b style="font-size: 1.1rem; color: #094cac;">Quizás esta buscando {{
+                        sugerencias[0].sugerencia }}</b>...
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="products-list-search" *ngFor="let item of sugerencias | slice : 1 : 4">
+                                    <div class="item">
+                                        <a (click)="texto = item.sugerencia"
+                                            [routerLink]="['/', 'inicio', 'productos', item.sugerencia]">
+                                            <span
+                                                [innerHTML]="item.html.replace('<em>', '<b>').replace('</em>', '</b>')"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="col-12 mt-2" style="border-bottom: 1px solid #094cac">
+                <div class="categories-list-search" *ngIf="productosEncontrados?.length > 0">
+                  <div class="font-weight-bold text-uppercase"
+                    style="padding: 0.5rem 0rem; font-size: 1.1rem; color: #094cac">
+                    Categorias
+                  </div>
+                  <div class="item" *ngFor="let item of categorias | slice : 0 : 3">
+                    <a [routerLink]="item.url" (click)="modalRef.hide()">
+                      <span>{{ item.name | capitalizeFirst }}</span>
+                    </a>
+                  </div>
+                </div>
+              </div> -->
+                            <div class="col-12 mt-2" style="border-bottom: 1px solid #094cac">
+                                <div class="font-weight-bold"
+                                    style="padding: 0.5rem 0rem; font-size: 1.1rem; color: #094cac">
+                                    Marcas
+                                </div>
+                                <div class="products-list-search" *ngFor="let item of marcas | slice : 0 : 3">
+                                    <div class="item text-truncate">
+                                        <a [routerLink]="'/inicio/productos/' + textToSearch"
+                                            [queryParams]="{ filter_MARCA: item.marca }" (click)="modalRef.hide()">
+                                            <div class="row">
+                                                <div class="col-8">
+                                                    {{ item.marca | titlecase }}
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row list-products">
+                            <div class="col-12">
+                                <div class="font-weight-bold"
+                                    style="padding: 0.5rem 0rem; font-size: 1.1rem; color: #094cac">
+                                    Resultados de productos
+                                </div>
+                                <div class="text-truncate" *ngFor="let item of productosEncontrados | slice : 0 : 3">
+                                    <a [routerLink]="item.url" (click)="modalRef.hide()">
+                                        <span>
+                                            <img [src]="root.getUrlImagenMiniatura150(item)" alt="" width="70px"
+                                                class="pr-3" style="color: #000" />
+                                            {{ item.nombre | titlecase }}
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="products-list-search" *ngIf="productosEncontrados?.length > 0">
+                            <div class="item">
+                                <a (click)="modalRef.hide()" [routerLink]="['/', 'inicio', 'productos', textToSearch]">
+                                    <i class="fas fa-search fa-fw" style="color: #0063b9; margin-right: 5px"></i>
+                                    <span class="font-weight-bold">
+                                        <font color="#0063b9">Ver todos los resultados</font>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="overlay" *ngIf="isFocusedInput" (click)="blurInput()"></div>
+
+</div>

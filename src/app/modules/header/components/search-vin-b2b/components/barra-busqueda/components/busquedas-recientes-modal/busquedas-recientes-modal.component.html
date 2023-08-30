@@ -1,0 +1,40 @@
+<div class="modal-header">
+    <h5 class="modal-title pull-left">
+        <i class="fas fa-search mr-2"></i>
+        <span style="font-size: 16px;">Busquedas Recientes</span>
+    </h5>
+    <button name="ModalRef" type="button" class="close pull-right" aria-label="Close" (click)="ModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body px-3">
+    <div style="max-height: 450px; overflow-y: auto;">
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="hover datatable table-shadow"
+            style="width:100%">
+            <thead class="thead-dark" *ngIf="busquedasRecientes?.length > 0">
+                <tr>
+                    <th>VIN</th>
+                    <th>Tipo</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Año</th>
+                    <th>Fecha Busqueda</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of busquedasRecientes">
+                    <td nowrap>{{ item.vehiculo.chasis }}</td>
+                    <td nowrap>{{ item.vehiculo.tipo }}</td>
+                    <td nowrap>{{ item.vehiculo.marca }}</td>
+                    <td nowrap>{{ item.vehiculo.modelo }}</td>
+                    <td nowrap>{{ item.vehiculo.anio }}</td>
+                    <td>{{ item.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button name="Cerrar" class="btn btn-secondary" (click)="ModalRef.hide()">Cerrar</button>
+</div>

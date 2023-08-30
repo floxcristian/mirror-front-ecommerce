@@ -1,0 +1,14 @@
+.tabla {
+    @media (max-width: 576px) {
+        width: 100%;
+    }
+
+    @media (min-width: 576px) {
+        width: 75%;
+    }
+}
+
+.bg-primary {
+    background-color: #094cac!important;
+    color: white!important;
+}

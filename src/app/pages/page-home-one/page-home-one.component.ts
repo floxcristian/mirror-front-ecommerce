@@ -1,21 +1,28 @@
-import { Component, ɵConsole, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { posts } from '../../../data/blog-posts';
+import {
+  Component,
+  ɵConsole,
+  OnInit,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
+/*import { posts } from '../../../data/blog-posts';
 import { brands } from '../../../data/shop-brands';
 import { products } from '../../../data/shop-products';
 import { categories } from '../../../data/shop-block-categories';
 import { Category } from '../../shared/interfaces/category';
-import { CmsService } from '../../shared/services/cms.service';
+import { CmsService } from '../../shared/services/cms.service';*/
 import { isPlatformBrowser } from '@angular/common';
 import { RootService } from '../../shared/services/root.service';
-import { brandsB2c } from '../../../data/shop-brands-b2c';
+//import { brandsB2c } from '../../../data/shop-brands-b2c';
 
 @Component({
-    selector: 'app-home',
-    templateUrl: './page-home-one.component.html',
-    styleUrls: ['./page-home-one.component.scss']
+  selector: 'app-home',
+  templateUrl: './page-home-one.component.html',
+  styleUrls: ['./page-home-one.component.scss'],
 })
 export class PageHomeOneComponent implements OnInit {
-    products = products;
+  ngOnInit(): void {}
+  /*products = products;
     categories: Category[] = categories;
     banners: any = [];
 
@@ -92,5 +99,5 @@ export class PageHomeOneComponent implements OnInit {
         this.banner = true;
         this.marcas = true;
         // }, tiempo);
-    }
+    }*/
 }

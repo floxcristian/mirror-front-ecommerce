@@ -1,0 +1,184 @@
+.fa-user-circle {
+    font-size: 2.25rem;
+}
+
+.search__button {
+    fill: #fff;
+}
+
+.modal-header .search__form {
+    box-shadow: none;
+}
+
+.modal-header .search__button {
+    background-color: #fff;
+}
+
+.btn-shadow {
+    box-shadow: 10px 18px 18px 0 rgba(0, 0, 0, 0.16);
+}
+
+.dropdown-vehicule .indicator__dropdown {
+    top: 6.25rem;
+    right: -2.5rem;
+}
+
+.ng-select.ng-select-opened.ng-select-bottom>.ng-select-container {
+    border: none;
+}
+
+.dropdown-search .indicator__dropdown {
+    background: #f8f9fa;
+    top: 49px;
+    left: 0;
+    color: #000;
+    padding: 0;
+    width: 100%;
+    box-shadow: 0 24px 44px 0 rgba(0, 0, 0, 0.16);
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    max-height: 25.875rem;
+    overflow-y: auto;
+}
+
+.dropdown-search .indicator__dropdown .item a {
+    color: #000;
+    display: block;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.products-list-search .item:hover,
+.categories-list-search .item:hover {
+    background-color: #e7e7e7;
+}
+
+.dropdown-search .indicator__dropdown h2 {
+    font-size: 1rem;
+    padding: 0.75rem;
+    border-top: 1px solid #ccc;
+    padding-bottom: 0;
+    color: #999;
+}
+
+.item-no-found {
+    padding: 1rem;
+    text-align: left;
+    width: 100%;
+    display: block;
+}
+
+.col-header-2 .btn-lg {
+    padding: 0.375rem 1.25rem;
+}
+
+.sku,
+.desc {
+    font-size: 0.7rem;
+    margin-right: 10px;
+    color: #6c757d;
+}
+
+.icon-title {
+    font-size: 0.8rem;
+}
+
+span.desc {
+    font-size: 0.8rem !important;
+}
+
+.sku {
+    width: 75px;
+    display: inline-block;
+}
+
+.alert-session {
+    color: #000 !important;
+}
+
+.title-sesion {
+    font-size: 1.2rem;
+}
+
+.subtitle {
+    font-size: 0.95rem;
+}
+
+.indicator--trigger--click.indicator--opened .alert-session {
+    z-index: 1;
+    transition-delay: 0s, 0s, 0s;
+    opacity: 1;
+    visibility: visible;
+}
+
+.alert-session {
+    background: #FFFFFF;
+    border: 1px solid #DBDBDB;
+    transition: opacity 0.2s, visibility 0s 0.2s, -webkit-transform 0.2s;
+    transition: transform 0.2s, opacity 0.2s, visibility 0s 0.2s;
+    transition: transform 0.2s, opacity 0.2s, visibility 0s 0.2s, -webkit-transform 0.2s;
+}
+
+.alert-session:after,
+.alert-session:before {
+    bottom: 100%;
+    right: 0;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    border-color: rgba(255, 255, 255, 0);
+}
+
+.alert-session:before {
+    border-bottom-color: rgba(219, 219, 219, 1) !important;
+    margin-left: -31px;
+    border-width: 31px;
+}
+
+.alert-session:after {
+    border-bottom-color: rgba(255, 255, 255, 1) !important;
+    margin-left: -31px;
+    border-width: 31px;
+}
+
+.tiendas {
+    margin-top: 0;
+    margin-right: 20px;
+    font-weight: 500;
+}
+
+.icongps {
+    color: rgb(252, 30, 14);
+
+    // text-shadow: -5px 3px 8px rgb(49, 48, 48);
+}
+
+.indicator__dropdown-tienda .alert-session:after,
+.indicator__dropdown-tienda .alert-session:before {
+    right: 46%;
+    border-width: 21px;
+}
+
+.indicator__dropdown-chasis .alert-session:after,
+.indicator__dropdown-chasis .alert-session:before {
+    right: 49%;
+    border-width: 21px;
+}
+
+
+.indicator__dropdown-tienda, .indicator__dropdown-chasis {
+    top: 90%;
+    right: -9.5625rem;
+    position: absolute;
+    width: 23.75rem;
+}
+
+.fas.fa-truck-moving{
+    font-size: 2.2rem;
+}
+
+.indicator {
+    text-align: center;
+}

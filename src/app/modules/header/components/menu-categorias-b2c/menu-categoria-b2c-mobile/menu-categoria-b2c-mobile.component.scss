@@ -1,0 +1,52 @@
+.mobilemenu__content {
+    overflow-x: hidden;
+    overflow: hidden;
+}
+
+.mobilemenu__body {
+    width: 25vw !important;
+    background-color: #094cac;
+    color: #fff;
+}
+
+@media (max-width: 900px) {
+    .mobilemenu__body {
+        width: 50% !important;
+        background-color: #094cac;
+        color: #fff;
+    }
+}
+
+@media (max-width: 600px) {
+    .mobilemenu__body {
+        width: 100% !important;
+        background-color: #094cac;
+        color: #fff;
+    }
+}
+
+ul {
+    padding: 0px 15px;
+}
+
+li {
+    list-style: none;
+
+    >div {
+        cursor: pointer;
+    }
+}
+
+li {
+    div:hover {
+        font-weight: bold;
+    }
+
+    div:last-child:hover {
+        transform: scale(1.3);
+    }
+}
+
+.icon-title {
+    font-size: 12px;
+}

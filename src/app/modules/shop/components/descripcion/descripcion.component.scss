@@ -1,0 +1,15 @@
+.show {
+    opacity: 1;
+    transition: opacity 0.5s linear;
+    height: auto;
+}
+
+.hide {
+    opacity: 0;
+    height: 0px;
+}
+
+.card-body {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}

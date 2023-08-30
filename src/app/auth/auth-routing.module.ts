@@ -13,7 +13,7 @@ import { PageHomeOneComponent } from '../pages/page-home-one/page-home-one.compo
 // import { PageMesDelCamioneroComponent } from '../pages/page-mes-del-camionero/page-mes-del-camionero.component';
 // import { PageMesAniversarioComponent } from '../pages/page-mes-aniversario/page-mes-aniversario.component';
 // import { PageCyberComponent } from '../pages/page-cyber/page-cyber.component';
-// import { VerificarpagoComponent } from './pages/verificarpago/verificarpago.component';
+import { VerificarpagoComponent } from './pages/verificarpago/verificarpago.component';
 import { PageCiberdayFormComponent } from './pages/page-ciberday-form/page-ciberday-form.component';
 import { AuthGuard } from '../core/guards/auth.guard';
 // import { PageDevolucionesComponent } from '../pages/page-devoluciones/page-devoluciones.component';

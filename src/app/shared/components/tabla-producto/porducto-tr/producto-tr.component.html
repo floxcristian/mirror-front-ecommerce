@@ -1,0 +1,343 @@
+<div class="table-responsive">
+  <table border="0" class="mb-2">
+    <tbody>
+      <tr class="dia-container-habilitado">
+        <td style="width: 10%">
+          <div class="text-center">
+            <a
+              [routerLink]="
+                root.product(
+                  productData.sku,
+                  productData.nombre,
+                  paramsCategory
+                )
+              "
+              ><img
+                class="imagen"
+                [src]="root.getUrlImagenMiniatura150(productData)"
+                width="150"
+            /></a>
+          </div>
+        </td>
+        <td style="width: 35%">
+          <div class="row" style="font-size: 14px">
+            <div class="col-12 col-lg-12">
+              <a
+                [routerLink]="
+                  root.product(
+                    productData.sku,
+                    productData.nombre,
+                    paramsCategory
+                  )
+                "
+              >
+                <strong>
+                  <font style="color: black">
+                    {{ productData.nombre }}
+                  </font>
+                </strong>
+              </a>
+            </div>
+            <div class="col-12 col-lg-12" style="font-size: 10px">
+              {{ productData.sku }}
+            </div>
+
+            <div class="col-12 col-lg-12">
+              <ng-container *ngIf="exists">
+                <a
+                  class="marcaP"
+                  [routerLink]="
+                    root.product(
+                      productData.sku,
+                      productData.nombre,
+                      paramsCategory
+                    )
+                  "
+                  style="margin-right: 2px"
+                  ><img
+                    class="imagen_marca"
+                    style="margin-top: 5px !important"
+                    src="https://images.implementos.cl/marcas/small/{{
+                      productData.marca
+                    }}.png"
+                    alt="{{ productData.marca }}"
+                    (error)="ErrorImage($event)"
+                /></a>
+              </ng-container>
+              <ng-container *ngIf="!exists">
+                <a
+                  [routerLink]="
+                    root.product(
+                      productData.sku,
+                      productData.nombre,
+                      paramsCategory
+                    )
+                  "
+                  style="margin-right: 10px"
+                  ><strong>{{
+                    productData.marca
+                      | replace : "^SIN MARCA$" : "IMPLEMENTOS"
+                      | replace : "^0$" : "IMPLEMENTOS"
+                  }}</strong></a
+                >
+              </ng-container>
+            </div>
+          </div>
+        </td>
+        <td style="width: 20%">
+          <div
+            class="row"
+            style="margin-top: 10px; text-align: left !important"
+          >
+            <div class="col-12 col-lg-12">
+              <ng-container
+                *ngIf="
+                  productData.fechaEntrega !== undefined &&
+                  productData.fechaEntrega != null
+                "
+              >
+                <ng-container *ngIf="convertir">
+                  <ng-container *ngIf="!tomorrow">
+                    <i class="fas fa-shipping-fast mr-2"></i>
+                    <i style="color: black; font-weight: bold"
+                      >Llega el {{ fecha | titlecase }}</i
+                    >
+                  </ng-container>
+
+                  <ng-container *ngIf="tomorrow">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-shipping-fast mr-2"></i>
+                      <div
+                        style="
+                          margin-top: 2px;
+                          padding: 0px 5px;
+                          background-color: #00800033;
+                          border-radius: 4px;
+                        "
+                      >
+                        <i style="color: green; font-weight: bold"
+                          >Llega {{ fecha | titlecase }}</i
+                        >
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="!convertir">
+                  <i class="fas fa-shipping-fast mr-2"></i>
+                  <i style="color: black; font-weight: bold">{{
+                    productData.fechaEntrega | date : "dd/MM/yyyy" | uppercase
+                  }}</i>
+                </ng-container>
+              </ng-container>
+              <ng-container
+                *ngIf="
+                  productData.fechaEntrega !== undefined &&
+                  productData.fechaEntrega == null
+                "
+              >
+                <i class="fas fa-shipping-fast mr-2" style="color: grey"></i>
+                <i style="color: grey">No disponible</i>
+              </ng-container>
+            </div>
+            <div class="col-12 col-lg-12" style="margin-top: 10px">
+              <ng-container *ngIf="productData.retiro">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-store mr-2"></i>
+                  <div
+                    style="
+                      margin-top: 2px;
+                      padding: 0px 5px;
+                      background-color: #00800033;
+                      border-radius: 4px;
+                    "
+                  >
+                    <i style="color: green; font-weight: bold">Retira hoy</i>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container
+                *ngIf="
+                  productData.retiro !== undefined &&
+                  productData.retiro == false
+                "
+              >
+                <div style="margin-top: 2px">
+                  <i class="fas fa-store mr-2" style="color: grey"></i>
+                  <i style="color: grey">No disponible</i>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </td>
+        <td style="width: 18%">
+          <div class="row">
+            <div
+              class="col-lg-12 text-right"
+              style="margin-top: 10px; font-size: 18px"
+            >
+              <ng-container *ngIf="!productData.compareAtPrice">
+                <div
+                  *ngIf="
+                    productData?.precio?.rut == '0' &&
+                    productData?.precioComun === productData?.precio?.precio
+                  "
+                  class="product-card__new-price col-12"
+                  style="
+                    padding-left: 0 !important;
+                    padding-right: 5px !important;
+                  "
+                >
+                  {{ productData.precio.precio | currencyFormat }}
+                  <em>
+                    {{
+                      !isVacio(usuario.iva)
+                        ? usuario.iva
+                          ? "c/iva"
+                          : "s/iva"
+                        : "c/iva"
+                    }}
+                  </em>
+                </div>
+
+                <div
+                  *ngIf="
+                    productData?.precio?.rut == '0' &&
+                    productData?.precioComun != productData?.precio?.precio
+                  "
+                  class="product-card__new-price text-danger col-12"
+                  style="
+                    padding-left: 0 !important;
+                    padding-right: 5px !important;
+                  "
+                >
+                  {{ productData?.precio?.precio | currencyFormat }}
+                  <em>
+                    {{
+                      !isVacio(usuario.iva)
+                        ? usuario.iva
+                          ? "c/iva"
+                          : "s/iva"
+                        : "c/iva"
+                    }}
+                  </em>
+                </div>
+                <div
+                  *ngIf="productData?.precio?.rut != '0'"
+                  tooltip="Precio con descuento cliente"
+                  class="product-card__new-price text-danger col-12"
+                  style="
+                    padding-left: 0 !important;
+                    padding-right: 5px !important;
+                  "
+                >
+                  {{ productData?.precio?.precio | currencyFormat }}
+                  <em>
+                    {{
+                      !isVacio(usuario.iva)
+                        ? usuario.iva
+                          ? "c/iva"
+                          : "s/iva"
+                        : "c/iva"
+                    }}
+                  </em>
+                </div>
+                <div
+                  *ngIf="
+                    productData?.precioComun != productData?.precio?.precio
+                  "
+                  tooltip="Precio normal"
+                  class="product-card__old-price col-12"
+                  style="
+                    text-align: right;
+                    padding-left: 0 !important;
+                    padding-right: 5px !important;
+                  "
+                >
+                  {{ productData.precioComun | currencyFormat }}
+                  <em>
+                    {{
+                      !isVacio(usuario.iva)
+                        ? usuario.iva
+                          ? "c/iva"
+                          : "s/iva"
+                        : "c/iva"
+                    }}
+                  </em>
+                </div>
+                <ng-container *ngIf="productData.precio_escala">
+                  <div class="col-12">
+                    <img
+                      style="width: 80px !important"
+                      src="assets/images/llevaMasPagaMenos/100x25_rectangular.jpg"
+                    />
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </td>
+        <td class="cantidad_2" style="width: 150px">
+          <div class="row" style="margin-top: 10px">
+            <div class="col-lg-12 text-center">
+              <app-input-number-product
+                class="product__quantity"
+                [min]="1"
+                [formControl]="quantity"
+                (quantity)="updateCart($event)"
+              >
+              </app-input-number-product>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="row" style="margin-top: 10px">
+            <div class="cantidad_1">
+              <div class="col-lg-12 text-center">
+                <app-input-number-product
+                  class="product__quantity"
+                  [min]="1"
+                  [formControl]="quantity"
+                  (quantity)="updateCart($event)"
+                >
+                </app-input-number-product>
+              </div>
+            </div>
+
+            <div class="col-lg-12" style="margin-top: 5px">
+              <button
+                [disabled]="!productData.precioComun"
+                style="width: 150px"
+                class="btn btn-secondary"
+                type="button"
+                appClick
+                (click)="addToCart()"
+                [ngClass]="{ 'btn-loading': addingToCart }"
+              >
+                <i class="fas fa-cart-plus" style="margin-left: 5px"></i>
+              </button>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr class="p-0 bg-white border-0">
+        <td
+          colspan="6"
+          [class.p-0]="atributos.length > 0"
+          [class.pt-2]="atributos.length == 0"
+        >
+          <div class="col-12 col-lg-12">
+            <span
+              *ngFor="let atributo of atributos; let i = index"
+              style="font-size: 0.75rem"
+              ><span *ngIf="i > 0">{{ " | " }}</span
+              >{{ atributo.nombre }}:
+              <strong>{{ atributo.valor }}</strong></span
+            >
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<hr />

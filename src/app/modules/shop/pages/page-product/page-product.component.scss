@@ -1,0 +1,152 @@
+.container-feature-special {
+  border-top: 1px solid #f2f2f2;
+}
+
+@media (max-width: 479px) {
+  .products-list[data-layout='grid-5-full'] .products-list__item {
+    width: 50% !important;
+    margin: 0 0 !important;
+    height: 310px !important;
+  }
+}
+
+@media (min-width: 1000px) {
+  .nav {
+    margin-left: 130px;
+  }
+}
+
+.nav-link {
+  color: #000;
+  font-weight: bolder;
+}
+
+.nav-link + div {
+  border-bottom: 5px solid #dbdbdb;
+  border-radius: 50px;
+}
+
+.nav-link.active + div {
+  border-color: #094cac;
+}
+
+.linea {
+  border-bottom: 2px solid #094cac;
+  border-radius: 50px;
+  width: 100px;
+}
+
+ul.product-card__features-list {
+  display: none !important;
+}
+
+::ng-deep.carouselFicha .owl-prev {
+  @media (max-width: 576px) {
+    left: 2px !important;
+    font-size: 2rem !important;
+    top: 45% !important;
+    display: block !important;
+    i {
+      color: #094cac;
+    }
+  }
+}
+
+::ng-deep.carouselFicha .owl-next {
+  @media (max-width: 576px) {
+    right: 2px !important;
+    font-size: 2rem !important;
+    top: 45% !important;
+    display: block !important;
+    i {
+      color: #094cac;
+    }
+  }
+}
+
+::ng-deep.carouselFicha .owl-prev {
+  @media (min-width: 576px) {
+    left: -35px !important;
+    font-size: 2rem !important;
+    top: 45% !important;
+    display: block !important;
+    i {
+      color: #094cac;
+    }
+  }
+}
+
+::ng-deep.carouselFicha .owl-next {
+  @media (min-width: 576px) {
+    right: -35px !important;
+    font-size: 2rem !important;
+    top: 45% !important;
+    display: block !important;
+    i {
+      color: #094cac;
+    }
+  }
+}
+
+::ng-deep.carouselFicha .owl-prev:hover {
+  i {
+    color: #094cac;
+  }
+}
+
+::ng-deep.carouselFicha .owl-next:hover {
+  i {
+    color: #094cac;
+  }
+}
+
+::ng-deep.carouselFicha .owl-carousel .owl-item {
+  padding: 10px;
+  display: flex;
+
+  app-product-card-b2b {
+    display: flex;
+    width: 115%;
+
+    .product-card {
+      flex: 1 1 auto !important;
+    }
+  }
+
+  app-product-card-b2c-ficha {
+    display: flex;
+    width: 115%;
+
+    .product-card {
+      flex: 1 1 auto !important;
+    }
+  }
+}
+
+::ng-deep.carouselFicha .owl-carousel .owl-stage {
+  display: flex !important;
+}
+
+::ng-deep.carouselFicha .owl-dots {
+  @media (min-width: 992px) {
+    background: none;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+::ng-deep.carouselFicha .owl-dot {
+  @media (min-width: 992px) {
+    width: 50px;
+    height: 5px;
+    border-radius: 5px;
+    background: #e0e0e0;
+    margin-left: 5px;
+  }
+}
+
+::ng-deep.carouselFicha .owl-dot.active {
+  @media (min-width: 992px) {
+    background: #094cac;
+  }
+}

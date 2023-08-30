@@ -1,0 +1,46 @@
+<div
+  class="block-header"
+  [ngStyle]="{ 'margin-top': header === 'Nuestras Marcas' ? '-90px' : '0px' }"
+>
+  <h3 *ngIf="header" class="block-header__title text-h3">
+    {{ header }}
+  </h3>
+
+  <h5 *ngIf="subTitle != 'false'" class="block-header__subtitle text-h5">
+    {{ subTitle }}
+  </h5>
+
+  <ul *ngIf="groups?.length" class="block-header__groups-list">
+    <li *ngFor="let group of groups">
+      <button
+        name="setGroup"
+        type="button"
+        class="block-header__group"
+        [ngClass]="{ 'block-header__group--active': group.current }"
+        (click)="setGroup(group)"
+      >
+        {{ group.name }}
+      </button>
+    </li>
+  </ul>
+
+  <br *ngIf="groups?.length" />
+  <div *ngIf="arrows" class="block-header__arrows-list">
+    <button
+      name="emit"
+      class="block-header__arrow block-header__arrow--left"
+      type="button"
+      (click)="prev.emit()"
+    >
+      <app-icon name="arrow-rounded-left-7x11" size="7x11"></app-icon>
+    </button>
+    <button
+      name="next"
+      class="block-header__arrow block-header__arrow--right"
+      type="button"
+      (click)="next.emit()"
+    >
+      <app-icon name="arrow-rounded-right-7x11" size="7x11"></app-icon>
+    </button>
+  </div>
+</div>

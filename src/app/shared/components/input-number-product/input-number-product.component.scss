@@ -1,0 +1,16 @@
+
+
+
+.input-number__sub:before, .input-number__sub:after, .input-number__add:before, .input-number__add:after{
+    content: none;
+}
+
+input[type=number]::-webkit-inner-spin-button {
+    opacity: 1
+}
+
+input.form-control {
+    border-radius: 0px !important;
+    border: solid 1px #927e7e;
+    width:120px;
+}

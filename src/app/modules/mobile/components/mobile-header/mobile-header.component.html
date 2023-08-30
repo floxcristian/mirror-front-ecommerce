@@ -1,0 +1,398 @@
+<app-topbar-mobile></app-topbar-mobile>
+<div class="mobile-header sticky" *ngIf="Hidebar()">
+  <div
+    class="mobile-header__panel"
+    style="padding-top: 8px; padding-bottom: 8px"
+  >
+    <div class="container">
+      <div class="mobile-header__body">
+        <button
+          name="menu"
+          class="mobile-header__menu-button"
+          style="margin-top: 4.5px"
+          (click)="menuCategorias.open(null, null)"
+        >
+          <i class="fa-regular fa-bars hamburguesa" style="font-size: 17px"></i>
+        </button>
+        <a class="mobile-header__logo mr-auto" [routerLink]="['/', 'inicio']">
+          <img
+            height="35"
+            [src]="logoSrc"
+            alt="logo-implementos"
+            class="lazyload"
+          />
+        </a>
+
+        <div class="mobile-header__indicators p-2">
+          <div class="indicator indicator--mobile" style="margin-left: -8%">
+            <a
+              [routerLink]="['/', 'carro-compra']"
+              class="indicator__button"
+              style="flex-direction: column"
+            >
+              <span class="indicator__area" style="height: 32.5px !important">
+                <img
+                  src="../../../../../assets/svg/07.svg"
+                  style="width: 26px; height: 26px; margin-top: 7px"
+                  alt="carro"
+                />
+
+                <span class="indicator__value" style="margin-top: 8px">{{
+                  cart.quantity$ | async
+                }}</span>
+              </span>
+              <span class="icon-title" style="font-size: 0.5em !important">
+                Carro
+              </span>
+            </a>
+          </div>
+
+          <!-- Ingreso cuenta usuario -->
+          <app-mobile-header-account></app-mobile-header-account>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mobile-header__panel" style="padding-bottom: 15px">
+    <div class="container">
+      <div class="mobile-header__body">
+        <!-- BARRA DE BUSCADOR -->
+        <app-mobile-search
+          style="margin-top: 8px; width: 100%"
+        ></app-mobile-search>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bottomBar p-0 m-0 w-100"></div>
+
+<ng-template #modalSearch>
+  <div class="modal-header" style="height: 60px">
+    <div class="search w-100">
+      <div class="search__form" style="height: 38px !important">
+        <button
+          class="mr-2 p-0"
+          type="button"
+          (click)="modalRef.hide()"
+          style="background-color: #094cac; border: 0"
+        >
+          <i class="fa-solid fa-chevron-left fa-2x" style="color: #fff"></i>
+        </button>
+        <input
+          [(ngModel)]="texto"
+          id="searchMobileModal"
+          [formControl]="searchControl"
+          (keyup.enter)="buscar(); modalRef.hide()"
+          class="search__input"
+          name="search"
+          placeholder="¿Qué buscas?"
+          aria-label="Site search"
+          type="text"
+          autocomplete="off"
+        />
+
+        <button
+          name="clear"
+          type="button"
+          class="search__button clear__button"
+          (click)="texto = ''; textToSearch = ''"
+        >
+          <i class="fa-regular fa-xmark fa-lg"></i>
+        </button>
+        <button
+          name="buscar"
+          class="search__button"
+          type="button"
+          (click)="buscar(); modalRef.hide()"
+        >
+          <img
+            src="../../../../../assets/svg/10.svg"
+            style="width: 20px"
+            alt="search"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal-body modal-body-search mt-0"
+    *ngIf="texto.length > 0"
+    style="min-height: 40px"
+  >
+    <div class="row pb-1 pt-2" *ngIf="mostrarCargando">
+      <div
+        class="col-12 d-flex flex-column justify-content-center align-items-center"
+      >
+        <i class="fas fa-spinner fa-2x fa-spin mb-1"></i> Buscando
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div
+          *ngIf="
+            productosEncontrados.length == 0 &&
+            texto.length > 0 &&
+            buscando == false &&
+            !mostrarCargando
+          "
+          class="products-list-search"
+        >
+          <div class="item item-no-found p-0">
+            <span> No se encontraron coicidencias para </span>
+            <span class="font-weight-bold">{{ texto | capitalizeFirst }}</span>
+          </div>
+        </div>
+
+        <div
+          class="row"
+          *ngIf="productosEncontrados.length > 0 && !mostrarCargando"
+        >
+          <div
+            class="col-12 mb-2"
+            style="max-height: 65vh; overflow-y: auto; overflow-x: hidden"
+          >
+            <div class="row css-categorias">
+              <div
+                class="col-12"
+                *ngIf="sugerencias.length > 1"
+                style="border-bottom: 1px solid #094cac"
+              >
+                <div
+                  class="products-list-search"
+                  *ngIf="sugerencias.length > 0"
+                >
+                  <div class="item">
+                    <a
+                      (click)="texto = sugerencias[0].sugerencia"
+                      [routerLink]="[
+                        '/',
+                        'inicio',
+                        'productos',
+                        sugerencias[0].sugerencia
+                      ]"
+                    >
+                      <b class="text-uppercase" style="font-size: 1.1rem"
+                        >Quizás esta buscando {{ sugerencias[0].sugerencia }}</b
+                      >...
+                    </a>
+                  </div>
+                </div>
+                <div
+                  class="products-list-search"
+                  *ngFor="let item of sugerencias | slice : 1 : 4"
+                >
+                  <div class="item">
+                    <a
+                      (click)="texto = item.sugerencia"
+                      [routerLink]="[
+                        '/',
+                        'inicio',
+                        'productos',
+                        item.sugerencia
+                      ]"
+                    >
+                      <span
+                        [innerHTML]="
+                          item.html
+                            .replace('<em>', '<b>')
+                            .replace('</em>', '</b>')
+                        "
+                      ></span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 mt-2" style="border-bottom: 1px solid #094cac">
+                <div
+                  class="categories-list-search"
+                  *ngIf="productosEncontrados.length > 0"
+                >
+                  <div
+                    class="font-weight-bold text-uppercase"
+                    style="
+                      padding: 0.5rem 0rem;
+                      font-size: 1.1rem;
+                      color: #094cac;
+                    "
+                  >
+                    Categorias
+                  </div>
+                  <div
+                    class="item"
+                    *ngFor="let item of categorias | slice : 0 : 3"
+                  >
+                    <a [routerLink]="item.url" (click)="modalRef.hide()">
+                      <span>{{ item.name | capitalizeFirst }}</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 mt-2" style="border-bottom: 1px solid #094cac">
+                <div
+                  class="font-weight-bold text-uppercase"
+                  style="
+                    padding: 0.5rem 0rem;
+                    font-size: 1.1rem;
+                    color: #094cac;
+                  "
+                >
+                  Marcas
+                </div>
+                <div
+                  class="products-list-search"
+                  *ngFor="let item of marcas | slice : 0 : 3"
+                >
+                  <div class="item text-truncate">
+                    <a
+                      [routerLink]="'/inicio/productos/' + textToSearch"
+                      [queryParams]="{ filter_MARCA: item.marca }"
+                      (click)="modalRef.hide()"
+                    >
+                      <div class="row">
+                        <div class="col-8">
+                          {{ item.marca | titlecase }}
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row list-products">
+              <div class="col-12">
+                <div
+                  class="font-weight-bold"
+                  style="
+                    padding: 0.5rem 0rem;
+                    font-size: 1.1rem;
+                    color: #094cac;
+                  "
+                >
+                  Resultados de productos
+                </div>
+                <div
+                  class="text-truncate"
+                  *ngFor="let item of productosEncontrados | slice : 0 : 3"
+                >
+                  <a [routerLink]="item.url" (click)="modalRef.hide()">
+                    <span>
+                      <img
+                        [src]="root.getUrlImagenMiniatura150(item)"
+                        alt=""
+                        width="70px"
+                        class="pr-3"
+                        style="color: #000"
+                        [alt]="item.nombre | titlecase"
+                      />
+                      {{ item.nombre | titlecase }}
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div
+              class="products-list-search"
+              *ngIf="productosEncontrados.length > 0"
+            >
+              <div class="item">
+                <a
+                  (click)="modalRef.hide()"
+                  [routerLink]="['/', 'inicio', 'productos', texto]"
+                >
+                  <i
+                    class="fas fa-search fa-fw"
+                    style="color: #0063b9; margin-right: 5px"
+                  ></i>
+                  <span class="font-weight-bold">
+                    <font color="#0063b9">Ver todos los resultados</font>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #modalsearchVin>
+  <div class="modal-body modal-body-search">
+    <div class="text-center">
+      <p class="font-weight-bold">Buscar por VIN</p>
+    </div>
+    <div>
+      <div class="row d-flex">
+        <div class="col-12 mb-1">
+          <input
+            type="text"
+            [(ngModel)]="numeroVIN"
+            placeholder="Número VIN"
+            class="form-control mb-2"
+            name="searchVin"
+            (keyup.enter)="buscarEnModalVin(''); modalRefVin.hide()"
+          />
+        </div>
+        <div class="col-6">
+          <!-- <img src="assets/images/marcas/MARCOPOLO_Mesa de trabajo 1.png" alt="" width="100%" /> -->
+          <picture>
+            <source
+              srcset="assets/images/marcas/MARCOPOLO_Mesa de trabajo 1.webp"
+              type="image/webp"
+            />
+            <source
+              srcset="assets/images/marcas/MARCOPOLO_Mesa de trabajo 1.png"
+              type="image/png"
+            />
+            <img
+              src="assets/images/marcas/MARCOPOLO_Mesa de trabajo 1.png"
+              alt="marcopolo"
+              width="100%"
+            />
+          </picture>
+        </div>
+        <div class="col-6">
+          <!-- <img src="assets/images/marcas/RANDON_Mesa de trabajo 1.png" alt="" width="100%" /> -->
+          <picture>
+            <source
+              srcset="assets/images/marcas/RANDON_Mesa de trabajo 1.webp"
+              type="image/webp"
+            />
+            <source
+              srcset="assets/images/marcas/RANDON_Mesa de trabajo 1.png"
+              type="image/png"
+            />
+            <img
+              src="assets/images/marcas/RANDON_Mesa de trabajo 1.png"
+              alt="marcopolo"
+              width="100%"
+            />
+          </picture>
+        </div>
+        <div class="col-12" style="margin-bottom: 10px"></div>
+        <div class="col-6">
+          <button
+            class="btn btn-border-primary w-100 text-center"
+            (click)="modalRefVin.hide(); numeroVIN = ''"
+          >
+            Cancelar
+          </button>
+        </div>
+        <div class="col-6">
+          <button
+            class="btn btn-secondary w-100 text-center"
+            (click)="buscarEnModalVin(''); modalRefVin.hide()"
+          >
+            Buscar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<app-modal-stores
+  (template)="estableceModalTienda($event)"
+  [modalRef]="modalRefTienda"
+></app-modal-stores>

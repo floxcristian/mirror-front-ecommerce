@@ -1,0 +1,112 @@
+<!--<div class="col-12 newAddress mt-3">
+  <div>
+    <div class="row" *ngIf="invitado === false">
+      <div class="col-12 text-right">
+        <span class="closeIcon"
+          ><i class="fas fa-chevron-up" (click)="hideNewAddress()" style="font-size: 15px !important"></i
+        ></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-lg-12 mb-2">
+        <app-map
+          (clearAdress)="clearAddress()"
+          [tienda]="tienda"
+          [autocompletado]="autocompletado"
+          (setDireccion)="set_direccion($event)"
+          (geolocalizacion)="geolocalizacion($event)"
+        ></app-map>
+      </div>
+      <div class="col-12 col-lg-12">
+        <form (ngSubmit)="agregarDireccion()" id="form" [formGroup]="formDireccion">
+          <div class="form-row" style="color: #0063b9">
+            <div class="form-group col-md-8">
+              <label>Calle (*)</label>
+              <input type="text" class="form-control" formControlName="calle" (blur)="cargarDireccion()" />
+            </div>
+
+            <div class="form-group col-md-4">
+              <label for="inputPassword4">Número</label>
+              <input
+                [class.is-invalid]="formDireccion.controls['numero'].hasError('completar')"
+                type="number"
+                class="form-control"
+                formControlName="numero"
+                (blur)="cargarDireccion()"
+                maxLength="9"
+                min="1"
+                max="999999999"
+                appPhoneChar
+              />
+              <div class="invalid-feedback">Ingrese el número</div>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Departamento</label>
+              <input type="text" class="form-control" formControlName="depto" (blur)="cargarDireccion()" />
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Comuna (*)</label>
+              <ng-select
+                [clearable]="false"
+                [searchable]="true"
+                [items]="comunas"
+                bindLabel="value"
+                bindValue="id"
+                formControlName="comuna"
+                class="form-control-select form-control"
+                placeholder="Comuna*"
+                (blur)="cargarDireccion()"
+                (change)="obtenerLocalidades($event)"
+              >
+              </ng-select>
+            </div>
+
+            <div class="form-group col-md-6" hidden>
+              <label for="inputPassword4">Localización (*)</label>
+              <div *ngIf="!localidades">
+                <p>Seleccione una comuna para ver localidades</p>
+              </div>
+              <div *ngIf="localidades">
+                <ng-select
+                  [clearable]="false"
+                  [searchable]="true"
+                  [items]="localidades"
+                  bindLabel="localidad"
+                  bindValue="localidad"
+                  formControlName="localizacion"
+                  class="form-control-select form-control"
+                  placeholder="Comuna*"
+                  (change)="cargarDireccion()"
+                  (blur)="cargarDireccion()"
+                >
+                </ng-select>
+              </div>
+            </div>
+            <div class="form-group col-md-12">
+              <label for="validationTextarea">Referencia</label>
+              <textarea
+                class="form-control"
+                placeholder="Ingrese referencia para su direccion"
+                formControlName="referencia"
+              ></textarea>
+            </div>
+          </div>
+        </form>
+        <div class="text-right mb-2">
+          <button name="cerrar" class="btn btn-danger" *ngIf="invitado === false" (click)="hideNewAddress()">Cancelar</button>
+          <button
+            name="agregarDireccion"
+            class="btn btn-secondary ml-1"
+            (click)="emitirDireccion()"
+            [disabled]="!formDireccion.valid && !tienda"
+          >
+            Agregar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+-->

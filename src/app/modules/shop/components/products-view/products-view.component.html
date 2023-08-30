@@ -1,0 +1,192 @@
+<div
+  infiniteScroll
+  [infiniteScrollDistance]="2"
+  (scrolled)="onPageChange(currentPage)"
+>
+  <app-scroll-top [fast]="true"> </app-scroll-top>
+  <div class="products-view" (window:resize)="onResize($event)">
+    <div
+      class="col-12 col-lg-12 mt-3"
+      *ngIf="totalRegistros === 0 && !cargandoCatalogo"
+    >
+      <div class="alert alert-info text-center">
+        No se encontraron productos.
+      </div>
+    </div>
+    <ng-container *ngIf="innerWidth >= 1025">
+      <div class="row w-100">
+        <div
+          *ngIf="totalRegistros > 0"
+          class="col-12 order-3 order-lg-2 text-justify"
+          [class.ml-xl-2]="!isB2B && innerWidth >= 1550"
+          style="padding-left: 0px; font-size: 18px"
+        >
+          (<strong>{{ totalRegistros }}</strong
+          >) Resultados en: <span> {{ decodedUrl(textToSearch) }}</span>
+          <ng-container *ngIf="breadcrumbs.length > 0">
+            <strong> {{ breadcrumbs[0].label || "" | titlecase }} </strong>
+          </ng-container>
+          <ng-container *ngIf="url.includes('_MARCA')">
+            <strong> {{ url.split("=")[1].split("&")[0] | titlecase }}</strong>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+    <div class="d-flex mb-3 menu-opciones-producto" *ngIf="showProductOptions">
+      <div
+        class="d-flex flew-wrap w-100 align-items-center"
+        *ngIf="totalRegistros > 0"
+      >
+        <div
+          *ngIf="isB2B && !cargandoCatalogo"
+          class="col-4 col-lg-auto d-flex justify-content-start"
+          style="margin-right: 5px"
+        >
+          <div class="layout-switcher__list" *ngIf="totalRegistros > 0">
+            <button
+              name="setLayout"
+              title="Mosaico"
+              type="button"
+              class="layout-switcher__button"
+              [ngClass]="{
+                'layout-switcher__button--active': layout === 'grid'
+              }"
+              (click)="setLayout('grid')"
+            >
+              <app-icon name="layout-grid-16x16" size="16"></app-icon>
+            </button>
+
+            <button
+              name="setLayout2s"
+              title="Listado con atributos"
+              type="button"
+              class="layout-switcher__button d-none d-md-block d-lg-block"
+              [ngClass]="{
+                'layout-switcher__button--active': layout === 'list'
+              }"
+              (click)="setLayout('list')"
+            >
+              <app-icon name="layout-list-16x16" size="16"></app-icon>
+            </button>
+          </div>
+          <div class="d-block d-lg-none">
+            <button
+              title="Filtros"
+              type="button"
+              class="layout-switcher__button w-auto"
+              (click)="setVisibleFilter(true)"
+            >
+              <i class="fas fa-filter mr-1"></i>
+              Filtros
+            </button>
+          </div>
+        </div>
+        <div
+          *ngIf="!isB2B && !cargandoCatalogo"
+          class="col-4 col-lg-auto d-flex justify-content-start"
+          style="margin-right: 5px"
+        >
+          <div class="d-block d-lg-none">
+            <button
+              title="Filtros"
+              type="button"
+              class="layout-switcher__button w-auto"
+              (click)="setVisibleFilter(true)"
+            >
+              <i class="fas fa-filter mr-1"></i>
+              Filtros
+            </button>
+          </div>
+        </div>
+
+        <div
+          *ngIf="!cargandoCatalogo"
+          [class.col-11]="!isB2B && innerWidth > 768"
+          [class.col-8]="!isB2B && innerWidth <= 768"
+          [class.col-10]="isB2B"
+          class="mr-2 w-100 d-flex justify-content-end"
+        >
+          <label for="view-options-sort">
+            <i
+              class="fa-solid fa-bars-sort"
+              style="color: #005db9; margin-right: 5px"
+            ></i>
+          </label>
+          <div>
+            <select
+              class="form-control form-control-sm"
+              [(ngModel)]="tipo_orden"
+              (change)="ChangeOrdenar()"
+              name=""
+              id="view-options-sort"
+            >
+              <option [ngValue]="null">Seleccione Orden</option>
+              <option value="precio|desc">Mayor precio</option>
+              <option value="precio|asc">Menor Precio</option>
+              <option value="nombre|asc">Nombre</option>
+              <option value="marca|asc">Marca</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div
+      class="products-view__list products-list m-0"
+      [attr.data-layout]="layout != 'list' ? grid : layout"
+      [attr.data-with-features]="
+        layout == 'grid-with-features' ? 'true' : 'false'
+      "
+    >
+      <div class="products-list__body w-100">
+        <app-loading-element
+          *ngIf="cargandoCatalogo"
+          text="Cargando productos"
+        ></app-loading-element>
+        <ng-container *ngIf="class == 'grid'">
+          <div
+            *ngFor="let product of products"
+            class="products-list__item mb-1 mr-1"
+          >
+            <app-product-card-b2b
+              *ngIf="isB2B"
+              [paramsCategory]="paramsCategory"
+              [origen]="origen"
+              [product]="product"
+              [grid]="layout"
+            >
+            </app-product-card-b2b>
+            <app-product-card-b2c-cms
+              *ngIf="!isB2B"
+              [paramsCategory]="paramsCategory"
+              [origen]="origen"
+              [product]="product"
+              [grid]="layout"
+            >
+            </app-product-card-b2c-cms>
+          </div>
+        </ng-container>
+        <div class="col-12 col-lg-12">
+          <app-tabla-producto
+            *ngIf="class == 'list'"
+            [origen]="origen"
+            [paramsCategory]="paramsCategory"
+            [products]="products"
+          ></app-tabla-producto>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    *ngIf="cargandoProductos"
+    class="row flex-column justify-content-center align-content-center mt-4"
+  >
+    <div class="text-center">
+      <i class="fas fa-spinner fa-2x fa-spin fa-fw"></i>
+    </div>
+    <div class="mt-1">Cargando</div>
+  </div>
+</div>

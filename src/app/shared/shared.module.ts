@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core';
 // modules (angular)
 import { CommonModule, DecimalPipe, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-//import { NgSelectModule } from '@ng-select/ng-select';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { RouterModule } from '@angular/router';
 
 // modules (third-party)
-//import { CarouselModule } from 'ngx-owl-carousel-o';
+import { CarouselModule } from 'ngx-owl-carousel-o';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 //import { Ng2Rut, RutValidator } from 'ng2-rut';
@@ -34,22 +34,21 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 //import { LazyImgDirective } from './directives/lazy-img.directive';
 
 // pipes
-//import { CurrencyFormatPipe } from './pipes/currency-format.pipe';
+import { CurrencyFormatPipe } from './pipes/currency-format.pipe';
 import { SlugifyPipe } from './pipes/slugify.pipe';
-//import { CapitalizeFirstPipe } from './pipes/capitalize.pipe';
-//import { TitleCasePipe } from './pipes/title-case.pipe';
+import { CapitalizeFirstPipe } from './pipes/capitalize.pipe';
+import { TitleCasePipe } from './pipes/title-case.pipe';
 
 // components
 //import { AlertComponent } from './components/alert/alert.component';
-//import { IconComponent } from './components/icon/icon.component';
+import { IconComponent } from './components/icon/icon.component';
 //import { InputNumberComponent } from './components/input-number/input-number.component';
-//import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
+import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
 //import { PageHeaderComponent } from './components/page-header/page-header.component';
 //import { PaginationComponent } from './components/pagination/pagination.component';
-//import { ProductCardB2bComponent } from './components/product-card-b2b/product-card-b2b.component';
+import { ProductCardB2bComponent } from './components/product-card-b2b/product-card-b2b.component';
 //import { ProductFeatureSpecialComponent } from './components/product-feature-special/product-feature-special.component';
-//import { LoadingElementComponent } from './loading-element/loading-element.component';
-//import { ProductsViewComponent } from '../modules/shop/components/products-view/products-view.component';
+import { ProductsViewComponent } from '../modules/shop/components/products-view/products-view.component';
 //import { ProductSliderComponent } from './components/product-slider/product-slider.component';
 //import { FiltersProductsComponent } from './components/filters-products/filters-products.component';
 //import { AlertCartComponent } from './components/alert-cart/alert-cart.component';
@@ -64,50 +63,51 @@ import { SlugifyPipe } from './pipes/slugify.pipe';
 //import { LoadingComponent } from './components/loading/loading.component';
 //import { AddcartButtonComponent } from './components/addcart-button/addcart-button.component';
 //import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
-//import { SafeHtmlPipe } from './pipes/safe-html.pipe';
-//import { ReplacePipe } from './pipes/replace.pipe';
-//import { ScrollTopComponent } from './components/scroll-top/scroll-top.component';
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+import { ReplacePipe } from './pipes/replace.pipe';
+import { ScrollTopComponent } from './components/scroll-top/scroll-top.component';
 //import { VideoComponent } from './components/video/video.component';
-//import { ModalComponent } from './components/modal/modal.component';
-//import { TablaProductoComponent } from './components/tabla-producto/tabla-producto.component';
-//import { AddFlotaModalComponent } from './components/add-flota-modal/add-flota-modal.component';
-//import { ProductCardB2cComponent } from './components/product-card-b2c/product-card-b2c.component';
+import { ModalComponent } from './components/modal/modal.component';
+import { TablaProductoComponent } from './components/tabla-producto/tabla-producto.component';
+import { AddFlotaModalComponent } from './components/add-flota-modal/add-flota-modal.component';
+import { ProductCardB2cComponent } from './components/product-card-b2c/product-card-b2c.component';
 //import { UpdateFlotaModalComponent } from './components/update-flota-modal/update-flota-modal.component';
-/*import { PorductoTrComponent } from './components/tabla-producto/porducto-tr/producto-tr.component';
+import { PorductoTrComponent } from './components/tabla-producto/porducto-tr/producto-tr.component';
 import { InputNumberProductComponent } from './components/input-number-product/input-number-product.component';
-import { ChartsModule, ThemeService } from 'ng2-charts';
+// import { ChartsModule, ThemeService } from 'ng2-charts';
 import { WishListModalComponent } from './components/wish-list-modal/wish-list-modal.component';
-import { ProductListCardComponent } from './components/product-list-card/product-list-card.component';
-import { EditarListaProductosComponent } from './components/editar-lista-productos/editar-lista-productos.component';
-import { AgregarListaProductosMasivaModalComponent } from './components/agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
-import { ProductListModalComponent } from './components/product-list-card/components/product-list-modal/product-list-modal.component';
-import { PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface, PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { AngularEmailAutocompleteComponent } from './components/angular-email-autocomplete/angular-email-autocomplete.component';
+// import { ProductListCardComponent } from './components/product-list-card/product-list-card.component';
+// import { EditarListaProductosComponent } from './components/editar-lista-productos/editar-lista-productos.component';
+// import { AgregarListaProductosMasivaModalComponent } from './components/agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
+// import { ProductListModalComponent } from './components/product-list-card/components/product-list-modal/product-list-modal.component';
+// import { PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface, PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+// import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+// import { AngularEmailAutocompleteComponent } from './components/angular-email-autocomplete/angular-email-autocomplete.component';
 import { MonedaPipe } from './pipes/moneda.pipe';
-import { FiltroMagicoModule } from './components/filtro-magico/filtro-magico.module';
+/*import { FiltroMagicoModule } from './components/filtro-magico/filtro-magico.module';
 import { ProductoSelectBusquedaComponent } from './components/producto-select-busqueda/producto-select-busqueda.component';
 import { AgregarListaProductosUnitariaModalComponent } from './components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
 import { MenuCategoriaComponent } from './components/menu-categoria/menu-categoria.component';
 import { NguCarouselModule } from '@ngu/carousel';
 import { ShareButtonComponent } from './components/share-button/share-button.component';
-import { ProductRatingComponent } from './components/product-rating/product-rating.component';
+import { ProductRatingComponent } from './components/product-rating/product-rating.component';*/
 import { AddCommentModalComponent } from './components/add-comment-modal/add-comment-modal.component';
 import { StarSelectComponent } from './components/add-comment-modal/components/star-select/star-select.component';
-import { ProductCardB2cFichaComponent } from './components/product-card-b2c-ficha/product-card-b2c-ficha.component';
-import { UpdateAddressModalComponent } from './components/update-address-modal/update-address-modal.component';
-import { AddContactModalComponent } from './components/add-contact-modal/add-contact-modal.component';
-import { UpdateContactModalComponent } from './components/update-contact-modal/update-contact-modal.component';
-import { Productb2bComponent } from './components/productb2b/productb2b.component';
-import { AvisoStockComponent } from './components/aviso-stock/aviso-stock.component';
-import { CountdownTimerModule } from './../../../projects/countdown-timer/src/lib/countdown-timer.module';
-import { ProductCardB2cCmsComponent } from './components/product-card-b2c-cms/product-card-b2c-cms.component';
-import { ButtonsSlideshowComponent } from './components/buttons-slideshow/buttons-slideshow.component';
-import { ButtonComponent } from './components/buttons-slideshow/components/button/button.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-  suppressScrollX: true
-};*/
+import { LoadingElementComponent } from './components/loading-element/loading-element.component';
+// import { ProductCardB2cFichaComponent } from './components/product-card-b2c-ficha/product-card-b2c-ficha.component';
+// import { UpdateAddressModalComponent } from './components/update-address-modal/update-address-modal.component';
+// import { AddContactModalComponent } from './components/add-contact-modal/add-contact-modal.component';
+// import { UpdateContactModalComponent } from './components/update-contact-modal/update-contact-modal.component';
+// import { Productb2bComponent } from './components/productb2b/productb2b.component';
+// import { AvisoStockComponent } from './components/aviso-stock/aviso-stock.component';
+// import { CountdownTimerModule } from './../../../projects/countdown-timer/src/lib/countdown-timer.module';
+// import { ProductCardB2cCmsComponent } from './components/product-card-b2c-cms/product-card-b2c-cms.component';
+// import { ButtonsSlideshowComponent } from './components/buttons-slideshow/buttons-slideshow.component';
+// import { ButtonComponent } from './components/buttons-slideshow/components/button/button.component';
+// import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+// const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+//   suppressScrollX: true
+// };
 
 @NgModule({
   declarations: [
@@ -127,7 +127,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DisableControlDirective,
     RutCharsDirective,
     LazyImgDirective,
-    AvisoStockComponent,
+    AvisoStockComponent,*/
     // pipe
     CurrencyFormatPipe,
     SlugifyPipe,
@@ -135,75 +135,75 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CapitalizeFirstPipe,
 
     // components
-    AlertComponent,
+    // AlertComponent,
     IconComponent,
-    InputNumberComponent,
+    // InputNumberComponent,
     LoadingBarComponent,
-    PageHeaderComponent,
-    PaginationComponent,
+    // PageHeaderComponent,
+    // PaginationComponent,
     ProductCardB2bComponent,
-    ProductFeatureSpecialComponent,
+    // ProductFeatureSpecialComponent,
     LoadingElementComponent,
-    ProductSliderComponent,
-    FiltersProductsComponent,
-    AlertCartComponent,
-    AlertCartMinComponent,
-    ViewPdfComponent,
-    MapComponent,
-    LoginComponent,
-    RegisterComponent,
-    WidgetProductsComponent,
-    ProductSlideshowComponent,
-    ProductSlideshowSpecialsComponent,
+    // ProductSliderComponent,
+    // FiltersProductsComponent,
+    // AlertCartComponent,
+    // AlertCartMinComponent,
+    // ViewPdfComponent,
+    // MapComponent,
+    // LoginComponent,
+    // RegisterComponent,
+    // WidgetProductsComponent,
+    // ProductSlideshowComponent,
+    // ProductSlideshowSpecialsComponent,
     ProductsViewComponent,
-    LoadingComponent,
-    AddcartButtonComponent,
-    ConfirmModalComponent,
+    // LoadingComponent,
+    // AddcartButtonComponent,
+    // ConfirmModalComponent,
     SafeHtmlPipe,
     ReplacePipe,
     ScrollTopComponent,
-    VideoComponent,
+    // VideoComponent,
     ModalComponent,
     TablaProductoComponent,
     AddFlotaModalComponent,
     ProductCardB2cComponent,
-    UpdateFlotaModalComponent,
+    // UpdateFlotaModalComponent,
     PorductoTrComponent,
     InputNumberProductComponent,
     WishListModalComponent,
-    ProductListCardComponent,
-    EditarListaProductosComponent,
-    AgregarListaProductosMasivaModalComponent,
-    ProductListModalComponent,
-    AngularEmailAutocompleteComponent,
+    // ProductListCardComponent,
+    // EditarListaProductosComponent,
+    // AgregarListaProductosMasivaModalComponent,
+    // ProductListModalComponent,
+    // AngularEmailAutocompleteComponent,
     MonedaPipe,
-    ProductoSelectBusquedaComponent,
-    AgregarListaProductosUnitariaModalComponent,
-    MenuCategoriaComponent,
-    ShareButtonComponent,
-    ProductRatingComponent,
+    // ProductoSelectBusquedaComponent,
+    // AgregarListaProductosUnitariaModalComponent,
+    // MenuCategoriaComponent,
+    // ShareButtonComponent,
+    // ProductRatingComponent,
     AddCommentModalComponent,
     StarSelectComponent,
-    ProductCardB2cFichaComponent,
-    UpdateAddressModalComponent,
-    AddContactModalComponent,
-    UpdateContactModalComponent,
-    Productb2bComponent,
-    ProductCardB2cCmsComponent,
-    ButtonsSlideshowComponent,
-    ButtonComponent*/
+    // ProductCardB2cFichaComponent,
+    // UpdateAddressModalComponent,
+    // AddContactModalComponent,
+    // UpdateContactModalComponent,
+    // Productb2bComponent,
+    // ProductCardB2cCmsComponent,
+    // ButtonsSlideshowComponent,
+    // ButtonComponent
   ],
   imports: [
     // modules (angular)
     CommonModule,
-    //NgSelectModule,
+    NgSelectModule,
     RouterModule,
     FormsModule,
     //NgbModule,
     ReactiveFormsModule,
 
     // modules (third-party)
-    //CarouselModule,
+    CarouselModule,
     ModalModule.forRoot(),
     TabsModule.forRoot(),
     TooltipModule.forRoot(),
@@ -245,61 +245,61 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LazyImgDirective,*/
 
     // pipes
-    //CurrencyFormatPipe,
-    //SlugifyPipe,
+    CurrencyFormatPipe,
+    SlugifyPipe,
     DecimalPipe,
-    //TitleCasePipe,
-    //CapitalizeFirstPipe,
-    //SafeHtmlPipe,
-    //ReplacePipe,
+    TitleCasePipe,
+    CapitalizeFirstPipe,
+    SafeHtmlPipe,
+    ReplacePipe,
 
     // components
     //AlertComponent,
-    //IconComponent,
+    IconComponent,
     //InputNumberComponent,
-    //LoadingBarComponent,
+    LoadingBarComponent,
     //PageHeaderComponent,
-    /*PaginationComponent,
+    // PaginationComponent,
     ProductCardB2bComponent,
     ProductCardB2cComponent,
     LoadingElementComponent,
-    ProductSliderComponent,
-    FiltersProductsComponent,
-    AlertCartComponent,
-    AlertCartMinComponent,
-    ProductFeatureSpecialComponent,
-    MapComponent,
-    LoginComponent,
-    RegisterComponent,
-    WidgetProductsComponent,
-    ProductSlideshowComponent,
-    ProductSlideshowSpecialsComponent,
+    // ProductSliderComponent,
+    // FiltersProductsComponent,
+    // AlertCartComponent,
+    // AlertCartMinComponent,
+    // ProductFeatureSpecialComponent,
+    // MapComponent,
+    // LoginComponent,
+    // RegisterComponent,
+    // WidgetProductsComponent,
+    // ProductSlideshowComponent,
+    // ProductSlideshowSpecialsComponent,
     ProductsViewComponent,
-    LoadingComponent,
-    AddcartButtonComponent,
-    ConfirmModalComponent,
-    VideoComponent,
-    ViewPdfComponent,
-    AngularEmailAutocompleteComponent,
-    ProductoSelectBusquedaComponent,
-    ProductCardB2cCmsComponent,
-    ShareButtonComponent,
-    ProductRatingComponent,
-    ProductCardB2cFichaComponent,
-    UpdateAddressModalComponent,
-    AddContactModalComponent,
-    UpdateContactModalComponent,
-    ButtonsSlideshowComponent,
-    ButtonComponent,
+    // LoadingComponent,
+    // AddcartButtonComponent,
+    // ConfirmModalComponent,
+    // VideoComponent,
+    // ViewPdfComponent,
+    // AngularEmailAutocompleteComponent,
+    // ProductoSelectBusquedaComponent,
+    // ProductCardB2cCmsComponent,
+    // ShareButtonComponent,
+    // ProductRatingComponent,
+    // ProductCardB2cFichaComponent,
+    // UpdateAddressModalComponent,
+    // AddContactModalComponent,
+    // UpdateContactModalComponent,
+    // ButtonsSlideshowComponent,
+    // ButtonComponent,
 
     // a evaluar
-    CountdownTimerModule,
+    // CountdownTimerModule,
     NgSelectModule,
     CarouselModule,
-    PerfectScrollbarModule,
-    FiltroMagicoModule,
-    NguCarouselModule,
-    MenuCategoriaComponent*/
+    // PerfectScrollbarModule,
+    // FiltroMagicoModule,
+    // NguCarouselModule,
+    // MenuCategoriaComponent
   ],
   providers: [
     /*{
@@ -308,9 +308,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     },*/
     SlugifyPipe,
     DecimalPipe,
-    //CapitalizeFirstPipe,
+    CapitalizeFirstPipe,
     DatePipe,
-    //CurrencyFormatPipe,
+    CurrencyFormatPipe,
     //RutValidator,
     //ThemeService
   ],

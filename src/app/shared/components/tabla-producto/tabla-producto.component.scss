@@ -1,0 +1,29 @@
+.table thead {
+  color: #fff;
+  background-color: #f00;
+}
+.table thead th {
+  background-color: #0063b9 !important;
+  color: #fff;
+}
+
+.alert-primary {
+  background: #e9ecef;
+  color: #36414d;
+}
+
+.product__quantity {
+  width: 150px !important;
+  margin-bottom: -20px;
+}
+
+.modal-body {
+  max-height: 50vh;
+  min-height: 40vh;
+  overflow: auto;
+}
+
+.imagen {
+  width: 90px;
+  height: 90px;
+}

@@ -1,0 +1,85 @@
+.close {
+  opacity: 1;
+}
+
+::ng-deep .modal-dialog {
+  @media (max-height: 650px) {
+    max-width: 650px;
+    min-width: 650px;
+    margin: 1.75rem auto;
+  }
+  @media (min-height: 650px) {
+    margin: 1.75rem auto;
+  }
+}
+
+::ng-deep .modificar .modal-body {
+  min-height: auto;
+}
+
+select {
+  height: 3.5rem;
+  border-radius: 4px;
+  border: solid 1px #cfcfcf;
+  background-color: #ffffff;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.21;
+  letter-spacing: normal;
+  text-align: left;
+  font-weight: bold;
+  padding: 0px 20px;
+}
+
+.btn-border-primary,
+.btn-border-primary.disabled,
+.btn-border-primary:disabled {
+  background: #efefef;
+  color: #0063b9;
+  fill: #fff;
+  border: none !important;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+.btn-secondary,
+.btn-secondary.disabled,
+.btn-secondary:disabled {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+.btn-border-primary:hover {
+  background: #0000003b;
+  color: #0063b9;
+  fill: #fff;
+  border: none !important;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0rem 1rem;
+  padding-top: 1.3rem;
+  border-bottom: 1px solid #dee2e6;
+  border-top-left-radius: calc(0.3rem - 1px);
+  border-top-right-radius: calc(0.3rem - 1px);
+}
+
+select.form-select {
+  background-image: url('/assets/images/icon-select.png');
+  background-repeat: no-repeat;
+  background-position: right center !important;
+  background-size: 2rem;
+  padding-right: 32px !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+}
+select.form-select::-ms-expand {
+  display: none;
+  /*Evita que se muestre la flecha por defecto en versiones de IE*/
+}

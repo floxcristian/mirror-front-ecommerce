@@ -1,0 +1,316 @@
+<div class="row justify-content-center">
+  <!--  BARRA DE BUSQUEDA PRINCIPAL -->
+  <div class="col-12">
+    <div
+      class="indicator indicator--trigger--click position-relative dropdown-search col p-0"
+      appDropdown="indicator--opened"
+      #menuSearch="appDropdown"
+    >
+      <div class="input-group">
+        <div dropdown #dropdown="bs-dropdown" class="input-group-prepend mr-0">
+          <button
+            dropdownToggle
+            class="btn btn-primary dropdown-toggle"
+            style="font-size: 0.9rem; padding: 0px 10px"
+            *ngIf="!isVacio(filtro); else sinToolTip"
+            [tooltip]="tooltipImgVehiculoFiltro"
+            triggers="mouseenter:mouseleave"
+            #pop="bs-tooltip"
+            (click)="pop.hide()"
+            placement="left"
+            containerClass="imgVehiculoTooltip"
+            type="button"
+            aria-controls="dropdown-basic"
+          >
+            <div class="d-inline-block" [innerHTML]="textoFiltro"></div>
+          </button>
+          <ng-template #sinToolTip>
+            <button
+              dropdownToggle
+              class="btn btn-primary dropdown-toggle"
+              style="font-size: 0.9rem; padding: 0px 10px"
+              type="button"
+              aria-controls="dropdown-basic"
+            >
+              <div class="d-inline-block" [innerHTML]="textoFiltro"></div>
+            </button>
+          </ng-template>
+          <ng-template #tooltipImgVehiculoFiltro>
+            <img src="../../../../../../../assets/images/imagenEjemploB.png" style="width: 280px; max-height: 280px" />
+            <div class="mt-2" style="font-size: 0.7rem; color: #000">
+              {{ filtro.vehiculo.marca }} /
+              {{ filtro.vehiculo.tipo }}
+              / {{ filtro.vehiculo.anio }}
+            </div>
+          </ng-template>
+
+          <div
+            *dropdownMenu
+            class="dropdown-menu"
+            style="width: 350px"
+            aria-labelledby="button-basic"
+            (click)="$event.stopPropagation()"
+          >
+            <div class="d-flex justify-content-between align-items-center">
+              <h6 class="dropdown-header">Mi Flota</h6>
+              <span class="mr-4">
+                <small
+                  >Buscar:
+                  <input
+                    type="search"
+                    size="20"
+                    style="height: 1.4rem; border: 1px solid #bbb; border-radius: 5px"
+                    [formControl]="searchControl1"
+                    autocomplete="off"
+                    [(ngModel)]="filtroFlota"
+                  />
+                </small>
+              </span>
+            </div>
+            <div class="dropdown-item" *ngIf="flota.length == 0 && !cargando">Sin registros</div>
+            <div *ngIf="flota.length > 0 && !cargando" style="max-height: 222px; overflow-y: auto">
+              <div
+                class="pl-4 py-1 d-flex align-items-center"
+                style="border-bottom: 0.5px solid #ddd"
+                *ngFor="let item of flotaFiltrada"
+              >
+                <div
+                  class="mr-3 d-flex align-items-center"
+                  [tooltip]="tooltipImgVehiculo"
+                  placement="right"
+                  [delay]="300"
+                  triggers="mouseenter:mouseleave click"
+                  containerClass="imgVehiculoTooltip"
+                  style="min-height: 65px"
+                >
+                  <img
+                    src="../../../../../../../assets/images/imagenEjemploB.png"
+                    style="width: 65px; max-height: 65px; border: 1px solid #ccc"
+                  />
+                </div>
+
+                <ng-template #tooltipImgVehiculo>
+                  <img src="../../../../../../../assets/images/imagenEjemploB.png" style="width: 200px; max-height: 200px" />
+                  <div class="mt-2" style="font-size: 0.6rem; color: #000">
+                    {{ item.vehiculo.marca }} / {{ item.vehiculo.tipo }} / {{ item.vehiculo.anio }}
+                  </div>
+                </ng-template>
+
+                <a class="dropdown-item pl-0" (click)="seleccionaFiltro(item); dropdown.hide()">
+                  <div class="d-flex align-items-center">
+                    <div class="d-flex flex-column justify-content-center">
+                      <div style="color: #000; font-weight: bold; font-size: 1rem; white-space: normal; line-height: initial">
+                        {{ item.alias | capitalizeFirst }}
+                      </div>
+                      <small>{{ item.vehiculo.chasis }}</small>
+                      <small>{{ item.vehiculo.marca }} / {{ item.vehiculo.tipo }} / {{ item.vehiculo.anio }}</small>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div class="dropdown-item" *ngIf="cargando">Cargando...</div>
+
+            <div class="d-flex justify-content-between">
+              <h6 class="dropdown-header">Búsquedas recientes</h6>
+              <button class="btn btn-sm btn-link" *ngIf="busquedas.length > 3" (click)="verMas()">Ver más...</button>
+            </div>
+            <div class="dropdown-item" *ngIf="busquedas.length == 0 && !cargando">Sin registros</div>
+            <div *ngIf="busquedas.length > 0 && !cargando">
+              <div *ngFor="let item of busquedas | slice: 0:3">
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-1 flex-grow-1">
+                    <a class="dropdown-item pr-0" style="font-size: 1rem" (click)="seleccionaFiltro(item); dropdown.hide()">
+                      <div>{{ item.vehiculo.chasis }}</div>
+                      <small>{{ item.vehiculo.patente }}</small>
+                    </a>
+                  </div>
+                  <div>
+                    <button class="btn btn-sm btn-link pr-2" tooltip="Agregar a mi flota" (click)="agregarVinFlota(item)">
+                      <i class="far fa-save fa-lg"></i>
+                    </button>
+                    <button class="btn btn-sm btn-link" tooltip="Eliminar" (click)="eliminarVinBusqueda(item)">
+                      <i class="fas fa-trash-alt text-danger fa-lg"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="dropdown-item" *ngIf="cargando">Cargando...</div>
+          </div>
+        </div>
+
+        <button
+          *ngIf="!isVacio(filtro) || !isVacio(marcaModeloAnio)"
+          tooltip="Limpiar Filtro"
+          class="btn btn-primary py-0 border-left"
+          style="height: 3rem; padding-left: 0.6rem; padding-right: 0.8rem"
+          (click)="clearFiltro(); dropdown.hide()"
+        >
+          <i class="fas fa-filter fa-lg"></i>
+          <i
+            class="fas fa-times-circle fa-sm position-absolute"
+            style="bottom: 12px; right: 8px; border-radius: 15px; background-color: #000"
+          ></i>
+        </button>
+
+        <input
+          type="search"
+          class="form-control with-button"
+          autofocus="on"
+          [(ngModel)]="textToSearch"
+          (keydown)="reset()"
+          (keyup.enter)="buscar()"
+          [formControl]="searchControl"
+          name="search"
+          placeholder="Buscar productos por código, nombre, número de parte, cross reference"
+          style="font-size: 1.2rem"
+          aria-label="Site search"
+          autocomplete="off"
+        />
+        <div class="input-group-append">
+          <button class="btn btn-sm btn-primary" style="padding-top: 10px" type="button" (click)="buscar(); menuSearch.close()">
+            <i class="fas fa-search fa-lg"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="indicator__dropdown">
+        <div
+          *ngIf="productosEncontrados.length == 0 && textToSearch.length > 0 && buscando == false"
+          class="products-list-search"
+        >
+          <div class="item item-no-found">
+            <span> No se encontraron coincidencias para </span>
+            <span class="font-weight-bold">
+              <font color="blue">{{ textToSearch | capitalizeFirst }}</font>
+            </span>
+          </div>
+        </div>
+
+        <div class="row ml-1 mt-3" *ngIf="productosEncontrados?.length > 0">
+          <div class="col-30 col">
+            <div class="row css-categorias">
+              <div class="col-12" *ngIf="sugerencias?.length > 1" style="height: 160px">
+                <div class="products-list-search" *ngIf="sugerencias.length > 0">
+                  <div class="item">
+                    <a
+                      (click)="menuSearch.toggle(); seleccionado = true; blurInput(); textToSearch = sugerencias[0].sugerencia"
+                      [routerLink]="['/', 'inicio', 'productos', sugerencias[0].sugerencia]"
+                    >
+                      <b class="text-uppercase">Quizás esta buscando {{ sugerencias[0].sugerencia }}</b
+                      >...
+                    </a>
+                  </div>
+                </div>
+                <div class="products-list-search" *ngFor="let item of sugerencias | slice: 1:5">
+                  <div class="item">
+                    <a
+                      (click)="menuSearch.toggle(); seleccionado = true; blurInput(); textToSearch = item.sugerencia"
+                      [routerLink]="['/', 'inicio', 'productos', item.sugerencia]"
+                    >
+                      <span [innerHTML]="item.html.replace('<em>', '<b>').replace('</em>', '</b>')"></span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="categories-list-search" *ngIf="productosEncontrados?.length > 0">
+                  <div class="font-weight-bold text-uppercase" style="padding: 0.5rem 0.75rem; font-size: 0.9rem; color: #094cac">
+                    Categorias
+                  </div>
+                  <div class="item" *ngFor="let item of categorias | slice: 0:3">
+                    <a [routerLink]="item.url" (click)="menuSearch.toggle(); blurInput(); seleccionado = false">
+                      <span>{{ item.name | capitalizeFirst }}</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-2 mb-2 pr-4" style="border-left: solid 1px #094cac; border-right: solid 1px #094cac">
+            <div class="font-weight-bold text-uppercase" style="padding: 0.5rem 0.75rem; font-size: 0.9rem; color: #094cac">
+              Marcas
+            </div>
+            <div class="products-list-search" *ngFor="let item of marcas | slice: 0:8">
+              <div class="item text-truncate">
+                <a
+                  [routerLink]="'/inicio/productos/' + textToSearch"
+                  [queryParams]="{ filter_MARCA: item.marca }"
+                  (click)="menuSearch.toggle(); blurInput(); seleccionado = false"
+                >
+                  <div class="row">
+                    <div class="col-8">
+                      {{ item.marca | titlecase }}
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="font-weight-bold text-uppercase" style="padding: 0.5rem 0.75rem; font-size: 0.9rem; color: #094cac">
+              Resultados de Productos
+            </div>
+            <div class="d-flex justify-content-around m-2">
+              <div class="d-flex flex-column px-3" *ngFor="let item of productosEncontrados | slice: 0:3" style="width: 180px">
+                <div class="mb-3 d-flex justify-content-center">
+                  <a [routerLink]="item.url" (click)="menuSearch.toggle(); blurInput(); seleccionado = true">
+                    <img [src]="root.getUrlImagenMiniatura150(item)" alt="" width="90px" height="90px" />
+                  </a>
+                </div>
+                <div style="color: #094cac">
+                  {{ item.marca | titlecase }}
+                </div>
+                <div class="nombre_producto">
+                  {{ item.nombre | titlecase }}
+                </div>
+                <div style="font-size: 0.8rem; color: #b2b2b2">SKU: {{ item.sku }}</div>
+                <div class="row">
+                  <div
+                    *ngIf="item?.precio?.precioComun == item?.precio?.precio"
+                    class="col-12 font-weight-bold"
+                    style="color: #094cac; font-size: 1.4rem"
+                  >
+                    {{ item?.precio?.precio | currencyFormat }} <em> c/iva </em>
+                  </div>
+
+                  <div
+                    *ngIf="item?.precio?.precioComun != item?.precio?.precio"
+                    class="text-danger font-weight-bold col-12"
+                    style="font-size: 1.4rem"
+                  >
+                    {{ item?.precio?.precio | currencyFormat }} <em> c/iva </em>
+                  </div>
+
+                  <div
+                    *ngIf="item?.precio?.precioComun != item?.precio?.precio"
+                    tooltip="Precio normal"
+                    class="product-card__old-price col-12"
+                    style="font-size: 1.3rem; line-height: 1rem"
+                  >
+                    {{ item?.precio?.precioComun | currencyFormat }} <em> c/iva </em>
+                    <br />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3" *ngIf="productosEncontrados?.length > 0" style="border-top: solid 1px #094cac">
+          <div class="col-12 products-list-search pr-5 p-2">
+            <div class="item justify-content-end d-flex">
+              <a
+                (click)="menuSearch.toggle(); blurInput(); seleccionado = false"
+                [routerLink]="['/', 'inicio', 'productos', textToSearch]"
+              >
+                <i class="fas fa-search fa-fw" style="color: #0063b9; margin-right: 5px"></i>
+                <span style="text-decoration: underline; font-size: 1rem">Ver todos los resultados</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+
+
+table {border: none;}
+
+
+
+.title-container {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.title-container h5 {
+    padding-bottom: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.tabla-dias td {
+    padding-top: 0px !important;
+    padding-bottom: 4px !important;
+    padding-left: 5px !important;
+    padding-right: 1px !important;
+    text-align: center;
+    
+   overflow-x:auto;
+   
+}
+
+.dia-semana {
+    font-weight: bold;
+    font-size: 11px;
+    margin-bottom: 4px;
+}
+
+.dia-container-habilitado>div {
+    width: 120px !important;
+    height: 65px !important;
+    border: 1px solid #00549d;
+    background-color: #FFFFFF;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.dia-container-habilitado>div>div {
+  
+    padding-top: 8px;
+    padding-bottom: 8px;
+    width: 88px !important;
+    height: 65px !important;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dia-container-activado {
+  
+    padding-top: 8px;
+    padding-bottom: 8px;
+    width: 88px !important;
+    height: 65px !important;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #0063b9;
+    color: white;
+}
+
+
+.dia-container-deshabilitado>div {
+    width: 88px !important;
+    height: 65px !important;
+    padding: 8px;
+    border: 1px solid #BFBFBF;
+    background-color: #F5F5F5;
+    border-radius: 4px;
+    pointer-events: none;
+}

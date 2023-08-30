@@ -1,0 +1,18 @@
+<!-- .block-product-columns -->
+<div class=" block-product-columns d-lg-block d-none">
+    <div class="container card p-3 shadow my-3">
+        <div class="row">
+            <div *ngFor="let column of columns" class="col">
+                <app-block-header [header]="column.header"></app-block-header>
+
+                <div class="block-product-columns__column">
+                    <div *ngFor="let product of column.products" class="block-product-columns__item">
+                        <app-product-card-b2b *ngIf="isB2B" [product]="product" layout="horizontal"></app-product-card-b2b>
+                        <app-product-card-b2c *ngIf="!isB2B" [product]="product" layout="horizontal"></app-product-card-b2c>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- .block-product-columns / end -->

@@ -1,0 +1,84 @@
+<!-- <app-page-header [breadcrumbs]="[
+    {label: 'Inicio',         url: '../../'},
+    {label: 'Listado De Productos', url: ''}
+]"></app-page-header> -->
+<!-- <ng-container *ngIf="innerWidth > 1025"> -->
+
+<!-- <app-page-header ></app-page-header> -->
+<!-- </ng-container> -->
+<ng-container *ngIf="innerWidth <= 1025">
+    <app-page-header [breadcrumbs]="breadcrumbs" [textToSearch]="textToSearch" [totalRegistros]="PagTotalRegistros">
+    </app-page-header>
+    <div class="col-sm" style="border:1px solid; margin-top: 5px;margin-bottom: 5px; color:rgba(0,0,0,.1);"></div>
+</ng-container>
+
+<ng-template #sidebar>
+    <div class="shop-layout__sidebar  d-none d-lg-block d-xl-block" style="border-radius: 10px;">
+        <div class="block block-sidebar">
+            <div class="block-sidebar__item " (window:scroll)="positionScroll($event)"
+                [class.top]=" scrollPosition > 700">
+                <!-- <app-widget-categories [categories]="filterCategories"></app-widget-categories> -->
+                <app-widget-filters [filtrosOculto]="filtrosOculto" [filters]="filters"
+                    [removableFilters]="removableFilters" [removableFiltersFlota]="removableFiltersFlota"
+                    [removableCategory]="removableCategory" (filtersSelected)="updateFilters($event)"
+                    (clearCategory)="clearCategory($event)" (clearAll)="clearAll($event)">
+                </app-widget-filters>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="shop-layout__sidebar shop-layout-mobile__sidebar" [ngClass]="{'active': visibleFilter == true }">
+        <div class="block block-sidebar">
+            <div class="block-sidebar__item ">
+
+                <app-widget-filters [filtrosOculto]="filtrosOculto" [filters]="filters"
+                    [removableFilters]="removableFilters" [removableCategory]="removableCategory"
+                    (filtersSelected)="updateFilters($event)" (clearCategory)="clearCategory($event)"
+                    (clearAll)="clearAll($event)">
+                </app-widget-filters>
+
+            </div>
+
+            <div class="row m-0">
+                <div class="col-12">
+                    <button name="visibleFilter" class="btn btn-block btn-secondary  btn-lg text-center"
+                        (click)="visibleFilter=false">Cerrar</button>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</ng-template>
+
+
+
+
+<div class="shop-layout container shop-layout--sidebar--{{ sidebarPosition }} mt-3 site_b2c">
+
+    <ng-container *ngIf="sidebarPosition === 'start'" [ngTemplateOutlet]="sidebar"></ng-container>
+
+    <div class="shop-layout__content container">
+
+        <div class="block">
+
+            <!-- <app-filtros *ngIf="filtrosVehiculoVisibles && isB2B" class="w-100 d-lg-block d-none" [inHeader]="false"></app-filtros> -->
+
+
+            <!-- <app-product-slider [product]="productoCategoria" [loading]="isLoadingSlider"></app-product-slider> -->
+            <!-- <app-filters-products></app-filters-products> -->
+            <app-products-view *ngIf="origen !==undefined" [paramsCategory]="paramsCategory" [origen]="origen"
+                [breadcrumbs]="breadcrumbs" [textToSearch]="textToSearch" [currentPage]="currentPage"
+                [showProductOptions]="true" [cargandoCatalogo]="cargandoCatalogo"
+                [cargandoProductos]="cargandoProductos" [products]="products" [layout]="viewMode" [grid]="'grid-4-full'"
+                [limit]="productosPorPagina" [totalPaginas]="totalPaginas" [desde]="PagDesde" [hasta]="PagHasta"
+                [totalRegistros]="PagTotalRegistros" (cambiaPagina)="paginacionProductos($event)"
+                (itemPorPagina)="cambiaItemPorPagina($event)" (filterState)="setFilteState($event)"
+                (sort)="setSort($event)">
+            </app-products-view>
+        </div>
+    </div>
+    <ng-container *ngIf="sidebarPosition === 'end'" [ngTemplateOutlet]="sidebar"></ng-container>
+</div>

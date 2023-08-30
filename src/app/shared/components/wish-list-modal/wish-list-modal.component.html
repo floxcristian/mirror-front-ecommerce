@@ -1,0 +1,73 @@
+<div class="modal-header">
+  <h5 class="modal-title pull-left">
+    <span style="font-size: 16px">Guardar en...</span>
+  </h5>
+  <button
+    name="modalRef"
+    type="button"
+    class="close pull-right"
+    aria-label="Close"
+    (click)="close()"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body px-4">
+  <div
+    class="custom-control custom-checkbox align-items-center d-flex"
+    *ngFor="let item of listas"
+  >
+    <div class="flex-shrink-1 flex-grow-1">
+      <input
+        type="checkbox"
+        class="custom-control-input listas"
+        [checked]="item.checked"
+        [id]="'ID-' + item._id"
+        (change)="seleccionaLista(item)"
+      />
+      <label class="custom-control-label" [for]="'ID-' + item._id">{{
+        item.nombre
+      }}</label>
+    </div>
+  </div>
+  <div *ngIf="listas.length === 0">No tiene listas creadas</div>
+</div>
+
+<div class="modal-footer">
+  <div *ngIf="!creandoLista" class="col-12">
+    <button
+      class="btn btn-link btn-sm btn-block text-decoration-none"
+      (click)="creandoLista = !creandoLista"
+    >
+      <i class="fas fa-plus fa-lg fa-fw mr-2"></i>Crear nueva lista
+    </button>
+  </div>
+  <div *ngIf="creandoLista" class="col-12">
+    <div class="input-group">
+      <input
+        type="search"
+        class="form-control form-control-sm"
+        maxlength="40"
+        (search)="cantCaracteres = nombre.length"
+        (keyup)="ingresaNombre()"
+        (keydown)="ingresaNombre()"
+        (keypress)="ingresaNombre()"
+        placeholder="Escriba el nombre de la lista"
+        aria-label="nombre"
+        [(ngModel)]="nombre"
+      />
+      <div class="w-100 d-flex justify-content-end mt-1">
+        <div class="validacion d-none">Ingrese un nombre</div>
+        <div class="max-caracteres">
+          {{ cantCaracteres }} / {{ maxCaracteres }}
+        </div>
+      </div>
+    </div>
+    <button
+      class="btn btn-link btn-sm mt-2 float-right text-decoration-none"
+      (click)="crearLista()"
+    >
+      Crear
+    </button>
+  </div>
+</div>

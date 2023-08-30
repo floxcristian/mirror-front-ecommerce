@@ -8,15 +8,13 @@ import { RootService } from '../shared/services/root.service';
 
 @Component({
   selector: 'app-layout',
-  templateUrl: './layout.component.html'
+  templateUrl: './layout.component.html',
 })
 export class LayoutComponent implements OnInit {
-  isB2B: boolean = false
-  // fbclid: string = ''
-  fbclid:any
-  gclid: string = ''
-  // utm_campaign: string = ''
-  utm_campaign:any
+  isB2B: boolean = false;
+  fbclid: string | undefined = '';
+  gclid: string = '';
+  utm_campaign: string | undefined = '';
 
   constructor(
     private readonly rootService: RootService,

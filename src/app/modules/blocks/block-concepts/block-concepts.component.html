@@ -1,0 +1,52 @@
+<!-- .block-products-carousel -->
+<div class="block-products-carousel">
+  <div class="container" (window:resize)="onResize($event)">
+    <app-block-header
+      [header]="'No te lo puedes perder'"
+      [subTitle]="'Contamos con el mayor stock de productos a nivel nacional'"
+    ></app-block-header>
+
+    <div class="row row-img">
+      <ng-container *ngIf="innerWidth >= 450">
+        <div *ngFor="let column of conceptos; let i = index" class="column">
+          <div *ngFor="let item of column.hijos">
+            <a [routerLink]="item.url" class="img-zoom-hover">
+              <img
+                class="img-fluid_old lazyload"
+                [src]="item.image"
+                alt="{{ item.text }}"
+              />
+              <span
+                class="label"
+                [ngStyle]="{ 'background-color': item.bg, color: item.color }"
+                >{{ item.text }}</span
+              >
+            </a>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="innerWidth < 450">
+        <div
+          *ngFor="let column of conceptos_mobile; let i = index"
+          class="column"
+        >
+          <div *ngFor="let item of column.hijos">
+            <a [routerLink]="item.url" class="img-zoom-hover">
+              <img
+                class="img-fluid_old lazyload"
+                [src]="item.image"
+                alt="{{ item.text }}"
+              />
+              <span
+                class="label"
+                [ngStyle]="{ 'background-color': item.bg, color: item.color }"
+                >{{ item.text }}</span
+              >
+            </a>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

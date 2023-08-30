@@ -1,0 +1,348 @@
+<div
+  class="product-card"
+  [ngClass]="{
+    'product-card--layout--grid product-card--size--sm': layout === 'grid-sm',
+    'product-card--layout--grid product-card--size--nl': layout === 'grid-nl',
+    'product-card--layout--grid product-card--size--lg': layout === 'grid-lg',
+    'product-card--layout--list': layout === 'list',
+    'product-card--layout--horizontal': layout === 'horizontal'
+  }"
+>
+  <span class="floating-offers" *ngIf="layout === 'horizontal'"> 50% </span>
+
+  <div
+    class="p-2 m-auto position-relative"
+    [class.text-center]="home || cartClass"
+  >
+    <a
+      class="d-flex align-items-center justify-content-center"
+      appClick
+      (click)="setOrigenBeforeFicha()"
+      [routerLink]="
+        root.product(productData.sku, productData.nombre, paramsCategory)
+      "
+    >
+      <img
+        [src]="root.getUrlImagenMiniatura(productData)"
+        class="img-fluid lazyload"
+        [class.imgH]="home"
+        [class.imgC]="cartClass"
+        [alt]="productData.nombre"
+      />
+    </a>
+
+    <div
+      class="product-card__badges-list-right position-absolute"
+      style="right: 5px !important; bottom: 5px"
+    >
+      <ng-container *ngIf="exist">
+        <a
+          class="marcaP"
+          (click)="setOrigenBeforeFicha()"
+          appClick
+          [routerLink]="
+            root.product(productData.sku, productData.nombre, paramsCategory)
+          "
+        >
+          <img
+            class="img_marca"
+            src="https://images.implementos.cl/marcas/small/{{
+              productData.marca
+            }}.png"
+            alt="{{ productData.marca }}"
+            (error)="ErrorImage($event)"
+          />
+        </a>
+      </ng-container>
+      <ng-container *ngIf="!exist">
+        <a
+          class="marcaPlink"
+          (click)="setOrigenBeforeFicha()"
+          appClick
+          [routerLink]="
+            root.product(productData.sku, productData.nombre, paramsCategory)
+          "
+          >{{
+            productData.marca
+              | replace : "^SIN MARCA$" : "IMPLEMENTOS"
+              | replace : "^0$" : "IMPLEMENTOS"
+          }}</a
+        >
+      </ng-container>
+    </div>
+
+    <div
+      class="product-card__badges-list-right"
+      *ngIf="(productData.cyberMonday || 0) > 0"
+    >
+      <div
+        class="badge_cyber float-right"
+        style="position: absolute; top: 5px; right: 1px"
+      >
+        <picture>
+          <source
+            srcset="assets/images/cyberMondaySquare.webp"
+            type="image/webp"
+          />
+          <source
+            srcset="assets/images/cyberMondaySquare.png"
+            type="image/png"
+          />
+          <img
+            src="assets/images/cyberMondaySquare.png"
+            height="60px"
+            width="60px"
+            class="mr-1 mt-sm-1 img"
+            style="
+              position: absolute;
+              width: 60px;
+              height: 60px;
+              top: 3px;
+              right: 1px;
+              z-index: 8;
+            "
+          />
+        </picture>
+      </div>
+    </div>
+
+    <div class="product-card__badges-list" style="left: 5px">
+      <ng-container *ngIf="productData.precio_escala">
+        <img
+          class="img_escala"
+          src="assets/images/llevaMasPagaMenos/100x25_rectangular.jpg"
+        />
+      </ng-container>
+    </div>
+  </div>
+  <div class="line"></div>
+  <div class="p-1 text-center m-auto" [class.text-center]="home || cartClass">
+    <ng-container *ngIf="!productData.compareAtPrice">
+      <div
+        *ngIf="productData?.precioComun == productData?.precio?.precio"
+        class="product-card__new-price col-12"
+        style="padding-left: 0 !important; padding-right: 5px !important"
+      >
+        {{ productData.precio.precio | currency : "CLP" }}
+        <em>
+          {{
+            !isVacio(usuario.iva) ? (usuario.iva ? "c/iva" : "s/iva") : "c/iva"
+          }}
+        </em>
+      </div>
+
+      <div
+        *ngIf="productData?.precioComun != productData?.precio?.precio"
+        class="product-card__new-price text-danger col-12"
+        style="padding-left: 0 !important; padding-right: 5px !important"
+      >
+        {{ productData.precio.precio | currency : "CLP" }}
+        <em>
+          {{
+            !isVacio(usuario.iva) ? (usuario.iva ? "c/iva" : "s/iva") : "c/iva"
+          }}
+        </em>
+      </div>
+
+      <div
+        *ngIf="productData?.precioComun != productData?.precio?.precio"
+        tooltip="Precio normal"
+        class="product-card__old-price col-12"
+        style="
+          text-align: center;
+          padding-left: 0 !important;
+          padding-right: 5px !important;
+        "
+      >
+        {{ productData.precioComun | currency : "CLP" }}
+        <em>
+          {{
+            !isVacio(usuario.iva) ? (usuario.iva ? "c/iva" : "s/iva") : "c/iva"
+          }}
+        </em>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="product-card__info">
+    <div class="product-card__name d-flex align-items-center">
+      <a
+        appClick
+        (click)="setOrigenBeforeFicha()"
+        [routerLink]="
+          root.product(productData.sku, productData.nombre, paramsCategory)
+        "
+      >
+        <span class="nombreP">
+          {{ productData.nombre | capitalizeFirst }}
+        </span>
+      </a>
+    </div>
+
+    <div class="product-card_fecha flex-column mt-1" *ngIf="!cartClass">
+      <ng-container *ngIf="isB2B">
+        <div>
+          <ng-container
+            *ngIf="
+              productData.fechaEntrega !== undefined &&
+              productData.fechaEntrega != null
+            "
+          >
+            <ng-container *ngIf="convertir">
+              <ng-container *ngIf="!tomorrow">
+                <i class="fas fa-shipping-fast mr-2"></i>
+                <i style="color: black; font-weight: bold"
+                  >Llega el {{ fecha | titlecase }}</i
+                >
+              </ng-container>
+
+              <ng-container *ngIf="tomorrow">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-shipping-fast mr-2"></i>
+                  <div
+                    style="
+                      margin-top: 2px;
+                      padding: 0px 5px;
+                      background-color: #00800033;
+                      border-radius: 4px;
+                    "
+                  >
+                    <i style="color: green; font-weight: bold"
+                      >Llega {{ fecha | titlecase }}</i
+                    >
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="!convertir">
+              <i class="fas fa-shipping-fast mr-2"></i>
+              <i style="color: black; font-weight: bold">{{
+                productData.fechaEntrega | date : "dd/MM/yyyy" | uppercase
+              }}</i>
+            </ng-container>
+          </ng-container>
+          <ng-container
+            *ngIf="
+              productData.fechaEntrega !== undefined &&
+              productData.fechaEntrega == null
+            "
+          >
+            <i class="fas fa-shipping-fast mr-2" style="color: grey"></i>
+            <i style="color: grey">No disponible</i>
+          </ng-container>
+        </div>
+
+        <ng-container *ngIf="productData.retiro">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-store mr-2"></i>
+            <div
+              style="
+                margin-top: 2px;
+                padding: 0px 5px;
+                background-color: #00800033;
+                border-radius: 4px;
+              "
+            >
+              <i style="color: green; font-weight: bold">Retira hoy</i>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container
+          *ngIf="
+            productData.retiro !== undefined && productData.retiro == false
+          "
+        >
+          <div style="margin-top: 2px">
+            <i class="fas fa-store mr-2" style="color: grey"></i>
+            <i style="color: grey">No disponible</i>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+    <div
+      *ngIf="productData?.uen === 'POST VENTA MARCOPOLO Y VOLARE'"
+      class="text-right"
+      style="line-height: 1rem; padding-top: 8px !important"
+    >
+      <small style="color: black"
+        >N° Parte: {{ productData.numero_parte }}</small
+      >
+    </div>
+    <div class="product-card__prices text-right pr-0">
+      <a
+        appClick
+        class="skuP"
+        (click)="setOrigenBeforeFicha()"
+        [routerLink]="
+          root.product(productData.sku, productData.nombre, paramsCategory)
+        "
+      >
+        <font style="color: black">SKU: {{ productData.sku }}</font>
+      </a>
+    </div>
+    <ul
+      *ngIf="productData.atributos?.length"
+      class="product-card__features-list"
+    >
+      <li *ngFor="let feature of productData.atributos | slice : 0 : 5">
+        <span class="producto-atributo-listado">{{
+          feature.nombre | titlecase
+        }}</span
+        >:
+        {{ feature.valor | titlecase }}
+      </li>
+
+      <li>
+        <a
+          (click)="setOrigenBeforeFicha()"
+          [routerLink]="
+            root.product(productData.sku, productData.nombre, paramsCategory)
+          "
+        >
+          Ver más...</a
+        >
+      </li>
+    </ul>
+  </div>
+
+  <div class="product-card__actions">
+    <div class="product-card__buttons">
+      <button
+        name="addToCart"
+        [disabled]="!productData.precio"
+        class="btn btn-secondary product-card__addtocart btn-block"
+        type="button"
+        appClick
+        (click)="addToCart()"
+        [ngClass]="{ 'btn-loading': addingToCart }"
+      >
+        <div class="text-center" style="font-size: 14px">AGREGAR</div>
+      </button>
+
+      <button
+        name="add"
+        [disabled]="!productData.precio"
+        class="btn btn-secondary product-card__addtocart product-card__addtocart--list"
+        type="button"
+        appClick
+        (click)="addToCart()"
+        [ngClass]="{ 'btn-loading': addingToCart }"
+      >
+        <div class="text-center" style="font-size: 14px">AGREGAR</div>
+      </button>
+
+      <button
+        name="addingToWishlist"
+        *ngIf="grid == 'list'"
+        ngbTooltip="Tooltip on top"
+        class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist"
+        type="button"
+        appClick
+        (click)="addToWishlist()"
+        [ngClass]="{ 'btn-loading': addingToWishlist }"
+      >
+        <i class="far fa-heart"></i>
+      </button>
+    </div>
+  </div>
+</div>

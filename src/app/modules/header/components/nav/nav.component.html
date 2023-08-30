@@ -1,0 +1,36 @@
+<!-- <div class="bg-white navbar-expand-md" style="border-bottom: 1px solid #c4c5cd;">
+    <div class="container" style="padding-left: 2rem; padding-right: 2rem; max-width: 1700px;">
+        <ul class="departments__links navbar-nav pb-0">
+            <li *ngFor="let item of items" class="departments__item "
+                [ngClass]="{'departments__item--menu': item.menu && item.menu.type == 'menu'}">
+
+                <ng-template #link>
+
+                    <a class="nav-link text-center p-0"
+                        style="font-size: 9.5px !important ;font-family: 'AvenirLTStd', sans-serif;">{{item.label }}</a>
+                </ng-template>
+
+                <a (click)="toggle()" *ngIf="!item.external" [routerLink]="item.url" [target]="item.target" class="">
+                    <ng-container [ngTemplateOutlet]="link"></ng-container>
+                </a>
+                <a (click)="toggle()" *ngIf="item.external" [routerLink]="item.url" [target]="item.target" class="">
+                    <ng-container [ngTemplateOutlet]="link"></ng-container>
+                </a>
+                <div *ngIf="permitir">
+                    <div (click)="toggle()" *ngIf="item.menu && item.menu.type == 'megamenu'"
+                        class="departments__megamenu departments__megamenu--{{ item.menu.size }}"
+                        style="z-index: 1000;">
+                        <app-header-megamenu [menu]="item.menu" [departments]="true"></app-header-megamenu>
+                    </div>
+
+                    <div (click)="toggle()" *ngIf="item.menu && item.menu.type == 'menu'" class="departments__menu"
+                        style="z-index: 1000;">
+                        <app-header-menu [items]="item.menu.items"></app-header-menu>
+                    </div>
+                </div>
+
+
+            </li>
+        </ul>
+    </div>
+</div> -->

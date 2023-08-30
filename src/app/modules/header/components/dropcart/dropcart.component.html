@@ -1,0 +1,145 @@
+<!-- .dropcart -->
+<div class="dropcart container-cart">
+  <div class="dropcart-title mb-3" style="color: #0d61bb">
+    <i class="fas fa-shopping-cart mr-1" style="color: #0d61bb"></i>
+    Carro de compra
+  </div>
+
+  <div class="dropcart__empty" *ngIf="!(cart.items$ | async).length">Todavia no ha agregado productos al carro</div>
+  <ng-container *ngIf="(cart.items$ | async).length">
+    <div class="dropcart__products-list">
+      <div *ngFor="let item of items; let i = index" class="cart-row d-flex">
+        <div class="dropcart__product-image mr-3">
+          <a [routerLink]="root.product(item.ProductCart.sku, item.ProductCart.nombre)">
+            <img
+              class="img-fluid lazyload"
+              alt="carro-compra"
+              [src]="root.getUrlImagenMiniatura(item.ProductCart)"
+              [alt]="item.ProductCart.nombre"
+            />
+          </a>
+        </div>
+        <div class="cart-product col-5 my-auto">
+          <div class="text-truncate">
+            <span class="product-title font-weight-bold" title=" {{ item.ProductCart.nombre | capitalizeFirst }}">
+              {{ item.ProductCart.nombre | capitalizeFirst }}
+            </span>
+          </div>
+
+          <span class="product-sku text-gray-2"> {{ item.ProductCart.sku }} </span>
+          <span class="product-sku text-gray-2"> {{ item.ProductCart.marca }} </span>
+          <!-- <div class="product-card__rating"  tooltip="Calidad del producto" placement="right" container="body">
+                                <app-rating [value]="4"></app-rating>
+                                <div class="product-card__rating-legend"></div>
+                            </div> -->
+          <div class="clearfix"></div>
+
+          <span class="product-price">
+            <!-- <span class="price-old"></span> -->
+            <span class="price-save font-weight-bold">
+              {{
+                (!isVacio(usuario.iva)
+                  ? usuario.iva
+                    ? item.ProductCart.precio
+                    : item.ProductCart.precio / (1 + IVA)
+                  : item.ProductCart.precio
+                ) | currencyFormat
+              }}
+              <em> {{ !isVacio(usuario.iva) ? (usuario.iva ? 'c/iva' : 's/iva') : 'c/iva' }}</em>
+            </span>
+          </span>
+        </div>
+
+        <div class="cart-quantity my-auto text-center" style="padding-top: 27px">
+          <app-input-number
+            [formControl]="item.quantityControl"
+            (quantity)="updateCart($event, item)"
+            [min]="1"
+          ></app-input-number>
+        </div>
+
+        <div class="cart-price col-2 my-auto text-center">
+          <span class="cart-price-value font-weight-bold"
+            >{{
+              (!isVacio(usuario.iva)
+                ? (usuario.iva ? item.ProductCart.precio : item.ProductCart.precio / (1 + IVA)) * item.quantity
+                : item.ProductCart.precio * item.quantity
+              ) | currencyFormat
+            }}
+            <em> {{ !isVacio(usuario.iva) ? (usuario.iva ? 'c/iva' : 's/iva') : 'c/iva' }}</em></span
+          >
+        </div>
+
+        <div class="col-delete-product d-flex align-items-center" (click)="remove(item.ProductCart)">
+          <!-- <i class="fas fa-times"></i> -->
+
+          <span style="cursor: pointer"> <i class="fas fa-trash-alt" style="color: #0d61bb"></i></span>
+        </div>
+      </div>
+
+      <!-- <div *ngFor="let item of cart.items$|async" class="dropcart__product">
+                <div class="dropcart__product-image">
+                    <a [routerLink]="root.product(item.sku, item.nombre)">
+
+                        <img [src]="root.getUrlImagenMiniatura(item)" [alt]="item.nombre">
+                    </a>
+                </div>
+                <div class="dropcart__product-info dropcart__product-info-1 my-auto col-3 mr-3">
+                    <div class="dropcart__product-name">
+                        <a [routerLink]="root.product(item.sku, item.nombre)">{{ item.nombre | capitalizeFirst }}</a>
+                    </div>
+
+                    <div class="dropcart__product-meta">
+                        <span class="dropcart__product-sku d-block text-gray-2">{{ item.sku }}</span>
+                        <span class="dropcart__product-price d-block">{{ item.precio|currencyFormat }}</span>
+                    </div>
+                </div>
+
+                <div class="dropcart__product-info my-auto ">
+                    <span class="dropcart__product-quantity">{{ item.cantidad }}</span>
+
+                </div>
+
+
+
+                <button class="btn btn-lg btn-circle btn-outline-danger border-delete-btn my-auto"
+                    (click)="remove(item)">
+                    <i class="fa fa-times"></i>
+                </button>
+
+            </div> -->
+    </div>
+
+    <!-- <div class="dropcart__totals ">
+            <table>
+                <tr *ngIf="(cart.totals$|async).length">
+                    <th>Subtotal</th>
+                    <td>{{ cart.subtotal$|async|currencyFormat }}</td>
+                </tr>
+                <tr *ngFor="let total of cart.totals$|async">
+                    <th>{{ total.title }}</th>
+                    <td>{{ total.price|currencyFormat  }}</td>
+                </tr>
+                <tr>
+                    <th>Total</th>
+                    <td>{{ cart.total$|async|currencyFormat }}</td>
+                </tr>
+            </table>
+        </div> -->
+
+    <div class="dropcart__buttons mt-2 p-0 row">
+      <div class="col-md-6 col-lg-6">
+        <a class="btn btn-lg btn-border-primary text-center w-100" [routerLink]="['/', 'carro-compra']">
+          <i class="fas fa-shopping-cart"></i> Ver carro</a
+        >
+      </div>
+
+      <div class="col-md-6 col-lg-6">
+        <a class="btn btn-lg btn-secondary w-100 text-center" [routerLink]="['/', 'carro-compra', 'metodo-de-envio']">
+          <i class="far fa-credit-card"></i> Comprar ahora</a
+        >
+      </div>
+    </div>
+  </ng-container>
+</div>
+<!-- .dropcart / end -->

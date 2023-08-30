@@ -1,5 +1,5 @@
 // Angular
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeCL from '@angular/common/locales/es-CL';
 
@@ -10,7 +10,7 @@ import { BrowserModule, Title } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Libs
 import { ToastrModule } from 'ngx-toastr';
-import { LocalStorageModule } from 'angular-2-local-storage';
+//import { LocalStorageModule } from 'angular-2-local-storage'; // NO SE USA
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule, BsModalRef } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -25,20 +25,21 @@ import { WidgetsModule } from './modules/widgets/widgets.module';
 
 // Interceptor
 import { BasicAuthInterceptor } from './core/interceptors/basic-auth.interceptor';
+import { LocalStorageService } from './core/modules/local-storage/local-storage.service';
+import { LocalStorageModule } from './core/modules/local-storage/local-storage.module';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     BrowserAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
-    LocalStorageModule.forRoot({
+    /*LocalStorageModule.forRoot({
       prefix: 'ImplementosB2B',
       storageType: 'localStorage'
-    }),
+    }),*/
+    LocalStorageModule,
     ToastrModule.forRoot(),
     HttpClientModule,
     BsDropdownModule.forRoot(),
@@ -47,15 +48,22 @@ import { BasicAuthInterceptor } from './core/interceptors/basic-auth.interceptor
     SharedModule,
     WidgetsModule,
     // NgtUniversalModule
-
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'CLP' },
 
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     Title,
-    BsModalRef
+    BsModalRef,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (provider: LocalStorageService) => {
+        return () => provider.setPrefix('ImplementosB2B.');
+      },
+      deps: [LocalStorageService],
+      multi: true,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

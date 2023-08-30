@@ -1,0 +1,239 @@
+<!-- <div class="row my-3 justify-content-center">
+
+    <div class="col-7 d-flex" *ngIf="!collapsed">
+
+        <div class="card card-filtro p-0 d-flex flex-column align-items-center">
+
+            <div class="d-flex flex-column w-100">
+                <tabset class="miTabset">
+                    <tab heading="BUSCAR POR VIN, PATENTE O N° DE PARTE" [class.mt-3]="buscado">
+                        <div class="p-3" [class.d-none]="buscado">
+                            <div class="row mb-5">
+                                <div class="col-9">
+                                    <div class="input-group">
+                                        <input type="search" class="form-control"
+                                            placeholder="INGRESE VIN, USUALMENTE N° DE 17 DÍGITOS"
+                                            (keyup)="vin = vin.toUpperCase();" aria-label="VIN" [(ngModel)]="vin">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-secondary btn-block" type="button"
+                                        (click)="buscarChassis()">BUSCAR <i
+                                            class="fas fa-search fa-lg ml-2"></i></button>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-9">
+                                    <div class="input-group">
+                                        <input type="search" class="form-control" placeholder="INGRESE PATENTE"
+                                            (keyup)="patente = patente.toUpperCase();" aria-label="patente"
+                                            [(ngModel)]="patente">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-secondary btn-block" type="button"
+                                        (click)="buscarChassis()">BUSCAR <i
+                                            class="fas fa-search fa-lg ml-2"></i></button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-9">
+                                    <div class="input-group">
+                                        <input type="search" class="form-control" [(ngModel)]="numeroParte"
+                                            placeholder="INGRESE N° DE PARTE">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-secondary btn-block" type="button"
+                                        (click)="buscarChassis()">BUSCAR <i
+                                            class="fas fa-search fa-lg ml-2"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-3" [class.d-none]="!buscado">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label pr-0">MARCA:</label>
+                                        <div class="col-sm-8 pl-0">
+                                            <input type="text" class="form-control" value="RANDON">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label pr-0">PANTENTE:</label>
+                                        <div class="col-sm-8 pl-0">
+                                            <input type="text" class="form-control" value="GVHZ95">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label pr-0">MODELO:</label>
+                                        <div class="col-sm-8 pl-0">
+                                            <input type="text" class="form-control" value="ACTROZ III">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label pr-0">N° DE MOTOR:</label>
+                                        <div class="col-sm-8 pl-0">
+                                            <input type="text" class="form-control" value="ZA73910BYHY">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label pr-0">AÑO:</label>
+                                        <div class="col-sm-8 pl-0">
+                                            <input type="text" class="form-control" value="2014">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label pr-0">N° VIN / CHASIS:</label>
+                                        <div class="col-sm-8 pl-0">
+                                            <input type="text" class="form-control" value="MB09583KJY8739G0M">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-12">
+                                    <button class="btn btn-primary float-right" type="button"
+                                            (click)="nuevaBusqueda()">NUEVA BÚSQUEDA <i class="fas fa-search fa-lg ml-2"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </tab>
+
+                    <tab heading="BUSCAR POR MARCA, MODELO Y AÑO" [class.mt-3]="buscado">
+                        <div class="p-3" [class.d-none]="buscado">
+                            <div class="row mb-4 justify-content-center">
+                                <div class="col-7">
+                                    <div class="input-group">
+                                        <select class="form-control bootstrap-select" [(ngModel)]="marca">
+                                            <option selected [value]="''">Seleccione marca...</option>
+                                            <option *ngFor="let item of marcas" [value]="item">{{item}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-4 justify-content-center">
+                                <div class="col-7">
+                                    <div class="input-group">
+                                        <select class="form-control bootstrap-select" [(ngModel)]="modelo">
+                                            <option selected [value]="''">Seleccione modelo...</option>
+                                            <option *ngFor="let item of modelos" [value]="item">{{item}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-4 justify-content-center">
+                                <div class="col-7">
+                                    <div class="input-group mb-2">
+                                        <select class="form-control bootstrap-select" [(ngModel)]="anio">
+                                            <option selected [value]="''">Seleccione año...</option>
+                                            <option *ngFor="let item of anios" [value]="item">{{item}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-center mt-2">
+                                <div class="col-7">
+                                    <button class="btn btn-secondary" type="button" (click)="buscarVehiculo()">BUSCAR <i
+                                            class="fas fa-search fa-lg ml-2"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-3" [class.d-none]="!buscado">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label pr-0">MARCA:</label>
+                                        <div class="col-sm-8 pl-0">
+                                            <input type="text" class="form-control" value="RANDON">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label pr-0">PANTENTE:</label>
+                                        <div class="col-sm-8 pl-0">
+                                            <input type="text" class="form-control" value="GVHZ95">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label pr-0">MODELO:</label>
+                                        <div class="col-sm-8 pl-0">
+                                            <input type="text" class="form-control" value="ACTROZ III">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label pr-0">N° DE MOTOR:</label>
+                                        <div class="col-sm-8 pl-0">
+                                            <input type="text" class="form-control" value="ZA73910BYHY">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label pr-0">AÑO:</label>
+                                        <div class="col-sm-8 pl-0">
+                                            <input type="text" class="form-control" value="2014">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label pr-0">N° VIN / CHASIS:</label>
+                                        <div class="col-sm-8 pl-0">
+                                            <input type="text" class="form-control" value="MB09583KJY8739G0M">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-12">
+                                    <button class="btn btn-primary float-right" type="button"
+                                            (click)="nuevaBusqueda()">NUEVA BÚSQUEDA <i class="fas fa-search fa-lg ml-2"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </tab>
+                </tabset>
+            </div>
+        </div>
+    </div>
+    <div class="imagen col-5 d-none">
+        <div class="card card-filtro p-0" *ngIf="!collapsed">
+            <tabset class="miTabset">
+                <tab heading="TIPO DE VEHÍCULO: SEMIRREMOLQUE">
+                    <div class="mt-2">
+                        <div class="imagen p-0">
+                            <app-imagen [collapsed]="collapsed"></app-imagen>
+                        </div>
+                    </div>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div> -->

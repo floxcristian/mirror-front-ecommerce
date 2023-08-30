@@ -1,0 +1,79 @@
+<div
+  class="indicator indicator--trigger--click"
+  appDropdown="indicator--opened"
+  #menuUser="appDropdown"
+>
+  <span
+    class="indicator__button flex-column"
+    (click)="$event.preventDefault(); cerrarBienvenida(); menuUser.toggle()"
+    style="padding-top: 10px !important"
+  >
+    <span class="indicator__area fa p-0">
+      <img
+        src="../../../../../assets/svg/08.svg"
+        style="width: 23px; height: 28px"
+      />
+    </span>
+    <span
+      class="icon-title"
+      *ngIf="this.usuario == null || this.usuario.login_temp == true"
+      style="font-size: 0.5rem !important"
+    >
+      Ingresar
+    </span>
+    <span
+      class="icon-title"
+      *ngIf="this.usuario != null && this.usuario.login_temp == false"
+      style="font-size: 0.5rem !important"
+    >
+      {{ usuario.first_name | capitalizeFirst : true }}
+    </span>
+  </span>
+
+  <div class="indicator__dropdown" style="max-height: auto; overflow-y: auto">
+    <ng-container *ngIf="mostrarMenu && !mostrarBienvenida">
+      <app-header-menu layout="topbar" [items]="linkMiCuenta">
+      </app-header-menu>
+    </ng-container>
+    <ng-container *ngIf="!mostrarMenu">
+      <app-header-login
+        (muestraLogin)="cambiaElementosMenu($event)"
+        [linkRegister]="true"
+      >
+      </app-header-login>
+    </ng-container>
+
+    <div
+      *ngIf="mostrarMenu && mostrarBienvenida"
+      class="alert-session card p-4 mt-4"
+    >
+      <p class="font-weight-bold title-sesion">
+        Bienvenido
+        <span *ngIf="this.usuario != null">
+          {{ usuario.first_name | capitalizeFirst : true }}
+          {{ usuario.last_name | capitalizeFirst : true }}
+        </span>
+      </p>
+      <p class="font-weight-bold">
+        Se han cargado tus precios especiales de {{ usuario.company }}
+      </p>
+      <p class="text-gray-2 subtitle mb-2">
+        Recuerda que puedes ingresar a tu cuenta para:
+      </p>
+      <ul class="text-gray-2 subtitle pl-4">
+        <li>Ver historial de pedidos</li>
+        <li>Mis listas guardadas</li>
+        <li>Chat con mi vendedor</li>
+        <li>Y mucho más</li>
+      </ul>
+
+      <button
+        name="close"
+        class="btn btn-link"
+        (click)="menuUser.toggle(); cerrarBienvenida()"
+      >
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>

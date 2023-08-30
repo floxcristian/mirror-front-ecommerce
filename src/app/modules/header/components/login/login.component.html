@@ -1,0 +1,34 @@
+<div id="formContent" style="padding-top: 30px">
+  <!-- Login Form -->
+  <div class="col-sm-12 d-flex justify-content-start ml-3" style="color: #0063b9; font-weight: bold">INICIAR SESIÓN</div>
+  <form [formGroup]="form">
+    <div>
+      <input formControlName="username" type="email" placeholder="Email" />
+      <div class="pwd">
+        <input formControlName="password" type="password" #psw placeholder="Contraseña" />
+        <span class="p-viewer" (click)="ChangeType(psw)">
+          <ng-container *ngIf="texto">
+            <i class="far fa-eye"></i>
+          </ng-container>
+          <ng-container *ngIf="!texto">
+            <i class="far fa-eye-slash"></i>
+          </ng-container>
+        </span>
+      </div>
+      <div class="rounded float-left" style="padding: 15px 32px">
+        <a href="/sitio/recover"> ¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <input (click)="entrar()" [disabled]="!form.valid" type="submit" value="Ingresar" />
+    </div>
+  </form>
+
+  <!-- Remind Passowrd -->
+  <div id="formFooter" style="margin-top: 15px">
+    <div class="rounded float-center" style="padding: 15px 32px">
+      <label style="color: #0063b9; font-weight: bold">¿Eres nuevo en Implementos?</label>
+      <label style="color: #0063b9; font-weight: bold">¡Crear tu cuenta con nosotros!</label>
+    </div>
+    <input (click)="Registrar()" type="button" class="fadeIn fourth" value="Registrarme" />
+  </div>
+</div>

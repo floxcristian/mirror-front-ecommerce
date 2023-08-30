@@ -1,0 +1,39 @@
+.modal-header {
+    padding: 0.5rem 1rem;
+    align-items: center;
+
+    .close {
+        margin: 0;
+        padding: 0 0.5rem;
+    }
+}
+
+.modal-body {
+    font-size: 15px;
+    min-height: auto !important;
+}
+
+.text-success {
+    color: #28a745 !important
+}
+
+::ng-deep.modal-sm2 {
+    max-width: 450px !important;
+}
+
+.validacion {
+    width: 50%;
+    text-align: start;
+    color: red;
+    font-size: 75%;
+}
+
+.max-caracteres {
+    width: 50%;
+    text-align: end;
+    font-size: 75%;
+}
+
+.dropdown-toggle::after {
+    display: none;
+}

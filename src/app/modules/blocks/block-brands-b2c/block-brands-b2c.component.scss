@@ -1,0 +1,15 @@
+.marca {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 7px;
+  margin-right: 8px;
+  border: none;
+  border-radius: 10px;
+}
+
+::ng-deep .marcas.owl-carousel .owl-item {
+  display: flex;
+  border-radius: 20px;
+  margin-left: 10px;
+}
