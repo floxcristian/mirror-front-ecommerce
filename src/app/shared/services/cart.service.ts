@@ -12,6 +12,7 @@ import { Usuario } from '../interfaces/login';
 import { DatePipe } from '@angular/common';
 import { GeoLocationService } from './geo-location.service';
 import { isVacio } from '../utils/utilidades';
+import { ResponseApi } from '../interfaces/response-api';
 
 @Injectable({
   providedIn: 'root',
@@ -1149,8 +1150,11 @@ export class CartService {
     );
   }
 
-  cartTransfer(data: any) {
-    return this.http.put(environment.apiImplementosCarro + `traspaso`, data);
+  cartTransfer(data: any): Observable<ResponseApi> {
+    return this.http.put<ResponseApi>(
+      environment.apiImplementosCarro + `traspaso`,
+      data
+    );
   }
 
   getPriceProduct(params: any) {

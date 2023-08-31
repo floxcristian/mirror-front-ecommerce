@@ -77,7 +77,7 @@ import { MenuCategoriaB2cMobileComponent } from './components/menu-categorias-b2
     MenuCategoriasB2cComponent,
     MenuCategoriaB2cMobileComponent,
     Nivel2Component,
-    //Nivel3Component,
+    Nivel3Component,
   ],
   imports: [
     // modules (angular)
@@ -86,7 +86,7 @@ import { MenuCategoriaB2cMobileComponent } from './components/menu-categorias-b2
     // modules
     SharedModule,
     FormsModule,
-    //BlocksModule,
+    BlocksModule,
     WidgetsModule,
     NgSelectModule,
     // modules

@@ -127,7 +127,7 @@
   <div class="product-card__info position-relative">
     <div
       class="product-card__badges-list-right"
-      *ngIf="productData.cyberMonday > 0"
+      *ngIf="(productData.cyberMonday || 0) > 0"
     >
       <div
         class="badge_cyber float-right"
@@ -154,7 +154,7 @@
 
     <div
       class="product-card__badges-list-right"
-      *ngIf="productData.cyber > 0 && productData.cyberMonday === 0"
+      *ngIf="(productData.cyber || 0) > 0 && productData.cyberMonday === 0"
     >
       <div
         class="badge_cyber float-right"
@@ -228,7 +228,7 @@
           class="product-card__new-price col-12"
           style="padding-left: 0 !important; padding-right: 5px !important"
         >
-          {{ productData?.precio?.precio | currencyFormat }} <em> c/iva </em>
+          {{ productData.precio.precio | currencyFormat }} <em> c/iva </em>
         </div>
 
         <div
@@ -240,7 +240,7 @@
             margin-left: 5px;
           "
         >
-          {{ productData?.precio?.precio | currencyFormat }} <em> c/iva </em>
+          {{ productData.precio.precio | currencyFormat }} <em> c/iva </em>
         </div>
 
         <div
@@ -253,7 +253,7 @@
             padding-right: 5px !important;
           "
         >
-          {{ productData?.precioComun | currencyFormat }} <em> c/iva </em>
+          {{ productData.precioComun | currencyFormat }} <em> c/iva </em>
           <br />
         </div>
       </ng-container>
@@ -357,9 +357,7 @@
             <td>
               <strong
                 >{{ precio.desde }} -
-                {{
-                  precio.hasta === 999 ? "y más" : precio.hasta - 1
-                }}
+                {{ precio.hasta === 999 ? "y más" : precio.hasta - 1 }}
                 und.</strong
               >
             </td>

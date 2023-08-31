@@ -48,11 +48,9 @@ import { FooterModule } from '../footer/footer.module';
     QuickviewComponent,
     RatingComponent,*/
     DescripcionComponent,
-    /*DespachoComponent,*/
+    DespachoComponent,
     FechasPromesasComponent,
-    /*
     MapaFichasComponent,
-*/
     DetalleTecnicosComponent,
     ComentariosComponent,
   ],

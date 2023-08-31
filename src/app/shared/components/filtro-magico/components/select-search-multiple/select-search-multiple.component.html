@@ -1,0 +1,17 @@
+<ng-select
+  [multiple]="multiple"
+  [compareWith]="compararValor"
+  placeholder="Escriba 3 o más caracteres"
+  [minTermLength]="3"
+  typeToSearchText="Escriba 3 o más caracteres"
+  [notFoundText]="'No se encontraron registros'"
+  [loading]="loading"
+  [loadingText]="'Cargando...'"
+  [typeahead]="input$"
+  [(ngModel)]="valores"
+  (change)="valoresCambiados()"
+>
+  <ng-option *ngFor="let item of valoresSelect$ | async" [value]="item">
+    {{ opcionSelect?.(item) }}
+  </ng-option>
+</ng-select>

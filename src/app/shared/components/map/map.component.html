@@ -1,0 +1,21 @@
+<div class="form-group" [hidden]="showSearchBar" style="color: #0063b9">
+    <label>{{ titulo || 'Ingrese Dirección' }}</label>
+    <div class="input-group">
+        <input type="text" class="form-control" (keydown.enter)="$event.preventDefault()" placeholder="Nombre Dirección"
+            autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search />
+        <button class="btn bg-transparent" (click)="clearSearch()" style="margin-left: -40px; z-index: 100">
+            <i class="fa fa-times" style="font-size: 13px !important"></i>
+        </button>
+    </div>
+</div>
+<div class="mr-1 ml-1">
+    <agm-map [latitude]="lat" [mapTypeId]="autocompletado === true ? 'hybrid' : 'roadmap'" [longitude]="lng"
+        [zoom]="zoom" [disableDefaultUI]="autocompletado === true ? true : false">
+        <agm-marker [latitude]="lat" [longitude]="lng" [markerDraggable]="autocompletado === true ? true : false"
+            (dragEnd)="markerDragEnd($event)">
+            <agm-info-window *ngIf="infoWindowContent" [disableAutoPan]="false" isOpen="true">
+                {{ infoWindowContent }}
+            </agm-info-window>
+        </agm-marker>
+    </agm-map>
+</div>

@@ -1,22 +1,33 @@
 <div class="mobilemenu" [ngClass]="{ 'mobilemenu--open': isOpen }">
-    <div class="mobilemenu__backdrop" (click)="menuCategorias.close()"></div>
-    <div class="mobilemenu__body">
-        <div class="px-3 d-flex align-items-center" style="height: 50px">
-            <i class="fa-regular fa-square-xmark fa-2x" style="cursor: pointer" (click)="menuCategorias.close()"></i>
-        </div>
-
-        <div class="mobilemenu__content">
-            <ul>
-                <li class="mb-3 d-flex justify-content-between" *ngFor="let item of items">
-                    <div class="text-truncate" (click)="menuCategorias.open(2, item);">
-                        {{ item.label | titlecase }}</div>
-                    <div style="width: 20px" (click)="menuCategorias.open(2, item);">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div>
-                </li>
-            </ul>
-        </div>
+  <div class="mobilemenu__backdrop" (click)="menuCategorias.close()"></div>
+  <div class="mobilemenu__body">
+    <div class="px-3 d-flex align-items-center" style="height: 50px">
+      <i
+        class="fa-regular fa-square-xmark fa-2x"
+        style="cursor: pointer"
+        (click)="menuCategorias.close()"
+      ></i>
     </div>
+
+    <div class="mobilemenu__content">
+      <ul>
+        <li
+          class="mb-3 d-flex justify-content-between"
+          *ngFor="let item of items"
+        >
+          <div class="text-truncate" (click)="menuCategorias.open(2, item)">
+            {{ item.label | titlecase }}
+          </div>
+          <div style="width: 20px" (click)="menuCategorias.open(2, item)">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
 
-<app-nivel2 [items]="items" (seleccionado)="menuCategorias.close()"></app-nivel2>
+<app-nivel2
+  [items]="items"
+  (seleccionado)="menuCategorias.close()"
+></app-nivel2>

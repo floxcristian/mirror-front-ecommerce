@@ -1,27 +1,33 @@
-import { Component, Input, ViewChild, TemplateRef, Renderer2, ElementRef, PLATFORM_ID, Inject, OnInit } from '@angular/core';
+import {
+  Component,
+  Renderer2,
+  ElementRef,
+  PLATFORM_ID,
+  Inject,
+  OnInit,
+} from '@angular/core';
 import { RootService } from '../../../../shared/services/root.service';
-
 import { CategoryService } from '../../../../shared/services/category.service';
 import { ToastrService } from 'ngx-toastr';
 import { CategoryApi } from '../../../../shared/interfaces/category-api';
 import { NavigationLink } from '../../../../shared/interfaces/navigation-link';
-
-import { Subject, fromEvent } from 'rxjs';
+import { Subject } from 'rxjs';
 import { DepartmentsService } from '../../../../shared/services/departments.service';
+import { Megamenu } from 'src/app/shared/interfaces/megamenu';
 
 @Component({
   selector: 'app-header-nav',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.scss']
+  styleUrls: ['./nav.component.scss'],
 })
 export class NavComponent implements OnInit {
   private destroy$: Subject<any> = new Subject();
   permitir: boolean = true;
   items: NavigationLink[] = [];
-  private categoriaDetalle: NavigationLink;
+  private categoriaDetalle!: NavigationLink;
   private arrayCategorias: NavigationLink[] = [];
   private segundoNivel: any;
-  private sizeColumn: number;
+  private sizeColumn!: number;
 
   isOpen = true;
   fixed = false;
@@ -51,7 +57,7 @@ export class NavComponent implements OnInit {
         this.sortCategories(categorias);
         this.formatCategories(categorias);
       },
-      e => {
+      (e) => {
         this.toastr.error('Error de conexión con el servidor');
       }
     );
@@ -60,23 +66,30 @@ export class NavComponent implements OnInit {
   formatCategories(data: CategoryApi[]) {
     for (const primeraCategoria of data) {
       this.categoriaDetalle = {
-        url: ['/', 'inicio', 'productos', 'todos', 'categoria', this.root.replaceSlash(primeraCategoria.url)],
+        url: [
+          '/',
+          'inicio',
+          'productos',
+          'todos',
+          'categoria',
+          this.root.replaceSlash(primeraCategoria.url),
+        ],
         label: `${primeraCategoria.title}`,
         menu: {
           type: 'megamenu',
           size: 'xl',
           image: 'assets/images/megamenu/megamenu-1.jpg',
-          columns: []
-        }
+          columns: [],
+        },
       };
 
       // // agregamos los item internet
-      for (const segundaCategoria of primeraCategoria.children) {
+      for (const segundaCategoria of primeraCategoria.children || []) {
         // tamaño de la columna de bootstrap por defecto
-        const rColumns = this.getSizeColumns(primeraCategoria.children.length);
+        const rColumns = this.getSizeColumns(primeraCategoria.children?.length);
 
         this.sizeColumn = rColumns.columnas;
-        this.categoriaDetalle.menu['size'] = rColumns.estilo;
+        (this.categoriaDetalle.menu as Megamenu).size = rColumns.estilo as any;
 
         this.segundoNivel = {
           size: this.sizeColumn,
@@ -90,16 +103,16 @@ export class NavComponent implements OnInit {
                 'todos',
                 'categoria',
                 this.root.replaceSlash(primeraCategoria.url),
-                this.root.replaceSlash(segundaCategoria.url)
+                this.root.replaceSlash(segundaCategoria.url),
               ],
-              items: ''
-            }
-          ]
+              items: '',
+            },
+          ],
         };
 
         // Creamos tercer nivel -> Lineas
         const tercerNivel = [];
-        for (const terceraCategoria of segundaCategoria.children) {
+        for (const terceraCategoria of segundaCategoria.children || []) {
           const dataLineas = {
             label: `${terceraCategoria.title}`,
             url: [
@@ -110,14 +123,16 @@ export class NavComponent implements OnInit {
               'categoria',
               this.root.replaceSlash(primeraCategoria.url),
               this.root.replaceSlash(segundaCategoria.url),
-              this.root.replaceSlash(terceraCategoria.url)
-            ]
+              this.root.replaceSlash(terceraCategoria.url),
+            ],
           };
           tercerNivel.push(dataLineas);
         }
 
         this.segundoNivel.items[0].items = tercerNivel;
-        this.categoriaDetalle.menu['columns'].push(this.segundoNivel);
+        (this.categoriaDetalle.menu as Megamenu).columns.push(
+          this.segundoNivel
+        );
       }
       this.arrayCategorias.push(this.categoriaDetalle);
     }
@@ -125,9 +140,9 @@ export class NavComponent implements OnInit {
     // this.open();
   }
 
-  private sortCategories(items) {
+  private sortCategories(items: any[]) {
     for (const item of items) {
-      const segundaCategoria = item.children;
+      const segundaCategoria: any[] = item.children;
 
       segundaCategoria.sort((a, b) => {
         if (a.children.length < b.children.length) {
@@ -141,7 +156,7 @@ export class NavComponent implements OnInit {
     }
   }
 
-  getSizeColumns(columnas) {
+  getSizeColumns(columnas: any) {
     let sizeColumn = 3;
     let estilo = 'xxl';
 
@@ -159,80 +174,30 @@ export class NavComponent implements OnInit {
     return { columnas: sizeColumn, estilo };
   }
 
-  addChild(items: CategoryApi[], arrCategoria) {
+  addChild(items: CategoryApi[], arrCategoria: any[]) {
     if (items.length > 0) {
       let cont = 0;
       for (const item of items) {
         const obj: NavigationLink = {
           label: item.title,
-          url: ['/', 'inicio', 'productos', 'todos', 'categoria', this.root.replaceSlash(item.url)]
+          url: [
+            '/',
+            'inicio',
+            'productos',
+            'todos',
+            'categoria',
+            this.root.replaceSlash(item.url),
+          ],
         };
         arrCategoria.push(obj);
-        if (item.children.length > 0) {
+        if ((item.children?.length || 0) > 0) {
           arrCategoria[cont].items = [];
-          this.addChild(item.children, arrCategoria[cont].items);
+          this.addChild(item.children || [], arrCategoria[cont].items);
         }
         cont++;
       }
     }
   }
-
-  /*  updateCategories() {
-         const root = this.element.querySelector('.departments') as HTMLElement;
-         const content = this.element.querySelector('.departments__links-wrapper') as HTMLElement;
- 
-         this.service.areaElement$.pipe(takeUntil(this.destroy$)).subscribe(areaElement => {
-             if (areaElement) {
-                 this.fixed = true;
-                 this.isOpen = true;
- 
-                 if (isPlatformBrowser(this.platformId)) {
-                     const areaRect = areaElement.getBoundingClientRect();
-                     const areaBottom = areaRect.top + areaRect.height + window.scrollY;
- 
-                     root.classList.remove('departments--transition');
-                     root.classList.add('departments--fixed', 'departments--opened');
- 
-                     const height = areaBottom - (content.getBoundingClientRect().top + window.scrollY);
- 
-                     content.style.height = `${height}px`;
-                     content.getBoundingClientRect(); // force reflow
-                 } else {
-                     // this.renderer.addClass(root, 'departments--fixed');
-                     // this.renderer.addClass(root, 'departments--opened');
-                 }
-             } else {
-                 this.fixed = false;
-                 this.isOpen = false;
- 
-                 if (isPlatformBrowser(this.platformId)) {
-                     root.classList.remove('departments--opened', 'departments--fixed');
-                     content.style.height = '';
-                 } else {
-                     // this.renderer.removeClass(root, 'departments--fixed');
-                     // this.renderer.removeClass(root, 'departments--opened');
-                 }
-             }
-         });
- 
-         if (isPlatformBrowser(this.platformId)) {
-             fromEvent<MouseEvent>(document, 'mousedown').pipe(
-                 takeUntil(this.destroy$)
-             ).subscribe((event) => {
-                 if (event.target instanceof HTMLElement && !this.element.contains(event.target)) {
-                     this.close();
-                 }
-             });
-             fromEvent<TransitionEvent>(content, 'transitionend').pipe(
-                 takeUntil(this.destroy$)
-             ).subscribe((event) => {
-                 if (event.propertyName === 'height') {
-                     root.classList.remove('departments--transition');
-                 }
-             });
-         }
-         this.open()
-     } */
 
   toggle(): void {
     if (this.isOpen) {
@@ -248,7 +213,7 @@ export class NavComponent implements OnInit {
     this.cerrarMenu();
   }
 
-  public close(): void {
+  close(): void {
     if (this.fixed || !this.isOpen) {
       return;
     }

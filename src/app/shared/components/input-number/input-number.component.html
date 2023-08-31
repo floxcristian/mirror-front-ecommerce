@@ -1,0 +1,25 @@
+<div class="input-group">
+  <div data-name="gtm_minus" class="input-group-prepend" (mousedown)="sub()">
+    <span class="input-group-text" style="cursor: pointer">
+      <i class="fas fa-minus m-auto" style="font-size: 10px"></i>
+    </span>
+  </div>
+  <input
+    class="form-control text-center"
+    type="number"
+    [min]="options.min"
+    [max]="options.max"
+    [value]="value"
+    [disabled]="options.disabled"
+    [readOnly]="options.readonly"
+    (blur)="onTouched()"
+    (change)="changeValue()"
+    #inputElement
+    (input)="input()"
+  />
+  <div data-name="gtm_add" class="input-group-append" (mousedown)="add()">
+    <span class="input-group-text" style="cursor: pointer">
+      <i class="fas fa-plus m-auto" style="font-size: 10px"></i>
+    </span>
+  </div>
+</div>

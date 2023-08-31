@@ -23,8 +23,7 @@ import { Router } from '@angular/router';
 import { GeoLocationService } from '../../services/geo-location.service';
 import { isVacio } from '../../utils/utilidades';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-//import { BsModalRef, BsModalService } from 'ngx-bootstrap';
-//import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-product-card-b2c-cms',
@@ -46,7 +45,6 @@ export class ProductCardB2cCmsComponent implements OnInit {
   @Input() set product(value: Product) {
     this.productData = value;
     this.productData.nombre = this.root.limpiarNombres(this.productData.nombre);
-
     this.quality = this.root.setQuality(this.productData);
     this.root.limpiaAtributos(value);
   }
@@ -73,6 +71,7 @@ export class ProductCardB2cCmsComponent implements OnInit {
   quality: any = 0;
   precioProducto = 0;
   today = Date.now();
+  IVA = 0.19;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -121,7 +120,7 @@ export class ProductCardB2cCmsComponent implements OnInit {
     }
 
     //calcular porcentaje de descuento
-    if (this.productData.precioComun > this.productData.precio.precio) {
+    if ((this.productData.precioComun || 0) > this.productData.precio.precio) {
       this.porcentaje_descuento();
     }
     let url: string = this.root.product(
@@ -224,11 +223,10 @@ export class ProductCardB2cCmsComponent implements OnInit {
 
   porcentaje_descuento() {
     let descuento =
-      this.productData.precioComun - this.productData.precio.precio;
+      (this.productData.precioComun || 0) - this.productData.precio.precio;
     this.porcentaje = Math.round(
-      (descuento / this.productData.precioComun) * 100
+      (descuento / (this.productData.precioComun || 1)) * 100
     );
-    //this.porcentaje = 0;
   }
 
   verPreciosEscala(popover: NgbPopover) {

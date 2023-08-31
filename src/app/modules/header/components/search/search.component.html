@@ -1,244 +1,435 @@
 <div class="search d-flex align-items-center">
-    <div class="nav-panel__indicators d-flex align-items-center" style="width: 160px">
-        <div class="indicator position-relative indicator--trigger--click" (click)="menuCategorias.open(null, null)">
-            <span class="indicator__button mr-3" style="cursor: pointer;">
-                <!-- <span class="icon-title mt-1 mr-3"> Categorías</span> -->
-                <i class="fa-regular fa-bars hamburguesa"></i>
+  <div
+    class="nav-panel__indicators d-flex align-items-center"
+    style="width: 160px"
+  >
+    <div
+      class="indicator position-relative indicator--trigger--click"
+      (click)="menuCategorias.open(null, null)"
+    >
+      <span class="indicator__button mr-3" style="cursor: pointer">
+        <i class="fa-regular fa-bars hamburguesa"></i>
+      </span>
+    </div>
+    <div class="col-sm-5 p-0 d-flex justify-content-center">
+      Menú Categorías
+    </div>
+  </div>
+
+  <div class="search__form col p-0 mr-5">
+    <div
+      class="indicator indicator--trigger--click position-relative dropdown-search col p-0"
+      appDropdown="indicator--opened"
+      #menuSearch="appDropdown"
+    >
+      <input
+        [(ngModel)]="textToSearch"
+        (click)="menuSearch.open()"
+        (keydown)="reset()"
+        (keyup.enter)="buscar(); menuSearch.toggle(); blurInput()"
+        [formControl]="searchControl"
+        class="search__input"
+        name="search"
+        placeholder="¿Qué buscas?"
+        aria-label="Site search"
+        type="text"
+        autocomplete="off"
+        (focus)="focusInput()"
+        [ngStyle]="{ 'z-index': isFocusedInput ? '1001' : 'unset' }"
+      />
+
+      <button
+        name="clear"
+        type="button"
+        class="search__button clear__button"
+        (click)="textToSearch = ''"
+        [ngStyle]="{ 'z-index': isFocusedInput ? '1001' : 'unset' }"
+      >
+        <i class="fa-regular fa-xmark fa-lg"></i>
+      </button>
+      <button
+        name="buscar"
+        class="search__button"
+        type="button"
+        (click)="buscar(); menuSearch.toggle(); blurInput()"
+        [ngStyle]="{ 'z-index': isFocusedInput ? '1001' : 'unset' }"
+      >
+        <img
+          src="../../../../../assets/svg/10.svg"
+          style="width: 20px"
+          alt="buscar"
+        />
+      </button>
+
+      <div class="indicator__dropdown">
+        <div
+          *ngIf="
+            productosEncontrados.length == 0 &&
+            textToSearch.length > 0 &&
+            buscando == false
+          "
+          class="products-list-search"
+        >
+          <div class="item item-no-found">
+            <span> No se encontraron coincidencias para </span>
+            <span class="font-weight-bold">
+              <font color="blue">{{ textToSearch | capitalizeFirst }}</font>
             </span>
+          </div>
         </div>
-        <div class="col-sm-5 p-0 d-flex justify-content-center">Menú Categorías</div>
-    </div>
 
-    <div class="search__form col p-0 mr-5">
-        <div class="indicator indicator--trigger--click position-relative dropdown-search col p-0"
-            appDropdown="indicator--opened" #menuSearch="appDropdown">
-            <input [(ngModel)]="textToSearch" (click)="menuSearch.open()" (keydown)="reset()"
-                (keyup.enter)="buscar(); menuSearch.toggle(); blurInput()" [formControl]="searchControl"
-                class="search__input" name="search" placeholder="¿Qué buscas?" aria-label="Site search" type="text"
-                autocomplete="off" (focus)="focusInput()"
-                [ngStyle]="{ 'z-index': isFocusedInput ? '1001' : 'unset' }" />
-
-            <button name="clear" type="button" class="search__button clear__button" (click)="textToSearch = ''"
-                [ngStyle]="{ 'z-index': isFocusedInput ? '1001' : 'unset' }">
-                <i class="fa-regular fa-xmark fa-lg"></i>
-            </button>
-            <button name="buscar" class="search__button" type="button"
-                (click)="buscar(); menuSearch.toggle(); blurInput()"
-                [ngStyle]="{ 'z-index': isFocusedInput ? '1001' : 'unset' }">
-                <img src="../../../../../assets/svg/10.svg" style="width: 20px" alt="buscar" />
-            </button>
-
-            <div class="indicator__dropdown">
-                <div *ngIf="productosEncontrados.length == 0 && textToSearch.length > 0 && buscando == false"
-                    class="products-list-search">
-                    <div class="item item-no-found">
-                        <span> No se encontraron coincidencias para </span>
-                        <span class="font-weight-bold">
-                            <font color="blue">{{ textToSearch | capitalizeFirst }}</font>
-                        </span>
-                    </div>
+        <div
+          class="row ml-1 mt-3"
+          *ngIf="(productosEncontrados?.length || 0) > 0"
+        >
+          <div class="col-30 col">
+            <div class="row css-categorias">
+              <div
+                class="col-12"
+                *ngIf="(sugerencias?.length || 0) > 1"
+                style="height: 160px"
+              >
+                <div
+                  class="products-list-search"
+                  *ngIf="sugerencias.length > 0"
+                >
+                  <div class="item">
+                    <a
+                      (click)="
+                        menuSearch.toggle();
+                        seleccionado = true;
+                        blurInput();
+                        textToSearch = sugerencias[0].sugerencia
+                      "
+                      [routerLink]="[
+                        '/',
+                        'inicio',
+                        'productos',
+                        sugerencias[0].sugerencia
+                      ]"
+                    >
+                      <b class="text-uppercase" style="color: #094cac"
+                        >Quizás esta buscando {{ sugerencias[0].sugerencia }}</b
+                      >...
+                    </a>
+                  </div>
                 </div>
-
-                <div class="row ml-1 mt-3" *ngIf="productosEncontrados?.length > 0">
-                    <div class="col-30 col">
-                        <div class="row css-categorias">
-                            <div class="col-12" *ngIf="sugerencias?.length > 1" style="height: 160px">
-                                <div class="products-list-search" *ngIf="sugerencias.length > 0">
-                                    <div class="item">
-                                        <a (click)="menuSearch.toggle(); seleccionado = true; blurInput(); textToSearch = sugerencias[0].sugerencia"
-                                            [routerLink]="['/', 'inicio', 'productos', sugerencias[0].sugerencia]">
-                                            <b class="text-uppercase" style="color: #094cac;">Quizás esta buscando
-                                                {{ sugerencias[0].sugerencia }}</b>...
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="products-list-search" *ngFor="let item of sugerencias | slice: 1:5">
-                                    <div class="item">
-                                        <a (click)="menuSearch.toggle(); seleccionado = true; blurInput(); textToSearch = item.sugerencia"
-                                            [routerLink]="['/', 'inicio', 'productos', item.sugerencia]">
-                                            <span
-                                                [innerHTML]="item.html.replace('<em>', '<b>').replace('</em>', '</b>')"></span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="categories-list-search" *ngIf="productosEncontrados?.length > 0">
-                                    <div class="font-weight-bold text-uppercase"
-                                        style="padding: 0.5rem 0.75rem; font-size: 0.9rem; color: #094cac">
-                                        Categorias
-                                    </div>
-                                    <div class="item" *ngFor="let item of categorias | slice: 0:3">
-                                        <a [routerLink]="item.url"
-                                            (click)="menuSearch.toggle(); blurInput(); seleccionado = false">
-                                            <span>{{ item.name | capitalizeFirst }}</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-2 mb-2 pr-4"
-                        style="border-left: solid 1px #094cac; border-right: solid 1px #094cac">
-                        <div class="font-weight-bold text-uppercase"
-                            style="padding: 0.5rem 0.75rem; font-size: 0.9rem; color: #094cac">
-                            Marcas
-                        </div>
-                        <div class="products-list-search" *ngFor="let item of marcas | slice: 0:8">
-                            <div class="item text-truncate">
-                                <a [routerLink]="'/inicio/productos/' + textToSearch"
-                                    [queryParams]="{ filter_MARCA: item.marca }"
-                                    (click)="menuSearch.toggle(); blurInput(); seleccionado = false">
-                                    <div class="row">
-                                        <div class="col-8">
-                                            {{ item.marca | titlecase }}
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="font-weight-bold text-uppercase"
-                            style="padding: 0.5rem 0.75rem; font-size: 0.9rem; color: #094cac">
-                            Resultados de Productos
-                        </div>
-                        <div class="d-flex justify-content-around m-2">
-                            <div class="d-flex flex-column px-3" *ngFor="let item of productosEncontrados | slice: 0:3"
-                                style="width: 180px">
-                                <div class="mb-3 d-flex justify-content-center">
-                                    <a [routerLink]="item.url"
-                                        (click)="menuSearch.toggle(); blurInput(); seleccionado = true">
-                                        <img [src]="root.getUrlImagenMiniatura150(item)" alt="producto" width="110px"
-                                            height="110px" />
-                                    </a>
-                                </div>
-                                <div style="color: #094cac">
-                                    {{ item.marca | titlecase }}
-                                </div>
-                                <div class="nombre_producto">
-                                    {{ item.nombre | titlecase }}
-                                </div>
-                                <div style="font-size: 0.8rem; color: #b2b2b2">SKU: {{ item.sku }}</div>
-                                <div class="row">
-                                    <div *ngIf="item?.precio?.precioComun == item?.precio?.precio"
-                                        class="col-12 font-weight-bold" style="color: #094cac; font-size: 1.4rem">
-                                        {{ item?.precio?.precio | currencyFormat }} <em> c/iva </em>
-                                    </div>
-
-                                    <div *ngIf="item?.precio?.precioComun != item?.precio?.precio"
-                                        class="text-danger font-weight-bold col-12" style="font-size: 1.4rem">
-                                        {{ item?.precio?.precio | currencyFormat }} <em> c/iva </em>
-                                    </div>
-
-                                    <div *ngIf="item?.precio?.precioComun != item?.precio?.precio"
-                                        tooltip="Precio normal" class="product-card__old-price col-12"
-                                        style="font-size: 1.3rem; line-height: 1rem">
-                                        {{ item?.precio?.precioComun | currencyFormat }} <em> c/iva </em>
-                                        <br />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div
+                  class="products-list-search"
+                  *ngFor="let item of sugerencias | slice : 1 : 5"
+                >
+                  <div class="item">
+                    <a
+                      (click)="
+                        menuSearch.toggle();
+                        seleccionado = true;
+                        blurInput();
+                        textToSearch = item.sugerencia
+                      "
+                      [routerLink]="[
+                        '/',
+                        'inicio',
+                        'productos',
+                        item.sugerencia
+                      ]"
+                    >
+                      <span
+                        [innerHTML]="
+                          item.html
+                            .replace('<em>', '<b>')
+                            .replace('</em>', '</b>')
+                        "
+                      ></span>
+                    </a>
+                  </div>
                 </div>
-                <div class="row mt-3" *ngIf="productosEncontrados?.length > 0" style="border-top: solid 1px #094cac">
-                    <div class="col-12 products-list-search pr-5 p-2">
-                        <div class="item justify-content-end d-flex">
-                            <a (click)="menuSearch.toggle(); blurInput(); seleccionado = false"
-                                [routerLink]="['/', 'inicio', 'productos', textToSearch]">
-                                <i class="fas fa-search fa-fw" style="color: #0063b9; margin-right: 5px"></i>
-                                <span style="text-decoration: underline; font-size: 1rem">Ver todos los
-                                    resultados</span>
-                            </a>
-                        </div>
-                    </div>
+              </div>
+              <div class="col-12">
+                <div
+                  class="categories-list-search"
+                  *ngIf="(productosEncontrados?.length || 0) > 0"
+                >
+                  <div
+                    class="font-weight-bold text-uppercase"
+                    style="
+                      padding: 0.5rem 0.75rem;
+                      font-size: 0.9rem;
+                      color: #094cac;
+                    "
+                  >
+                    Categorias
+                  </div>
+                  <div
+                    class="item"
+                    *ngFor="let item of categorias | slice : 0 : 3"
+                  >
+                    <a
+                      [routerLink]="item.url"
+                      (click)="
+                        menuSearch.toggle(); blurInput(); seleccionado = false
+                      "
+                    >
+                      <span>{{ item.name | capitalizeFirst }}</span>
+                    </a>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
+          <div
+            class="col-2 mb-2 pr-4"
+            style="
+              border-left: solid 1px #094cac;
+              border-right: solid 1px #094cac;
+            "
+          >
+            <div
+              class="font-weight-bold text-uppercase"
+              style="padding: 0.5rem 0.75rem; font-size: 0.9rem; color: #094cac"
+            >
+              Marcas
+            </div>
+            <div
+              class="products-list-search"
+              *ngFor="let item of marcas | slice : 0 : 8"
+            >
+              <div class="item text-truncate">
+                <a
+                  [routerLink]="'/inicio/productos/' + textToSearch"
+                  [queryParams]="{ filter_MARCA: item.marca }"
+                  (click)="
+                    menuSearch.toggle(); blurInput(); seleccionado = false
+                  "
+                >
+                  <div class="row">
+                    <div class="col-8">
+                      {{ item.marca | titlecase }}
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div
+              class="font-weight-bold text-uppercase"
+              style="padding: 0.5rem 0.75rem; font-size: 0.9rem; color: #094cac"
+            >
+              Resultados de Productos
+            </div>
+            <div class="d-flex justify-content-around m-2">
+              <div
+                class="d-flex flex-column px-3"
+                *ngFor="let item of productosEncontrados | slice : 0 : 3"
+                style="width: 180px"
+              >
+                <div class="mb-3 d-flex justify-content-center">
+                  <a
+                    [routerLink]="item.url"
+                    (click)="
+                      menuSearch.toggle(); blurInput(); seleccionado = true
+                    "
+                  >
+                    <img
+                      [src]="root.getUrlImagenMiniatura150(item)"
+                      alt="producto"
+                      width="110px"
+                      height="110px"
+                    />
+                  </a>
+                </div>
+                <div style="color: #094cac">
+                  {{ item.marca | titlecase }}
+                </div>
+                <div class="nombre_producto">
+                  {{ item.nombre | titlecase }}
+                </div>
+                <div style="font-size: 0.8rem; color: #b2b2b2">
+                  SKU: {{ item.sku }}
+                </div>
+                <div class="row">
+                  <div
+                    *ngIf="item?.precio?.precioComun == item?.precio?.precio"
+                    class="col-12 font-weight-bold"
+                    style="color: #094cac; font-size: 1.4rem"
+                  >
+                    {{ item?.precio?.precio | currencyFormat }} <em> c/iva </em>
+                  </div>
+
+                  <div
+                    *ngIf="item?.precio?.precioComun != item?.precio?.precio"
+                    class="text-danger font-weight-bold col-12"
+                    style="font-size: 1.4rem"
+                  >
+                    {{ item?.precio?.precio | currencyFormat }} <em> c/iva </em>
+                  </div>
+
+                  <div
+                    *ngIf="item?.precio?.precioComun != item?.precio?.precio"
+                    tooltip="Precio normal"
+                    class="product-card__old-price col-12"
+                    style="font-size: 1.3rem; line-height: 1rem"
+                  >
+                    {{ item?.precio?.precioComun | currencyFormat }}
+                    <em> c/iva </em>
+                    <br />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
-    <div class="overlay" *ngIf="isFocusedInput" (click)="blurInput()"></div>
-
-    <div class="col-header-2">
-        <div class="nav-panel__indicators d-flex align-items-center">
-            <!-- <div class="indicator position-relative indicator--trigger--click" [routerLink]="['/sitio/tiendas']">
-        <a [href]="" class="indicator__button flex-column mt-2 mr-3">
-          <img src="../../../../../assets/svg/06.svg" style="width: 30px; height: 40px" />
-          <span class="icon-title mt-1">Nuestras</span>
-          <span class="icon-title" style="margin-top: -4px">Tiendas</span>
-        </a>
-      </div> -->
-
-            <div class="indicator position-relative indicator--trigger--click" appDropdown="indicator--opened"
-                #menuTienda="appDropdown">
-                <span class="indicator__button flex-column mt-2 mr-3" style="cursor: pointer;"
-                    (click)="$event.preventDefault(); menuTienda.toggle()">
-                    <img src="../../../../../assets/svg/24.svg" style="width: 40px; height: 40px; margin-top: -12px"
-                        [alt]="tiendaSeleccionada?.zona" />
-                    <span class="icon-title mt-1"> {{ tiendaSeleccionada?.zona }}</span>
-                </span>
-
-                <div class="indicator__dropdown indicator__dropdown-tienda">
-                    <div class="alert-session card p-5 mt-4 shadow">
-                        <p class="d-flex justify-content-center"
-                            style="color: #0063b9; font-size: 18px; font-weight: bold">
-                            INFORMACIÓN
-                            <img src="../../../../../assets/svg/23.svg" alt="información"
-                                style="width: 30px; height: 40px; margin-left: 10px; margin-top: -10px" />
-                        </p>
-                        <p class="d-flex justify-content-center">Se ha establecido la tienda más cercana a su ubicación.
-                        </p>
-
-                        <div class="d-flex">
-                            <div class="col-6">
-                                <button name="abrirModalTiendas" class="btn btn-border-primary btn-lg text-center w-100"
-                                    (click)="abrirModalTiendas()">
-                                    Cambiar
-                                </button>
-                            </div>
-                            <div class="col-6">
-                                <button name="menuTienda" class="btn btn-secondary btn-lg w-100 text-center"
-                                    (click)="menuTienda.toggle()">
-                                    Mantener
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div
+          class="row mt-3"
+          *ngIf="(productosEncontrados?.length || 0) > 0"
+          style="border-top: solid 1px #094cac"
+        >
+          <div class="col-12 products-list-search pr-5 p-2">
+            <div class="item justify-content-end d-flex">
+              <a
+                (click)="menuSearch.toggle(); blurInput(); seleccionado = false"
+                [routerLink]="['/', 'inicio', 'productos', textToSearch]"
+              >
+                <i
+                  class="fas fa-search fa-fw"
+                  style="color: #0063b9; margin-right: 5px"
+                ></i>
+                <span style="text-decoration: underline; font-size: 1rem"
+                  >Ver todos los resultados</span
+                >
+              </a>
             </div>
-
-            <div class="indicator position-relative indicator--trigger--click" (click)="validarCuenta()">
-                <span class="indicator__button flex-column mt-2 mr-3" style="cursor: pointer;">
-                    <img src="../../../../../assets/svg/09.svg" style="width: 40px; height: 40px" alt="seguimiento" />
-                    <span class="icon-title mt-2">Seguimiento</span>
-                    <span class="icon-title" style="margin-top: -4px">de Pedido</span>
-                </span>
-            </div>
-
-            <div class="indicator indicator--trigger--click" appDropdown="indicator--opened"
-                #cartDropdown="appDropdown">
-                <span class="indicator__button flex-column mr-4 mt-2" style="cursor: pointer;"
-                    (click)="$event.preventDefault(); verificarCarro(cartDropdown)">
-                    <span class="indicator__area indicator__area-cart">
-                        <img src="../../../../../assets/svg/07.svg" style="width: 40px; height: 45px" alt="carro" />
-
-                        <span *ngIf="(cart.quantity$ | async) > 0"
-                            class="indicator__value">{{ cart.quantity$ | async }}</span>
-                    </span>
-
-                    <span class="icon-title mt-1">Mis</span>
-                    <span class="icon-title" style="margin-top: -4px">Compras</span>
-                </span>
-
-                <div class="indicator__dropdown">
-                    <app-header-dropcart></app-header-dropcart>
-                </div>
-            </div>
-
-            <!-- Opción para ingresar al sistema -->
-            <app-account></app-account>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
+  <div class="overlay" *ngIf="isFocusedInput" (click)="blurInput()"></div>
+
+  <div class="col-header-2">
+    <div class="nav-panel__indicators d-flex align-items-center">
+      <div
+        class="indicator position-relative indicator--trigger--click"
+        appDropdown="indicator--opened"
+        #menuTienda="appDropdown"
+      >
+        <span
+          class="indicator__button flex-column mt-2 mr-3"
+          style="cursor: pointer"
+          (click)="$event.preventDefault(); menuTienda.toggle()"
+        >
+          <img
+            src="../../../../../assets/svg/24.svg"
+            style="width: 40px; height: 40px; margin-top: -12px"
+            [alt]="tiendaSeleccionada?.zona"
+          />
+          <span class="icon-title mt-1"> {{ tiendaSeleccionada?.zona }}</span>
+        </span>
+
+        <div class="indicator__dropdown indicator__dropdown-tienda">
+          <div class="alert-session card p-5 mt-4 shadow">
+            <p
+              class="d-flex justify-content-center"
+              style="color: #0063b9; font-size: 18px; font-weight: bold"
+            >
+              INFORMACIÓN
+              <img
+                src="../../../../../assets/svg/23.svg"
+                alt="información"
+                style="
+                  width: 30px;
+                  height: 40px;
+                  margin-left: 10px;
+                  margin-top: -10px;
+                "
+              />
+            </p>
+            <p class="d-flex justify-content-center">
+              Se ha establecido la tienda más cercana a su ubicación.
+            </p>
+
+            <div class="d-flex">
+              <div class="col-6">
+                <button
+                  name="abrirModalTiendas"
+                  class="btn btn-border-primary btn-lg text-center w-100"
+                  (click)="abrirModalTiendas()"
+                >
+                  Cambiar
+                </button>
+              </div>
+              <div class="col-6">
+                <button
+                  name="menuTienda"
+                  class="btn btn-secondary btn-lg w-100 text-center"
+                  (click)="menuTienda.toggle()"
+                >
+                  Mantener
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="indicator position-relative indicator--trigger--click"
+        (click)="validarCuenta()"
+      >
+        <span
+          class="indicator__button flex-column mt-2 mr-3"
+          style="cursor: pointer"
+        >
+          <img
+            src="../../../../../assets/svg/09.svg"
+            style="width: 40px; height: 40px"
+            alt="seguimiento"
+          />
+          <span class="icon-title mt-2">Seguimiento</span>
+          <span class="icon-title" style="margin-top: -4px">de Pedido</span>
+        </span>
+      </div>
+
+      <div
+        class="indicator indicator--trigger--click"
+        appDropdown="indicator--opened"
+        #cartDropdown="appDropdown"
+      >
+        <span
+          class="indicator__button flex-column mr-4 mt-2"
+          style="cursor: pointer"
+          (click)="$event.preventDefault(); verificarCarro(cartDropdown)"
+        >
+          <span class="indicator__area indicator__area-cart">
+            <img
+              src="../../../../../assets/svg/07.svg"
+              style="width: 40px; height: 45px"
+              alt="carro"
+            />
+
+            <span
+              *ngIf="((cart.quantity$ | async) || 0) > 0"
+              class="indicator__value"
+              >{{ cart.quantity$ | async }}</span
+            >
+          </span>
+
+          <span class="icon-title mt-1">Mis</span>
+          <span class="icon-title" style="margin-top: -4px">Compras</span>
+        </span>
+
+        <div class="indicator__dropdown">
+          <app-header-dropcart></app-header-dropcart>
+        </div>
+      </div>
+
+      <!-- Opción para ingresar al sistema -->
+      <app-account></app-account>
+    </div>
+  </div>
 </div>
 
-<app-modal-stores (template)="estableceModalTienda($event)" [modalRef]="modalRefTienda"></app-modal-stores>
+<app-modal-stores
+  (template)="estableceModalTienda($event)"
+  [modalRef]="modalRefTienda"
+></app-modal-stores>

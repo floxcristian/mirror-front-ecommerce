@@ -1,6 +1,19 @@
-import { Component, TemplateRef, ViewChild, AfterViewInit, OnInit, OnDestroy, ElementRef, Input } from '@angular/core';
+import {
+  Component,
+  TemplateRef,
+  ViewChild,
+  AfterViewInit,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+  Input,
+} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { BsModalService, BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
+import {
+  BsModalService,
+  BsModalRef,
+  ModalDirective,
+} from 'ngx-bootstrap/modal';
 import { ProductsService } from '../../../../shared/services/products.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { ToastrService, ToastrModule } from 'ngx-toastr';
@@ -21,17 +34,18 @@ import { MobileBarraBusquedaComponent } from './components/mobile-barra-busqueda
 @Component({
   selector: 'app-mobile-header-b2b',
   templateUrl: './mobile-header-b2b.component.html',
-  styleUrls: ['./mobile-header-b2b.component.scss']
+  styleUrls: ['./mobile-header-b2b.component.scss'],
 })
 export class MobileHeaderB2bComponent implements OnInit, OnDestroy {
-  @ViewChild('menuSearch', { static: false }) dropdown: DropdownDirective;
-  @ViewChild('modalSearch', { read: TemplateRef, static: false }) template: TemplateRef<any>;
+  @ViewChild('menuSearch', { static: false }) dropdown!: DropdownDirective;
+  @ViewChild('modalSearch', { read: TemplateRef, static: false })
+  template!: TemplateRef<any>;
 
   destroy$: Subject<boolean> = new Subject<boolean>();
   logoSrc = environment.logoSrcFooter;
 
-  modalRef: BsModalRef;
-  modalRefVin: BsModalRef;
+  modalRef!: BsModalRef;
+  modalRefVin!: BsModalRef;
 
   public texto = '';
   public numeroVIN = '';
@@ -42,7 +56,7 @@ export class MobileHeaderB2bComponent implements OnInit, OnDestroy {
   public mostrarContenido = false;
   public mostrarCargando = false;
   public linkBusquedaProductos = '#';
-  public searchControl: FormControl;
+  public searchControl!: FormControl;
   private debounce = 300;
   public buscando = true;
 
@@ -64,15 +78,17 @@ export class MobileHeaderB2bComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.searchControl = new FormControl('');
-    this.searchControl.valueChanges.pipe(debounceTime(this.debounce), distinctUntilChanged()).subscribe(query => {
-      if (query.trim() !== '') {
-        this.textToSearch = query;
-        this.buscarEnModal();
-      } else {
-        this.categorias = [];
-        this.productosEncontrados = [];
-      }
-    });
+    this.searchControl.valueChanges
+      .pipe(debounceTime(this.debounce), distinctUntilChanged())
+      .subscribe((query) => {
+        if (query.trim() !== '') {
+          this.textToSearch = query;
+          this.buscarEnModal();
+        } else {
+          this.categorias = [];
+          this.productosEncontrados = [];
+        }
+      });
   }
 
   ngOnDestroy() {
@@ -110,21 +126,28 @@ export class MobileHeaderB2bComponent implements OnInit, OnDestroy {
           this.buscando = false;
         }
 
-        this.categorias.map(item => {
-          item.url = ['/', 'inicio', 'productos', this.textToSearch, 'categoria', item.slug];
+        this.categorias.map((item: any) => {
+          item.url = [
+            '/',
+            'inicio',
+            'productos',
+            this.textToSearch,
+            'categoria',
+            item.slug,
+          ];
           if (typeof item.name === 'undefined') {
             item.name = 'Sin categorias';
           }
         });
       },
-      error => {
+      (error) => {
         this.toastr.error('Error de conexión con el servidor de Elastic');
         console.error('Error de conexión con el servidor de Elastic');
       }
     );
   }
 
-  public buscarEnModalVin(event) {
+  public buscarEnModalVin(event: any) {
     if (this.numeroVIN.trim().length > 0) {
       var textToSearch = this.numeroVIN.trim();
       var data = `VIM__${textToSearch}`;
@@ -136,14 +159,18 @@ export class MobileHeaderB2bComponent implements OnInit, OnDestroy {
   }
 
   public mostraModalBuscador() {
-    this.modalRef = this.modalService.show(MobileBarraBusquedaComponent, { class: 'modal-100 modal-buscador' });
+    this.modalRef = this.modalService.show(MobileBarraBusquedaComponent, {
+      class: 'modal-100 modal-buscador',
+    });
     // this.root.setModalRefBuscador(this.modalRef);
     // document.getElementById('searchMobileModal').focus();
   }
 
   public mostraModalBuscadorVin() {
-    this.modalRefVin = this.modalService.show(MobileFiltrosComponent, { class: 'mx-md-auto mt-2' });
-    this.modalRefVin.content.event.subscribe(res => {
+    this.modalRefVin = this.modalService.show(MobileFiltrosComponent, {
+      class: 'mx-md-auto mt-2',
+    });
+    this.modalRefVin.content.event.subscribe((res: any) => {
       if (res) {
         this.mostraModalBuscador();
       }

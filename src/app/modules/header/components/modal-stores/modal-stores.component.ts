@@ -7,12 +7,12 @@ import {
   EventEmitter,
   AfterViewInit,
   Output,
-  ChangeDetectorRef
+  ChangeDetectorRef,
 } from '@angular/core';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { TiendaLocation } from '../../../../shared/interfaces/geo-location';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { Router } from '@angular/router';
 import { combineLatest, Subscription } from 'rxjs';
@@ -21,17 +21,17 @@ import { first, take } from 'rxjs/operators';
 @Component({
   selector: 'app-modal-stores',
   templateUrl: './modal-stores.component.html',
-  styleUrls: ['./modal-stores.component.scss']
+  styleUrls: ['./modal-stores.component.scss'],
 })
 export class ModalStoresComponent implements OnInit, AfterViewInit {
-  @ViewChild('modalTemplate', { static: false }) modalTemplate: ElementRef;
-  @Input() modalRef: BsModalRef;
+  @ViewChild('modalTemplate', { static: false }) modalTemplate!: ElementRef;
+  @Input() modalRef!: BsModalRef;
   @Output() template = new EventEmitter<any>();
 
-  tiendas: TiendaLocation[];
-  tienda: TiendaLocation;
-  tiendaTemporal: TiendaLocation = null;
-  geoLocationServicePromise: Subscription;
+  tiendas!: TiendaLocation[];
+  tienda!: TiendaLocation | undefined;
+  tiendaTemporal!: TiendaLocation;
+  geoLocationServicePromise!: Subscription;
   subscriptions: Subscription[] = [];
   i = 0;
 
@@ -49,9 +49,10 @@ export class ModalStoresComponent implements OnInit, AfterViewInit {
     this.logisticsService.obtenerTiendas().subscribe((r: ResponseApi) => {
       this.tiendas = r.data;
     });
-    this.geoLocationServicePromise = this.geoLocationService.localizacionObs$.subscribe(
-      r => (this.tienda = this.geoLocationService.getTiendaSeleccionada())
-    );
+    this.geoLocationServicePromise =
+      this.geoLocationService.localizacionObs$.subscribe(
+        (r) => (this.tienda = this.geoLocationService.getTiendaSeleccionada())
+      );
     /* this.logisticsService.$stores.subscribe(r => {
       this.tiendas = r.data;
     }); */
@@ -62,7 +63,9 @@ export class ModalStoresComponent implements OnInit, AfterViewInit {
   }
 
   ngOndestroy() {
-    this.geoLocationServicePromise ? this.geoLocationServicePromise.unsubscribe() : '';
+    this.geoLocationServicePromise
+      ? this.geoLocationServicePromise.unsubscribe()
+      : '';
   }
 
   estebleceTienda() {}
@@ -71,7 +74,7 @@ export class ModalStoresComponent implements OnInit, AfterViewInit {
     const tienda = this.tiendaTemporal;
     const coord = {
       lat: this.tiendaTemporal.lat,
-      lon: this.tiendaTemporal.lon
+      lon: this.tiendaTemporal.lon,
     };
 
     this.geoLocationService.cambiarTiendaCliente(coord, tienda);

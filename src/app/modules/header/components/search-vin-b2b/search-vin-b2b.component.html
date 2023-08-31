@@ -66,7 +66,7 @@
             <app-icon name="cart-20"></app-icon>
 
             <span
-              *ngIf="(cart.quantity$ | async) > 0"
+              *ngIf="((cart.quantity$ | async) || 0) > 0"
               class="indicator__value"
               >{{ cart.quantity$ | async }}</span
             >
@@ -112,7 +112,7 @@
             direccion?.calle +
               ' ' +
               direccion?.numero +
-              (direccion?.deptocasa.length > 0
+              ((direccion?.deptocasa?.length || 0) > 0
                 ? ', ' + direccion?.deptocasa
                 : '') | titlecase
           }}"
@@ -239,31 +239,11 @@
     *ngIf="!Hidebar()"
     [withDepartments]="false"
   ></app-block-slideshow>
-
-  <!-- <div class="d-flex justify-content-center" style="background: white"
-        *ngIf="filtrosVisibles && router.url.includes('inicio')">
-        <div class="col-12 px-4">
-            <div class="card card-filtro col-12 mt-5 align-items-center">
-                <app-filtros class="w-100" #filtros [inHeader]="true"></app-filtros>
-            </div>
-        </div>
-    </div> -->
 </div>
-
-<!-- <div class="d-flex py-2 justify-content-center align-items-center w-100" style="position: fixed; z-index: 10000; background-color: #cccccc80; top:0px">
-    <div class="col d-flex align-items-center" style="padding: 0px 200px;">
-        <div class="col-12 align-items-center">
-            <ng-container *ngTemplateOutlet="barra"></ng-container>
-        </div>
-    </div>
-</div> -->
 
 <app-modal-stores
   (template)="estableceModalTienda($event)"
   [modalRef]="modalRefTienda"
 ></app-modal-stores>
 
-<!-- <ng-template #barra>
-    <app-barra-busqueda #barraBusqueda (limpiaFiltro)="router.navigate(['inicio'])" (changeFiltro)="changeFiltro()" (selectCategoria)="filtrosVisibles = false"></app-barra-busqueda>
-</ng-template> -->
 <app-menu-categoria (menu)="menu_open()"></app-menu-categoria>

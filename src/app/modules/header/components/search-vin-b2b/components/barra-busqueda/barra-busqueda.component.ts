@@ -45,7 +45,7 @@ declare var $: any;
 })
 export class BarraBusquedaComponent implements OnInit, OnDestroy {
   @ViewChild(DropdownDirective, { static: false }) dropdown!: DropdownDirective;
-
+  seleccionado!: boolean;
   filtro!: Flota | undefined;
   marcaModeloAnio!: MarcaModeloAnio | undefined;
   textToSearch = '';
@@ -60,10 +60,10 @@ export class BarraBusquedaComponent implements OnInit, OnDestroy {
   destroy$: Subject<boolean> = new Subject<boolean>();
   private buscadorExternoRef!: Subscription;
 
-  categorias = [];
-  marcas = [];
-  sugerencias = [];
-  productosEncontrados = [];
+  categorias: any[] = [];
+  marcas: any[] = [];
+  sugerencias: any[] = [];
+  productosEncontrados: any[] = [];
   searchControl!: FormControl;
   searchControl1!: FormControl;
   // public linkBusquedaProductos = '#';
@@ -79,7 +79,7 @@ export class BarraBusquedaComponent implements OnInit, OnDestroy {
 
   constructor(
     private toastr: ToastrService,
-    private root: RootService,
+    public root: RootService,
     private productsService: ProductsService,
     private modalService: BsModalService,
     private clientsService: ClientsService,
@@ -497,4 +497,6 @@ export class BarraBusquedaComponent implements OnInit, OnDestroy {
 
     return queryParams;
   }
+
+  blurInput() {}
 }

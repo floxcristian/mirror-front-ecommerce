@@ -382,9 +382,12 @@ export class ClientsService {
   getVehiculo(chassisPatente: string) {
     const httpParams = new HttpParams().set('chasis_patente', chassisPatente);
 
-    return this.http.get(environment.apiImplementosClientes + `vehiculo`, {
-      params: httpParams,
-    });
+    return this.http.get<ResponseApi>(
+      environment.apiImplementosClientes + `vehiculo`,
+      {
+        params: httpParams,
+      }
+    );
   }
 
   getListaArticulosFavoritos(rut: string): Observable<ResponseApi> {

@@ -21,7 +21,7 @@ import { SharedModule } from '../shared/shared.module';
 // import { CatalogoModule } from '../modules/catalogo/catalogo.module';
 import { WidgetsModule } from '../modules/widgets/widgets.module';
 // Components
-// import { PageHomeOneComponent } from '../pages/page-home-one/page-home-one.component';
+import { PageHomeOneComponent } from '../pages/page-home-one/page-home-one.component';
 // import { PageNotFoundComponent } from '../pages/page-not-found/page-not-found.component';
 // import { PageRegistroComponent } from '../pages/page-registro/page-registro.component';
 // import { PageSpecialsComponent } from '../pages/page-specials/page-specials.component';
@@ -47,7 +47,7 @@ import { FooterB2cModule } from '../modules/footer-b2c/footer-b2c.module';
   declarations: [
     PageCiberdayFormComponent,
     // pages
-    // PageHomeOneComponent,
+    PageHomeOneComponent,
     // PageNotFoundComponent,
     // PageRegistroComponent,
     // PageSpecialsComponent,

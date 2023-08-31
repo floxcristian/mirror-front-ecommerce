@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { ArticuloResponse } from '../interfaces/articulos.response';
+import { ResponseApi } from '../interfaces/response-api';
 
 @Injectable({
   providedIn: 'root',
@@ -72,7 +73,7 @@ export class LogisticsService {
   }
 
   obtenerTiendas() {
-    return this.http.get(this.urlApi + `tiendas`).pipe(
+    return this.http.get<ResponseApi>(this.urlApi + `tiendas`).pipe(
       map((r) => {
         this.storesSubject.next(r);
         return r;

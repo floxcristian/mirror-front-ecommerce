@@ -27,6 +27,7 @@ import { WidgetsModule } from './modules/widgets/widgets.module';
 import { BasicAuthInterceptor } from './core/interceptors/basic-auth.interceptor';
 import { LocalStorageService } from './core/modules/local-storage/local-storage.service';
 import { LocalStorageModule } from './core/modules/local-storage/local-storage.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [AppComponent],
@@ -47,6 +48,7 @@ import { LocalStorageModule } from './core/modules/local-storage/local-storage.m
     TooltipModule.forRoot(),
     SharedModule,
     WidgetsModule,
+    NgbModule,
     // NgtUniversalModule
   ],
   providers: [

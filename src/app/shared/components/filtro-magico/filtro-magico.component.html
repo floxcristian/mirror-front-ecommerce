@@ -1,0 +1,180 @@
+<div class="form-row">
+  <ng-container *ngFor="let filtro of filtrosMagicos.filtros; let i = index">
+    <div class="input-container" [ngClass]="filtro.class || ''">
+      <ng-container
+        *ngIf="
+          filtro.tipo === 'select' ||
+          (filtro.tipo === 'select-multiple' && !filtro.groupBy)
+        "
+      >
+        <label *ngIf="filtro.mostrarLabel !== false">{{ filtro.nombre }}</label>
+        <ng-select
+          [multiple]="filtro.tipo === 'select-multiple'"
+          placeholder="Seleccione..."
+          (change)="selectChanged(filtro.key, $event)"
+          [(ngModel)]="filtrosBind[filtro.key]"
+          [virtualScroll]="true"
+          [closeOnSelect]="closeOnSelect"
+          [clearSearchOnAdd]="true"
+        >
+          <ng-option
+            *ngFor="let item of filtrosValores[filtro.key]"
+            [value]="item"
+          >
+            {{ filtro?.opcionSelect(item) }}
+          </ng-option>
+        </ng-select>
+      </ng-container>
+
+      <ng-container *ngIf="filtro.tipo === 'select-multiple' && filtro.groupBy">
+        <label *ngIf="filtro.mostrarLabel !== false">{{ filtro.nombre }}</label>
+        <ng-select
+          [multiple]="true"
+          placeholder="Seleccione..."
+          (change)="selectChanged(filtro.key, $event)"
+          [(ngModel)]="filtrosBind[filtro.key]"
+          [selectableGroup]="true"
+          [selectableGroupAsModel]="false"
+          [groupBy]="filtro.groupBy"
+          [virtualScroll]="true"
+          [closeOnSelect]="closeOnSelect"
+          [clearSearchOnAdd]="true"
+          [searchFn]="searchGroupItemFiltroMagicoFn(filtro)"
+        >
+          <ng-option
+            *ngFor="let item of filtrosValores[filtro.key]"
+            [value]="item"
+          >
+            {{ filtro?.opcionSelect(item) }}
+          </ng-option>
+        </ng-select>
+      </ng-container>
+
+      <ng-container *ngIf="filtro.tipo === 'select-search-multiple'">
+        <label *ngIf="filtro.mostrarLabel !== false">{{ filtro.nombre }}</label>
+        <app-select-search-multiple
+          [nuevosValores]="filtrosBind[filtro.key]"
+          (valoresSeleccionados)="selectSearchChanged(filtro.key, $event)"
+          [multiple]="true"
+          [valoresSelectSearch]="filtro.valoresSelectSearch"
+          [opcionSelect]="filtro.opcionSelect"
+          [opcionKey]="filtro.valoresSelectSearchKey"
+          (respuestaBusqueda)="onRespuestaBusqueda(filtro, $event)"
+        ></app-select-search-multiple>
+      </ng-container>
+
+      <ng-container *ngIf="filtro.tipo === 'dropdown-input'">
+        <label *ngIf="filtro.mostrarLabel !== false">{{ filtro.nombre }}</label>
+        <div class="input-group">
+          <div class="input-group-prepend mb-2">
+            <button
+              class="btn btn-outline-secondary dropdown-toggle btn-sm dropdown-input"
+              [style]="{ width: filtro.widthDropdown || '100px' }"
+              type="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span>{{
+                filtrosModel[filtro.key].dropdown
+                  ? filtro?.opcionDropdown(filtrosModel[filtro.key].dropdown)
+                  : "Seleccione"
+              }}</span>
+            </button>
+            <div class="dropdown-menu">
+              <a
+                *ngFor="let item of filtro.valoresDropdown || []"
+                class="dropdown-item"
+                href="javascript:void(0)"
+                (click)="dropdownChanged(filtro.key, item, $event)"
+              >
+                {{ filtro?.opcionDropdown(item) }}
+              </a>
+            </div>
+          </div>
+          <input
+            [(ngModel)]="filtrosBind[filtro.key]"
+            [type]="filtro.tipoInput"
+            class="form-control dropdown-input-input"
+            (ngModelChangeDebounced)="dropdownInputChanged(filtro.key, $event)"
+          />
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="filtro.tipo === 'dropdown-select-multiple'">
+        <label *ngIf="filtro.mostrarLabel !== false">{{ filtro.nombre }}</label>
+        <div class="input-group dropdown-select-multiple">
+          <div class="input-group-prepend">
+            <button
+              class="btn btn-outline-secondary dropdown-toggle btn-sm dropdown-input"
+              [style]="{ width: filtro.widthDropdown || '100px' }"
+              type="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span>{{
+                filtrosModel[filtro.key].dropdown
+                  ? filtro?.opcionDropdown(filtrosModel[filtro.key].dropdown)
+                  : "Seleccione"
+              }}</span>
+            </button>
+            <div class="dropdown-menu">
+              <a
+                *ngFor="let item of filtro.valoresDropdown"
+                class="dropdown-item"
+                href="javascript:void(0)"
+                (click)="dropdownChanged(filtro.key, item, $event)"
+              >
+                {{ filtro?.opcionDropdown(item) }}
+              </a>
+            </div>
+          </div>
+          <ng-select
+            [(ngModel)]="filtrosBind[filtro.key]"
+            [multiple]="true"
+            placeholder="Seleccione..."
+            (change)="dropdownInputChanged(filtro.key, $event)"
+            class="select-multiple"
+            [virtualScroll]="true"
+          >
+            <ng-option
+              *ngFor="let item of filtrosValores[filtro.key]"
+              [value]="item"
+            >
+              {{ filtro?.opcionSelect(item) }}
+            </ng-option>
+          </ng-select>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="filtro.tipo === 'rango-fechas'">
+        <label *ngIf="filtro.mostrarLabel !== false">{{ filtro.nombre }}</label>
+        <div class="input-group">
+          <input
+            [(ngModel)]="filtrosBind[filtro.key]['desde']"
+            class="form-control date-input"
+            type="date"
+            (ngModelChangeDebounced)="
+              rangoFechaInputChanged(filtro.key, 'desde', $event)
+            "
+          />
+          <input
+            [(ngModel)]="filtrosBind[filtro.key]['hasta']"
+            class="form-control date-input"
+            type="date"
+            (ngModelChangeDebounced)="
+              rangoFechaInputChanged(filtro.key, 'hasta', $event)
+            "
+            [min]="rangosFechaMinimos[filtro.key]"
+          />
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>
+
+<br />
+<div *ngIf="filtrosMagicos.mostrarBotonFiltrar">
+  <button class="btn btn-primary btn-block" (click)="filtrar()">Filtrar</button>
+</div>

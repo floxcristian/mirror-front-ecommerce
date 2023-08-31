@@ -1,55 +1,65 @@
 <div class="mobilemenu" [ngClass]="{ 'mobilemenu--open': isOpen }">
-
-    <div class="mobilemenu__body">
-        <div class="row mb-2" style="border-bottom:1px solid #fff">
-            <div class=" col-1 d-flex align-items-center" style="margin-left:10px; height: 50px">
-                <i class="fa-regular fa-square-xmark fa-2x" style="cursor: pointer"
-                    (click)="menuCategorias.close()"></i>
-            </div>
-
-            <!-- <div class="col-10 d-flex justify-content-end">
-                <div class="indicator position-relative indicator--trigger--click" appDropdown="indicator--opened"
-                    #menuTienda="appDropdown" style="margin-right: -8px; margin-left:8px">
-                    <a [href]="" class="indicator__button mt-2 mr-3" (click)="abrirModalTiendas()">
-                        <img src="../../../../../assets/svg/24.svg" style="width: 30px; height: 33px" />
-                        <span class="icon-title mt-1"> {{ tiendaSeleccionada?.zona }}</span>
-                    </a>
-                </div>
-                <div class="indicator position-relative indicator--trigger--click"
-                    (click)="validarCuenta();menuCategorias.close()">
-                    <a [href]="" class="indicator__button flex-column mt-2 mr-3">
-                        <img src="../../../../../assets/svg/09.svg" style="width: 30px; height: 33px" />
-                        <span class="icon-title mt-1">Seguimiento</span>
-                    </a>
-                </div>
-            </div> -->
-        </div>
-        <div class="mobilemenu__content">
-            <ul style="border-bottom:1px solid #fff">
-                <span class="indicator__button " (click)="abrirModalTiendas()">
-                    <img src="../../../../../assets/svg/24.svg" style="width: 30px; height: 33px;margin-right: 20px;"
-                        [alt]="tiendaSeleccionada?.zona" />
-                    <span class="icon-title mt-1" style="font-size:14px!important"> {{ tiendaSeleccionada?.zona
-                        }}</span>
-                </span>
-                <span class="indicator__button" (click)="validarCuenta();menuCategorias.close()">
-                    <img src="../../../../../assets/svg/09.svg" style="width: 30px; height: 33px;margin-right: 20px;"
-                        alt="seguimiento" />
-                    <span class="icon-title mt-1" style="font-size:14px!important">Seguimiento</span>
-                </span>
-            </ul>
-            <ul>
-                <li class="mb-3 d-flex justify-content-between" *ngFor="let item of items">
-                    <div class="text-truncate" (click)="menuCategorias.open(2, item);">
-                        {{ item.label | titlecase }}</div>
-                    <div style="width: 20px" (click)="menuCategorias.open(2, item);">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div>
-                </li>
-            </ul>
-        </div>
+  <div class="mobilemenu__body">
+    <div class="row mb-2" style="border-bottom: 1px solid #fff">
+      <div
+        class="col-1 d-flex align-items-center"
+        style="margin-left: 10px; height: 50px"
+      >
+        <i
+          class="fa-regular fa-square-xmark fa-2x"
+          style="cursor: pointer"
+          (click)="menuCategorias.close()"
+        ></i>
+      </div>
     </div>
+    <div class="mobilemenu__content">
+      <ul style="border-bottom: 1px solid #fff">
+        <span class="indicator__button" (click)="abrirModalTiendas()">
+          <img
+            src="../../../../../assets/svg/24.svg"
+            style="width: 30px; height: 33px; margin-right: 20px"
+            [alt]="tiendaSeleccionada?.zona"
+          />
+          <span class="icon-title mt-1" style="font-size: 14px !important">
+            {{ tiendaSeleccionada?.zona }}</span
+          >
+        </span>
+        <span
+          class="indicator__button"
+          (click)="validarCuenta(); menuCategorias.close()"
+        >
+          <img
+            src="../../../../../assets/svg/09.svg"
+            style="width: 30px; height: 33px; margin-right: 20px"
+            alt="seguimiento"
+          />
+          <span class="icon-title mt-1" style="font-size: 14px !important"
+            >Seguimiento</span
+          >
+        </span>
+      </ul>
+      <ul>
+        <li
+          class="mb-3 d-flex justify-content-between"
+          *ngFor="let item of items"
+        >
+          <div class="text-truncate" (click)="menuCategorias.open(2, item)">
+            {{ item.label | titlecase }}
+          </div>
+          <div style="width: 20px" (click)="menuCategorias.open(2, item)">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
 
-<app-nivel2 [items]="items" (seleccionado)="menuCategorias.close()"></app-nivel2>
-<app-modal-stores (template)="estableceModalTienda($event)" [modalRef]="modalRefTienda"></app-modal-stores>
+<app-nivel2
+  [items]="items"
+  (seleccionado)="menuCategorias.close()"
+></app-nivel2>
+<app-modal-stores
+  (template)="estableceModalTienda($event)"
+  [modalRef]="modalRefTienda"
+></app-modal-stores>

@@ -12,7 +12,7 @@ import { environment } from '../../../../../environments/environment';
   styleUrls: ['./topbar.component.scss'],
 })
 export class TopbarComponent {
-  @Input() tipo: 'b2b' | 'b2c' = 'b2c';
+  @Input() tipo: any = 'b2c'; // 'b2b' | 'b2c'
   @Input() desde: string = '';
 
   languages = [

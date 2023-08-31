@@ -19,19 +19,23 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 //import { NgxPaginationModule } from 'ngx-pagination';
 
 // directives
-//import { ClickDirective } from './directives/click.directive';
-//import { CollapseContentDirective, CollapseDirective, CollapseItemDirective } from './directives/collapse.directive';
-//import { DepartmentsAreaDirective } from './directives/departments-area.directive';
-//import { DropdownDirective } from './directives/dropdown.directive';
-//import { FakeSlidesDirective } from './directives/fake-slides.directive';
-//import { OwlPreventClickDirective } from './directives/owl-prevent-click.directive';
-//import { DragDropDirective } from './directives/drag-drop.directive';
-//import { PhoneCharDirective } from './directives/phone-char.directive';
-//import { LettersCharDirective } from './directives/letters-char.directive';
-//import { DisableControlDirective } from './directives/disable-control.directive';
-//import { OnlyNumbersDirective } from './directives/only-numbers.directive';
-//import { RutCharsDirective } from './directives/rut-chars.directive';
-//import { LazyImgDirective } from './directives/lazy-img.directive';
+import { ClickDirective } from './directives/click.directive';
+import {
+  CollapseContentDirective,
+  CollapseDirective,
+  CollapseItemDirective,
+} from './directives/collapse.directive';
+import { DepartmentsAreaDirective } from './directives/departments-area.directive';
+import { DropdownDirective } from './directives/dropdown.directive';
+import { FakeSlidesDirective } from './directives/fake-slides.directive';
+import { OwlPreventClickDirective } from './directives/owl-prevent-click.directive';
+import { DragDropDirective } from './directives/drag-drop.directive';
+import { PhoneCharDirective } from './directives/phone-char.directive';
+import { LettersCharDirective } from './directives/letters-char.directive';
+import { DisableControlDirective } from './directives/disable-control.directive';
+import { OnlyNumbersDirective } from './directives/only-numbers.directive';
+import { RutCharsDirective } from './directives/rut-chars.directive';
+import { LazyImgDirective } from './directives/lazy-img.directive';
 
 // pipes
 import { CurrencyFormatPipe } from './pipes/currency-format.pipe';
@@ -42,7 +46,7 @@ import { TitleCasePipe } from './pipes/title-case.pipe';
 // components
 //import { AlertComponent } from './components/alert/alert.component';
 import { IconComponent } from './components/icon/icon.component';
-//import { InputNumberComponent } from './components/input-number/input-number.component';
+import { InputNumberComponent } from './components/input-number/input-number.component';
 import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
 //import { PageHeaderComponent } from './components/page-header/page-header.component';
 //import { PaginationComponent } from './components/pagination/pagination.component';
@@ -57,7 +61,7 @@ import { ProductsViewComponent } from '../modules/shop/components/products-view/
 //import { ProductSlideshowComponent } from './components/product-slideshow/product-slideshow.component';
 //import { ProductSlideshowSpecialsComponent } from './components/product-slideshow-specials/product-slideshow-specials.component';
 //import { MapComponent } from './components/map/map.component';
-//import { LoginComponent } from '../modules/header/components/login/login.component';
+import { LoginComponent } from '../modules/header/components/login/login.component';
 //import { RegisterComponent } from './components/register/register.component';
 //import { WidgetProductsComponent } from '../modules/widgets/widget-products/widget-products.component';
 //import { LoadingComponent } from './components/loading/loading.component';
@@ -81,13 +85,14 @@ import { WishListModalComponent } from './components/wish-list-modal/wish-list-m
 // import { AgregarListaProductosMasivaModalComponent } from './components/agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
 // import { ProductListModalComponent } from './components/product-list-card/components/product-list-modal/product-list-modal.component';
 // import { PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface, PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-// import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 // import { AngularEmailAutocompleteComponent } from './components/angular-email-autocomplete/angular-email-autocomplete.component';
 import { MonedaPipe } from './pipes/moneda.pipe';
-/*import { FiltroMagicoModule } from './components/filtro-magico/filtro-magico.module';
-import { ProductoSelectBusquedaComponent } from './components/producto-select-busqueda/producto-select-busqueda.component';
-import { AgregarListaProductosUnitariaModalComponent } from './components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
+import { FiltroMagicoModule } from './components/filtro-magico/filtro-magico.module';
+/*import { ProductoSelectBusquedaComponent } from './components/producto-select-busqueda/producto-select-busqueda.component';
+import { AgregarListaProductosUnitariaModalComponent } from './components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';*/
 import { MenuCategoriaComponent } from './components/menu-categoria/menu-categoria.component';
+/*
 import { NguCarouselModule } from '@ngu/carousel';
 import { ShareButtonComponent } from './components/share-button/share-button.component';
 import { ProductRatingComponent } from './components/product-rating/product-rating.component';*/
@@ -101,18 +106,22 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
 // import { Productb2bComponent } from './components/productb2b/productb2b.component';
 // import { AvisoStockComponent } from './components/aviso-stock/aviso-stock.component';
 // import { CountdownTimerModule } from './../../../projects/countdown-timer/src/lib/countdown-timer.module';
-// import { ProductCardB2cCmsComponent } from './components/product-card-b2c-cms/product-card-b2c-cms.component';
+import { ProductCardB2cCmsComponent } from './components/product-card-b2c-cms/product-card-b2c-cms.component';
 // import { ButtonsSlideshowComponent } from './components/buttons-slideshow/buttons-slideshow.component';
 // import { ButtonComponent } from './components/buttons-slideshow/components/button/button.component';
+// Bootstrap
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 // import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 // const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 //   suppressScrollX: true
 // };
 
+const BOOSTRAP_MODULES = [NgbPopoverModule];
+
 @NgModule({
   declarations: [
     // directives
-    /*ClickDirective,
+    ClickDirective,
     CollapseContentDirective,
     CollapseDirective,
     CollapseItemDirective,
@@ -127,7 +136,7 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
     DisableControlDirective,
     RutCharsDirective,
     LazyImgDirective,
-    AvisoStockComponent,*/
+    /*AvisoStockComponent,*/
     // pipe
     CurrencyFormatPipe,
     SlugifyPipe,
@@ -137,7 +146,7 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
     // components
     // AlertComponent,
     IconComponent,
-    // InputNumberComponent,
+    InputNumberComponent,
     LoadingBarComponent,
     // PageHeaderComponent,
     // PaginationComponent,
@@ -150,7 +159,7 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
     // AlertCartMinComponent,
     // ViewPdfComponent,
     // MapComponent,
-    // LoginComponent,
+    LoginComponent,
     // RegisterComponent,
     // WidgetProductsComponent,
     // ProductSlideshowComponent,
@@ -179,7 +188,7 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
     MonedaPipe,
     // ProductoSelectBusquedaComponent,
     // AgregarListaProductosUnitariaModalComponent,
-    // MenuCategoriaComponent,
+    MenuCategoriaComponent,
     // ShareButtonComponent,
     // ProductRatingComponent,
     AddCommentModalComponent,
@@ -189,7 +198,7 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
     // AddContactModalComponent,
     // UpdateContactModalComponent,
     // Productb2bComponent,
-    // ProductCardB2cCmsComponent,
+    ProductCardB2cCmsComponent,
     // ButtonsSlideshowComponent,
     // ButtonComponent
   ],
@@ -199,9 +208,9 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
     NgSelectModule,
     RouterModule,
     FormsModule,
-    //NgbModule,
     ReactiveFormsModule,
-
+    //NgbModule,
+    ...BOOSTRAP_MODULES,
     // modules (third-party)
     CarouselModule,
     ModalModule.forRoot(),
@@ -219,9 +228,9 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
     }),
     Ng2Rut,
     NguCarouselModule,
-    ChartsModule,
+    ChartsModule,*/
     FiltroMagicoModule,
-    InfiniteScrollModule*/
+    InfiniteScrollModule,
   ],
   exports: [
     // modules (third-party)
@@ -231,10 +240,10 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
     //Ng2Rut,
 
     //ChartsModule,
-    //InfiniteScrollModule,
+    InfiniteScrollModule,
 
     // directives
-    /*ClickDirective,
+    ClickDirective,
     CollapseContentDirective,
     CollapseDirective,
     CollapseItemDirective,
@@ -242,7 +251,7 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
     DropdownDirective,
     FakeSlidesDirective,
     OwlPreventClickDirective,
-    LazyImgDirective,*/
+    LazyImgDirective,
 
     // pipes
     CurrencyFormatPipe,
@@ -256,7 +265,7 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
     // components
     //AlertComponent,
     IconComponent,
-    //InputNumberComponent,
+    InputNumberComponent,
     LoadingBarComponent,
     //PageHeaderComponent,
     // PaginationComponent,
@@ -269,7 +278,7 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
     // AlertCartMinComponent,
     // ProductFeatureSpecialComponent,
     // MapComponent,
-    // LoginComponent,
+    LoginComponent,
     // RegisterComponent,
     // WidgetProductsComponent,
     // ProductSlideshowComponent,
@@ -282,7 +291,7 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
     // ViewPdfComponent,
     // AngularEmailAutocompleteComponent,
     // ProductoSelectBusquedaComponent,
-    // ProductCardB2cCmsComponent,
+    ProductCardB2cCmsComponent,
     // ShareButtonComponent,
     // ProductRatingComponent,
     // ProductCardB2cFichaComponent,
@@ -297,9 +306,9 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
     NgSelectModule,
     CarouselModule,
     // PerfectScrollbarModule,
-    // FiltroMagicoModule,
+    FiltroMagicoModule,
     // NguCarouselModule,
-    // MenuCategoriaComponent
+    MenuCategoriaComponent,
   ],
   providers: [
     /*{

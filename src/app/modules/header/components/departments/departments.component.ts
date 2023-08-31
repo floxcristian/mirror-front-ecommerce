@@ -18,6 +18,7 @@ import { CategoryApi } from '../../../../shared/interfaces/category-api';
 import { SlugifyPipe } from '../../../../shared/pipes/slugify.pipe';
 import { ToastrService } from 'ngx-toastr';
 import { RootService } from '../../../../shared/services/root.service';
+import { Megamenu } from 'src/app/shared/interfaces/megamenu';
 
 @Component({
   selector: 'app-header-departments',
@@ -28,10 +29,10 @@ export class DepartmentsComponent implements OnInit {
   private destroy$: Subject<any> = new Subject();
 
   items: NavigationLink[] = [];
-  private categoriaDetalle: NavigationLink;
+  private categoriaDetalle!: NavigationLink;
   private arrayCategorias: NavigationLink[] = [];
   private segundoNivel: any;
-  private sizeColumn: number;
+  private sizeColumn!: number;
 
   isOpen = true;
   fixed = false;
@@ -89,54 +90,62 @@ export class DepartmentsComponent implements OnInit {
         },
       };
 
-      // // agregamos los item internet
-      for (const segundaCategoria of primeraCategoria.children) {
-        // tamaño de la columna de bootstrap por defecto
-        const rColumns = this.getSizeColumns(primeraCategoria.children.length);
+      if (primeraCategoria.children) {
+        // agregamos los item internet
+        for (const segundaCategoria of primeraCategoria.children) {
+          // tamaño de la columna de bootstrap por defecto
+          const rColumns = this.getSizeColumns(
+            primeraCategoria.children.length
+          );
 
-        this.sizeColumn = rColumns.columnas;
-        this.categoriaDetalle.menu['size'] = rColumns.estilo;
+          this.sizeColumn = rColumns.columnas;
+          (this.categoriaDetalle.menu as Megamenu).size =
+            rColumns.estilo as any;
 
-        this.segundoNivel = {
-          size: this.sizeColumn,
-          items: [
-            {
-              label: `${segundaCategoria.title}`,
-              url: [
-                '/',
-                'inicio',
-                'productos',
-                'todos',
-                'categoria',
-                this.root.replaceSlash(primeraCategoria.url),
-                this.root.replaceSlash(segundaCategoria.url),
-              ],
-              items: '',
-            },
-          ],
-        };
-
-        // Creamos tercer nivel -> Lineas
-        const tercerNivel = [];
-        for (const terceraCategoria of segundaCategoria.children) {
-          const dataLineas = {
-            label: `${terceraCategoria.title}`,
-            url: [
-              '/',
-              'inicio',
-              'productos',
-              'todos',
-              'categoria',
-              this.root.replaceSlash(primeraCategoria.url),
-              this.root.replaceSlash(segundaCategoria.url),
-              this.root.replaceSlash(terceraCategoria.url),
+          this.segundoNivel = {
+            size: this.sizeColumn,
+            items: [
+              {
+                label: `${segundaCategoria.title}`,
+                url: [
+                  '/',
+                  'inicio',
+                  'productos',
+                  'todos',
+                  'categoria',
+                  this.root.replaceSlash(primeraCategoria.url),
+                  this.root.replaceSlash(segundaCategoria.url),
+                ],
+                items: '',
+              },
             ],
           };
-          tercerNivel.push(dataLineas);
-        }
 
-        this.segundoNivel.items[0].items = tercerNivel;
-        this.categoriaDetalle.menu['columns'].push(this.segundoNivel);
+          // Creamos tercer nivel -> Lineas
+          const tercerNivel = [];
+          if (segundaCategoria.children) {
+            for (const terceraCategoria of segundaCategoria.children) {
+              const dataLineas = {
+                label: `${terceraCategoria.title}`,
+                url: [
+                  '/',
+                  'inicio',
+                  'productos',
+                  'todos',
+                  'categoria',
+                  this.root.replaceSlash(primeraCategoria.url),
+                  this.root.replaceSlash(segundaCategoria.url),
+                  this.root.replaceSlash(terceraCategoria.url),
+                ],
+              };
+              tercerNivel.push(dataLineas);
+            }
+          }
+          this.segundoNivel.items[0].items = tercerNivel;
+          (this.categoriaDetalle.menu as Megamenu).columns.push(
+            this.segundoNivel
+          );
+        }
       }
       this.arrayCategorias.push(this.categoriaDetalle);
     }
@@ -146,11 +155,11 @@ export class DepartmentsComponent implements OnInit {
     this.updateCategories();
   }
 
-  private sortCategories(items) {
+  private sortCategories(items: any) {
     for (const item of items) {
       const segundaCategoria = item.children;
 
-      segundaCategoria.sort((a, b) => {
+      segundaCategoria.sort((a: any, b: any) => {
         if (a.children.length < b.children.length) {
           return 1;
         }
@@ -162,7 +171,7 @@ export class DepartmentsComponent implements OnInit {
     }
   }
 
-  getSizeColumns(columnas) {
+  getSizeColumns(columnas: any) {
     let sizeColumn = 3;
     let estilo = 'xxl';
 
@@ -180,7 +189,7 @@ export class DepartmentsComponent implements OnInit {
     return { columnas: sizeColumn, estilo: estilo };
   }
 
-  addChild(items: CategoryApi[], arrCategoria) {
+  addChild(items: CategoryApi[], arrCategoria: any) {
     if (items.length > 0) {
       let cont = 0;
       for (const item of items) {
@@ -196,9 +205,11 @@ export class DepartmentsComponent implements OnInit {
           ],
         };
         arrCategoria.push(obj);
-        if (item.children.length > 0) {
-          arrCategoria[cont].items = [];
-          this.addChild(item.children, arrCategoria[cont].items);
+        if (item.children) {
+          if (item.children.length > 0) {
+            arrCategoria[cont].items = [];
+            this.addChild(item.children, arrCategoria[cont].items);
+          }
         }
         cont++;
       }

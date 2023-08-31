@@ -49,21 +49,21 @@ export class CatalogoService {
 
   getFiltroAnios() {
     const call = environment.apiImplementosCatalogo + `catalogo/filtros/anios`;
-    return this.http.get(call);
+    return this.http.get<ResponseApi>(call);
   }
 
   getFiltroMarcas(anio: string) {
     const call =
       environment.apiImplementosCatalogo +
       `catalogo/filtros/marcas?anio=${anio}`;
-    return this.http.get(call);
+    return this.http.get<ResponseApi>(call);
   }
 
-  getFiltroModelos(anio: string, marca: string) {
+  getFiltroModelos(anio: string, marca: string): Observable<ResponseApi> {
     const call =
       environment.apiImplementosCatalogo +
       `catalogo/filtros/modelos?anio=${anio}&marca=${marca}`;
-    return this.http.get(call);
+    return this.http.get<ResponseApi>(call);
   }
 
   guardarComentarioArticulo(

@@ -1,4 +1,10 @@
-import { Component, PLATFORM_ID, Inject, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  PLATFORM_ID,
+  Inject,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { Product, ProductPrecio } from '../../../../shared/interfaces/product';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -27,11 +33,11 @@ declare let fbq: any;
 @Component({
   selector: 'app-page-product',
   templateUrl: './page-product.component.html',
-  styleUrls: ['./page-product.component.scss']
+  styleUrls: ['./page-product.component.scss'],
 })
 export class PageProductComponent implements OnInit, OnDestroy {
   categories = categories;
-  product: Product;
+  product!: Product;
   recommendedProducts: Product[] = [];
   matrixProducts: Product[] = [];
   relatedProducts: Product[] = [];
@@ -50,7 +56,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
   public paramsCategory = {
     firstCategory: '',
     secondCategory: '',
-    thirdCategory: ''
+    thirdCategory: '',
   };
   breadcrumbs = [];
 
@@ -58,7 +64,10 @@ export class PageProductComponent implements OnInit, OnDestroy {
   carouselOptions = {
     items: 4,
     nav: true,
-    navText: [`<i class="fas fa-chevron-left"></i>`, `<i class="fas fa-chevron-right"></i>`],
+    navText: [
+      `<i class="fas fa-chevron-left"></i>`,
+      `<i class="fas fa-chevron-right"></i>`,
+    ],
     dots: true,
     slideBy: 'page',
     // loop: true,
@@ -68,20 +77,20 @@ export class PageProductComponent implements OnInit, OnDestroy {
       920: { items: 4 },
       680: { items: 3 },
       500: { items: 3 },
-      0: { items: 2 }
-    }
+      0: { items: 2 },
+    },
   };
 
   acordion = [
     {
-      abierto: false
+      abierto: false,
     },
     {
-      abierto: false
+      abierto: false,
     },
     {
-      abierto: false
-    }
+      abierto: false,
+    },
   ];
 
   constructor(
@@ -109,14 +118,17 @@ export class PageProductComponent implements OnInit, OnDestroy {
     this.innerWidth = window.innerWidth;
 
     this.user = this.root.getDataSesionUsuario();
-    this.isB2B = this.user.user_role === 'supervisor' || this.user.user_role === 'comprador';
+    this.isB2B =
+      this.user.user_role === 'supervisor' ||
+      this.user.user_role === 'comprador';
 
-    this.route.data.subscribe(data => {
+    this.route.data.subscribe((data) => {
       this.layout = 'layout' in data ? data.layout : this.layout;
-      this.sidebarPosition = 'sidebarPosition' in data ? data.sidebarPosition : this.sidebarPosition;
+      this.sidebarPosition =
+        'sidebarPosition' in data ? data.sidebarPosition : this.sidebarPosition;
     });
 
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       // Seteamos el origen del ingreso a la ficha del producto.
       let origenHistory: string[] = this.cart.getOrigenHistory();
       this.origen = origenHistory.length > 0 ? origenHistory : ['link', ''];
@@ -146,7 +158,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
         // this.getPopularProducts(sku);
         this.productoService.getStockProduct(sku).subscribe((r: any) => {
           let stockTienda = 0;
-          r.map(async stock => {
+          r.map(async (stock) => {
             stockTienda += stock.cantidad;
           });
           stockTienda > 0 ? (this.stock = true) : (this.stock = false);
@@ -175,12 +187,22 @@ export class PageProductComponent implements OnInit, OnDestroy {
       // tslint:disable-next-line: max-line-length
       this.breadcrumbs.push({
         label: this.capitalize.transform(cat),
-        url: ['/', 'inicio', 'productos', 'todos', 'categoria', this.paramsCategory.firstCategory]
+        url: [
+          '/',
+          'inicio',
+          'productos',
+          'todos',
+          'categoria',
+          this.paramsCategory.firstCategory,
+        ],
       });
     }
 
     if (this.paramsCategory.secondCategory !== '') {
-      const cat = this.root.replaceAll(this.paramsCategory.secondCategory, /-/g);
+      const cat = this.root.replaceAll(
+        this.paramsCategory.secondCategory,
+        /-/g
+      );
       // tslint:disable-next-line: max-line-length
       this.breadcrumbs.push({
         label: this.capitalize.transform(cat),
@@ -191,8 +213,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
           'todos',
           'categoria',
           this.paramsCategory.firstCategory,
-          this.paramsCategory.secondCategory
-        ]
+          this.paramsCategory.secondCategory,
+        ],
       });
     }
 
@@ -209,12 +231,15 @@ export class PageProductComponent implements OnInit, OnDestroy {
           'categoria',
           this.paramsCategory.firstCategory,
           this.paramsCategory.secondCategory,
-          this.paramsCategory.thirdCategory
-        ]
+          this.paramsCategory.thirdCategory,
+        ],
       });
     }
 
-    this.breadcrumbs.push({ label: this.capitalize.transform(product.nombre), url: '' });
+    this.breadcrumbs.push({
+      label: this.capitalize.transform(product.nombre),
+      url: '',
+    });
   }
 
   getDetailProduct(sku) {
@@ -223,13 +248,15 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
     if (usuario != null) {
       params = {
-        rut: usuario.rut
+        rut: usuario.rut,
       };
     }
 
     this.productoService.obtieneDetalleProducto(sku, params).subscribe(
       (r: any) => {
-        r.data.chassis == null || r.data.chassis == undefined ? (r.data.chassis = '') : r.data.chassis;
+        r.data.chassis == null || r.data.chassis == undefined
+          ? (r.data.chassis = '')
+          : r.data.chassis;
         const producto: Product = r.data;
         delete producto.precio;
 
@@ -243,7 +270,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
         this.setBreadcrumbs(this.product);
         // this.root.limpiaAtributos(this.product);
       },
-      error => {
+      (error) => {
         this.toastr.error('Error de conexión, para obtener los articulos');
       }
     );
@@ -268,7 +295,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
       imageType: 'image/jpeg',
       type: 'product',
       keywords: descripcionFull,
-      slug
+      slug,
     };
     this.seoService.generarMetaTag(meta);
 
@@ -279,7 +306,9 @@ export class PageProductComponent implements OnInit, OnDestroy {
     }
 
     if (isPlatformServer(this.platformId)) {
-      this.canonicalService.setCanonicalURL(environment.canonical + this.router.url);
+      this.canonicalService.setCanonicalURL(
+        environment.canonical + this.router.url
+      );
     }
   }
 
@@ -292,7 +321,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
       content_name: this.capitalize.transform(product.nombre),
       content_type: 'product',
       value: product.precioCliente,
-      currency: 'CLP'
+      currency: 'CLP',
     });
   }
 
@@ -300,7 +329,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     let obj = {
       listaSku: [sku],
       rut: '',
-      cantidad: 10
+      cantidad: 10,
     };
     if (this.user != null) {
       obj.rut = this.user.rut;
@@ -312,7 +341,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     let obj = {
       sku,
       rut: '',
-      sucursal: tiendaSeleccionada.codigo
+      sucursal: tiendaSeleccionada.codigo,
     };
 
     if (this.user != null) {
@@ -323,8 +352,10 @@ export class PageProductComponent implements OnInit, OnDestroy {
       (r: ResponseApi) => {
         this.matrixProducts = r.data;
       },
-      error => {
-        this.toastr.error('Error de conexión, para obtener los productos recomendados ');
+      (error) => {
+        this.toastr.error(
+          'Error de conexión, para obtener los productos recomendados '
+        );
       }
     );
   }
@@ -332,7 +363,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
   getRelatedProducts(sku) {
     let obj = {
       sku,
-      rut: ''
+      rut: '',
     };
 
     if (this.user != null) {
@@ -343,8 +374,10 @@ export class PageProductComponent implements OnInit, OnDestroy {
       (r: ResponseApi) => {
         this.relatedProducts = r.data;
       },
-      error => {
-        this.toastr.error('Error de conexión, para obtener los productos recomendados ');
+      (error) => {
+        this.toastr.error(
+          'Error de conexión, para obtener los productos recomendados '
+        );
       }
     );
   }
@@ -355,8 +388,10 @@ export class PageProductComponent implements OnInit, OnDestroy {
         //console.log(r);
         this.popularProducts = r.data;
       },
-      e => {
-        this.toastr.error('Error en la conexion para obtener productos populares: ' + e);
+      (e) => {
+        this.toastr.error(
+          'Error en la conexion para obtener productos populares: ' + e
+        );
       }
     );
   }
@@ -367,14 +402,14 @@ export class PageProductComponent implements OnInit, OnDestroy {
     const obj = {
       sku,
       rut: '',
-      sucursal: tiendaSeleccionada.codigo
+      sucursal: tiendaSeleccionada.codigo,
     };
 
     const obj1 = {
       listaSku: [sku],
       rut: '',
       sucursal: tiendaSeleccionada.codigo,
-      cantidad: 10
+      cantidad: 10,
     };
 
     if (this.user != null) {
@@ -385,14 +420,18 @@ export class PageProductComponent implements OnInit, OnDestroy {
     forkJoin([
       this.productoService.getMatrixProducts(obj),
       this.productoService.getRelatedProducts(obj),
-      this.productoService.getRecommendedProductsList(obj1)
+      this.productoService.getRecommendedProductsList(obj1),
     ]).subscribe((resp: any[]) => {
       this.mixProducts = [];
       if (!this.isB2B) {
         resp[0].data.forEach((e: Product) => this.mixProducts.push(e));
       }
-      randomElements(resp[1].data, 5).forEach((e: Product) => this.mixProducts.push(e));
-      randomElements(resp[2].data, 5).forEach((e: Product) => this.mixProducts.push(e));
+      randomElements(resp[1].data, 5).forEach((e: Product) =>
+        this.mixProducts.push(e)
+      );
+      randomElements(resp[2].data, 5).forEach((e: Product) =>
+        this.mixProducts.push(e)
+      );
     });
   }
 
@@ -435,7 +474,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
   controlaChevron(indice: number) {
     const control = this.acordion[indice].abierto;
-    this.acordion.forEach(a => (a.abierto = false));
+    this.acordion.forEach((a) => (a.abierto = false));
     if (control) {
       this.acordion[indice].abierto = false;
     } else {
