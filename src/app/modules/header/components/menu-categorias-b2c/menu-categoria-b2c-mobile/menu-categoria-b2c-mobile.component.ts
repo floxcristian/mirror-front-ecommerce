@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { LocalStorageService } from 'angular-2-local-storage';
+// import { LocalStorageService } from 'angular-2-local-storage';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -17,6 +17,7 @@ import { CartService } from '../../../../../shared/services/cart.service';
 import { GeoLocationService } from '../../../../../shared/services/geo-location.service';
 import { DropdownDirective } from '../../../../../shared/directives/dropdown.directive';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 @Component({
   selector: 'app-menu-categoria-b2c-mobile',
   templateUrl: './menu-categoria-b2c-mobile.component.html',

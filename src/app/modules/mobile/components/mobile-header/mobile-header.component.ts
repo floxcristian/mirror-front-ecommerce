@@ -25,12 +25,13 @@ import { WishlistService } from '../../../../shared/services/wishlist.service';
 import { Subject } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
 import { LoginService } from '../../../../shared/services/login.service';
-import { LocalStorageService } from 'angular-2-local-storage';
+// import { LocalStorageService } from 'angular-2-local-storage';
 import { MobileMenuService } from '../../../../shared/services/mobile-menu.service';
 import { environment } from '../../../../../environments/environment';
 declare let dataLayer: any;
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-mobile-header',

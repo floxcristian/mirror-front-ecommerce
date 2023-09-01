@@ -25,11 +25,12 @@ import { WishlistService } from '../../../../shared/services/wishlist.service';
 import { Subject } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
 import { LoginService } from '../../../../shared/services/login.service';
-import { LocalStorageService } from 'angular-2-local-storage';
+//import { LocalStorageService } from 'angular-2-local-storage';
 import { MobileMenuService } from '../../../../shared/services/mobile-menu.service';
 import { environment } from '../../../../../environments/environment';
 import { MobileFiltrosComponent } from './components/mobile-filtros/mobile-filtros.component';
 import { MobileBarraBusquedaComponent } from './components/mobile-barra-busqueda/mobile-barra-busqueda.component';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-mobile-header-b2b',

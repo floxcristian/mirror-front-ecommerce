@@ -2,9 +2,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 // Storage
-import { LocalStorageService } from 'angular-2-local-storage';
+//import { LocalStorageService } from 'angular-2-local-storage';
 // Services
 import { RootService } from '../shared/services/root.service';
+import { LocalStorageService } from '../core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-layout',
@@ -26,6 +27,7 @@ export class LayoutComponent implements OnInit {
     this.scrollTop();
     this.isB2B = this.checkIsB2b();
     this.getQueryParams();
+    console.log('hola entre');
   }
 
   /**

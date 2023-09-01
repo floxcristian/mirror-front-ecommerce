@@ -1,9 +1,10 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LocalStorageService } from 'angular-2-local-storage';
+// import { LocalStorageService } from 'angular-2-local-storage';
 import { Usuario } from '../../../../shared/interfaces/login';
 import { LoginService } from '../../../../shared/services/login.service';
 import { RootService } from '../../../../shared/services/root.service';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-mi-cuenta',

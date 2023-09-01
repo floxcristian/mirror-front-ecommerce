@@ -1,0 +1,9 @@
+<router-outlet></router-outlet>
+<ng-template #alertCartModal>
+  <app-alert-cart
+    [modalRef]="modalRef"
+    [product]="productCard"
+  ></app-alert-cart>
+</ng-template>
+
+<app-alert-cart-min [product]="productCard"></app-alert-cart-min>

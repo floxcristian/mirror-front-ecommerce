@@ -12,7 +12,7 @@ import { mobileMenu } from '../../../../../data/mobile-menu';
 import { MobileMenuItem } from '../../../../shared/interfaces/mobile-menu-item';
 import { environment } from '../../../../../environments/environment';
 import { Usuario } from '../../../../shared/interfaces/login';
-import { LocalStorageService } from 'angular-2-local-storage';
+// import { LocalStorageService } from 'angular-2-local-storage';
 import { LoginService } from '../../../../shared/services/login.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { NavigationLink } from '../../../../shared/interfaces/navigation-link';
@@ -31,6 +31,7 @@ import { ShippingAddress } from '../../../../shared/interfaces/address';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -151,7 +152,7 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
 
   updateLink() {
     const isLogin = this.loginService.isLogin();
-    this.usuario = this.localS.get('usuario');
+    this.usuario = this.localS.get('usuario') as any;
 
     if (isLogin) {
       const nameUser = this.usuario.first_name + ' ' + this.usuario.last_name;
@@ -302,7 +303,7 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
       this.direccion = direccionDespacho;
       const preferencias: PreferenciasCliente = this.localS.get(
         'preferenciasCliente'
-      );
+      ) as any;
       preferencias.direccionDespacho = direccionDespacho;
       this.localS.set('preferenciasCliente', preferencias);
 

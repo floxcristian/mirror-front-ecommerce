@@ -6,7 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { LocalStorageService } from 'angular-2-local-storage';
+//import { LocalStorageService } from 'angular-2-local-storage';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { RootService } from '../../../../shared/services/root.service';
 import { ClientsService } from '../../../../shared/services/clients.service';
@@ -33,6 +33,7 @@ import {
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-search-vin-b2b',
@@ -301,7 +302,7 @@ export class SearchVinB2bComponent implements OnInit, OnDestroy {
       this.direccion = direccionDespacho;
       const preferencias: PreferenciasCliente = this.localS.get(
         'preferenciasCliente'
-      );
+      ) as any;
       preferencias.direccionDespacho = direccionDespacho;
       this.localS.set('preferenciasCliente', preferencias);
 

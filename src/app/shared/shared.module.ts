@@ -44,7 +44,7 @@ import { CapitalizeFirstPipe } from './pipes/capitalize.pipe';
 import { TitleCasePipe } from './pipes/title-case.pipe';
 
 // components
-//import { AlertComponent } from './components/alert/alert.component';
+// import { AlertComponent } from './components/alert/alert.component';
 import { IconComponent } from './components/icon/icon.component';
 import { InputNumberComponent } from './components/input-number/input-number.component';
 import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
@@ -55,8 +55,8 @@ import { ProductCardB2bComponent } from './components/product-card-b2b/product-c
 import { ProductsViewComponent } from '../modules/shop/components/products-view/products-view.component';
 //import { ProductSliderComponent } from './components/product-slider/product-slider.component';
 //import { FiltersProductsComponent } from './components/filters-products/filters-products.component';
-//import { AlertCartComponent } from './components/alert-cart/alert-cart.component';
-//import { AlertCartMinComponent } from './components/alert-cart-min/alert-cart-min.component';
+import { AlertCartComponent } from './components/alert-cart/alert-cart.component';
+import { AlertCartMinComponent } from './components/alert-cart-min/alert-cart-min.component';
 //import { ViewPdfComponent } from './components/view-pdf/view-pdf.component';
 //import { ProductSlideshowComponent } from './components/product-slideshow/product-slideshow.component';
 //import { ProductSlideshowSpecialsComponent } from './components/product-slideshow-specials/product-slideshow-specials.component';
@@ -155,8 +155,8 @@ const BOOSTRAP_MODULES = [NgbPopoverModule];
     LoadingElementComponent,
     // ProductSliderComponent,
     // FiltersProductsComponent,
-    // AlertCartComponent,
-    // AlertCartMinComponent,
+    AlertCartComponent,
+    AlertCartMinComponent,
     // ViewPdfComponent,
     // MapComponent,
     LoginComponent,
@@ -263,7 +263,7 @@ const BOOSTRAP_MODULES = [NgbPopoverModule];
     ReplacePipe,
 
     // components
-    //AlertComponent,
+    // AlertComponent,
     IconComponent,
     InputNumberComponent,
     LoadingBarComponent,
@@ -274,8 +274,8 @@ const BOOSTRAP_MODULES = [NgbPopoverModule];
     LoadingElementComponent,
     // ProductSliderComponent,
     // FiltersProductsComponent,
-    // AlertCartComponent,
-    // AlertCartMinComponent,
+    AlertCartComponent,
+    AlertCartMinComponent,
     // ProductFeatureSpecialComponent,
     // MapComponent,
     LoginComponent,

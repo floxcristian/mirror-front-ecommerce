@@ -45,7 +45,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     read: AlertCartMinComponent,
     static: false,
   })
-  alert: AlertCartMinComponent;
+  alert!: AlertCartMinComponent;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -67,6 +67,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   ) {}
 
   ngOnInit() {
+    console.log('amiguito');
     this.currency.options = {
       code: 'CLP',
       // display: 'symbol',
@@ -86,11 +87,11 @@ export class AppComponent implements AfterViewInit, OnInit {
       usuario.fechaControl = moment();
       data.append('usuario', JSON.stringify(usuario));
       this.login
-        .registroSesion(data, usuario.id_sesion, 'cierre')
+        .registroSesion(data, usuario.id_sesion || '', 'cierre')
         .then((r: any) => {
           delete usuario.fechaControl;
           this.login
-            .registroSesion(data, usuario.id_sesion, 'ingreso')
+            .registroSesion(data, usuario.id_sesion || '', 'ingreso')
             .then((resp: any) => {
               usuario.id_sesion = resp.id_sesion;
               delete usuario.ultimoCierre;
@@ -186,16 +187,14 @@ export class AppComponent implements AfterViewInit, OnInit {
       this.zone.runOutsideAngular(() => {
         setTimeout(() => {
           const preloader = document.querySelector('.site-preloader');
-
-          preloader.addEventListener(
-            'transitionend',
-            (event: TransitionEvent) => {
+          if (preloader) {
+            preloader.addEventListener('transitionend', (event: any) => {
               if (event.propertyName === 'opacity') {
                 preloader.remove();
               }
-            }
-          );
-          preloader.classList.add('site-preloader__fade');
+            });
+            preloader.classList.add('site-preloader__fade');
+          }
         }, 300);
       });
 

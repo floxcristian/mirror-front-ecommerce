@@ -3,11 +3,12 @@ import { StoresService } from '../../shared/services/stores.service';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { HostListener } from '@angular/core';
-import { LocalStorageService } from 'angular-2-local-storage';
+// import { LocalStorageService } from 'angular-2-local-storage';
 import { BuscadorB2B } from '../../shared/interfaces/buscadorB2B';
 import { LogisticsService } from '../../shared/services/logistics.service';
 import { RootService } from '../../shared/services/root.service';
 import { isVacio } from '../../shared/utils/utilidades';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 interface Store {
   cod_almacen: string;

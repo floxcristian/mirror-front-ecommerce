@@ -18,7 +18,7 @@ import { WishlistService } from '../../../../shared/services/wishlist.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
-import { LocalStorageService } from 'angular-2-local-storage';
+//import { LocalStorageService } from 'angular-2-local-storage';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import {
   GeoLocation,
@@ -26,6 +26,7 @@ import {
 } from '../../../../shared/interfaces/geo-location';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 declare let dataLayer: any;
 
 @Component({
