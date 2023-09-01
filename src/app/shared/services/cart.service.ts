@@ -7,12 +7,13 @@ import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { RootService } from './root.service';
 import { ToastrService } from 'ngx-toastr';
-import { LocalStorageService } from 'angular-2-local-storage';
+// import { LocalStorageService } from 'angular-2-local-storage';
 import { Usuario } from '../interfaces/login';
 import { DatePipe } from '@angular/common';
 import { GeoLocationService } from './geo-location.service';
 import { isVacio } from '../utils/utilidades';
 import { ResponseApi } from '../interfaces/response-api';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -113,7 +114,7 @@ export class CartService {
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
 
-    this.cartSession = this.localS.get('carroCompraB2B');
+    this.cartSession = this.localS.get('carroCompraB2B') as any;
     let productoCarro;
 
     if (this.cartSession == null) {
@@ -183,7 +184,7 @@ export class CartService {
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
 
-    this.cartSession = this.localS.get('carroCompraB2B');
+    this.cartSession = this.localS.get('carroCompraB2B') as any;
     let productoCarro;
     const productos: any[] = [];
 
@@ -320,11 +321,11 @@ export class CartService {
   }
 
   private save(): void {
-    this.localS.set('carroCompraB2B', this.CartData);
+    this.localS.set('carroCompraB2B', this.CartData as any);
   }
 
   private saveOmni(): void {
-    this.localS.set('carroCompraOMNI', this.CartData);
+    this.localS.set('carroCompraOMNI', this.CartData as any);
   }
 
   load(): void {
@@ -333,7 +334,7 @@ export class CartService {
     }
     this.loadingCart = true;
 
-    const usuario: Usuario = this.localS.get('usuario');
+    const usuario: Usuario = this.localS.get('usuario') as any;
     if (usuario == null) {
       return;
     }
@@ -632,7 +633,7 @@ export class CartService {
       return;
     }
     this.loadingCart = true;
-    const usuario: Usuario = this.localS.get('usuario');
+    const usuario: Usuario = this.localS.get('usuario') as any;
     if (usuario == null) {
       return;
     }
@@ -787,7 +788,7 @@ export class CartService {
   }
 
   remove(item: any): Observable<any> {
-    const carro: CartData = this.localS.get('carroCompraB2B');
+    const carro: CartData = this.localS.get('carroCompraB2B') as any;
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -915,9 +916,9 @@ export class CartService {
     // Sucursal
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
-    const carro: CartData = this.localS.get('carroCompraB2B');
+    const carro: CartData = this.localS.get('carroCompraB2B') as any;
     const usuario: Usuario = this.root.getDataSesionUsuario();
-    const invitado: Usuario = this.localS.get('invitado');
+    const invitado: Usuario = this.localS.get('invitado') as any;
     const recibe: any = this.localS.get('recibe');
     const productos = (carro.productos || []).map((item) => {
       return {
@@ -950,9 +951,9 @@ export class CartService {
   updateShippingPrecio(despacho: any) {
     // Sucursal
     const sucursal = this.tiendaPrecio.codigo;
-    const carro: CartData = this.localS.get('carroCompraB2B');
+    const carro: CartData = this.localS.get('carroCompraB2B') as any;
     const usuario: Usuario = this.root.getDataSesionUsuario();
-    const invitado: Usuario = this.localS.get('invitado');
+    const invitado: Usuario = this.localS.get('invitado') as any;
     const recibe: any = this.localS.get('recibe');
     const productos = (carro.productos || []).map((item) => {
       return {
@@ -984,9 +985,9 @@ export class CartService {
     // Sucursal
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
-    const carro: CartData = this.localS.get('carroCompraB2B');
+    const carro: CartData = this.localS.get('carroCompraB2B') as any;
     const usuario: Usuario = this.root.getDataSesionUsuario();
-    const invitado: Usuario = this.localS.get('invitado');
+    const invitado: Usuario = this.localS.get('invitado') as any;
     const recibe: any = this.localS.get('recibe');
     const productos = (carro.productos || []).map((item) => {
       return {
@@ -1206,7 +1207,7 @@ export class CartService {
   }
 
   getSaveCart(pagina: number, carrosPorPagina: number) {
-    const usuario: Usuario = this.localS.get('usuario');
+    const usuario: Usuario = this.localS.get('usuario') as any;
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
     let params: any = {
       usuario: usuario.username,
@@ -1220,7 +1221,7 @@ export class CartService {
   }
 
   setSaveCart(objeto: any) {
-    const usuario: Usuario = this.localS.get('usuario');
+    const usuario: Usuario = this.localS.get('usuario') as any;
     if (usuario.login_temp) {
       this.toast.warning('Debe iniciar sesion para guardar el carro');
       return;

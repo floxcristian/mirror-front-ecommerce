@@ -14,7 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
-import { LocalStorageService } from 'angular-2-local-storage';
+// import { LocalStorageService } from 'angular-2-local-storage';
 
 import { Usuario } from '../../../interfaces/login';
 import { GeoLocationService } from '../../../services/geo-location.service';
@@ -26,6 +26,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import * as moment from 'moment';
 import 'moment/min/locales';
 import { isVacio } from '../../../utils/utilidades';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-producto-tr',
@@ -134,7 +135,7 @@ export class PorductoTrComponent implements OnInit {
     }
 
     // verificamos si esta la session iniciada
-    const usuario: Usuario = this.localS.get('usuario');
+    const usuario: Usuario = this.localS.get('usuario') as any;
     let rut = '0';
 
     if (usuario != null) {
@@ -249,7 +250,7 @@ export class PorductoTrComponent implements OnInit {
   }
 
   async updateCart(cantidad: any) {
-    const usuario: Usuario = this.localS.get('usuario');
+    const usuario: Usuario = this.localS.get('usuario') as any;
     let rut = '0';
 
     if (usuario != null) {

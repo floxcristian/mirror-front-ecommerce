@@ -2,7 +2,7 @@ import { Component, OnInit, Input, SimpleChange } from '@angular/core';
 import { ProductOrigen } from '../../interfaces/product';
 import { ProductsService } from '../../services/products.service';
 import { GeoLocationService } from '../../services/geo-location.service';
-import { LocalStorageService } from 'angular-2-local-storage';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { CartService } from '../../services/cart.service';
 import { Usuario } from '../../interfaces/login';
 import { RootService } from '../../services/root.service';
@@ -46,13 +46,13 @@ export class TablaProductoComponent implements OnInit {
     public sanitizer: DomSanitizer,
     private modalService: BsModalService
   ) {
-    this.preferenciaCliente = this.localS.get('preferenciasCliente');
+    this.preferenciaCliente = this.localS.get('preferenciasCliente') as any;
   }
 
   ngOnInit() {
     this.logisticSerivice.direccionCliente$.subscribe((r) => {
       this.loadingData = true;
-      this.preferenciaCliente = this.localS.get('preferenciasCliente');
+      this.preferenciaCliente = this.localS.get('preferenciasCliente') as any;
       if (this.products !== undefined) {
         this.productsData = this.products;
         this.loadingData = false;
@@ -71,7 +71,7 @@ export class TablaProductoComponent implements OnInit {
   async construirJSON() {
     let listaProducto: any = [];
     this.productsData = [];
-    const usuario: Usuario = this.localS.get('usuario');
+    const usuario: Usuario = this.localS.get('usuario') as any;
     let rut = '0';
 
     if (usuario != null) {
@@ -156,7 +156,7 @@ export class TablaProductoComponent implements OnInit {
   }
 
   async updateCart(cantidad: any, item: any) {
-    const usuario: Usuario = this.localS.get('usuario');
+    const usuario: Usuario = this.localS.get('usuario') as any;
     let rut = '0';
 
     if (usuario != null) {

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Login, Usuario } from '../interfaces/login';
 import { Subject, Observable } from 'rxjs';
-import { LocalStorageService } from 'angular-2-local-storage';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { RootService } from './root.service';
 
 @Injectable({
@@ -25,7 +25,7 @@ export class LoginService {
     if (this.localS.get('usuario') == null) {
       return false;
     } else {
-      const user: Usuario = this.localS.get('usuario');
+      const user: Usuario = this.localS.get('usuario') as any;
       if (user.login_temp) {
         return false;
       } else {

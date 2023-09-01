@@ -1,6 +1,6 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { LocalStorageService } from 'angular-2-local-storage';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GeoLocation, TiendaLocation } from '../interfaces/geo-location';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -30,7 +30,7 @@ export class GeoLocationService {
 
   // verifica la si la tienda esta en la sesion, sino lo esta toma la por defecto
   getTiendaSeleccionada() {
-    let geo: GeoLocation = this.localStorage.get('geolocalizacion');
+    let geo: GeoLocation = this.localStorage.get('geolocalizacion') as any;
     if (geo != null) {
       this.geoLocation = geo;
       return this.geoLocation.tiendaSelecciona;
@@ -42,7 +42,7 @@ export class GeoLocationService {
 
   getGeoLocation() {
     // rescatamos la ubicacion de la sesion
-    let geo: GeoLocation = this.localStorage.get('geolocalizacion');
+    let geo: GeoLocation = this.localStorage.get('geolocalizacion') as any;
 
     if (geo != null) {
       this.geoLocation = geo;

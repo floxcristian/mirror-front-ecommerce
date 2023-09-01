@@ -21,7 +21,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
-import { LocalStorageService } from 'angular-2-local-storage';
+//import { LocalStorageService } from 'angular-2-local-storage';
 
 import { Usuario } from '../../interfaces/login';
 import { GeoLocationService } from '../../services/geo-location.service';
@@ -38,6 +38,7 @@ import { ResponseApi } from '../../interfaces/response-api';
 import { ArticuloFavorito, Lista } from '../../interfaces/articuloFavorito';
 import * as moment from 'moment';
 import 'moment/min/locales';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-product-card-b2b',
@@ -303,7 +304,7 @@ export class ProductCardB2bComponent implements OnInit, OnDestroy {
 
   refreshListasEnQueExiste() {
     this.listasEnQueExiste = [];
-    const favoritos: ArticuloFavorito = this.localS.get('favoritos');
+    const favoritos: ArticuloFavorito = this.localS.get('favoritos') as any;
     if (!isVacio(favoritos)) {
       favoritos.listas.forEach((lista) => {
         if (!isVacio(lista.skus.find((sku) => sku === this.productData.sku))) {

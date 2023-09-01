@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, EventEmitter, OnInit } from '@angular/core';
-import { LocalStorageService } from 'angular-2-local-storage';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { ArticuloFavorito, Lista } from '../../interfaces/articuloFavorito';
@@ -9,6 +8,7 @@ import { ResponseApi } from '../../interfaces/response-api';
 import { ClientsService } from '../../services/clients.service';
 import { RootService } from '../../services/root.service';
 import { isVacio } from '../../utils/utilidades';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 export interface DataWishListModal {
   producto: Product;
@@ -178,7 +178,7 @@ export class WishListModalComponent implements OnInit {
 
   refreshListasEnQueExiste() {
     this.listasEnQueExiste = [];
-    const favoritos: ArticuloFavorito = this.localS.get('favoritos');
+    const favoritos: ArticuloFavorito = this.localS.get('favoritos') as any;
     if (!isVacio(favoritos)) {
       favoritos.listas.forEach((lista) => {
         if (!isVacio(lista.skus.find((sku) => sku === this.producto.sku))) {

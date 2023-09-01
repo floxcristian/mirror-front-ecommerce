@@ -2,9 +2,10 @@ import { Component, Input } from '@angular/core';
 import { CurrencyService } from '../../../../shared/services/currency.service';
 import { Usuario } from '../../../../shared/interfaces/login';
 import { LoginService } from '../../../../shared/services/login.service';
-import { LocalStorageService } from 'angular-2-local-storage';
+// import { LocalStorageService } from 'angular-2-local-storage';
 import { Router } from '@angular/router';
 import { environment } from '../../../../../environments/environment';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-header-topbar',
@@ -40,7 +41,7 @@ export class TopbarComponent {
     public loginService: LoginService,
     public localS: LocalStorageService
   ) {
-    this.usuario = this.localS.get('usuario');
+    this.usuario = this.localS.get('usuario') as any;
 
     this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
       if (!usuario.hasOwnProperty('user_role')) {

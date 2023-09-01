@@ -4,7 +4,7 @@ import { Product } from '../interfaces/product';
 import { SlugifyPipe } from '../pipes/slugify.pipe';
 import { HttpClient } from '@angular/common/http';
 import { DecimalPipe } from '@angular/common';
-import { LocalStorageService } from 'angular-2-local-storage';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { Usuario } from '../interfaces/login';
 import { Router } from '@angular/router';
 // import * as uuid from 'uuid/v4';
@@ -82,7 +82,7 @@ export class RootService {
   }
 
   getDataSesionUsuario() {
-    const data: Usuario = this.localS.get('usuario');
+    const data: Usuario = this.localS.get('usuario') as any;
 
     const id = uuidv4();
 
@@ -104,7 +104,7 @@ export class RootService {
   async getPreferenciasCliente() {
     let preferencias: PreferenciasCliente = this.localS.get(
       'preferenciasCliente'
-    );
+    ) as any;
     if (isVacio(preferencias)) {
       preferencias = {
         direccionDespacho: null,

@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { LoginService } from '../../../../shared/services/login.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LocalStorageService } from 'angular-2-local-storage';
+//import { LocalStorageService } from 'angular-2-local-storage';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CartService } from '../../../../shared/services/cart.service';
@@ -11,6 +11,7 @@ import { ClientsService } from '../../../../shared/services/clients.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-header-login',
@@ -32,7 +33,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private loginService: LoginService,
     private fb: FormBuilder,
-    private localS: LocalStorageService,
+    //private localS: LocalStorageService,
     private router: Router,
     private toastr: ToastrService,
     private cart: CartService,
@@ -57,7 +58,8 @@ export class LoginComponent implements OnInit {
   }
 
   entrar() {
-    const user: Usuario = this.localS.get('usuario');
+    //const user: Usuario = this.localS.get('usuario');
+    const user: Usuario = this.localStorage.get('usuario') as Usuario;
 
     let userIdOld: any = null;
     if (user !== null) {
@@ -115,8 +117,8 @@ export class LoginComponent implements OnInit {
 
           const data = { ...r.data, login_temp: false, iva };
 
-          this.localS.set('usuario', data);
-          this.localS.remove('invitado');
+          this.localStorage.set('usuario', data);
+          this.localStorage.remove('invitado');
           this.loginService.notify(data);
           this.verificaSession();
 
@@ -150,7 +152,7 @@ export class LoginComponent implements OnInit {
   }
 
   verificaSession() {
-    const user: Usuario = this.localS.get('usuario');
+    const user: Usuario = this.localStorage.get('usuario') as Usuario;
     if (user == null) {
       this.muestraLogin.emit(false);
     } else {

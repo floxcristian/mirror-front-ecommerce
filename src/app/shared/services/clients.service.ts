@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Usuario } from '../interfaces/login';
 import { RootService } from './root.service';
-import { LocalStorageService } from 'angular-2-local-storage';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { Flota } from '../interfaces/flota';
 import { isVacio } from '../utils/utilidades';
 import { Observable } from 'rxjs';
@@ -259,7 +259,7 @@ export class ClientsService {
   }
 
   getPreciosPorRut(pagina: number, preciosPorPagina: number, sucursal: string) {
-    const usuario: Usuario = this.localS.get('usuario');
+    const usuario: Usuario = this.localS.get('usuario') as any;
     const params: any = {
       rut: usuario.rut,
       sucursal,

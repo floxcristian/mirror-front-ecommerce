@@ -3,7 +3,8 @@ import { BehaviorSubject, Observable, Subject, timer } from 'rxjs';
 import { Product } from '../interfaces/product';
 import { map, takeUntil } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
-import { LocalStorageService } from 'angular-2-local-storage';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+//import { LocalStorageService } from 'angular-2-local-storage';
 
 interface WishlistData {
   items: Product[];
@@ -77,13 +78,13 @@ export class WishlistService implements OnDestroy {
   }
 
   private save(): void {
-    this.localS.set('wishlistItems', this.data.items);
+    this.localS.set('wishlistItems', this.data.items as any);
 
     this.itemsSubject$.next(this.data.items);
   }
 
   private load(): void {
-    const items: Product[] = this.localS.get('wishlistItems');
+    const items: Product[] = this.localS.get('wishlistItems') as any;
     if (items) {
       this.data.items = items;
       this.itemsSubject$.next(this.data.items);

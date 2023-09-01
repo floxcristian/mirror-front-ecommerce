@@ -6,7 +6,7 @@ export class LocalStorageService {
 
   constructor() {}
 
-  getItem(key: string) {
+  get(key: string) {
     return localStorage.getItem(this.prefix + key);
   }
 
@@ -19,7 +19,7 @@ export class LocalStorageService {
     return null;
   }*/
 
-  setItem(key: string, value: string): void {
+  set(key: string, value: any): void {
     localStorage.setItem(this.prefix + key, value);
   }
 
@@ -39,5 +39,9 @@ export class LocalStorageService {
         localStorage.removeItem(key);
       }
     }
+  }
+
+  remove(key: string) {
+    localStorage.removeItem(`${this.prefix}${key}`);
   }
 }
