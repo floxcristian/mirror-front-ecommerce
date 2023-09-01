@@ -1,0 +1,169 @@
+.bg-primary {
+    background-color: #0063b9 !important;
+    color: white !important;
+}
+
+.bg-primary:hover {
+    background-color: #004B8D !important;
+
+}
+
+
+@keyframes latidos {
+    from {
+        transform: none;
+    }
+
+    10% {
+        transform: scale(1.1);
+    }
+
+    to {
+        transform: none;
+    }
+}
+
+.latiendo {
+    display: inline-block;
+    animation: latidos 1.3s infinite;
+    transform-origin: center;
+}
+
+i.latiendo {
+    font-size: 1.7rem;
+}
+
+h1.block-header__title {
+    font-size: 1.6rem;
+    margin-bottom: 0px;
+}
+
+div.barra_titulo:hover>h1.block-header__title {
+    font-size: 1.65rem;
+}
+
+div.barra_titulo>div>span {
+    -visibility: hidden;
+    // color:#FFF;
+}
+
+div.barra_titulo>div>span.ver-mas {
+    font-size: 1rem;
+    // color: #CCC;
+}
+
+div.barra_titulo:hover>div>span.mostrar {
+    visibility: visible;
+    // color:#FFFFFF;
+    font-weight: bold;
+}
+
+::ng-deep.carouselHome .owl-prev {
+    @media (max-width: 1366px) {
+        left: 0px !important;
+
+        i {
+            color: #aaa;
+        }
+    }
+}
+
+::ng-deep.carouselHome .owl-next {
+    @media (max-width: 1366px) {
+        right: 0px !important;
+
+        i {
+            color: #aaa;
+        }
+    }
+}
+
+::ng-deep.carouselHome .owl-prev {
+    @media (min-width: 1366px) {
+        left: -65px !important;
+
+        i {
+            color: #aaa;
+        }
+    }
+}
+
+::ng-deep.carouselHome .owl-next {
+    @media (min-width: 1366px) {
+        right: -55px !important;
+
+        i {
+            color: #aaa;
+        }
+    }
+}
+
+::ng-deep.carouselHome .owl-prev:hover {
+    i {
+        color: #007bff;
+    }
+}
+
+::ng-deep.carouselHome .owl-next:hover {
+    i {
+        color: #007bff;
+    }
+}
+
+::ng-deep.carouselHome .owl-carousel .owl-item img {
+    display: unset !important;
+}
+
+::ng-deep.carouselHome .owl-carousel .owl-item {
+    padding: 10px;
+    display: flex;
+
+    app-product-card-b2b {
+        display: flex;
+        width: 115%;
+
+        .product-card {
+            flex: 1 1 auto !important;
+        }
+    }
+
+    app-product-card-b2c {
+        display: flex;
+        width: 115%;
+
+        .product-card {
+            flex: 1 1 auto !important;
+        }
+    }
+
+    app-product-card-b2c-cms {
+        display: flex;
+        width: 115%;
+
+        .product-card {
+            flex: 1 1 auto !important;
+        }
+    }
+
+    app-product-list-card {
+        width: 100%;
+
+        .product-card {
+            height: 100%;
+        }
+    }
+}
+
+::ng-deep.carouselHome .owl-carousel .owl-stage {
+    display: flex !important;
+}
+
+::ng-deep.listCards div.owl-stage {
+    height: 29.8rem !important;
+}
+
+.block-header__subtitle {
+    text-transform: uppercase;
+    color: #6c757d;
+    text-align: center;
+}

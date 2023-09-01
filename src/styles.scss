@@ -1,4 +1,87 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Importing Bootstrap SCSS file. */
-@import 'bootstrap/scss/bootstrap';
+@import "bootstrap/scss/bootstrap";
+
+@import "scss/style";
+// @import "~animate.css/animate.min";
+
+agm-map {
+  height: 300px;
+}
+
+// .owl-stage-outer {
+//     margin-top: 1px!important;
+// }
+.titilo-w {
+  width: 75px !important;
+}
+
+// .owl-stage-outer.ng-star-inserted{
+//     height: 300px !important;
+// }
+
+/* .modal-content {
+    width: 800px!important;
+}
+
+.modal-body {
+    width: 800px!important;
+}
+
+.modal-wide {
+    width: 800px!important;
+} */
+
+.pac-container {
+  z-index: 1051 !important;
+}
+
+.ng-select.ng-select.ng-select-single.ng-select-filtered:not(.ng-select-opened)
+  .ng-select-container.ng-has-value
+  .ng-value-container
+  .ng-value {
+  visibility: visible;
+}
+
+@media (min-width: 0px) and (max-width: 575px) {
+  .ng-select.ng-select-single .ng-select-container .ng-value-container,
+  .ng-select.ng-select-single
+    .ng-select-container
+    .ng-value-container
+    .ng-value {
+    font-size: 14px;
+  }
+}
+
+@font-face {
+  font-family: din-heavy;
+  src: url("assets/fonts/DINN/DINNextLTPro-Heavy.ttf");
+}
+
+@font-face {
+  font-family: din-bold;
+  src: url("assets/fonts/DINN/DINNextLTPro-Bold.ttf");
+}
+
+@font-face {
+  font-family: din-medium;
+  src: url("assets/fonts/DINN/DINNextLTPro-Medium.ttf");
+}
+
+@font-face {
+  font-family: din-regular;
+  src: url("assets/fonts/DINN/DINNextLTPro-Regular.ttf");
+}
+
+@font-face {
+  font-family: AvenirLTStd;
+  font-weight: bold;
+  src: url("./assets/fonts/AvenirLTStd-Black.otf");
+}
+
+@font-face {
+  font-family: AvenirLTStd;
+  font-weight: normal;
+  src: url("./assets/fonts/AvenirLTStd-Book.otf");
+}

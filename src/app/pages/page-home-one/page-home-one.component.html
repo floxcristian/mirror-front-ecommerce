@@ -1,18 +1,21 @@
-PAGE-HOME-COMPONENT
-<!-- FIXME: START -->
-<!--
-<app-block-slideshow *ngIf="galeria && !isB2B" [withDepartments]="false"></app-block-slideshow>
+<app-block-slideshow
+  *ngIf="galeria && !isB2B"
+  [withDepartments]="false"
+></app-block-slideshow>
 
 <app-buttons-slideshow *ngIf="!isB2B"></app-buttons-slideshow>
-
 <app-product-slideshow *ngIf="isB2B"></app-product-slideshow>
 
 <app-block-brands *ngIf="marcas && isB2B" [brands]="brands"></app-block-brands>
-
-<app-page-home *ngIf="!isB2B"></app-page-home>
-<div *ngIf="marcas && !isB2B" class="container" style="background-color: white; padding: 20px">
-  <app-block-brands-b2c *ngIf="marcas && !isB2B" [brands]="brandsB2c"></app-block-brands-b2c>
+<!-- FIXME: falta -->
+<!-- <app-page-home *ngIf="!isB2B"></app-page-home> -->
+<div
+  *ngIf="marcas && !isB2B"
+  class="container"
+  style="background-color: white; padding: 20px"
+>
+  <app-block-brands-b2c
+    *ngIf="marcas && !isB2B"
+    [brands]="brandsB2c"
+  ></app-block-brands-b2c>
 </div>
-
--->
-<!-- FIXME: END -->

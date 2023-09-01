@@ -1,30 +1,45 @@
 <div class="site-header" *ngIf="Hidebar()">
-    <app-header-topbar logo="0" [tipo]="tipo"></app-header-topbar>
+  <app-header-topbar logo="0" [tipo]="tipo"></app-header-topbar>
 
-    <div *ngIf="tipo === 'b2c'" class="d-flex search-group-bar align-items-center" id="sticky_header_b2c">
-        <div class="p-0">
-            <div class="site-header__logo">
-                <a [routerLink]="['/', 'inicio']">
-                    <img height="110" [src]="logoSrc" alt="logo-implementos" class="lazyload" />
-                </a>
-            </div>
-        </div>
-
-        <div class="col p-0">
-            <div class="site-header__middle">
-                <div class="site-header__search">
-                    <app-header-search></app-header-search>
-                </div>
-            </div>
-        </div>
+  <div
+    *ngIf="tipo === 'b2c'"
+    class="d-flex search-group-bar align-items-center"
+    id="sticky_header_b2c"
+  >
+    <div class="p-0">
+      <div class="site-header__logo">
+        <a [routerLink]="['/', 'inicio']">
+          <img
+            height="110"
+            [src]="logoSrc"
+            alt="logo-implementos"
+            class="lazyload"
+          />
+        </a>
+      </div>
     </div>
 
-    <div class="header_nav" id="sticky_header_b2c_nav"></div>
-    <app-header-nav [ngStyle]="{ display: tipo === 'b2b' ? 'none' : 'none' }"></app-header-nav>
+    <div class="col p-0">
+      <div class="site-header__middle">
+        <div class="site-header__search">
+          <app-header-search></app-header-search>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <app-search-vin-b2b *ngIf="tipo === 'b2b'"></app-search-vin-b2b>
+  <div class="header_nav" id="sticky_header_b2c_nav"></div>
+  <app-header-nav
+    [ngStyle]="{ display: tipo === 'b2b' ? 'none' : 'none' }"
+  ></app-header-nav>
+
+  <app-search-vin-b2b *ngIf="tipo === 'b2b'"></app-search-vin-b2b>
 </div>
 
 <div class="site-header" *ngIf="!Hidebar()">
-    <app-header-topbar logo="0" [tipo]="tipo" [desde]="getDesde()"></app-header-topbar>
+  <app-header-topbar
+    logo="0"
+    [tipo]="tipo"
+    [desde]="getDesde()"
+  ></app-header-topbar>
 </div>

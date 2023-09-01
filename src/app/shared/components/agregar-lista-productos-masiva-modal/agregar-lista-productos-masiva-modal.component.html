@@ -1,0 +1,301 @@
+<div class="modal-header">
+  <h5 class="modal-title pull-left">
+    <i class="fas fa-file-upload mr-2"></i>
+    <span style="font-size: 16px" *ngIf="modo === 'lotes'"
+      >Cargar productos por lotes</span
+    >
+    <span style="font-size: 16px" *ngIf="modo === 'lista'"
+      >Agregando productos a lista "{{ lista.nombre }}"</span
+    >
+  </h5>
+</div>
+<div class="modal-body px-4">
+  <div *ngIf="!procesado">
+    <p *ngIf="modo === 'lotes'">
+      Descargue el archivo excel de ejemplo y complete la informacion, a
+      continuación seleccione el archivo modificado, cree una nueva lista o
+      seleccione una existente y haga clic en "Procesar Archivo".
+    </p>
+    <p *ngIf="modo === 'lista'">
+      Descargue el archivo excel de ejemplo y complete la informacion, a
+      continuación seleccione el archivo modificado y haga clic en "Procesar
+      Archivo".
+    </p>
+    <a
+      href="../../../../assets/excel/base_carga_masiva_lista_productos.xlsx"
+      target="_blank"
+    >
+      <i class="far fa-file-excel"></i> Descargar plantilla</a
+    >
+
+    <form [formGroup]="form">
+      <div class="form-row mt-1">
+        <div class="form-group col-12">
+          <label class="mr-3">Seleccione el archivo Excel: </label>
+          <input
+            formControlName="file"
+            class="pl-0 form-control-lg"
+            [disabled]="procesandoExcel"
+            (change)="onFileChange($event)"
+            type="file"
+          />
+        </div>
+      </div>
+    </form>
+    <div class="dropdown-divider" *ngIf="modo === 'lotes'"></div>
+    <div class="row" *ngIf="modo === 'lotes'">
+      <ng-container
+        *ngIf="creandoLista === false && seleccionandoLista === false"
+      >
+        <div class="col-6">
+          <button
+            class="btn btn-link btn-sm btn-block text-decoration-none"
+            (click)="creandoLista = true; seleccionandoLista = false"
+          >
+            <i class="fas fa-plus fa-lg fa-fw mr-2"></i>Crear nueva lista
+          </button>
+        </div>
+
+        <div class="col-6">
+          <button
+            class="btn btn-link btn-sm btn-block text-decoration-none"
+            (click)="creandoLista = false; seleccionandoLista = true"
+          >
+            <i class="fas fa-list fa-lg fa-fw mr-2"></i>Seleccionar lista
+            existente
+          </button>
+        </div>
+      </ng-container>
+      <div
+        class="col-12 text-center"
+        *ngIf="creandoLista || seleccionandoLista"
+      >
+        <div *ngIf="creandoLista"><label>Crear una nueva lista</label></div>
+        <div *ngIf="seleccionandoLista">
+          <label>Selccionar una lista existente</label>
+        </div>
+        <span class="position-absolute" style="right: 30px; top: 2px">
+          <button
+            class="btn btn-sm btn-link p-0"
+            (click)="creandoLista = false; seleccionandoLista = false"
+          >
+            <span class="d-none d-sm-inline p-0">Volver</span
+            ><i class="fas fa-undo-alt ml-2"></i>
+          </button>
+        </span>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="modo === 'lotes'">
+      <div *ngIf="creandoLista" class="col-12 mt-2">
+        <div class="input-group">
+          <input
+            type="search"
+            class="form-control form-control-sm"
+            maxlength="40"
+            [disabled]="procesandoExcel"
+            (search)="cantCaracteres = nombre.length"
+            (keyup)="ingresaNombre()"
+            (keydown)="ingresaNombre()"
+            (keypress)="ingresaNombre()"
+            placeholder="Escriba el nombre de la lista"
+            aria-label="nombre"
+            [(ngModel)]="nombre"
+          />
+          <div class="w-100 d-flex justify-content-end mt-1">
+            <div class="max-caracteres">
+              {{ cantCaracteres }} / {{ maxCaracteres }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="seleccionandoLista" class="col-12 mt-2">
+        <div class="input-group">
+          <select
+            class="form-control form-control-sm bootstrap-select"
+            [disabled]="procesandoExcel"
+            [(ngModel)]="lista"
+          >
+            <option selected [value]="undefined">Seleccione lista...</option>
+            <option *ngFor="let item of listas" [ngValue]="item">
+              {{ item.nombre }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="procesado">
+    <label>Resultado: </label><br />
+    <div [class]="alertClass" role="alert">
+      <strong>{{ mensaje }} </strong>
+    </div>
+    <label>Detalle Resultados: </label><br />
+    <div class="accordion" id="DetalleResultados">
+      <div *ngIf="productosCargados.length > 0">
+        <div class="border accordion-header">
+          <div
+            class="mb-0 d-flex"
+            style="cursor: pointer"
+            data-toggle="collapse"
+            data-target="#productosOK"
+            aria-expanded="false"
+            aria-controls="productosOK"
+            (click)="clickCollapse(1)"
+          >
+            <div
+              class="text-success p-2 ml-3 flex-grow-1 flex-shrink-1 collapsed"
+              style="font-size: 15px; font-weight: 500"
+            >
+              {{ productosCargados.length }}
+              <span *ngIf="productosCargados.length == 1">Producto cargado</span
+              ><span *ngIf="productosCargados.length > 0"
+                >Productos cargados</span
+              >
+              correctamente
+            </div>
+            <div style="float: right" class="mr-3 d-flex align-items-center">
+              <span
+                class="fas fa-chevron-{{ collapsed1State ? 'right' : 'down' }}"
+                style="cursor: pointer"
+              ></span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="productosOK"
+          class="collapse"
+          data-parent="#DetalleResultados"
+          style="max-height: 200px; overflow-y: scroll"
+        >
+          <div
+            class="border-left border-right border-bottom py-2 px-3 d-flex flex-wrap justify-content-center"
+          >
+            <div class="producto" *ngFor="let item of productosCargados">
+              <div>
+                <div class="mr-2 float-left">
+                  <a
+                    [routerLink]="
+                      rootService.product(
+                        item.detalleSku.sku,
+                        item.detalleSku.nombre
+                      )
+                    "
+                  >
+                    <img
+                      style="width: 3rem"
+                      [src]="rootService.getUrlImagenMiniatura(item.detalleSku)"
+                      [alt]="item.detalleSku.nombre"
+                    />
+                  </a>
+                </div>
+                <div>
+                  <div class="text-truncate" style="height: 20px">
+                    <span style="font-size: 0.9rem">{{
+                      item.detalleSku.nombre | capitalizeFirst
+                    }}</span>
+                  </div>
+                  <span style="font-size: 70%">{{
+                    "SKU: " + item.detalleSku.sku
+                  }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="productosNoCargados.length > 0">
+        <div class="border accordion-header">
+          <div
+            class="mb-0 d-flex"
+            style="cursor: pointer"
+            data-toggle="collapse"
+            data-target="#productosERROR"
+            aria-expanded="false"
+            aria-controls="productosERROR"
+            (click)="clickCollapse(2)"
+          >
+            <div
+              class="text-danger p-2 ml-3 flex-grow-1 flex-shrink-1 collapsed"
+              style="font-size: 15px; font-weight: 500"
+            >
+              {{ productosNoCargados.length }}
+              <span *ngIf="productosNoCargados.length == 1"
+                >Producto No encontrado</span
+              ><span *ngIf="productosNoCargados.length > 0"
+                >Productos No encontrados</span
+              >
+            </div>
+            <div style="float: right" class="mr-3 d-flex align-items-center">
+              <span
+                class="fas fa-chevron-{{ collapsed2State ? 'right' : 'down' }}"
+                style="cursor: pointer"
+              ></span>
+            </div>
+          </div>
+        </div>
+        <div
+          id="productosERROR"
+          class="collapse"
+          data-parent="#DetalleResultados"
+          style="max-height: 200px; overflow-y: scroll"
+        >
+          <div
+            class="border-left border-right border-bottom pt-2 pb-2 pl-3 pr-3 d-flex flex-wrap justify-content-center"
+          >
+            <div class="producto" *ngFor="let item of productosNoCargados">
+              <div>
+                <div class="col-sm-12">
+                  <span class="product-sku text-gray-2"
+                    >Celda: {{ item.celda }}
+                  </span>
+                </div>
+                <div class="col-sm-12">
+                  <span class="product-sku text-gray-2" style="font-size: 75%"
+                    >SKU: {{ item.sku }}</span
+                  >
+                </div>
+                <div class="col-sm-12">
+                  <span class="text-danger" style="font-size: 75%"
+                    >Producto no encontrado</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button
+    name="Cerrar"
+    class="btn btn-link text-danger mr-2"
+    (click)="close(false)"
+    [disabled]="procesandoExcel"
+    *ngIf="!procesado"
+  >
+    Cancelar
+  </button>
+  <button
+    name="Guardar"
+    class="btn btn-secondary"
+    [ngClass]="{ 'btn-loading': procesandoExcel }"
+    *ngIf="!procesado"
+    (click)="procesarArchvo()"
+  >
+    Procesar Archivo
+  </button>
+  <button
+    name="Cerrar"
+    class="btn btn-secondary"
+    *ngIf="procesado"
+    (click)="close(true)"
+  >
+    Cerrar
+  </button>
+</div>

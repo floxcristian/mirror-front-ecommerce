@@ -7,7 +7,13 @@ export class LocalStorageService {
   constructor() {}
 
   get(key: string) {
-    return localStorage.getItem(this.prefix + key);
+    const data: any = localStorage.getItem(this.prefix + key) as any;
+    try {
+      return JSON.parse(data);
+    } catch (err) {
+      return data;
+    }
+    //return JSON.parse(data);
   }
 
   /*

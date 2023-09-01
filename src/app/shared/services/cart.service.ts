@@ -179,7 +179,7 @@ export class CartService {
       );
   }
 
-  addLista(products: Product[]): Observable<any> {
+  addLista(products: Product[] | any[] | undefined): Observable<any> {
     // Sucursal
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
@@ -188,7 +188,7 @@ export class CartService {
     let productoCarro;
     const productos: any[] = [];
 
-    products.forEach((producto) => {
+    (products || []).forEach((producto) => {
       if (this.cartSession == null) {
         productoCarro = { cantidad: 0 };
       } else {
@@ -335,6 +335,7 @@ export class CartService {
     this.loadingCart = true;
 
     const usuario: Usuario = this.localS.get('usuario') as any;
+    console.log('usuario : ', usuario);
     if (usuario == null) {
       return;
     }

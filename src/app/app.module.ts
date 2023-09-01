@@ -18,7 +18,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 // import { NgtUniversalModule } from '@ng-toolkit/universal';
 
 import { AppComponent } from './app.component';
-
+// Routing
+import { AppRoutingModule } from './app-routing.module';
 // Modules
 import { SharedModule } from './shared/shared.module';
 import { WidgetsModule } from './modules/widgets/widgets.module';
@@ -28,14 +29,18 @@ import { BasicAuthInterceptor } from './core/interceptors/basic-auth.interceptor
 import { LocalStorageService } from './core/modules/local-storage/local-storage.service';
 import { LocalStorageModule } from './core/modules/local-storage/local-storage.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RouterModule } from '@angular/router';
+import { TestComponent } from './test/test.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, TestComponent],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'serverApp' }),
+    BrowserModule,
+    // BrowserModule.withServerTransition({ appId: 'serverApp' }),
     BrowserAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
+    RouterModule,
     /*LocalStorageModule.forRoot({
       prefix: 'ImplementosB2B',
       storageType: 'localStorage'
@@ -46,6 +51,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BsDropdownModule.forRoot(),
     ModalModule,
     TooltipModule.forRoot(),
+    // modules
+    AppRoutingModule,
     SharedModule,
     WidgetsModule,
     NgbModule,

@@ -1,0 +1,102 @@
+// colors
+$light-opposite-color:  #3d464d       !default;
+$accent-color:          #ff9800       !default;
+$accent-opposite-color: #fff          !default;
+$link-color:            $accent-color !default;
+$link-hover-color:      $accent-color !default;
+
+
+// barra de iconos header
+
+$nav-links-item-default-shadow: #000 !default;
+
+
+// .nav-links
+$nav-links-item-font-weight:         400             !default;
+$nav-links-item-default-arrow-color: #cfcfcf !default;
+$nav-links-item-hover-bg:            rgba(#fff, .15) !default;
+
+
+// .departments
+$departments-bg: transparent !default;
+$departments-icon-color:    rgba(#000,1 )  !default;
+$departments-arrow-color:   rgba(#000 ,1)  !default;
+$departments-item-hover-bg: rgba(#000, .08) !default;
+$departments-border: 2px solid $departments-icon-color;
+$departments-font-color:  rgba(#000,1 );
+
+// .mobile-header
+$mobile-header-menu-button-hover-bg:                  $nav-links-item-hover-bg !default;
+// search input default
+$mobile-header-search-input-default-bg:               rgba(#fff, .4)           !default;
+$mobile-header-search-input-default-shadow:           none                     !default;
+$mobile-header-search-input-default-placeholder:      rgba(#000, .5)           !default;
+$mobile-header-search-input-default-font-color:       $light-opposite-color    !default;
+$mobile-header-search-input-default-icon-color:       rgba(#000, .4)           !default;
+$mobile-header-search-input-default-icon-hover-color: $light-opposite-color    !default;
+// search input hover
+$mobile-header-search-input-hover-bg:                 rgba(#fff, .6)           !default;
+// search input focus
+$mobile-header-search-input-focus-bg:                 #fff                     !default;
+$mobile-header-search-input-focus-shadow:             0 1px 5px rgba(#000, .2) !default;
+$mobile-header-search-input-focus-placeholder:        #999                     !default;
+$mobile-header-search-input-focus-font-color:         $light-opposite-color    !default;
+$mobile-header-search-input-focus-icon-color:         #b3b3b3                  !default;
+$mobile-header-search-input-focus-icon-hover-color:   $light-opposite-color    !default;
+
+
+// .product-card
+$product-card-hover-shadow:            0 0 0 2px #e5e5e5 inset !default;
+$product-card-quickview-default-bg:    #e5e5e5                 !default;
+$product-card-quickview-default-color: $light-opposite-color   !default;
+
+
+// .nouislider
+$nouislider-border-color: $accent-color          !default;
+$nouislider-handle-color: $accent-opposite-color !default;
+
+
+
+
+
+// ----------------------------------------
+// -- header
+// ----------------------------------------
+$header-bg: #f1d01c !default;
+$header-font-color: inherit !default;
+// $header-font-muted-color: $body-font-muted-color !default;
+// $header-logo-color: inherit !default;
+
+// buttom
+
+// secondary
+// default
+$btn-secondary-bg-color: #f1d01c !default;
+$btn-secondary-font-color: #000 !default;
+$btn-secondary-icon-color: #000 !default;
+
+// hover
+$btn-secondary-hover-bg-color: #e2c31a !default;
+$btn-secondary-hover-font-color:#000 !default;
+$btn-secondary-hover-icon-color: #000 !default;
+
+
+// active
+$btn-secondary-active-bg-color: #e2c31a !default;
+$btn-secondary-active-font-color: #000 !default;
+$btn-secondary-active-icon-color: #000 !default;
+
+
+// btn-border-primary
+$btn-border-primary-color: #000  !default;;
+$btn-border-primary-color-hover: #373737  !default;;
+
+
+
+//  step cart - pasos de compra
+$cart-step-number-color: #000;
+$cart-step-number-bg: #e2c31a;
+$cart-step-number-border: #e2c31a;
+
+$cart-step-active-bg: #e2c31a;
+$cart-step-active-subtitle: #000;

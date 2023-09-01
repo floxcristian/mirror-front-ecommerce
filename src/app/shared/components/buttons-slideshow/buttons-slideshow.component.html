@@ -1,0 +1,48 @@
+<div
+  class="container d-none d-xl-block"
+  style="background-color: white; padding: 30px 10px"
+>
+  <div class="row mt-3">
+    <div class="col-20" *ngFor="let item of botones1">
+      <a [href]="item.url">
+        <app-button
+          [imagen]="item.imagen"
+          [titulo]="item.titulo"
+          [linea1]="item.linea1"
+          [linea2]="item.linea2"
+        >
+        </app-button>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div
+  class="container block-slideshow mb-0 d-xl-none d-block"
+  style="background-color: white; padding: 50px 10px 20px 10px"
+>
+  <owl-carousel-o
+    class="carouselButtons"
+    [options]="options"
+    appOwlPreventClick
+    [ngClass]="{ item: true }"
+  >
+    <ng-container *ngFor="let item of botones1">
+      <ng-template
+        carouselSlide
+        [id]="'id-' + item._id"
+        style="height: 300px !important"
+      >
+        <a [href]="item.url">
+          <app-button
+            [imagen]="item.imagen"
+            [titulo]="item.titulo"
+            [linea1]="item.linea1"
+            [linea2]="item.linea2"
+          >
+          </app-button>
+        </a>
+      </ng-template>
+    </ng-container>
+  </owl-carousel-o>
+</div>

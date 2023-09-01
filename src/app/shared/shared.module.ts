@@ -58,7 +58,7 @@ import { ProductsViewComponent } from '../modules/shop/components/products-view/
 import { AlertCartComponent } from './components/alert-cart/alert-cart.component';
 import { AlertCartMinComponent } from './components/alert-cart-min/alert-cart-min.component';
 //import { ViewPdfComponent } from './components/view-pdf/view-pdf.component';
-//import { ProductSlideshowComponent } from './components/product-slideshow/product-slideshow.component';
+import { ProductSlideshowComponent } from './components/product-slideshow/product-slideshow.component';
 //import { ProductSlideshowSpecialsComponent } from './components/product-slideshow-specials/product-slideshow-specials.component';
 //import { MapComponent } from './components/map/map.component';
 import { LoginComponent } from '../modules/header/components/login/login.component';
@@ -80,10 +80,10 @@ import { PorductoTrComponent } from './components/tabla-producto/porducto-tr/pro
 import { InputNumberProductComponent } from './components/input-number-product/input-number-product.component';
 // import { ChartsModule, ThemeService } from 'ng2-charts';
 import { WishListModalComponent } from './components/wish-list-modal/wish-list-modal.component';
-// import { ProductListCardComponent } from './components/product-list-card/product-list-card.component';
-// import { EditarListaProductosComponent } from './components/editar-lista-productos/editar-lista-productos.component';
-// import { AgregarListaProductosMasivaModalComponent } from './components/agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
-// import { ProductListModalComponent } from './components/product-list-card/components/product-list-modal/product-list-modal.component';
+import { ProductListCardComponent } from './components/product-list-card/product-list-card.component';
+import { EditarListaProductosComponent } from './components/editar-lista-productos/editar-lista-productos.component';
+import { AgregarListaProductosMasivaModalComponent } from './components/agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
+import { ProductListModalComponent } from './components/product-list-card/components/product-list-modal/product-list-modal.component';
 // import { PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface, PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 // import { AngularEmailAutocompleteComponent } from './components/angular-email-autocomplete/angular-email-autocomplete.component';
@@ -107,8 +107,8 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
 // import { AvisoStockComponent } from './components/aviso-stock/aviso-stock.component';
 // import { CountdownTimerModule } from './../../../projects/countdown-timer/src/lib/countdown-timer.module';
 import { ProductCardB2cCmsComponent } from './components/product-card-b2c-cms/product-card-b2c-cms.component';
-// import { ButtonsSlideshowComponent } from './components/buttons-slideshow/buttons-slideshow.component';
-// import { ButtonComponent } from './components/buttons-slideshow/components/button/button.component';
+import { ButtonsSlideshowComponent } from './components/buttons-slideshow/buttons-slideshow.component';
+import { ButtonComponent } from './components/buttons-slideshow/components/button/button.component';
 // Bootstrap
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 // import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -162,7 +162,7 @@ const BOOSTRAP_MODULES = [NgbPopoverModule];
     LoginComponent,
     // RegisterComponent,
     // WidgetProductsComponent,
-    // ProductSlideshowComponent,
+    ProductSlideshowComponent,
     // ProductSlideshowSpecialsComponent,
     ProductsViewComponent,
     // LoadingComponent,
@@ -180,10 +180,10 @@ const BOOSTRAP_MODULES = [NgbPopoverModule];
     PorductoTrComponent,
     InputNumberProductComponent,
     WishListModalComponent,
-    // ProductListCardComponent,
-    // EditarListaProductosComponent,
-    // AgregarListaProductosMasivaModalComponent,
-    // ProductListModalComponent,
+    ProductListCardComponent,
+    EditarListaProductosComponent,
+    AgregarListaProductosMasivaModalComponent,
+    ProductListModalComponent,
     // AngularEmailAutocompleteComponent,
     MonedaPipe,
     // ProductoSelectBusquedaComponent,
@@ -199,8 +199,8 @@ const BOOSTRAP_MODULES = [NgbPopoverModule];
     // UpdateContactModalComponent,
     // Productb2bComponent,
     ProductCardB2cCmsComponent,
-    // ButtonsSlideshowComponent,
-    // ButtonComponent
+    ButtonsSlideshowComponent,
+    ButtonComponent,
   ],
   imports: [
     // modules (angular)
@@ -281,7 +281,7 @@ const BOOSTRAP_MODULES = [NgbPopoverModule];
     LoginComponent,
     // RegisterComponent,
     // WidgetProductsComponent,
-    // ProductSlideshowComponent,
+    ProductSlideshowComponent,
     // ProductSlideshowSpecialsComponent,
     ProductsViewComponent,
     // LoadingComponent,
@@ -298,8 +298,8 @@ const BOOSTRAP_MODULES = [NgbPopoverModule];
     // UpdateAddressModalComponent,
     // AddContactModalComponent,
     // UpdateContactModalComponent,
-    // ButtonsSlideshowComponent,
-    // ButtonComponent,
+    ButtonsSlideshowComponent,
+    ButtonComponent,
 
     // a evaluar
     // CountdownTimerModule,

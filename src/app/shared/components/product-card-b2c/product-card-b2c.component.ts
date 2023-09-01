@@ -28,7 +28,7 @@ export class ProductCardB2cComponent implements OnInit {
   private destroy$: Subject<void> = new Subject();
   @Input() home: boolean = false;
   @Input() cartClass!: boolean;
-  @Input() set product(value: Product) {
+  @Input() set product(value: Product | any) {
     this.productData = value;
     this.productData.nombre = this.root.limpiarNombres(this.productData.nombre);
 

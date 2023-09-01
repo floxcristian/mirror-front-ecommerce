@@ -1,0 +1,152 @@
+<div
+  class="product-card"
+  [ngClass]="{
+    'product-card--layout--grid product-card--size--sm': layout === 'grid-sm',
+    'product-card--layout--grid product-card--size--nl': layout === 'grid-nl',
+    'product-card--layout--grid product-card--size--lg': layout === 'grid-lg',
+    'product-card--layout--list': layout === 'list',
+    'product-card--layout--horizontal': layout === 'horizontal'
+  }"
+>
+  <span class="floating-offers" *ngIf="layout === 'horizontal'"> 50% </span>
+
+  <div class="pt-3 text-center d-flex justify-content-center position-relative">
+    <h6 style="width: 200px">{{ lista.nombre | capitalizeFirst }}</h6>
+    <div
+      class="dropdown dropleft position-absolute"
+      style="right: 10px; top: 10px"
+    >
+      <button
+        class="btn btn-light btn-sm btn-svg-icon dropdown-toggle"
+        style="width: 20px"
+        type="button"
+        id="dropDown"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <i class="fas fa-ellipsis-v mt-1"></i>
+      </button>
+      <div class="dropdown-menu p-1" aria-labelledby="dropDown">
+        <!-- <a class="dropdown-item px-1" style="font-size: 0.85rem;" (click)="listaPredeterminada(item)">Establecer como
+                    predeterminada</a> -->
+        <a
+          class="dropdown-item px-1"
+          style="font-size: 0.85rem"
+          (click)="cambiarNombre()"
+          >Cambiar nombre</a
+        >
+        <a
+          class="dropdown-item px-1"
+          style="font-size: 0.85rem"
+          (click)="eliminarLista()"
+          >Eliminar</a
+        >
+        <div class="dropdown-divider"></div>
+        <a
+          class="dropdown-item px-1"
+          style="font-size: 0.85rem"
+          (click)="cargaMasiva()"
+          >Agregar más productos</a
+        >
+      </div>
+    </div>
+    <!-- <button name="addingToWishlistOptions" style="width: 25px; border-radius: 5px; right: 10px;"
+            class="optionsListaBoton btn btn-light btn-svg-icon px-2 position-absolute border-0" type="button" appClick
+            (click)="addToWishlistOptions()" [ngClass]="{'btn-loading': addingToWishlist}">
+            <i class="fas fa-ellipsis-v"></i>
+        </button> -->
+  </div>
+  <div class="flex-grow-1 mb-3" style="padding: 0px 15px">
+    <ul
+      class="list-group"
+      *ngFor="let item of lista.detalleSkus | slice : 0 : 5"
+    >
+      <li class="list-group-item mb-2 p-0 border-0">
+        <div
+          class="mr-2 float-left"
+          [tooltip]="tooltipImgProducto"
+          [delay]="300"
+          containerClass="imgProductoTooltip"
+          container="body"
+        >
+          <a [routerLink]="rootService.product(item.sku, item.nombre)">
+            <img
+              style="width: 3rem"
+              [src]="rootService.getUrlImagenMiniatura(item)"
+              [alt]="item.nombre"
+            />
+          </a>
+        </div>
+        <ng-template #tooltipImgProducto>
+          <div class="p-2">
+            <img
+              style="width: 11rem"
+              [src]="rootService.getUrlImagenMiniatura(item)"
+              [alt]="item.nombre"
+            />
+            <div style="font-size: 0.7rem; color: #000">
+              SKU: {{ item.sku }}
+            </div>
+          </div>
+        </ng-template>
+        <div>
+          <div class="text-truncate">
+            <span style="font-size: 0.9rem">{{
+              item.nombre | capitalizeFirst
+            }}</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span
+              style="font-size: 70%"
+              *ngIf="getCodigoCliente(item) !== ''"
+              >{{ "COD: " + getCodigoCliente(item) }}</span
+            >
+            <span style="font-size: 70%">{{ "SKU: " + item.sku }}</span>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div *ngIf="(lista.detalleSkus?.length || 0) > 5">
+      <span
+        class="float-right text-primary"
+        style="cursor: pointer; font-size: 0.85rem"
+        (click)="verMas()"
+        >Ver todos...</span
+      >
+    </div>
+
+    <div
+      class="text-center mt-3"
+      *ngIf="(lista.detalleSkus?.length || 0) === 0"
+    >
+      <div>No hay productos</div>
+      <button
+        class="btn btn-secondary mt-3"
+        style="height: auto"
+        (click)="cargaMasiva()"
+      >
+        Agregar productos a la lista
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="product-card__actions"
+    *ngIf="(lista.detalleSkus?.length || 0) > 0"
+  >
+    <div class="product-card__buttons">
+      <button
+        name="addToCart"
+        class="btn btn-secondary product-card__addtocart btn-block"
+        type="button"
+        appClick
+        (click)="addToCart()"
+        [ngClass]="{ 'btn-loading': addingToCart }"
+      >
+        <div class="text-center" style="font-size: 14px">AGREGAR</div>
+      </button>
+    </div>
+  </div>
+</div>

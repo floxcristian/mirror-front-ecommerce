@@ -1,0 +1,30 @@
+.boton {
+  cursor: pointer;
+  padding: 10px 5px;
+  color: #fff;
+  background-color: #0063b9;
+  border-radius: 10px;
+}
+
+.titulo {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.linea1 {
+  font-size: 0.8rem;
+  letter-spacing: 0px;
+}
+
+.linea2 {
+  font-size: 0.8rem;
+  letter-spacing: 0px;
+}
+
+.boton:hover {
+  padding: 10px 5px;
+  color: #0063b9;
+  border: 1px solid #0063b9;
+  background-color: white;
+  border-radius: 10px;
+}
