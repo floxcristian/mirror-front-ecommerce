@@ -9,11 +9,12 @@ import {
   ViewChild,
   ElementRef,
   NgZone,
+  SimpleChanges,
 } from '@angular/core';
 import { tap, map, switchMap } from 'rxjs/operators';
 //import { fromPromise } from 'rxjs/observable/fromPromise';
 import { Observable, of } from 'rxjs';
-import { MapsAPILoader, MouseEvent } from '@agm/core';
+/*import { MapsAPILoader, MouseEvent } from '@agm/core';
 declare var google: any;
 
 export interface DireccionMap {
@@ -21,7 +22,7 @@ export interface DireccionMap {
   zona: string;
   lat?: string;
   lon?: string;
-}
+}*/
 
 @Component({
   selector: 'app-map',
@@ -29,7 +30,11 @@ export interface DireccionMap {
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit, OnChanges {
-  @Input() titulo!: string;
+  ngOnChanges(changes: SimpleChanges): void {}
+
+  ngOnInit(): void {}
+  // FIXME: START
+  /*@Input() titulo!: string;
   @Input() tienda!: DireccionMap;
   @Input() autocompletado!: boolean;
   @Input() infoWindowContent!: string;
@@ -180,5 +185,6 @@ export class MapComponent implements OnInit, OnChanges {
   clearSearch() {
     this.searchElementRef.nativeElement.value = '';
     this.clearAdress.emit();
-  }
+  }*/
+  // FIXME: END
 }

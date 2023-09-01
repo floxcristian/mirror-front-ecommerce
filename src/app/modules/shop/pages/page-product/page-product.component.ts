@@ -36,7 +36,10 @@ declare let fbq: any;
   styleUrls: ['./page-product.component.scss'],
 })
 export class PageProductComponent implements OnInit, OnDestroy {
-  categories = categories;
+  ngOnInit(): void {}
+  ngOnDestroy(): void {}
+  // FIXME: START
+  /*categories = categories;
   product!: Product;
   recommendedProducts: Product[] = [];
   matrixProducts: Product[] = [];
@@ -480,5 +483,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
     } else {
       this.acordion[indice].abierto = true;
     }
-  }
+  }*/
+  // FIXME: END
 }

@@ -26,7 +26,7 @@ export class FakeSlidesDirective implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit(): void {
     // console.log('Se redimensiona la pantalla con 111');
-
+    /* FIXME: START
     this.resizeHandler = this.eventManager.addGlobalEventListener(
       'window',
       'resize',
@@ -34,7 +34,8 @@ export class FakeSlidesDirective implements OnInit, OnChanges, OnDestroy {
         this.calc();
       }
     );
-    this.calc();
+    this.calc();*/
+    // FIXME: END
   }
 
   calc(): void {

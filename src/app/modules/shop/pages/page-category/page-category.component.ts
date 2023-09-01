@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ɵConsole } from '@angular/core';
-import { Product, ProductCategory, ProductPrecio } from '../../../../shared/interfaces/product';
+/*import { Product, ProductCategory, ProductPrecio } from '../../../../shared/interfaces/product';
 import { ActivatedRoute, Router, NavigationStart, NavigationEnd, NavigationError, Event } from '@angular/router';
 import {
   ProductFilter,
@@ -33,14 +33,19 @@ import { Subscription } from 'rxjs';
 import { Flota } from '../../../../shared/interfaces/flota';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { BuscadorService } from '../../../../shared/services/buscador.service';
-import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
+import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';*/
 
 @Component({
   selector: 'app-grid',
   templateUrl: './page-category.component.html',
-  styleUrls: ['./page-category.component.scss']
+  styleUrls: ['./page-category.component.scss'],
 })
 export class PageCategoryComponent implements OnInit, OnDestroy {
+  ngOnDestroy(): void {}
+
+  ngOnInit(): void {}
+  // FIXME: START
+  /*
   products: Product[] = [];
   ultimosProductos: Product[];
   filters: ProductFilter[] = [];
@@ -392,7 +397,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         if (key.startsWith('filter_') === false) {
           return true;
         }
-        // console.log(key);
       })
       .reduce((obj, key) => {
         obj[key] = params[key];
@@ -411,7 +415,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       texto = texto.substring(4, texto.length);
       parametros.word = texto;
       this.productosTemp = texto.split(' ');
-      //console.log(this.productosTemp.slice(0, this.productosTemp.length));
     }
     if (this.parametrosBusqueda.categoria !== '') {
       const cat = this.root.replaceAll(this.parametrosBusqueda.categoria, /-/g);
@@ -601,10 +604,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
 
       // this.filterCategories.push(categoriasFiltro);
     });
-
-    // this.setFisrtCategory();
     this.filters.push(filtros);
-    //console.log(this.filters);
   }
 
   private formatFiltersFlota() {
@@ -680,11 +680,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
 
       r.values = fastSort(r.values).asc();
 
-      // verificamos si hay una categoria seleccionada para activar los filtros
-      // if (this.parametrosBusqueda.categoria === '' && r.name !== 'MARCA') {
-      //     return;
-      // }
-
       let collapsed = true;
       const field = 'filter_' + r.name;
       // revisamos el filtro de la url y lo expandimos
@@ -729,15 +724,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       this.filters.push(filtro);
     });
   }
-
-  /* No se usa, se comenta */
-  // setFisrtCategory() {
-  //     const r = this.levelCategories[0];
-  //     if (this.parametrosBusqueda.categoria === '') {
-  //         const productoBuscado = (this.parametrosBusqueda.word === '') ? 'todos' : this.parametrosBusqueda.word;
-  //         this.router.navigate(['/', 'inicio', 'productos', productoBuscado, 'categoria', r.slug]);
-  //     }
-  // }
 
   // limpia los atributos que no son mostrables
   cleanFilters(atributos) {
@@ -791,8 +777,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.parametrosBusqueda.page = page;
     this.currentPage = page;
     this.cargarCatalogoProductos(this.parametrosBusqueda, '', scroll);
-
-    /*  this.cargarCatalogoProductos(this.parametrosBusqueda, ''); */
   }
 
   cambiaItemPorPagina(items) {
@@ -802,13 +786,11 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   }
 
   updateFilters(filtersObj) {
-    //console.log(filtersObj);
     let filters = filtersObj.selected;
 
     const url = this.router.url.split('?')[0];
 
     filters = this.armaQueryParams(filters);
-    //console.log(url, filters);
     this.router.navigate([url], { queryParams: filters });
   }
 
@@ -2346,5 +2328,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.parametrosBusqueda.orden = event;
     let parametros: any = this.parametrosBusqueda;
     this.cargarCatalogoProductos(parametros, this.textToSearch, false);
-  }
+  }*/
+  // FIXME: END
 }

@@ -1,11 +1,5 @@
-<!-- <app-page-header [breadcrumbs]="[
-    {label: 'Inicio',         url: '../../'},
-    {label: 'Listado De Productos', url: ''}
-]"></app-page-header> -->
-<!-- <ng-container *ngIf="innerWidth > 1025"> -->
-
-<!-- <app-page-header ></app-page-header> -->
-<!-- </ng-container> -->
+<!-- FIXME: START -->
+<!--
 <ng-container *ngIf="innerWidth <= 1025">
     <app-page-header [breadcrumbs]="breadcrumbs" [textToSearch]="textToSearch" [totalRegistros]="PagTotalRegistros">
     </app-page-header>
@@ -17,7 +11,6 @@
         <div class="block block-sidebar">
             <div class="block-sidebar__item " (window:scroll)="positionScroll($event)"
                 [class.top]=" scrollPosition > 700">
-                <!-- <app-widget-categories [categories]="filterCategories"></app-widget-categories> -->
                 <app-widget-filters [filtrosOculto]="filtrosOculto" [filters]="filters"
                     [removableFilters]="removableFilters" [removableFiltersFlota]="removableFiltersFlota"
                     [removableCategory]="removableCategory" (filtersSelected)="updateFilters($event)"
@@ -64,11 +57,7 @@
 
         <div class="block">
 
-            <!-- <app-filtros *ngIf="filtrosVehiculoVisibles && isB2B" class="w-100 d-lg-block d-none" [inHeader]="false"></app-filtros> -->
-
-
-            <!-- <app-product-slider [product]="productoCategoria" [loading]="isLoadingSlider"></app-product-slider> -->
-            <!-- <app-filters-products></app-filters-products> -->
+          
             <app-products-view *ngIf="origen !==undefined" [paramsCategory]="paramsCategory" [origen]="origen"
                 [breadcrumbs]="breadcrumbs" [textToSearch]="textToSearch" [currentPage]="currentPage"
                 [showProductOptions]="true" [cargandoCatalogo]="cargandoCatalogo"
@@ -82,3 +71,5 @@
     </div>
     <ng-container *ngIf="sidebarPosition === 'end'" [ngTemplateOutlet]="sidebar"></ng-container>
 </div>
+-->
+<!-- FIXME: END -->
