@@ -1,0 +1,17 @@
+<div class="card_concepto" *ngIf="caja">
+  <img
+    [src]="caja.data.image"
+    class="img-fluid-product-mobile"
+    [alt]="caja?.data?.titulo"
+  />
+  <div class="overlay">
+    <div
+      class="col-sm-12 h-100 d-flex justify-content-center align-items-center"
+      style="cursor: pointer"
+    >
+      <h4 style="color: white; font-size: 22px">
+        {{ caja.data.titulo }}
+      </h4>
+    </div>
+  </div>
+</div>

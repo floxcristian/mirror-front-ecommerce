@@ -1,0 +1,139 @@
+<div *ngIf="innerWidth >= 1025 && slides.length > 1" class="block-slideshow">
+  <owl-carousel-o
+    class="carouselMundo"
+    [options]="carouselOptions"
+    appOwlPreventClick
+  >
+    <ng-container *ngFor="let slide of slides; let i = index">
+      <ng-template
+        carouselSlide
+        [id]="slide.image_classic"
+        style="height: 300px !important"
+      >
+        <div>
+          <a [href]="slide.url">
+            <ng-container>
+              <img
+                [src]="slide.image_tablet"
+                [alt]="slide.alt"
+                [title]="slide.alt"
+                class=".img-fluid-product lazyload"
+              />
+            </ng-container>
+            <div class="overlay">
+              <div class="text d-flex flex-column justify-content-center">
+                <h3 style="text-align: center" *ngIf="slide.title !== '.'">
+                  {{ slide.title }}
+                </h3>
+                <h6
+                  class="font-weight-normal text-center"
+                  *ngIf="!isVacio(slide.descripcion)"
+                >
+                  {{ slide.descripcion }}
+                </h6>
+              </div>
+              <div class="mundo" [ngStyle]="style[i]"></div>
+              <div class="poligono" [ngStyle]="slide.style_color"></div>
+            </div>
+          </a>
+        </div>
+      </ng-template>
+    </ng-container>
+  </owl-carousel-o>
+</div>
+<div *ngIf="innerWidth >= 1025 && slides.length == 1" class="block-slideshow">
+  <owl-carousel-o
+    class="carouselMundo"
+    [options]="carouselOptions2"
+    appOwlPreventClick
+  >
+    <ng-container *ngFor="let slide of slides; let i = index">
+      <ng-template
+        carouselSlide
+        [id]="slide.image_classic"
+        style="height: 300px !important"
+      >
+        <div>
+          <a [href]="slide.url">
+            <ng-container>
+              <img
+                [src]="slide.image_tablet"
+                [alt]="slide.alt"
+                [title]="slide.alt"
+                class=".img-fluid-product lazyload"
+              />
+            </ng-container>
+            <div class="overlay">
+              <div class="text d-flex flex-column justify-content-center">
+                <h3 style="text-align: center" *ngIf="slide.title !== '.'">
+                  {{ slide.title }}
+                </h3>
+                <h6
+                  class="font-weight-normal text-center"
+                  *ngIf="!isVacio(slide.descripcion)"
+                >
+                  {{ slide.descripcion }}
+                </h6>
+              </div>
+              <div class="mundo_0" [ngStyle]="style[i]"></div>
+              <div class=".poligono_0" [ngStyle]="slide.style_color"></div>
+            </div>
+          </a>
+        </div>
+      </ng-template>
+    </ng-container>
+  </owl-carousel-o>
+</div>
+
+<div *ngIf="innerWidth < 1025" class="block-slideshow">
+  <owl-carousel-o
+    class="carouselMundo"
+    [options]="carouselOptions2"
+    appOwlPreventClick
+  >
+    <ng-container *ngFor="let slide of slides; let i = index">
+      <ng-template
+        carouselSlide
+        [id]="slide.image_classic"
+        style="height: 300px !important"
+      >
+        <div>
+          <a [href]="slide.url">
+            <ng-container *ngIf="innerWidth >= 500">
+              <img
+                [src]="slide.image_mobile"
+                [alt]="slide.alt"
+                [title]="slide.alt"
+                class=".img-fluid-product lazyload"
+              />
+            </ng-container>
+
+            <ng-container *ngIf="innerWidth < 500">
+              <img
+                [src]="slide.image_tablet"
+                [alt]="slide.alt"
+                [title]="slide.alt"
+                class=".img-fluid-product lazyload"
+              />
+            </ng-container>
+            <div class="overlay">
+              <div class="text d-flex flex-column justify-content-center">
+                <h3 style="text-align: center" *ngIf="slide.title !== '.'">
+                  {{ slide.title }}
+                </h3>
+                <h6
+                  class="font-weight-normal text-center"
+                  *ngIf="!isVacio(slide.descripcion)"
+                >
+                  {{ slide.descripcion }}
+                </h6>
+              </div>
+              <div class="mundo" [ngStyle]="style[i]"></div>
+              <div class="poligono" [ngStyle]="slide.style_color"></div>
+            </div>
+          </a>
+        </div>
+      </ng-template>
+    </ng-container>
+  </owl-carousel-o>
+</div>

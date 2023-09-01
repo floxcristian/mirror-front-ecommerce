@@ -1,0 +1,45 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left" style="color: #094cac">{{ data.title }}</h4>
+  <button
+    type="button"
+    class="btn-close close pull-right"
+    aria-label="Close"
+    (click)="bsModalRef.hide()"
+  >
+    <span aria-hidden="true" style="color: #094cac" class="visually-hidden"
+      >&times;</span
+    >
+  </button>
+</div>
+<div
+  class="modal-body"
+  style="max-height: 750px; overflow-y: scroll; overflow-x: hidden"
+>
+  <div class="row">
+    <div
+      class="col-6 d-flex"
+      style="padding-left: 5px; padding-right: 5px"
+      *ngFor="let product of data.skus; let i = index"
+    >
+      <div
+        class="card-body-producto"
+        style="margin-bottom: 10px"
+        data-layout="grid-5-full"
+        data-with-features="false"
+      >
+        <!-- FIXME: no hay variables CRISTIAN -->
+        <!--
+        <app-product-card-b2c-cms
+          *ngIf="!isB2B"
+          [product]="product"
+          [origen]="[ruta, '', product.nombre.trim(), '']"
+          [home]="true"
+          [layout]="layout"
+          [cartClass]="true"
+          [popoverContent]="popoverContent"
+          (precioEscalaEvent)="get_precioEscala($event)"
+        ></app-product-card-b2c-cms>
+      --></div>
+    </div>
+  </div>
+</div>

@@ -99,7 +99,7 @@ import { ProductRatingComponent } from './components/product-rating/product-rati
 import { AddCommentModalComponent } from './components/add-comment-modal/add-comment-modal.component';
 import { StarSelectComponent } from './components/add-comment-modal/components/star-select/star-select.component';
 import { LoadingElementComponent } from './components/loading-element/loading-element.component';
-// import { ProductCardB2cFichaComponent } from './components/product-card-b2c-ficha/product-card-b2c-ficha.component';
+import { ProductCardB2cFichaComponent } from './components/product-card-b2c-ficha/product-card-b2c-ficha.component';
 // import { UpdateAddressModalComponent } from './components/update-address-modal/update-address-modal.component';
 // import { AddContactModalComponent } from './components/add-contact-modal/add-contact-modal.component';
 // import { UpdateContactModalComponent } from './components/update-contact-modal/update-contact-modal.component';
@@ -110,13 +110,13 @@ import { ProductCardB2cCmsComponent } from './components/product-card-b2c-cms/pr
 import { ButtonsSlideshowComponent } from './components/buttons-slideshow/buttons-slideshow.component';
 import { ButtonComponent } from './components/buttons-slideshow/components/button/button.component';
 // Bootstrap
-import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 // import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 // const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 //   suppressScrollX: true
 // };
 
-const BOOSTRAP_MODULES = [NgbPopoverModule];
+const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
 
 @NgModule({
   declarations: [
@@ -193,7 +193,7 @@ const BOOSTRAP_MODULES = [NgbPopoverModule];
     // ProductRatingComponent,
     AddCommentModalComponent,
     StarSelectComponent,
-    // ProductCardB2cFichaComponent,
+    ProductCardB2cFichaComponent,
     // UpdateAddressModalComponent,
     // AddContactModalComponent,
     // UpdateContactModalComponent,
@@ -294,7 +294,7 @@ const BOOSTRAP_MODULES = [NgbPopoverModule];
     ProductCardB2cCmsComponent,
     // ShareButtonComponent,
     // ProductRatingComponent,
-    // ProductCardB2cFichaComponent,
+    ProductCardB2cFichaComponent,
     // UpdateAddressModalComponent,
     // AddContactModalComponent,
     // UpdateContactModalComponent,

@@ -1,0 +1,110 @@
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(8, 141px);
+  grid-template-rows: repeat(6, 100px);
+  grid-gap: 5px;
+}
+
+.gallery-tablet {
+  display: block;
+}
+
+::ng-deep.carouselConcepto .owl-carousel .owl-stage-outer {
+  @media (min-width: 576px) {
+    position: relative;
+    overflow: hidden;
+    top: 7px;
+    height: 400px;
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+  @media (max-width: 576px) {
+    position: relative;
+    overflow: hidden;
+    top: 7px;
+    height: 300px;
+    margin-bottom: -20px;
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+}
+
+::ng-deep.carouselConcepto .owl-prev {
+  @media (min-width: 576px) {
+    left: -35px !important;
+    font-size: 2rem !important;
+    top: 45% !important;
+    display: block !important;
+
+    i {
+      color: #094cac;
+    }
+  }
+}
+
+::ng-deep.carouselConcepto .owl-next {
+  @media (min-width: 576px) {
+    right: -35px !important;
+    font-size: 2rem !important;
+    top: 45% !important;
+    display: block !important;
+
+    i {
+      color: #094cac;
+    }
+  }
+}
+
+::ng-deep.carouselConcepto .owl-carousel .owl-item img {
+  display: block;
+  width: 100% !important;
+}
+
+::ng-deep.carouselConcepto .owl-prev:hover {
+  i {
+    color: #094cac;
+  }
+}
+
+::ng-deep.carouselConcepto .owl-next:hover {
+  i {
+    color: #094cac;
+  }
+}
+
+::ng-deep.carouselConcepto .owl-carousel .owl-item {
+  //   padding: 0px 10px;
+
+  display: flex;
+  //   border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  margin-right: 10px;
+  // align-items: center
+}
+
+::ng-deep.carouselConcepto .owl-carousel .owl-stage {
+  display: flex !important;
+}
+
+.cargandoCent {
+  font-size: 2rem;
+  height: 300px;
+  padding-top: 5%;
+  border: 1px solid #0063b9;
+  border-radius: 20px;
+}
+::ng-deep.carouselConcepto .owl-dots {
+  background: none;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+::ng-deep.carouselConcepto .owl-dot {
+  width: 50px;
+  height: 5px;
+  border-radius: 5px;
+  background: #e0e0e0;
+  margin-left: 5px;
+}
+
+::ng-deep.carouselConcepto .owl-dot.active {
+  background: #094cac;
+}

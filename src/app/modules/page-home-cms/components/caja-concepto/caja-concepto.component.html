@@ -1,0 +1,67 @@
+<div *ngIf="screenWidth > 768" class="row">
+  <div class="col-sm-12">
+    <div style="text-align: center; margin-bottom: 1.8rem">
+      <h1
+        style="
+          text-align: center;
+          font-size: 39px;
+          font-weight: 900;
+          line-height: 53px;
+          letter-spacing: 0px;
+          border-bottom: 1px solid #0d61bb;
+          color: #0d61bb;
+          margin-top: -10px;
+        "
+      >
+        No te lo puedes perder
+      </h1>
+      <h4
+        style="
+          margin-top: 10px;
+          text-align: center;
+          font: normal medium 900 39px/53px Avenir;
+          letter-spacing: 0px;
+          color: #0d61bb;
+        "
+      >
+        Contamos con el mayor stock de productos a nivel nacional
+      </h4>
+    </div>
+  </div>
+</div>
+<div *ngIf="screenWidth <= 768" class="row">
+  <div class="col-sm-12">
+    <div style="text-align: center; margin-bottom: 1.8rem">
+      <h1 style="color: #0d61bb; font-weight: 900; font-size: 1.5rem; margin: 0; border-bottom: 1px solid #0d61bb">
+        No te lo puedes perder
+      </h1>
+      <h4 style="margin-top: 10px; color: #0d61bb; font-size: 1.1rem; font-weight: 500; line-height: 1.5">
+        Contamos con el mayor stock de preocuductos a nivel nacional
+      </h4>
+    </div>
+  </div>
+</div>
+<div *ngIf="screenWidth >= 1024" [ngStyle]="grid_galery">
+  <ng-container *ngFor="let item of grid_layout; let i = index">
+    <div [ngStyle]="item">
+      <app-concepto [concepto]="concepto_array[i]" [tipo]="'caja'"></app-concepto>
+    </div>
+  </ng-container>
+</div>
+<div *ngIf="screenWidth < 1024 && screenWidth > 500" [ngStyle]="grid_galery">
+  <ng-container *ngFor="let item of grid_layout; let i = index">
+    <div [ngStyle]="item">
+      <app-concepto [concepto]="concepto_array[i]" [tipo]="'caja'"></app-concepto>
+    </div>
+  </ng-container>
+</div>
+
+<div *ngIf="screenWidth <= 500" class="gallery-tablet">
+  <owl-carousel-o class="carouselConcepto" [options]="carouselOptions">
+    <div *ngFor="let item of grid_layout; let i = index" class="products-list__item">
+      <ng-template carouselSlide>
+        <app-concepto-mobile [concepto]="concepto_array[i]" [tipo]="'slide'"></app-concepto-mobile>
+      </ng-template>
+    </div>
+  </owl-carousel-o>
+</div>

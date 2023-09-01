@@ -1,0 +1,27 @@
+@media screen and (min-width: 768px) {
+  .image_mobile {
+    display: none;
+  }
+  .image_tablet {
+    display: none;
+  }
+}
+@media (max-width: 768px) and (min-width: 576px) {
+  .image_tablet {
+    display: block;
+  }
+  .image_full {
+    display: none;
+  }
+  .image_mobile {
+    display: none;
+  }
+}
+@media (max-width: 576px) {
+  .image_full {
+    display: none;
+  }
+  .image_tablet {
+    display: none;
+  }
+}

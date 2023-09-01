@@ -1,0 +1,10 @@
+<div class="col-sm-12 p-0" *ngIf="screenWidth > 1024">
+    <a [href]="bannerCms.btn_url">
+        <img [src]="bannerCms.image_classic" [alt]="bannerCms.alt" [title]="bannerCms.title" class="img-fluid" />
+    </a>
+</div>
+<div *ngIf="screenWidth <= 1024" class="col-sm-12 d-flex p-0">
+    <a [href]="bannerCms.btn_url">
+        <img [src]="bannerCms.image_mobile" [alt]="bannerCms.alt" [title]="bannerCms.title" style="width: 100%" />
+    </a>
+</div>

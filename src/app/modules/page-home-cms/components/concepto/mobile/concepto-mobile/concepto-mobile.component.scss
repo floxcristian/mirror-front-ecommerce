@@ -1,0 +1,29 @@
+.card_concepto {
+  border-radius: 20px;
+  overflow: hidden;
+  min-height: 250px;
+  height: 250px;
+}
+
+.img-fluid-product-mobile {
+  width: 100%;
+  min-height: 448px;
+  max-height: 700px;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  border-radius: 20px;
+  top: 0px;
+  bottom: 0;
+  left: 0px;
+  z-index: 1;
+  object-fit: contain;
+  right: 0;
+  height: auto;
+  opacity: 1;
+  width: 100%;
+  background-color: #003058a9;
+}

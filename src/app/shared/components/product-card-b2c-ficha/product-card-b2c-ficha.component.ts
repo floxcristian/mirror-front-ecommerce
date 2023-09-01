@@ -26,11 +26,11 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-product-card-b2c-cms',
-  templateUrl: './product-card-b2c-cms.component.html',
-  styleUrls: ['./product-card-b2c-cms.component.scss'],
+  selector: 'app-product-card-b2c-ficha',
+  templateUrl: './product-card-b2c-ficha.component.html',
+  styleUrls: ['./product-card-b2c-ficha.component.scss'],
 })
-export class ProductCardB2cCmsComponent implements OnInit {
+export class ProductCardB2cFichaComponent implements OnInit {
   private destroy$: Subject<void> = new Subject();
   @Input() home: boolean = false;
   @Input() cartClass!: boolean;
@@ -38,13 +38,14 @@ export class ProductCardB2cCmsComponent implements OnInit {
   preciosEscalas: any[] | undefined = [];
   @Output() precioEscalaEvent: EventEmitter<any> = new EventEmitter();
 
-  @Input() popoverContent: any;
+  @Input() popoverContent!: any;
   isVacio = isVacio;
   @ViewChild('modalEscala', { static: false }) modalEscala!: TemplateRef<any>;
   modalEscalaRef!: BsModalRef;
   @Input() set product(value: Product) {
     this.productData = value;
     this.productData.nombre = this.root.limpiarNombres(this.productData.nombre);
+
     this.quality = this.root.setQuality(this.productData);
     this.root.limpiaAtributos(value);
   }
@@ -55,10 +56,9 @@ export class ProductCardB2cCmsComponent implements OnInit {
     | 'grid-lg'
     | 'list'
     | 'horizontal'
-    | null
-    | any = null;
-  @Input() grid: any;
-  @Input() paramsCategory: any;
+    | null = null;
+  @Input() grid!: any;
+  @Input() paramsCategory!: any;
   @Input() origen!: string[];
   @Input() tipoOrigen: string = '';
   usuario: any;
@@ -72,7 +72,6 @@ export class ProductCardB2cCmsComponent implements OnInit {
   quality: any = 0;
   precioProducto = 0;
   today = Date.now();
-  IVA = 0.19;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -112,16 +111,14 @@ export class ProductCardB2cCmsComponent implements OnInit {
     }
 
     if (this.home) {
-      if (
-        (this.productData.precioComun || 0) > this.productData.precio.precio
-      ) {
+      if (this.productData.precioComun || 0 > this.productData.precio.precio) {
         this.porcentaje_descuento();
       }
       return;
     }
 
     //calcular porcentaje de descuento
-    if ((this.productData.precioComun || 0) > this.productData.precio.precio) {
+    if (this.productData.precioComun || 0 > this.productData.precio.precio) {
       this.porcentaje_descuento();
     }
     let url: string = this.root.product(
@@ -224,19 +221,20 @@ export class ProductCardB2cCmsComponent implements OnInit {
 
   porcentaje_descuento() {
     let descuento =
-      (this.productData.precioComun || 0) - this.productData.precio.precio;
+      this.productData.precioComun || 0 - this.productData.precio.precio;
     this.porcentaje = Math.round(
-      (descuento / (this.productData.precioComun || 1)) * 100
+      (descuento / (this.productData.precioComun || 0)) * 100
     );
+    //this.porcentaje = 0;
   }
 
   verPreciosEscala(popover: NgbPopover) {
+    // this.modalEscalaRef = this.modalService.show(this.modalEscala, { class: 'modal-dialog-centered' });
+    //let json = {
+    //popover: popover,
+    //preciosEscalas: this.preciosEscalas
+    //};
     popover.open();
-  }
-
-  verPreciosEscalaModal() {
-    this.modalEscalaRef = this.modalService.show(this.modalEscala, {
-      class: 'modal-dialog-centered',
-    });
+    //this.precioEscalaEvent.emit(json);
   }
 }

@@ -1,0 +1,229 @@
+.container-product {
+  max-width: 1920px;
+}
+
+::ng-deep.carouselLista .owl-carousel .owl-stage-outer {
+  @media (min-width: 576px) {
+    position: relative;
+    overflow: hidden;
+    top: 7px;
+    height: 400px;
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+
+  @media (max-width: 576px) {
+    position: relative;
+    overflow: hidden;
+    top: 7px;
+    height: 360px;
+    margin-bottom: -20px;
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+}
+
+::ng-deep.carouselLista .owl-prev {
+  @media (min-width: 576px) {
+    left: -35px !important;
+    font-size: 2rem !important;
+    top: 45% !important;
+    display: block !important;
+
+    i {
+      color: #909090;
+    }
+  }
+}
+
+::ng-deep.carouselLista .owl-next {
+  @media (min-width: 576px) {
+    right: -35px !important;
+    font-size: 2rem !important;
+    top: 45% !important;
+    display: block !important;
+
+    i {
+      color: #909090;
+    }
+  }
+}
+
+::ng-deep.carouselLista .owl-carousel .owl-item img {
+  display: block;
+  width: 90% !important;
+  max-height: 200px;
+}
+
+::ng-deep.carouselLista .owl-carousel .owl-nav .owl-prev .m-arrow__container {
+  font-size: 1.3rem;
+  width: 2.17125rem;
+  height: 4.086875rem;
+  background-color: #fff;
+  box-shadow: -0.0625rem 0 0.25rem 0.1875rem rgb(0 0 0 / 3%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+::ng-deep.carouselLista .owl-carousel .owl-nav .owl-next .m-arrow__container {
+  font-size: 1.3rem;
+  width: 2.17125rem;
+  height: 4.086875rem;
+  background-color: #fff;
+  box-shadow: -0.0625rem 0 0.25rem 0.1875rem rgb(0 0 0 / 3%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+::ng-deep.carouselLista .owl-carousel .owl-item {
+  //   padding: 0px 10px;
+  @media (min-width: 576px) {
+    display: flex;
+    //   border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    margin-left: 10px;
+    // align-items: center;
+
+    app-product-card-b2b {
+      display: flex;
+      width: 115%;
+
+      .product-card {
+        flex: 1 1 auto !important;
+      }
+    }
+
+    app-product-card-b2c-ficha {
+      display: flex;
+      width: 100%;
+
+      .product-card {
+        flex: 1 1 auto !important;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    display: flex;
+    //   border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    margin-left: 10px;
+    // align-items: center;
+
+    app-product-card-b2b {
+      display: flex;
+      width: 115%;
+
+      .product-card {
+        flex: 1 1 auto !important;
+      }
+    }
+
+    app-product-card-b2c-ficha {
+      display: flex;
+      width: 100%;
+
+      .product-card {
+        flex: 1 1 auto !important;
+        padding: 10px;
+      }
+    }
+  }
+}
+
+::ng-deep.carouselLista .owl-carousel .owl-stage {
+  display: flex !important;
+}
+
+.cargandoCent {
+  font-size: 2rem;
+  height: 300px;
+  padding-top: 5%;
+  border: 1px solid #0063b9;
+  border-radius: 20px;
+}
+
+::ng-deep.carouselLista .owl-dots {
+  background: none;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+::ng-deep.carouselLista .owl-dot {
+  @media (min-width: 992px) {
+    width: 50px;
+    height: 5px;
+    border-radius: 5px;
+    background: #e0e0e0;
+    margin-left: 5px;
+  }
+}
+
+::ng-deep.carouselLista .owl-dot.active {
+  @media (min-width: 992px) {
+    background: #094cac;
+  }
+}
+
+::ng-deep.listCards div.owl-stage {
+  height: 29.8rem !important;
+}
+
+.text-h1 {
+  text-align: center;
+  font-size: 39px;
+  font-weight: 900;
+  line-height: 53px;
+  font-style: normal;
+  border-radius: 0px;
+
+  letter-spacing: 0px;
+  color: #0d61bb;
+  margin-bottom: -15px;
+}
+
+@media (max-width: 769px) {
+  .text-h1 {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 30px;
+    font-style: normal;
+    border-radius: 0px;
+
+    letter-spacing: 0px;
+    color: #0d61bb;
+    margin-bottom: -15px;
+  }
+}
+
+.text-subtitle {
+  text-align: center;
+  font-size: 22px;
+  font-weight: normal;
+  //line-height: 53px;
+  font-style: normal;
+  border-radius: 0px;
+
+  letter-spacing: 0px;
+  color: #0d61bb;
+  margin-bottom: -15px;
+}
+
+@media (max-width: 769px) {
+  .text-subtitle {
+    text-align: center;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 25px;
+    font-style: normal;
+    border-radius: 0px;
+
+    letter-spacing: 0px;
+    color: #0d61bb;
+    margin-bottom: -15px;
+  }
+}

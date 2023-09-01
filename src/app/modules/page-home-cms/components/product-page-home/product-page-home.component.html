@@ -1,0 +1,210 @@
+<div class="cargandoCent text-center" *ngIf="cargando">
+  <i
+    class="fak fa-implementos fa-bounce"
+    style="font-size: 48px; color: #0063b9"
+  ></i>
+  <div
+    class="fa-beat-fade"
+    style="
+      --fa-beat-fade-opacity: 0.67;
+      --fa-beat-fade-scale: 1.075;
+      color: #0063b9;
+    "
+  >
+    Cargando productos...
+  </div>
+</div>
+
+<ngb-tabset *ngIf="!cargando && screenWidth > 1024 && tipo_producto">
+  <ngb-tab *ngFor="let item of tipo_producto; let i = index">
+    <ng-template ngbTabTitle>
+      {{ item.title }}
+    </ng-template>
+
+    <ng-template ngbTabContent>
+      <div class="row" style="margin-top: 20px">
+        <div *ngIf="screenWidth > 1024" class="col-sm-6 d-flex">
+          <a [href]="item.url">
+            <div class="container-image" *ngIf="item.image != undefined">
+              <div
+                class="overlay d-flex flex-column justify-content-center align-items-center"
+              >
+                <p align="center" style="margin-bottom: -10px">
+                  <span> Ver más </span>
+                </p>
+
+                <p align="center">
+                  <span
+                    ><i
+                      class="fa-solid fa-hand-back-point-up"
+                      style="color: white; font-size: 20px"
+                    ></i
+                  ></span>
+                </p>
+              </div>
+
+              <img
+                [src]="item.image"
+                class="img-fluid-product lazyload"
+                alt="Ver más"
+              />
+            </div>
+          </a>
+          <div class="container-image" *ngIf="item.image === undefined">
+            <div
+              class="overlay d-flex justify-content-center align-items-center"
+            >
+              <a [href]="item.url"> Ver mas </a>
+            </div>
+            <a [href]="item.url">
+              <img
+                src="../../../../../assets/img/no-image-ficha.jpg"
+                alt="no imgagen"
+                class="img-fluid-product"
+            /></a>
+          </div>
+        </div>
+        <!-- cambio de pantalla-->
+
+        <div
+          *ngIf="screenWidth > 1024"
+          class="col-sm-6 d-flex justify-content-center"
+        >
+          <div class="row">
+            <div
+              class="col-6-producto d-flex"
+              style="padding-left: 5px; padding-right: 5px"
+              *ngFor="let product of item.skus | slice : 0 : 4; let i = index"
+            >
+              <div
+                class="card-body-producto"
+                [ngStyle]="{ 'margin-bottom': i < 2 ? '30px' : '0px' }"
+                data-layout="grid-5-full"
+                data-with-features="false"
+              >
+                <!-- FIXME: no hay variables CRISTIAN -->
+                <!--<app-product-card-b2c-cms
+                  *ngIf="!isB2B"
+                  [product]="product"
+                  [origen]="[ruta, '', product.nombre.trim(), '']"
+                  [home]="true"
+                  [layout]="layout"
+                  [cartClass]="true"
+                  [popoverContent]="popoverContent"
+                  (precioEscalaEvent)="get_precioEscala($event)"
+                ></app-product-card-b2c-cms> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ngb-tab>
+</ngb-tabset>
+
+<div *ngIf="screenWidth <= 1024 && tipo_producto">
+  <div *ngIf="refresh" class="w-100" style="min-height: 50px"></div>
+  <div
+    *ngIf="!refresh"
+    class="products-view__list products-list"
+    data-layout="grid-5-full"
+    data-with-features="false"
+  >
+    <owl-carousel-o
+      class="carouselTitulo"
+      [options]="carouselOptions2"
+      appOwlPreventClick
+      (translated)="getData2($event)"
+    >
+      <div
+        *ngFor="let item of tipo_producto; let i = index"
+        class="products-list__item"
+      >
+        <ng-template carouselSlide [id]="item._id">
+          <div
+            [class.text-truncate]="item.title.length > 15"
+            [class.select_active]="index_seleccionado == i"
+            [class.select_inactive]="index_seleccionado != i"
+          >
+            {{ item.title }}
+          </div>
+        </ng-template>
+      </div>
+    </owl-carousel-o>
+  </div>
+</div>
+
+<div *ngIf="screenWidth <= 1024 && tipo_producto">
+  <div
+    *ngIf="refresh2"
+    class="w-100"
+    style="min-height: 350px; border: 1px solid #005db9; border-radius: 20px"
+  >
+    <div
+      class="col-12 d-flex justify-content-center align-items-center"
+      style="min-height: 320px"
+    >
+      <i
+        class="fak fa-implementos fa-bounce"
+        style="font-size: 78px; color: #0063b9"
+      ></i>
+    </div>
+  </div>
+  <div
+    *ngIf="!refresh2"
+    class="products-view__list products-list"
+    data-layout="grid-5-full"
+    data-with-features="false"
+  >
+    <owl-carousel-o
+      class="carouselImagen"
+      [options]="carouselOptions3"
+      appOwlPreventClick
+      (translated)="getData($event)"
+    >
+      <div
+        *ngFor="let item of tipo_producto; let i = index"
+        class="products-list__item"
+      >
+        <ng-template carouselSlide [id]="item._id">
+          <img
+            [src]="tipo_producto[i].image"
+            class="img-fluid-product-mobile"
+            alt="imagen"
+          />
+        </ng-template>
+      </div>
+    </owl-carousel-o>
+  </div>
+</div>
+
+<div *ngIf="screenWidth <= 1024 && producto_selecionado">
+  <div
+    class="products-view__list products-list"
+    data-layout="grid-5-full"
+    data-with-features="false"
+  >
+    <owl-carousel-o
+      class="carouselProducto"
+      [options]="carouselOptions"
+      appOwlPreventClick
+    >
+      <div
+        *ngFor="let prod of producto_selecionado.skus"
+        class="products-list__item"
+      >
+        <ng-template carouselSlide>
+          <app-product-card-b2c-cms
+            (mouseover)="over($event)"
+            (mouseleave)="leave($event)"
+            [product]="prod"
+            [origen]="[ruta, '', prod.nombre.trim(), '']"
+            [home]="true"
+            [layout]="layout"
+            [cartClass]="true"
+          ></app-product-card-b2c-cms>
+        </ng-template>
+      </div>
+    </owl-carousel-o>
+  </div>
+</div>
