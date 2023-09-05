@@ -23,7 +23,7 @@ interface Store {
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements AfterViewInit {
-  @Input() layout: 'classic' | 'compact' = 'classic';
+  @Input() layout: 'classic' | 'compact' | any = 'classic';
   @Input() tipo: 'b2b' | 'b2c' = 'b2c';
 
   storesArr: any[] = [];

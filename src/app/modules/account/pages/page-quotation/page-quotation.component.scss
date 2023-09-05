@@ -1,0 +1,13 @@
+.mobile-data-cell .options {
+    text-align: right;
+}
+
+.mobile-container .sorting, .mobile-container .sorting_asc, .mobile-container .sorting_desc {
+    background : none;
+}
+
+.mobile-container table.dataTable thead .sorting, 
+.mobile-container table.dataTable thead .sorting_asc, 
+.mobile-container table.dataTable thead .sorting_desc {
+    background : none;
+}

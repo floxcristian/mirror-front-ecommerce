@@ -1,0 +1,122 @@
+.menu-account {
+    min-width: 22rem;
+    background: #fff;
+    // box-shadow: 6px 0 6px rgba(0, 0, 0, .1);
+    box-shadow: 0 0 24px 0 rgba(0, 0, 0, .06), 0 1px 0 0 rgba(0, 0, 0, .02);
+}
+
+
+.menu-account-min {
+    min-width: 5rem;
+
+}
+
+li a {
+    font-size: 0.875rem;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #585857;
+    padding: 1.125rem 1.875rem;
+    background: none;
+    text-transform: uppercase;
+}
+
+.account-nav {
+    border: none;
+    border-radius: 0px;
+}
+
+.btn-dark {
+    background-color: #212121 !important;
+    color: #fff !important;
+}
+
+.account-nav__item--active a {
+    background-color: #0464b4;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #fafafa;
+}
+
+.account-nav__item:hover a {
+    background-color: #0464b4;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #fafafa;
+}
+
+.logo-company {
+    height: 4rem;
+
+}
+
+.logo-company img {
+    max-height: 100%;
+}
+
+
+.button-menu {
+
+    width: 40px;
+    height: auto;
+}
+
+.button-menu i {
+    position: relative;
+    right: -17px;
+    top: 40%;
+}
+
+.container-bar {
+    border-bottom: 1px solid #eee;
+}
+
+.button-menu:hover {
+    background: #EEEEEE;
+}
+
+.menu-account-min li a {
+    text-align: center !important;
+}
+
+.menu-account-min li a i{
+    font-size: 1.2rem;
+    margin: 0 !important;
+}
+
+.menu-account-min .text {
+    display: none;
+}
+
+// .menu-account .min, .menu-account-min .large{
+//     display: none !important;
+// }
+.menu-account .large{
+    display: block ;
+}
+
+.menu-account-min .min{
+    display: block !important;
+}
+
+.menu-account.menu-account-min .large{
+    display: none !important;
+}
+
+.menu-account .min{
+    display: none
+}
+
+.menu-account{
+    -webkit-transition: width 0.3s; /* Safari prior 6.1 */
+    transition: width 0.3s;
+}

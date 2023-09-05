@@ -1,0 +1,404 @@
+<ng-template #template_usuario>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Usuario</h4>
+    <button
+      name="modalRef"
+      type="button"
+      class="close pull-right"
+      aria-label="Close"
+      (click)="Close()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="formUsuario" (ngSubmit)="onSubmit(formUsuario.value)">
+      <div class="form-group">
+        <input
+          type="hidden"
+          class="form-control"
+          id="_id"
+          formControlName="_id"
+        />
+      </div>
+      <div class="form-group custom-control custom-switch">
+        <input
+          type="checkbox"
+          class="custom-control-input"
+          formControlName="active"
+          id="active"
+        />
+        <label class="custom-control-label" for="active">Activo</label>
+      </div>
+      <div class="form-group">
+        <label for="username">Usuario:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          formControlName="username"
+          placeholder="Ingrese Nombre de Usuario"
+        />
+      </div>
+      <p
+        *ngIf="
+          formUsuario.controls.username.invalid &&
+          formUsuario.controls.username.touched
+        "
+        class="text-error-form-2"
+      >
+        Debe Ingresar Nombre de Usuario
+      </p>
+      <div class="form-group">
+        <label for="first_name">Nombres:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="first_name"
+          formControlName="first_name"
+          placeholder="Ingrese Nombres"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="last_name">Apellidos:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="last_name"
+          formControlName="last_name"
+          placeholder="Ingrese Apellidos"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          formControlName="email"
+          placeholder="Ingrese Email"
+        />
+      </div>
+      <p
+        *ngIf="
+          formUsuario.controls.email.invalid &&
+          formUsuario.controls.email.touched
+        "
+        class="text-error-form-2"
+      >
+        Debe Ingresar el correo correctamente.
+      </p>
+
+      <div class="form-group">
+        <label for="phone">Celular:</label>
+        <input
+          type="phone"
+          class="form-control"
+          id="phone"
+          formControlName="phone"
+          placeholder="Ingrese Telefono"
+        />
+      </div>
+      <p
+        *ngIf="
+          formUsuario.controls.phone.invalid &&
+          formUsuario.controls.phone.touched
+        "
+        class="text-error-form-2"
+      >
+        Debe Ingresar Contacto
+      </p>
+
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          formControlName="password"
+          placeholder="Ingrese Contraseña"
+        />
+      </div>
+      <p
+        *ngIf="
+          formUsuario.controls.password.invalid &&
+          formUsuario.controls.password.touched
+        "
+        class="text-error-form-2"
+      >
+        Debe Ingresar Contacto
+      </p>
+      <div class="form-group">
+        <label for="user_role">ROL</label>
+        <select
+          name="user_role"
+          class="form-control"
+          id="user_role"
+          formControlName="user_role"
+        >
+          <option value="comprador">Comprador</option>
+        </select>
+      </div>
+      <p
+        *ngIf="
+          formUsuario.controls.user_role.invalid &&
+          formUsuario.controls.user_role.touched
+        "
+        class="text-error-form-2"
+      >
+        Debe Ingresar Contacto
+      </p>
+      <button
+        name="salir"
+        type="button"
+        class="btn btn-secondary"
+        aria-label="Close"
+        (click)="modalRef.hide(); formUser()"
+        style="margin-right: 10px"
+      >
+        Salir
+      </button>
+
+      <button
+        name="Actualizar"
+        type="submit"
+        class="btn btn-success"
+        [disabled]="!formUsuario.valid"
+      >
+        Actualizar
+      </button>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #template_crearusuario>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Usuario</h4>
+    <button
+      name="modalRef"
+      type="button"
+      class="close pull-right"
+      aria-label="Close"
+      (click)="Close()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="formUsuario" (ngSubmit)="onSubmit(formUsuario.value)">
+      <div class="form-group">
+        <input
+          type="hidden"
+          class="form-control"
+          id="_id"
+          formControlName="_id"
+        />
+      </div>
+      <div class="form-group custom-control custom-switch">
+        <input
+          type="checkbox"
+          class="custom-control-input"
+          formControlName="active"
+          id="active"
+        />
+        <label class="custom-control-label" for="active">Activo</label>
+      </div>
+      <div class="form-group">
+        <label for="username">Usuario:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          formControlName="username"
+          placeholder="Ingrese Nombre de Usuario"
+        />
+      </div>
+      <p
+        *ngIf="
+          formUsuario.controls.username.invalid &&
+          formUsuario.controls.username.touched
+        "
+        class="text-error-form-2"
+      >
+        Debe Ingresar Nombre de Usuario
+      </p>
+      <div class="form-group">
+        <label for="first_name">Nombres:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="first_name"
+          formControlName="first_name"
+          placeholder="Ingrese Nombres"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="last_name">Apellidos:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="last_name"
+          formControlName="last_name"
+          placeholder="Ingrese Apellidos"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          formControlName="email"
+          placeholder="Ingrese Email"
+        />
+      </div>
+      <p
+        *ngIf="
+          formUsuario.controls.email.invalid &&
+          formUsuario.controls.email.touched
+        "
+        class="text-error-form-2"
+      >
+        Debe Ingresar el correo correctamente.
+      </p>
+
+      <div class="form-group">
+        <label for="phone">Celular:</label>
+        <input
+          type="phone"
+          class="form-control"
+          id="phone"
+          formControlName="phone"
+          placeholder="Ingrese Telefono"
+        />
+      </div>
+      <p
+        *ngIf="
+          formUsuario.controls.phone.invalid &&
+          formUsuario.controls.phone.touched
+        "
+        class="text-error-form-2"
+      >
+        Debe Ingresar Contacto
+      </p>
+
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          formControlName="password"
+          placeholder="Ingrese Contraseña"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="user_role">ROL</label>
+        <select
+          name="user_role"
+          class="form-control"
+          id="user_role"
+          formControlName="user_role"
+        >
+          <option value="comprador">Comprador</option>
+        </select>
+      </div>
+
+      <button
+        name="salir"
+        type="button"
+        class="btn btn-secondary"
+        aria-label="Close"
+        (click)="modalRef.hide(); formUser()"
+        style="margin-right: 10px"
+      >
+        Salir
+      </button>
+
+      <button
+        name="Crear"
+        type="submit"
+        class="btn btn-success"
+        [disabled]="!formUsuario.valid"
+      >
+        Registrar
+      </button>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #template_eliminarusuario>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Usuario</h4>
+    <button
+      name="modalRef"
+      type="button"
+      class="close pull-right"
+      aria-label="Close"
+      (click)="Close()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="alert alert-danger" role="alert">
+      <i class="fas fa-info-circle" style="margin-right: 10px"></i> ¿Esta seguro
+      que desea Eliminar a este usuario?
+    </div>
+    <hr />
+    <div>
+      <table class="table">
+        <tbody>
+          <tr>
+            <th scope="row">Usuario</th>
+            <td>{{ users.username | titlecase }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Nombre</th>
+            <td>
+              {{ users.first_name | titlecase }}
+              {{ users.last_name | titlecase }}
+            </td>
+          </tr>
+
+          <tr>
+            <th scope="row">Correo</th>
+            <td>{{ users.email }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Contacto</th>
+            <ng-container *ngIf="users.phone !== undefined">
+              <td>{{ users.phone }}</td>
+            </ng-container>
+            <ng-container *ngIf="users.phone === undefined">
+              <td><font style="color: red">No tiene contacto</font></td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-danger"
+      aria-label="Close"
+      (click)="Eliminar(users)"
+    >
+      Eliminar
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger"
+      aria-label="Close"
+      (click)="Close()"
+    >
+      Cerrar
+    </button>
+  </div>
+</ng-template>

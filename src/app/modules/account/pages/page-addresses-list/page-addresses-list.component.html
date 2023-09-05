@@ -1,0 +1,33 @@
+<div class="addresses-list">
+    <a routerLink="./" class="addresses-list__item addresses-list__item--new card card-1">
+        <div class="addresses-list__plus"></div>
+        <div class="btn btn-secondary btn-sm">Agrega Nueva</div>
+    </a>
+    <div class="addresses-list__divider"></div>
+
+    <ng-container *ngFor="let address of addresses">
+        <div class="addresses-list__item card address-card card-1">
+            <div class="address-card__badge" *ngIf="address.default">Dirección despacho</div>
+            <div class="address-card__body">
+                <div class="address-card__name">{{ address.firstName + ' ' + address.lastName}}</div>
+                <div class="address-card__row">
+                    {{ address.address }} {{ address.postcode }}<br>
+                    {{ address.city }}
+                </div>
+                <div class="address-card__row">
+                    <div class="address-card__row-title">Número telefono</div>
+                    <div class="address-card__row-content">{{ address.phone }}</div>
+                </div>
+                <div class="address-card__row">
+                    <div class="address-card__row-title">Email</div>
+                    <div class="address-card__row-content">{{ address.email }}</div>
+                </div>
+                <div class="address-card__footer">
+                    <a routerLink="./">Editar</a>&nbsp;&nbsp;
+                    <a routerLink="./">Eliminar</a>
+                </div>
+            </div>
+        </div>
+        <div class="addresses-list__divider"></div>
+    </ng-container>
+</div>

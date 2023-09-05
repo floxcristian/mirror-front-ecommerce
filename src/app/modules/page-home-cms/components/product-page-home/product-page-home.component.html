@@ -15,6 +15,7 @@
   </div>
 </div>
 
+<!-- FIXME: reemplazar esto por ng-nav
 <ngb-tabset *ngIf="!cargando && screenWidth > 1024 && tipo_producto">
   <ngb-tab *ngFor="let item of tipo_producto; let i = index">
     <ng-template ngbTabTitle>
@@ -64,8 +65,7 @@
             /></a>
           </div>
         </div>
-        <!-- cambio de pantalla-->
-
+  
         <div
           *ngIf="screenWidth > 1024"
           class="col-sm-6 d-flex justify-content-center"
@@ -82,8 +82,8 @@
                 data-layout="grid-5-full"
                 data-with-features="false"
               >
-                <!-- FIXME: no hay variables CRISTIAN -->
-                <!--<app-product-card-b2c-cms
+                FIXME: no hay variables CRISTIAN 
+              <app-product-card-b2c-cms
                   *ngIf="!isB2B"
                   [product]="product"
                   [origen]="[ruta, '', product.nombre.trim(), '']"
@@ -92,7 +92,7 @@
                   [cartClass]="true"
                   [popoverContent]="popoverContent"
                   (precioEscalaEvent)="get_precioEscala($event)"
-                ></app-product-card-b2c-cms> -->
+                ></app-product-card-b2c-cms>
               </div>
             </div>
           </div>
@@ -101,6 +101,8 @@
     </ng-template>
   </ngb-tab>
 </ngb-tabset>
+
+-->
 
 <div *ngIf="screenWidth <= 1024 && tipo_producto">
   <div *ngIf="refresh" class="w-100" style="min-height: 50px"></div>

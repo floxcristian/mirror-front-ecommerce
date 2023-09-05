@@ -116,20 +116,20 @@ const routes: Routes = [
   //         }
   //     ]
   // },
-  // {
-  //     path: 'mi-cuenta',
-  //     component: LayoutComponent,
-  //     data: {
-  //         headerLayout: 'classic'
-  //     },
-  //     children: [
-  //         {
-  //             path: '',
-  //             canActivate: [AuthGuard],
-  //             loadChildren: () => import('../modules/account/account.module').then(m => m.AccountModule)
-  //         }
-  //     ]
-  // },
+  {
+       path: 'mi-cuenta',
+      component: LayoutComponent,
+       data: {
+           headerLayout: 'classic'
+       },
+       children: [
+           {
+               path: '',
+               canActivate: [AuthGuard],
+               loadChildren: () => import('../modules/account/account.module').then(m => m.AccountModule)
+           }
+       ]
+   },
   // {
   //     path: 'sitio',
   //     component: LayoutComponent,

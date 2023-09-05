@@ -1,0 +1,7 @@
+.btn:not(.btn-svg-icon) {
+    position: relative;
+    overflow: hidden;
+    border-width: 1px;
+    box-shadow: none;
+    transition: background-color 0.3s;
+}

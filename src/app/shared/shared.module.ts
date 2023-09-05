@@ -66,7 +66,7 @@ import { LoginComponent } from '../modules/header/components/login/login.compone
 //import { WidgetProductsComponent } from '../modules/widgets/widget-products/widget-products.component';
 //import { LoadingComponent } from './components/loading/loading.component';
 //import { AddcartButtonComponent } from './components/addcart-button/addcart-button.component';
-//import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
+import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
 import { ScrollTopComponent } from './components/scroll-top/scroll-top.component';
@@ -167,7 +167,7 @@ const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
     ProductsViewComponent,
     // LoadingComponent,
     // AddcartButtonComponent,
-    // ConfirmModalComponent,
+    ConfirmModalComponent,
     SafeHtmlPipe,
     ReplacePipe,
     ScrollTopComponent,
@@ -286,7 +286,7 @@ const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
     ProductsViewComponent,
     // LoadingComponent,
     // AddcartButtonComponent,
-    // ConfirmModalComponent,
+    ConfirmModalComponent,
     // VideoComponent,
     // ViewPdfComponent,
     // AngularEmailAutocompleteComponent,

@@ -1,38 +1,71 @@
 <div class="cargandoCent text-center" *ngIf="cargar">
-    <i class="fak fa-implementos fa-bounce" style="font-size: 48px; color: #0063b9"></i>
-    <div class="fa-beat-fade" style="--fa-beat-fade-opacity: 0.67; --fa-beat-fade-scale: 1.075; color: #0063b9">
-        Cargando productos...
-    </div>
+  <i
+    class="fak fa-implementos fa-bounce"
+    style="font-size: 48px; color: #0063b9"
+  ></i>
+  <div
+    class="fa-beat-fade"
+    style="
+      --fa-beat-fade-opacity: 0.67;
+      --fa-beat-fade-scale: 1.075;
+      color: #0063b9;
+    "
+  >
+    Cargando productos...
+  </div>
 </div>
 
 <div *ngIf="!cargar" class="container-product" style="margin-top: 10px">
-    <div class="row mt-2">
-        <div class="col-sm-12 d-flex justify-content-center"
-            [ngStyle]="{'margin-bottom': !isVacio(subtitle) ? '0px' : '1.8rem'}">
-            <h1 class="text-h1">
-                {{ title }}
-            </h1>
-        </div>
+  <div class="row mt-2">
+    <div
+      class="col-sm-12 d-flex justify-content-center"
+      [ngStyle]="{ 'margin-bottom': !isVacio(subtitle) ? '0px' : '1.8rem' }"
+    >
+      <h1 class="text-h1">
+        {{ title }}
+      </h1>
     </div>
-    <div class="row mt-3" *ngIf="!isVacio(subtitle)">
-        <div class="col-sm-12 d-flex justify-content-center" style="margin-bottom: 1.8rem">
-            <h1 class="text-subtitle">
-                {{ subtitle }}
-            </h1>
-        </div>
+  </div>
+  <div class="row mt-3" *ngIf="!isVacio(subtitle)">
+    <div
+      class="col-sm-12 d-flex justify-content-center"
+      style="margin-bottom: 1.8rem"
+    >
+      <h1 class="text-subtitle">
+        {{ subtitle }}
+      </h1>
     </div>
+  </div>
 
-    <div style="margin-top: 15px">
-        <div class="products-view__list products-list" data-layout="grid-5-full" data-with-features="false">
-            <owl-carousel-o class="carouselLista" [options]="carouselOptions" appOwlPreventClick>
-                <div *ngFor="let prod of product_list.skus" class="products-list__item">
-                    <ng-template carouselSlide>
-                        <app-product-card-b2c-ficha (mouseover)="over($event)" (mouseleave)="leave($event)"
-                            [product]="prod" [origen]="[ruta, '', prod.nombre.trim(), '']" [home]="true"
-                            [layout]="layout" [cartClass]="true"></app-product-card-b2c-ficha>
-                    </ng-template>
-                </div>
-            </owl-carousel-o>
-        </div>
+  <div style="margin-top: 15px">
+    <div
+      class="products-view__list products-list"
+      data-layout="grid-5-full"
+      data-with-features="false"
+    >
+      <owl-carousel-o
+        *ngIf="product_list.skus.length"
+        class="carouselLista"
+        [options]="carouselOptions"
+        appOwlPreventClick
+      >
+        <ng-container
+          *ngFor="let prod of product_list.skus; let i = index"
+          class="products-list__item"
+        >
+          <ng-template carouselSlide>
+            <app-product-card-b2c-ficha
+              (mouseover)="over($event)"
+              (mouseleave)="leave($event)"
+              [product]="prod"
+              [origen]="[ruta, '', prod.nombre.trim(), '']"
+              [home]="true"
+              [layout]="layout"
+              [cartClass]="true"
+            ></app-product-card-b2c-ficha>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
     </div>
+  </div>
 </div>

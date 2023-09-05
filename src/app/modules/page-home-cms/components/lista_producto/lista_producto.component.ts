@@ -31,7 +31,7 @@ export class Lista_productoComponent implements OnInit {
   @Input() lstProductos: any[] = [];
   @Input() set elemento(value: any) {
     this.productData = value;
-
+    console.log('datos', this.productData);
     if (this.productData) {
       if (this.productData.elemento) {
         this.product_list = this.productData.elemento;

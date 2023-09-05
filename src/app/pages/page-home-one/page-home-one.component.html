@@ -8,7 +8,7 @@
 
 <app-block-brands *ngIf="marcas && isB2B" [brands]="brands"></app-block-brands>
 <!-- FIXME: falta -->
-<!-- <app-page-home *ngIf="!isB2B"></app-page-home> -->
+<app-page-home *ngIf="!isB2B"></app-page-home>
 <div
   *ngIf="marcas && !isB2B"
   class="container"

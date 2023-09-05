@@ -1,0 +1,40 @@
+.label-form {
+  font-size: 0.75rem;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  text-align: left;
+  color: #b2b2b2;
+}
+.space-input-form{
+    padding-top: 40px;
+}
+.text-form-edit {
+
+  font-size: 0.875rem;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.21;
+  letter-spacing: normal;
+  text-align: left;
+  color: #000000;
+}
+.button-save{
+    border-radius: 28px;
+    margin-top: 20px;
+}
+.form-control-lg {
+    padding: 1rem;
+}
+.container-flex{
+    display: flex;
+    justify-content: space-between;
+}
+.separated-input{
+    // si se deja en rem puede cambiar el espaciado de sólo este elemento y el de los 
+    // demás no. Se deja en pixeles para ser fiel al template.
+    margin-left: 0.7142rem;
+}

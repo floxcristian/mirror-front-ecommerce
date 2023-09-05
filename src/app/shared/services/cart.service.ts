@@ -1022,8 +1022,11 @@ export class CartService {
     this.shippingValidateProductsSubject$.next(products);
   }
 
-  generaOrdenDeCompra(data: any) {
-    return this.http.post(environment.apiImplementosCarro + `generar`, data);
+  generaOrdenDeCompra(data: any): Observable<ResponseApi> {
+    return this.http.post<ResponseApi>(
+      environment.apiImplementosCarro + `generar`,
+      data
+    );
   }
 
   purchaseRequest(data: any) {
@@ -1033,8 +1036,8 @@ export class CartService {
     );
   }
 
-  refuseOrder(data: any) {
-    return this.http.post(
+  refuseOrder(data: any): Observable<ResponseApi> {
+    return this.http.post<ResponseApi>(
       environment.apiImplementosCarro + `rechazarcarro`,
       data
     );
@@ -1120,7 +1123,7 @@ export class CartService {
       formData.append(key, data[key]);
     }
 
-    return this.http.post(
+    return this.http.post<ResponseApi>(
       environment.apiImplementosCarro + 'cargarlistado',
       formData
     );
@@ -1133,7 +1136,7 @@ export class CartService {
       formData.append(key, data[key]);
     }
 
-    return this.http.post(
+    return this.http.post<ResponseApi>(
       environment.apiImplementosCarro + 'cargarListadoPdf',
       formData
     );
@@ -1221,11 +1224,12 @@ export class CartService {
     });
   }
 
-  setSaveCart(objeto: any) {
+  setSaveCart(objeto: any): Observable<any> {
     const usuario: Usuario = this.localS.get('usuario') as any;
     if (usuario.login_temp) {
       this.toast.warning('Debe iniciar sesion para guardar el carro');
-      return;
+      throw Error('Debe iniciar sesion para guardar el carro');
+      //return;
     }
     let params = objeto;
 

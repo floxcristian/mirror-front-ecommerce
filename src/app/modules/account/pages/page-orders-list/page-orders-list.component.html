@@ -1,0 +1,93 @@
+<div class="  ">
+  <div class="top-bar-categories d-flex align-items-center mb-3" [class.p-0]="innerWidth < 450"
+    [class.pl-4]="innerWidth < 450" (window:resize)="onResize($event)">
+    <div class="title d-flex align-items-center mr-auto">
+      <i _ngcontent-serverapp-c11="" class="fas fa-history mr-3"></i>
+      <h5>Documentos</h5>
+    </div>
+  </div>
+
+  <div class="row m-0">
+    <div class="col-xl-12">
+      <div class="card">
+        <div class="card-body table-responsive">
+          <div class="col-sm-12" style="margin-bottom: 20px; padding: 10px; border: 1px solid #33333338">
+            <table datatable [dtOptions]="dtOptions" class="row-border" width="100%">
+              <thead class="thead-dark">
+                <tr>
+                  <th>OV</th>
+                  <th>OC</th>
+                  <th>Centro Costo</th>
+                  <th>Documento</th>
+                  <th>Fecha</th>
+                  <th>Sucursal</th>
+                  <th>Vendedor</th>
+                  <th>Neto</th>
+                  <th>IVA</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="rows?.length > 0 && !loadingData">
+                <tr *ngFor="let order of rows">
+                  <td align="center">
+                    <a routerLink="/carro-compra/downloadpdf" [queryParams]="{ numero: order.ordenVenta }"
+                      target="_blank">{{
+                      order.ordenVenta
+                      }}</a>
+                  </td>
+                  <!-- <td align="center"><a href="https://b2b-api.implementos.cl/api/carro/getoc?id={{ order._id }}" target="_blank">{{ order.ordenCompra }}</a></td> -->
+                  <td align="center" nowrap>{{ order.ordenCompra || '0' }}</td>
+                  <td align="center" nowrap>
+                    <ng-container *ngIf="order.ordenCompra != 0 && order.ordenCompra != null">
+                      <ng-container *ngIf="order.carros != null && order.carros.ordenCompra">
+                        {{ order.carros.ordenCompra.centroCosto }}
+                      </ng-container>
+                      <ng-container *ngIf="order.carros == null || !order.carros.ordenCompra">
+                        <font color="red">{{ 'S/CC' }}</font>
+                      </ng-container>
+                    </ng-container>
+
+                    <ng-container *ngIf="order.ordenCompra == null || order.ordenCompra == 0">
+                      <font color="red"> S/CC</font>
+                    </ng-container>
+                  </td>
+                  <td align="center">
+                    <a routerLink="/carro-compra/downloadpdf"
+                      [queryParams]="{ numero: order.documento, tipo: 'factura' }" target="_blank">{{ order.documento
+                      }}</a>
+                  </td>
+                  <td align="center">{{ order.fecha | date: 'dd-MM-yy hh:mm' }}</td>
+                  <td align="center">{{ order.sucursal }}</td>
+                  <td>{{ order.vendedor }}</td>
+                  <td align="right">${{ order.neto }}</td>
+                  <td align="right">${{ order.iva }}</td>
+                  <td align="right">${{ order.total }}</td>
+                </tr>
+              </tbody>
+              <tbody *ngIf="rows?.length == 0 && !loadingData">
+                <tr>
+                  <td colspan="10" class="no-data-available">
+                    <div class="col-sm-12" style="margin-bottom: 20px; padding: 10px; border: 1px solid #33333338">
+                      <i class="fas fa-info-circle" style="margin-right: 10px"></i> No hay pedidos con este filtro
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tbody *ngIf="loadingData">
+                <tr>
+                  <td align="center" colspan="10" class="no-data-available">
+                    <div class="col-sm-12" style="margin-bottom: 20px; padding: 10px; border: 1px solid #33333338">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

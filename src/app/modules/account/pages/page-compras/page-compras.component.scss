@@ -1,0 +1,45 @@
+.card {
+  border-radius: 20px;
+  color: #333;
+  background: #fff !important;
+  width: 100%;
+  border: solid 1px #0063b9;
+  padding: 20px;
+  box-shadow: none;
+}
+.card-header {
+  border-bottom: solid 1px #0063b9 !important;
+}
+.cart-img {
+  width: 4rem;
+}
+
+.text-compras {
+  font-size: 18px;
+  color: #0063b9;
+  font-weight: bold;
+}
+
+.text-fechas {
+  font-size: 14px;
+  color: #0063b9;
+  font-weight: bold;
+}
+
+.btn-outline-primary {
+  color: #0063b9 !important;
+  border-color: #0063b9;
+  border: solid 1px #0063b9 !important;
+}
+
+.btn-outline-primary:hover {
+  color: #fff !important;
+  background-color: #0063b9;
+  border-color: #0063b9;
+}
+
+.cargandoCent {
+  font-size: 16px;
+  height: 200px;
+  padding-top: 5%;
+}

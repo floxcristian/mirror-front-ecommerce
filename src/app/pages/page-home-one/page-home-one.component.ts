@@ -59,9 +59,6 @@ export class PageHomeOneComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.cmsService.obtenerBanners().subscribe((r: any) => {
-    //     this.banners = r.data.filter(banners => banners.position === "homepage");
-    // });
     this.banners = [
       {
         url: 'https://www.implementos.cl/sitio/blog',
@@ -100,11 +97,9 @@ export class PageHomeOneComponent implements OnInit {
       tiempo = 3500;
     }
 
-    // setTimeout(() => {
     this.categoriaPopulares = true;
     this.cajaConceptos = true;
     this.banner = true;
     this.marcas = true;
-    // }, tiempo);
   }
 }

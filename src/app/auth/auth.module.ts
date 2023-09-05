@@ -36,7 +36,8 @@ import { PageCiberdayFormComponent } from './pages/page-ciberday-form/page-ciber
 import { RegistroOkModalComponent } from '../pages/components/registro-ok-modal/registro-ok-modal.component';
 import { RouterModule } from '@angular/router';
 import { FooterB2cModule } from '../modules/footer-b2c/footer-b2c.module';
-// import { PageHomeCmsModule } from '../modules/page-home-cms/page-home-cms.module';
+import { PageHomeCmsModule } from '../modules/page-home-cms/page-home-cms.module';
+
 // import { PageDevolucionesComponent } from '../pages/page-devoluciones/page-devoluciones.component';
 // import { DevolucionOkModalComponent } from '../pages/components/devolucion-ok-modal/devolucion-ok-modal.component';
 // import { PageConcursoGiftcardComponent } from '../pages/page-concurso-giftcard/page-concurso-giftcard.component';
@@ -92,7 +93,7 @@ import { FooterB2cModule } from '../modules/footer-b2c/footer-b2c.module';
     BsDropdownModule.forRoot(),
     ModalModule,
     TooltipModule.forRoot(),
-    // PageHomeCmsModule,
+    PageHomeCmsModule,
     SharedModule,
   ],
 })

@@ -1,0 +1,272 @@
+<app-loading-element *ngIf="loadingData"></app-loading-element>
+<ng-container *ngIf="caja_concepto.template=='gallery'">
+<div class="gallery">
+    <ng-container *ngIf="caja_concepto.conceptos[0].image===undefined">
+      <figure class="gallery__item gallery__item--1">
+        <a [routerLink]="['/mi-cuenta/template']" (click)="openForm(template,0)">
+        <img src="../../../../../../assets/images/products/no-image-listado-2.jpg" alt="Gallery image 1" class="gallery__img">
+      </a>
+      </figure>
+    </ng-container>
+    <ng-container *ngIf="caja_concepto.conceptos[0].image!==undefined">
+      <figure class="gallery__item gallery__item--1"> 
+        <img [src]="caja_concepto.conceptos[0].image" alt="Gallery image 1" class="gallery__img" (click)="openForm_update(template_update,0)">
+      </figure>
+    </ng-container>
+    
+ 
+    <ng-container *ngIf="caja_concepto.conceptos[1].image===undefined">
+      <figure class="gallery__item gallery__item--2">
+        <a [routerLink]="['/mi-cuenta/template']" (click)="openForm(template,1)">
+          <img src="../../../../../../assets/images/products/no-image-listado-2.jpg" alt="Gallery image 1" class="gallery__img">
+        </a>
+      </figure>
+    </ng-container>
+    
+    <ng-container *ngIf="caja_concepto.conceptos[1].image!==undefined">
+      <figure class="gallery__item gallery__item--2">
+        <img [src]="caja_concepto.conceptos[1].image" alt="Gallery image 2" class="gallery__img" (click)="openForm_update(template_update,1)">
+    </figure>
+    </ng-container>
+    
+    <ng-container *ngIf="caja_concepto.conceptos[2].image===undefined">
+      <figure class="gallery__item gallery__item--3">
+        <a [routerLink]="['/mi-cuenta/template']" (click)="openForm(template,2)">
+          <img src="../../../../../../assets/images/products/no-image-listado-2.jpg" alt="Gallery image 1" class="gallery__img">
+        </a>
+      </figure>
+    </ng-container>
+    
+    <ng-container *ngIf="caja_concepto.conceptos[2].image!==undefined">
+      <figure class="gallery__item gallery__item--3">
+        <img [src]="caja_concepto.conceptos[2].image" alt="Gallery image 3" class="gallery__img" (click)="openForm_update(template_update,2)">
+    </figure>
+    </ng-container>
+    
+    <ng-container *ngIf="caja_concepto.conceptos[3].image===undefined">
+      <figure class="gallery__item gallery__item--4">
+        <a [routerLink]="['/mi-cuenta/template']" (click)="openForm(template,3)">
+           <img src="../../../../../../assets/images/products/no-image-listado-2.jpg" alt="Gallery image 1" class="gallery__img" >
+        </a>
+      </figure>
+    </ng-container>
+    
+    <ng-container *ngIf="caja_concepto.conceptos[3].image!==undefined">
+      <figure class="gallery__item gallery__item--4">
+        <img [src]="caja_concepto.conceptos[3].image" alt="Gallery image 4" class="gallery__img" (click)="openForm_update(template_update,3)">
+    </figure>
+    </ng-container>
+  
+   
+</div>
+</ng-container>
+
+
+<ng-container *ngIf="caja_concepto.template=='gallery_2'">
+  <div class="gallery_2">
+      <ng-container *ngIf="caja_concepto.conceptos[0].image===undefined">
+        <figure class="gallery2__item gallery2__item--1">
+          <a [routerLink]="['/mi-cuenta/template']" (click)="openForm(template,0)">
+          <img src="../../../../../../assets/images/products/no-image-listado-2.jpg" alt="Gallery image 1" class="gallery__img">
+        </a>
+        </figure>
+      </ng-container>
+      <ng-container *ngIf="caja_concepto.conceptos[0].image!==undefined">
+        <figure class="gallery2__item gallery2__item--1">
+         
+          <img [src]="caja_concepto.conceptos[0].image" alt="Gallery image 1" class="gallery2__img" (click)="openForm_update(template_update,0)">
+          
+        </figure>
+      </ng-container>
+      
+   
+      <ng-container *ngIf="caja_concepto.conceptos[1].image===undefined">
+        <figure class="gallery2__item gallery2__item--2">
+          <a [routerLink]="['/mi-cuenta/template']" (click)="openForm(template,1)">
+            <img src="../../../../../../assets/images/products/no-image-listado-2.jpg" alt="Gallery image 1" class="gallery__img">
+          </a>
+        </figure>
+      </ng-container>
+      <ng-container *ngIf="caja_concepto.conceptos[1].image!==undefined">
+        <figure class="gallery2__item gallery2__item--2">
+         
+          <img [src]="caja_concepto.conceptos[1].image" alt="Gallery image 2" class="gallery2__img" (click)="openForm_update(template_update,1)">
+       
+      </figure>
+      </ng-container>
+      <ng-container *ngIf="caja_concepto.conceptos[2].image===undefined">
+        <figure class="gallery2__item gallery2__item--3">
+          <a [routerLink]="['/mi-cuenta/template']" (click)="openForm(template,2)">
+            <img src="../../../../../../assets/images/products/no-image-listado-2.jpg" alt="Gallery image 1" class="gallery__img">
+          </a></figure>
+      </ng-container>
+      <ng-container *ngIf="caja_concepto.conceptos[2].image!==undefined">
+        <figure class="gallery2__item gallery2__item--3">
+        
+            <img [src]="caja_concepto.conceptos[2].image" alt="Gallery image 1" class="gallery2__img" (click)="openForm_update(template_update,2)">
+            
+      </figure>
+      </ng-container>
+      <ng-container *ngIf="caja_concepto.conceptos[3].image===undefined">
+        <figure class="gallery2__item gallery2__item--4">
+          <a [routerLink]="['/mi-cuenta/template']" (click)="openForm(template,3)">
+            <img src="../../../../../../assets/images/products/no-image-listado-2.jpg" alt="Gallery image 4" class="gallery2__img">
+          </a>
+        </figure>
+      </ng-container>
+      <ng-container *ngIf="caja_concepto.conceptos[3].image!==undefined">
+        <figure class="gallery2__item gallery2__item--4">
+          
+            <img [src]="caja_concepto.conceptos[3].image" alt="Gallery image 4" class="gallery2__img" (click)="openForm_update(template,3)">
+          
+      </figure>
+      </ng-container>
+    
+     
+  </div>
+  </ng-container>
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4>Concepto</h4>  
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form_concepto">
+      <div class="row">
+     
+          
+          <div class="col-sm mb-3">
+              <label>Título </label>
+              <input type="text" class="form-control" formControlName="titulo" 
+              [class.is-valid]="form_concepto.value.titulo"
+              [class.is-invalid]="!form_concepto.get('titulo').valid" > 
+              
+          </div>
+
+         
+
+
+
+      </div>
+      <div class="row">
+          <div class="col-sm mb-3">
+              <label>Categoría</label>
+              <select class="custom-select round-input" formControlName="categoria"  (change)='SubCategoria()'>
+               <option  [ngValue]="null">Ingrese búsqueda</option>
+            
+               <option *ngFor="let cat of categorias"  value="{{cat.id}}">
+                   {{cat.name |titlecase}}
+               </option>
+          
+           </select>
+
+          </div>
+
+
+          <div class="col-sm mb-3">
+              <label>Subcategoria</label>
+              <select class="custom-select round-input" formControlName="subcategoria" #subcategoria (change)='seleccionar(subcategoria.value)'>
+                  <option  [ngValue]="null">Ingrese búsqueda</option>
+                  <option *ngFor="let sub of subcategorias" [value]="sub.id">
+                    {{sub.name |titlecase}}
+                </option>
+
+              </select>
+
+          </div>
+
+        
+
+        
+
+
+      </div>
+      <hr />
+      <div class="form-group">
+        <div class="preview" *ngIf="preview && preview !== null">
+          <img [src]="preview" style="width: 100%;">
+      </div>
+    </div>
+      <div class="form-group">
+        <input type="file" (change)="uploadFile($event)">
+    </div>
+      <hr />
+      <button [disabled]="form_concepto.invalid" type="button" class="btn btn-secondary" style="margin-right: 20px;border-radius:0px" data-dismiss="modal" (click)="actualizar()">Ingresar</button>
+  <button type="button" class="btn btn-danger" data-dismiss="modal"  style="margin-right: 20px;border-radius:0px" (click)="modalRef.hide()">Cerrar</button>
+  </form>
+  </div>
+
+</ng-template>
+
+
+<ng-template #template_update>
+  <div class="modal-header">
+    <h4>Concepto</h4>  
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form_concepto">
+      <div class="row">
+     
+          
+          <div class="col-sm mb-3">
+              <label>Título </label>
+              <input type="text" class="form-control" formControlName="titulo" 
+              [class.is-valid]="form_concepto.value.titulo"
+              [class.is-invalid]="!form_concepto.get('titulo').valid" > 
+              
+          </div>
+
+         
+
+
+
+      </div>
+      <div class="row">
+          <div class="col-sm mb-3">
+              <label>Categoría</label>
+              <select class="custom-select round-input" formControlName="categoria"  (change)='SubCategoria()'>
+               <option  [ngValue]="null">Ingrese búsqueda</option>
+            
+               <option *ngFor="let cat of categorias"  value="{{cat.id}}">
+                   {{cat.name |titlecase}}
+               </option>
+          
+           </select>
+
+          </div>
+
+
+          <div class="col-sm mb-3">
+              <label>Subcategoria</label>
+              <select class="custom-select round-input" formControlName="subcategoria" #subcategoria (change)='seleccionar(subcategoria.value)'>
+                  <option  [ngValue]="null">Ingrese búsqueda</option>
+                  <option *ngFor="let sub of subcategorias" [value]="sub.id">
+                    {{sub.name |titlecase}}
+                </option>
+
+              </select>
+
+          </div>
+
+        
+
+        
+
+
+      </div>
+      <hr />
+      <div class="form-group">
+        <div class="preview" *ngIf="preview && preview !== null">
+          <img [src]="preview" style="width: 100%;">
+      </div>
+    </div>
+      <div class="form-group">
+        <input type="file" (change)="uploadFile($event)">
+    </div>
+      <hr />
+      <button [disabled]="form_concepto.invalid" type="button" class="btn btn-secondary" style="margin-right: 20px;border-radius:0px" data-dismiss="modal" (click)="actualizar()">Actualizar</button>
+  <button type="button" class="btn btn-danger" data-dismiss="modal"  style="margin-right: 20px;border-radius:0px" (click)="modalRef.hide()">Cerrar</button>
+  </form>
+  </div>
+
+</ng-template>

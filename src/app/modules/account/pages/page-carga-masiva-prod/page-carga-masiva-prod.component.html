@@ -1,0 +1,390 @@
+<div class="top-bar-categories d-flex align-orders-center">
+  <div class="title d-flex align-orders-center mr-auto">
+    <i _ngcontent-serverapp-c11="" class="fas fa-file-upload mr-3"></i>
+    <h5>Carga Masiva de Productos</h5>
+  </div>
+</div>
+
+<div class="row m-0">
+  <div class="col-lg-12">
+    <div class="card mt-3">
+      <div class="card-body">
+        <p>
+          Descargue el archivo excel de ejemplo (
+          <a
+            href="https://www.implementos.cl/downloads/base_carga_masiva.xlsx"
+            target="_blank"
+          >
+            <i class="far fa-file-excel text-success"></i> aquí</a
+          >
+          ) y complete la informacion, a continuación seleccione el archivo
+          modificado y haga clic en "Procesar Archivo".<br />
+          <span class="text-danger"
+            >Si su carro tiene productos actualmente, este quedará guardado. </span
+          ><span
+            >Podrá activarlo o eliminarlo desde el menú Carros Guardados.</span
+          >
+        </p>
+
+        <div class="row mt-4">
+          <div class="col-12 d-flex justify-content-start">
+            <label [for]="idArchivo" class="btn btn-sm btn-primary mr-2"
+              >Seleccionar Archivo</label
+            >
+            <input
+              type="file"
+              [id]="idArchivo"
+              (change)="onFileChange($event.target.files)"
+              style="display: none"
+            />
+          </div>
+        </div>
+        <div class="row mt-2" *ngIf="archivo">
+          <div
+            class="col-10 col-md-4 text-left text-truncate"
+            style="font-size: 0.85rem"
+          >
+            <i [class]="archivo?.icon + ' mr-2'"></i> {{ archivo?.nombre }}
+          </div>
+          <label
+            class="btn btn-sm btn-min_pad p-0 m-0"
+            (click)="eliminaArchivo()"
+          >
+            <i class="fas fa-trash-alt text-danger"></i>
+          </label>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-12 text-left">
+            <button
+              name="Procesar"
+              class="btn btn-secondary"
+              (click)="uploadFile()"
+              [disabled]="isVacio(archivo)"
+              [ngClass]="{ 'btn-loading': procesando }"
+            >
+              <i class="fas fa-cloud-upload-alt mr-2"></i> Procesar archivo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="procesado" class="row m-0">
+  <div class="col-lg-12">
+    <div class="card mt-3">
+      <label>Resultado: </label>
+      <div [class]="alertClass" role="alert">
+        <strong>{{ mensaje }} </strong
+        ><span *ngIf="carroGuardado?.guardado"
+          >Se guardó un carro de compra previo con
+          {{ carroGuardado.cantidad }} producto(s).</span
+        >
+      </div>
+      <ng-container *ngIf="!isExcel">
+        <label>Orden de compra: </label>
+        <table border="0" class="ml-3">
+          <tr>
+            <th style="width: 75px">Número:</th>
+            <td>{{ OC.orden_compra }}</td>
+          </tr>
+          <tr>
+            <th>Total:</th>
+            <td>{{ OC.total | currencyFormat }}</td>
+          </tr>
+          <!-- <li><strong>N°:&nbsp;</strong>{{ OC.orden_compra }}</li>
+                <li><strong>Total:&nbsp;</strong>{{ OC.total | currencyFormat }}</li> -->
+        </table>
+      </ng-container>
+      <div class="alert alert-danger" *ngIf="totalesDistintos" role="alert">
+        <strong>Los montos totales son diferentes.</strong>
+      </div>
+
+      <div
+        *ngIf="productosCargados.length > 0 || productosNoCargados.length > 0"
+        [class.mt-3]="!totalesDistintos"
+      >
+        <label>Detalle Resultados: </label><br />
+        <div class="accordion" id="DetalleResultados">
+          <div *ngIf="productosCargados.length > 0">
+            <div class="border accordion-header">
+              <div
+                class="mb-0 d-flex"
+                style="cursor: pointer"
+                data-toggle="collapse"
+                data-target="#productosOK"
+                aria-expanded="false"
+                aria-controls="productosOK"
+              >
+                <div
+                  class="text-success p-2 ml-3 collapsed"
+                  style="font-size: 15px; font-weight: 500"
+                >
+                  {{ productosCargados.length }}
+                  <span *ngIf="productosCargados.length == 1"
+                    >Producto cargado</span
+                  ><span *ngIf="productosCargados.length > 1"
+                    >Productos cargados</span
+                  >
+                  correctamente
+                </div>
+                <div
+                  class="d-flex justify-content-end align-items-center flex-grow-1 flex-shrink-1 mr-4"
+                  style="font-size: 15px; color: black; font-weight: bold"
+                >
+                  <span>Total: {{ total | currencyFormat }}</span>
+                </div>
+                <div
+                  style="float: right"
+                  class="mr-3 d-flex align-items-center"
+                >
+                  <span
+                    class="fas fa-search mr-1"
+                    style="cursor: pointer"
+                  ></span>
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="productosOK"
+              class="collapse"
+              data-parent="#DetalleResultados"
+            >
+              <div
+                class="border-left border-right border-bottom pt-2 pb-2 pl-3 pr-3 d-flex flex-wrap justify-content-center"
+              >
+                <div class="producto" *ngFor="let item of productosCargados">
+                  <div>
+                    <div class="col-sm-12">
+                      <span class="product-sku text-gray-2">
+                        {{ item.marca }}
+                      </span>
+                    </div>
+                    <div class="col-sm-12">
+                      <span class="product-title">
+                        {{ item.nombre | titlecase }}
+                      </span>
+                    </div>
+                    <div class="col-sm-12">
+                      <span
+                        class="product-sku text-gray-2"
+                        style="font-size: 75%"
+                        >Precio: {{ item.precio | currencyFormat }}</span
+                      >
+                      <span
+                        class="product-sku text-gray-2 float-right"
+                        style="font-size: 75%"
+                        >Cantidad: {{ item.cantidad }}</span
+                      >
+                    </div>
+                    <div class="col-sm-12">
+                      <span
+                        class="product-sku text-gray-2"
+                        style="font-size: 75%"
+                        >SKU: {{ item.sku }}</span
+                      >
+                    </div>
+
+                    <div class="col-12">
+                      <div
+                        class="item float-left"
+                        style="color: #b2b2b2"
+                        placement="bottom"
+                        [tooltip]="
+                          item.entregas.despacho
+                            ? 'Con despacho a domicilio'
+                            : 'Sin despacho a domicilio'
+                        "
+                      >
+                        <i
+                          [ngClass]="
+                            item.entregas.despacho
+                              ? 'fas fa-truck text-success mr-1'
+                              : 'fas fa-truck mr-1'
+                          "
+                          style="font-size: 18px"
+                        ></i>
+                      </div>
+                      <div
+                        class="item float-left"
+                        style="color: #b2b2b2"
+                        placement="bottom"
+                        [tooltip]="
+                          item.entregas.retiroTienda
+                            ? 'Con retiro en tienda'
+                            : 'Sin retiro en tienda'
+                        "
+                      >
+                        <i
+                          [ngClass]="
+                            item.entregas.retiroTienda
+                              ? 'fas fa-store text-success mr-1'
+                              : 'fas fa-store mr-1'
+                          "
+                          style="font-size: 18px"
+                        ></i>
+                      </div>
+                      <div
+                        class="float-right"
+                        style="font-size: 14px; color: black"
+                      >
+                        {{ item.precio * item.cantidad | currencyFormat }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="productosNoDisponibles.length > 0">
+            <div class="border accordion-header">
+              <div
+                class="mb-0 d-flex"
+                style="cursor: pointer"
+                data-toggle="collapse"
+                data-target="#productosERROR2"
+                aria-expanded="false"
+                aria-controls="productosERROR2"
+              >
+                <div
+                  class="text-danger p-2 ml-3 flex-grow-1 flex-shrink-1 collapsed"
+                  style="font-size: 15px; font-weight: 500"
+                >
+                  {{ productosNoDisponibles.length }}
+                  <span *ngIf="productosNoDisponibles.length == 1"
+                    >Producto No disponible</span
+                  ><span *ngIf="productosNoDisponibles.length > 1"
+                    >Productos No disponibles</span
+                  >
+                  para despacho o retiro en tienda
+                </div>
+                <div
+                  style="float: right"
+                  class="mr-3 d-flex align-items-center"
+                >
+                  <span
+                    class="fas fa-search mr-1"
+                    style="cursor: pointer"
+                  ></span>
+                </div>
+              </div>
+            </div>
+            <div
+              id="productosERROR2"
+              class="collapse"
+              data-parent="#DetalleResultados"
+            >
+              <div
+                class="border-left border-right border-bottom pt-2 pb-2 pl-3 pr-3 d-flex flex-wrap justify-content-center"
+              >
+                <div
+                  class="producto"
+                  *ngFor="let item of productosNoDisponibles"
+                >
+                  <div>
+                    <div class="col-sm-12">
+                      <span class="product-sku text-gray-2">
+                        {{ item.marca }}
+                      </span>
+                    </div>
+                    <div class="col-sm-12">
+                      <span class="product-title">
+                        {{ item.nombre | titlecase }}
+                      </span>
+                    </div>
+                    <div class="col-sm-12">
+                      <span
+                        class="product-sku text-gray-2"
+                        style="font-size: 75%"
+                        >SKU: {{ item.sku }}</span
+                      >
+                    </div>
+                    <div class="col-sm-12">
+                      <span class="text-danger" style="font-size: 75%"
+                        >Producto no disponible</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="productosNoCargados.length > 0">
+            <div class="border accordion-header">
+              <div
+                class="mb-0 d-flex"
+                style="cursor: pointer"
+                data-toggle="collapse"
+                data-target="#productosERROR"
+                aria-expanded="false"
+                aria-controls="productosERROR"
+              >
+                <div
+                  class="text-danger p-2 ml-3 flex-grow-1 flex-shrink-1 collapsed"
+                  style="font-size: 15px; font-weight: 500"
+                >
+                  {{ productosNoCargados.length }}
+                  <span *ngIf="productosNoCargados.length == 1"
+                    >Producto No encontrado</span
+                  ><span *ngIf="productosNoCargados.length > 1"
+                    >Productos No encontrados</span
+                  >
+                </div>
+                <div
+                  style="float: right"
+                  class="mr-3 d-flex align-items-center"
+                >
+                  <span
+                    class="fas fa-search mr-1"
+                    style="cursor: pointer"
+                  ></span>
+                </div>
+              </div>
+            </div>
+            <div
+              id="productosERROR"
+              class="collapse"
+              data-parent="#DetalleResultados"
+            >
+              <div
+                class="border-left border-right border-bottom pt-2 pb-2 pl-3 pr-3 d-flex flex-wrap justify-content-center"
+              >
+                <div class="producto" *ngFor="let item of productosNoCargados">
+                  <div>
+                    <div *ngIf="isExcel" class="col-sm-12">
+                      <span class="product-sku text-gray-2"
+                        >Celda: {{ item.celda }}
+                      </span>
+                    </div>
+                    <div *ngIf="isExcel" class="col-sm-12">
+                      <span
+                        class="product-sku text-gray-2"
+                        style="font-size: 75%"
+                        >SKU: {{ item.sku }}</span
+                      >
+                    </div>
+                    <div *ngIf="!isExcel" class="col-sm-12">
+                      <span
+                        class="product-sku text-gray-2"
+                        style="font-size: 75%"
+                        >Código: {{ item.codigo }}</span
+                      >
+                    </div>
+                    <div class="col-sm-12">
+                      <span class="text-danger" style="font-size: 75%"
+                        >Producto no encontrado</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

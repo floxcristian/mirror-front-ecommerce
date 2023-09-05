@@ -1,0 +1,88 @@
+<div class="container " style="margin-top:20px">
+  <div class="row">
+    <div class="col-7">
+      <pagination class="mb-3" *ngIf="totalItems>0" [boundaryLinks]="showBoundaryLinks"
+        [directionLinks]="showDirectionLinks" [totalItems]="totalItems" [itemsPerPage]="maxlength" [maxSize]="maxlength"
+        (pageChanged)="pageChanged($event)">
+      </pagination>
+    </div>
+    <div class="col-5">
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Buscar" (keyup.enter)="buscar()" [(ngModel)]="search"
+          name="search">
+        <button class="btn btn-outline-primary" type="button" (click)="buscar()"><i
+            class="fa-solid fa-magnifying-glass"></i></button>
+
+      </div>
+    </div>
+  </div>
+  <div *ngIf="loadData" class="card mb-2">
+    <div class="cargandoCent text-center">
+      <i class="fak fa-implementos fa-bounce" style="font-size: 64px; color: #0063b9"></i>
+      <div class="fa-beat-fade" style="--fa-beat-fade-opacity: 0.67; --fa-beat-fade-scale: 1.075;color: #0063b9">
+        Cargando compras..
+      </div>
+    </div>
+  </div>
+  <ng-container *ngFor="let item of data; let i = index">
+    <div class="card mb-2">
+      <div class="card-header bg-transparent border-success">
+        <div class="row w-100">
+
+          <div class="col-2 text-fechas d-flex justify-content-start align-items-end">
+            <div class="row">
+              <div class="col-12" style="font-size:12px; color:#0063b9;cursor:pointer;font-weight: normal;"
+                (click)="expand(i)">
+                <ng-container *ngIf="item.expand">
+                  <i class="fa-solid fa-eye" style="cursor:pointer" style="margin-right:10px"></i>
+                  Ocultar detalle
+                </ng-container>
+                <ng-container *ngIf="!item.expand">
+                  <i class="fa-solid fa-eye-slash" style="cursor:pointer;color:#0063b986" style="margin-right:10px"></i>
+                  Ver detalle
+                </ng-container>
+              </div>
+              <div class="col-12 text-fechas"> {{item.fechaCreacionOrden | date:"dd-MM-yyyy"}}</div>
+            </div>
+
+          </div>
+          <div class="col-4 text-fechas d-flex justify-content-center align-items-end" style="margin-left:10px">
+            <div class="row">
+
+              <div class="col-12 text-fechas">
+                {{item.Vendedor| titlecase}}
+              </div>
+              <div class="col-12 d-flex justify-content-start text-fechas" style="font-weight: normal;">
+                <ng-container *ngIf="item.ModoEntrega=='VEN- RPTDA'">
+                  Retiro en tienda
+                </ng-container>
+                <ng-container *ngIf="item.ModoEntrega=='VEN DPCLI'">
+                  Despacho
+                </ng-container>
+                <ng-container *ngIf="item.ModoEntrega=='VEN- RTCLI'">
+                  Retiro inmediato en tienda
+                </ng-container>
+                - {{item.TiendaDestino}}
+              </div>
+            </div>
+          </div>
+          <div class="col-5 d-flex justify-content-center" style="margin-left:55px">
+            <div class="row w-100">
+              <div class="col-12 text-compras"> {{item.OrdenSeguimiento}}</div>
+              <div class="col-12 text-fechas" style="font-weight:normal;font-size: 12px;"> {{item.OrdenCompra |
+                uppercase}}</div>
+              <div class="col-12 text-fechas"> {{item.EstadoActual | titlecase }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+
+        <app-detalle-pedido *ngIf="item.expand" [ordenVenta]="item.OrdenSeguimiento" [productos]="item.productos"
+          [index]="i" (listaProducto)="addToCart($event)"></app-detalle-pedido>
+      </div>
+
+    </div>
+  </ng-container>
+
+</div>

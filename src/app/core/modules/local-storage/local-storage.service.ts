@@ -26,7 +26,13 @@ export class LocalStorageService {
   }*/
 
   set(key: string, value: any): void {
-    localStorage.setItem(this.prefix + key, value);
+    // TODO: verificar si la variable es un objeto
+    if (typeof value === 'object') {
+      const data = JSON.stringify(value);
+      localStorage.setItem(this.prefix + key, data);
+    } else {
+      localStorage.setItem(this.prefix + key, value);
+    }
   }
 
   /*

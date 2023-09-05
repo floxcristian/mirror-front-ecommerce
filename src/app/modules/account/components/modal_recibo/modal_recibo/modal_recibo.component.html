@@ -1,0 +1,38 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left" style="color: #0063b9">
+    {{ data.glosaRespaldo }}
+  </h4>
+  <button
+    name="modalRef"
+    type="button"
+    class="close pull-right"
+    aria-label="Close"
+    (click)="bsModalRef.hide()"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="col-sm-12 w-100 d-flex justify-content-center">
+    <div *ngIf="!esPdf()">
+      <div *ngIf="urlGuiaMostrar">
+        <img
+          [src]="urlGuiaMostrar"
+          width="100%"
+          height="350px"
+          (click)="openPhotoSwipe($event)"
+          style="cursor: pointer"
+          [alt]="'Imagen rota, no se pudo encontrar imagen en su servidor'"
+        />
+      </div>
+    </div>
+    <div *ngIf="esPdf() && pdfBase64" class="pdf-container">
+      <embed
+        [src]="pdfBase64"
+        type="application/pdf"
+        width="100%"
+        height="400px"
+      />
+    </div>
+  </div>
+</div>

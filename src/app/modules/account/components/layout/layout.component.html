@@ -1,0 +1,37 @@
+<div class="container" style="max-width: 1360px">
+  <div class="row flex-nowrap">
+    <div class="menu-account d-none d-lg-block" [ngClass]="{ 'menu-account-min': menuCollapsed }">
+      <div class="account-nav flex-grow-1">
+        <div class="d-flex container-bar">
+          <div class="logo-company text-center col p-0"></div>
+          <div class="button-menu pointer" (click)="changeMenu()">
+            <i class="fas fa-bars"></i>
+          </div>
+        </div>
+        <ul>
+          <li
+            *ngFor="let link of links"
+            class="account-nav__item"
+            routerLinkActive="account-nav__item--active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <a class="min" tooltip="{{ link.label }}" [routerLink]="link.url" [ngClass]="{ 'btn-dark': link.dark }">
+              <i class="{{ link.icon }} mr-3"></i>
+            </a>
+
+            <a class="large" [routerLink]="link.url" [ngClass]="{ 'btn-dark': link.dark }">
+              <i class="{{ link.icon }} mr-3"></i>
+              <span class="text">
+                {{ link.label }}
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col p-0">
+      <router-outlet></router-outlet>
+      <div style="margin-bottom: 70px !important"></div>
+    </div>
+  </div>
+</div>

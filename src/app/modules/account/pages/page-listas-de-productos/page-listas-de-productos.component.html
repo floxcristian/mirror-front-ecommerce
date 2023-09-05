@@ -1,0 +1,177 @@
+<div class="top-bar-categories d-flex  align-items-center mb-3" [class.p-0]="innerWidth < 450"
+    [class.pl-3]="innerWidth < 450" [class.pr-3]="innerWidth < 450" (window:resize)="onResize($event)">
+    <div class="title d-flex align-items-center mr-auto ">
+        <i _ngcontent-serverapp-c11="" class="fas fa-list-alt mr-3"></i>
+        <h5>Listas de productos</h5>
+    </div>
+</div>
+
+<div class="row m-0" [ngStyle]="{'min-height': listas.length > 0 ? '650px' : ''}">
+    <div class="col-12 d-flex" *ngIf="showLoading">
+        <div class="card" style="height: 200px;">
+            <div class="card-body">
+                <app-loading-element [text]="'Cargando listas'"></app-loading-element>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 d-flex" *ngIf="listas.length === 0 && !showLoading">
+        <div class="card">
+            <div class="card-body text-center">
+                <h6 style="color:#888; font-weight: normal; letter-spacing: 1.5px;">NO TIENE LISTAS CREADAS</h6>
+                <button class="btn btn-sm btn-secondary mt-2" style="margin-right: 10px;"
+                    (click)="cargaUnitaria()">Carga
+                    unitaria</button>
+                <button class="btn btn-sm btn-secondary mt-2" (click)="cargaMasiva(null)">Cargar productos por
+                    lotes</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 d-flex" *ngIf="listas.length > 0">
+        <div class="card">
+            <div class="card-header">
+                <div class="text-center mb-2"><strong>Mis listas</strong></div>
+            </div>
+            <div class="card-body">
+                <perfect-scrollbar style="max-height: 450px; overflow-y: auto; padding-right: 10px;">
+                    <div class="list-group" id="listas" role="tablist">
+                        <ng-container *ngFor="let lista of listas; let i = index">
+                            <a class="list-group-item list-group-item-action" [ngClass]="{'active': i === seleccionada}"
+                                (click)="seleccionarLista(i)" data-toggle="list" [href]="'#list-'+lista._id" role="tab">
+                                <div class="align-items-center justify-content-between d-flex"
+                                    style="font-weight: bold;">
+                                    <div class="flex-shrink-1 flex-grow-1">
+                                        {{ lista.nombre }}
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-check-circle text-success mr-3" tooltip="Predeterminada"
+                                            container="body" *ngIf="lista.predeterminada"></i>
+                                        <div dropdown class="ml-1">
+                                            <button dropdownToggle
+                                                class="btn btn-light btn-sm btn-svg-icon dropdown-toggle"
+                                                style="width: 20px;" type="button">
+                                                <i class="fas fa-ellipsis-v mt-1"></i>
+                                            </button>
+                                            <div *dropdownMenu class="dropdown-menu p-1">
+                                                <a class="dropdown-item px-1"
+                                                    style="font-size: 0.85rem; cursor: pointer;"
+                                                    (click)="listaPredeterminada(lista)">Establecer como
+                                                    predeterminada</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item px-1"
+                                                    style="font-size: 0.85rem; cursor: pointer;"
+                                                    (click)="cambiarNombre(lista)">Cambiar nombre</a>
+                                                <a class="dropdown-item px-1"
+                                                    style="font-size: 0.85rem; cursor: pointer;"
+                                                    (click)="eliminarLista(lista)">Eliminar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </ng-container>
+                    </div>
+                </perfect-scrollbar>
+            </div>
+            <hr class="mb-1">
+            <div class="card-footer p-1">
+                <h6 class="mb-2">Carga de productos:</h6>
+                <button class="btn btn-sm btn-secondary float-left" (click)="cargaUnitaria()">Carga unitaria</button>
+                <button class="btn btn-sm btn-secondary float-right" (click)="cargaMasiva()">Carga masiva</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8 mt-3 mt-lg-0 d-flex" *ngIf="listas.length > 0">
+        <div class="card">
+            <div class="card-header">
+                <div class="text-center mb-2"><strong>Mis productos</strong></div>
+            </div>
+            <div class="card-body mt-3">
+                <div class="input-group" style="margin-bottom:10px">
+                    <input type="text" class="form-control" (keyup)="buscar_producto($event,seleccionada)"
+                        aria-label="Amount (to the nearest dollar)">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" style="border: solid 1px !important;">
+                            <i class="fa-solid fa-magnifying-glass"></i></button>
+
+                    </div>
+                </div>
+
+                <perfect-scrollbar style="max-height: 500px; overflow-y: auto; padding-right: 10px;">
+                    <div class="tab-content border-0" id="nav-tabContent">
+                        <ng-container *ngFor="let lista of listas; let i = index">
+                            <div class="tab-pane fade" [ngClass]="{'show active': i === seleccionada}"
+                                [id]="'list-'+ lista._id" role="tabpanel">
+
+                                <div class="d-flex flex-wrap justify-content-center flex-column">
+                                    <div class="border-bottom d-sm-flex d-block align-items-center flex-grow-1 flex-shrink-1"
+                                        *ngFor="let product of lista.detalleSkus">
+
+                                        <div class="col-12 d-block d-sm-none text-center">
+                                            <span class="product-title"> {{ product.nombre | titlecase }} </span><br>
+                                            <span class="product-sku text-gray-2">{{ getCodigoCliente(product) }} - {{
+                                                product.sku }}</span>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-2 text-center align-items-center">
+                                            <a [routerLink]="rootService.product(product.sku, product.nombre)">
+                                                <img class="precio-img lazyload"
+                                                    [src]="rootService.getUrlImagenMiniatura(product)"
+                                                    [alt]="product.nombre">
+                                            </a>
+                                        </div>
+                                        <div class="col-8 col-sm-5 d-flex align-items-center">
+                                            <span class="product-title d-none d-sm-block"> {{ product.nombre | titlecase
+                                                }}
+                                            </span>
+                                        </div>
+                                        <!-- <div class="col-lg-2 d-none d-lg-flex align-items-center">
+                                            <span class="product-sku text-gray-2"> {{ product.marca }} </span>
+                                        </div> -->
+                                        <div
+                                            class="col-8 col-sm-2 flex-sm-column justify-content-xl-end justify-content-center d-flex align-items-center">
+                                            <span class="product-sku ml-2 d-none d-sm-block"> {{
+                                                getCodigoCliente(product) }}
+                                            </span>
+                                            <span class="product-sku text-gray-2 ml-2 d-none d-sm-block"> {{ product.sku
+                                                }}
+                                            </span>
+                                        </div>
+                                        <div
+                                            class="col-12 col-sm-2 flex-sm-column justify-content-xl-end justify-content-center d-flex align-items-center">
+                                            <button class="btn btn-sm btn-link" tooltip="Agregar prodcuto"
+                                                placement="left" container="body" (click)="addCart(product)">
+                                                <i class="fa-solid fa-cart-arrow-down"
+                                                    style="font-size:14px; color:#0063b9"></i>
+
+                                            </button>
+                                        </div>
+                                        <div
+                                            class="col-12 col-sm-1 flex-sm-column justify-content-xl-end justify-content-center d-flex align-items-center">
+                                            <button class="btn btn-sm btn-link" tooltip="Eliminar producto"
+                                                placement="left" container="body"
+                                                (click)="eliminarProducto(lista, product.sku)">
+                                                <i class="fas fa-trash-alt text-danger"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class=" class-sm-12 d-flex justify-content-center">
+                                        <button class="btn btn-secondary mt-3" (click)="addToCart(lista)"> <i
+                                                class="fa-solid fa-cart-plus" style="margin-left:10px;"></i> Agregar
+                                            Carro</button>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-3" *ngIf="lista.detalleSkus.length === 0">
+                                    <div>No hay productos</div>
+
+                                    <button class="btn btn-secondary mt-3" (click)="cargaMasiva(lista)">Agregar
+                                        productos a la lista</button>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </perfect-scrollbar>
+            </div>
+        </div>
+    </div>
+</div>

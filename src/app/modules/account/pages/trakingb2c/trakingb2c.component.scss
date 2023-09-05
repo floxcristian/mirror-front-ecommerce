@@ -1,0 +1,18 @@
+.info-entrega {
+    border: 1px solid #0063b9;
+}
+
+.info-entrega .header{
+    background: #0063b9;
+    color: #fff;
+    padding: .5rem 1rem;
+    margin-bottom: .6rem;
+}
+
+.info-entrega .body{
+    padding: .5rem 2rem;
+    font-size: 12px;
+    text-align: justify;
+    margin-top: .5rem;
+    overflow-x: auto;
+}

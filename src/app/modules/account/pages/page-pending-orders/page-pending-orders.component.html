@@ -1,0 +1,135 @@
+<div class=" ">
+
+    <div class="top-bar-categories d-flex  align-items-center">
+        <div class="title d-flex align-items-center mr-auto ">
+            <i _ngcontent-serverapp-c11="" class="fas fa-file-invoice mr-3"></i>
+            <h5>Pedidos pendientes de aprobación</h5>
+
+        </div>
+
+    </div>
+
+    <div class=" row m-0">
+
+        <div class="col-xl-12">
+            <div class="card mt-3 ">
+                <div class="card-body table-responsive ">
+
+                    <ng-container *ngIf="viewActive=='list'">
+                        <table datatable [dtOptions]="dtOptions" class=" hover datatable nowrap  table-shadow"
+                            style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+
+                                    <th>Folio OV</th>
+                                    <th>Monto OV</th>
+                                    <th>Folio OC</th>
+
+                                    <th>Monto OC</th>
+                                    <th>Centro Costo</th>
+                                    <th>Email Usuario</th>
+                                    <th></th>
+
+                                </tr>
+                            </thead>
+                            <tbody *ngIf="orders?.length != 0">
+                                <tr *ngFor="let item of orders">
+                                    <td>{{ item.modificacion | date:'dd-MM-yyyy HH:mm' }}</td>
+                                    <td>
+                                        <span class="badge" [ngClass]="{'badge-danger': item?.estado=='rechazado', 
+                                            'badge-warning': item?.estado=='pendiente',
+                                            'badge-info': item?.estado=='generado',
+                                            'badge-success': item?.estado=='finalizado'
+
+                                        }">
+                                            {{ item?.estado | capitalizeFirst }}
+                                        </span>
+                                    </td>
+
+                                    <td>{{ item?.numero }}</td>
+                                    <td>{{ item?.totalOv | currencyFormat }}</td>
+                                    <td>{{ item?.folio }}</td>
+                                    <td>{{ item?.montoOcCliente | currencyFormat }}</td>
+                                    <td>{{ item?.centroCosto}}</td>
+                                    <td>{{ item?.usuario }}</td>
+
+                                    <td>
+
+
+                                        <div class="btn-group" dropdown>
+                                            <button name="Opciones" id="button-basic" dropdownToggle type="button"
+                                                class="btn btn-border-primary dropdown-toggle">
+                                                Opciones
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul id="dropdown-basic" *dropdownMenu
+                                                class="dropdown-menu dropdown-menu-right" role="menu"
+                                                aria-labelledby="button-basic">
+                                                <li role="menuitem">
+                                                    <a class="dropdown-item" (click)="viewOrderDetail(item);">
+                                                        <i class="far fa-file-alt"></i>
+                                                        Ver detalle
+                                                    </a>
+                                                </li>
+
+                                                <li role="menuitem">
+                                                    <a class="dropdown-item " routerLink="/carro-compra/downloadpdf"
+                                                        [queryParams]="{numero:item?.numero}">
+                                                        <i class="far fa-file-pdf"></i>
+                                                        Descargar OV
+                                                    </a>
+                                                </li>
+                                                <li role="menuitem">
+                                                    <a target="_blank" class="dropdown-item"
+                                                        routerLink="/carro-compra/downloadpdf"
+                                                        [queryParams]="{numero:item?._id,tipo:'orden-compra'}">
+                                                        <i class="far fa-file-alt"></i>
+                                                        Descargar OC
+                                                    </a>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                            <tbody *ngIf="orders?.length == 0">
+                                <tr>
+                                    <td colspan="7" class="no-data-available">No hay registros a mostrar!</td>
+                                </tr>
+                            <tbody>
+                        </table>
+
+                    </ng-container>
+
+
+
+
+
+                    <ng-container *ngIf="viewActive=='detail'">
+                        <button name="Atrás" class=" btn  btn-border-primary mb-3" (click)="backToList()">
+                            <i class="fas fa-chevron-left"></i>
+                            Atrás
+                        </button>
+
+                        <app-order-details [title]="title" [id]="orderId"></app-order-details>
+                    </ng-container>
+
+
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+</div>

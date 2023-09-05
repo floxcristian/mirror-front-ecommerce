@@ -69,9 +69,7 @@ export class ClientsService {
     return this.http.patch(call, data);
   }
 
-  updateIVA(data: any) {
-    // console.log(data);
-
+  updateIVA(data: any): Observable<ResponseApi> {
     const call = environment.apiImplementosClientes + `actualizarIva`;
     return this.http.put<ResponseApi>(call, data);
   }
@@ -229,8 +227,8 @@ export class ClientsService {
       environment.apiImplementosClientes + `rutb2b?rut=${rut}`
     );
   }
-  getDataClient(data: any) {
-    return this.http.post(
+  getDataClient(data: any): Observable<ResponseApi> {
+    return this.http.post<ResponseApi>(
       environment.apiImplementosClientes + `GetDatosCliente`,
       data
     );
