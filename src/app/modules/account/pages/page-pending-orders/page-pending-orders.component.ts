@@ -13,12 +13,12 @@ import { DataTablesResponse } from '../../../../shared/interfaces/data-table';
 export class PagePendingOrdersComponent implements OnInit {
 
     dtOptions: DataTables.Settings = {};
-    usuario: Usuario;
-    orders: any[];
+    usuario!: Usuario;
+    orders!: any[];
     urlDonwloadOC = environment.apiImplementosCarro + 'getoc?id=';
     viewActive = 'list';
     orderId = null;
-    title: '';
+    title: string = '';
 
 
     constructor(private http: HttpClient, private root: RootService) { }
@@ -70,12 +70,10 @@ export class PagePendingOrdersComponent implements OnInit {
                         });
                     });
             },
-
         };
-
     }
 
-    viewOrderDetail(item) {
+    viewOrderDetail(item:any) {
         this.viewActive = 'detail';
         this.orderId = item._id;
         this.title = item.numero;
@@ -83,7 +81,5 @@ export class PagePendingOrdersComponent implements OnInit {
 
     backToList() {
         this.viewActive = 'list';
-
     }
-
 }

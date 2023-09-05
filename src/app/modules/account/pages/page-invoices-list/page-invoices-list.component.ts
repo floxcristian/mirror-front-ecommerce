@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Order } from '../../../../shared/interfaces/order';
-import { orders } from '../../../../../data/account-orders';
 import { Usuario } from '../../../../shared/interfaces/login';
 import { RootService } from '../../../../shared/services/root.service';
 import { ClientsService } from '../../../../shared/services/clients.service';
@@ -16,28 +14,21 @@ export class PageInvoicesListComponent implements OnInit {
 
     usuario: Usuario;
     invoices: String[] = [];
-    
     visible_columns: String[] = ["Factura", "Fecha", "Monto", "Saldo", "Vencimiento", "Orden de Venta", "Sucursal", "Medio de Pago"];
-    columns: String[] = ["factura", "fecha", "monto", "saldo", "vencimiento", "ordenVenta", "sucursal", "medioPago"];
+    // columns: String[] = ["factura", "fecha", "monto", "saldo", "vencimiento", "ordenVenta", "sucursal", "medioPago"];
+    columns: any[] = ["factura", "fecha", "monto", "saldo", "vencimiento", "ordenVenta", "sucursal", "medioPago"];
 
     constructor(private root: RootService, private toastr: ToastrService, private clients: ClientsService) { 
 
         this.usuario = this.root.getDataSesionUsuario();
-        
         this.clients.buscarFacturas(this.usuario.rut)
             .subscribe((r: any) => {
-                
-              
-
                 this.invoices = r.data;
                 this.toastr.info('Facturas cargadas');
             }, error => {
                 this.toastr.error('Error de conexión, para obtener facturas por rut');
             });
-
     }
-
     ngOnInit() { }
-    
 
 }

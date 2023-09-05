@@ -27,7 +27,7 @@
                   <th>Total</th>
                 </tr>
               </thead>
-              <tbody *ngIf="rows?.length > 0 && !loadingData">
+              <tbody *ngIf="rows.length > 0 && !loadingData">
                 <tr *ngFor="let order of rows">
                   <td align="center">
                     <a routerLink="/carro-compra/downloadpdf" [queryParams]="{ numero: order.ordenVenta }"

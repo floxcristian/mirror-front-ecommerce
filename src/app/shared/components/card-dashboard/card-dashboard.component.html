@@ -1,0 +1,20 @@
+<div class="card card-stats mb-4 mb-xl-0 h-100">
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">{{title}}</h5>
+                <span class="h2 font-weight-bold mb-0">{{value}}</span>
+            </div>
+            <div class="col-auto">
+                <div class="icon icon-shape text-white rounded-circle shadow {{iconContainerClass}}">
+                    <i class="{{iconClass}}"></i>
+                </div>
+            </div>
+        </div>
+        <p *ngIf="subtitle" class="mt-3 mb-0 text-muted text-sm">
+            <span class="{{subtitle.textClass}} mr-2"> <i class="{{subtitle.icon}}"></i>
+                {{subtitle.value}}%</span>
+                <span class="text-nowrap">{{subtitle.text}}</span>
+        </p>
+    </div>
+</div>

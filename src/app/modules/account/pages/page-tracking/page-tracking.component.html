@@ -3,8 +3,6 @@
     <div class="title d-flex align-items-center mr-auto ">
         <i _ngcontent-serverapp-c11="" class="fas fa-truck-moving mr-3"></i>
         <h5>Seguimiento de pedidos</h5>
-       
-
     </div>
 
 </div>
@@ -12,12 +10,10 @@
 <div class="dashboard row m-0">
 
     <div class="col-lg-12 mb-3">
-       
         <div class="card pt-0">
-        
             <div style="margin-top:10px">
-                 <app-trakingb2c *ngIf="usuario.user_role=='temp' || usuario.user_role=='compradorb2c'" [OV]="OV"></app-trakingb2c> 
-                 <app-page-tracking-ov *ngIf="usuario.user_role!='temp' && usuario.user_role!='compradorb2c'"></app-page-tracking-ov> 
+                 <app-trakingb2c *ngIf="usuario.user_role=='temp' || usuario.user_role=='compradorb2c'" [OV]="OV"></app-trakingb2c>
+                 <app-page-tracking-ov *ngIf="usuario.user_role!='temp' && usuario.user_role!='compradorb2c'"></app-page-tracking-ov>
                 </div>
 
         </div>

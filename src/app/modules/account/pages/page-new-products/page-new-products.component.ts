@@ -30,22 +30,18 @@ export class PageNewProductsComponent implements OnInit {
     catLevel3: any[] = [];
     ready: Boolean = false;
     cat2Disable=true;
-    modalRef: BsModalRef;
-    form: FormGroup;
-    filename: string;
-    extension: string;
+    modalRef!: BsModalRef;
+    form!: FormGroup;
+    filename!: string;
+    extension!: string;
     dtOptions: DataTables.Settings = {};
     dtTrigger: Subject<any> = new Subject();
-    preview: string;
+    preview!: string;
     percentDone: any = 0;
     isDtInitialized:boolean = false
     @ViewChild(DataTableDirective,{static: false})
-    dtElement: DataTableDirective;
+    dtElement!: DataTableDirective;
 
-    
-
-   
-   
     constructor(
 
         private root: RootService,
@@ -66,30 +62,28 @@ export class PageNewProductsComponent implements OnInit {
         this.clearForm();
         this.loadtable();
     }
-        
     loadtable(){
         this.cms.obtenerNuevosProductos()
-        .subscribe((r: any) => {               
-            this.newProducts = r.data; 
-            this.dtOptions = this.root.simpleDtOptions; 
+        .subscribe((r: any) => {
+            this.newProducts = r.data;
+            this.dtOptions = this.root.simpleDtOptions;
             this.loadingData = false;
             if (this.isDtInitialized) {
                 this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-                  dtInstance.destroy();
-                  this.dtTrigger.next();
+                    dtInstance.destroy();
+                    this.dtTrigger.next('');
                 });
-              } else {
+            } else {
                 this.isDtInitialized = true
-                this.dtTrigger.next();
-              }
-            
+                this.dtTrigger.next('');
+            }
         }, error => {
             console.log(error);
             this.toastr.error('Error de conexión, para obtener nuevos productos');
             this.loadingData = false;
         });
     }
-    loadLevel1(level) {
+    loadLevel1(level:any) {
         this.form.setValue({ level1: level, level2: -1, level3: -1, sku: this.selectedProduct.sku });
         this.catLevel2 = [];
         this.catLevel3=[];
@@ -99,7 +93,7 @@ export class PageNewProductsComponent implements OnInit {
         this.catLevel2.sort((a, b) => (a.name > b.name) ? 1 : -1);
     }
 
-    loadLevel2(level) {
+    loadLevel2(level:any) {
         this.form.controls['level2'].setValue(level);
         this.catLevel3 = [];
         for (let i=0; i< this.categories.length; i++) {
@@ -108,7 +102,7 @@ export class PageNewProductsComponent implements OnInit {
         this.catLevel3.sort((a, b) => (a.name > b.name) ? 1 : -1);
     }
 
-    loadLevel3(level) {
+    loadLevel3(level:any) {
         if (level > -1) this.ready = true;
         this.form.controls['level3'].setValue(level);
     }
@@ -116,7 +110,7 @@ export class PageNewProductsComponent implements OnInit {
     clearForm() {
         this.ready = false;
         this.cms.obtenerCategorias()
-            .subscribe((r: any) => {               
+            .subscribe((r: any) => {
                 this.categories = r.data;
                 for (let i=0; i< r.data.length; i++) {
                     if (r.data[i].level == 1) this.catLevel1.push(r.data[i]);
@@ -135,25 +129,24 @@ export class PageNewProductsComponent implements OnInit {
                 this.toastr.error('Error de conexión, para obtener categorias');
                 this.loadingData = false;
             });
-    }    
+    }
 
     openForm(template: TemplateRef<any>) {
         this.modalRef = this.modalService.show(template, { backdrop: 'static', keyboard: false });
     }
-   
-    select(producto) {
+    select(producto:any) {
         this.editing = true;
         this.selectedProduct = producto;
         this.form.patchValue(producto);
     }
 
-    asignar(data) {
+    asignar(data:any) {
         if (this.form.valid) {
             this.cms.asignarCategorias(data)
                 .subscribe((r: any) => {
                     this.toastr.success(r.message);
                     this.modalRef.hide();
-                    this.clearForm();   
+                    this.clearForm();
                     this.loadingData = false;
                     this.loadtable();
                 }, error => {
@@ -163,9 +156,5 @@ export class PageNewProductsComponent implements OnInit {
         } else {
             this.toastr.warning('Debe completar todos los campos');
         }
-
     }
-
-
-
 }

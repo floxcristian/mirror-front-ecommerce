@@ -139,7 +139,7 @@
               <label>Título </label>
               <input type="text" class="form-control" formControlName="titulo" 
               [class.is-valid]="form_concepto.value.titulo"
-              [class.is-invalid]="!form_concepto.get('titulo').valid" > 
+              [class.is-invalid]="!form_concepto.get('titulo')?.valid" > 
               
           </div>
 
@@ -212,7 +212,7 @@
               <label>Título </label>
               <input type="text" class="form-control" formControlName="titulo" 
               [class.is-valid]="form_concepto.value.titulo"
-              [class.is-invalid]="!form_concepto.get('titulo').valid" > 
+              [class.is-invalid]="!form_concepto.get('titulo')?.valid" > 
               
           </div>
 

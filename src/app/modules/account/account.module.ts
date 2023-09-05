@@ -36,13 +36,13 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PageTrackingComponent } from './pages/page-tracking/page-tracking.component';
 import { PageSaveCartComponent } from './pages/page-save-cart/page-save-cart.component';
 import { AddressModalComponent } from '../../shared/components/address-modal/address-modal.component';
-import { CardDashboardChartComponent } from '../../shared/components/card-dashboard-chart/card-dashboard-chart.component';
+// import { CardDashboardChartComponent } from '../../shared/components/card-dashboard-chart/card-dashboard-chart.component';
 import { CardDashboardComponent } from '../../shared/components/card-dashboard/card-dashboard.component';
 import { EditProfileModalComponent } from '../../shared/components/edit-profile-modal/edit-profile-modal.component';
 import { OrderDetailsComponent } from '../../shared/components/order-details/order-details.component';
 import { PasswordModalComponent } from '../../shared/components/password-modal/password-modal.component';
 import { TrackingStepsComponent } from '../../shared/components/tracking-steps/tracking-steps.component';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+// import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PageCajaConceptoComponent } from './pages/page-caja-concepto/page-caja-concepto.component';
 import { PageCajaConceptoDemoComponent } from './pages/page-caja-concepto/page-caja-concepto-demo/page-caja-concepto-demo.component';
 import { PageCargaMasivaProdComponent } from './pages/page-carga-masiva-prod/page-carga-masiva-prod.component';
@@ -98,7 +98,7 @@ import { PaginationModule, PaginationConfig } from 'ngx-bootstrap/pagination';
     PageTrackingComponent,
     PageSaveCartComponent,
     AddressModalComponent,
-    CardDashboardChartComponent,
+    // CardDashboardChartComponent,
     CardDashboardNoChartComponent,
     CardDashboardComponent,
     EditProfileModalComponent,
@@ -138,7 +138,7 @@ import { PaginationModule, PaginationConfig } from 'ngx-bootstrap/pagination';
     FormsModule,
     ReactiveFormsModule,
     PaginationModule,
-    DragDropModule,
+    // DragDropModule,
   ],
   providers: [PaginationConfig],
 })

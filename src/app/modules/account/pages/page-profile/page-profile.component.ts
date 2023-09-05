@@ -35,7 +35,7 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
   styleUrls: ['./page-profile.component.scss'],
 })
 export class PageProfileComponent implements OnDestroy, OnInit {
-  usuario: Usuario;
+  usuario: Usuario | any;
   dataClient!: Cliente;
   addresses!: Direccion[];
   contacts!: Contacto[];

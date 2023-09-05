@@ -2,9 +2,6 @@ import {
   Component,
   Input,
   OnInit,
-  Output,
-  EventEmitter,
-  ContentChild,
   TemplateRef,
 } from '@angular/core';
 import {

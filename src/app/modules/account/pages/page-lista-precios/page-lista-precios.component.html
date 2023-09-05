@@ -63,8 +63,6 @@
                 <!-- PC -->
                 <div *ngIf="innerWidth >= 1200">
                     <div class="col-sm-12" style="margin-bottom: 20px; padding:10px; border: 1px solid #33333338">
-                       
-                    
                         <app-filtro-categorias *ngIf="!showLoading" (url)="busquedaCategoria($event)"></app-filtro-categorias>
                     </div>
                     <div class="col-sm-12" style="margin-bottom: 20px; padding-top:10px;padding-bottom: 10px; border: 1px solid #33333338">

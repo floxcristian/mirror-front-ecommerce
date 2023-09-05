@@ -109,8 +109,8 @@
       </div>
       <p
         *ngIf="
-          formUsuario.controls.username.invalid &&
-          formUsuario.controls.username.touched
+          formUsuario.controls['username'].invalid &&
+          formUsuario.controls['username'].touched
         "
         class="text-error-form-2"
       >
@@ -128,8 +128,8 @@
       </div>
       <p
         *ngIf="
-          formUsuario.controls.email.invalid &&
-          formUsuario.controls.email.touched
+          formUsuario.controls['email'].invalid &&
+          formUsuario.controls['email'].touched
         "
         class="text-error-form-2"
       >
@@ -193,8 +193,8 @@
         />
         <p
           *ngIf="
-            formUsuario.controls.rut.errors?.invalidRut &&
-            formUsuario.controls.rut.touched
+            formUsuario.controls['rut'].errors?.['invalidRut'] &&
+            formUsuario.controls['rut'].touched
           "
           class="text-error-form-2 pull-right"
         >

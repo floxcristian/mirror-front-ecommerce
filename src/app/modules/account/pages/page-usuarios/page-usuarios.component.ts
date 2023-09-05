@@ -25,7 +25,7 @@ class DataTablesResponse {
 })
 export class PageUsuariosComponent implements OnInit {
   prueba = [];
-  usuario: Usuario;
+  usuario: Usuario | any;
   selectedUsuario!: Usuario | null;
   loadingData = true;
   users: String[] = [];

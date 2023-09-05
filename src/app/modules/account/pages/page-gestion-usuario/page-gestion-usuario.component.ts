@@ -16,18 +16,17 @@ export interface Archivo {
   styleUrls: ['./page-gestion-usuario.component.scss']
 })
 export class PageGestionUsuarioComponent implements OnInit {
-  userSession:Usuario;
+  userSession!:Usuario;
   nuevo:any=[];
   existe:any=[];
   constructor(private userService:UsersService,private rootService:RootService,private toast:ToastrService ) { }
-   archivo:Archivo;
-   idArchivo:string;
-   isExcel:Boolean=false;
+  archivo!:Archivo | undefined;
+  idArchivo!:string;
+  isExcel:Boolean=false;
   ngOnInit() {
     this.userSession=this.rootService.getDataSesionUsuario();
-   
   }
-  
+
   onFileChange(files: FileList) {
     this.archivo=undefined;
     if (files.length > 0) {
@@ -41,9 +40,7 @@ export class PageGestionUsuarioComponent implements OnInit {
         };
 
         this.archivo = aux;
-        $('#' + this.idArchivo).val(null);
-
-      
+        $('#' + this.idArchivo).val('');
     }
 }
 
@@ -51,34 +48,30 @@ export class PageGestionUsuarioComponent implements OnInit {
 async uploadFile() {
   this.existe=[];
   this.nuevo=[];
-  if (!this.extensionValida(this.archivo.extension)) {
+  if (!this.extensionValida(this.archivo?.extension || '')) {
       this.toast.error('Debe seleccionar un archivo Excel o PDF.');
       return;
   }
   const data = {
-    file: this.archivo.archivo,
+    file: this.archivo?.archivo,
     id: this.userSession._id,
     accion: 'guardar',
 };
   let respuesta:any= await this.userService.uploadExcel(data).toPromise();
-     if(respuesta.nuevo.length>0){
+    if(respuesta.nuevo.length>0){
       respuesta.nuevo.forEach(
-        item=>{
+        (item:any)=>{
           this.nuevo.push(item);
         }
       );
-       
-     }
-   if(respuesta.duplicados.length>0){
-     respuesta.duplicados.forEach(
-       item=>{
+    }
+    if(respuesta.duplicados.length>0){
+      respuesta.duplicados.forEach(
+        (item:any)=>{
         this.existe.push(item);
-       }
-     );
-       
-   }
-
-   
+        }
+      );
+    }
   this.userService.LoadData();
 }
 

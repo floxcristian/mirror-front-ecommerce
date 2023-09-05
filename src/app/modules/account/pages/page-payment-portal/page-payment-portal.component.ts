@@ -15,16 +15,16 @@ import { environment } from '../../../../../environments/environment';
 })
 export class PagePaymentPortalComponent implements OnInit {
 
-  @ViewChild('modalPaymentMethods', { static: false }) modalPaymentMethods: TemplateRef<any>;
+  @ViewChild('modalPaymentMethods', { static: false }) modalPaymentMethods!: TemplateRef<any>;
 
-  modalPaymentMethodsRef: BsModalRef;
+  modalPaymentMethodsRef!: BsModalRef;
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
-  user: Usuario;
+  user!: Usuario;
   customerDebt: any;
   loading = true;
-  documentToPay = [];
-  documentsSelected = [];
+  documentToPay:any[] = [];
+  documentsSelected:any[] = [];
   total = 0;
   totalExpired = 0;
   totalDocuments = 0;
@@ -66,7 +66,7 @@ export class PagePaymentPortalComponent implements OnInit {
     private root: RootService,
     private modalService: BsModalService,
     private toastr: ToastrService
-  ) { 
+  ) {
     this.innerWidth = window.innerWidth;
   }
 
@@ -87,12 +87,12 @@ export class PagePaymentPortalComponent implements OnInit {
     this.clientsService.getCustomerDebt(data).subscribe((r: ResponseApi) => {
 
       this.customerDebt = r.data[0].documento_cobros;
-      this.dtTrigger.next();
+      this.dtTrigger.next('');
       this.addCheckBoxs(this.customerDebt);
       this.calcTotalSelected();
       this.loading = false;
 
-      this.customerDebt.forEach(e => {
+      this.customerDebt.forEach((e:any) => {
 
         var date_string = e.fechaVencimiento;
         var diff = +(new Date()) - +(new Date(date_string));
@@ -104,13 +104,13 @@ export class PagePaymentPortalComponent implements OnInit {
 
   }
 
-  addCheckBoxs(docs) {
-    docs.map(item => {
+  addCheckBoxs(docs:any) {
+    docs.map((item:any) => {
       item.check = false;
     });
   }
 
-  addCheck(item) {
+  addCheck(item:any) {
     item.check = !item.check;
     this.calcTotalSelected();
   }
@@ -127,22 +127,17 @@ export class PagePaymentPortalComponent implements OnInit {
 
     for (const item of this.customerDebt) {
       this.totalDocuments += item.saldo;
-
       // guarda las vencidas
       if (item.estado === 'VENCIDA') {
         this.totalExpired += item.saldo;
       }
-
-
       // guarda la seleccionadas
       if (item.check) {
         //console.log(item.check);
-
         const obj = {
           folio: item.folio,
           monto: item.saldo
         };
-
         this.documentToPay.push(item);
         this.documentsSelected.push(obj);
 
@@ -159,7 +154,7 @@ export class PagePaymentPortalComponent implements OnInit {
     // console.log(this.documentToPay);
   }
 
-  setPaymentMethod(item) {
+  setPaymentMethod(item:any) {
     this.paymentBtns.map(i => {
       i.selected = false;
     });
@@ -241,7 +236,7 @@ export class PagePaymentPortalComponent implements OnInit {
 
   }
 
-  redirectPaymentImplementos(orderId) {
+  redirectPaymentImplementos(orderId:any) {
     const url = `${environment.urlPagosImplementos}metodo_pago/resumen.php?order_id=${orderId}`;
     window.open(url);
   }
@@ -262,7 +257,7 @@ export class PagePaymentPortalComponent implements OnInit {
   closeAlert() {
     this.paymentMsgSuccess = false;
   }
-  onResize(event) {
+  onResize(event:any) {
     this.innerWidth = event.target.innerWidth;
   }
 }

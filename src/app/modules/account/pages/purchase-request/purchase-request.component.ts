@@ -168,7 +168,6 @@ export class PurchaseRequestComponent implements OnInit {
       id: this.order._id,
       observacion: this.obsRefuse,
     };
-
     this.loadingPage = true;
     this.cart.refuseOrder(data).subscribe(
       (r: ResponseApi) => {
@@ -178,7 +177,6 @@ export class PurchaseRequestComponent implements OnInit {
           this.toast.error(r.msg);
           return;
         }
-
         this.toast.success('Solitud rechazada correctamente');
         this.modalRefuseRef.hide();
         this.loadData();

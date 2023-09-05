@@ -126,7 +126,7 @@ export class PageQuotationComponent implements OnInit {
     const initialState = {
       title: 'Cargar productos en carro de compras',
       body: `Se cargarán todos los productos de esta cotización en el carro de compras, reemplazando el contenido actual.<br/>
-                 Podrá retomar su carro actual posteriormente.<br>
+                Podrá retomar su carro actual posteriormente.<br>
                   ¿Desea continuar?`,
       textBtnTrue: 'Confirmar',
       textBtnFalse: 'Cancelar',

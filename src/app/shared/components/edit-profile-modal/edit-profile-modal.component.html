@@ -1,0 +1,49 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Editar Datos</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalEditRef.hide()" name="modalEditRef">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+
+    <form (ngSubmit)="editarPerfil()" [formGroup]="formPerfil">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>nombre (*)</label>
+                <input type="text" class="form-control" formControlName="nombre">
+            </div>
+            <div class="form-group col-md-6">
+                <label>apeliido (*)</label>
+                <input type="text" class="form-control" formControlName="apellido">
+            </div>
+            <div class="form-group col-md-6">
+                <label>correo de contacto (*)</label>
+                <input type="text" class="form-control" formControlName="correo">
+            </div>
+            <div class="col-md-6">
+                <div class=" form-group">
+                    <label>Telefono (*)</label>
+                    <div class="input-group ">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">+569</span>
+                        </div>
+                        <input formControlName="telefono" type="text" class="form-control  " placeholder="Teléfono*"
+                            maxLength="8" min="1" max="99999999" appPhoneChar>
+                    </div>
+
+                    <p *ngIf="(formPerfil.controls['telefono'].invalid && formPerfil.controls['telefono'].touched)"
+                        class="text-error-form-2">
+                        El Teléfono ingresado no es válido
+                    </p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-danger" (click)="modalEditRef.hide();" name="modalEditRef2">
+        Cancelar</button>
+    <button class="btn btn-secondary" (click)="editarPerfil(); " name="editarPerfil" [disabled]="!formPerfil.valid">Actualizar</button>
+
+</div>

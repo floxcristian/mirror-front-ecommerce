@@ -27,7 +27,7 @@
         </p>
 
         <div class="row mt-4">
-          <div class="col-12 d-flex justify-content-start">
+          <!-- <div class="col-12 d-flex justify-content-start">
             <label [for]="idArchivo" class="btn btn-sm btn-primary mr-2"
               >Seleccionar Archivo</label
             >
@@ -37,14 +37,14 @@
               (change)="onFileChange($event.target.files)"
               style="display: none"
             />
-          </div>
+          </div> -->
         </div>
         <div class="row mt-2" *ngIf="archivo">
           <div
             class="col-10 col-md-4 text-left text-truncate"
             style="font-size: 0.85rem"
           >
-            <i [class]="archivo?.icon + ' mr-2'"></i> {{ archivo?.nombre }}
+            <i [class]="archivo.icon + ' mr-2'"></i> {{ archivo.nombre }}
           </div>
           <label
             class="btn btn-sm btn-min_pad p-0 m-0"

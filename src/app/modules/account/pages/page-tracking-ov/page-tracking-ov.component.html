@@ -10,12 +10,10 @@
         <th>Modo Entrega</th>
         <th>Precio</th>
         <th>Fecha compromiso</th>
-
       </tr>
     </thead>
     <tbody *ngIf="persons?.length != 0">
       <ng-container *ngFor="let person of persons; let i=index">
-
         <tr>
           <td>
             <div class="text-center">
@@ -24,7 +22,6 @@
                 <i class="far fa-plus-square" style="color:#0063b9;margin-right:10px;cursor:pointer;"></i> </a> <a
                 routerLink="/carro-compra/downloadpdf" [queryParams]="{numero:person.OrdenSeguimiento}"
                 target="_blank">{{ person.OrdenSeguimiento}}</a>
-
             </div>
           </td>
           <td>
@@ -63,27 +60,20 @@
           <td style="width: 15%;">{{ person.TiendaDestino | titlecase}}</td>
 
           <td>
-
-
-
             <ng-container *ngIf="person.ModoEntrega=='VEN- RPTDA'">
               <i class="fas fa-store" style="color:green;font-size:18px;margin-right:10px"></i> Tienda
             </ng-container>
             <ng-container *ngIf="person.ModoEntrega=='VEN- DPCLI'">
               <i class="fas fa-truck-moving" style="color:#0063b9;font-size:18px;margin-right:10px;"></i> Despacho
             </ng-container>
-
           </td>
           <td style="text-align:right;">{{ person.MontoNeto | currencyFormat}}</td>
           <td>{{ person.FechaCompromisoCliente | date:"dd-MM-yyyy"}}</td>
-
         </tr>
         <tr [attr.id]="'expand-' + i" class="collapse" aria-expanded="true">
           <td colspan="9">
-
             <app-page-detalle-traking-ov *ngIf="person.expanded" [Ov]="person.OrdenSeguimiento" [detalle]="person">
             </app-page-detalle-traking-ov>
-
           </td>
         </tr>
       </ng-container>
@@ -96,8 +86,6 @@
               <span class="sr-only">Loading...</span>
             </div>
           </div>
-
-
         </td>
       </tr>
     </tbody>

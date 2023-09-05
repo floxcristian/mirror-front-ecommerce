@@ -3,14 +3,10 @@
     <div class="title d-flex align-items-center mr-auto ">
         <i _ngcontent-serverapp-c11="" class="fas  fa-money-check-alt mr-3"></i>
         <h5>Portal de pagos</h5>
-
-
     </div>
-
 </div>
 
 <div class="dashboard row m-0">
-
     <div class="col-lg-9 mb-3">
         <div class="card mb-3" *ngIf="paymentMsgSuccess">
             <div class="card-header">
@@ -34,12 +30,8 @@
         </div>
 
         <div class="card ">
-            <!-- <div class="card-header">Deudas pendientes </div> -->
-
             <div class="card-body card-body-min-height-loading">
-
                 <app-loading-element [text]="'Cargando datos'" *ngIf="loading"></app-loading-element>
-
                 <div class="mb-3 row">
                     <div class="col-lg-4">
                         <span class="font-weight-bold"> Pagar total facturas</span>
@@ -52,9 +44,9 @@
                         </div>
                     </div>
                     <div class="col-lg-4 text-center">
-                 
                         <h5>{{user.company}} </h5> 
-                        <h6> Rut: {{user.rut | rut}}  </h6>
+                        <!-- <h6> Rut: {{user.rut | rut}}  </h6> -->
+                        <h6> Rut: {{user.rut}}  </h6>
                     </div>
                     <div class="col-lg-4 " [class.text-right]="innerWidth > 450">
                         <span class="font-weight-bold">Pagar facturas vencidas </span>
@@ -70,7 +62,8 @@
                 <hr/>
                 <ng-container *ngIf="innerWidth < 450">
 
-                    <div class="dropcart__totals" [ngClass]="{'border-0': seeProducts==false}"*ngFor="let item of customerDebt">
+                    <!-- <div class="dropcart__totals" [ngClass]="{'border-0': seeProducts==false}"*ngFor="let item of customerDebt"> -->
+                        <div class="dropcart__totals" [ngClass]="{'border-0': false}"*ngFor="let item of customerDebt">
                         <table >
                             <tr>
                                 <th class=" font-weight-bold titilo-w" >Nota venta</th>
@@ -114,7 +107,6 @@
                         </table>
                     </div>
 
-
                 </ng-container>
                 <ng-container *ngIf="innerWidth > 450">
                     <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table-checkbox">
@@ -132,7 +124,6 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let item of customerDebt" [ngClass]="{'row-red': item.estado=='VENCIDA', 'row-green': item.estado=='PENDIENTE'}" >
-                                
                                 <td>{{ item.nota_venta }}</td>
                                 <td>{{ item.ordencompra }}</td>
                                 <td>{{ item.folio }}</td>
@@ -142,10 +133,8 @@
                                 <td>
                                     <span class="badge " [ngClass]="{'badge-danger': item.estado=='VENCIDA', 'badge-warning': item.estado=='PENDIENTE'}">
                                         {{ item.estado }}
-                                    </span>    
+                                    </span>
                                     <span *ngIf="item.days > 0"> {{ item.days }} días</span>
-    
-    
                                 </td>
                                 <td class="td-checkbox">
                                     <div class="form-check form-check-lg">
@@ -164,13 +153,8 @@
                         </tbody>
                     </table>
                 </ng-container>
-                
-                
-
             </div>
-
         </div>
-
     </div>
 
     <div class="col-lg-3 mb-3">
@@ -184,9 +168,7 @@
                         <tr>
                             <th>Folio</th>
                             <th>Monto</th>
-
                         </tr>
-
                     </thead>
                     <tbody>
                         <tr *ngFor="let item of documentsSelected">
@@ -195,8 +177,6 @@
                         </tr>
                     </tbody>
                 </table>
-
-
             </div>
             <div class="card-footer p-0">
                 <button name="openModalSelectedItem" class="btn btn-lg btn-secondary btn-block text-center" (click)="openModalSelectedItem()"
@@ -209,7 +189,6 @@
 
 <ng-template #modalPaymentMethods>
 
-
     <div class="modal-header">
         <h4 class="modal-title pull-left">Métodos de pagos</h4>
         <button name="modalPaymentMethodsRef" type="button" class="close pull-right" aria-label="Close" (click)="modalPaymentMethodsRef.hide()">
@@ -218,9 +197,6 @@
     </div>
     <div class="modal-body">
         <app-loading-element *ngIf="loadingPayment" text="Conectando al banco"></app-loading-element>
-
-
-
         <div class="content-total">
             <span>
                 Monto a pagar
@@ -229,16 +205,10 @@
                 {{totalToPay | currencyFormat}}
             </span>
         </div>
-
         <div *ngFor="let item of paymentBtns" class="content-img" (click)="setPaymentMethod(item)"
             [ngClass]="{'active': item.selected}">
             <img class="bank-logo lazyload" [src]="item.image" [alt]="item.title" [ngClass]="{'disabled': item.disabled}">
         </div>
-
-
-
-
-
     </div>
 
     <div class="modal-footer">
@@ -247,7 +217,6 @@
             Cancelar</button>
         <button name="Pagar" [disabled]="loadingPayment" class="btn btn-secondary" (click)="generatePayment();"> <i
                 class="far fa-credit-card"></i> Pagar</button>
-
     </div>
 
 </ng-template>

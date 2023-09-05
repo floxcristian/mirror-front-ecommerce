@@ -1,9 +1,6 @@
 import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { TrackingService } from '../../../../shared/services/tracking.service';
-import { LogisticsService } from '../../../../shared/services/logistics.service';
-import { TrackingStep } from '../../../../shared/interfaces/tracking';
-import { ToastrService } from 'ngx-toastr';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Modal_reciboComponent } from '../../components/modal_recibo/modal_recibo/modal_recibo.component';
 
 @Component({
@@ -48,7 +45,7 @@ export class DetalleTrakingOvComponent implements OnInit {
     this.subestados = [];
     this.productos = consulta.data;
     this.suma = 0;
-    this.productos.forEach(r => {
+    this.productos.forEach((r:any) => {
       this.suma = this.suma + parseInt(r.total);
     });
 

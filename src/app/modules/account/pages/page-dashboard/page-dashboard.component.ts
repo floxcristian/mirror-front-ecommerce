@@ -7,12 +7,13 @@ import { Usuario } from '../../../../shared/interfaces/login';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
 import { Data } from '../../../../shared/components/card-dashboard-no-chart/card-dashboard-no-chart.component';
 import { GraficoVentaValorada } from '../../../../shared/interfaces/graficoVentaValorada';
-import { ChartDataSets, ChartOptions } from 'chart.js';
+// import { ChartDataSets, ChartOptions } from 'chart.js';
+import { ChartDataset, ChartOptions } from 'chart.js';
 import { Context } from 'chartjs-plugin-datalabels';
-import { Label } from 'ng2-charts';
+// import { Label } from 'ng2-charts';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { GraficoVentasPorUen } from '../../../../shared/interfaces/graficoVentaPorUen';
-// import { runInDebugContext } from 'vm';
+
 
 @Component({
   selector: 'app-page-dashboard',
@@ -22,7 +23,7 @@ import { GraficoVentasPorUen } from '../../../../shared/interfaces/graficoVentaP
 export class PageDashboardComponent {
   // graficos
   chartHistorySale: any;
-  usuario: Usuario;
+  usuario: Usuario | any;
 
   ventaMes: any;
   detalleVenta: any;
@@ -41,13 +42,15 @@ export class PageDashboardComponent {
 
   ESTADO = { BUSCANDO: 1, OK: 2, NO_ENCONTRADO: 3, ERROR: 4 };
   lineEstado = this.ESTADO.BUSCANDO;
-  lineChartData: ChartDataSets[] = [];
-  lineChartLabels!: Label[];
+  lineChartData: ChartDataset[] = [];
+  // lineChartLabels!: Label[];
+  lineChartLabels!: any[];
   lineChartOptions: ChartOptions = {};
 
   barEstado = this.ESTADO.BUSCANDO;
-  barChartData: ChartDataSets[] = [];
-  barChartLabels!: Label[];
+  barChartData: ChartDataset[] = [];
+  // barChartLabels!: Label[];
+  barChartLabels!: any[];
   barChartOptions: ChartOptions = {};
 
   constructor(
@@ -254,9 +257,9 @@ export class PageDashboardComponent {
         yAxisID: 'y-axis-0',
         datalabels: {
           align: (context: Context) => {
-            const data1 = context.dataset.data[context.dataIndex];
+            const data1 = context.dataset.data[context.dataIndex] || 0;
             const data2 =
-              context.chart.data.datasets[1].data[context.dataIndex];
+              context.chart.data.datasets[1].data[context.dataIndex] ||0;
             return data1 > data2 ? 'end' : 'start';
           },
           formatter: (value: any, context: any) => {
@@ -274,9 +277,9 @@ export class PageDashboardComponent {
         yAxisID: 'y-axis-0',
         datalabels: {
           align: (context: Context) => {
-            const data1 = context.dataset.data[context.dataIndex];
+            const data1 = context.dataset.data[context.dataIndex] || 0;
             const data2 =
-              context.chart.data.datasets[0].data[context.dataIndex];
+              context.chart.data.datasets[0].data[context.dataIndex]  || 0;
             return data1 > data2 ? 'end' : 'start';
           },
           formatter: (value: any, context: any) => {
@@ -301,7 +304,7 @@ export class PageDashboardComponent {
       plugins: {
         datalabels: {
           backgroundColor: (context: Context) => {
-            return context.dataset.borderColor.toString();
+            return context.dataset?.borderColor?.toString() || '';
           },
           borderRadius: 4,
           color: 'white',
@@ -310,29 +313,47 @@ export class PageDashboardComponent {
       },
       aspectRatio: 3 / 1,
       scales: {
-        xAxes: [
+        xAxes:
           {
-            scaleLabel: {
-              display: true,
-              labelString: 'Meses',
-            },
+            display: true,
+            // labelString: 'Meses',
           },
-        ],
-        yAxes: [
+    
+        // xAxes: [
+        //   {
+        //     scaleLabel: {
+        //       display: true,
+        //       labelString: 'Meses',
+        //     },
+        //   },
+        // ],
+        // yAxes: [
+        //   {
+        //     id: 'y-axis-0',
+        //     position: 'left',
+        //     ticks: {
+        //       min: 0,
+        //       max: newMax,
+        //       stepSize: Math.ceil(newMax / steps),
+        //     },
+        //     scaleLabel: {
+        //       display: true,
+        //       labelString: 'Pesos ($)',
+        //     },
+        //   },
+        // ],
+        yAxes:
           {
-            id: 'y-axis-0',
+            // id: 'y-axis-0',
             position: 'left',
+            min: 0,
+            max: newMax,
             ticks: {
-              min: 0,
-              max: newMax,
               stepSize: Math.ceil(newMax / steps),
             },
-            scaleLabel: {
-              display: true,
-              labelString: 'Pesos ($)',
-            },
+            display: true,
+            // labelString: 'Pesos ($)',
           },
-        ],
       },
     };
     this.lineEstado = this.ESTADO.OK;
@@ -374,7 +395,7 @@ export class PageDashboardComponent {
       plugins: {
         datalabels: {
           backgroundColor: (context: Context) => {
-            return context.dataset.borderColor.toString();
+            return context.dataset.borderColor?.toString() || '';
           },
           borderRadius: 4,
           font: {
@@ -386,29 +407,46 @@ export class PageDashboardComponent {
       },
       aspectRatio: 3 / 1,
       scales: {
-        xAxes: [
+        // xAxes: [
+        //   {
+        //     ticks: {
+        //       min: 0,
+        //       max: newMax,
+        //       stepSize: Math.ceil(newMax / steps),
+        //     },
+        //     scaleLabel: {
+        //       display: true,
+        //       labelString: 'Pesos ($)',
+        //     },
+        //   },
+        // ],
+        // yAxes: [
+        //   {
+        //     id: 'y-axis-0',
+        //     position: 'left',
+        //     scaleLabel: {
+        //       display: true,
+        //       labelString: 'Categorías',
+        //     },
+        //   },
+        // ],
+        xAxes:
           {
+            min: 0,
+            max: newMax,
             ticks: {
-              min: 0,
-              max: newMax,
               stepSize: Math.ceil(newMax / steps),
             },
-            scaleLabel: {
-              display: true,
-              labelString: 'Pesos ($)',
-            },
+            display: true,
+            // labelString: 'Pesos ($)',
           },
-        ],
-        yAxes: [
+        yAxes:
           {
-            id: 'y-axis-0',
+            // id: 'y-axis-0',
             position: 'left',
-            scaleLabel: {
-              display: true,
-              labelString: 'Categorías',
-            },
+            display: true,
+            // labelString: 'Categorías',
           },
-        ],
       },
     };
     this.barEstado = this.ESTADO.OK;

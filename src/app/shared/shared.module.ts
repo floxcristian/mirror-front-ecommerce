@@ -75,10 +75,10 @@ import { ModalComponent } from './components/modal/modal.component';
 import { TablaProductoComponent } from './components/tabla-producto/tabla-producto.component';
 import { AddFlotaModalComponent } from './components/add-flota-modal/add-flota-modal.component';
 import { ProductCardB2cComponent } from './components/product-card-b2c/product-card-b2c.component';
-//import { UpdateFlotaModalComponent } from './components/update-flota-modal/update-flota-modal.component';
+import { UpdateFlotaModalComponent } from './components/update-flota-modal/update-flota-modal.component';
 import { PorductoTrComponent } from './components/tabla-producto/porducto-tr/producto-tr.component';
 import { InputNumberProductComponent } from './components/input-number-product/input-number-product.component';
-// import { ChartsModule, ThemeService } from 'ng2-charts';
+import { NgChartsModule, ThemeService } from 'ng2-charts';
 import { WishListModalComponent } from './components/wish-list-modal/wish-list-modal.component';
 import { ProductListCardComponent } from './components/product-list-card/product-list-card.component';
 import { EditarListaProductosComponent } from './components/editar-lista-productos/editar-lista-productos.component';
@@ -89,8 +89,8 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 // import { AngularEmailAutocompleteComponent } from './components/angular-email-autocomplete/angular-email-autocomplete.component';
 import { MonedaPipe } from './pipes/moneda.pipe';
 import { FiltroMagicoModule } from './components/filtro-magico/filtro-magico.module';
-/*import { ProductoSelectBusquedaComponent } from './components/producto-select-busqueda/producto-select-busqueda.component';
-import { AgregarListaProductosUnitariaModalComponent } from './components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';*/
+import { ProductoSelectBusquedaComponent } from './components/producto-select-busqueda/producto-select-busqueda.component';
+import { AgregarListaProductosUnitariaModalComponent } from './components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
 import { MenuCategoriaComponent } from './components/menu-categoria/menu-categoria.component';
 /*
 import { NguCarouselModule } from '@ngu/carousel';
@@ -176,7 +176,7 @@ const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
     TablaProductoComponent,
     AddFlotaModalComponent,
     ProductCardB2cComponent,
-    // UpdateFlotaModalComponent,
+    UpdateFlotaModalComponent,
     PorductoTrComponent,
     InputNumberProductComponent,
     WishListModalComponent,
@@ -186,8 +186,8 @@ const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
     ProductListModalComponent,
     // AngularEmailAutocompleteComponent,
     MonedaPipe,
-    // ProductoSelectBusquedaComponent,
-    // AgregarListaProductosUnitariaModalComponent,
+    ProductoSelectBusquedaComponent,
+    AgregarListaProductosUnitariaModalComponent,
     MenuCategoriaComponent,
     // ShareButtonComponent,
     // ProductRatingComponent,
@@ -218,17 +218,17 @@ const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
     TooltipModule.forRoot(),
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
-    /*InlineSVGModule.forRoot(),
-    NgxPaginationModule,
-    PerfectScrollbarModule,
-    CountdownTimerModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyD_HuwF5F8X8fOSR_1Ai_hFT115caUq4vI',
-      libraries: ['places']
-    }),
-    Ng2Rut,
-    NguCarouselModule,
-    ChartsModule,*/
+    // InlineSVGModule.forRoot(),
+    // NgxPaginationModule,
+    // PerfectScrollbarModule,
+    // CountdownTimerModule,
+    // AgmCoreModule.forRoot({
+    //   apiKey: 'AIzaSyD_HuwF5F8X8fOSR_1Ai_hFT115caUq4vI',
+    //   libraries: ['places']
+    // }),
+    // Ng2Rut,
+    // NguCarouselModule,
+    NgChartsModule,
     FiltroMagicoModule,
     InfiniteScrollModule,
   ],
@@ -239,7 +239,7 @@ const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
     TabsModule,
     //Ng2Rut,
 
-    //ChartsModule,
+    NgChartsModule,
     InfiniteScrollModule,
 
     // directives
@@ -290,7 +290,7 @@ const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
     // VideoComponent,
     // ViewPdfComponent,
     // AngularEmailAutocompleteComponent,
-    // ProductoSelectBusquedaComponent,
+    ProductoSelectBusquedaComponent,
     ProductCardB2cCmsComponent,
     // ShareButtonComponent,
     // ProductRatingComponent,

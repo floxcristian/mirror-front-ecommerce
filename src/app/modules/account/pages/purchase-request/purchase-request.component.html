@@ -7,15 +7,12 @@
         </div>
     </div>
 
-
     <div class=" row m-0">
 
         <div class="col-xl-12">
             <div class="card mt-3 ">
                 <div class="card-body table-responsive ">
-
                     <app-loading-element *ngIf="loadingPage" [text]="'Generando orden de venta'"></app-loading-element>
-
                     <ng-container *ngIf="viewActive=='list'">
                         <table datatable [dtOptions]="dtOptions" class=" hover datatable nowrap  table-shadow"
                             style="width:100%">
@@ -28,7 +25,6 @@
                                     <th>Monto OC</th>
                                     <th>Solicita</th>
                                     <th></th>
-
                                 </tr>
                             </thead>
                             <tbody *ngIf="orders?.length != 0">
@@ -40,15 +36,11 @@
                                         </span>
                                     </td>
                                     <td>{{ item?.totalOv  | currencyFormat  }}</td>
-
                                     <td>{{ item?.folio }} <span *ngIf="item?.folio==null">No definido</span></td>
                                     <td>{{ item?.montoOcCliente | currencyFormat }} <span
                                             *ngIf="item?.montoOcCliente==null">No definido</span></td>
                                     <td>{{ item?.usuario }}</td>
-
                                     <td>
-
-
                                         <div class="btn-group" dropdown>
                                             <button id="button-basic" dropdownToggle data-boundary="body" type="button"
                                                 class="btn btn-border-primary dropdown-toggle">
@@ -82,7 +74,6 @@
                                                     </a>
                                                 </li>
 
-
                                                 <li role="menuitem"
                                                     *ngIf="usuario.user_role=='supervisor' && item?.folio!=null && item?.estado=='pendiente'  ">
                                                     <a class="dropdown-item" (click)="refuseOrder(item)">
@@ -93,8 +84,6 @@
                                             </ul>
                                         </div>
                                     </td>
-
-
                                 </tr>
                             </tbody>
                             <tbody *ngIf="orders?.length == 0">
@@ -103,39 +92,30 @@
                                 </tr>
                             <tbody>
                         </table>
-
                     </ng-container>
-
 
                     <ng-container *ngIf="viewActive=='detail'">
                         <button class=" btn  btn-border-primary mb-3" (click)="backToList()">
                             <i class="fas fa-chevron-left"></i>
                             Atrás
                         </button>
-
                         <button class=" btn  btn-border-primary mb-3 float-right" (click)="approveOrder(order)"
                             *ngIf="order?.folio!=null && usuario.user_role=='supervisor' && order?.estado=='pendiente' ">
                             <i class="far fa-thumbs-up"></i>
                             Aprobar compra
                         </button>
-
                         <button class=" btn  btn-border-primary mb-3 float-right mr-2" (click)="refuseOrder(order)"
                             *ngIf="order?.folio!=null && usuario.user_role=='supervisor' && order?.estado=='pendiente' " >
                             <i class="far fa-thumbs-down"></i>
                             Rechazar compra
                         </button>
-
                         <button class=" btn  btn-border-primary mb-3 float-right" (click)="backToList()"
-                            *ngIf="order?.folio==null && usuario.user_role=='supervisor' && item?.estado=='pendiente' ">
+                            *ngIf="order?.folio==null && usuario.user_role=='supervisor' && order?.estado=='pendiente' ">
                             <i class="fas fa-marker"></i>
                             Completar pedido
                         </button>
-
                         <app-order-details [title]="'Solicitud de compra'" [id]="orderId"></app-order-details>
                     </ng-container>
-
-
-
 
                 </div>
 

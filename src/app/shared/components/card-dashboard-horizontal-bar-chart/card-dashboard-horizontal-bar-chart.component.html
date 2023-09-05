@@ -1,0 +1,24 @@
+<div class="card card-chart h-100 p-3">
+    <div class="card-header card-header-icon ">
+        <div class="card-icon shadow {{iconContainerClass}}" style="color: white;">
+            <i class="{{iconClass}}"></i>
+        </div>
+        <h4 class="card-title">{{titulo}}</h4>
+    </div>
+    <div class="card-body">
+        <div *ngIf="estado === ESTADO.OK">
+            <div style="display: block;">
+                <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+                    [colors]="barChartColors" [legend]="barChartLegend" [plugins]="barChartPlugins"
+                    [chartType]="barChartType"></canvas>
+            </div>
+        </div>
+        <div *ngIf="estado === ESTADO.BUSCANDO" class="row flex-column justify-content-center align-content-center">
+            <div class="text-center"><i class="fas fa-spinner fa-2x fa-spin fa-fw"></i></div>
+            <div class="mt-1">Cargando</div>
+        </div>
+        <div class="card p-20 col-12 col-lg-6" *ngIf="estado === ESTADO.ERROR">
+            <h5>Oops... Ocurrió un error al traer la información.</h5>
+        </div>
+    </div>
+</div>

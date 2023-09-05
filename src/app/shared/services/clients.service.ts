@@ -235,14 +235,14 @@ export class ClientsService {
   }
 
   getCustomerDebt(data: any) {
-    return this.http.post(
+    return this.http.post<ResponseApi>(
       environment.apiImplementosClientes + `deuda/listado`,
       data
     );
   }
 
   generatePayment(data: any) {
-    return this.http.post(
+    return this.http.post<ResponseApi>(
       environment.apiImplementosClientes + `deuda/generaPago`,
       data
     );

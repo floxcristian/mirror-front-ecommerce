@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LocalStorageService } from 'angular-2-local-storage';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { DataModal, ModalComponent, TipoIcon, TipoModal } from '../../../../shared/components/modal/modal.component';
 import { Lista } from '../../../../shared/interfaces/articuloFavorito';
@@ -15,7 +14,7 @@ import { EditarListaProductosComponent } from '../../../../shared/components/edi
 import { AgregarListaProductosMasivaModalComponent } from '../../../../shared/components/agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
 import { AgregarListaProductosUnitariaModalComponent } from '../../../../shared/components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
 import { CartService } from '../../../../shared/services/cart.service';
-import { ItemsControl } from '@ngu/carousel/lib/ngu-carousel/ngu-carousel';
+// import { ItemsControl } from '@ngu/carousel/lib/ngu-carousel/ngu-carousel';
 
 @Component({
   selector: 'app-page-listas-de-productos',
@@ -24,9 +23,9 @@ import { ItemsControl } from '@ngu/carousel/lib/ngu-carousel/ngu-carousel';
 })
 export class PageListasDeProductosComponent implements OnInit {
   innerWidth: number;
-  usuario: Usuario;
-  tiendaSeleccionada: TiendaLocation;
-  origen: string[];
+  usuario!: Usuario;
+  tiendaSeleccionada!: TiendaLocation | undefined;
+  origen!: string[];
   listas: any = [];
   seleccionada = 0;
   addingToCart = false;
@@ -53,16 +52,16 @@ export class PageListasDeProductosComponent implements OnInit {
     this.listas = [];
     this.listas_temp = [];
     this.showLoading = true;
-    this.clientsService.getListaArticulosFavoritos(this.usuario.rut).subscribe((resp: ResponseApi) => {
+    this.clientsService.getListaArticulosFavoritos(this.usuario.rut || '0').subscribe((resp: ResponseApi) => {
       if (resp.data.length > 0) {
         if (resp.data[0].listas.length > 0) {
           this.listas = resp.data[0].listas;
           const detalleSkus = resp.data[0].detalleSkus;
 
-          this.listas = this.listas.map(list => {
+          this.listas = this.listas.map((list:any) => {
             const products: any[] = [];
-            list.skus.forEach(p => {
-              const detalle = detalleSkus.find(dp => dp.sku === p);
+            list.skus.forEach((p:any) => {
+              const detalle = detalleSkus.find((dp:any) => dp.sku === p);
               products.push(detalle);
             });
             list.detalleSkus = products;
@@ -76,10 +75,10 @@ export class PageListasDeProductosComponent implements OnInit {
   }
 
   getPrecio(precios: any[]): number {
-    let precio = precios.find(p => p.sucursal === this.tiendaSeleccionada.codigo && p.rut === this.usuario.rut);
+    let precio = precios.find(p => p.sucursal === this.tiendaSeleccionada?.codigo && p.rut === this.usuario.rut);
 
     if (isVacio(precio)) {
-      precio = precios.find(p => p.sucursal === this.tiendaSeleccionada.codigo && p.rut === '0');
+      precio = precios.find(p => p.sucursal === this.tiendaSeleccionada?.codigo && p.rut === '0');
     }
 
     return precio.precio;
@@ -95,10 +94,10 @@ export class PageListasDeProductosComponent implements OnInit {
       closeToOk: false
     };
     const bsModalRef: BsModalRef = this.modalService.show(EditarListaProductosComponent, { initialState });
-    bsModalRef.content.event.subscribe(async res => {
+    bsModalRef.content.event.subscribe(async (res:any) => {
       if (res !== '') {
         const respuesta: any = await this.clientsService
-          .updateListaArticulosFavoritos(res, this.usuario.rut, lista._id)
+          .updateListaArticulosFavoritos(res, this.usuario.rut || '0', lista._id)
           .toPromise();
         if (!respuesta.error) {
           this.toastr.success('Lista actualizada exitosamente.');
@@ -118,9 +117,9 @@ export class PageListasDeProductosComponent implements OnInit {
       tipoModal: TipoModal.QUESTION
     };
     const bsModalRef: BsModalRef = this.modalService.show(ModalComponent, { initialState });
-    bsModalRef.content.event.subscribe(async res => {
+    bsModalRef.content.event.subscribe(async (res:any) => {
       if (res) {
-        const respuesta: any = await this.clientsService.deleteListaArticulosFavoritos(this.usuario.rut, lista._id).toPromise();
+        const respuesta: any = await this.clientsService.deleteListaArticulosFavoritos(this.usuario.rut || '0', lista._id).toPromise();
         if (!respuesta.error) {
           this.toastr.success('Lista eliminada exitosamente.');
           this.getListas();
@@ -139,9 +138,9 @@ export class PageListasDeProductosComponent implements OnInit {
       tipoModal: TipoModal.QUESTION
     };
     const bsModalRef: BsModalRef = this.modalService.show(ModalComponent, { initialState });
-    bsModalRef.content.event.subscribe(async res => {
+    bsModalRef.content.event.subscribe(async (res:any) => {
       if (res) {
-        const respuesta: any = await this.clientsService.deleteArticulosFavoritos(sku, this.usuario.rut, lista._id).toPromise();
+        const respuesta: any = await this.clientsService.deleteArticulosFavoritos(sku, this.usuario.rut || '0', lista._id).toPromise();
         if (!respuesta.error) {
           this.toastr.success('Producto eliminado exitosamente.');
           this.getListas();
@@ -153,7 +152,7 @@ export class PageListasDeProductosComponent implements OnInit {
   }
 
   listaPredeterminada(lista: Lista) {
-    this.clientsService.predeterminadaListaArticulosFavoritos(this.usuario.rut, lista._id).subscribe((resp: ResponseApi) => {
+    this.clientsService.predeterminadaListaArticulosFavoritos(this.usuario.rut || '0', lista._id).subscribe((resp: ResponseApi) => {
       if (!resp.error) {
         this.getListas();
       }
@@ -165,7 +164,7 @@ export class PageListasDeProductosComponent implements OnInit {
       class: 'modal-lg modal-dialog-centered',
       ignoreBackdropClick: true
     });
-    modal.content.event.subscribe(res => {
+    modal.content.event.subscribe((res:any) => {
       if (res) {
         this.getListas();
       }
@@ -177,7 +176,7 @@ export class PageListasDeProductosComponent implements OnInit {
       class: 'modal-lg modal-dialog-centered',
       ignoreBackdropClick: true
     });
-    modal.content.event.subscribe(res => {
+    modal.content.event.subscribe((res:any) => {
       if (res) {
         this.getListas();
       }
@@ -187,7 +186,7 @@ export class PageListasDeProductosComponent implements OnInit {
   getCodigoCliente(prod: any) {
     let resp = '';
     if (!isVacio(prod.codigos)) {
-      const codigo = prod.codigos.find(c => c.rutCliente === this.usuario.rut);
+      const codigo = prod.codigos.find((c:any) => c.rutCliente === this.usuario.rut);
       if (!isVacio(codigo)) {
         resp = codigo.codigoCliente;
       }
@@ -195,7 +194,7 @@ export class PageListasDeProductosComponent implements OnInit {
     return resp;
   }
 
-  onResize(event) {
+  onResize(event:any) {
     this.innerWidth = event.target.innerWidth;
   }
 
@@ -240,14 +239,14 @@ export class PageListasDeProductosComponent implements OnInit {
     });
   }
 
-  buscar_producto(event, index) {
+  buscar_producto(event:any, index:any) {
     this.listas = JSON.parse(JSON.stringify(this.listas_temp));
     console.log(this.listas_temp[index].detalleSkus);
     let listaTemp: any = [];
 
     listaTemp = JSON.parse(JSON.stringify(this.listas[index].detalleSkus));
     listaTemp = listaTemp.filter(
-      item =>
+      (item:any) =>
         item.nombre.toLowerCase().includes(event.target.value.toLowerCase()) ||
         item.sku.toLowerCase().includes(event.target.value.toLowerCase())
     );

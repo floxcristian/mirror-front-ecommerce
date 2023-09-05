@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 
 import { Usuario } from '../../../../shared/interfaces/login';
 import { RootService } from '../../../../shared/services/root.service';
-import { ClientsService } from '../../../../shared/services/clients.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
@@ -11,10 +10,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
 
 class DataTablesResponse {
-  data: any[];
-  draw: number;
-  recordsFiltered: number;
-  recordsTotal: number;
+  data!: any[];
+  draw!: number;
+  recordsFiltered!: number;
+  recordsTotal!: number;
 }
 
 @Component({
@@ -26,7 +25,7 @@ export class PageOrdersListComponent implements OnInit {
   usuario: Usuario;
   loadingData = true;
   rows: String[] = [];
-  datatableElement: DataTableDirective;
+  datatableElement!: DataTableDirective;
   dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject();
   innerWidth: any;
@@ -46,7 +45,7 @@ export class PageOrdersListComponent implements OnInit {
     this.construir_tabla();
   }
 
-  onResize(event) {
+  onResize(event:any) {
     this.innerWidth = event.target.innerWidth;
   }
 
@@ -72,7 +71,7 @@ export class PageOrdersListComponent implements OnInit {
         processing: 'Cargando Ordenes de ventas..'
       },
 
-      ajax: (dataTablesParameters: any, callback) => {
+      ajax: (dataTablesParameters: any, callback:any) => {
         //datos set de ordenamiento//
         this.loadingData = true;
 

@@ -37,6 +37,11 @@ export class PageSlidesComponent implements OnInit {
   preview!: string;
   percentDone: any = 0;
 
+  image1:any
+  image2:any
+  image3:any
+  image4:any
+
   constructor(
     private root: RootService,
     private toastr: ToastrService,
@@ -273,5 +278,9 @@ export class PageSlidesComponent implements OnInit {
             break;
         }
       });
+  }
+
+  onSubmitUploads(value:any){
+
   }
 }

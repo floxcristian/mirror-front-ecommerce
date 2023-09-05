@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, Subject } from 'rxjs';
 import { AddFlotaModalComponent } from '../../../../shared/components/add-flota-modal/add-flota-modal.component';
@@ -17,9 +17,9 @@ import { RootService } from '../../../../shared/services/root.service';
   styleUrls: ['./page-flota.component.scss']
 })
 export class PageFlotaComponent implements OnInit, OnDestroy {
-  @ViewChildren(DataTableDirective) dtElements: QueryList<DataTableDirective>;
+  @ViewChildren(DataTableDirective) dtElements!: QueryList<DataTableDirective>;
 
-  userSession: Usuario;
+  userSession!: Usuario;
 
   busquedasRecientes: any[] = [];
   flota: any[] = [];
@@ -54,18 +54,18 @@ export class PageFlotaComponent implements OnInit, OnDestroy {
   getData() {
     this.cargando = true;
     forkJoin([
-      this.clientsService.getBusquedasVin(this.userSession.rut),
-      this.clientsService.getFlota(this.userSession.rut)
+      this.clientsService.getBusquedasVin(this.userSession.rut || '0'),
+      this.clientsService.getFlota(this.userSession.rut || '0')
     ]).subscribe((resp: any[]) => {
       this.busquedasRecientes = resp[0].data;
       this.flota = resp[1].data;
       this.cargando = false;
 
       if (this.busquedasRecientes.length > 0) {
-        this.dtTrigger1.next();
+        this.dtTrigger1.next('');
       }
       if (this.flota.length > 0) {
-        this.dtTrigger2.next();
+        this.dtTrigger2.next('');
       }
     });
   }
@@ -81,17 +81,17 @@ export class PageFlotaComponent implements OnInit, OnDestroy {
     });
   }
 
-  clickCollapse(item) {
+  clickCollapse(item:any) {
     switch (item) {
       case 1:
-        if (document.getElementById('busquedasRecientes').classList.contains('collapsing')) {
+        if (document.getElementById('busquedasRecientes')?.classList.contains('collapsing')) {
           return;
         }
         this.collapsed1State = !this.collapsed1State;
         this.collapsed2State = true;
         break;
       case 2:
-        if (document.getElementById('miFlota').classList.contains('collapsing')) {
+        if (document.getElementById('miFlota')?.classList.contains('collapsing')) {
           return;
         }
         this.collapsed2State = !this.collapsed2State;
@@ -102,11 +102,11 @@ export class PageFlotaComponent implements OnInit, OnDestroy {
 
   agregarVinFlota(busqueda: Flota) {
     const initialState = {
-      vin: busqueda.vehiculo.chasis,
+      vin: busqueda.vehiculo?.chasis,
       closeToOk: false
     };
     const bsModalRef: BsModalRef = this.modalService.show(AddFlotaModalComponent, { initialState });
-    bsModalRef.content.event.subscribe(async res => {
+    bsModalRef.content.event.subscribe(async (res:any) => {
       if (res !== '') {
         const request: any = {
           idFlota: busqueda._id,
@@ -126,12 +126,12 @@ export class PageFlotaComponent implements OnInit, OnDestroy {
 
   actualizarVinFlota(flota: Flota) {
     const initialState = {
-      vin: flota.vehiculo.chasis,
+      vin: flota.vehiculo?.chasis,
       alias: flota.alias,
       closeToOk: false
     };
     const bsModalRef: BsModalRef = this.modalService.show(UpdateFlotaModalComponent, { initialState });
-    bsModalRef.content.event.subscribe(async res => {
+    bsModalRef.content.event.subscribe(async (res:any) => {
       if (res !== '') {
         const request: any = {
           idFlota: flota._id,
@@ -152,12 +152,12 @@ export class PageFlotaComponent implements OnInit, OnDestroy {
   eliminarVinBusqueda(busqueda: Flota) {
     const initialState: DataModal = {
       titulo: 'Confirmación',
-      mensaje: `¿Esta seguro que desea <strong>eliminar</strong> el VIN ${busqueda.vehiculo.chasis} de las busquedas recientes?`,
+      mensaje: `¿Esta seguro que desea <strong>eliminar</strong> el VIN ${busqueda.vehiculo?.chasis} de las busquedas recientes?`,
       tipoIcon: TipoIcon.QUESTION,
       tipoModal: TipoModal.QUESTION
     };
     const bsModalRef: BsModalRef = this.modalService.show(ModalComponent, { initialState });
-    bsModalRef.content.event.subscribe(async res => {
+    bsModalRef.content.event.subscribe(async (res:any) => {
       if (res) {
         const respuesta: any = await this.clientsService.deleteBusquedaVin(busqueda).toPromise();
         if (!respuesta.error) {
@@ -180,7 +180,7 @@ export class PageFlotaComponent implements OnInit, OnDestroy {
       tipoModal: TipoModal.QUESTION
     };
     const bsModalRef: BsModalRef = this.modalService.show(ModalComponent, { initialState });
-    bsModalRef.content.event.subscribe(async res => {
+    bsModalRef.content.event.subscribe(async (res:any) => {
       if (res) {
         const respuesta: any = await this.clientsService.deleteFlota(flota).toPromise();
         if (!respuesta.error) {

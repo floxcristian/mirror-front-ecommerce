@@ -3,16 +3,13 @@ import { Usuario } from '../../../../shared/interfaces/login';
 import { Category } from '../../../../shared/interfaces/category';
 import { RootService } from '../../../../shared/services/root.service';
 import { CmsService } from '../../../../shared/services/cms.service';
-import { ImagesService } from '../../../../shared/services/images.service';
 
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 
-import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
 
 @Component({
     selector: 'app-page-products-categories',
@@ -23,20 +20,20 @@ import * as moment from 'moment';
 export class PageProductsCategoriesComponent implements OnInit {
 
     usuario: Usuario;
-    category: Category;
-    selectedCategory: Category;
+    category!: Category;
+    selectedCategory!: Category;
     editing = false;
     loadingData = true;
     categories: Category[] = [];
-    modalRef: BsModalRef;
-    form: FormGroup;
-    formUploads: FormGroup;
+    modalRef!: BsModalRef;
+    form!: FormGroup;
+    formUploads!: FormGroup;
     imgType: string = 'image_full';
-    filename: string;
-    extension: string;
+    filename!: string;
+    extension!: string;
     dtOptions: DataTables.Settings = {};
     dtTrigger: Subject<any> = new Subject();
-    preview: string;
+    preview!: string;
     percentDone: any = 0;
 
     constructor(
@@ -54,13 +51,12 @@ export class PageProductsCategoriesComponent implements OnInit {
 
     ngOnInit() {
 
-        this.dtOptions = this.root.simpleDtOptions;
+        // this.dtOptions = this.root.simpleDtOptions;
         // this.clearForm();
         // this.clearFormUploads();
-        
         // this.cms.obtenerCategorys()
         //     .subscribe((r: any) => {
-        //         this.categories = r.data;                
+        //         this.categories = r.data;
         //         this.loadingData = false;
         //         this.dtTrigger.next();
         //     }, error => {

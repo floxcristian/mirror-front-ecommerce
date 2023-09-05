@@ -16,13 +16,11 @@
 
         <div class="card pt-3">
             <div class="card-body card-body-min-height-loading" [ngStyle]="{'min-height': (lstCart && lstCart.length == 0) ? '40px' : '130px' }">
-
                 <ng-container>
                     <app-loading-element class="pt-3" [text]="'Cargando carros de compras guardados'" *ngIf="showLoading"></app-loading-element>
                     <div class="row mt-3" *ngIf="lstCart && lstCart.length == 0">
-                       <div class="col-12 text-center"> No tiene carros de compras guardados. </div>
+                        <div class="col-12 text-center"> No tiene carros de compras guardados. </div>
                     </div>
-
                     <div class="row mb-3 font-weight-bold" *ngIf="lstCart && lstCart.length > 0">
                         <div class="col-md-2 d-none d-md-block"> <span class="ml-3">Cantidad </span></div>
                         <div class="col-md-3 d-none d-md-block"> <span> Fecha Creación </span></div>
@@ -30,7 +28,6 @@
                         <div class="col-md-2 d-none d-md-block"> <span> Opciones </span></div>
                         <div class="col-md-2 d-none d-md-block text-right"> <span class="mr-3"> Ver Detalle </span></div>
                     </div>
-
                     <div class="accordion" id="DetalleCarro">
                         <div *ngFor="let cart of lstCart" class="mb-2">
                             <div class="border accordion-header">
@@ -38,7 +35,6 @@
                                     <div class="col-md-2 col-sm-3 d-none d-sm-flex align-items-center"><i class="fas fa fa-shopping-cart mr-1"></i>{{ cart.productos.length }}<span class="d-none d-xl-inline ml-1">artículo(s)</span></div>
                                     <div class="col-md-3 d-none d-md-block"> {{ cart.creacion | date:'dd-MM-yyyy' }} </div>
                                     <div class="col-md-3 col-sm-4 col-5 text-nowrap font-weight-bolder"> {{  getTotalCart(cart.productos) | currencyFormat }} </div>
-
                                     <div class="col-md-3 col-sm-4 d-none d-xl-block">
                                         <button class="btn btn-sm btn-secondary mr-2" style="font-size: 12px;" (click)="updateCart(cart._id,'abierto')">Activar</button>
                                         <button class="btn btn-sm btn-danger" style="font-size: 12px;" (click)="updateCart(cart._id,'eliminado')">Eliminar</button>
@@ -47,7 +43,6 @@
                                         <button class="btn btn-secondary btn-sm mr-sm-2 mr-1" style="font-size: 12px;" title="Activar Carro" (click)="updateCart(cart._id,'abierto')" ><i class="far fa-check-circle"></i></button>
                                         <button class="btn btn-danger btn-sm" style="font-size: 12px;" title="Borrar Carro" (click)="updateCart(cart._id,'eliminado')"><i class="far fa-trash-alt"></i></button>
                                     </div>
-
                                     <div class="col-md-1 col-sm-1 col-2 text-right">
                                         <span class="fas fa-search mr-1" style="cursor:pointer" data-toggle="collapse" [attr.data-target]="'#ID'+cart._id" aria-expanded="false" [attr.aria-controls]="'ID' + cart._id"></span>
                                     </div>
@@ -60,7 +55,6 @@
                                         <div class="col-12 d-block d-sm-none text-center">
                                             <span class="product-title"> {{ item.nombre | titlecase }} <b>X</b> {{ item.cantidad }} </span>
                                         </div>
-
                                         <div class="col-xs-12 col-sm-2 text-center align-items-center">
                                             <a [routerLink]="root.product(item.sku, item.nombre)">
                                                 <img class="cart-img lazyload" [src]="root.getUrlImagenMiniatura(item)" [alt]="item.nombre">

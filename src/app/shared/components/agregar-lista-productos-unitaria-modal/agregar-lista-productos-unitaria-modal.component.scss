@@ -1,0 +1,42 @@
+.modal-header {
+    padding: 0.5rem 1rem;
+    align-items: center;
+
+    .close {
+        margin: 0;
+        padding: 0 0.5rem;
+    }
+}
+
+.modal-body {
+    font-size: 15px;
+    min-height: auto !important;
+}
+
+.text-success {
+    color: #28a745 !important
+}
+
+.max-caracteres {
+    width: 50%;
+    text-align: end;
+    font-size: 75%;
+}
+
+.dropdown-toggle::after {
+    display: none;
+}
+
+.table thead th {
+    border-bottom: 1px solid #e2e5e8 !important;
+    font-size: 13px;
+    color: #37474f;
+    background: #ecf0f5;
+    text-transform: uppercase;
+    padding: 4px !important;
+}
+
+.table td {
+    vertical-align: middle;
+    font-size: 13px !important;
+}

@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { LocalStorageService } from 'angular-2-local-storage';
 import { Usuario } from '../../../../shared/interfaces/login';
 import { RootService } from '../../../../shared/services/root.service';
 import { LoginService } from '../../../../shared/services/login.service';
-import { environment } from '../../../../../environments/environment';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 @Component({
     selector: 'app-login',
@@ -25,7 +24,7 @@ export class PageLoginComponent {
             const data: FormData = new FormData();
 
             data.append('usuario', JSON.stringify(u));
-            this.login.registroSesion(data, u.id_sesion, 'cierre').then(
+            this.login.registroSesion(data, u.id_sesion || '', 'cierre').then(
                 (resp) => {
                     // Cerramos la sesion del usuario
                     this.localS.remove('usuario');

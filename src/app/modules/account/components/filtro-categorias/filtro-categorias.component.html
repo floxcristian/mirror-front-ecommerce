@@ -3,24 +3,20 @@
 <select class="form-control" [(ngModel)]="level1" (change)="changeSelect()" aria-label="Default select example">
     <option [ngValue]="null">{{'Elija alguna categoria' | uppercase}}</option>
     <option *ngFor="let item of categoria" value="{{item.url}}">{{item.title}}</option>
-   
   </select>
 </div>
 </div>
 <div class="row" style="margin-top:20px;" *ngIf="categoria2.length>0">
-    
     <div class="col-sm-6">
         <select class="form-control" [(ngModel)]="level2"  (change)="changeSelect2()" aria-label="Default select example">
             <option [ngValue]="null">Escoja alguna Subcategoria</option>
             <option *ngFor="let item of categoria2" value="{{item.url}}">{{item.title}}</option>
-           
           </select>
         </div>
         <div class="col-sm-6">
             <select class="form-control" [(ngModel)]="level3" aria-label="Default select example">
                 <option [ngValue]="null">Escoja alguna Subcategoria</option>
                 <option *ngFor="let item of categoria3" value="{{item.url}}">{{item.title}}</option>
-               
               </select>
             </div>
 </div>

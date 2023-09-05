@@ -21,7 +21,7 @@
                 <button class="btn btn-sm btn-secondary mt-2" style="margin-right: 10px;"
                     (click)="cargaUnitaria()">Carga
                     unitaria</button>
-                <button class="btn btn-sm btn-secondary mt-2" (click)="cargaMasiva(null)">Cargar productos por
+                <button class="btn btn-sm btn-secondary mt-2" (click)="cargaMasiva()">Cargar productos por
                     lotes</button>
             </div>
         </div>
@@ -36,7 +36,7 @@
                     <div class="list-group" id="listas" role="tablist">
                         <ng-container *ngFor="let lista of listas; let i = index">
                             <a class="list-group-item list-group-item-action" [ngClass]="{'active': i === seleccionada}"
-                                (click)="seleccionarLista(i)" data-toggle="list" [href]="'#list-'+lista._id" role="tab">
+                                (click)="seleccionarLista(i,'')" data-toggle="list" [href]="'#list-'+lista._id" role="tab">
                                 <div class="align-items-center justify-content-between d-flex"
                                     style="font-weight: bold;">
                                     <div class="flex-shrink-1 flex-grow-1">
@@ -124,9 +124,6 @@
                                                 }}
                                             </span>
                                         </div>
-                                        <!-- <div class="col-lg-2 d-none d-lg-flex align-items-center">
-                                            <span class="product-sku text-gray-2"> {{ product.marca }} </span>
-                                        </div> -->
                                         <div
                                             class="col-8 col-sm-2 flex-sm-column justify-content-xl-end justify-content-center d-flex align-items-center">
                                             <span class="product-sku ml-2 d-none d-sm-block"> {{
@@ -164,7 +161,7 @@
                                 <div class="text-center mt-3" *ngIf="lista.detalleSkus.length === 0">
                                     <div>No hay productos</div>
 
-                                    <button class="btn btn-secondary mt-3" (click)="cargaMasiva(lista)">Agregar
+                                    <button class="btn btn-secondary mt-3" (click)="cargaMasiva()">Agregar
                                         productos a la lista</button>
                                 </div>
                             </div>

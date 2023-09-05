@@ -6,23 +6,19 @@
                 <h4 class="alert-heading">Bienvenido al Módulo Gestión de Usuario</h4>
                 <hr>
                 <p>Presione el boton  "Agregar" para crear un usuario comprador o para una carga masiva de usuario descargue el archivo excel de ejemplo ( <a href="https://www.implementos.cl/downloads/compradorB2B.xlsx" target="_blank"><i class="fa-solid fa-file-excel" style="margin-left:5px;margin-right:5px;font-size:20px"></i> aquí</a> ) y complete la informacion, a continuación seleccione el archivo modificado y haga clic en el boton con el icono <i class="fas fa-file-upload" style="margin-left:5px;margin-right:5px;font-size:20px;" ></i> que aparecera continuación .</p>
-                
-                
-              </div>
+            </div>
 
 
             <div class="row">
         <div class="col-sm-4" (click)="crearUsuario()">
             <div class="btn btn-success"> Agregar  <i class="far fa-plus-circle" style="margin-left:10px;"></i></div>
             </div>
-        
         <div class="col-sm-4">
             <label [for]="idArchivo"
                 class="btn  btn-outline-dark mr-2">Seleccionar Archivo <i class="fas fa-folder" style="margin-left:10px;"></i></label>
-            <input type="file" [id]="idArchivo" (change)="onFileChange($event.target.files)"
-                style="display: none;">
+            <!-- <input type="file" [id]="idArchivo" (change)="onFileChange($event.target.files)"
+                style="display: none;"> -->
         </div>
-       
     </div>
 </div>
 
@@ -35,29 +31,28 @@
 
     <div *ngIf="nuevo.length>0" class="alert alert-success alert-dismissible fade show" role="alert">
         <ul>
-          <li *ngFor="let item of nuevo">
+            <li *ngFor="let item of nuevo">
                 Usuario <strong>{{item.username}}</strong> ingreso correctamente <i class="far fa-check-circle" style="margin-left:10px;font-size:20px;color:green"></i>
-          </li>
-        </ul>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div *ngIf="existe.length>0" class="alert alert-warning alert-dismissible fade show" role="alert">
-            <ul>
-            <li *ngFor="let item of existe">
-                  ¡Usuario <strong>{{item.username}}</strong> ya existe en la tabla! <i class="far fa-info-circle" style="margin-left:10px;font-size:20px;"></i>
             </li>
         </ul>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
-          </button>
-          </div>
+        </button>
+        </div>
+        <div *ngIf="existe.length>0" class="alert alert-warning alert-dismissible fade show" role="alert">
+            <ul>
+                <li *ngFor="let item of existe">
+                    ¡Usuario <strong>{{item.username}}</strong> ya existe en la tabla! <i class="far fa-info-circle" style="margin-left:10px;font-size:20px;"></i>
+                </li>
+            </ul>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
 </ng-container>
 
 <hr />
-
         <app-tabla-usuario [userSession]="userSession"></app-tabla-usuario>
-            </div>
+        </div>
     </div>
 </div>

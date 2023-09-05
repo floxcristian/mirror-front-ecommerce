@@ -1,19 +1,13 @@
 <div class="  ">
-
     <div class="top-bar-categories d-flex  align-items-center">
-
         <div class="title d-flex align-items-center mr-auto ">
             <i _ngcontent-serverapp-c11="" class="fas fa-file-invoice mr-3"></i>
             <h5>Órdenes de Venta</h5>
         </div>
     </div>
-
     <div class="card-body position-relative">
-
         <app-loading-element *ngIf="loadingData"></app-loading-element>
-
         <div class="table-responsive-sm">
-
             <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
                 <thead class="thead-dark">
                     <tr>
@@ -33,7 +27,6 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let carro of carros">
-
                         <td>{{ carro.modificacion }}</td>
                         <td nowrap><a routerLink="/carro-compra/downloadpdf" [queryParams]="{numero:carro.numero}"
                                 target="_blank">{{ carro.numero }}</a></td>
@@ -46,7 +39,6 @@
                                 [queryParams]="{numero:carro._id,tipo:'orden-compra'}" target="_blank">
                                 $ {{ carro.ordenCompra.monto }}
                             </a>
-
                         </td>
                         <td nowrap>
                             <a routerLink="/carro-compra/downloadpdf"
@@ -68,15 +60,12 @@
                         <!-- <td align="center"><a href="viewProducts();">Ver Productos</a></td> -->
                         <td align="center"> <button name="Confirmar" class="btn btn-secondary"
                                 (click)="confirmarOV(carro._id)">Confirmar</button></td>
-
                     </tr>
                     <tr *ngIf="carros.length === 0">
                         <td class="text-center" colspan="11">No se encontraron registros.</td>
                     </tr>
                 </tbody>
             </table>
-
         </div>
     </div>
-
 </div>

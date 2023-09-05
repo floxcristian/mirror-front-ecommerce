@@ -10,9 +10,6 @@ export class PageCajaConceptoDemoComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-  
-    
-  
   }
 
 

@@ -48,7 +48,6 @@ export class Trakingb2cComponent implements OnInit {
 
   async buscarOrden(value: any) {
     //reiniciando variables
-
     this.OVEstados = [];
     let OV = '';
     if (value.orden !== undefined) OV = value.orden.trim();

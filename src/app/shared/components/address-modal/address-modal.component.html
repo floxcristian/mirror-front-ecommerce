@@ -1,0 +1,62 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Agregar Dirección</h4>
+    <button name="modalAddressRef" type="button" class="close pull-right" aria-label="Close" (click)="modalAddressRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <app-loading-element *ngIf="loadingForm" [text]="'Registrando Dirección'"></app-loading-element>
+    <div class="row mb-3">
+        <div class="col-12">
+            <!-- <app-map (clearAdress)="clearAddress()" [tienda]="tienda" [autocompletado]="autocompletado" (setDireccion)="set_direccion($event)" (geolocalizacion)="geolocalizacion($event)"></app-map> -->
+        </div>
+    </div>
+    <form (ngSubmit)="agregarDireccion()" [formGroup]="formDireccion">
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label>Calle (*)</label>
+                <input type="text" class="form-control" formControlName="calle" (blur)="cargarDireccion()">
+            </div>
+
+            <div class="form-group col-md-4">
+                <label for="inputPassword4">Número</label>
+                <input type="number" class="form-control" formControlName="numero" (blur)="cargarDireccion()" maxLength="9" min="1" max="999999999" appPhoneChar>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Departamento</label>
+                <input type="text" class="form-control" formControlName="depto" (blur)="cargarDireccion()">
+            </div>
+
+            <div class="form-group col-md-6">
+                <label>Comuna (*)</label>
+                <ng-select [clearable]="false" [searchable]="true" [items]="comunas" bindLabel="value" bindValue="id" formControlName=comuna class="form-control-select form-control" placeholder="Comuna*" (blur)="cargarDireccion()" (change)="obtenerLocalidades($event)">
+                </ng-select>
+            </div>
+
+            <div class="form-group col-md-6" hidden>
+                <label for="inputPassword4">Localización (*)</label>
+                <div *ngIf="!localidades" >
+                    <p>Seleccione una comuna para ver localidades</p>
+                </div>
+                <div *ngIf="localidades">
+                    <ng-select [clearable]="false" [searchable]="true" [items]="localidades" bindLabel="localidad" bindValue="localidad" formControlName="localizacion" class="form-control-select form-control" placeholder="Comuna*" (change)="cargarDireccion()" (blur)="cargarDireccion()">
+                    </ng-select>
+                </div>
+
+            </div>
+            <div class="form-group col-md-12">
+                <label for="validationTextarea">Referencia</label>
+                <textarea class="form-control" placeholder="Ingrese referencia para su direccion" formControlName="referencia"></textarea>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+
+<div class="modal-footer">
+    <button name="cerrar" class="btn btn-danger" (click)="modalAddressRef.hide();">
+        Cancelar</button>
+    <button name="agregarDireccion" class="btn btn-secondary" (click)="agregarDireccion(); " [disabled]="!formDireccion.valid || !tienda || loadingForm">Agregar</button>
+
+</div>
