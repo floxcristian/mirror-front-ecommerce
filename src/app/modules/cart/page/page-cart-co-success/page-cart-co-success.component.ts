@@ -19,7 +19,7 @@ export class PageCartCoSuccessComponent implements OnInit {
    
   ) {
     this.route.params.subscribe(params => {
-      this.numero = params.numero;
+      this.numero = params['numero'];
     });
   }
 

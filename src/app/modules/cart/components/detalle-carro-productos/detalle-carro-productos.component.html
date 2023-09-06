@@ -25,7 +25,7 @@
   <div *ngIf="seePrices" class="dropcart__totals" [ngClass]="{ 'border-0': seeProducts == false }">
     <table>
       <ng-container *ngIf="show">
-        <tr *ngIf="(cart.totals$ | async).length">
+        <tr *ngIf="(cart.totals$ | async)?.length">
           <th>Subtotal</th>
 
           <td style="color: #0d61bb; font-weight: bold">{{ cart.subtotal$ | async | currencyFormat }}</td>

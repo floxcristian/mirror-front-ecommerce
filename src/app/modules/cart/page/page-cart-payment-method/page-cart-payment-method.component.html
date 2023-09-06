@@ -30,7 +30,7 @@
             <!-- DESPACHO_A_DOMICILIO - INI -->
             <!-- ========================================= -->
             <div
-              *ngIf="cartSession.despacho.tipo != 'TIENDA'"
+              *ngIf="cartSession.despacho?.tipo != 'TIENDA'"
               class="row block_despacho"
             >
               <div
@@ -185,7 +185,7 @@
                           class="fa-solid fa-calendar-days"
                           style="margin-right: 10px; color: #0063b9"
                         ></i>
-                        {{ item | date : "EEEE dd MMMM, y " | titlecase }}
+                        {{ item ? (item | date : "EEEE dd MMMM, y ") : '' | titlecase }}
                       </div>
                     </div>
                   </li>
@@ -200,7 +200,7 @@
             <!-- RETIRO_EN_TIENDA - INI -->
             <!-- ========================================= -->
             <div
-              *ngIf="cartSession.despacho.tipo == 'TIENDA'"
+              *ngIf="cartSession.despacho?.tipo == 'TIENDA'"
               class="row block_despacho"
             >
               <div
@@ -299,7 +299,8 @@
                         >
                       </div>
                       <div class="col-12" style="color: #0063b9">
-                        <span
+                        <!-- FIXME: -->
+                        <!-- <span
                           ><i
                             class="fa-solid fa-circle-check"
                             style="color: #118565"
@@ -310,15 +311,26 @@
                           ></i
                           >{{
                             cartSession.observacion ==
-                            "Persona que recibe: Titular de la
-                                                    Venta"
-                              ? "Titular de la
-                                                    compra"
-                              : cartSession.observacion
-                                  .split("Celular")[0]
+                            "Persona que recibe: Titular de la Venta"
+                              ? "Titular de la compra"
+                              : cartSession.observacion.split("Celular")[0]
                                   .split("Recibe:")[1]
-                          }}</span
-                        >
+                          }}</span> -->
+                          <span
+                          ><i
+                            class="fa-solid fa-circle-check"
+                            style="color: #118565"
+                          ></i
+                          ><i
+                            class="fas fa-people-carry"
+                            style="color: #0063b9"
+                          ></i
+                          >{{
+                            cartSession.observacion ==
+                            "Persona que recibe: Titular de la Venta"
+                              ? "Titular de la compra"
+                              : ""
+                          }}</span>
                       </div>
                     </div>
                   </li>
@@ -344,7 +356,7 @@
                           class="fa-solid fa-calendar-days"
                           style="margin-right: 10px; color: #0063b9"
                         ></i>
-                        {{ item | date : "EEEE dd MMMM, y " | titlecase }}
+                        {{ item ? (item | date : "EEEE dd MMMM, y ") : '' | titlecase }}
                       </div>
                     </div>
                   </li>
@@ -397,15 +409,22 @@
 
                             <p
                               *ngIf="
-                                formVisita.controls.rut.errors?.invalidRut &&
-                                formVisita.controls.rut.touched
+                                formVisita.controls['rut'].errors?.['invalidRut'] &&
+                                formVisita.controls['rut'].touched
                               "
                               class="text-error-form-2 pull-right"
                             >
                               El RUT ingresado no es válido
                             </p>
-                            <p
+                            <!-- FIXME: Variebla no existe -->
+                            <!-- <p
                               *ngIf="isInvoice"
+                              class="text-error-form-2 pull-right"
+                            >
+                              Debes ingresar el rut de empresa.
+                            </p> -->
+                            <p
+                              *ngIf="false"
                               class="text-error-form-2 pull-right"
                             >
                               Debes ingresar el rut de empresa.
@@ -453,8 +472,8 @@
 
                             <p
                               *ngIf="
-                                formVisita.controls.telefono.invalid &&
-                                formVisita.controls.telefono.touched
+                                formVisita.controls['telefono'].invalid &&
+                                formVisita.controls['telefono'].touched
                               "
                               class="text-error-form-2"
                             >
@@ -696,7 +715,7 @@
                             type="file"
                             [id]="idArchivo"
                             [disabled]="userSession.requiereValidacion"
-                            (change)="onFileChange($event.target.files)"
+                            (change)="onFileChange($event)"
                             style="display: none"
                           />
                         </div>
@@ -937,15 +956,22 @@
 
                             <p
                               *ngIf="
-                                formVisita.controls.rut.errors?.invalidRut &&
-                                formVisita.controls.rut.touched
+                                formVisita.controls['rut'].errors?.['invalidRut'] &&
+                                formVisita.controls['rut'].touched
                               "
                               class="text-error-form-2 pull-right"
                             >
                               El RUT ingresado no es válido
                             </p>
-                            <p
+                            <!-- FIXME: variable no existe  -->
+                            <!-- <p
                               *ngIf="isInvoice"
+                              class="text-error-form-2 pull-right"
+                            >
+                              Debes ingresar el rut de empresa.
+                            </p> -->
+                            <p
+                              *ngIf="false"
                               class="text-error-form-2 pull-right"
                             >
                               Debes ingresar el rut de empresa.
@@ -993,8 +1019,8 @@
 
                             <p
                               *ngIf="
-                                formVisita.controls.telefono.invalid &&
-                                formVisita.controls.telefono.touched
+                                formVisita.controls['telefono'].invalid &&
+                                formVisita.controls['telefono'].touched
                               "
                               class="text-error-form-2"
                             >
@@ -1230,7 +1256,7 @@
                             type="file"
                             [id]="idArchivoMobile"
                             [disabled]="userSession.requiereValidacion"
-                            (change)="onFileChange($event.target.files)"
+                            (change)="onFileChange($event)"
                             style="display: none"
                           />
                         </div>
@@ -1365,12 +1391,12 @@
         <div class="card-header" style="color: #0063b9">Resumen pedido</div>
         <div class="card-body">
           <app-detalle-carro-productos
-            [shippingType]="cartSession.despacho.tipo"
+            [shippingType]="cartSession.despacho?.tipo"
             *ngIf="innerWidth < 450"
             [seePrices]="false"
           ></app-detalle-carro-productos>
           <app-detalle-carro-productos
-            [shippingType]="cartSession.despacho.tipo"
+            [shippingType]="cartSession.despacho?.tipo"
             *ngIf="innerWidth >= 450"
           >
           </app-detalle-carro-productos>
@@ -1495,7 +1521,7 @@
                     paymentMethodActive == 'khipu' &&
                     !invitado
                   "
-                  (click)="paymentKhipu()"
+                  (click)="paymentKhipu('')"
                   class="btn btn-lg btn-secondary btn-block text-center"
                 >
                   Ir a pagar
@@ -1510,7 +1536,7 @@
                     btnWebpayPost
                   "
                   *ngIf="invitado && paymentMethodActive == 'khipu'"
-                  (click)="paymentKhipu()"
+                  (click)="paymentKhipu('')"
                   class="btn btn-lg btn-secondary btn-block tex-tcenter"
                 >
                   Ir a pagar
@@ -1791,7 +1817,7 @@
                               class="fa-solid fa-calendar-days"
                               style="margin-right: 10px; color: #0063b9"
                             ></i>
-                            {{ item | date : "EEEE dd MMMM, y " | titlecase }}
+                            {{ item ? (item | date : "EEEE dd MMMM, y ")  : '' | titlecase }}
                           </div>
                         </div>
                       </div>
@@ -1944,8 +1970,9 @@
                             <i
                               class="fas fa-people-carry"
                               style="color: #005db9 !important"
-                            ></i>
-                            <span>{{
+                            ></i>\
+                            <!-- FIXME: SPLIT A NULO -->
+                            <!-- <span>{{
                               cartSession.observacion ==
                               "Persona que recibe: Titular de la
                                                     Venta"
@@ -1954,6 +1981,14 @@
                                 : cartSession.observacion
                                     .split("Celular")[0]
                                     .split("Recibe:")[1]
+                            }}</span> -->
+                            <span>{{
+                              cartSession.observacion ==
+                              "Persona que recibe: Titular de la
+                                                    Venta"
+                                ? "Titular de la
+                                                    compra"
+                                : ""
                             }}</span>
                           </div>
                         </div>
@@ -1988,7 +2023,7 @@
                               class="fa-solid fa-calendar-days"
                               style="margin-right: 10px; color: #0063b9"
                             ></i>
-                            {{ item | date : "EEEE dd MMMM, y " | titlecase }}
+                            {{ item ? (item | date : "EEEE dd MMMM, y ") : '' | titlecase }}
                           </div>
                         </div>
                       </div>
@@ -2056,10 +2091,16 @@
           ></div>
 
           <div class="card-body text-justify" style="font-size: 14px">
-            <app-detalle-carro-productos
-              [shippingType]="cartSession.despacho.tipo"
+            <!-- FIXME: NO EXISTE productCart -->
+            <!-- <app-detalle-carro-productos
+              [shippingType]="cartSession.despacho?.tipo"
               [seeProducts]="false"
               [productCart]="productCart"
+            >
+            </app-detalle-carro-productos> -->
+            <app-detalle-carro-productos
+              [shippingType]="cartSession.despacho?.tipo"
+              [seeProducts]="false"
             >
             </app-detalle-carro-productos>
           </div>

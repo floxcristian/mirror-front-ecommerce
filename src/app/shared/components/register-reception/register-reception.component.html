@@ -1,0 +1,101 @@
+<div class="row d-flex justify-content-center">
+  <div class="col-md-12 d-flex">
+    <div class="card m-0 shadow-none">
+      <div class="card-body m-0">
+        <h3 class="card-title" style="color: #0063b9 !important; margin-bottom: 10px">
+          Datos de la persona que recibirá el pedido
+        </h3>
+        <form [formGroup]="formRecibe">
+          <div class="form-row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <input formControlName="nombre" type="text" class="form-control" placeholder="Nombres*" appLettersChar />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <input formControlName="apellido" type="text" class="form-control" placeholder="Apellidos*" appLettersChar />
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label style="color: #0063b9">Telefono fijo/Celular</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <button
+                      class="btn btn-outline-secondary dropdown-toggle"
+                      type="button"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <i
+                        [ngClass]="tipo_fono == '+569' ? 'fa-solid fa-mobile-screen' : 'fa-solid fa-phone'"
+                        style="margin-right: 1px"
+                      ></i>
+                      {{ tipo_fono }}
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" (click)="Select_fono('+569')"
+                        ><i class="fa-solid fa-mobile-screen" style="margin-right: 1px"></i>+569</a
+                      >
+                      <a class="dropdown-item" (click)="Select_fono('+56')"
+                        ><i class="fa-solid fa-phone" style="margin-right: 1px"></i>+56</a
+                      >
+                    </div>
+                  </div>
+                  <input
+                    formControlName="telefono"
+                    type="text"
+                    maxLength="9"
+                    class="form-control"
+                    placeholder="Numero Contacto*"
+                  />
+                </div>
+
+                <p *ngIf="formRecibe.controls['telefono'].invalid && formRecibe.controls['telefono'].touched" class="text-error-form-2">
+                  El número de contacto no es válido
+                </p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label style="color: #0063b9">Rut*</label>
+                <input type="text" formControlName="rut" class="form-control" placeholder="Rut*" formatRut />
+                <!-- FIXME: RUT ERROR  -->
+                <!-- <p
+                  *ngIf="formRecibe.controls.rut.errors?.invalidRut && formRecibe.controls.rut.touched"
+                  class="text-error-form-2 pull-right"
+                >
+                  El RUT ingresado no es válido
+                </p> -->
+                <p
+                  *ngIf="formRecibe.controls['rut'].touched"
+                  class="text-error-form-2 pull-right"
+                >
+                  El RUT ingresado no es válido
+                </p>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="card-footer p-0 d-flex justify-content-center" style="margin-top: 10px">
+        <div class="col-sm-8">
+          <button
+            name="aceptar"
+            (click)="enviarReceptor()"
+            type="button"
+            [disabled]="!formRecibe.valid"
+            class="btn btn-secondary btn-block text-center"
+            name="aceptar"
+          >
+            Aceptar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

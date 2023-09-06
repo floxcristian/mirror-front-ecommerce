@@ -72,7 +72,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   documentType = 'factura';
   totalCarro: number | undefined = 0;
   paymentMethods: PaymentMethod[] = [];
-  paymentMethodActive: string | null = null;
+  paymentMethodActive: string = '';
   bloqueoCliente: any;
   clienteBloqueado = false;
   getBloqueoError = false;
@@ -93,7 +93,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   validado!: boolean;
   innerWidth: number;
   transBankToken!: TransBankToken;
-  productosSinStock: ProductCart[] = [];
+  productosSinStock: ProductCart[] | any = [];
   loadkhipu: boolean = false;
   recibe: Usuario;
 
@@ -259,7 +259,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.paymentService.closemodal$.subscribe((r) => {
       if (r) {
         this.modalRef.hide();
-        this.paymentMethodActive = null;
+        this.paymentMethodActive = '';
       }
     });
 
@@ -410,7 +410,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFileChange(files: FileList) {
+  onFileChange(event:any) {
+    let files = event.target.files
     if (files.length > 0) {
       this.archivo = this.cargaArchivo(files[0]);
 
@@ -873,7 +874,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       document.getElementById('openModalButton')?.click();
       this.paymentService.sendEmailError(
         `Productos sin stock: <br> ${JSON.stringify(
-          this.productosSinStock.map((producto) => {
+          this.productosSinStock.map((producto:any) => {
             return `sku: ${producto.sku}, cantidad: ${producto.cantidad}`;
           })
         )} <br><br> Carro: <br> ${JSON.stringify(this.cartSession)}`,

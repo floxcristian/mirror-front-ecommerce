@@ -1,0 +1,89 @@
+.login-header {
+  width: 50rem;
+}
+
+.login-header .card {
+  box-shadow: 0 24px 44px 0 rgba(0, 0, 0, 0.16);
+  background-color: #ffffff;
+}
+.btn-outline-secondary {
+  color: #0063b9;
+  border-color: #0063b9;
+  border: solid 1px !important;
+}
+
+.btn-outline-secondary:hover {
+  color: #fff !important;
+  background-color: #0063b9;
+  border-color: #0063b9;
+}
+
+.form-group label {
+  font-size: 12px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  text-align: left;
+  color: #000000;
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.19;
+  letter-spacing: normal;
+  text-align: center;
+  color: #000000;
+  text-transform: uppercase;
+}
+
+.form-group-remember {
+  margin-top: 36px;
+}
+
+.form-group-remember label {
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: left;
+  color: #606060;
+}
+
+.text-footer {
+  margin-top: 95px;
+}
+.text-register {
+  margin-top: 65px;
+}
+
+.login-register {
+  width: auto;
+}
+
+.login-register .card {
+  box-shadow: none;
+}
+
+.login-register .card-body {
+  margin: 0 !important;
+}
+
+.btn-success {
+  color: #fff;
+  background-color: #118565;
+  border-color: #118565;
+}
+
+.btn-success:hover {
+  color: #fff;
+  background-color: #118565;
+  border-color: #118565;
+}

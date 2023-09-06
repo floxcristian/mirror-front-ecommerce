@@ -17,10 +17,10 @@ import { PageCartRequestSuccessComponent } from './page/page-cart-request-succes
 import { ProductsListSummaryCartComponent } from './components/products-list-sumarry-cart/products-list-summary-cart.component';
 import { AddAddressComponent } from '../../shared/components/add-address/add-address.component';
 import { GuidedStepsComponent } from '../../shared/components/guided-steps/guided-steps.component';
-// import { LoginRegisterComponent } from '../../shared/components/login-register/login-register.component'
+import { LoginRegisterComponent } from '../../shared/components/login-register/login-register.component'
 // import { RegisterAddressComponent } from '../../shared/components/register-address/register-address.component'
-// import { RegisterVisitComponent } from '../../shared/components/register-visit/register-visit.component'
-// import { RegisterReceptionComponent } from '../../shared/components/register-reception/register-reception.component'
+import { RegisterVisitComponent } from '../../shared/components/register-visit/register-visit.component'
+import { RegisterReceptionComponent } from '../../shared/components/register-reception/register-reception.component'
 import { PageCartHomeComponent } from './page/page-cart-home/page-cart-home.component';
 import { HeaderModule } from '../header/header.module';
 import { GrupoDetalleFechasComponent } from './components/grupo-detalle-fechas/grupo-detalle-fechas.component';
@@ -50,39 +50,39 @@ import { CardProductCardComponent } from './components/card-product-card/card-pr
     PageCartComponent,
     PageCartShippingComponent,
     PageCartPaymentMethodComponent,
-    // PageCartOvSuccessComponent,
-    // DetalleCarroProductosComponent,
-    // PageCartCoSuccessComponent,
-    // PageCartRequestSuccessComponent,
-    // ProductsListSummaryCartComponent,
-    // PageOmniCartPaymentMethodComponent,
-    // ListaPagoComponent,
-    // ResumenRetiroComponent,
-    // AddAddressComponent,
+    PageCartOvSuccessComponent,
+    DetalleCarroProductosComponent,
+    PageCartCoSuccessComponent,
+    PageCartRequestSuccessComponent,
+    ProductsListSummaryCartComponent,
+    PageOmniCartPaymentMethodComponent,
+    ListaPagoComponent,
+    ResumenRetiroComponent,
+    AddAddressComponent,
     GuidedStepsComponent,
-    // LoginRegisterComponent,
+    LoginRegisterComponent,
     // RegisterAddressComponent,
-    // RegisterReceptionComponent,
-    // RegisterVisitComponent,
-    // PageCartHomeComponent,
-    // GrupoDetalleProductosComponent,
-    // GrupoDetalleFechasComponent,
+    RegisterReceptionComponent,
+    RegisterVisitComponent,
+    PageCartHomeComponent,
+    GrupoDetalleProductosComponent,
+    GrupoDetalleFechasComponent,
     CardProductCardComponent,
-    // GrupoDetalleFechaMobileComponent,
-    // ModalConfirmComponent,
+    GrupoDetalleFechaMobileComponent,
+    ModalConfirmComponent,
     BancoslistComponent,
-    // PageCartChilexpressComponent,
-    // MapChilexpressComponent,
-    // SucursalesComponent,
-    // GrupoChilexpressComponent,
-    // PageDownloadpdfComponent,
-    // FormContactoComponent,
-    // ModalConfirmDatesComponent,
+    PageCartChilexpressComponent,
+    MapChilexpressComponent,
+    SucursalesComponent,
+    GrupoChilexpressComponent,
+    PageDownloadpdfComponent,
+    FormContactoComponent,
+    ModalConfirmDatesComponent,
     AgregarCentroCostoComponent,
-    // PageOmniCartOvSuccessComponent,
+    PageOmniCartOvSuccessComponent,
     CodigoOcComponent,
-    // PagesCartPaymentOcComponent,
-    // DetalleCarroProductosOcComponent
+    PagesCartPaymentOcComponent,
+    DetalleCarroProductosOcComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,157 @@
+<div class="row">
+  <div class="col-md-12 d-flex">
+    <div class="card m-0 shadow-none">
+      <div class="card-body m-0" style="color: #0063b9">
+        <h3 class="card-title" style="color: #0063b9">Comprar como invitado</h3>
+        <small>
+          <p style="color: #0063b9">
+            Al comprar como Invitado , el documento emitido siempre será :<strong style="margin-left: 10px">BOLETA</strong> <br />
+            Si necesita <strong>FACTURA</strong> , por favor inicie sesión o
+            <a
+              [routerLink]="['/sitio', 'registro-usuario']"
+              style="color: #0063b9 !important"
+              class="link-primary"
+              data-dismiss="modal"
+              >Registrese como empresa</a
+            >
+          </p>
+        </small>
+        <form [formGroup]="formVisita">
+          <div class="form-row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label style="color: #0063b9; font-weight: bold">Rut*</label>
+                <input
+                  formControlName="rut"
+                  type="text"
+                  class="form-control"
+                  placeholder="Rut* "
+                  appLettersChar
+                  autocomplete="off"
+                />
+                <p *ngIf="formVisita.controls['rut'].invalid && formVisita.controls['rut'].touched" class="text-error-form-2">
+                  Rut no válido, estimado usario su rut debe ingresarse sin '.', Ejemplo rut valido (17007900-0)
+                </p>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <input formControlName="nombre" type="text" class="form-control" placeholder="Nombres*" appLettersChar />
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <input formControlName="apellido" type="text" class="form-control" placeholder="Apellidos*" appLettersChar />
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group" style="color: #0063b9">
+                <label style="color: #0063b9; font-weight: bold"
+                  ><font style="margin-right: 10px">Codigo*</font> Teléfono Fijo/Celular</label
+                >
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <button
+                      class="btn btn-outline-secondary dropdown-toggle"
+                      type="button"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <i
+                        [ngClass]="tipo_fono == '+569' ? 'fa-solid fa-mobile-screen' : 'fa-solid fa-phone'"
+                        style="margin-right: 1px"
+                      ></i>
+                      {{ tipo_fono }}
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" (click)="Select_fono('+569')"
+                        ><i class="fa-solid fa-mobile-screen" style="margin-right: 1px"></i>+569</a
+                      >
+                      <a class="dropdown-item" (click)="Select_fono('+56')"
+                        ><i class="fa-solid fa-phone" style="margin-right: 1px"></i>+56</a
+                      >
+                    </div>
+                  </div>
+                  <input
+                    formControlName="telefono"
+                    type="text"
+                    class="form-control"
+                    placeholder="Numero Contacto*"
+                    maxLength="9"
+                  />
+                </div>
+
+                <p *ngIf="formVisita.controls['telefono'].invalid && formVisita.controls['telefono'].touched" class="text-error-form-2">
+                  El número de contacto que ha ingresado no es válido
+                </p>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <input
+                  formControlName="email"
+                  type="email"
+                  pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$"
+                  class="form-control"
+                  placeholder="Email*"
+                />
+
+                <p *ngIf="formVisita.controls['email'].invalid && formVisita.controls['email'].touched" class="text-error-form-2">
+                  El Email ingresado no es válido
+                </p>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <ng-container *ngIf="innerWidth >= 768">
+        <div class="card-footer p-0">
+          <div class="row">
+            <div class="col-sm-12" style="margin-bottom: 10px">
+              <div class="btn btn-success btn-block text-center btn-lg" [routerLink]="['/sitio', 'registro-usuario']">
+                Quiero factura
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <button
+                type="button"
+                [disabled]="!formVisita.valid"
+                class="btn btn-secondary btn-lg btn-block text-center"
+                (click)="registerUser()"
+              >
+                Continuar
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="innerWidth < 768">
+        <div class="card-footer p-0">
+          <div class="row">
+            <div class="col-md-6" style="margin-bottom: 10px">
+              <div class="btn btn-success btn-block text-center btn-lg" [routerLink]="['/sitio', 'registro-usuario']">
+                Quiero factura
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <button
+                type="button"
+                [disabled]="!formVisita.valid"
+                style="margin-bottom: 20px"
+                class="btn btn-secondary btn-lg btn-block text-center"
+                (click)="registerUser()"
+              >
+                Continuar
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

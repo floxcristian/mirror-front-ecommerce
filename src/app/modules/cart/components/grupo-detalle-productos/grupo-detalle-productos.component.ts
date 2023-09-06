@@ -16,7 +16,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 })
 export class GrupoDetalleProductosComponent implements OnInit {
   @Input() grupo_producto: any = [];
-  @Input() index: number = 0;
+  @Input() index: any = 0;
   @Input() length: number = 0;
   products: ProductCart[] = [];
   innerWidth: number;

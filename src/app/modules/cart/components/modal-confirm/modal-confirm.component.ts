@@ -8,11 +8,10 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class ModalConfirmComponent implements OnInit {
   modalRef!: BsModalRef;
-
+  fecha: any[] = [];
   @Input() set fechaEvent(value: any) {
     this.fecha = value;
   }
-  fecha: any = [];
   estado: boolean = false;
   constructor() {}
 

@@ -6,7 +6,7 @@
       </td>
       <td>
         <div class="row" style="color: #00549d">
-          <div class="col-lg-12" style="font-size: 13px">{{ item.fecha | date: 'EEEE dd MMMM, y ' | titlecase }}</div>
+          <div class="col-lg-12" style="font-size: 13px">{{ item.fecha ? (item.fecha | date: 'EEEE dd MMMM, y ') :''  | titlecase }}</div>
           <div class="col-lg-12" *ngIf="item.precio > 0" style="font-size: 13px">
             <strong>{{ item.precio | currency: 'CLP' }}</strong>
           </div>

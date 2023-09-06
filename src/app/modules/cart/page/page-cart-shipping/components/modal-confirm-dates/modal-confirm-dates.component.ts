@@ -1,7 +1,7 @@
 // Angular
 import { Component, EventEmitter } from '@angular/core';
 // Libs
-import { BsModalRef } from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 // Enums
 import { ShippingType } from '../../../../../../core/enums';
 
@@ -11,10 +11,10 @@ import { ShippingType } from '../../../../../../core/enums';
   styleUrls: ['./modal-confirm-dates.component.scss']
 })
 export class ModalConfirmDatesComponent {
-  confirmar: boolean;
-  obj_fecha: any[];
-  select_grupos: boolean;
-  shippingType: ShippingType;
+  confirmar!: boolean;
+  obj_fecha!: any[];
+  select_grupos!: boolean;
+  shippingType!: ShippingType;
 
   select_grupos_change = new EventEmitter<boolean>();
   selectTab = new EventEmitter<ShippingType>();

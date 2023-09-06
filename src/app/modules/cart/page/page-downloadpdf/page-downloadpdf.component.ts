@@ -16,8 +16,8 @@ export class PageDownloadpdfComponent implements OnInit {
   constructor(private http: HttpClient, private sanitizer: DomSanitizer, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    this.numero = this.activatedRoute.snapshot.queryParams.numero;
-    this.tipo = this.activatedRoute.snapshot.queryParams.tipo;
+    this.numero = this.activatedRoute.snapshot.queryParams['numero'];
+    this.tipo = this.activatedRoute.snapshot.queryParams['tipo'];
     console.log(this.tipo);
     if (this.tipo === undefined || this.tipo == null) this.downloadOvPdf();
     else if (this.tipo === 'factura') this.downloadFacturaPdf();

@@ -130,7 +130,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   loadingCotizacion = false;
 
   constructor(
-    private cart: CartService,
+    public cart: CartService,
     private logistics: LogisticsService,
     private toast: ToastrService,
     private root: RootService,

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PaymentParams } from '../../../../shared/interfaces/payment-method';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { PaymentService } from '../../../../shared/services/payment.service';
@@ -15,10 +15,10 @@ import { isVacio } from '../../../../shared/utils/utilidades';
     styleUrls: ['./page-omni-cart-payment-method.component.scss']
 })
 export class PageOmniCartPaymentMethodComponent implements OnInit {
-    id: String = null;
+    id: string = '';
     @ViewChild('bankmodal', { static: false }) content: any;
     cartSession: any = [];
-    shippingType: String = null;
+    shippingType: string = '';
     productCart: any = [];
     loadCart = false;
     linkNoValido = false;
@@ -27,10 +27,10 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
     transBankToken: any = null;
     alertCart: any;
     alertCartShow = false;
-    rejectedCode: number;
+    rejectedCode!: number;
 
     totalCarro: any = '0';
-    modalRef: BsModalRef;
+    modalRef!: BsModalRef;
     constructor(
         private cartService: CartService,
         private logisticaService: LogisticsService,
@@ -54,7 +54,7 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
         });
 
         this.route.queryParams.subscribe(query => {
-            if (query.status) {
+            if (query['status']) {
                 this.showRejectedMsg(query);
             }
             // if (query.site_id === 'MLC' && query.external_reference) this.manejarAlertaMercadoPagoSiEsNecesario(query);
@@ -82,15 +82,15 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
         };
         if (this.cartSession.despacho.codTipo === 'VEN- DPCLI') {
             let cliente: any = await this.clienteService.getDataClient(data).toPromise();
-            this.direccion = cliente.data[0].direcciones.filter(item => item.recid == this.cartSession.despacho.recidDireccion);
+            this.direccion = cliente.data[0].direcciones.filter((item:any) => item.recid == this.cartSession.despacho.recidDireccion);
         } else {
             let consulta: any = await this.logisticaService.obtenerTiendasOmni().toPromise();
             let tiendas: any = consulta.data;
-            this.direccion = tiendas.filter(item => item.recid == this.cartSession.grupos[0].despacho.recidDireccion);
+            this.direccion = tiendas.filter((item:any) => item.recid == this.cartSession.grupos[0].despacho.recidDireccion);
         }
     }
     //fincuon para activar el boton de pago
-    async Activepayment(event) {
+    async Activepayment(event:any) {
         this.pago = event;
     }
 
@@ -129,7 +129,7 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
     }
 
     //proceso khipu
-    async paymentKhipu(banco) {
+    async paymentKhipu(banco:any) {
         const successUrl = environment.urlPaymentOmniVoucher;
         const canceledUrl = environment.urlPaymentOmniCanceled;
         const documento = this.cartSession._id;
@@ -165,7 +165,7 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
     intentarPagoNuevamente() {
         this.alertCartShow = false;
         this.alertCart = null;
-        this.rejectedCode = null;
+        this.rejectedCode = 0;
         this.router.navigate(['/', 'carro-compra', 'omni-forma-de-pago'], { queryParams: { cart_id: this.id } });
     }
 

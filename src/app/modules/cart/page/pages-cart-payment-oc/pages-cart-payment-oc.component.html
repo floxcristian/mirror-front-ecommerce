@@ -1,5 +1,8 @@
 <div *ngIf="usuarioTemp" class="d-flex justify-content-center">
-    <app-header-login (muestraLogin)="validaLogin($event)" [ruta]="ruta" [linkRegister]="true">
+    <!-- FIXME: NO EXISTE RUTA -->
+    <!-- <app-header-login (muestraLogin)="validaLogin($event)" [ruta]="ruta" [linkRegister]="true">
+    </app-header-login> -->
+    <app-header-login (muestraLogin)="validaLogin($event)" [linkRegister]="true">
     </app-header-login>
 </div>
 <div *ngIf="!usuarioTemp">
@@ -92,10 +95,13 @@
                                             [DIAS_SEMANA]="10" (itemSeleccionado)="setSeleccionarEnvio($event, i)"
                                             [index]="i" [fletes]="fechas[i]">
                                         </app-grupo-detalle-fechas>
-
-                                        <app-grupo-detalle-fechas-mobile *ngIf="innerWidth <= 450 && fechas.length > 0"
+                                        <!-- FIXME: no existe función setSeleccionarEnvioMobile() -->
+                                        <!-- <app-grupo-detalle-fechas-mobile *ngIf="innerWidth <= 450 && fechas.length > 0"
                                             (itemSeleccionado)="setSeleccionarEnvioMobile($event, i)" [index]="i"
-                                            [fletes]="fechas[i]"></app-grupo-detalle-fechas-mobile>
+                                            [fletes]="fechas[i]"></app-grupo-detalle-fechas-mobile> -->
+                                            <app-grupo-detalle-fechas-mobile *ngIf="innerWidth <= 450 && fechas.length > 0"
+                                                [index]="i"
+                                                [fletes]="fechas[i]"></app-grupo-detalle-fechas-mobile>
                                     </div>
                                 </div>
 

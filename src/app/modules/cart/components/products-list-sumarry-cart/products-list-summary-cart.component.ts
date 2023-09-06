@@ -8,7 +8,7 @@ import { RootService } from '../../../../shared/services/root.service';
   styleUrls: ['./products-list-summary-cart.component.scss'],
 })
 export class ProductsListSummaryCartComponent implements OnInit {
-  productoList: ProductCart[] = [];
+  productoList: ProductCart[] | any[]= [];
   innerWidth!: number;
 
   @Input() set products(value: any) {
@@ -16,7 +16,7 @@ export class ProductsListSummaryCartComponent implements OnInit {
     this.productoList = value;
   }
 
-  constructor(private root: RootService) {}
+  constructor(public root: RootService) {}
 
   ngOnInit() {}
 

@@ -4,21 +4,20 @@ import { FormControl } from '@angular/forms';
 import { ProductCart } from '../../../../shared/interfaces/cart-item';
 import { RootService } from '../../../../shared/services/root.service';
 
-import { Usuario } from '../../../../shared/interfaces/login';
-import { LocalStorageService } from 'angular-2-local-storage';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Banner } from '../../../../shared/interfaces/banner';
 import { HostListener } from '@angular/core';
 import { DirectionService } from '../../../../shared/services/direction.service';
-import { WINDOW } from '@ng-toolkit/universal';
+// import { WINDOW } from '@ng-toolkit/universal';
 import { environment } from '../../../../../environments/environment';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { ToastrService } from 'ngx-toastr';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import * as moment from 'moment';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 interface Item {
   ProductCart: ProductCart;
@@ -31,8 +30,8 @@ interface Item {
   styleUrls: ['./pages-cart-payment-oc.component.scss']
 })
 export class PagesCartPaymentOcComponent implements OnInit {
-  @ViewChild('modalRefuse', { static: false }) modalRefuse: TemplateRef<any>;
-  modalRefuseRef: BsModalRef;
+  @ViewChild('modalRefuse', { static: false }) modalRefuse!: TemplateRef<any>;
+  modalRefuseRef!: BsModalRef;
 
   cartSession: any = null;
   items: any = [];
@@ -54,11 +53,11 @@ export class PagesCartPaymentOcComponent implements OnInit {
   showresumen = false;
   IVA = environment.IVA || 0.19;
   isVacio = isVacio;
-  @Input() id;
+  @Input() id:any;
   user: any;
   usuario: any;
   sinStock: boolean = false;
-  isB2B: boolean;
+  isB2B!: boolean;
   addingToCart = false;
   total: any = {};
   credito = false;
@@ -79,11 +78,11 @@ export class PagesCartPaymentOcComponent implements OnInit {
     },
     rtl: this.direction.isRTL()
   };
-  usuarioTemp: boolean;
+  usuarioTemp!: boolean;
   obsRefuse = '';
 
   @HostListener('window:resize', ['$event'])
-  onResize(event) {
+  onResize(event:any) {
     this.innerWidth = window.innerWidth;
   }
 
@@ -98,7 +97,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private direction: DirectionService,
-    @Inject(WINDOW) private window: Window
+    // @Inject(WINDOW) private window: Window
   ) {
     this.innerWidth = window.innerWidth;
   }
@@ -117,12 +116,12 @@ export class PagesCartPaymentOcComponent implements OnInit {
     this.productCart = this.cartSession.productos;
     this.shippingType = this.cartSession.despacho.tipo;
     await this.getDireccion();
-    this.cartSession.productos.map(producto => {
+    this.cartSession.productos.map((producto:any) => {
       //asignando producto al carro
       producto.quantity = producto.cantidad;
       this.items.push(producto);
     });
-    this.cartSession.grupos.forEach(item => {
+    this.cartSession.grupos.forEach((item:any) => {
       this.fecha_entrega.push(item.despacho.fechaEntrega);
     });
     this.verificar_fechas();
@@ -134,19 +133,18 @@ export class PagesCartPaymentOcComponent implements OnInit {
     };
     if (this.cartSession.despacho.tipo === 'STD') {
       let cliente: any = await this.clienteService.getDataClient(data).toPromise();
-      this.direccion = cliente.data[0].direcciones.filter(item => item.recid == this.cartSession.despacho.recidDireccion);
+      this.direccion = cliente.data[0].direcciones.filter((item:any) => item.recid == this.cartSession.despacho.recidDireccion);
     } else {
       let consulta: any = await this.logisticaService.obtenerTiendasOmni().toPromise();
       let tiendas: any = consulta.data;
-      this.direccion = tiendas.filter(item => item.codigo == this.cartSession.codigoSucursal);
+      this.direccion = tiendas.filter((item:any) => item.codigo == this.cartSession.codigoSucursal);
     }
   }
 
   async verificar_usuario() {
     if (!this.user.login_temp) {
       let consulta: any = await this.cart.verificar_supervisor(this.user.rut).toPromise();
-      this.usuario = consulta.data.filter(item => item.username == this.user.username);
-
+      this.usuario = consulta.data.filter((item:any) => item.username == this.user.username);
       if (this.usuario.length == 0) {
         return (this.propietario = false);
       }
@@ -170,7 +168,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
     }
   }
 
-  async validaLogin($event) {
+  async validaLogin($event:any) {
     console.log($event);
     if ($event) {
       this.usuarioTemp = !$event;
@@ -194,7 +192,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
     this.verificar_oc = true;
   }
 
-  async confirmar(event) {
+  async confirmar(event:any) {
     this.verificar_oc = event;
     if (this.verificar_oc) await this.confirmar_compra();
   }
@@ -237,7 +235,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
     }
   }
 
-  agregar_lista(event) {
+  agregar_lista(event:any) {
     this.productoDisponible = event;
   }
 
@@ -251,19 +249,19 @@ export class PagesCartPaymentOcComponent implements OnInit {
       }
     });
   }
-  verificarOc(event) {
+  verificarOc(event:any) {
     this.sinStock = event;
   }
 
   verificar_fechas() {
-    this.cartSession.grupos.forEach(item => {});
+    this.cartSession.grupos.forEach((item:any) => {});
   }
 
-  Ver_fecha(event) {
+  Ver_fecha(event:any) {
     this.fechas = event;
     console.log(this.fechas);
   }
-  setSeleccionarEnvio(event, i) {
+  setSeleccionarEnvio(event:any, i:any) {
     this.cartSession.grupos[i].despacho.fechaEntrega = event.fecha;
     this.fecha_entrega[i] = event.fecha;
   }

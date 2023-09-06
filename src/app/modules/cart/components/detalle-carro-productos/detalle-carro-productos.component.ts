@@ -21,7 +21,7 @@ export class DetalleCarroProductosComponent implements OnInit, OnDestroy {
   shippingTypeSubs!: Subscription;
   shippinGroup: any = {};
 
-  @Input() shippingType = 'retiro';
+  @Input() shippingType:any = 'retiro';
   shippingTypeTitle = '';
   totals: any = [];
 

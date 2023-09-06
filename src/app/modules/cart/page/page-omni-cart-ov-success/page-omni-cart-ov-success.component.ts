@@ -12,8 +12,8 @@ import { PaymentService } from '../../../../shared/services/payment.service';
 export class PageOmniCartOvSuccessComponent implements OnInit {
   numeroCarro = '';
   loadingCart = true;
-  cartData = null;
-  documento = null;
+  cartData:any = null;
+  documento:any = null;
   SubscriptionQueryParams: Subscription;
   showFolioMsj: boolean = false;
   carro: any = [];
@@ -26,7 +26,7 @@ export class PageOmniCartOvSuccessComponent implements OnInit {
     });
   }
 
-  async manejaRespuesta(query) {
+  async manejaRespuesta(query:any) {
     let status = query.status ? query.status : query.payment_status ? query.payment_status : null;
 
     if (query.external_reference && status && status == 'approved') {
