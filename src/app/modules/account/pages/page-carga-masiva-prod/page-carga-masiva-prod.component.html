@@ -27,17 +27,17 @@
         </p>
 
         <div class="row mt-4">
-          <!-- <div class="col-12 d-flex justify-content-start">
+          <div class="col-12 d-flex justify-content-start">
             <label [for]="idArchivo" class="btn btn-sm btn-primary mr-2"
               >Seleccionar Archivo</label
             >
             <input
               type="file"
               [id]="idArchivo"
-              (change)="onFileChange($event.target.files)"
+              (change)="onFileChange($event)"
               style="display: none"
             />
-          </div> -->
+          </div>
         </div>
         <div class="row mt-2" *ngIf="archivo">
           <div

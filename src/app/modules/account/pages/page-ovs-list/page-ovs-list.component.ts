@@ -13,7 +13,7 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-page-ovs-list',
   templateUrl: './page-ovs-list.component.html',
-  styleUrls: ['./page-ovs-list.component.sass']
+  styleUrls: ['./page-ovs-list.component.sass'],
 })
 export class PageOvsListComponent implements OnInit {
   usuario: Usuario;
@@ -29,8 +29,7 @@ export class PageOvsListComponent implements OnInit {
   constructor(
     private root: RootService,
     private toastr: ToastrService,
-    private carroService: ClientsService,
-    private modalService: BsModalService
+    private carroService: ClientsService
   ) {
     this.usuario = this.root.getDataSesionUsuario();
     this.loadingData = true;
@@ -43,16 +42,25 @@ export class PageOvsListComponent implements OnInit {
     this.carroService.buscarOvsGeneradas().subscribe(
       (r: any) => {
         if (r.data !== null) {
-          const results = r.data.map(result => {
-            result.modificacion = moment(result.modificacion).format('DD/MM/YYYY');
+          const results = r.data.map((result: any) => {
+            result.modificacion = moment(result.modificacion).format(
+              'DD/MM/YYYY'
+            );
             if (result.ordenCompra.monto != undefined) {
-              result.ordenCompra.monto = result.ordenCompra.monto.toLocaleString('es-es', { minimumFractionDigits: 0 });
+              result.ordenCompra.monto =
+                result.ordenCompra.monto.toLocaleString('es-es', {
+                  minimumFractionDigits: 0,
+                });
             }
-            result.cliente.credito = result.cliente.credito.toLocaleString('es-es', { minimumFractionDigits: 0 });
+            result.cliente.credito = result.cliente.credito.toLocaleString(
+              'es-es',
+              { minimumFractionDigits: 0 }
+            );
             if (result.cliente.creditoUtilizado) {
-              result.cliente.creditoUtilizado = result.cliente.creditoUtilizado.toLocaleString('es-es', {
-                minimumFractionDigits: 0
-              });
+              result.cliente.creditoUtilizado =
+                result.cliente.creditoUtilizado.toLocaleString('es-es', {
+                  minimumFractionDigits: 0,
+                });
             } else {
               result.cliente.creditoUtilizado = '0';
             }
@@ -64,16 +72,16 @@ export class PageOvsListComponent implements OnInit {
         }
 
         this.loadingData = false;
-        this.dtTrigger.next();
+        this.dtTrigger.next(null);
       },
-      error => {
+      (error) => {
         this.loadingData = false;
         this.toastr.error('Error de conexión, para obtener ovs');
       }
     );
   }
 
-  public confirmarOV(idCarro) {
+  public confirmarOV(idCarro: any) {
     this.carroService.confirmarOV(idCarro).subscribe((r: any) => {
       this.toastr.success('Error de conexión, para obtener ovs');
       window.location.reload();

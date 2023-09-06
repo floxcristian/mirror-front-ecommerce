@@ -1,0 +1,40 @@
+<div
+  *ngFor="let item of productoList"
+  class="dropcart__product"
+  (window:resize)="onResize($event)"
+>
+  <div class="dropcart__product-image">
+    <a [routerLink]="root.product(item.sku, item.nombre)">
+      <img
+        [src]="item.images[0]['150'][0]"
+        width="50px"
+        height="50px"
+        [alt]="item.nombre"
+        onerror="this.onerror=null; this.src='/assets/img/no-image-ficha.jpg'"
+      />
+    </a>
+  </div>
+  <div class="dropcart__product-info dropcart__product-info-1 my-auto">
+    <div class="dropcart__product-name">
+      <a [routerLink]="root.product(item.sku, item.nombre)"
+        >{{ item.nombre | capitalizeFirst }}
+      </a>
+    </div>
+
+    <div class="dropcart__product-meta">
+      <span class="dropcart__product-cant font-weight-bold"
+        >{{ item.cantidad }} X
+      </span>
+      <span class="dropcart__product-price" style="margin-left: 10px">{{
+        item.precio | currencyFormat
+      }}</span>
+    </div>
+  </div>
+
+  <div
+    class="dropcart__product-info col-4 text-right"
+    [ngStyle]="{ 'font-size': innerWidth < 450 ? '14px' : '16px' }"
+  >
+    {{ item.precio * item.cantidad | currencyFormat }}
+  </div>
+</div>

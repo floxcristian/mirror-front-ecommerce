@@ -1,0 +1,345 @@
+<div class="block-empty bg-white" *ngIf="!items.length">
+  <div class="container container-cart">
+    <h1 class="pt-4 mb-3 text-h1">Carro de compra</h1>
+
+    <div class="block-empty__body mt-5">
+      <i class="far fa-frown icon-lg"></i>
+      <div class="block-empty__message mt-2">Esto esta muy vacío, sigue buscando el producto que necesita.</div>
+
+      <div class="block-empty__actions">
+        <a [routerLink]="['/']" class="link-primary"> <i class="fas fa-home"></i> ir al home</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="items.length">
+  <div class="container container-cart site_b2c">
+    <!-- <h1 class="mt-4 mb-3">Carro de compra</h1> -->
+    <app-guided-steps [step]="1"></app-guided-steps>
+    <div class="row">
+      <div class="col-12 col-xl-8 col-lg-8">
+        <div class="card h-100">
+          <div class="card-header" style="display: inline-block">
+            <div class="col-12 text-h1" [ngStyle]="{ 'font-size': innerWidth < 450 ? '16px' : '18px' }">
+              <i class="fa-solid fa-cart-shopping" style="margin-right: 10px; text-transform: uppercase"></i> Carro de compra
+              <ng-container *ngIf="items.length > 1">
+                <font style="font-weight: normal">({{ ' ' + items.length + ' Productos' + ' ' }})</font>
+              </ng-container>
+              <ng-container *ngIf="items.length == 1">
+                <font style="font-weight: normal">({{ ' ' + items.length + ' Producto' + ' ' }})</font>
+              </ng-container>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="cart-table" *ngIf="innerWidth > 450">
+              <div
+                class="row d-flex align-items-center mb-1 rowborde"
+                style="margin-bottom: 20px !important"
+                *ngFor="let item of items; let i = index"
+              >
+                <div class="col-12 col-lg-6">
+                  <ng-container *ngIf="innerWidth < 992">
+                    <div style="float: right" (click)="remove(item.ProductCart)">
+                      <button name="eliminar" class="btn btn-outline-danger">
+                        <i class="fas fa-times" style="color: #0d61bb"></i>
+                      </button>
+                    </div>
+                  </ng-container>
+                  <div class="row d-flex justify-content-center align-items-center">
+                    <div class="col-3">
+                      <a [routerLink]="root.product(item.ProductCart.sku, item.ProductCart.nombre)">
+                        <img
+                          class="cart-img lazyload"
+                          [src]="root.getUrlImagenMiniatura(item.ProductCart)"
+                          [alt]="item.ProductCart.nombre"
+                        />
+                      </a>
+                    </div>
+
+                    <div class="col-9 col-md-8">
+                      <div class="col-sm-12">
+                        <span class="text-marca"> {{ item.ProductCart.marca }} </span>
+                      </div>
+                      <div class="col-sm-12">
+                        <span class="product-title"> {{ item.ProductCart.nombre | titlecase }} </span>
+                      </div>
+                      <div class="col-sm-12">
+                        <font class="product-sku text-gray-2" style="font-size: 75%">SKU: {{ item.ProductCart.sku }}</font>
+                      </div>
+
+                      <div class="col-sm-12" *ngIf="innerWidth >= 992">
+                        <div class="item" [ngClass]="{ active: item.ProductCart.entregas.despacho }">
+                          <i
+                            [ngClass]="
+                              item.ProductCart.entregas.despacho ? 'fas fa-truck text-success mr-1' : 'fas fa-truck mr-1'
+                            "
+                            style="font-size: 20px"
+                          ></i>
+                        </div>
+                        <div class="item" [ngClass]="{ active: item.ProductCart.entregas.retiroTienda }">
+                          <i
+                            [ngClass]="
+                              item.ProductCart.entregas.retiroTienda ? 'fas fa-store text-success mr-1' : 'fas fa-store mr-1'
+                            "
+                            style="font-size: 20px"
+                          ></i>
+                        </div>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                  <div
+                    class="row"
+                    [ngStyle]="{ 'margin-right': innerWidth >= 992 ? '-210px' : '-15px' }"
+                    style="margin-bottom: 20px !important"
+                  >
+                    <ng-container *ngIf="innerWidth < 992">
+                      <div
+                        class="col-3 col-sm-3 text"
+                        style="margin-top: 15px; margin-left: 10px; padding: 2px !important; text-align: center"
+                      >
+                        <div class="item" [ngClass]="{ active: item.ProductCart.entregas.despacho }">
+                          <i
+                            [ngClass]="
+                              item.ProductCart.entregas.despacho ? 'fas fa-truck text-success mr-1' : 'fas fa-truck mr-1'
+                            "
+                            style="font-size: 15px"
+                          ></i>
+                        </div>
+                        <div class="item" [ngClass]="{ active: item.ProductCart.entregas.retiroTienda }">
+                          <i
+                            [ngClass]="
+                              item.ProductCart.entregas.retiroTienda ? 'fas fa-store text-success mr-1' : 'fas fa-store mr-1'
+                            "
+                            style="font-size: 15px"
+                          ></i>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <div
+                      [ngClass]="{ 'col-3 col-lg-3': innerWidth >= 1500, 'col-3': innerWidth < 1500, 'col-5': innerWidth <= 450 }"
+                      style="padding: 2px !important"
+                    >
+                      <app-input-number
+                        [formControl]="item.quantityControl"
+                        (quantity)="updateCart($event, item)"
+                        [min]="1"
+                      ></app-input-number>
+                    </div>
+
+                    <div
+                      class="col-3 col-sm-3 text"
+                      style="padding-top: 10px !important; text-align: center; padding-left: 5px; padding-right: 0px"
+                    >
+                      <span class="cart-price-value"
+                        >{{
+                          (!isVacio(user.iva)
+                            ? (user.iva ? item.ProductCart.precio : item.ProductCart.precio / (1 + IVA)) * item.quantity
+                            : item.ProductCart.precio * item.quantity
+                          ) | currencyFormat
+                        }}
+                        <em> {{ !isVacio(user.iva) ? (user.iva ? 'c/iva' : 's/iva') : 'c/iva' }}</em></span
+                      >
+                    </div>
+                    <div
+                      class="col-1"
+                      style="margin-top: 8px; padding: 1px !important; margin-right: -110px"
+                      *ngIf="innerWidth >= 992"
+                    >
+                      <div data-name="gtm_delete" class="text-center" (click)="remove(item.ProductCart)">
+                        <!-- <i class="fas fa-times"></i> -->
+                        <span style="cursor: pointer"> <i class="fas fa-trash-alt" style="color: #0d61bb"></i></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <app-card-product-card [productos]="items" *ngIf="innerWidth <= 450"></app-card-product-card>
+            <!--                         <div class="float-left mt-2" *ngIf="root.getDataSesionUsuario().user_role != 'temp'">
+                            <button name="setSaveCart" class="btn btn-secondary" (click)="setSaveCart()">
+                                Guardar carro
+                            </button>
+                        </div> -->
+          </div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="innerWidth >= 992">
+        <div class="col-xl-4 col-lg-4 col-md-6" style="padding: 15px; background-color: #e3e3e3">
+          <div class="card h-100">
+            <div class="card-header" style="display: inline-block">
+              <div class="d-flex align-items-center">
+                <div class="col-sm-12 text-h1" [ngStyle]="{ 'font-size': innerWidth < 450 ? '16px' : '18px' }">
+                  Resumen de tu compra
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <app-detalle-carro-productos [seeProducts]="false" [productCart]="productCart"> </app-detalle-carro-productos>
+
+              <div class="mt-3 col p-0">
+                <a
+                  [routerLink]="['/', 'carro-compra', 'metodo-de-envio']"
+                  (click)="limpiarInvitado()"
+                  class="btn btn-lg btn-secondary btn-block text-center"
+                >
+                  Ir a comprar
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="innerWidth >= 450 && innerWidth < 992">
+        <div class="col-sm" style="margin-top: 20px">
+          <div class="card h-100">
+            <div class="card-header" style="display: inline-block">
+              <div class="d-flex align-items-center">
+                <div class="col-9">Resumen de tu compra</div>
+              </div>
+              <hr />
+            </div>
+
+            <div class="card-body">
+              <app-detalle-carro-productos [seeProducts]="false" [productCart]="productCart"> </app-detalle-carro-productos>
+
+              <div class="mt-3 col p-0">
+                <a
+                  [routerLink]="['/', 'carro-compra', 'metodo-de-envio']"
+                  (click)="limpiarInvitado()"
+                  class="btn btn-lg btn-secondary btn-block text-center"
+                >
+                  Continuar <i class="fas fa-chevron-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="row m-0">
+      <div class="col-12" [ngStyle]="{ 'margin-bottom': showresumen == true ? '300px' : '200px' }">
+        <div class="mb-5" (window:resize)="onResize($event)">
+          <div class="shop-layout shop-layout--sidebar-- mb-3">
+            <div class="shop-layout__content" style="width: 100%">
+              <!-- <div *ngIf="recommendedProducts?.length>0" class="bg-primary text-center mt-3"></div>
+                                <h1 class="block-header__title text-white pt-0" style="text-transform: uppercase">
+                                    Te podría interesar
+                                </h1>
+                            </div>-->
+              <div class="margin-less">
+                <app-block-header *ngIf="recommendedProducts.length > 0" [header]="'Te podría interesar'"></app-block-header>
+              </div>
+              <div class="products-view">
+                <div class="products-view__list products-list" data-with-features="false"></div>
+
+                <div class="products-view__list products-list" data-layout="grid-5-full" data-with-features="false">
+                  <div>
+                    <owl-carousel-o class="carouselCart" [options]="carouselOptions" appOwlPreventClick>
+                      <ng-container *ngFor="let item of recommendedProducts">
+                        <ng-template carouselSlide>
+                          <app-product-card-b2c-cms
+                            *ngIf="isB2B"
+                            [product]="item"
+                            [origen]="['carro', '', '', 'te podria interesar']"
+                            [cartClass]="true"
+                          ></app-product-card-b2c-cms>
+                          <app-product-card-b2c-cms
+                            *ngIf="!isB2B"
+                            [product]="item"
+                            [origen]="['carro', '', '', 'te podria interesar']"
+                            [cartClass]="true"
+                          ></app-product-card-b2c-cms>
+                        </ng-template>
+                      </ng-container>
+                    </owl-carousel-o>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="innerWidth < 450">
+        <div *ngIf="items.length" class="footer-page">
+          <div class="card h-100" style="margin-top: 5px; margin-bottom: -13px">
+            <div class="card-header" style="display: inline-block" (mousedown)="showresumen = !showresumen">
+              <div class="d-flex">
+                <div class="col-9 text-justify" style="font-size: 16px; color: #0d61bb">
+                  <strong>Resumen de tu compra</strong>
+                </div>
+                <div class="col-3">
+                  <i [class]="showresumen ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="!showresumen" class="card-body text-justify">
+              <div class="dropcart__totals text-justify">
+                <table>
+                  <tr style="font-size: 14px; color: #0d61bb">
+                    <th>Total</th>
+                    <td class="font-weight-bold">{{ cart.total$ | async | currencyFormat }}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <ng-container *ngIf="showresumen">
+              <div class="col-12" style="border: 1px solid; margin-top: 5px; margin-bottom: 5px; color: rgba(0, 0, 0, 0.1)"></div>
+
+              <div class="card-body text-justify" style="font-size: 14px">
+                <app-detalle-carro-productos [seeProducts]="false" [productCart]="productCart"> </app-detalle-carro-productos>
+              </div>
+            </ng-container>
+            <div class="mt-3 col-12 pl-0 pr-1">
+              <a
+                [routerLink]="['/', 'carro-compra', 'metodo-de-envio']"
+                (click)="limpiarInvitado()"
+                class="btn btn-lg btn-secondary btn-block text-center"
+              >
+                Ir a comprar
+              </a>
+            </div>
+            <div class="mt-3 col-12 pl-0 pr-1">
+              <a href="https://www.implementos.cl" style="color: #118565; text-align: center; font-weight: bold">
+                Seguir comprando</a
+              >
+            </div>
+          </div>
+
+          <div class="row"></div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<!--Modal para confirmar guardar carro -->
+<div class="modal fade" id="saveCartModal" tabindex="-1" role="dialog" aria-labelledby="saveCartModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>Guardar Carro</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="min-height: auto">
+        Desea guardar los productos del carro? <br class="mb-2" />
+        El carro quedará en estado guardado y podrá ser reactivado desde el menu "Carros guardados", ubicado en su perfil de
+        usuario.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-secondary" (click)="setSaveCart()" data-dismiss="modal">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>

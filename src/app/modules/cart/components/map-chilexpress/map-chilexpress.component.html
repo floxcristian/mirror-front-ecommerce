@@ -1,0 +1,23 @@
+<div class="row">
+      <div class="col-7">
+           
+    <div id="map" style="border: 1px solid #000; margin-left: 10px;"></div>
+</div>
+<div class="col-5">
+      <div class="table">
+      <div class="list-group" style="cursor: pointer;">
+            <ng-container *ngFor="let item of sucursales;let i=index">
+                  <div (click)="getPromesas(i)">
+            <a [ngClass]="index==i?'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'">
+                <i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> {{item.streetName}} {{item.streetNumber}}
+            </a>
+      </div>
+      </ng-container>
+           
+          </div>
+      </div>
+
+</div>
+
+</div>
+

@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <h5 class="modal-title" id="modal-basic-title">
+    <font color="#0063b9"><i class="fas fa-calendar-alt" style="margin-right: 10px"></i> Confirmación</font>
+  </h5>
+</div>
+<div class="modal-body" style="min-height: 25vh">
+  <div class="row" style="margin-bottom: 20px; padding: 8px">
+    <i class="fa-regular fa-circle-info" style="font-size: 20px; margin-right: 10px; margin-left: 10px"></i> Por favor confirme
+    las fechas de entrega
+  </div>
+  <ng-container *ngIf="confirmar">
+    <app-modal-confirm [fechaEvent]="obj_fecha"></app-modal-confirm>
+  </ng-container>
+</div>
+<div class="modal-footer">
+  <div class="row w-100 p-0">
+    <div class="col-6">
+      <button type="button" class="btn btn-secondary w-100 mb-2" (click)="submit(true)">Confirmar</button>
+    </div>
+    <div class="col-6">
+      <button type="button" class="btn btn-danger w-100" (click)="submit(false)">Cambiar</button>
+    </div>
+  </div>
+</div>

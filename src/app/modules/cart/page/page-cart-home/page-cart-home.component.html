@@ -1,0 +1,22 @@
+<div class="site site_b2b">
+    <div class="site-header">
+        <app-header-topbar></app-header-topbar>
+        <div class="d-flex search-group-bar">
+            <div class=" p-0">
+                <div class="site-header__logo">
+                    <a [routerLink]="['/','inicio']">
+                        <img height="80" [src]="logoSrc" alt="logo-implementos" class="lazyload">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- site__body -->
+    <div class="site__body">
+        <router-outlet></router-outlet>
+    </div>
+    <!-- site__body / end -->
+
+</div>
+<!-- site / end -->

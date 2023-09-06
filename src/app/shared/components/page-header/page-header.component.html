@@ -1,0 +1,152 @@
+<div
+  class="page-header {{ class }} pl-5"
+  [ngClass]="{
+    'px-lg-4': !class,
+    'pl-C': header == 'Contacto'
+  }"
+>
+  <div
+    class="page-header__container px-sm-4 d-flex align-items-center row mb-3"
+    [ngClass]="HideOnFicha() ? '' : 'titleBusqueda'"
+    [ngStyle]="{ 'margin-top': innerWidth < 530 ? '25px' : '0px' }"
+  >
+    <div *ngIf="header || headerSubtitle" class="page-header__title mr-auto">
+      <h1 class="float-left">{{ header }}</h1>
+      <h2 class="float-left">{{ headerSubtitle }}</h2>
+    </div>
+
+    <div *ngIf="returnUrl != ''" class="mr-auto page-return my-auto">
+      <a class="link" [routerLink]="returnUrl">
+        <i class="fas fa-chevron-left"></i> Regresar
+      </a>
+    </div>
+    <ng-container *ngIf="innerWidth >= 530 && innerWidth < 1025; px">
+      <div
+        *ngIf="totalRegistros > 0 && !url.includes('_MARCA')"
+        class="col-12 pt-1 mr-1 textToSearch col-xs-12 textToSearchLocation"
+        [hidden]="HideOnFicha() ? true : false"
+      >
+        <div class="text-center">
+          <div style="font-size: 18px">
+            (<strong>{{ totalRegistros }}</strong
+            >) Resultados en: <span> {{ decodedUrl(textToSearch) }}</span>
+            <ng-container *ngIf="breadcrumbs.length > 0">
+              <strong> {{ breadcrumbs[0].label || "" | titlecase }} </strong>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div
+        *ngIf="totalRegistros > 0 && url.includes('_MARCA')"
+        class="col-12 pt-1 mr-1 textToSearch col-xs-12 textToSearchLocation"
+        [hidden]="HideOnFicha() ? true : false"
+      >
+        <div class="text-left">
+          <div style="font-size: 18px">
+            (<strong>{{ totalRegistros }}</strong
+            >) Resultados en:
+            <ng-container>
+              <strong>
+                {{ url.split("=")[1].split("&")[0] | titlecase }}</strong
+              >
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="innerWidth < 530">
+      <div
+        *ngIf="totalRegistros > 0 && !url.includes('_MARCA')"
+        class="col-12 pt-1 mr-1 textToSearch col-xs-12 textToSearchLocation"
+        [hidden]="HideOnFicha() ? true : false"
+      >
+        <div class="text-center">
+          <div style="font-size: 15px">
+            (<strong>{{ totalRegistros }}</strong
+            >) Resultados en: <span> {{ decodedUrl(textToSearch) }}</span>
+            <ng-container *ngIf="breadcrumbs.length > 0">
+              <strong> {{ breadcrumbs[0].label || "" | titlecase }} </strong>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div
+        *ngIf="totalRegistros > 0 && url.includes('_MARCA')"
+        class="col-12 pt-1 mr-1 textToSearch col-xs-12 textToSearchLocation"
+        [hidden]="HideOnFicha() ? true : false"
+      >
+        <div class="text-left">
+          <div style="font-size: 15px">
+            (<strong>{{ totalRegistros }}</strong
+            >) Resultados en:
+            <ng-container>
+              <strong>
+                {{ url.split("=")[1].split("&")[0] | titlecase }}</strong
+              >
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <div
+      *ngIf="totalRegistros && totalRegistros === 0 && !breadcrumbs[0]?.label"
+      class="col-12 pt-1 mr-1 font-weight-bold textToSearch col-xs-12 textToSearchLocation"
+      [hidden]="HideOnFicha() ? true : false"
+    >
+      <div class="container">
+        <h5 class="text-center mt-2 text-secondary">
+          Oops!... no se encontraron resultados!
+          <i class="fa fa-exclamation-triangle"></i>
+        </h5>
+      </div>
+    </div>
+
+    <div
+      class="page-header__breadcrumb pt-0 pt-md-1 col-xs-12"
+      [hidden]="HideOnFicha() ? false : true"
+    >
+      <nav aria-label="breadcrumb ">
+        <ol class="breadcrumb flex-nowrap">
+          <ng-container *ngFor="let breadcrumb of breadcrumbs; last as last">
+            <ng-container *ngIf="innerWidth >= 774">
+              <li
+                *ngIf="!last"
+                class="breadcrumb-item pr-2 d-flex align-items-center"
+              >
+                <a [routerLink]="breadcrumb.url">{{ breadcrumb?.label }}</a>
+                <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+              </li>
+              <li *ngIf="last" class="breadcrumb-item active">
+                {{ breadcrumb?.label }}
+              </li>
+            </ng-container>
+            <li
+              *ngIf="last"
+              class="breadcrumb-item pr-2 d-flex align-items-center"
+            >
+              <ng-container *ngIf="innerWidth < 774">
+                <i class="fas fa-chevron-right" style="margin-right: 10px"></i>
+                <ng-container *ngIf="breadcrumbs.length == 1">
+                  <a
+                    class="text-left"
+                    [routerLink]="breadcrumbs[breadcrumbs.length - 1].url"
+                    >{{ breadcrumbs[breadcrumbs.length - 1].label }}</a
+                  >
+                </ng-container>
+
+                <ng-container *ngIf="breadcrumbs.length > 1">
+                  <a
+                    class="text-left"
+                    [routerLink]="breadcrumbs[breadcrumbs.length - 2].url"
+                    >{{ breadcrumbs[breadcrumbs.length - 2].label }}</a
+                  >
+                </ng-container>
+              </ng-container>
+            </li>
+          </ng-container>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>

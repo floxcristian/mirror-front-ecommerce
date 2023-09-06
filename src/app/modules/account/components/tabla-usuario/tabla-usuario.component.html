@@ -1,41 +1,63 @@
 <app-loading-element *ngIf="loadingData"></app-loading-element>
-<div *ngIf="!loadingData" class="table-responsive-sm" style="margin-top: 20px;">
-    <table datatable [dtOptions]="dtOptions"  class="row-border hover">
-
-        <tbody *ngIf="users.length != 0">
-            <tr *ngFor="let user of users">
-                <td >{{ user.username }}</td>
-                <td >{{ user.first_name | titlecase }}</td>
-                <td >{{ user.last_name | titlecase }}</td>
-                <td ><ng-container *ngIf="user.phone!==undefined">{{ user.phone }}</ng-container>
-                    <ng-container *ngIf="user.phone===undefined"><font color="red">S/N</font></ng-container></td>
-                <td >{{ user.email }}</td>
-                <td >{{ user.user_role }}</td>
-                <td align="center">
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="s{{ user._id }}" [disabled]="true" [checked]="user.active">
-                        <label class="custom-control-label" for="{{ user._id }}"></label>
-                    </div>
-                </td>
-                <td align="center">
-                    <div class="col-sm-12">
-                    <div class="row">
-                    <div class="col-sm-6" style="cursor: pointer;" (click)="Editar(user)">
-                        <i class="fas fa-edit" style="color:blue;font-size:18px"></i>
-                    </div>
-                    <div class="col-sm-6" style="cursor: pointer;" (click)="Eliminar(user)">
-                        <i class="fas fa-trash-alt" style="color:red;font-size:18px"></i>
-                    </div>
-                </div>
+<div *ngIf="!loadingData" class="table-responsive-sm" style="margin-top: 20px">
+  <table datatable [dtOptions]="dtOptions" class="row-border hover">
+    <tbody *ngIf="users.length != 0">
+      <tr *ngFor="let user of users">
+        <td>{{ user.username }}</td>
+        <td>{{ user.first_name | titlecase }}</td>
+        <td>{{ user.last_name | titlecase }}</td>
+        <td>
+          <ng-container *ngIf="user.phone !== undefined">{{
+            user.phone
+          }}</ng-container>
+          <ng-container *ngIf="user.phone === undefined"
+            ><font color="red">S/N</font></ng-container
+          >
+        </td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.user_role }}</td>
+        <td align="center">
+          <div class="custom-control custom-switch">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="s{{ user._id }}"
+              [disabled]="true"
+              [checked]="user.active"
+            />
+            <label class="custom-control-label" for="{{ user._id }}"></label>
+          </div>
+        </td>
+        <td align="center">
+          <div class="col-sm-12">
+            <div class="row">
+              <div
+                class="col-sm-6"
+                style="cursor: pointer"
+                (click)="Editar(user)"
+              >
+                <i class="fas fa-edit" style="color: blue; font-size: 18px"></i>
+              </div>
+              <div
+                class="col-sm-6"
+                style="cursor: pointer"
+                (click)="Eliminar(user)"
+              >
+                <i
+                  class="fas fa-trash-alt"
+                  style="color: red; font-size: 18px"
+                ></i>
+              </div>
             </div>
-                </td>
-            </tr>
-            </tbody>
-            <tbody *ngIf="users.length == 0">
-                <tr>
-                    <td colspan="9">No existes compradores asociado a este cliente</td>
-                    </tr>
-            </tbody>
-    </table>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+    <tbody *ngIf="users.length == 0">
+      <tr>
+        <td colspan="9">No existes compradores asociado a este cliente</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 <app-modaluser></app-modaluser>

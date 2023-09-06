@@ -1,0 +1,88 @@
+<div class="mt-2 ml-4 mb-3">
+  <div class="dia-container-deshabilitado">
+    <div class="row" (click)="openModal(content)">
+      <div class="col-12" *ngIf="select" style="margin-left: 10px">
+        <p style="font-size: 16px; margin-bottom: 0px; margin-right: 10px">
+          <i class="far fa-calendar-alt" style="margin-right: 10px"></i> {{ FECHA.diaSemana }}. {{ FECHA.numeroDia }}-{{
+            FECHA.mes
+          }}
+          <font *ngIf="FECHA.valor > 0" style="font-size: 16px">
+            <strong>{{ FECHA.habilitado ? (FECHA.valor | currency : 'CLP') : '' }}</strong>
+          </font>
+          <font *ngIf="FECHA.valor == 0" style="font-size: 16px"><strong>Gratis</strong></font>
+        </p>
+        <p style="color: #8d8d8d; margin-left: -84px; font-size: 13px">
+          <i class="fa-solid fa-pen-to-square" style="margin-left: 10px"></i> Cambiar Fecha
+        </p>
+      </div>
+
+      <div class="col-12" *ngIf="!select" style="margin-left: 10px">
+        <p style="color: #8d8d8d; margin-left: -84px; font-size: 16px; margin-bottom: 0px">
+          <i class="fa-solid fa-pen-to-square" style="margin-left: 10px"></i> Seleccione una fecha
+        </p>
+        <p style="font-size: 16px; margin-left: -70px; font-weight: bold">
+          {{ fecha_seleccionar }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header pull-left">
+    <h5 class="modal-title" style="font-size: 16px" id="modal-basic-title">
+      <font color="#0063b9"
+        ><i class="fa-sharp fa-solid fa-circle-check" style="margin-right: 10px"></i> Seleccione una fecha</font
+      >
+    </h5>
+
+    <button type="button" class="close" (click)="Close()">
+      <i class="fas fa-times-circle" style="color: #00549d"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row mb-3">
+      <div class="col-2 d-flex justify-content-center align-items-center">
+        <i class="fa-regular fa-circle-info" style="font-size: 20px"></i>
+      </div>
+      <div class="col-10">la información de disponibilidad puede variar durante la compra.</div>
+    </div>
+    <div class="table-responsive overflow-auto">
+      <table class="tabla-dias table table-sm table-borderless">
+        <tbody>
+          <tr class="dia-container-habilitado" *ngFor="let fecha of semanas[semanaActual].fechas">
+            <div
+              (click)="SeleccionarEnvio(fecha)"
+              [ngClass]="itemSelectedindex == fecha.index ? 'dia-container-activado' : ''"
+              style="margin-bottom: 10px"
+            >
+              <td style="width: 20%">
+                <i
+                  class="fa-sharp fa-solid fa-circle-check"
+                  style="font-size: 20px"
+                  [ngStyle]="{ color: itemSelectedindex == fecha.index ? '#118565' : '#D1D1D1' }"
+                ></i>
+              </td>
+              <td>
+                <div class="row" style="color: #00549d">
+                  <div class="col-lg-12" style="font-size: 13px">
+                    {{ fecha.diaSemana }}. {{ fecha.numeroDia }}-{{ fecha.mes }}
+                  </div>
+                  <div class="col-lg-12" *ngIf="fecha.valor > 0" style="font-size: 13px">
+                    <strong>{{ fecha.habilitado ? (fecha.valor | currency : 'CLP') : '' }}</strong>
+                  </div>
+                  <div class="col-lg-12" *ngIf="fecha.valor == 0" style="font-size: 14px"><strong>Gratis</strong></div>
+                </div>
+              </td>
+              <td>
+                <div class="row" style="color: #00549d">
+                  <div class="col-lg-12" style="font-size: 13px">Seleccionar fecha</div>
+                </div>
+              </td>
+            </div>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-template>

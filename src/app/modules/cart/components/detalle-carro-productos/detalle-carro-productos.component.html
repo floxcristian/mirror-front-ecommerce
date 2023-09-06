@@ -1,0 +1,58 @@
+<ng-container *ngIf="products.length || shippingNotSupported.length">
+  <div *ngIf="seeProducts" class="dropcart__products-list">
+    <ng-container *ngIf="products.length > 0">
+      <div class="row m-0" class="mensaje-entrega mb-3">
+        <div class="header">
+          <i class="fas fa-check-circle" style="margin-right: 10px"></i>
+          <span class="font-weight-bold"> {{ shippingTypeTitle }}</span>
+        </div>
+        <app-products-list-summary-cart [products]="products"> </app-products-list-summary-cart>
+      </div>
+    </ng-container>
+
+    <div *ngIf="shippingNotSupported.length > 0">
+      <div class="row m-0" class="conflicto-entrega mb-3">
+        <div class="header">
+          <i class="fas fa-info-circle" style="margin-right: 10px"> </i>
+          <span class="font-weight-bold">Productos no disponible</span>
+        </div>
+        <app-products-list-summary-cart [products]="shippingNotSupported"> </app-products-list-summary-cart>
+        <div class="footer"></div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="seePrices" class="dropcart__totals" [ngClass]="{ 'border-0': seeProducts == false }">
+    <table>
+      <ng-container *ngIf="show">
+        <tr *ngIf="(cart.totals$ | async).length">
+          <th>Subtotal</th>
+
+          <td style="color: #0d61bb; font-weight: bold">{{ cart.subtotal$ | async | currencyFormat }}</td>
+        </tr>
+        <tr *ngFor="let total of cart.totals$ | async" [ngClass]="{ 'td-discount': total.type == 'discount' }">
+          <ng-container *ngIf="router.url != '/carro-compra/resumen'">
+            <th>{{ total.title }}</th>
+            <td style="color: #0d61bb; font-weight: bold">{{ total.price | currencyFormat }}</td>
+          </ng-container>
+          <ng-container *ngIf="total.title !== undefined">
+            <ng-container
+              *ngIf="
+                router.url == '/carro-compra/resumen' &&
+                total.title.indexOf('Despacho') == -1 &&
+                total.title.indexOf('Retiro') == -1
+              "
+            >
+              <th>{{ total.title }}</th>
+              <td style="color: #0d61bb">{{ total.price | currencyFormat }}</td>
+            </ng-container>
+          </ng-container>
+        </tr>
+        <tr>
+          <th style="color: #0d61bb">Total</th>
+          <td class="font-weight-bold" style="color: #0d61bb">{{ cart.total$ | async | currencyFormat }}</td>
+        </tr>
+      </ng-container>
+    </table>
+  </div>
+</ng-container>

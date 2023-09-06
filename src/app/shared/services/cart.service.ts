@@ -1029,8 +1029,8 @@ export class CartService {
     );
   }
 
-  purchaseRequest(data: any) {
-    return this.http.put(
+  purchaseRequest(data: any): Observable<ResponseApi> {
+    return this.http.put<ResponseApi>(
       environment.apiImplementosCarro + `solicitaraprobacion`,
       data
     );

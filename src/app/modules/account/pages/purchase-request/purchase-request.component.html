@@ -1,190 +1,264 @@
-<div class=" ">
-
-    <div class="top-bar-categories d-flex  align-items-center">
-        <div class="title d-flex align-items-center mr-auto ">
-            <i _ngcontent-serverapp-c11="" class="fas fa-file-invoice mr-3"></i>
-            <h5>Solicitudes de compra pendientes de aprobación</h5>
-        </div>
+<div>
+  <div class="top-bar-categories d-flex align-items-center">
+    <div class="title d-flex align-items-center mr-auto">
+      <i _ngcontent-serverapp-c11="" class="fas fa-file-invoice mr-3"></i>
+      <h5>Solicitudes de compra pendientes de aprobación</h5>
     </div>
+  </div>
 
-    <div class=" row m-0">
+  <div class="row m-0">
+    <div class="col-xl-12">
+      <div class="card mt-3">
+        <div class="card-body table-responsive">
+          <app-loading-element
+            *ngIf="loadingPage"
+            [text]="'Generando orden de venta'"
+          ></app-loading-element>
+          <ng-container *ngIf="viewActive == 'list'">
+            <table
+              datatable
+              [dtOptions]="dtOptions"
+              class="hover datatable nowrap table-shadow"
+              style="width: 100%"
+            >
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Estado</th>
+                  <th>Monto OV</th>
+                  <th>Folio OC</th>
+                  <th>Monto OC</th>
+                  <th>Solicita</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody *ngIf="orders?.length != 0">
+                <tr *ngFor="let item of orders">
+                  <td>{{ item.modificacion | date : "dd-MM-yyyy HH:mm" }}</td>
+                  <td>
+                    <span
+                      class="badge"
+                      [ngClass]="{
+                        'badge-danger': item?.estado == 'rechazado',
+                        'badge-warning': item?.estado == 'pendiente'
+                      }"
+                    >
+                      {{ item?.estado | capitalizeFirst }}
+                    </span>
+                  </td>
+                  <td>{{ item?.totalOv | currencyFormat }}</td>
+                  <td>
+                    {{ item?.folio }}
+                    <span *ngIf="item?.folio == null">No definido</span>
+                  </td>
+                  <td>
+                    {{ item?.montoOcCliente | currencyFormat }}
+                    <span *ngIf="item?.montoOcCliente == null"
+                      >No definido</span
+                    >
+                  </td>
+                  <td>{{ item?.usuario }}</td>
+                  <td>
+                    <div class="btn-group" dropdown>
+                      <button
+                        id="button-basic"
+                        dropdownToggle
+                        data-boundary="body"
+                        type="button"
+                        class="btn btn-border-primary dropdown-toggle"
+                      >
+                        Opciones
+                        <span class="caret"></span>
+                      </button>
+                      <ul
+                        id="dropdown-basic"
+                        *dropdownMenu
+                        class="dropdown-menu dropdown-menu-right"
+                        role="menu"
+                        aria-labelledby="button-basic"
+                      >
+                        <li role="menuitem">
+                          <a
+                            class="dropdown-item"
+                            (click)="viewOrderDetail(item)"
+                          >
+                            <i class="far fa-file-alt"></i>
+                            Ver detalle
+                          </a>
+                        </li>
 
-        <div class="col-xl-12">
-            <div class="card mt-3 ">
-                <div class="card-body table-responsive ">
-                    <app-loading-element *ngIf="loadingPage" [text]="'Generando orden de venta'"></app-loading-element>
-                    <ng-container *ngIf="viewActive=='list'">
-                        <table datatable [dtOptions]="dtOptions" class=" hover datatable nowrap  table-shadow"
-                            style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Estado</th>
-                                    <th>Monto OV</th>
-                                    <th>Folio OC</th>
-                                    <th>Monto OC</th>
-                                    <th>Solicita</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody *ngIf="orders?.length != 0">
-                                <tr *ngFor="let item of orders">
-                                    <td>{{ item.modificacion  | date:'dd-MM-yyyy HH:mm' }}</td>
-                                    <td>
-                                        <span class="badge" [ngClass]="{'badge-danger': item?.estado=='rechazado', 'badge-warning': item?.estado=='pendiente'}">
-                                            {{ item?.estado  | capitalizeFirst  }}
-                                        </span>
-                                    </td>
-                                    <td>{{ item?.totalOv  | currencyFormat  }}</td>
-                                    <td>{{ item?.folio }} <span *ngIf="item?.folio==null">No definido</span></td>
-                                    <td>{{ item?.montoOcCliente | currencyFormat }} <span
-                                            *ngIf="item?.montoOcCliente==null">No definido</span></td>
-                                    <td>{{ item?.usuario }}</td>
-                                    <td>
-                                        <div class="btn-group" dropdown>
-                                            <button id="button-basic" dropdownToggle data-boundary="body" type="button"
-                                                class="btn btn-border-primary dropdown-toggle">
-                                                Opciones
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul id="dropdown-basic" *dropdownMenu
-                                                class="dropdown-menu dropdown-menu-right" role="menu"
-                                                aria-labelledby="button-basic">
-
-                                                <li role="menuitem">
-                                                    <a class="dropdown-item" (click)="viewOrderDetail(item);">
-                                                        <i class="far fa-file-alt"></i>
-                                                        Ver detalle
-                                                    </a>
-                                                </li>
-
-                                                <li role="menuitem"
-                                                    *ngIf="usuario.user_role=='supervisor' && item?.folio==null">
-                                                    <a class="dropdown-item">
-                                                        <i class="fas fa-marker"></i>
-                                                        Completar pedido
-                                                    </a>
-                                                </li>
-
-                                                <li role="menuitem"
-                                                    *ngIf="usuario.user_role=='supervisor' && item?.folio!=null && item?.estado=='pendiente' ">
-                                                    <a class="dropdown-item" (click)="approveOrder(item)">
-                                                        <i class="far fa-thumbs-up"></i>
-                                                        Aprobar compra
-                                                    </a>
-                                                </li>
-
-                                                <li role="menuitem"
-                                                    *ngIf="usuario.user_role=='supervisor' && item?.folio!=null && item?.estado=='pendiente'  ">
-                                                    <a class="dropdown-item" (click)="refuseOrder(item)">
-                                                        <i class="far fa-thumbs-down"></i>
-                                                        Rechazar compra
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tbody *ngIf="orders?.length == 0">
-                                <tr>
-                                    <td colspan="7" class="no-data-available">No hay registros a mostrar!</td>
-                                </tr>
-                            <tbody>
-                        </table>
-                    </ng-container>
-
-                    <ng-container *ngIf="viewActive=='detail'">
-                        <button class=" btn  btn-border-primary mb-3" (click)="backToList()">
-                            <i class="fas fa-chevron-left"></i>
-                            Atrás
-                        </button>
-                        <button class=" btn  btn-border-primary mb-3 float-right" (click)="approveOrder(order)"
-                            *ngIf="order?.folio!=null && usuario.user_role=='supervisor' && order?.estado=='pendiente' ">
-                            <i class="far fa-thumbs-up"></i>
-                            Aprobar compra
-                        </button>
-                        <button class=" btn  btn-border-primary mb-3 float-right mr-2" (click)="refuseOrder(order)"
-                            *ngIf="order?.folio!=null && usuario.user_role=='supervisor' && order?.estado=='pendiente' " >
-                            <i class="far fa-thumbs-down"></i>
-                            Rechazar compra
-                        </button>
-                        <button class=" btn  btn-border-primary mb-3 float-right" (click)="backToList()"
-                            *ngIf="order?.folio==null && usuario.user_role=='supervisor' && order?.estado=='pendiente' ">
+                        <li
+                          role="menuitem"
+                          *ngIf="
+                            usuario.user_role == 'supervisor' &&
+                            item?.folio == null
+                          "
+                        >
+                          <a class="dropdown-item">
                             <i class="fas fa-marker"></i>
                             Completar pedido
-                        </button>
-                        <app-order-details [title]="'Solicitud de compra'" [id]="orderId"></app-order-details>
-                    </ng-container>
+                          </a>
+                        </li>
 
-                </div>
+                        <li
+                          role="menuitem"
+                          *ngIf="
+                            usuario.user_role == 'supervisor' &&
+                            item?.folio != null &&
+                            item?.estado == 'pendiente'
+                          "
+                        >
+                          <a class="dropdown-item" (click)="approveOrder(item)">
+                            <i class="far fa-thumbs-up"></i>
+                            Aprobar compra
+                          </a>
+                        </li>
 
-            </div>
+                        <li
+                          role="menuitem"
+                          *ngIf="
+                            usuario.user_role == 'supervisor' &&
+                            item?.folio != null &&
+                            item?.estado == 'pendiente'
+                          "
+                        >
+                          <a class="dropdown-item" (click)="refuseOrder(item)">
+                            <i class="far fa-thumbs-down"></i>
+                            Rechazar compra
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tbody *ngIf="orders?.length == 0">
+                <tr>
+                  <td colspan="7" class="no-data-available">
+                    No hay registros a mostrar!
+                  </td>
+                </tr>
+              </tbody>
+
+              <tbody></tbody>
+            </table>
+          </ng-container>
+
+          <ng-container *ngIf="viewActive == 'detail'">
+            <button class="btn btn-border-primary mb-3" (click)="backToList()">
+              <i class="fas fa-chevron-left"></i>
+              Atrás
+            </button>
+            <button
+              class="btn btn-border-primary mb-3 float-right"
+              (click)="approveOrder(order)"
+              *ngIf="
+                order?.folio != null &&
+                usuario.user_role == 'supervisor' &&
+                order?.estado == 'pendiente'
+              "
+            >
+              <i class="far fa-thumbs-up"></i>
+              Aprobar compra
+            </button>
+            <button
+              class="btn btn-border-primary mb-3 float-right mr-2"
+              (click)="refuseOrder(order)"
+              *ngIf="
+                order?.folio != null &&
+                usuario.user_role == 'supervisor' &&
+                order?.estado == 'pendiente'
+              "
+            >
+              <i class="far fa-thumbs-down"></i>
+              Rechazar compra
+            </button>
+            <button
+              class="btn btn-border-primary mb-3 float-right"
+              (click)="backToList()"
+              *ngIf="
+                order?.folio == null &&
+                usuario.user_role == 'supervisor' &&
+                order?.estado == 'pendiente'
+              "
+            >
+              <i class="fas fa-marker"></i>
+              Completar pedido
+            </button>
+            <app-order-details
+              [title]="'Solicitud de compra'"
+              [id]="orderId"
+            ></app-order-details>
+          </ng-container>
         </div>
-
+      </div>
     </div>
-
-
-
-
-
+  </div>
 </div>
 
-
-
 <ng-template #modalApprove>
-    <div class="modal-header">
-        <h4 class="modal-title pull-left">Aprobar solicitud de compra</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="modalApproveRef.hide()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body modal-body-min">
-        ¿Esta seguro que desea aprobar la solicitud de compra?
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Aprobar solicitud de compra</h4>
+    <button
+      type="button"
+      class="close pull-right"
+      aria-label="Close"
+      (click)="modalApproveRef.hide()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-body-min">
+    ¿Esta seguro que desea aprobar la solicitud de compra?
+  </div>
 
-    </div>
+  <div class="modal-footer">
+    <button class="btn btn-border-primary" (click)="modalApproveRef.hide()">
+      <i class="fas fa-ban"></i>
+      Cancelar
+    </button>
 
-    <div class="modal-footer">
-        <button class="btn btn-border-primary" (click)="modalApproveRef.hide();">
-            <i class="fas fa-ban"></i>
-            Cancelar
-        </button>
-
-        <button class="btn btn-secondary" (click)="confirmApproveOrder()">
-            <i class="fas fa-check"></i>
-            Aceptar
-        </button>
-
-    </div>
+    <button class="btn btn-secondary" (click)="confirmApproveOrder()">
+      <i class="fas fa-check"></i>
+      Aceptar
+    </button>
+  </div>
 </ng-template>
 
 <ng-template #modalRefuse>
-    <div class="modal-header">
-        <h4 class="modal-title pull-left">Rechazar solicitud de compra</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRefuseRef.hide()">
-            <span aria-hidden="true">&times;</span>
-        </button>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Rechazar solicitud de compra</h4>
+    <button
+      type="button"
+      class="close pull-right"
+      aria-label="Close"
+      (click)="modalRefuseRef.hide()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-body-min">
+    ¿Esta seguro que desea rechazar la solicitud de compra?
+
+    <div class="form-group mt-3">
+      <label>Observación</label>
+      <textarea
+        rows="3"
+        class="form-control"
+        [(ngModel)]="obsRefuse"
+      ></textarea>
     </div>
-    <div class="modal-body modal-body-min">
-        ¿Esta seguro que desea rechazar la solicitud de compra?
+  </div>
 
-        <div class="form-group mt-3">
-            <label>Observación</label>
-            <textarea rows="3" class="form-control" [(ngModel)]="obsRefuse"></textarea>
-        </div>
+  <div class="modal-footer">
+    <button class="btn btn-border-primary" (click)="modalRefuseRef.hide()">
+      <i class="fas fa-ban"></i>
+      Cancelar
+    </button>
 
-    </div>
-
-    <div class="modal-footer">
-        <button class="btn btn-border-primary" (click)="modalRefuseRef.hide();">
-            <i class="fas fa-ban"></i>
-            Cancelar
-        </button>
-
-        <button class="btn btn-danger" (click)="confirmRefuseOrder()">
-            <i class="fas fa-check"></i>
-            Aceptar
-        </button>
-
-    </div>
+    <button class="btn btn-danger" (click)="confirmRefuseOrder()">
+      <i class="fas fa-check"></i>
+      Aceptar
+    </button>
+  </div>
 </ng-template>

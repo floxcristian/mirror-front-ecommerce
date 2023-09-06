@@ -1,30 +1,60 @@
-<app-tracking-steps [tipoEntrega]="detalle.ModoEntrega" [OVEstados]="OVEstados" [OV]="Ov"></app-tracking-steps>
+<app-tracking-steps
+  [tipoEntrega]="detalle.ModoEntrega"
+  [OVEstados]="OVEstados"
+  [OV]="Ov"
+></app-tracking-steps>
 <div class="row">
   <div [ngClass]="servicio_despacho.length > 0 ? 'col-sm-12' : 'col-sm-12'">
     <div class="info-entrega" style="margin-bottom: 10px">
-      <div class="header"><i class="fas fa-info-circle" style="margin-right: 10px"></i>INFORMACIÓN</div>
+      <div class="header">
+        <i class="fas fa-info-circle" style="margin-right: 10px"></i>INFORMACIÓN
+      </div>
       <div class="body" style="font-size: 14px">
         <div class="row">
           <font color="#0063b9" style="margin-right: 10px">Modo Entrega:</font>
-          <ng-container *ngIf="detalle.ModoEntrega == 'VEN- RPTDA'"> Retiro en Tienda </ng-container>
-          <ng-container *ngIf="detalle.ModoEntrega == 'VEN- DPCLI'"> Despacho a Domicilio </ng-container>
+          <ng-container *ngIf="detalle.ModoEntrega == 'VEN- RPTDA'">
+            Retiro en Tienda
+          </ng-container>
+          <ng-container *ngIf="detalle.ModoEntrega == 'VEN- DPCLI'">
+            Despacho a Domicilio
+          </ng-container>
         </div>
         <div class="row">
-          <font color="#0063b9" style="margin-right: 10px">Direccion Despacho:</font> {{ detalle.DireccionDespacho | titlecase }}
+          <font color="#0063b9" style="margin-right: 10px"
+            >Direccion Despacho:</font
+          >
+          {{ detalle.DireccionDespacho | titlecase }}
         </div>
-        <div class="row" *ngIf="OVEstados.length > 0 && OVEstados[0].EstadoSegPanel === 'RECIBIDO' && recibo">
-          <font color="#0063b9" style="margin-right: 10px">Respaldo de Entrega:</font>
+        <div
+          class="row"
+          *ngIf="
+            OVEstados.length > 0 &&
+            OVEstados[0].EstadoSegPanel === 'RECIBIDO' &&
+            recibo
+          "
+        >
+          <font color="#0063b9" style="margin-right: 10px"
+            >Respaldo de Entrega:</font
+          >
           <i
             class="fa-thin fa-file-lines"
             (click)="OpenModal()"
-            style="margin-left: 10px; color: #0063b9; cursor: pointer; font-size: 20px; font-weight: bold"
+            style="
+              margin-left: 10px;
+              color: #0063b9;
+              cursor: pointer;
+              font-size: 20px;
+              font-weight: bold;
+            "
           ></i>
         </div>
       </div>
     </div>
 
     <div class="info-entrega" style="margin-bottom: 10px">
-      <div class="header"><i class="fas fa-cubes" style="margin-right: 10px"></i>PRODUCTOS</div>
+      <div class="header">
+        <i class="fas fa-cubes" style="margin-right: 10px"></i>PRODUCTOS
+      </div>
       <div class="body" style="font-size: 14px">
         <div class="row">
           <table>
@@ -40,7 +70,9 @@
               <tr *ngFor="let item of productos">
                 <td>
                   <a [routerLink]="['/inicio/productos/ficha/', item.sku]"
-                    ><font color="#0063b9" style="margin-right: 10px">{{ item.sku }}</font></a
+                    ><font color="#0063b9" style="margin-right: 10px">{{
+                      item.sku
+                    }}</font></a
                   >
                 </td>
                 <td>{{ item.nombre | slice : 0 : 30 }}</td>

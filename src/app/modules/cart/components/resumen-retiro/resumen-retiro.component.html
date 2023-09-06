@@ -1,0 +1,16 @@
+<div class="col-sm-12 d-flex justify-content-center" style="color: #0063b9">
+  <h5><i class="fa-solid fa-truck-fast" style="margin-right: 10px"></i> {{ tipo }}</h5>
+</div>
+<hr />
+<div class="row">
+  <div class="col-sm-12"><label>Dirección : </label> {{ direccion[0].calle || direccion[0].direccion }}</div>
+  <div class="col-sm-12"><label>Comuna : </label> {{ direccion[0].comuna }}</div>
+  <div class="col-sm-12" *ngIf="!fechas">
+    <label>Fecha de Entrega : </label> {{ despacho.fechaEntrega | date : 'dd/MM/yyyy' | uppercase }}
+  </div>
+  <ng-container *ngIf="fechas">
+    <div class="col-sm-12" *ngFor="let item of fechas">
+      <label>Fecha de Entrega : </label> {{ item | date : 'dd/MM/yyyy' | uppercase }}
+    </div>
+  </ng-container>
+</div>

@@ -309,7 +309,7 @@ export class ClientsService {
   }
 
   setConcurso(data: any) {
-    return this.http.post(
+    return this.http.post<ResponseApi>(
       environment.apiImplementosClientes + `concurso`,
       data
     );
@@ -323,21 +323,21 @@ export class ClientsService {
   }
 
   setFormularioCyber(data: any) {
-    return this.http.post(
+    return this.http.post<ResponseApi>(
       environment.apiImplementosClientes + `formularioCyber`,
       data
     );
   }
 
   setDevolucion(data: any) {
-    return this.http.post(
+    return this.http.post<ResponseApi>(
       environment.apiImplementosClientes + `devolucion`,
       data
     );
   }
 
-  setConcursoGiftCard(data: any) {
-    return this.http.post(
+  setConcursoGiftCard(data: any): Observable<ResponseApi> {
+    return this.http.post<ResponseApi>(
       environment.apiImplementosClientes + `concursoGiftcard`,
       data
     );

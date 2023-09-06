@@ -1,0 +1,35 @@
+#timer {
+  font-size: 16px;
+  font-weight: 100;
+  color: white;
+  padding: 5px;
+  width: 100%;
+  color: white;
+}
+
+.separador {
+  min-width: 0px !important;
+  background: none !important;
+  text-align: center !important;
+  padding: 5px !important;
+  color: #0063b9 !important;
+}
+
+#timer div {
+  display: inline-block;
+  min-width: 90px;
+  padding-left: 30px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  background: #0063b9;
+  border-radius: 10px;
+  border: 2px solid #0063b9;
+  margin: 5px;
+}
+#timer div span {
+  color: #ffffff;
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 100;
+}

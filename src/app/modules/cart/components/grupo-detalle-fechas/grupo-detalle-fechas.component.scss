@@ -1,0 +1,97 @@
+.prev-next {
+  color: #0063b9;
+  font-size: 11px;
+  padding-right: 30px;
+  padding-left: 30px;
+}
+
+table {
+  border: none;
+}
+
+.prev-next:hover {
+  cursor: pointer;
+  color: #0063b9;
+}
+
+.title-container {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.title-container h5 {
+  padding-bottom: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+.tabla-dias td {
+  padding-top: 0px !important;
+  padding-bottom: 4px !important;
+  padding-left: 10px !important;
+  padding-right: 1px !important;
+  text-align: center;
+
+  overflow-x: auto;
+}
+
+.dia-semana {
+  font-weight: bold;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+.dia-container-habilitado > div {
+  width: 88px !important;
+  height: 83px !important;
+  border: 1px solid #bfbfbf;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.dia-container-habilitado > div > div {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  width: 88px !important;
+  height: 83px !important;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.dia-container-activado {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  width: 88px !important;
+  height: 83px !important;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #0063b9;
+  color: white;
+}
+
+.dia-container-desactivado {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  width: 88px !important;
+  height: 83px !important;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  color: #0063b9;
+}
+
+.dia-container-habilitado > div:hover {
+  cursor: pointer;
+  background-color: #e5f1fa;
+}
+
+.dia-container-deshabilitado > div {
+  width: 88px !important;
+  height: 53px !important;
+  padding: 4px;
+  border: 1px solid #bfbfbf;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  pointer-events: none;
+}

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MapComponent } from './map.component';
+import { AgregarCentroCostoComponent } from './agregar-centro-costo.component';
 
-describe('MapComponent', () => {
-  let component: MapComponent;
-  let fixture: ComponentFixture<MapComponent>;
+describe('AgregarCentroCostoComponent', () => {
+  let component: AgregarCentroCostoComponent;
+  let fixture: ComponentFixture<AgregarCentroCostoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MapComponent ]
+      declarations: [ AgregarCentroCostoComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MapComponent);
+    fixture = TestBed.createComponent(AgregarCentroCostoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

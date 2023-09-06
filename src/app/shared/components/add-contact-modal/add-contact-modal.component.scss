@@ -1,0 +1,13 @@
+.modal-body {
+  min-height: auto !important;
+}
+
+::ng-deep.modal-dialog.modal-addContact {
+  max-width: 700px !important;
+}
+
+.btn-outline-secondary {
+  color: #6c757d;
+  border-color: #6c757d;
+  border: solid 1px !important;
+}

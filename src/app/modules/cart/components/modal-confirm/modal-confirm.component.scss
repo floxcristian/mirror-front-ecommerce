@@ -1,0 +1,104 @@
+.prev-next {
+  color: #0063b9;
+  font-size: 11px;
+  padding-right: 30px;
+  padding-left: 30px;
+}
+.table {
+  background-color: #fff;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 0.9375rem;
+  table-layout: auto;
+  margin: 0;
+  border: 1px solid #e7e7e7 !important;
+}
+.table-responsive {
+  display: block;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+.prev-next:hover {
+  cursor: pointer;
+  color: #0063b9;
+}
+
+.title-container {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.title-container h5 {
+  padding-bottom: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+.tabla-dias td {
+  padding-top: 10px !important;
+  padding-bottom: 4px !important;
+  padding-left: 1px !important;
+  padding-right: 1px !important;
+  text-align: center;
+}
+
+.dia-semana {
+  font-weight: bold;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+.dia-container-habilitado > div {
+  width: 100% !important;
+  height: 53px !important;
+  padding: 8px;
+  border: 1px solid #bfbfbf;
+  background-color: #ffffff;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.dia-container-habilitado > div > div {
+  padding: 8px;
+  width: 100% !important;
+  height: 53px !important;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.dia-container-activado {
+  padding-bottom: 8px;
+
+  display: block;
+  text-align: center;
+
+  background-color: #0063b9 !important;
+  color: white !important;
+}
+
+.dia-container-deshabilitado > div {
+  width: 100% !important;
+  height: 53px !important;
+  border: 1px solid #bfbfbf;
+  background-color: #ffffff;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.dia-container-deshabilitado > div > div {
+  padding-top: 8px;
+  padding-bottom: 15px;
+  width: 100% !important;
+  height: 53px !important;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 11px;
+}
+
+.wrapper {
+  width: 100%;
+  padding: 20px;
+  height: 150px;
+}

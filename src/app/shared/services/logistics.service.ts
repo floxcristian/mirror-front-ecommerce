@@ -18,8 +18,8 @@ export class LogisticsService {
 
   constructor(private http: HttpClient) {}
 
-  obtieneDireccionesCliente(clienteRut: any) {
-    return this.http.get(
+  obtieneDireccionesCliente(clienteRut: any): Observable<ResponseApi> {
+    return this.http.get<ResponseApi>(
       this.urlApi + `direccionescliente?rut=${clienteRut}&tipo=2`
     );
   }
@@ -50,8 +50,8 @@ export class LogisticsService {
     );
   }
 
-  obtieneDireccionesTiendaRetiro(params: any) {
-    return this.http.get(
+  obtieneDireccionesTiendaRetiro(params: any): Observable<ResponseApi> {
+    return this.http.get<ResponseApi>(
       environment.apiImplementosLogistica + `tiendasretiroomni`,
       { params }
     );

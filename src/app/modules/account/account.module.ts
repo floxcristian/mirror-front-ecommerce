@@ -10,6 +10,17 @@ import { SharedModule } from '../../shared/shared.module';
 // components
 import { LayoutComponent } from './components/layout/layout.component';
 
+// Entry components
+/*
+ModalComponent,
+AddFlotaModalComponent,
+UpdateFlotaModalComponent,
+EditarListaProductosComponent,
+AgregarListaProductosMasivaModalComponent,
+AgregarListaProductosUnitariaModalComponent,
+AddCentroCostoModalComponent,
+EditCentroCostoModalComponent*/
+
 // pages
 import { PageAddressesListComponent } from './pages/page-addresses-list/page-addresses-list.component';
 import { PageDashboardComponent } from './pages/page-dashboard/page-dashboard.component';
@@ -38,10 +49,8 @@ import { PageSaveCartComponent } from './pages/page-save-cart/page-save-cart.com
 import { AddressModalComponent } from '../../shared/components/address-modal/address-modal.component';
 // import { CardDashboardChartComponent } from '../../shared/components/card-dashboard-chart/card-dashboard-chart.component';
 import { CardDashboardComponent } from '../../shared/components/card-dashboard/card-dashboard.component';
-import { EditProfileModalComponent } from '../../shared/components/edit-profile-modal/edit-profile-modal.component';
 import { OrderDetailsComponent } from '../../shared/components/order-details/order-details.component';
-import { PasswordModalComponent } from '../../shared/components/password-modal/password-modal.component';
-import { TrackingStepsComponent } from '../../shared/components/tracking-steps/tracking-steps.component';
+
 // import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PageCajaConceptoComponent } from './pages/page-caja-concepto/page-caja-concepto.component';
 import { PageCajaConceptoDemoComponent } from './pages/page-caja-concepto/page-caja-concepto-demo/page-caja-concepto-demo.component';
@@ -53,17 +62,16 @@ import { PageFlotaComponent } from './pages/page-flota/page-flota.component';
 import { AddFlotaModalComponent } from '../../shared/components/add-flota-modal/add-flota-modal.component';
 import { UpdateFlotaModalComponent } from '../../shared/components/update-flota-modal/update-flota-modal.component';
 import { CardDashboardNoChartComponent } from '../../shared/components/card-dashboard-no-chart/card-dashboard-no-chart.component';
-import { CardDashboardLineChartComponent } from '../../shared/components/card-dashboard-line-chart/card-dashboard-line-chart.component';
-import { CardDashboardHorizontalBarChartComponent } from '../../shared/components/card-dashboard-horizontal-bar-chart/card-dashboard-horizontal-bar-chart.component';
 import { PageTrackingOvComponent } from './pages/page-tracking-ov/page-tracking-ov.component';
 import { PageListasDeProductosComponent } from './pages/page-listas-de-productos/page-listas-de-productos.component';
 import { EditarListaProductosComponent } from '../../shared/components/editar-lista-productos/editar-lista-productos.component';
 import { AgregarListaProductosMasivaModalComponent } from '../../shared/components/agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
+import { AgregarListaProductosUnitariaModalComponent } from '../../shared/components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
 import { PageCentrosCostoComponent } from './pages/page-centros-costo/page-centros-costo.component';
 import { AddCentroCostoModalComponent } from './pages/page-centros-costo/components/add-centro-costo-modal/add-centro-costo-modal.component';
 import { EditCentroCostoModalComponent } from './pages/page-centros-costo/components/edit-centro-costo-modal/edit-centro-costo-modal.component';
 import { Trakingb2cComponent } from './pages/trakingb2c/trakingb2c.component';
-import { AgregarListaProductosUnitariaModalComponent } from '../../shared/components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
+
 import { PageGestionUsuarioComponent } from './pages/page-gestion-usuario/page-gestion-usuario.component';
 import { TablaUsuarioComponent } from './components/tabla-usuario/tabla-usuario.component';
 import { ModaluserComponent } from './components/modaluser/modaluser.component';
@@ -72,6 +80,12 @@ import { Modal_reciboComponent } from './components/modal_recibo/modal_recibo/mo
 import { PageComprasComponent } from './pages/page-compras/page-compras.component';
 import { DetallePedidoComponent } from './components/detalle-pedido/detalle-pedido.component';
 import { PaginationModule, PaginationConfig } from 'ngx-bootstrap/pagination';
+import { TrackingStepsComponent } from 'src/app/shared/components/tracking-steps/tracking-steps.component';
+import { CardDashboardHorizontalBarChartComponent } from 'src/app/shared/components/card-dashboard-horizontal-bar-chart/card-dashboard-horizontal-bar-chart.component';
+import { CardDashboardLineChartComponent } from 'src/app/shared/components/card-dashboard-line-chart/card-dashboard-line-chart.component';
+import { PasswordModalComponent } from 'src/app/shared/components/password-modal/password-modal.component';
+import { EditProfileModalComponent } from 'src/app/shared/components/edit-profile-modal/edit-profile-modal.component';
+
 @NgModule({
   declarations: [
     // components
@@ -98,7 +112,6 @@ import { PaginationModule, PaginationConfig } from 'ngx-bootstrap/pagination';
     PageTrackingComponent,
     PageSaveCartComponent,
     AddressModalComponent,
-    // CardDashboardChartComponent,
     CardDashboardNoChartComponent,
     CardDashboardComponent,
     EditProfileModalComponent,
@@ -138,7 +151,6 @@ import { PaginationModule, PaginationConfig } from 'ngx-bootstrap/pagination';
     FormsModule,
     ReactiveFormsModule,
     PaginationModule,
-    // DragDropModule,
   ],
   providers: [PaginationConfig],
 })

@@ -1,85 +1,221 @@
-<div class="top-bar-categories d-flex  align-items-center mb-3" [class.p-0]="innerWidth < 450"
-    [class.pl-3]="innerWidth < 450" [class.pr-3]="innerWidth < 450" (window:resize)="onResize($event)">
-    <div class="title d-flex align-items-center mr-auto ">
-        <i _ngcontent-serverapp-c11="" class="fas fa-truck-moving mr-3"></i>
-        <h5>Carros Guardados</h5>
-    </div>
-    <div class="float-right" *ngIf="lstCart && lstCart.length > 0 && totalPaginas > 1">
-        <button class="btn btm-sm btn-link mr-1" (click)="izquierda()" [disabled]="paginaActual == 1"><i class="fas fa-chevron-left"></i></button>
-        {{ paginaActual }} / {{ totalPaginas }}
-        <button class="btn btm-sm btn-link ml-1" (click)="derecha()" [disabled]="paginaActual == totalPaginas"><i class="fas fa-chevron-right"></i></button>
-    </div>
+<div
+  class="top-bar-categories d-flex align-items-center mb-3"
+  [class.p-0]="innerWidth < 450"
+  [class.pl-3]="innerWidth < 450"
+  [class.pr-3]="innerWidth < 450"
+  (window:resize)="onResize($event)"
+>
+  <div class="title d-flex align-items-center mr-auto">
+    <i _ngcontent-serverapp-c11="" class="fas fa-truck-moving mr-3"></i>
+    <h5>Carros Guardados</h5>
+  </div>
+  <div
+    class="float-right"
+    *ngIf="lstCart && lstCart.length > 0 && totalPaginas > 1"
+  >
+    <button
+      class="btn btm-sm btn-link mr-1"
+      (click)="izquierda()"
+      [disabled]="paginaActual == 1"
+    >
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    {{ paginaActual }} / {{ totalPaginas }}
+    <button
+      class="btn btm-sm btn-link ml-1"
+      (click)="derecha()"
+      [disabled]="paginaActual == totalPaginas"
+    >
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
 </div>
 
 <div class="dashboard row m-0">
-    <div class="col-lg-12 mb-3">
-
-        <div class="card pt-3">
-            <div class="card-body card-body-min-height-loading" [ngStyle]="{'min-height': (lstCart && lstCart.length == 0) ? '40px' : '130px' }">
-                <ng-container>
-                    <app-loading-element class="pt-3" [text]="'Cargando carros de compras guardados'" *ngIf="showLoading"></app-loading-element>
-                    <div class="row mt-3" *ngIf="lstCart && lstCart.length == 0">
-                        <div class="col-12 text-center"> No tiene carros de compras guardados. </div>
-                    </div>
-                    <div class="row mb-3 font-weight-bold" *ngIf="lstCart && lstCart.length > 0">
-                        <div class="col-md-2 d-none d-md-block"> <span class="ml-3">Cantidad </span></div>
-                        <div class="col-md-3 d-none d-md-block"> <span> Fecha Creación </span></div>
-                        <div class="col-md-3 d-none d-md-block"> <span> Total Carro </span></div>
-                        <div class="col-md-2 d-none d-md-block"> <span> Opciones </span></div>
-                        <div class="col-md-2 d-none d-md-block text-right"> <span class="mr-3"> Ver Detalle </span></div>
-                    </div>
-                    <div class="accordion" id="DetalleCarro">
-                        <div *ngFor="let cart of lstCart" class="mb-2">
-                            <div class="border accordion-header">
-                                <div class="mb-0 d-flex align-items-center">
-                                    <div class="col-md-2 col-sm-3 d-none d-sm-flex align-items-center"><i class="fas fa fa-shopping-cart mr-1"></i>{{ cart.productos.length }}<span class="d-none d-xl-inline ml-1">artículo(s)</span></div>
-                                    <div class="col-md-3 d-none d-md-block"> {{ cart.creacion | date:'dd-MM-yyyy' }} </div>
-                                    <div class="col-md-3 col-sm-4 col-5 text-nowrap font-weight-bolder"> {{  getTotalCart(cart.productos) | currencyFormat }} </div>
-                                    <div class="col-md-3 col-sm-4 d-none d-xl-block">
-                                        <button class="btn btn-sm btn-secondary mr-2" style="font-size: 12px;" (click)="updateCart(cart._id,'abierto')">Activar</button>
-                                        <button class="btn btn-sm btn-danger" style="font-size: 12px;" (click)="updateCart(cart._id,'eliminado')">Eliminar</button>
-                                    </div>
-                                    <div class="col-md-3 col-sm-4 col-5 d-xl-none d-block text-nowrap">
-                                        <button class="btn btn-secondary btn-sm mr-sm-2 mr-1" style="font-size: 12px;" title="Activar Carro" (click)="updateCart(cart._id,'abierto')" ><i class="far fa-check-circle"></i></button>
-                                        <button class="btn btn-danger btn-sm" style="font-size: 12px;" title="Borrar Carro" (click)="updateCart(cart._id,'eliminado')"><i class="far fa-trash-alt"></i></button>
-                                    </div>
-                                    <div class="col-md-1 col-sm-1 col-2 text-right">
-                                        <span class="fas fa-search mr-1" style="cursor:pointer" data-toggle="collapse" [attr.data-target]="'#ID'+cart._id" aria-expanded="false" [attr.aria-controls]="'ID' + cart._id"></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div [id]="'ID' + cart._id" class="collapse" data-parent="#DetalleCarro">
-                                <div class="border-left border-right border-bottom d-flex flex-wrap justify-content-center flex-column">
-                                    <div class="d-sm-flex d-block align-items-center flex-grow-1 flex-shrink-1 border-bottom" *ngFor="let item of cart.productos">
-                                        <div class="col-12 d-block d-sm-none text-center">
-                                            <span class="product-title"> {{ item.nombre | titlecase }} <b>X</b> {{ item.cantidad }} </span>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-2 text-center align-items-center">
-                                            <a [routerLink]="root.product(item.sku, item.nombre)">
-                                                <img class="cart-img lazyload" [src]="root.getUrlImagenMiniatura(item)" [alt]="item.nombre">
-                                            </a>
-                                        </div>
-                                        <div class="col-8 col-sm-5 col-xl-6 d-flex align-items-center">
-                                            <span class="product-title d-none d-sm-block"> {{ item.nombre | titlecase }} </span>
-                                            <span class="product-sku text-gray-2 ml-2 d-none d-xl-block"> {{ item.sku }} </span>
-                                            <span class="product-sku text-gray-2 ml-2 d-none d-xl-block"> {{ item.marca }} </span>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                        <div class="col-3 col-sm-2 d-flex align-items-center text-nowrap">
-                                            <span class="precio d-none d-md-block mr-1">{{ item.precio | currencyFormat }}</span><span class="cantidad d-none d-sm-block"> x {{item.cantidad}} </span>
-                                        </div>
-                                        <div class="col-12 col-sm-3 col-xl-2 text-right text-nowrap" [ngClass]="MobileView() ? '' : 'd-flex align-items-center' ">
-                                            <span class="cart-subtitle d-none d-md-block">Sub Total</span>
-                                            <span class="cart-price-value ml-2">{{ item.precio * item.cantidad | currencyFormat }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </ng-container>
+  <div class="col-lg-12 mb-3">
+    <div class="card pt-3">
+      <div
+        class="card-body card-body-min-height-loading"
+        [ngStyle]="{
+          'min-height': lstCart && lstCart.length == 0 ? '40px' : '130px'
+        }"
+      >
+        <ng-container>
+          <app-loading-element
+            class="pt-3"
+            [text]="'Cargando carros de compras guardados'"
+            *ngIf="showLoading"
+          ></app-loading-element>
+          <div class="row mt-3" *ngIf="lstCart && lstCart.length == 0">
+            <div class="col-12 text-center">
+              No tiene carros de compras guardados.
             </div>
-        </div>
+          </div>
+          <div
+            class="row mb-3 font-weight-bold"
+            *ngIf="lstCart && lstCart.length > 0"
+          >
+            <div class="col-md-2 d-none d-md-block">
+              <span class="ml-3">Cantidad </span>
+            </div>
+            <div class="col-md-3 d-none d-md-block">
+              <span> Fecha Creación </span>
+            </div>
+            <div class="col-md-3 d-none d-md-block">
+              <span> Total Carro </span>
+            </div>
+            <div class="col-md-2 d-none d-md-block">
+              <span> Opciones </span>
+            </div>
+            <div class="col-md-2 d-none d-md-block text-right">
+              <span class="mr-3"> Ver Detalle </span>
+            </div>
+          </div>
+          <div class="accordion" id="DetalleCarro">
+            <div *ngFor="let cart of lstCart" class="mb-2">
+              <div class="border accordion-header">
+                <div class="mb-0 d-flex align-items-center">
+                  <div
+                    class="col-md-2 col-sm-3 d-none d-sm-flex align-items-center"
+                  >
+                    <i class="fas fa fa-shopping-cart mr-1"></i
+                    >{{ cart.productos.length
+                    }}<span class="d-none d-xl-inline ml-1">artículo(s)</span>
+                  </div>
+                  <div class="col-md-3 d-none d-md-block">
+                    {{ cart.creacion | date : "dd-MM-yyyy" }}
+                  </div>
+                  <div
+                    class="col-md-3 col-sm-4 col-5 text-nowrap font-weight-bolder"
+                  >
+                    {{ getTotalCart(cart.productos) | currencyFormat }}
+                  </div>
+                  <div class="col-md-3 col-sm-4 d-none d-xl-block">
+                    <button
+                      class="btn btn-sm btn-secondary mr-2"
+                      style="font-size: 12px"
+                      (click)="updateCart(cart._id, 'abierto')"
+                    >
+                      Activar
+                    </button>
+                    <button
+                      class="btn btn-sm btn-danger"
+                      style="font-size: 12px"
+                      (click)="updateCart(cart._id, 'eliminado')"
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                  <div
+                    class="col-md-3 col-sm-4 col-5 d-xl-none d-block text-nowrap"
+                  >
+                    <button
+                      class="btn btn-secondary btn-sm mr-sm-2 mr-1"
+                      style="font-size: 12px"
+                      title="Activar Carro"
+                      (click)="updateCart(cart._id, 'abierto')"
+                    >
+                      <i class="far fa-check-circle"></i>
+                    </button>
+                    <button
+                      class="btn btn-danger btn-sm"
+                      style="font-size: 12px"
+                      title="Borrar Carro"
+                      (click)="updateCart(cart._id, 'eliminado')"
+                    >
+                      <i class="far fa-trash-alt"></i>
+                    </button>
+                  </div>
+                  <div class="col-md-1 col-sm-1 col-2 text-right">
+                    <span
+                      class="fas fa-search mr-1"
+                      style="cursor: pointer"
+                      data-toggle="collapse"
+                      [attr.data-target]="'#ID' + cart._id"
+                      aria-expanded="false"
+                      [attr.aria-controls]="'ID' + cart._id"
+                    ></span>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                [id]="'ID' + cart._id"
+                class="collapse"
+                data-parent="#DetalleCarro"
+              >
+                <div
+                  class="border-left border-right border-bottom d-flex flex-wrap justify-content-center flex-column"
+                >
+                  <div
+                    class="d-sm-flex d-block align-items-center flex-grow-1 flex-shrink-1 border-bottom"
+                    *ngFor="let item of cart.productos"
+                  >
+                    <div class="col-12 d-block d-sm-none text-center">
+                      <span class="product-title">
+                        {{ item.nombre | titlecase }} <b>X</b>
+                        {{ item.cantidad }}
+                      </span>
+                    </div>
+                    <div
+                      class="col-xs-12 col-sm-2 text-center align-items-center"
+                    >
+                      <a [routerLink]="root.product(item.sku, item.nombre)">
+                        <img
+                          class="cart-img lazyload"
+                          [src]="root.getUrlImagenMiniatura(item)"
+                          [alt]="item.nombre"
+                        />
+                      </a>
+                    </div>
+                    <div
+                      class="col-8 col-sm-5 col-xl-6 d-flex align-items-center"
+                    >
+                      <span class="product-title d-none d-sm-block">
+                        {{ item.nombre | titlecase }}
+                      </span>
+                      <span
+                        class="product-sku text-gray-2 ml-2 d-none d-xl-block"
+                      >
+                        {{ item.sku }}
+                      </span>
+                      <span
+                        class="product-sku text-gray-2 ml-2 d-none d-xl-block"
+                      >
+                        {{ item.marca }}
+                      </span>
+                      <div class="clearfix"></div>
+                    </div>
+                    <div
+                      class="col-3 col-sm-2 d-flex align-items-center text-nowrap"
+                    >
+                      <span class="precio d-none d-md-block mr-1">{{
+                        item.precio | currencyFormat
+                      }}</span
+                      ><span class="cantidad d-none d-sm-block">
+                        x {{ item.cantidad }}
+                      </span>
+                    </div>
+                    <div
+                      class="col-12 col-sm-3 col-xl-2 text-right text-nowrap"
+                      [ngClass]="
+                        MobileView() ? '' : 'd-flex align-items-center'
+                      "
+                    >
+                      <span class="cart-subtitle d-none d-md-block"
+                        >Sub Total</span
+                      >
+                      <span class="cart-price-value ml-2">{{
+                        item.precio * item.cantidad | currencyFormat
+                      }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
     </div>
+  </div>
 </div>

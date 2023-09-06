@@ -10,12 +10,9 @@ import { BrowserModule, Title } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Libs
 import { ToastrModule } from 'ngx-toastr';
-//import { LocalStorageModule } from 'angular-2-local-storage'; // NO SE USA
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule, BsModalRef } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-
-// import { NgtUniversalModule } from '@ng-toolkit/universal';
 
 import { AppComponent } from './app.component';
 // Routing
@@ -56,7 +53,6 @@ import { TestComponent } from './test/test.component';
     SharedModule,
     WidgetsModule,
     NgbModule,
-    // NgtUniversalModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'CLP' },

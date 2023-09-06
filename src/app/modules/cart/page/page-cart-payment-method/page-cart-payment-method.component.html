@@ -1,0 +1,2366 @@
+<div
+  class="container container-cart site_b2c"
+  (window:resize)="onResize($event)"
+  style="margin-bottom: 40px"
+>
+  <!-- <h1 class="mt-4 mb-3">Escoge tu forma de pago</h1> -->
+  <app-guided-steps [step]="3"></app-guided-steps>
+
+  <div class="row">
+    <ng-container *ngIf="innerWidth >= 450">
+      <div
+        class="col-xl-3 col-lg-3 col-md-6"
+        style="padding: 15px; background-color: #e3e3e3; margin-right: 10px"
+      >
+        <div class="card h-100">
+          <div class="card-body">
+            <!-- ========================================= -->
+            <!-- DESPACHO COLLAPSE - INI -->
+            <!-- ========================================= -->
+
+            <div
+              class="card-header"
+              style="display: inline-block"
+              style="color: #0063b9"
+            >
+              Información de retiro
+            </div>
+
+            <!-- ========================================= -->
+            <!-- DESPACHO_A_DOMICILIO - INI -->
+            <!-- ========================================= -->
+            <div
+              *ngIf="cartSession.despacho.tipo != 'TIENDA'"
+              class="row block_despacho"
+            >
+              <div
+                class="col-12"
+                style="flex-direction: column; justify-content: center"
+              >
+                <div
+                  style="
+                    color: #0063b9;
+                    font-size: small;
+                    font-weight: bold;
+                    padding-left: 10px;
+                    border-left: 1px solid #005db9;
+                    border-right: 1px solid #005db9;
+                    border-radius: 0px;
+                    border-top: 1px solid #005db9;
+                  "
+                >
+                  <div
+                    class="row"
+                    style="padding-top: 10px; margin-bottom: -5px"
+                  >
+                    <div class="ml-1 col-12 d-flex justify-content-start">
+                      DESPACHO A DOMICILIO
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <ul class="list-group lista_despacho">
+                  <li
+                    *ngIf="direccionDespacho"
+                    class="list-group-item"
+                    tooltip="Dirección de entrega "
+                  >
+                    <div class="row" style="color: #0063b9">
+                      <div class="col-12" style="color: #0063b9">
+                        <i
+                          class="fa-solid fa-circle-check"
+                          style="color: #118565"
+                        ></i>
+                        <i
+                          class="fas fa-truck"
+                          style="margin-right: 10px; color: #0063b9"
+                        ></i>
+                        {{ direccionDespacho.calle }} #{{
+                          direccionDespacho.numero
+                        }}, depto/casa: {{ direccionDespacho.deptocasa }},
+                        {{ direccionDespacho.comuna }}
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" tooltip="Tipo de Documento ">
+                    <div class="row">
+                      <div class="col-12">
+                        <span style="font-weight: bold; color: #0063b9">{{
+                          "Tipo de Documento" | uppercase
+                        }}</span>
+                      </div>
+                      <div class="col-12">
+                        <p
+                          *ngIf="!esBoleta"
+                          style="color: #0063b9; margin-bottom: -2px"
+                        >
+                          <i
+                            class="fa-solid fa-circle-check"
+                            style="color: #118565"
+                          ></i
+                          ><i
+                            class="fas fa-file-alt"
+                            style="margin-right: 10px; color: #0063b9"
+                          ></i>
+                          Factura
+                        </p>
+                        <p
+                          *ngIf="esBoleta"
+                          style="color: #0063b9; margin-bottom: -2px"
+                        >
+                          <i
+                            class="fa-solid fa-circle-check"
+                            style="color: #118565"
+                          ></i
+                          ><i
+                            class="fas fa-file-alt"
+                            style="margin-right: 10px; color: #0063b9"
+                          ></i>
+                          Boleta
+                          <a
+                            *ngIf="esBoleta"
+                            title="Si necesitas Factura Debes registrarte como Empresa"
+                            [routerLink]="['/sitio', 'registro-usuario']"
+                            class="float-right"
+                            >¿ Necesitas Factura ?</a
+                          >
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item" tooltip="Persona que recibe ">
+                    <div class="row">
+                      <div class="col-12" style="color: #0063b9">
+                        <span style="font-weight: bold"
+                          >PERSONA QUE RECIBE</span
+                        >
+                      </div>
+                      <div class="col-12" style="color: #0063b9">
+                        <span *ngIf="recibe.company">
+                          <i
+                            class="fa-solid fa-circle-check"
+                            style="color: #118565"
+                          ></i
+                          ><i
+                            class="fas fa-people-carry"
+                            style="margin-right: 10px; color: #0063b9"
+                          ></i
+                          >{{ recibe.company }}
+                        </span>
+                        <span *ngIf="!recibe.company">
+                          <i
+                            class="fa-solid fa-circle-check"
+                            style="color: #118565"
+                          ></i
+                          ><i
+                            class="fas fa-people-carry"
+                            style="margin-right: 10px; color: #0063b9"
+                          ></i>
+                          Titular de la compra
+                        </span>
+                      </div>
+                    </div>
+                  </li>
+                  <li
+                    *ngFor="let item of fechas_entregas; let i = index"
+                    class="list-group-item"
+                    tooltip="Fecha de entrega "
+                  >
+                    <div class="row">
+                      <div class="col-12">
+                        <span style="font-weight: bold; color: #0063b9"
+                          >FECHA DE ENTREGA {{ i + 1 }}/{{
+                            fechas_entregas.length
+                          }}</span
+                        >
+                      </div>
+                      <div class="col-12" style="color: #0063b9">
+                        <i
+                          class="fa-solid fa-circle-check"
+                          style="color: #118565"
+                        ></i>
+                        <i
+                          class="fa-solid fa-calendar-days"
+                          style="margin-right: 10px; color: #0063b9"
+                        ></i>
+                        {{ item | date : "EEEE dd MMMM, y " | titlecase }}
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- ========================================= -->
+            <!-- DESPACHO_A_DOMICILIO - FIN -->
+            <!-- ========================================= -->
+
+            <!-- ========================================= -->
+            <!-- RETIRO_EN_TIENDA - INI -->
+            <!-- ========================================= -->
+            <div
+              *ngIf="cartSession.despacho.tipo == 'TIENDA'"
+              class="row block_despacho"
+            >
+              <div
+                class="col-12"
+                style="flex-direction: column; justify-content: center"
+              >
+                <div
+                  style="
+                    color: #0063b9;
+                    font-size: small;
+                    font-weight: bold;
+                    padding-left: 10px;
+                    border-left: 1px solid #005db9;
+                    border-right: 1px solid #005db9;
+                    border-radius: 0px;
+                    border-top: 1px solid #005db9;
+                  "
+                >
+                  <div
+                    class="row"
+                    style="padding-top: 10px; margin-bottom: -5px"
+                  >
+                    <div class="ml-1 col-12 d-flex justify-content-start">
+                      {{ tiendaRetiro.nombre }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <ul class="list-group lista_despacho">
+                  <li class="list-group-item" tooltip="Fecha de entrega ">
+                    <div class="row">
+                      <div class="col-12" style="color: #0063b9">
+                        <i
+                          class="fa-solid fa-circle-check"
+                          style="color: #118565"
+                        ></i>
+                        <i class="fas fa-store-alt" style="color: #0063b9"></i>
+                        {{ tiendaRetiro.direccion | titlecase }}
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" tooltip="Tipo de Documento ">
+                    <div class="row">
+                      <div class="col-12">
+                        <span style="font-weight: bold; color: #0063b9"
+                          >TIPO DE DOCUMENTO</span
+                        >
+                      </div>
+                      <div class="col-12">
+                        <p
+                          *ngIf="!esBoleta"
+                          style="color: #0063b9; margin-bottom: -2px"
+                        >
+                          <i
+                            class="fa-solid fa-circle-check"
+                            style="color: #118565"
+                          ></i
+                          ><i
+                            class="fas fa-file-alt"
+                            style="color: #0063b9"
+                          ></i>
+                          Factura
+                        </p>
+                        <p
+                          *ngIf="esBoleta"
+                          style="color: #0063b9; margin-bottom: -2px"
+                        >
+                          <i
+                            class="fa-solid fa-circle-check"
+                            style="color: #118565"
+                          ></i>
+                          <i class="fas fa-file-alt" style="color: #0063b9"></i>
+                          Boleta
+                          <a
+                            *ngIf="esBoleta"
+                            title="Si necesitas Factura Debes registrarte como Empresa"
+                            [routerLink]="['/sitio', 'registro-usuario']"
+                            class="float-right"
+                            >¿ Necesitas Factura ?</a
+                          >
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li
+                    *ngIf="recibe"
+                    class="list-group-item"
+                    tooltip="Persona que recibe "
+                  >
+                    <div class="row">
+                      <div class="col-12">
+                        <span style="font-weight: bold; color: #0063b9"
+                          >RETIRA EN TIENDA</span
+                        >
+                      </div>
+                      <div class="col-12" style="color: #0063b9">
+                        <span
+                          ><i
+                            class="fa-solid fa-circle-check"
+                            style="color: #118565"
+                          ></i
+                          ><i
+                            class="fas fa-people-carry"
+                            style="color: #0063b9"
+                          ></i
+                          >{{
+                            cartSession.observacion ==
+                            "Persona que recibe: Titular de la
+                                                    Venta"
+                              ? "Titular de la
+                                                    compra"
+                              : cartSession.observacion
+                                  .split("Celular")[0]
+                                  .split("Recibe:")[1]
+                          }}</span
+                        >
+                      </div>
+                    </div>
+                  </li>
+                  <li
+                    *ngFor="let item of fechas_entregas; let i = index"
+                    class="list-group-item"
+                    tooltip="Fecha de entrega "
+                  >
+                    <div class="row">
+                      <div class="col-12">
+                        <span style="font-weight: bold; color: #0063b9"
+                          >FECHA DE ENTREGA {{ i + 1 }}/{{
+                            fechas_entregas.length
+                          }}</span
+                        >
+                      </div>
+                      <div class="col-12" style="color: #0063b9">
+                        <i
+                          class="fa-solid fa-circle-check"
+                          style="color: #118565"
+                        ></i>
+                        <i
+                          class="fa-solid fa-calendar-days"
+                          style="margin-right: 10px; color: #0063b9"
+                        ></i>
+                        {{ item | date : "EEEE dd MMMM, y " | titlecase }}
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- ========================================= -->
+            <!-- RETIRO_EN_TIENDA - FIN -->
+            <!-- ========================================= -->
+            <!-- ========================================= -->
+            <!-- DESPACHO COLLAPSE - FIN -->
+            <!-- ========================================= -->
+          </div>
+        </div>
+      </div>
+      <div
+        class="col-xl-4 col-lg-4 col-md-6"
+        style="padding: 15px; background-color: #e3e3e3; margin-right: 10px"
+      >
+        <div class="card h-100">
+          <div
+            class="card-header"
+            *ngIf="!alertCartShow"
+            style="color: #0063b9"
+          >
+            Selecciona medio de pago
+          </div>
+          <div class="card-body">
+            <app-loading-element
+              *ngIf="loadingPage"
+              [text]="loadingText"
+            ></app-loading-element>
+
+            <div *ngIf="invitado">
+              <div class="row">
+                <div style="margin-bottom: 10px; padding: 5px">
+                  <div class="card-body m-0">
+                    <h4 class="card-title" style="color: #005db9">Rut *</h4>
+                    <form [formGroup]="formVisita">
+                      <div class="form-row">
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <input
+                              type="text"
+                              formControlName="rut"
+                              class="form-control"
+                              placeholder="RUT*"
+                              formatRut
+                            />
+
+                            <p
+                              *ngIf="
+                                formVisita.controls.rut.errors?.invalidRut &&
+                                formVisita.controls.rut.touched
+                              "
+                              class="text-error-form-2 pull-right"
+                            >
+                              El RUT ingresado no es válido
+                            </p>
+                            <p
+                              *ngIf="isInvoice"
+                              class="text-error-form-2 pull-right"
+                            >
+                              Debes ingresar el rut de empresa.
+                            </p>
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <input
+                              formControlName="nombre"
+                              type="text"
+                              class="form-control"
+                              placeholder="Nombres*"
+                              appLettersChar
+                            />
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <input
+                              formControlName="apellido"
+                              type="text"
+                              class="form-control"
+                              placeholder="Apellidos*"
+                              appLettersChar
+                            />
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">+56 9</span>
+                              </div>
+                              <input
+                                formControlName="telefono"
+                                type="text"
+                                class="form-control"
+                                placeholder="Teléfono*"
+                                maxLength="8"
+                                min="1"
+                                max="99999999"
+                              />
+                            </div>
+
+                            <p
+                              *ngIf="
+                                formVisita.controls.telefono.invalid &&
+                                formVisita.controls.telefono.touched
+                              "
+                              class="text-error-form-2"
+                            >
+                              El Teléfono ingresado no es válido
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ng-container *ngIf="alertCartShow && alertCart">
+              <div class="alert-cart">
+                <div class="row" class="d-flex justify-content-center mb-3">
+                  <div class="col-12" class="text-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="50"
+                      height="50"
+                      fill="currentColor"
+                      class="bi bi-exclamation-circle"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                      />
+                      <path
+                        d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <h4 class="text-danger text-center">
+                  {{
+                    rejectedCode != -11
+                      ? "Pago Rechazado"
+                      : alertCart?.detalleMensaje
+                  }}
+                </h4>
+                <ng-container *ngIf="rejectedCode != -11" class="mb-5">
+                  <div class="row">
+                    <div class="col-12 text-center font-weight-bold">
+                      <p *ngIf="alertCart?.detalleMensaje">
+                        {{ alertCart?.detalleMensaje }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    class="row mb-3"
+                    *ngIf="
+                      alertCart?.proceso != 'Anulado' &&
+                      !alertCart?.pagoValidado
+                    "
+                  >
+                    <div
+                      class="col-12 text-justify"
+                      style="font-size: 14px; font-weight: 600"
+                    >
+                      Si su dinero fue descontado será reversado en la proximas
+                      horas.
+                    </div>
+                  </div>
+                </ng-container>
+
+                <div
+                  class="col-12"
+                  class="text-center"
+                  *ngIf="!alertCart?.pagoValidado"
+                >
+                  <button
+                    name="Volver"
+                    class="btn btn-lg btn-border-primary"
+                    (click)="intentarPagoNuevamente()"
+                  >
+                    Volver a intentarlo
+                  </button>
+                </div>
+              </div>
+              <div
+                class="col-12 p-0 text-center"
+                *ngIf="
+                  !alertCart?.pagoValidado ||
+                  alertCart?.mostrarBotonVolverIntentar
+                "
+              ></div>
+            </ng-container>
+
+            <ng-container *ngIf="!alertCartShow">
+              <ng-container *ngIf="documentType == 'factura'">
+                <div *ngIf="invitado" class="row-pagos">
+                  <div
+                    *ngFor="let item of paymentMethods"
+                    class="col-sm-12"
+                    style="margin-bottom: 5px"
+                    [class.mb-2]="innerWidth < 450"
+                  >
+                    <div
+                      id="pagos_weypaid"
+                      class="block-payment"
+                      [ngClass]="{
+                        active: this.paymentMethodActive == item.cod
+                      }"
+                      (click)="activepaymentMethod(item)"
+                    >
+                      <div
+                        class="col-sm-2 d-flex justify-content-center align-items-center"
+                      >
+                        <div class="custom-control custom-radio">
+                          <!--icon pago-->
+                          <i
+                            class="fa-sharp fa-solid fa-circle-check"
+                            style="font-size: 20px"
+                            [ngStyle]="{
+                              color:
+                                paymentMethodActive === item.cod
+                                  ? '#118565'
+                                  : '#D1D1D1'
+                            }"
+                          ></i>
+                        </div>
+                      </div>
+                      <div class="col-sm-10">
+                        <span style="color: black">
+                          <img
+                            *ngIf="item.iconImage"
+                            [src]="item.iconImage"
+                            class="methodPaymentLogo"
+                          />
+                          <label *ngIf="!item.iconImage">{{
+                            item.name | titlecase
+                          }}</label>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="!invitado" class="row-pagos">
+                  <div
+                    *ngFor="let item of paymentMethods"
+                    class="col-sm-12"
+                    style="margin-bottom: 5px"
+                    [class.mb-2]="innerWidth < 450"
+                  >
+                    <div
+                      class="block-payment"
+                      [ngClass]="{
+                        active: this.paymentMethodActive == item.cod
+                      }"
+                      (click)="activepaymentMethod(item)"
+                    >
+                      <div
+                        class="col-sm-2 d-flex justify-content-center align-items-center"
+                      >
+                        <div class="custom-control custom-radio">
+                          <!--icon pago-->
+                          <i
+                            class="fa-sharp fa-solid fa-circle-check"
+                            style="font-size: 20px"
+                            [ngStyle]="{
+                              color:
+                                paymentMethodActive === item.cod
+                                  ? '#118565'
+                                  : '#D1D1D1'
+                            }"
+                          ></i>
+
+                          <label></label>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-10">
+                        <span>
+                          <i
+                            *ngIf="item.iconClass"
+                            [class]="item.iconClass"
+                          ></i>
+                          <img
+                            *ngIf="item.iconImage"
+                            [src]="item.iconImage"
+                            [alt]="item.cod"
+                            class="methodPaymentLogo"
+                          />
+                          <label *ngIf="!item.iconImage">{{
+                            item.name | titlecase
+                          }}</label>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <form
+                  [formGroup]="formOv"
+                  *ngIf="paymentMethodActive == 'ordenCompra'"
+                >
+                  <div class="form-row mt-2" style="margin-top: 10px">
+                    <div class="form-group col-md-6">
+                      <label>Número orden de compra</label>
+                      <input
+                        formControlName="folio"
+                        class="form-control form-control-lg"
+                        type="text"
+                        placeholder="Ingrese el número de OC"
+                      />
+                    </div>
+                    <hr />
+                    <div class="form-group col-md-6">
+                      <label>Monto orden de compra</label>
+                      <input
+                        formControlName="monto"
+                        class="form-control form-control-lg"
+                        type="number"
+                        placeholder="Ingrese el monto de su OC"
+                      />
+                    </div>
+                    <div
+                      class="form-group"
+                      [class.col-sm-12]="centrosCosto.length > 0"
+                      [class.col-12]="centrosCosto.length == 0"
+                    >
+                      <label>Seleccione la orden de compra</label>
+                      <div class="row">
+                        <div class="col-12 d-flex justify-content-start">
+                          <label
+                            [for]="idArchivo"
+                            [ngStyle]="{
+                              cursor: userSession.requiereValidacion
+                                ? 'not-allowed'
+                                : 'pointer'
+                            }"
+                            [class.disabled]="userSession.requiereValidacion"
+                            class="btn btn-sm btn-primary mr-2"
+                            >Seleccionar Archivo</label
+                          >
+                          <input
+                            type="file"
+                            [id]="idArchivo"
+                            [disabled]="userSession.requiereValidacion"
+                            (change)="onFileChange($event.target.files)"
+                            style="display: none"
+                          />
+                        </div>
+                      </div>
+                      <div class="row mt-12" *ngIf="archivo">
+                        <div
+                          class="col-10 text-left text-truncate"
+                          style="font-size: 0.85rem"
+                        >
+                          <i
+                            [class]="archivo.icon + ' mr-2'"
+                            style="font-size: 1.33333em"
+                          ></i>
+                          {{ archivo.nombre }}
+                        </div>
+                        <label
+                          class="btn btn-sm btn-min_pad p-0 m-0"
+                          (click)="eliminaArchivo()"
+                        >
+                          <i class="fas fa-trash-alt text-danger"></i>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div
+                      class="form-group col-md-12"
+                      *ngIf="centrosCosto.length > 0"
+                    >
+                      <label
+                        >Centro de costo
+                        <a (click)="openModalCentroCosto()"
+                          ><i
+                            class="fa-solid fa-square-plus"
+                            style="
+                              color: #0063b9;
+                              margin-left: 10px;
+                              cursor: pointer;
+                              font-size: 20px;
+                            "
+                          ></i>
+                        </a>
+                      </label>
+                      <select
+                        class="form-control form-control-lg"
+                        formControlName="centroCosto"
+                      >
+                        <option [value]="''">Seleccione centro de costo</option>
+                        <option
+                          *ngFor="let item of centrosCosto"
+                          [value]="item.codigo"
+                        >
+                          {{ item.codigo }} - {{ item.nombre }}
+                        </option>
+                      </select>
+                    </div>
+                    <hr />
+                    <div
+                      class="form-group col-md-12"
+                      *ngIf="centrosCosto.length == 0"
+                    >
+                      <label
+                        >Si desea añadir el centro de costo, haz clic en el
+                        siguiente icono
+                        <a (click)="openModalCentroCosto()"
+                          ><i
+                            class="fa-solid fa-square-plus"
+                            style="
+                              color: #0063b9;
+                              margin-left: 10px;
+                              cursor: pointer;
+                              font-size: 20px;
+                            "
+                          ></i>
+                        </a>
+                      </label>
+                    </div>
+                  </div>
+                </form>
+
+                <div class="mt-2 mb-3" *ngIf="clienteBloqueado">
+                  <p>No es posible pagar con línea de crédito</p>
+                  <div>
+                    <b>Estado: </b
+                    ><span class="text-danger"><b>BLOQUEADO</b></span
+                    ><br />
+                    <span *ngIf="bloqueoCliente.nombreMotivoBloqueo != null">
+                      <b>Motivo: </b>{{ bloqueoCliente.nombreMotivoBloqueo }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="mt-2 mb-3" *ngIf="getBloqueoError">
+                  <p>
+                    Recargue nuevamente la página para validar si tiene
+                    habilitada su línea de crédito.
+                  </p>
+                </div>
+
+                <div
+                  class="form-row"
+                  *ngIf="paymentMethodActive == 'sinDefinir'"
+                >
+                  <p class="text-center subtitle w-100 text-danger">
+                    * Ha indicado que el supervisor al momento de aprobar la
+                    compra, seleccionará la forma de pago.
+                  </p>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="documentType == 'cotizacion'">
+                <div class="w-100 text-center mt-5">
+                  <i class="far fa-file-pdf text-blue"></i>
+                  <p class="text-center subtitle w-100 text-blue">
+                    Ha elegido generar una cotización, presione el boton
+                    continuar si esta seguro.
+                  </p>
+                  <button
+                    type="button"
+                    name="finishQuotation"
+                    class="btn btn-outline-primary"
+                    (click)="finishQuotation()"
+                  >
+                    Confirmar
+                  </button>
+                  <button
+                    type="button"
+                    name="cancelarQuotation"
+                    class="btn btn-outline-warning"
+                    (click)="documentType = 'factura'"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+          <div
+            class="row text-primary"
+            *ngIf="
+              documentType != 'cotizacion' &&
+              paymentMethodActive != 'ordenCompra' &&
+              userSession.user_role !== 'compradorb2c' &&
+              !invitado
+            "
+          >
+            <div class="col-12 text-right">
+              <div
+                class="cotizacionBtn"
+                (click)="setDocumentType('cotizacion')"
+                style="color: #0063b9 !important"
+              >
+                Obtener cotización <i class="fas fa-file-invoice-dollar"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="innerWidth < 450">
+      <!-- ========================================= -->
+      <!-- FORMA DE PAGO -->
+      <!-- ========================================= -->
+      <div class="container ml-4">
+        <div
+          class="cart-address-container ml-3 col-12 col-lg-12 pt-3 pb-2 pl-2"
+          style="color: #0063b9; margin-bottom: 10px"
+          [ngStyle]="{ width: innerWidth > 450 ? '96%' : '92%' }"
+        >
+          <div class="row">
+            <div
+              class="col-2 d-flex justify-content-center"
+              tyle=" color: #0063b9"
+            >
+              <i
+                class="fa-solid fa-cart-shopping"
+                style="font-size: 21px !important; color: #0063b9"
+              ></i>
+            </div>
+            <div class="col-10">
+              <p
+                style="font-weight: bold; margin-bottom: 5px"
+                [ngStyle]="{ 'font-size': innerWidth < 450 ? '16px' : '18px' }"
+              >
+                Carro de compra
+              </p>
+              <ng-container *ngIf="items.length > 1">
+                <font style="font-weight: normal"
+                  >({{ " " + items.length + " PRODUCTOS" + " " }})</font
+                >
+              </ng-container>
+              <ng-container *ngIf="items.length == 1">
+                <font style="font-weight: normal"
+                  >({{ " " + items.length + " PRODUCTO" + " " }})</font
+                >
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-4 col-md-6" [class.mb-3]="innerWidth < 450">
+        <div class="card h-100">
+          <div
+            class="card-header ml-4"
+            *ngIf="!alertCartShow"
+            style="color: #005db9"
+          >
+            Seleccione su forma de pago
+          </div>
+          <div class="card-body">
+            <app-loading-element
+              *ngIf="loadingPage"
+              [text]="loadingText"
+            ></app-loading-element>
+
+            <div *ngIf="invitado">
+              <div class="row">
+                <div
+                  class="card shadow-none"
+                  style="
+                    margin-bottom: 10px;
+                    padding-left: 30px;
+                    padding-right: 30px;
+                  "
+                >
+                  <div class="card-body m-0">
+                    <h4 class="card-title">Ingrese su RUT</h4>
+                    <form [formGroup]="formVisita">
+                      <div class="form-row">
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <input
+                              type="text"
+                              formControlName="rut"
+                              class="form-control"
+                              placeholder="RUT*"
+                              formatRut
+                            />
+
+                            <p
+                              *ngIf="
+                                formVisita.controls.rut.errors?.invalidRut &&
+                                formVisita.controls.rut.touched
+                              "
+                              class="text-error-form-2 pull-right"
+                            >
+                              El RUT ingresado no es válido
+                            </p>
+                            <p
+                              *ngIf="isInvoice"
+                              class="text-error-form-2 pull-right"
+                            >
+                              Debes ingresar el rut de empresa.
+                            </p>
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <input
+                              formControlName="nombre"
+                              type="text"
+                              class="form-control"
+                              placeholder="Nombres*"
+                              appLettersChar
+                            />
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <input
+                              formControlName="apellido"
+                              type="text"
+                              class="form-control"
+                              placeholder="Apellidos*"
+                              appLettersChar
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">+56 9</span>
+                              </div>
+                              <input
+                                formControlName="telefono"
+                                type="text"
+                                class="form-control"
+                                placeholder="Teléfono*"
+                                maxLength="8"
+                                min="1"
+                                appPhoneChar
+                              />
+                            </div>
+
+                            <p
+                              *ngIf="
+                                formVisita.controls.telefono.invalid &&
+                                formVisita.controls.telefono.touched
+                              "
+                              class="text-error-form-2"
+                            >
+                              El Teléfono ingresado no es válido
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ng-container *ngIf="alertCartShow && alertCart">
+              <div class="row" class="d-flex justify-content-center mb-3">
+                <div class="col-12" class="text-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="50"
+                    height="50"
+                    fill="currentColor"
+                    class="bi bi-exclamation-circle"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                    />
+                    <path
+                      d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="alert-cart">
+                <h4 class="text-danger text-center">
+                  {{
+                    rejectedCode != -11
+                      ? "Pago Rechazado"
+                      : alertCart?.detalleMensaje
+                  }}
+                </h4>
+
+                <ng-container *ngIf="rejectedCode != -11" class="mb-5">
+                  <div class="row">
+                    <div class="col-12 text-center font-weight-bold">
+                      <p *ngIf="alertCart?.detalleMensaje">
+                        {{ alertCart?.detalleMensaje }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    class="row mb-3"
+                    *ngIf="
+                      alertCart?.proceso != 'Anulado' &&
+                      !alertCart?.pagoValidado
+                    "
+                  >
+                    <div
+                      class="col-12 text-justify"
+                      style="font-size: 13px; font-weight: 600"
+                    >
+                      Si su dinero fue descontado será reversado en la proximas
+                      horas.
+                    </div>
+                  </div>
+                </ng-container>
+
+                <div
+                  class="col-12"
+                  class="text-center"
+                  *ngIf="!alertCart?.pagoValidado"
+                >
+                  <button
+                    name="Volver"
+                    class="btn btn-sm btn-border-primary"
+                    (click)="intentarPagoNuevamente()"
+                  >
+                    Volver a intentarlo
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="!alertCartShow">
+              <ng-container *ngIf="documentType == 'factura'">
+                <div class="form-row justify-content-center">
+                  <div class="form-group col-11">
+                    <div *ngIf="invitado" class="row mt-2">
+                      <div
+                        *ngFor="let item of paymentMethods"
+                        class="col-md-6"
+                        [class.mb-2]="innerWidth < 450"
+                      >
+                        <div
+                          id="pagos_weypaid"
+                          class="block-payment"
+                          [ngClass]="{
+                            active: this.paymentMethodActive == item.cod
+                          }"
+                          (click)="activepaymentMethod(item)"
+                        >
+                          <div
+                            class="col-1-pagos d-flex justify-content-center align-items-center"
+                          >
+                            <div class="form-check">
+                              <div class="custom-control custom-radio">
+                                <!--icon pago-->
+                                <i
+                                  class="fa-sharp fa-solid fa-circle-check"
+                                  style="font-size: 20px"
+                                  [ngStyle]="{
+                                    color:
+                                      paymentMethodActive === item.cod
+                                        ? '#118565'
+                                        : '#D1D1D1'
+                                  }"
+                                ></i>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-10">
+                            <span>
+                              <img
+                                *ngIf="item.iconImage"
+                                [alt]="item.cod"
+                                [src]="item.iconImage"
+                                class="lazyload methodPaymentLogo"
+                              />
+                              <label *ngIf="!item.iconImage">{{
+                                item.name | titlecase
+                              }}</label>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      *ngIf="!invitado"
+                      class="row ion-justify-content-center"
+                    >
+                      <div
+                        *ngFor="let item of paymentMethods"
+                        class="col-md-6"
+                        [class.mb-2]="innerWidth < 450"
+                      >
+                        <div
+                          id="pagos_weypaid"
+                          class="block-payment"
+                          [ngClass]="{
+                            active: this.paymentMethodActive == item.cod
+                          }"
+                          (click)="activepaymentMethod(item)"
+                        >
+                          <div
+                            class="col-2 d-flex justify-content-center align-items-center"
+                          >
+                            <div class="custom-control custom-radio">
+                              <!--icon pago-->
+                              <i
+                                class="fa-sharp fa-solid fa-circle-check"
+                                style="font-size: 20px"
+                                [ngStyle]="{
+                                  color:
+                                    paymentMethodActive === item.cod
+                                      ? '#118565'
+                                      : '#D1D1D1'
+                                }"
+                              ></i>
+                            </div>
+                          </div>
+
+                          <div class="col-10">
+                            <!--  <i class="fas fa-check-circle iconOk"></i> -->
+                            <span>
+                              <img
+                                *ngIf="item.iconImage"
+                                [src]="item.iconImage"
+                                [alt]="item.cod"
+                                class="methodPaymentLogo"
+                              />
+                              <label *ngIf="!item.iconImage">{{
+                                item.name | titlecase
+                              }}</label>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <form
+                  [formGroup]="formOv"
+                  *ngIf="paymentMethodActive == 'ordenCompra'"
+                >
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label>Número orden de compra</label>
+                      <input
+                        formControlName="folio"
+                        class="form-control form-control-lg"
+                        type="text"
+                        placeholder="Ingrese el número de OC"
+                      />
+                    </div>
+
+                    <div class="form-group col-md-6">
+                      <label>Monto orden de compra</label>
+                      <input
+                        formControlName="monto"
+                        class="form-control form-control-lg"
+                        type="number"
+                        placeholder="Ingrese el monto de su OC"
+                      />
+                    </div>
+                    <div class="form-group col-md-12">
+                      <label>Seleccione la orden de compra</label>
+                      <div class="row">
+                        <div class="col-12 d-flex justify-content-start">
+                          <label
+                            [for]="idArchivo"
+                            [ngStyle]="{
+                              cursor: userSession.requiereValidacion
+                                ? 'not-allowed'
+                                : 'pointer'
+                            }"
+                            [class.disabled]="userSession.requiereValidacion"
+                            class="btn btn-sm btn-primary mr-2"
+                            >Seleccionar Archivo</label
+                          >
+                          <input
+                            type="file"
+                            [id]="idArchivoMobile"
+                            [disabled]="userSession.requiereValidacion"
+                            (change)="onFileChange($event.target.files)"
+                            style="display: none"
+                          />
+                        </div>
+                      </div>
+                      <div class="row mt-2" *ngIf="archivo">
+                        <div
+                          class="col-10 text-left text-truncate"
+                          style="font-size: 0.85rem"
+                        >
+                          <i
+                            [class]="archivo.icon + ' mr-2'"
+                            style="font-size: 1.33333em"
+                          ></i>
+                          {{ archivo.nombre }}
+                        </div>
+                        <label
+                          class="btn btn-sm btn-min_pad p-0 m-0"
+                          (click)="eliminaArchivo()"
+                        >
+                          <i class="fas fa-trash-alt text-danger"></i>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                      <label>Centro de costo</label>
+                      <select
+                        class="form-control form-control-lg"
+                        formControlName="centroCosto"
+                      >
+                        <option [value]="''">Seleccione centro de costo</option>
+                        <option
+                          *ngFor="let item of centrosCosto"
+                          [value]="item.codigo"
+                        >
+                          {{ item.codigo }} - {{ item.nombre }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </form>
+
+                <div class="mb-3 px-3" *ngIf="clienteBloqueado">
+                  <p>No es posible pagar con línea de crédito</p>
+                  <div>
+                    <b>Estado: </b
+                    ><span class="text-danger"><b>BLOQUEADO</b></span
+                    ><br />
+                    <span *ngIf="bloqueoCliente.nombreMotivoBloqueo != null">
+                      <b>Motivo: </b>{{ bloqueoCliente.nombreMotivoBloqueo }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="px-3" *ngIf="getBloqueoError">
+                  <p>
+                    Recargue nuevamente la página para validar si tiene
+                    habilitada su línea de crédito.
+                  </p>
+                </div>
+
+                <div
+                  class="form-row"
+                  *ngIf="paymentMethodActive == 'sinDefinir'"
+                >
+                  <p class="text-center subtitle w-100 text-danger">
+                    * Ha indicado que el supervisor al momento de aprobar la
+                    compra, seleccionará la forma de pago.
+                  </p>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="documentType == 'cotizacion'">
+                <div class="w-100 text-center mt-5">
+                  <i class="far fa-file-pdf text-blue"></i>
+                  <p class="text-center subtitle w-100 text-blue">
+                    Ha elegido generar una cotización, presione el boton
+                    continuar si esta seguro.
+                  </p>
+                  <button
+                    type="button"
+                    name="finishQuotation"
+                    class="btn btn-outline-primary"
+                    (click)="finishQuotation()"
+                  >
+                    Confirmar
+                  </button>
+                  <button
+                    type="button"
+                    name="cancelarQuotation"
+                    class="btn btn-outline-warning"
+                    (click)="documentType = 'factura'"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+          <div
+            class="row text-primary mt-1 mb-2"
+            *ngIf="
+              documentType != 'cotizacion' &&
+              paymentMethodActive != 'ordenCompra' &&
+              userSession.user_role !== 'compradorb2c' &&
+              !invitado
+            "
+          >
+            <div class="col-12 text-right" style="color: #0063b9 !important">
+              <div
+                class="cotizacionBtn"
+                (click)="setDocumentType('cotizacion')"
+              >
+                Obtener cotización <i class="fas fa-file-invoice-dollar"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ========================================= -->
+      <!-- FIN FORMA DE PAGO -->
+      <!-- ========================================= -->
+    </ng-container>
+
+    <div
+      class="col-xl-4 col-lg-4 col-md-12"
+      style="padding: 15px; background-color: #e3e3e3"
+      [class.mt-4]="innerWidth < 1000 && innerWidth > 451"
+      [class.mb-3]="innerWidth < 450"
+    >
+      <div class="mr-1 card h-100">
+        <div class="card-header" style="color: #0063b9">Resumen pedido</div>
+        <div class="card-body">
+          <app-detalle-carro-productos
+            [shippingType]="cartSession.despacho.tipo"
+            *ngIf="innerWidth < 450"
+            [seePrices]="false"
+          ></app-detalle-carro-productos>
+          <app-detalle-carro-productos
+            [shippingType]="cartSession.despacho.tipo"
+            *ngIf="innerWidth >= 450"
+          >
+          </app-detalle-carro-productos>
+          <ng-container *ngIf="innerWidth >= 450">
+            <div class="row">
+              <div
+                class="col-sm-12"
+                *ngIf="cd_ver && userSession.requiereValidacion"
+              >
+                <app-codigo-oc
+                  [id]="cartSession._id"
+                  (verificar)="Confirmar($event)"
+                  (renv_cod)="paymentOvSms()"
+                ></app-codigo-oc>
+              </div>
+            </div>
+            <div class="row m-0">
+              <div class="mt-3 col-6 pl-0 pr-1" *ngIf="!cd_ver">
+                <a
+                  [routerLink]="['/', 'carro-compra', 'metodo-de-envio']"
+                  class="btn btn-border-primary btn-block btn-lg text-center"
+                >
+                  <i class="fas fa-chevron-left" style="margin-right: 10px"></i>
+                  Anterior
+                </a>
+              </div>
+
+              <div class="mt-3 col-6 pr-0 pl-1">
+                <button
+                  name="paymentOv "
+                  *ngIf="
+                    userSession.user_role != 'comprador' &&
+                    !userSession.requiereValidacion &&
+                    !['webPay', 'mercadopago', 'khipu'].includes(
+                      paymentMethodActive
+                    ) &&
+                    !invitado
+                  "
+                  (click)="paymentOv()"
+                  [disabled]="
+                    formOv.invalid ||
+                    isVacio(paymentMethodActive) ||
+                    isVacio(archivo) ||
+                    loadingPage
+                  "
+                  class="btn btn-lg btn-secondary btn-block text-center"
+                >
+                  Ir a pagar
+                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                </button>
+                <button
+                  name="paymentOvSms "
+                  *ngIf="
+                    userSession.user_role != 'comprador' &&
+                    userSession.requiereValidacion &&
+                    !cd_ver &&
+                    !['webPay', 'mercadopago', 'khipu'].includes(
+                      paymentMethodActive
+                    ) &&
+                    !invitado
+                  "
+                  (click)="paymentOvSms()"
+                  [disabled]="
+                    formOv.invalid ||
+                    isVacio(paymentMethodActive) ||
+                    loadingPage
+                  "
+                  class="btn btn-lg btn-secondary btn-block text-center"
+                >
+                  Ir a pagar
+                  <i
+                    class="fa-solid fa-comment-sms"
+                    style="margin-left: 3px"
+                  ></i>
+                </button>
+
+                <!-- Ningún pago seleccionado -->
+                <button
+                  name="paymentwebpay2 "
+                  [disabled]="true"
+                  *ngIf="!paymentMethodActive && invitado"
+                  class="btn btn-lg btn-secondary btn-block text-center"
+                >
+                  Ir a pagar
+                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                </button>
+
+                <button
+                  name="paymentMercadopago"
+                  [disabled]="btnWebpayPost || alertCartShow"
+                  *ngIf="
+                    userSession.user_role != 'comprador' &&
+                    paymentMethodActive == 'mercadopago' &&
+                    !invitado
+                  "
+                  (click)="paymentMercadopago()"
+                  class="btn btn-lg btn-secondary btn-block text-center"
+                >
+                  Ir a pagar
+                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                </button>
+                <button
+                  name="paymentMercadopago2 "
+                  [disabled]="
+                    !formVisita.valid ||
+                    !validado ||
+                    alertCartShow ||
+                    btnWebpayPost
+                  "
+                  *ngIf="invitado && paymentMethodActive == 'mercadopago'"
+                  (click)="paymentMercadopago()"
+                  class="btn btn-lg btn-secondary btn-block tex-tcenter"
+                >
+                  Ir a pagar
+                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                </button>
+                <button
+                  name="paymentKhipu"
+                  [disabled]="btnWebpayPost || alertCartShow"
+                  *ngIf="
+                    userSession.user_role != 'comprador' &&
+                    paymentMethodActive == 'khipu' &&
+                    !invitado
+                  "
+                  (click)="paymentKhipu()"
+                  class="btn btn-lg btn-secondary btn-block text-center"
+                >
+                  Ir a pagar
+                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                </button>
+                <button
+                  name="paymentKhipu"
+                  [disabled]="
+                    !formVisita.valid ||
+                    !validado ||
+                    alertCartShow ||
+                    btnWebpayPost
+                  "
+                  *ngIf="invitado && paymentMethodActive == 'khipu'"
+                  (click)="paymentKhipu()"
+                  class="btn btn-lg btn-secondary btn-block tex-tcenter"
+                >
+                  Ir a pagar
+                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                </button>
+
+                <button
+                  name="paymentWebpay"
+                  [disabled]="btnWebpayPost || alertCartShow"
+                  *ngIf="
+                    userSession.user_role != 'comprador' &&
+                    paymentMethodActive == 'webPay' &&
+                    !invitado
+                  "
+                  (click)="creteateTransactionTransBank()"
+                  class="btn btn-lg btn-secondary btn-block text-center"
+                >
+                  Ir a pagar
+                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                </button>
+                <button
+                  name="paymentwebpay2"
+                  [disabled]="
+                    !formVisita.valid ||
+                    !validado ||
+                    alertCartShow ||
+                    btnWebpayPost
+                  "
+                  *ngIf="invitado && paymentMethodActive == 'webPay'"
+                  (click)="creteateTransactionTransBank()"
+                  class="btn btn-lg btn-secondary btn-block text-center"
+                >
+                  Ir a pagar
+                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                </button>
+
+                <button
+                  name="purchaseRequestAll "
+                  *ngIf="
+                    userSession.user_role == 'comprador' &&
+                    paymentMethodActive != 'sinDefinir'
+                  "
+                  (click)="purchaseRequestAll()"
+                  [disabled]="formOv.invalid"
+                  class="btn btn-lg btn-secondary btn-block text-center"
+                >
+                  Solicitar Compra *
+                </button>
+
+                <button
+                  name="purchaseRequest "
+                  *ngIf="
+                    userSession.user_role == 'comprador' &&
+                    paymentMethodActive == 'sinDefinir'
+                  "
+                  (click)="purchaseRequest()"
+                  class="btn btn-lg btn-secondary btn-block text-center"
+                >
+                  Solicitar Compra *
+                </button>
+              </div>
+
+              <div class="mt-3 col-12 pl-0 pr-1">
+                <em *ngIf="userSession.user_role == 'comprador'"
+                  >* Se generará una solicitud de compra y debe ser aprobada por
+                  tu supervisor antes de generar el pedido.
+                </em>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="innerWidth < 450">
+      <div class="col-xl-4 col-lg-4 col-md-6" [class.mb-3]="innerWidth < 450">
+        <div
+          class="card"
+          [ngClass]="{ 'h-100': innerWidth >= 450 }"
+          [ngStyle]="{
+            'margin-bottom': showresumen == true ? '126px' : '220px'
+          }"
+        >
+          <div class="card-body">
+            <!-- ========================================= -->
+            <!-- DESPACHO COLLAPSE - INI -->
+            <!-- ========================================= -->
+
+            <div
+              class="card-header"
+              style="display: inline-block; color: #005db9"
+            >
+              Información de retiro
+            </div>
+
+            <!-- ========================================= -->
+            <!-- DESPACHO_A_DOMICILIO - INI -->
+            <!-- ========================================= -->
+            <div
+              *ngIf="cartSession.despacho?.tipo != 'TIENDA'"
+              class="row block_despacho"
+            >
+              <div
+                class="col-12"
+                style="flex-direction: column; justify-content: center"
+              >
+                <div
+                  style="
+                    color: #0063b9;
+                    font-size: small;
+                    font-weight: bold;
+                    padding-left: 10px;
+                    border-left: 1px solid #005db9;
+                    border-right: 1px solid #005db9;
+                    border-radius: 0px;
+                    border-top: 1px solid #005db9;
+                  "
+                >
+                  <div
+                    class="row"
+                    style="padding-top: 10px; margin-bottom: -5px"
+                  >
+                    <div class="ml-3 col-1"></div>
+                    <div class="col-10">DESPACHO A DOMICILIO</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <ul class="list-group lista_despacho">
+                  <li
+                    *ngIf="direccionDespacho"
+                    class="list-group-item"
+                    tooltip="Dirección de entrega "
+                  >
+                    <div class="row">
+                      <div
+                        class="ml-3 col-1 d-flex justify-content-center align-items-center"
+                      >
+                        <i
+                          class="fa-solid fa-circle-check"
+                          style="color: #118565"
+                        ></i>
+                      </div>
+                      <div class="col-10 d-flex justify-content-start">
+                        <div class="row" style="color: #005db9 !important">
+                          <div class="col-12">
+                            <i
+                              class="fas fa-map-marked-alt"
+                              style="color: #005db9 !important"
+                            ></i>
+                            {{ direccionDespacho.calle }} #{{
+                              direccionDespacho.numero
+                            }}, depto/casa: {{ direccionDespacho.deptocasa }},
+                            {{ direccionDespacho.comuna }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" tooltip="Tipo de Documento ">
+                    <div class="row">
+                      <div
+                        class="ml-3 col-1 d-flex justify-content-center align-items-center"
+                      >
+                        <i
+                          class="fa-solid fa-circle-check"
+                          style="color: #118565"
+                        ></i>
+                      </div>
+                      <div class="col-10 d-flex justify-content-start">
+                        <div class="row">
+                          <div class="col-12">
+                            <span style="font-weight: bold; color: #005db9"
+                              >TIPO DE DOCUMENTO</span
+                            >
+                          </div>
+                          <div class="col-12">
+                            <p
+                              *ngIf="!esBoleta"
+                              style="color: #005db9; margin-bottom: -2px"
+                            >
+                              <i
+                                class="fas fa-file-alt"
+                                style="color: #005db9 !important"
+                              ></i
+                              >Factura
+                            </p>
+                            <p
+                              *ngIf="esBoleta"
+                              style="color: #005db9; margin-bottom: -2px"
+                            >
+                              <i
+                                class="fas fa-file-alt"
+                                style="color: #005db9 !important"
+                              ></i>
+                              Boleta
+                              <a
+                                *ngIf="esBoleta"
+                                title="Si necesitas Factura Debes registrarte como Empresa"
+                                [routerLink]="['/sitio', 'registro-usuario']"
+                                style="color: #005db9 !important"
+                                class="float-right"
+                                >¿ Necesitas Factura ?</a
+                              >
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item" tooltip="Persona que recibe ">
+                    <div class="row">
+                      <div
+                        class="ml-3 col-1 d-flex justify-content-center align-items-center"
+                      >
+                        <i
+                          class="fa-solid fa-circle-check"
+                          style="color: #118565"
+                        ></i>
+                      </div>
+                      <div class="col-10 d-flex justify-content-start">
+                        <div class="row">
+                          <div class="col-12">
+                            <span
+                              style="
+                                font-weight: bold;
+                                color: #005db9 !important;
+                              "
+                              >RECIBE</span
+                            >
+                          </div>
+                          <div class="col-12" style="color: #005db9 !important">
+                            <span *ngIf="recibe.company"
+                              ><i
+                                class="fas fa-people-carry"
+                                style="color: #005db9 !important"
+                              ></i>
+                              {{ recibe.company }}
+                            </span>
+                            <span *ngIf="!recibe.company"
+                              ><i
+                                class="fas fa-people-carry"
+                                style="color: #005db9 !important"
+                              ></i>
+                              Titular de la compra
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li
+                    *ngFor="let item of fechas_entregas; let i = index"
+                    class="list-group-item"
+                    tooltip="Fecha de entrega "
+                  >
+                    <div class="row">
+                      <div
+                        class="ml-3 col-1 d-flex justify-content-center align-items-center"
+                      >
+                        <i
+                          class="fa-solid fa-circle-check"
+                          style="color: #118565"
+                        ></i>
+                      </div>
+                      <div class="col-10 d-flex justify-content-start">
+                        <div class="row">
+                          <div class="col-12" style="color: #0063b9">
+                            <span style="font-weight: bold"
+                              >FECHA DE ENTREGA {{ i + 1 }}/{{
+                                fechas_entregas.length
+                              }}</span
+                            >
+                          </div>
+                          <div class="col-12" style="color: #0063b9">
+                            <i
+                              class="fa-solid fa-calendar-days"
+                              style="margin-right: 10px; color: #0063b9"
+                            ></i>
+                            {{ item | date : "EEEE dd MMMM, y " | titlecase }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- ========================================= -->
+            <!-- DESPACHO_A_DOMICILIO - FIN -->
+            <!-- ========================================= -->
+
+            <!-- ========================================= -->
+            <!-- RETIRO_EN_TIENDA - INI -->
+            <!-- ========================================= -->
+            <div
+              *ngIf="cartSession.despacho?.tipo == 'TIENDA'"
+              class="row block_despacho"
+            >
+              <div
+                class="col-12"
+                style="flex-direction: column; justify-content: center"
+              >
+                <div
+                  style="
+                    color: #0063b9;
+                    font-size: small;
+                    font-weight: bold;
+                    padding-left: 10px;
+                    border-left: 1px solid #005db9;
+                    border-right: 1px solid #005db9;
+                    border-radius: 0px;
+                    border-top: 1px solid #005db9;
+                  "
+                >
+                  <div
+                    class="row"
+                    style="padding-top: 10px; margin-bottom: -5px"
+                  >
+                    <div class="ml-3 col-1"></div>
+                    <div class="col-10">
+                      {{ tiendaRetiro.nombre }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12" style="color: #005db9 !important">
+                <ul class="list-group lista_despacho">
+                  <li class="list-group-item" tooltip="Fecha de entrega ">
+                    <div class="row">
+                      <div class="ml-3 col-1 d-flex justify-content-center">
+                        <i
+                          class="fa-solid fa-circle-check"
+                          style="color: #118565"
+                        ></i>
+                      </div>
+                      <div class="col-10 d-flex justify-content-start">
+                        <div class="row">
+                          <div class="col-12" style="color: #005db9 !important">
+                            <i
+                              class="fas fa-store-alt"
+                              style="color: #005db9 !important"
+                            ></i>
+                            {{ tiendaRetiro.direccion | titlecase }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item" tooltip="Tipo de Documento ">
+                    <div class="row">
+                      <div
+                        class="ml-3 col-1 d-flex justify-content-center align-items-center"
+                      >
+                        <i
+                          class="fa-solid fa-circle-check"
+                          style="color: #118565"
+                        ></i>
+                      </div>
+                      <div class="col-10 d-flex justify-content-start">
+                        <div class="row">
+                          <div class="col-12">
+                            <span style="font-weight: bold; color: #005db9"
+                              >TIPO DE DOCUMENTO</span
+                            >
+                          </div>
+                          <div class="col-12">
+                            <p
+                              style="
+                                color: #005db9 !important;
+                                margin-bottom: -2px;
+                              "
+                              *ngIf="!esBoleta"
+                            >
+                              <i
+                                class="fas fa-file-alt"
+                                style="color: #005db9 !important"
+                              ></i>
+                              Factura
+                            </p>
+                            <p
+                              style="
+                                color: #005db9 !important;
+                                margin-bottom: -2px;
+                              "
+                              *ngIf="esBoleta"
+                            >
+                              <i
+                                class="fas fa-file-alt"
+                                style="color: #005db9 !important"
+                              ></i>
+                              Boleta
+                              <a
+                                *ngIf="esBoleta"
+                                title="Si necesitas Factura Debes registrarte como Empresa"
+                                [routerLink]="['/sitio', 'registro-usuario']"
+                                class="float-right"
+                                style="color: #0063b9"
+                                >¿ Necesitas Factura ?</a
+                              >
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li
+                    *ngIf="recibe"
+                    class="list-group-item"
+                    tooltip="Persona que recibe "
+                  >
+                    <div class="row">
+                      <div
+                        class="ml-3 col-1 d-flex justify-content-center align-items-center"
+                      >
+                        <i
+                          class="fa-solid fa-circle-check"
+                          style="color: #118565"
+                        ></i>
+                      </div>
+                      <div class="col-10 d-flex justify-content-start">
+                        <div class="row">
+                          <div class="col-12" style="color: #005db9 !important">
+                            <span style="font-weight: bold"
+                              >RETIRA EN TIENDA</span
+                            >
+                          </div>
+                          <div class="col-12" style="color: #005db9 !important">
+                            <i
+                              class="fas fa-people-carry"
+                              style="color: #005db9 !important"
+                            ></i>
+                            <span>{{
+                              cartSession.observacion ==
+                              "Persona que recibe: Titular de la
+                                                    Venta"
+                                ? "Titular de la
+                                                    compra"
+                                : cartSession.observacion
+                                    .split("Celular")[0]
+                                    .split("Recibe:")[1]
+                            }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li
+                    *ngFor="let item of fechas_entregas; let i = index"
+                    class="list-group-item"
+                    tooltip="Fecha de entrega "
+                  >
+                    <div class="row">
+                      <div
+                        class="ml-3 col-1 d-flex justify-content-center align-items-center"
+                      >
+                        <i
+                          class="fa-solid fa-circle-check"
+                          style="color: #118565"
+                        ></i>
+                      </div>
+                      <div class="col-10 d-flex justify-content-start">
+                        <div class="row">
+                          <div class="col-12" style="color: #0063b9">
+                            <span style="font-weight: bold"
+                              >FECHA DE ENTREGA {{ i + 1 }}/{{
+                                fechas_entregas.length
+                              }}</span
+                            >
+                          </div>
+                          <div class="col-12" style="color: #0063b9">
+                            <i
+                              class="fa-solid fa-calendar-days"
+                              style="margin-right: 10px; color: #0063b9"
+                            ></i>
+                            {{ item | date : "EEEE dd MMMM, y " | titlecase }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- ========================================= -->
+            <!-- RETIRO_EN_TIENDA - FIN -->
+            <!-- ========================================= -->
+            <!-- ========================================= -->
+            <!-- DESPACHO COLLAPSE - FIN -->
+            <!-- ========================================= -->
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+<ng-container *ngIf="innerWidth < 450">
+  <div style="margin-top: 50px">
+    <div class="footer_page">
+      <div class="card h-100" style="margin-top: 5px; margin-bottom: -13px">
+        <div
+          class="card-header"
+          style="display: inline-block"
+          (mousedown)="showresumen = !showresumen"
+        >
+          <div class="d-flex">
+            <div
+              class="col-9 text-justify"
+              style="font-size: 16px; color: #0063b9"
+            >
+              <strong>Resumen de tu Compra</strong>
+            </div>
+            <div class="col-3">
+              <i
+                [class]="showresumen ? 'fas fa-angle-down' : 'fas fa-angle-up'"
+              ></i>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!showresumen" class="card-body text-justify">
+          <div class="dropcart__totals text-justify">
+            <table>
+              <tr style="font-size: 14px; color: #005db9">
+                <th>Total</th>
+                <td class="font-weight-bold">
+                  {{ cart.total$ | async | currencyFormat }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <ng-container *ngIf="showresumen != false">
+          <div
+            class="col-12"
+            style="
+              border: 1px solid;
+              margin-top: 5px;
+              margin-bottom: 5px;
+              color: rgba(0, 0, 0, 0.1);
+            "
+          ></div>
+
+          <div class="card-body text-justify" style="font-size: 14px">
+            <app-detalle-carro-productos
+              [shippingType]="cartSession.despacho.tipo"
+              [seeProducts]="false"
+              [productCart]="productCart"
+            >
+            </app-detalle-carro-productos>
+          </div>
+        </ng-container>
+        <app-codigo-oc
+          *ngIf="cd_ver"
+          [id]="cartSession._id"
+          (verificar)="Confirmar($event)"
+          (renv_cod)="paymentOvSms()"
+        >
+        </app-codigo-oc>
+
+        <div class="row">
+          <div class="mt-3 col-12 pr-3 pl-3">
+            <button
+              name="paymentOv "
+              *ngIf="
+                userSession.user_role != 'comprador' &&
+                !userSession.requiereValidacion &&
+                !['webPay', 'mercadopago', 'khipu'].includes(
+                  paymentMethodActive
+                ) &&
+                !invitado
+              "
+              (click)="paymentOv()"
+              [disabled]="
+                formOv.invalid ||
+                isVacio(paymentMethodActive) ||
+                isVacio(archivo) ||
+                loadingPage
+              "
+              class="btn btn-lg btn-secondary btn-block text-center"
+            >
+              Ir a pagar
+              <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+            </button>
+            <button
+              name="paymentOvSms "
+              *ngIf="
+                userSession.user_role != 'comprador' &&
+                userSession.requiereValidacion &&
+                !cd_ver &&
+                paymentMethodActive != 'webPay' &&
+                paymentMethodActive != 'mercadopago' &&
+                !invitado
+              "
+              (click)="paymentOvSms()"
+              [disabled]="
+                formOv.invalid || isVacio(paymentMethodActive) || loadingPage
+              "
+              class="btn btn-lg btn-secondary btn-block text-center"
+            >
+              Ir a pagar<i
+                class="fa-solid fa-comment-sms"
+                style="margin-left: 10px"
+              ></i>
+            </button>
+
+            <button
+              name="paymentWebpay "
+              [disabled]="btnWebpayPost || alertCartShow"
+              *ngIf="
+                userSession.user_role != 'comprador' &&
+                paymentMethodActive == 'webPay' &&
+                !invitado
+              "
+              (click)="creteateTransactionTransBank()"
+              class="btn btn-lg btn-secondary btn-block text-center"
+            >
+              Ir a pagar <i class="fas fa-chevron-right"></i>
+            </button>
+            <button
+              name="paymentwebpay2 "
+              [disabled]="
+                !formVisita.valid || !validado || alertCartShow || btnWebpayPost
+              "
+              *ngIf="invitado && paymentMethodActive == 'webPay'"
+              (click)="creteateTransactionTransBank()"
+              class="btn btn-lg btn-secondary btn-block text-center"
+            >
+              Ir a pagar <i class="fas fa-chevron-rightp"></i>
+            </button>
+
+            <button
+              name="paymentMercadopago"
+              [disabled]="btnWebpayPost || alertCartShow"
+              *ngIf="
+                userSession.user_role != 'comprador' &&
+                paymentMethodActive == 'mercadopago' &&
+                !invitado
+              "
+              (click)="paymentMercadopago()"
+              class="btn btn-lg btn-secondary btn-block text-center"
+            >
+              Ir a pagar <i class="fas fa-chevron-right"></i>
+            </button>
+            <button
+              name="paymentMercadopago2 "
+              [disabled]="
+                !formVisita.valid || !validado || alertCartShow || btnWebpayPost
+              "
+              *ngIf="invitado && paymentMethodActive == 'mercadopago'"
+              (click)="paymentMercadopago()"
+              class="btn btn-lg btn-secondary btn-block tex-tcenter"
+            >
+              Ir a pagar <i class="fas fa-chevron-right"></i>
+            </button>
+
+            <button
+              name="purchaseRequestAll "
+              *ngIf="
+                userSession.user_role == 'comprador' &&
+                paymentMethodActive != 'sinDefinir'
+              "
+              (click)="purchaseRequestAll()"
+              [disabled]="formOv.invalid"
+              class="btn btn-lg btn-secondary btn-block text-center"
+            >
+              Solicitar Compra *
+            </button>
+
+            <button
+              name="purchaseRequest "
+              *ngIf="
+                userSession.user_role == 'comprador' &&
+                paymentMethodActive == 'sinDefinir'
+              "
+              (click)="purchaseRequest()"
+              class="btn btn-lg btn-secondary btn-block text-center"
+            >
+              Solicitar Compra *
+            </button>
+          </div>
+
+          <div
+            class="mt-3 col-12 pl-0 pr-1"
+            *ngIf="userSession.user_role == 'comprador'"
+          >
+            <em
+              >* Se generará una solicitud de compra y debe ser aprobada por tu
+              supervisor antes de generar el pedido.
+            </em>
+          </div>
+
+          <div class="mt-3 col-12 pl-0 pr-1">
+            <a
+              href="https://www.implementos.cl"
+              style="color: #118565; text-align: center; font-weight: bold"
+            >
+              Seguir comprando</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="paymentWebpayForm">
+  <form
+    id="myform"
+    action="{{ urlApiWebPay }}"
+    method="POST"
+    [hidden]="'false'"
+  >
+    <input
+      type="text"
+      placeholder="cartId"
+      name="cartId"
+      [value]="cartSession._id"
+    />
+    <br />
+
+    <input
+      type="number"
+      min="10"
+      placeholder="Monto a pagar"
+      name="amount"
+      [value]="totalCarro"
+    />
+
+    <br />
+
+    <input
+      type="text"
+      style="width: 400px"
+      placeholder="url para mostrar comprobante"
+      name="urlPaymentVoucher"
+      [value]="urlPaymentVoucher"
+    />
+    <br />
+
+    <input
+      type="text"
+      placeholder="endpoint para mostrar generar la ov desde la api pagos"
+      name="urlNotificationPayment"
+      [value]="urlNotificationPayment"
+    />
+    <br />
+
+    <input
+      type="text"
+      style="width: 400px"
+      placeholder="url para mostrar comprobante"
+      name="urlPaymentCanceled"
+      [value]="urlPaymentCanceled"
+    />
+    <br />
+
+    <input type="text" name="system" value="b2b/b2c" />
+
+    <br />
+  </form>
+</ng-container>
+
+<ng-container *ngIf="transBankToken && paymentWebpayForm">
+  <form id="transBankForm" [action]="transBankToken.url" method="POST">
+    <input type="hidden" name="token_ws" [value]="transBankToken.token" />
+    <input type="hidden" value="Pagar" />
+  </form>
+</ng-container>
+
+<button
+  id="openModalButton"
+  [hidden]="true"
+  data-toggle="modal"
+  data-target="#stockAlertModal"
+>
+  modal
+</button>
+
+<!--Modal para informar a cliente que hubieron problemas de stock -->
+<div
+  class="modal fade"
+  #stockAlertModal
+  id="stockAlertModal"
+  tabindex="-1"
+  data-backdrop="static"
+  role="dialog"
+  aria-labelledby="saveCartModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6>
+          No se ha encontrado stock suficiente para los siguientes productos:
+        </h6>
+      </div>
+      <div class="modal-body" style="min-height: auto">
+        <div
+          *ngFor="let productoSinStock of productosSinStock"
+          class="row d-flex justify-content-center align-items-center"
+        >
+          <div class="col-2">
+            <img
+              *ngIf="productoSinStock.images[0]"
+              [src]="
+                productoSinStock.images[0]['250']
+                  ? productoSinStock.images[0]['250'][0]
+                  : productoSinStock.images[0]['150']
+                  ? productoSinStock.images[0]['150'][0]
+                  : './assets/images/products/no-image-ficha.jpg'
+              "
+              onError="this.src='./assets/images/products/no-image-ficha.jpg'"
+              style="height: 60px; width: 60px"
+            />
+
+            <img
+              *ngIf="!productoSinStock.images[0]"
+              [src]="
+                productoSinStock.images['250']
+                  ? productoSinStock.images['250'][0]
+                  : productoSinStock.images['150']
+                  ? productoSinStock.images['150'][0]
+                  : './assets/images/products/no-image-ficha.jpg'
+              "
+              onError="this.src='./assets/images/products/no-image-ficha.jpg'"
+              style="height: 60px; width: 60px"
+            />
+          </div>
+          <div class="col-7 text-truncate">
+            {{ productoSinStock.nombre | titlecase }}
+          </div>
+          <div class="col-3">Cant: {{ productoSinStock.cantidad }}</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-warning"
+          (click)="VolverPaginaCarro()"
+          data-dismiss="modal"
+        >
+          Volver a Carro
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #bankmodal let-c="close" let-d="dismiss">
+  <app-bancoslist></app-bancoslist>
+</ng-template>

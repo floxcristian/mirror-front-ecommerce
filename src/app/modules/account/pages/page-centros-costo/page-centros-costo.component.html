@@ -1,78 +1,106 @@
 <div class="top-bar-categories d-flex align-orders-center">
-    <div class="title d-flex align-orders-center mr-auto ">
-        <i _ngcontent-serverapp-c11="" class="fas fa-hand-holding-usd mr-3"></i>
-        <h5>Mis centros de costo</h5>
-    </div>
-    <div>
-        <button class="btn btn-link btn-sm" (click)="agregarVinFlota()"><i class="fas fa-plus fa-lg mr-2"></i>Agregar
-            <span class="d-none d-sm-inline p-0">centro de costo</span></button>
-    </div>
+  <div class="title d-flex align-orders-center mr-auto">
+    <i _ngcontent-serverapp-c11="" class="fas fa-hand-holding-usd mr-3"></i>
+    <h5>Mis centros de costo</h5>
+  </div>
+  <div>
+    <button class="btn btn-link btn-sm" (click)="agregarVinFlota()">
+      <i class="fas fa-plus fa-lg mr-2"></i>Agregar
+      <span class="d-none d-sm-inline p-0">centro de costo</span>
+    </button>
+  </div>
 </div>
 
 <div class="row m-0">
-    <div class="col-lg-12">
-
-        <div class="card mt-3">
-            <div class="card-body table-responsive" style="min-height: 200px;">
-
-                <app-loading-element class="pt-3" [text]="'Cargando centros de costo'" *ngIf="cargando">
-                </app-loading-element>
-                <div class="d-block d-md-none">
-                    <div [ngClass]="{'dropcart__totals': i > 0}" style="font-size: 0.85rem;"
-                        *ngFor="let item of centrosCosto let i = index;">
-                        <table>
-                            <tr>
-                                <th class=" font-weight-bold titilo-w">Código</th>
-                                <td class="text-left">{{ item.codigo }}</td>
-                            </tr>
-                            <tr>
-                                <th class=" font-weight-bold titilo-w">Nombre</th>
-                                <td class="text-left">{{ item.nombre }}</td>
-                            </tr>
-                            <tr>
-                                <th class=" font-weight-bold titilo-w">Acciones</th>
-                                <td class="text-left ">
-                                    <button class="btn btn-sm btn-link" (click)="true">
-                                        <i class="fas fa-edit fa-lg mr-1"></i>Editar
-                                    </button>
-                                    <button class="btn btn-sm btn-link text-danger" (click)="eliminarCentroCosto(item)">
-                                        <i class="fas fa-trash-alt text-danger mr-1 fa-lg"></i>Eliminar
-                                    </button>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="d-none d-md-block">
-                    <div [ngStyle]="{'display': centrosCosto.length > 0 ? 'block' : 'none' }">
-                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger1"
-                            class="hover datatable table-shadow" style="width:100%">
-                            <thead class="thead-dark" *ngIf="centrosCosto.length > 0">
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Nombre</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let item of centrosCosto">
-                                    <td>{{ item.codigo }}</td>
-                                    <td nowrap>{{ item.nombre | capitalizeFirst }}</td>
-                                    <td style="font-size: 0.9rem;">
-                                        <button class="btn btn-sm btn-link" (click)="actualizarCentroCosto(item)">
-                                            <i class="fas fa-edit fa-lg mr-1"></i>Editar</button>
-                                        <button class="btn btn-sm btn-link text-danger"
-                                            (click)="eliminarCentroCosto(item)"><i
-                                                class="fas fa-trash-alt text-danger mr-1 fa-lg"></i>Eliminar</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="text-center" *ngIf="centrosCosto?.length == 0">Sin Registros</div>
-                </div>
-            </div>
+  <div class="col-lg-12">
+    <div class="card mt-3">
+      <div class="card-body table-responsive" style="min-height: 200px">
+        <app-loading-element
+          class="pt-3"
+          [text]="'Cargando centros de costo'"
+          *ngIf="cargando"
+        >
+        </app-loading-element>
+        <div class="d-block d-md-none">
+          <div
+            [ngClass]="{ dropcart__totals: i > 0 }"
+            style="font-size: 0.85rem"
+            *ngFor="let item of centrosCosto; let i = index"
+          >
+            <table>
+              <tr>
+                <th class="font-weight-bold titilo-w">Código</th>
+                <td class="text-left">{{ item.codigo }}</td>
+              </tr>
+              <tr>
+                <th class="font-weight-bold titilo-w">Nombre</th>
+                <td class="text-left">{{ item.nombre }}</td>
+              </tr>
+              <tr>
+                <th class="font-weight-bold titilo-w">Acciones</th>
+                <td class="text-left">
+                  <button class="btn btn-sm btn-link" (click)="(true)">
+                    <i class="fas fa-edit fa-lg mr-1"></i>Editar
+                  </button>
+                  <button
+                    class="btn btn-sm btn-link text-danger"
+                    (click)="eliminarCentroCosto(item)"
+                  >
+                    <i class="fas fa-trash-alt text-danger mr-1 fa-lg"></i
+                    >Eliminar
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </div>
         </div>
+
+        <div class="d-none d-md-block">
+          <div
+            [ngStyle]="{ display: centrosCosto.length > 0 ? 'block' : 'none' }"
+          >
+            <table
+              datatable
+              [dtOptions]="dtOptions"
+              [dtTrigger]="dtTrigger1"
+              class="hover datatable table-shadow"
+              style="width: 100%"
+            >
+              <thead class="thead-dark" *ngIf="centrosCosto.length > 0">
+                <tr>
+                  <th>Código</th>
+                  <th>Nombre</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of centrosCosto">
+                  <td>{{ item.codigo }}</td>
+                  <td nowrap>{{ item.nombre | capitalizeFirst }}</td>
+                  <td style="font-size: 0.9rem">
+                    <button
+                      class="btn btn-sm btn-link"
+                      (click)="actualizarCentroCosto(item)"
+                    >
+                      <i class="fas fa-edit fa-lg mr-1"></i>Editar
+                    </button>
+                    <button
+                      class="btn btn-sm btn-link text-danger"
+                      (click)="eliminarCentroCosto(item)"
+                    >
+                      <i class="fas fa-trash-alt text-danger mr-1 fa-lg"></i
+                      >Eliminar
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="text-center" *ngIf="centrosCosto?.length == 0">
+            Sin Registros
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

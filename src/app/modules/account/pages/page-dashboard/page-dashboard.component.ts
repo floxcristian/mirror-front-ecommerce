@@ -1,4 +1,4 @@
-import { Component, SimpleChanges, OnChanges } from '@angular/core';
+import { Component } from '@angular/core';
 // import { ProductsService } from '../../../../shared/services/products.service';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { ToastrService } from 'ngx-toastr';
@@ -13,7 +13,6 @@ import { Context } from 'chartjs-plugin-datalabels';
 // import { Label } from 'ng2-charts';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { GraficoVentasPorUen } from '../../../../shared/interfaces/graficoVentaPorUen';
-
 
 @Component({
   selector: 'app-page-dashboard',
@@ -259,7 +258,7 @@ export class PageDashboardComponent {
           align: (context: Context) => {
             const data1 = context.dataset.data[context.dataIndex] || 0;
             const data2 =
-              context.chart.data.datasets[1].data[context.dataIndex] ||0;
+              context.chart.data.datasets[1].data[context.dataIndex] || 0;
             return data1 > data2 ? 'end' : 'start';
           },
           formatter: (value: any, context: any) => {
@@ -268,6 +267,7 @@ export class PageDashboardComponent {
                 (Math.round((value / 1000000) * 100) / 100).toString() + ' MM'
               );
             }
+            return '';
           },
         },
       },
@@ -279,15 +279,16 @@ export class PageDashboardComponent {
           align: (context: Context) => {
             const data1 = context.dataset.data[context.dataIndex] || 0;
             const data2 =
-              context.chart.data.datasets[0].data[context.dataIndex]  || 0;
+              context.chart.data.datasets[0].data[context.dataIndex] || 0;
             return data1 > data2 ? 'end' : 'start';
           },
-          formatter: (value: any, context: any) => {
+          formatter: (value: any) => {
             if (value >= 1000000) {
               return (
                 (Math.round((value / 1000000) * 100) / 100).toString() + ' MM'
               );
             }
+            return '';
           },
         },
       },
@@ -313,12 +314,11 @@ export class PageDashboardComponent {
       },
       aspectRatio: 3 / 1,
       scales: {
-        xAxes:
-          {
-            display: true,
-            // labelString: 'Meses',
-          },
-    
+        xAxes: {
+          display: true,
+          // labelString: 'Meses',
+        },
+
         // xAxes: [
         //   {
         //     scaleLabel: {
@@ -342,18 +342,17 @@ export class PageDashboardComponent {
         //     },
         //   },
         // ],
-        yAxes:
-          {
-            // id: 'y-axis-0',
-            position: 'left',
-            min: 0,
-            max: newMax,
-            ticks: {
-              stepSize: Math.ceil(newMax / steps),
-            },
-            display: true,
-            // labelString: 'Pesos ($)',
+        yAxes: {
+          // id: 'y-axis-0',
+          position: 'left',
+          min: 0,
+          max: newMax,
+          ticks: {
+            stepSize: Math.ceil(newMax / steps),
           },
+          display: true,
+          // labelString: 'Pesos ($)',
+        },
       },
     };
     this.lineEstado = this.ESTADO.OK;
@@ -430,23 +429,21 @@ export class PageDashboardComponent {
         //     },
         //   },
         // ],
-        xAxes:
-          {
-            min: 0,
-            max: newMax,
-            ticks: {
-              stepSize: Math.ceil(newMax / steps),
-            },
-            display: true,
-            // labelString: 'Pesos ($)',
+        xAxes: {
+          min: 0,
+          max: newMax,
+          ticks: {
+            stepSize: Math.ceil(newMax / steps),
           },
-        yAxes:
-          {
-            // id: 'y-axis-0',
-            position: 'left',
-            display: true,
-            // labelString: 'Categorías',
-          },
+          display: true,
+          // labelString: 'Pesos ($)',
+        },
+        yAxes: {
+          // id: 'y-axis-0',
+          position: 'left',
+          display: true,
+          // labelString: 'Categorías',
+        },
       },
     };
     this.barEstado = this.ESTADO.OK;

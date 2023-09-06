@@ -1,0 +1,120 @@
+<ng-container *ngIf="innerWidth > 426">
+  <app-scroll-top> </app-scroll-top>
+  <ng-container *ngIf="banners">
+    <a [href]="banners.url" [target]="banners.target">
+      <img [src]="banners.image_full" width="100%" [alt]="banners.alt" />
+    </a>
+  </ng-container>
+  <div class="container h-100 my-2" id="top">
+    <div class="row justify-content-center h-100">
+      <div
+        class="card_especiales text-center col-sm-3 m-1 p-0 mb-3"
+        *ngFor="
+          let objB of lstProductos
+            | paginate : { itemsPerPage: 3, currentPage: p }
+        "
+      >
+        <div
+          (click)="getUrl(objB.p)"
+          style="text-transform: uppercase; font-size: 1.2rem"
+        >
+          {{ objB.nombre }}
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <pagination-controls
+        (pageChange)="pageChanged($event)"
+        previousLabel=""
+        nextLabel=""
+      ></pagination-controls>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="innerWidth < 427">
+  <ng-container *ngIf="banners">
+    <a [href]="banners.url" [target]="banners.target">
+      <img
+        [src]="banners.image_mobile"
+        width="100%"
+        [alt]="banners.alt"
+        style="margin-top: -15px"
+      />
+    </a>
+  </ng-container>
+  <div class="container h-100 my-2" id="top">
+    <div class="row justify-content-center h-100">
+      <div
+        class="card_especiales text-center col-sm-3 m-1 p-0 mb-3"
+        *ngFor="
+          let objB of lstProductos
+            | paginate : { itemsPerPage: 3, currentPage: p };
+          let y = index
+        "
+      >
+        <div
+          (click)="getUrl(objB.p)"
+          style="text-transform: uppercase; font-size: 1.2rem"
+        >
+          {{ objB.nombre }}
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <pagination-controls
+        (pageChange)="pageChanged($event)"
+        previousLabel=""
+        nextLabel=""
+      ></pagination-controls>
+    </div>
+  </div>
+</ng-container>
+
+<app-loading-element
+  [text]="'Cargando...'"
+  *ngIf="!lstProductos"
+></app-loading-element>
+
+<div class="products-view container mb-5" (window:resize)="onResize($event)">
+  <div class="clearfix"></div>
+  <div
+    class="products-view__list products-list"
+    [attr.data-layout]="layout != 'list' ? grid : layout"
+    [attr.data-with-features]="
+      layout == 'grid-with-features' ? 'true' : 'false'
+    "
+  >
+    <div
+      class="products-list__body m-auto"
+      [class.w-80]="innerWidth > 426"
+      [class.w-100]="innerWidth <= 426"
+    >
+      <div *ngIf="nombre != null" class="text-center mt-3 col-12">
+        <h1 class="pt-0 mb-3" style="text-transform: uppercase">
+          {{ nombre }}
+        </h1>
+      </div>
+
+      <div
+        *ngFor="let product of producto_espacial"
+        class="products-list__item mb-2 px-2 px-md-0"
+      >
+        <app-product-card-b2b
+          *ngIf="isB2B"
+          [origen]="['catalogo-especial', ruta[2], nombre?.trim(), '']"
+          [product]="product"
+          [grid]="layout"
+        >
+        </app-product-card-b2b>
+        <app-product-card-b2c-cms
+          *ngIf="!isB2B"
+          [origen]="['catalogo-especial', ruta[2], nombre?.trim(), '']"
+          [product]="product"
+          [grid]="layout"
+          [cartClass]="true"
+        >
+        </app-product-card-b2c-cms>
+      </div>
+    </div>
+  </div>
+</div>

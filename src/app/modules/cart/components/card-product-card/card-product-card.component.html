@@ -1,0 +1,50 @@
+<div class="row" *ngFor="let item of productos" style="margin-bottom: 10px; border-bottom: 1px solid #0063b9; padding: 10px">
+  <div class="col-sm-12 ml-3">
+    <div class="row" style="margin-bottom: 10px">
+      <div class="col-6" style="font-size: 12px">
+        <p style="margin-bottom: 2px !important">
+          {{ item.ProductCart.marca | uppercase }}
+        </p>
+        <p style="margin-bottom: 2px !important">
+          <strong>{{ item.ProductCart.nombre | uppercase }}</strong>
+        </p>
+        <p class="text-disabled" style="margin-bottom: 0px !important">
+          {{ item.ProductCart.sku | uppercase }}
+        </p>
+        <p style="margin-bottom: 5px !important">
+          <i
+            [ngClass]="item.ProductCart.entregas.despacho ? 'fas fa-truck text-success mr-1' : 'fas fa-truck text-disabled mr-1'"
+            style="font-size: 20px"
+          ></i>
+          <i
+            [ngClass]="
+              item.ProductCart.entregas.retiroTienda ? 'fas fa-store text-success mr-1' : 'fas fa-store text-disabled mr-1'
+            "
+            style="font-size: 20px"
+          ></i>
+        </p>
+      </div>
+      <div
+        class="col-6 d-flex justify-content-center align-items-center"
+        style="color: #0063b9; font-weight: bold; font-size: 16px"
+      >
+        <p>{{ item.ProductCart.precio | currencyFormat }}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6" style="font-size: 12px">
+        <a [routerLink]="root.product(item.ProductCart.sku, item.ProductCart.nombre)">
+          <img class="cart-img lazyload" [src]="root.getUrlImagenMiniatura(item.ProductCart)" [alt]="item.ProductCart.nombre" />
+        </a>
+      </div>
+      <div class="col-6" style="font-size: 12px">
+        <app-input-number [formControl]="item.quantityControl" (quantity)="updateCart($event, item)" [min]="1"></app-input-number>
+        <br />
+
+        <p style="margin-bottom: 0px !important; color: #0d61bb; text-align: center" (click)="remove(item.ProductCart)">
+          <i class="fas fa-trash-alt" style="color: #0d61bb; margin-left: 10px"></i> Eliminar
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

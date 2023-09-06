@@ -1,41 +1,70 @@
 <div class="container">
-  <ng-container *ngFor="let item of productos;let i = index">
+  <ng-container *ngFor="let item of productos; let i = index">
     <div class="row d-flex justify-content-center align-items-center mt-5">
       <div class="col-2">
         <a [routerLink]="root.product(item.sku, item.nombre)">
-          <img class="cart-img lazyload" [src]="root.getUrlImagenMiniatura(item)" [alt]="item.nombre" />
+          <img
+            class="cart-img lazyload"
+            [src]="root.getUrlImagenMiniatura(item)"
+            [alt]="item.nombre"
+          />
         </a>
       </div>
       <div class="col-6">
-        <div class="product-title" *ngIf="item.nombre.length>114"> {{item.nombre | slice:0:114}} ...</div>
-        <div class="product-title" *ngIf="item.nombre.length<=114"> {{item.nombre}} </div>
-        <div class="product-sku"> {{item.sku}}</div>
-        <div class="product-sku"> {{item.cantidad}} x {{item.precio | currencyFormat}}</div>
+        <div class="product-title" *ngIf="item.nombre.length > 114">
+          {{ item.nombre | slice : 0 : 114 }} ...
+        </div>
+        <div class="product-title" *ngIf="item.nombre.length <= 114">
+          {{ item.nombre }}
+        </div>
+        <div class="product-sku">{{ item.sku }}</div>
+        <div class="product-sku">
+          {{ item.cantidad }} x {{ item.precio | currencyFormat }}
+        </div>
       </div>
       <div class="col-4 d-flex justify-content-end">
         <div class="row w-100 p-0">
-          <div *ngIf="i==0" class="col-12">
+          <div *ngIf="i == 0" class="col-12">
             <span>
-
-              <i class="fa-solid fa-cart-plus" style="color:#0063b9;font-size: 14px;cursor:pointer;margin-right: 10px;"
-                (mousedown)="addCart(item)"></i>
-              <button class="btn btn-secondary btn-sm mr-1" (click)="addToCart()"> Rehacer
-                Pedido</button>
+              <i
+                class="fa-solid fa-cart-plus"
+                style="
+                  color: #0063b9;
+                  font-size: 14px;
+                  cursor: pointer;
+                  margin-right: 10px;
+                "
+                (mousedown)="addCart(item)"
+              ></i>
+              <button
+                class="btn btn-secondary btn-sm mr-1"
+                (click)="addToCart()"
+              >
+                Rehacer Pedido
+              </button>
             </span>
           </div>
 
-          <div *ngIf="i!=0" class="col-12" style="margin-left: 2px;">
+          <div *ngIf="i != 0" class="col-12" style="margin-left: 2px">
             <span>
-
-              <i class="fa-solid fa-cart-plus" style="color:#0063b9;font-size: 14px;cursor:pointer;margin-right: 10px;"
-                (mousedown)="addCart(item)"></i>
+              <i
+                class="fa-solid fa-cart-plus"
+                style="
+                  color: #0063b9;
+                  font-size: 14px;
+                  cursor: pointer;
+                  margin-right: 10px;
+                "
+                (mousedown)="addCart(item)"
+              ></i>
             </span>
           </div>
         </div>
       </div>
     </div>
-    <div *ngIf=" i != (productos.length-1)" style="border-bottom: 1px solid #0063b957;"></div>
+    <div
+      *ngIf="i != productos.length - 1"
+      style="border-bottom: 1px solid #0063b957"
+    ></div>
   </ng-container>
-
-
 </div>

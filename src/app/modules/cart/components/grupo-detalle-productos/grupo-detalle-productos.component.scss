@@ -1,0 +1,55 @@
+.simulador-card .card-header {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  margin: 0 !important;
+  background-color: #0063b9;
+  margin-bottom: 10px;
+}
+
+.simulador-card .card-body {
+  padding: 10px !important;
+}
+
+::ng-deep .producto-card h6 {
+  margin-bottom: 0px;
+}
+
+hr {
+  margin-top: 2px !important;
+  margin-bottom: 2px !important;
+}
+
+.text-precio {
+  padding-left: 10px;
+  text-align: right;
+}
+
+.modal-body {
+  overflow: auto;
+  min-height: auto;
+  max-height: 50vh;
+}
+@media (max-width: 575.98px) and (orientation: portrait) {
+  .dropcart__product-image {
+    width: 45px;
+  }
+  .dropcart__product-name {
+    font-size: 12px;
+  }
+}
+
+.dropcart__product-image {
+  width: 50px;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+.dropcart__product-name {
+  font-size: 12px;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #0063b9a5;
+}

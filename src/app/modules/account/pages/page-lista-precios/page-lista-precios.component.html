@@ -1,119 +1,270 @@
-<div class="top-bar-categories d-flex  align-items-center mb-3" [class.p-0]="innerWidth < 450"
-    [class.pl-3]="innerWidth < 450" [class.pr-3]="innerWidth < 450" (window:resize)="onResize($event)">
-    <div class="title d-flex align-items-center mr-auto ">
-        <i _ngcontent-serverapp-c11="" class="fas fa-truck-moving mr-3"></i>
-        <h5>Lista de Precios</h5>
-    </div>
-    <div class="custom-control custom-switch mr-3">
-        <input type="checkbox" class="custom-control-input" id="iva" checked [disabled]="showLoading" (change)="iva = !iva" style="cursor: pointer;">
-        <label class="custom-control-label" for="iva" style="cursor: pointer;">{{(iva) ? 'c/IVA' : 's/IVA'}}</label>
-    </div>
-    <div class="float-right d-block d-xl-none text-nowrap" *ngIf="precios && precios.length > 0 && totalPaginas > 1">
-        <button class="btn btm-sm btn-link mr-1" (click)="izquierda()" [disabled]="paginaActual == 1"><i
-                class="fas fa-chevron-left"></i></button>
-        {{ paginaActual }} / {{ totalPaginas }}
-        <button class="btn btm-sm btn-link ml-1" (click)="derecha()" [disabled]="paginaActual == totalPaginas"><i
-                class="fas fa-chevron-right"></i></button>
-    </div>
+<div
+  class="top-bar-categories d-flex align-items-center mb-3"
+  [class.p-0]="innerWidth < 450"
+  [class.pl-3]="innerWidth < 450"
+  [class.pr-3]="innerWidth < 450"
+  (window:resize)="onResize($event)"
+>
+  <div class="title d-flex align-items-center mr-auto">
+    <i _ngcontent-serverapp-c11="" class="fas fa-truck-moving mr-3"></i>
+    <h5>Lista de Precios</h5>
+  </div>
+  <div class="custom-control custom-switch mr-3">
+    <input
+      type="checkbox"
+      class="custom-control-input"
+      id="iva"
+      checked
+      [disabled]="showLoading"
+      (change)="iva = !iva"
+      style="cursor: pointer"
+    />
+    <label class="custom-control-label" for="iva" style="cursor: pointer">{{
+      iva ? "c/IVA" : "s/IVA"
+    }}</label>
+  </div>
+  <div
+    class="float-right d-block d-xl-none text-nowrap"
+    *ngIf="precios && precios.length > 0 && totalPaginas > 1"
+  >
+    <button
+      class="btn btm-sm btn-link mr-1"
+      (click)="izquierda()"
+      [disabled]="paginaActual == 1"
+    >
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    {{ paginaActual }} / {{ totalPaginas }}
+    <button
+      class="btn btm-sm btn-link ml-1"
+      (click)="derecha()"
+      [disabled]="paginaActual == totalPaginas"
+    >
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
 </div>
 
 <div class="dashboard row m-0">
-    <div class="col-lg-12 mb-3">
-
-        <div class="card pt-3">
-            <div class="card-body card-body-min-height-loading" [ngStyle]="{'min-height': (precios && precios.length == 0 && !showLoading) ? '40px' : '130px' }">
-
-                <app-loading-element class="pt-3" [text]="'Cargando precios'" *ngIf="showLoading"></app-loading-element>
-                <div class="row mt-3" *ngIf="precios && precios.length == 0">
-                    <div class="col-12 text-center"> No tiene una lista de precios acordada. </div>
-                </div>
-
-                <div class="d-flex flex-wrap justify-content-center flex-column" *ngIf="precios && precios.length > 0 && !showLoading">
-                    <!-- Mobile -->
-                    <div class="border-bottom d-sm-flex d-block d-xl-none align-items-center flex-grow-1 flex-shrink-1" *ngFor="let item of precios">
-                        <div class="col-12 d-block d-sm-none text-center">
-                            <span class="product-title"> {{ item.producto.nombre | titlecase }} </span><br>
-                            <span class="product-sku text-gray-2">{{ (item.producto.codigos && item.producto.codigos.length > 0) ? item.producto.codigos[0].codigoCliente : '' }} - {{ item.producto.sku }}</span>
-                        </div>
-
-                        <div class="col-xs-12 col-sm-2 text-center align-items-center">
-                            <a [routerLink]="root.product(item.producto.sku, item.producto.nombre)">
-                                <img class="precio-img lazyload" [src]="root.getUrlImagenMiniatura(item.producto)"
-                                    [alt]="item.producto.nombre">
-                            </a>
-                        </div>
-                        <div class="col-8 col-sm-5 d-flex align-items-center">
-                            <span class="product-title d-none d-sm-block"> {{ item.producto.nombre | titlecase }}
-                            </span>
-                        </div>
-                        <div class="col-8 col-sm-2 flex-sm-column justify-content-xl-end justify-content-center d-flex align-items-center">
-                            <span class="product-sku ml-2 d-none d-sm-block"> {{ (item.producto.codigos && item.producto.codigos.length > 0) ? item.producto.codigos[0].codigoCliente : '' }}
-                            </span>
-                            <span class="product-sku text-gray-2 ml-2 d-none d-sm-block"> {{ item.producto.sku }}
-                            </span>
-                        </div>
-                        <div
-                            class="col-12 col-sm-3 flex-sm-column justify-content-xl-end justify-content-center d-flex align-items-center">
-                            <span class="precio-price-value"><span class="precio-meson">{{ iva ? (item.precioMeson | currencyFormat) : (item.precioMesonBruto | currencyFormat) }}</span> {{ iva ? 'c/iva' : 's/iva'}}</span>
-                            <span class="precio-price-value text-danger ml-3 ml-sm-0">{{ iva ? (item._id.precio | currencyFormat) : (item._id.precioBruto | currencyFormat) }} {{ iva ? 'c/iva' : 's/iva'}}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PC -->
-                <div *ngIf="innerWidth >= 1200">
-                    <div class="col-sm-12" style="margin-bottom: 20px; padding:10px; border: 1px solid #33333338">
-                        <app-filtro-categorias *ngIf="!showLoading" (url)="busquedaCategoria($event)"></app-filtro-categorias>
-                    </div>
-                    <div class="col-sm-12" style="margin-bottom: 20px; padding-top:10px;padding-bottom: 10px; border: 1px solid #33333338">
-                    <table datatable [dtOptions]="dtOptions" class="hover datatable nowrap table-shadow" style="width:100%; ">
-                        <thead>
-                         <tr>
-                            <th></th>
-                            <th class="text-center">Nombre</th>
-                            <th class="text-center">Marca</th>
-                            <th class="text-center">Código Cliente</th>
-                            <th class="text-center">SKU</th>
-                            <th class="text-center">Precio Público</th>
-                            <th class="text-center">Precio</th>
-                    
-                          </tr>
-                        </thead>
-                        <tbody *ngIf="precios?.length != 0 &&  !loadingData">
-                            <tr *ngFor="let item of precios">
-                                <td class="text-center">
-                                    <a [routerLink]="root.product(item.producto.sku, item.producto.nombre)">
-                                        <img class="precio-img lazyload"
-                                            [src]="root.getUrlImagenMiniatura(item.producto)"
-                                            [alt]="item.producto.nombre">
-                                    </a>
-                                </td>
-                                <td nowrap>{{ item.producto.nombre | titlecase }}</td>
-                                <td class="text-center">{{ item.producto.marca }}</td>
-                                <td class="text-center">{{ (item.producto.codigos && item.producto.codigos.length > 0) ? item.producto.codigos[0].codigoCliente : '' }}</td>
-                                <td class="text-center">{{ item.producto.sku }}</td>
-                                <td class="text-center"><span class="precio-meson">{{ iva ? (item.precioMeson | currencyFormat) : (item.precioMesonBruto | currencyFormat) }}</span> {{ iva ? 'c/iva' : 's/iva'}}</td>
-                                <td class="text-center text-danger">{{ iva ? (item._id.precio | currencyFormat) : (item._id.precioBruto | currencyFormat) }} {{ iva ? 'c/iva' : 's/iva'}}</td>
-                            </tr>
-                        </tbody>
-                        <tbody *ngIf="loadingData">
-                            <td class="text-center" COLSPAN=7>
-                                <div class="col-sm-12" style="margin-bottom: 20px; padding:10px; border: 1px solid #33333338">
-                                    <i class="fas fa-spinner" style="margin-right:10px"></i> Cargando ...
-                                </div>
-                            </td>
-                        </tbody>
-                        <tbody *ngIf="precios?.length == 0 &&  !loadingData">
-                            <td class="text-center" COLSPAN=7>
-                                <div class="col-sm-12" style="margin-bottom: 20px; padding:10px; border: 1px solid #33333338">
-                                    <i class="fas fa-info-circle" style="margin-right:10px"></i> No Tiene productos en esta categoría
-                                </div>
-                            </td>
-                        </tbody>
-                      </table>
-                    </div>
-              </div>
-            </div>
+  <div class="col-lg-12 mb-3">
+    <div class="card pt-3">
+      <div
+        class="card-body card-body-min-height-loading"
+        [ngStyle]="{
+          'min-height':
+            precios && precios.length == 0 && !showLoading ? '40px' : '130px'
+        }"
+      >
+        <app-loading-element
+          class="pt-3"
+          [text]="'Cargando precios'"
+          *ngIf="showLoading"
+        ></app-loading-element>
+        <div class="row mt-3" *ngIf="precios && precios.length == 0">
+          <div class="col-12 text-center">
+            No tiene una lista de precios acordada.
+          </div>
         </div>
+
+        <div
+          class="d-flex flex-wrap justify-content-center flex-column"
+          *ngIf="precios && precios.length > 0 && !showLoading"
+        >
+          <!-- Mobile -->
+          <div
+            class="border-bottom d-sm-flex d-block d-xl-none align-items-center flex-grow-1 flex-shrink-1"
+            *ngFor="let item of precios"
+          >
+            <div class="col-12 d-block d-sm-none text-center">
+              <span class="product-title">
+                {{ item.producto.nombre | titlecase }} </span
+              ><br />
+              <span class="product-sku text-gray-2"
+                >{{
+                  item.producto.codigos && item.producto.codigos.length > 0
+                    ? item.producto.codigos[0].codigoCliente
+                    : ""
+                }}
+                - {{ item.producto.sku }}</span
+              >
+            </div>
+
+            <div class="col-xs-12 col-sm-2 text-center align-items-center">
+              <a
+                [routerLink]="
+                  root.product(item.producto.sku, item.producto.nombre)
+                "
+              >
+                <img
+                  class="precio-img lazyload"
+                  [src]="root.getUrlImagenMiniatura(item.producto)"
+                  [alt]="item.producto.nombre"
+                />
+              </a>
+            </div>
+            <div class="col-8 col-sm-5 d-flex align-items-center">
+              <span class="product-title d-none d-sm-block">
+                {{ item.producto.nombre | titlecase }}
+              </span>
+            </div>
+            <div
+              class="col-8 col-sm-2 flex-sm-column justify-content-xl-end justify-content-center d-flex align-items-center"
+            >
+              <span class="product-sku ml-2 d-none d-sm-block">
+                {{
+                  item.producto.codigos && item.producto.codigos.length > 0
+                    ? item.producto.codigos[0].codigoCliente
+                    : ""
+                }}
+              </span>
+              <span class="product-sku text-gray-2 ml-2 d-none d-sm-block">
+                {{ item.producto.sku }}
+              </span>
+            </div>
+            <div
+              class="col-12 col-sm-3 flex-sm-column justify-content-xl-end justify-content-center d-flex align-items-center"
+            >
+              <span class="precio-price-value"
+                ><span class="precio-meson">{{
+                  iva
+                    ? (item.precioMeson | currencyFormat)
+                    : (item.precioMesonBruto | currencyFormat)
+                }}</span>
+                {{ iva ? "c/iva" : "s/iva" }}</span
+              >
+              <span class="precio-price-value text-danger ml-3 ml-sm-0"
+                >{{
+                  iva
+                    ? (item._id.precio | currencyFormat)
+                    : (item._id.precioBruto | currencyFormat)
+                }}
+                {{ iva ? "c/iva" : "s/iva" }}</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- PC -->
+        <div *ngIf="innerWidth >= 1200">
+          <div
+            class="col-sm-12"
+            style="
+              margin-bottom: 20px;
+              padding: 10px;
+              border: 1px solid #33333338;
+            "
+          >
+            <app-filtro-categorias
+              *ngIf="!showLoading"
+              (url)="busquedaCategoria($event)"
+            ></app-filtro-categorias>
+          </div>
+          <div
+            class="col-sm-12"
+            style="
+              margin-bottom: 20px;
+              padding-top: 10px;
+              padding-bottom: 10px;
+              border: 1px solid #33333338;
+            "
+          >
+            <table
+              datatable
+              [dtOptions]="dtOptions"
+              class="hover datatable nowrap table-shadow"
+              style="width: 100%"
+            >
+              <thead>
+                <tr>
+                  <th></th>
+                  <th class="text-center">Nombre</th>
+                  <th class="text-center">Marca</th>
+                  <th class="text-center">Código Cliente</th>
+                  <th class="text-center">SKU</th>
+                  <th class="text-center">Precio Público</th>
+                  <th class="text-center">Precio</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="precios?.length != 0 && !loadingData">
+                <tr *ngFor="let item of precios">
+                  <td class="text-center">
+                    <a
+                      [routerLink]="
+                        root.product(item.producto.sku, item.producto.nombre)
+                      "
+                    >
+                      <img
+                        class="precio-img lazyload"
+                        [src]="root.getUrlImagenMiniatura(item.producto)"
+                        [alt]="item.producto.nombre"
+                      />
+                    </a>
+                  </td>
+                  <td nowrap>{{ item.producto.nombre | titlecase }}</td>
+                  <td class="text-center">{{ item.producto.marca }}</td>
+                  <td class="text-center">
+                    {{
+                      item.producto.codigos && item.producto.codigos.length > 0
+                        ? item.producto.codigos[0].codigoCliente
+                        : ""
+                    }}
+                  </td>
+                  <td class="text-center">{{ item.producto.sku }}</td>
+                  <td class="text-center">
+                    <span class="precio-meson">{{
+                      iva
+                        ? (item.precioMeson | currencyFormat)
+                        : (item.precioMesonBruto | currencyFormat)
+                    }}</span>
+                    {{ iva ? "c/iva" : "s/iva" }}
+                  </td>
+                  <td class="text-center text-danger">
+                    {{
+                      iva
+                        ? (item._id.precio | currencyFormat)
+                        : (item._id.precioBruto | currencyFormat)
+                    }}
+                    {{ iva ? "c/iva" : "s/iva" }}
+                  </td>
+                </tr>
+              </tbody>
+              <tbody *ngIf="loadingData">
+                <td class="text-center" COLSPAN="7">
+                  <div
+                    class="col-sm-12"
+                    style="
+                      margin-bottom: 20px;
+                      padding: 10px;
+                      border: 1px solid #33333338;
+                    "
+                  >
+                    <i class="fas fa-spinner" style="margin-right: 10px"></i>
+                    Cargando ...
+                  </div>
+                </td>
+              </tbody>
+              <tbody *ngIf="precios?.length == 0 && !loadingData">
+                <td class="text-center" COLSPAN="7">
+                  <div
+                    class="col-sm-12"
+                    style="
+                      margin-bottom: 20px;
+                      padding: 10px;
+                      border: 1px solid #33333338;
+                    "
+                  >
+                    <i
+                      class="fas fa-info-circle"
+                      style="margin-right: 10px"
+                    ></i>
+                    No Tiene productos en esta categoría
+                  </div>
+                </td>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

@@ -1,222 +1,331 @@
-<div class="top-bar-categories d-flex  align-items-center mb-3" [class.p-0]="innerWidth < 450"
-[class.pl-4]="innerWidth < 450" (window:resize)="onResize($event)">
-    <div class="title d-flex align-items-center mr-auto ">
-        <i _ngcontent-serverapp-c11="" class="fas  fa-money-check-alt mr-3"></i>
-        <h5>Portal de pagos</h5>
-    </div>
+<div
+  class="top-bar-categories d-flex align-items-center mb-3"
+  [class.p-0]="innerWidth < 450"
+  [class.pl-4]="innerWidth < 450"
+  (window:resize)="onResize($event)"
+>
+  <div class="title d-flex align-items-center mr-auto">
+    <i _ngcontent-serverapp-c11="" class="fas fa-money-check-alt mr-3"></i>
+    <h5>Portal de pagos</h5>
+  </div>
 </div>
 
 <div class="dashboard row m-0">
-    <div class="col-lg-9 mb-3">
-        <div class="card mb-3" *ngIf="paymentMsgSuccess">
-            <div class="card-header">
-                <button name="closeAlert" type="button" class="close pull-right" aria-label="Close" (click)="closeAlert()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="card-body">
-                <div class="payment-ticket">
-                    <div class="content-icon mb-3">
-                        <i class="fas fa-receipt"></i>
-                    </div>
-                    <p class="font-weight-bold">Se ha generado correctamente el cupon de pago, Una vez validado se verá reflejado en sus documentos.
-                        (Esto puede tomar unos minutos.)</p>
-                    <p>Su pago sera confirmado vía correo electrónico</p>
-                    <div class="text-center">
-                        <button name="Aceptar" class="btn btn-border-primary " (click)="closeAlert()">Aceptar</button>
-                    </div>
-                </div>
-            </div>
+  <div class="col-lg-9 mb-3">
+    <div class="card mb-3" *ngIf="paymentMsgSuccess">
+      <div class="card-header">
+        <button
+          name="closeAlert"
+          type="button"
+          class="close pull-right"
+          aria-label="Close"
+          (click)="closeAlert()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="payment-ticket">
+          <div class="content-icon mb-3">
+            <i class="fas fa-receipt"></i>
+          </div>
+          <p class="font-weight-bold">
+            Se ha generado correctamente el cupon de pago, Una vez validado se
+            verá reflejado en sus documentos. (Esto puede tomar unos minutos.)
+          </p>
+          <p>Su pago sera confirmado vía correo electrónico</p>
+          <div class="text-center">
+            <button
+              name="Aceptar"
+              class="btn btn-border-primary"
+              (click)="closeAlert()"
+            >
+              Aceptar
+            </button>
+          </div>
         </div>
-
-        <div class="card ">
-            <div class="card-body card-body-min-height-loading">
-                <app-loading-element [text]="'Cargando datos'" *ngIf="loading"></app-loading-element>
-                <div class="mb-3 row">
-                    <div class="col-lg-4">
-                        <span class="font-weight-bold"> Pagar total facturas</span>
-                        <div class="btn-div-group ml-2">
-                            <div class="btn-div"> {{totalDocuments | currencyFormat}} </div>
-                            <span (click)="openModalTotalDocuments()" class="icon pointer"
-                                tooltip="Pagar todas las facturas">
-                                <i class="fas fa-plus"></i>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 text-center">
-                        <h5>{{user.company}} </h5> 
-                        <!-- <h6> Rut: {{user.rut | rut}}  </h6> -->
-                        <h6> Rut: {{user.rut}}  </h6>
-                    </div>
-                    <div class="col-lg-4 " [class.text-right]="innerWidth > 450">
-                        <span class="font-weight-bold">Pagar facturas vencidas </span>
-                        <div class="btn-div-group ml-2">
-                            <div class="btn-div"> {{totalExpired | currencyFormat}} </div>
-                            <span (click)="openModalTotalExpired()" class="icon pointer"
-                                tooltip="Pagar todas las facturas vencidas">
-                                <i class="fas fa-plus"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <hr/>
-                <ng-container *ngIf="innerWidth < 450">
-
-                    <!-- <div class="dropcart__totals" [ngClass]="{'border-0': seeProducts==false}"*ngFor="let item of customerDebt"> -->
-                        <div class="dropcart__totals" [ngClass]="{'border-0': false}"*ngFor="let item of customerDebt">
-                        <table >
-                            <tr>
-                                <th class=" font-weight-bold titilo-w" >Nota venta</th>
-                                <td class="text-left">{{item.nota_venta}}</td>
-                            </tr>
-                            <tr>
-                                <th class=" font-weight-bold titilo-w" >Factura</th>
-                                <td class="text-left">{{item.folio}}</td>
-                            </tr>
-                            <tr>
-                                <th class=" font-weight-bold titilo-w" >Fecha</th>
-                                <td class="text-left">{{item.fechaCreacion | date:'dd-MM-yyyy'}}</td>
-                            </tr>
-                            <tr>
-                                <th class=" font-weight-bold titilo-w" >Vencimiento</th>
-                                <td class="text-left">{{item.fechaVencimiento | date:'dd-MM-yyyy'}}</td>
-                            </tr>
-                            <tr>
-                                <th class=" font-weight-bold titilo-w" >Adeudado</th>
-                                <td class="text-left">{{item.saldo | currencyFormat}}</td>
-                            </tr>
-                            <tr>
-                                <th class=" font-weight-bold titilo-w" >Estado</th>
-                                <td class="text-left badge" [ngClass]="{'badge-danger': item.estado=='VENCIDA', 'badge-warning': item.estado=='PENDIENTE'}">{{item.estado}}</td>
-                            </tr>
-                            <tr>
-                                <td class="td-checkbox">
-                                    <div class="form-check form-check-lg">
-                                        <span class="form-check-input input-check ">
-                                            <span class="input-check__body">
-                                                <input name="tipoDocumento" class="input-check__input" type="checkbox"
-                                                    id="check-factura" [checked]="item.check" (click)="addCheck(item)">
-                                                <span class="input-check__box"></span>
-                                                <app-icon class="input-check__icon" name="check-9x7" size="19x19">
-                                                </app-icon>
-                                            </span>
-                                        </span>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-
-                </ng-container>
-                <ng-container *ngIf="innerWidth > 450">
-                    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table-checkbox">
-                        <thead>
-                            <tr>
-                                <th>Nota venta</th>
-                                <th>Orden de Compra</th>
-                                <th>Factura</th>
-                                <th>Fecha</th>
-                                <th>Vencimiento</th>
-                                <th>Adeudado</th>
-                                <th>Estado</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let item of customerDebt" [ngClass]="{'row-red': item.estado=='VENCIDA', 'row-green': item.estado=='PENDIENTE'}" >
-                                <td>{{ item.nota_venta }}</td>
-                                <td>{{ item.ordencompra }}</td>
-                                <td>{{ item.folio }}</td>
-                                <td>{{ item.fechaCreacion | date:'dd-MM-yyyy'  }}</td>
-                                <td>{{ item.fechaVencimiento | date:'dd-MM-yyyy'  }} </td>
-                                <td class="text-right">{{ item.saldo | currencyFormat }}</td>
-                                <td>
-                                    <span class="badge " [ngClass]="{'badge-danger': item.estado=='VENCIDA', 'badge-warning': item.estado=='PENDIENTE'}">
-                                        {{ item.estado }}
-                                    </span>
-                                    <span *ngIf="item.days > 0"> {{ item.days }} días</span>
-                                </td>
-                                <td class="td-checkbox">
-                                    <div class="form-check form-check-lg">
-                                        <span class="form-check-input input-check ">
-                                            <span class="input-check__body">
-                                                <input name="tipoDocumento" class="input-check__input" type="checkbox"
-                                                    id="check-factura" [checked]="item.check" (click)="addCheck(item)">
-                                                <span class="input-check__box"></span>
-                                                <app-icon class="input-check__icon" name="check-9x7" size="19x19">
-                                                </app-icon>
-                                            </span>
-                                        </span>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </ng-container>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <div class="col-lg-3 mb-3">
-        <div class="card  cardh">
-            <div class="card-header">Resumen</div>
-            <div class="card-body">
-                <p class="text-center" *ngIf="documentsSelected.length == 0">No ha seleccionado documentos a pagar</p>
-
-                <table class="table-white" *ngIf="documentsSelected.length > 0">
-                    <thead>
-                        <tr>
-                            <th>Folio</th>
-                            <th>Monto</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of documentsSelected">
-                            <td>{{item.folio}}</td>
-                            <td class="text-right">{{item.monto | currencyFormat}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+    <div class="card">
+      <div class="card-body card-body-min-height-loading">
+        <app-loading-element
+          [text]="'Cargando datos'"
+          *ngIf="loading"
+        ></app-loading-element>
+        <div class="mb-3 row">
+          <div class="col-lg-4">
+            <span class="font-weight-bold"> Pagar total facturas</span>
+            <div class="btn-div-group ml-2">
+              <div class="btn-div">{{ totalDocuments | currencyFormat }}</div>
+              <span
+                (click)="openModalTotalDocuments()"
+                class="icon pointer"
+                tooltip="Pagar todas las facturas"
+              >
+                <i class="fas fa-plus"></i>
+              </span>
             </div>
-            <div class="card-footer p-0">
-                <button name="openModalSelectedItem" class="btn btn-lg btn-secondary btn-block text-center" (click)="openModalSelectedItem()"
-                    [disabled]="documentToPay.length == 0">Pagar {{total | currencyFormat }}</button>
+          </div>
+          <div class="col-lg-4 text-center">
+            <h5>{{ user.company }}</h5>
+            <h6>Rut: {{ user.rut }}</h6>
+          </div>
+          <div class="col-lg-4" [class.text-right]="innerWidth > 450">
+            <span class="font-weight-bold">Pagar facturas vencidas </span>
+            <div class="btn-div-group ml-2">
+              <div class="btn-div">{{ totalExpired | currencyFormat }}</div>
+              <span
+                (click)="openModalTotalExpired()"
+                class="icon pointer"
+                tooltip="Pagar todas las facturas vencidas"
+              >
+                <i class="fas fa-plus"></i>
+              </span>
             </div>
+          </div>
         </div>
+        <hr />
+        <ng-container *ngIf="innerWidth < 450">
+          <!-- <div class="dropcart__totals" [ngClass]="{'border-0': seeProducts==false}"*ngFor="let item of customerDebt"> -->
+          <div
+            class="dropcart__totals"
+            [ngClass]="{ 'border-0': false }"
+            *ngFor="let item of customerDebt"
+          >
+            <table>
+              <tr>
+                <th class="font-weight-bold titilo-w">Nota venta</th>
+                <td class="text-left">{{ item.nota_venta }}</td>
+              </tr>
+              <tr>
+                <th class="font-weight-bold titilo-w">Factura</th>
+                <td class="text-left">{{ item.folio }}</td>
+              </tr>
+              <tr>
+                <th class="font-weight-bold titilo-w">Fecha</th>
+                <td class="text-left">
+                  {{ item.fechaCreacion | date : "dd-MM-yyyy" }}
+                </td>
+              </tr>
+              <tr>
+                <th class="font-weight-bold titilo-w">Vencimiento</th>
+                <td class="text-left">
+                  {{ item.fechaVencimiento | date : "dd-MM-yyyy" }}
+                </td>
+              </tr>
+              <tr>
+                <th class="font-weight-bold titilo-w">Adeudado</th>
+                <td class="text-left">{{ item.saldo | currencyFormat }}</td>
+              </tr>
+              <tr>
+                <th class="font-weight-bold titilo-w">Estado</th>
+                <td
+                  class="text-left badge"
+                  [ngClass]="{
+                    'badge-danger': item.estado == 'VENCIDA',
+                    'badge-warning': item.estado == 'PENDIENTE'
+                  }"
+                >
+                  {{ item.estado }}
+                </td>
+              </tr>
+              <tr>
+                <td class="td-checkbox">
+                  <div class="form-check form-check-lg">
+                    <span class="form-check-input input-check">
+                      <span class="input-check__body">
+                        <input
+                          name="tipoDocumento"
+                          class="input-check__input"
+                          type="checkbox"
+                          id="check-factura"
+                          [checked]="item.check"
+                          (click)="addCheck(item)"
+                        />
+                        <span class="input-check__box"></span>
+                        <app-icon
+                          class="input-check__icon"
+                          name="check-9x7"
+                          size="19x19"
+                        >
+                        </app-icon>
+                      </span>
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="innerWidth > 450">
+          <table
+            datatable
+            [dtOptions]="dtOptions"
+            [dtTrigger]="dtTrigger"
+            class="table-checkbox"
+          >
+            <thead>
+              <tr>
+                <th>Nota venta</th>
+                <th>Orden de Compra</th>
+                <th>Factura</th>
+                <th>Fecha</th>
+                <th>Vencimiento</th>
+                <th>Adeudado</th>
+                <th>Estado</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let item of customerDebt"
+                [ngClass]="{
+                  'row-red': item.estado == 'VENCIDA',
+                  'row-green': item.estado == 'PENDIENTE'
+                }"
+              >
+                <td>{{ item.nota_venta }}</td>
+                <td>{{ item.ordencompra }}</td>
+                <td>{{ item.folio }}</td>
+                <td>{{ item.fechaCreacion | date : "dd-MM-yyyy" }}</td>
+                <td>{{ item.fechaVencimiento | date : "dd-MM-yyyy" }}</td>
+                <td class="text-right">{{ item.saldo | currencyFormat }}</td>
+                <td>
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'badge-danger': item.estado == 'VENCIDA',
+                      'badge-warning': item.estado == 'PENDIENTE'
+                    }"
+                  >
+                    {{ item.estado }}
+                  </span>
+                  <span *ngIf="item.days > 0"> {{ item.days }} días</span>
+                </td>
+                <td class="td-checkbox">
+                  <div class="form-check form-check-lg">
+                    <span class="form-check-input input-check">
+                      <span class="input-check__body">
+                        <input
+                          name="tipoDocumento"
+                          class="input-check__input"
+                          type="checkbox"
+                          id="check-factura"
+                          [checked]="item.check"
+                          (click)="addCheck(item)"
+                        />
+                        <span class="input-check__box"></span>
+                        <app-icon
+                          class="input-check__icon"
+                          name="check-9x7"
+                          size="19x19"
+                        >
+                        </app-icon>
+                      </span>
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-container>
+      </div>
     </div>
+  </div>
+
+  <div class="col-lg-3 mb-3">
+    <div class="card cardh">
+      <div class="card-header">Resumen</div>
+      <div class="card-body">
+        <p class="text-center" *ngIf="documentsSelected.length == 0">
+          No ha seleccionado documentos a pagar
+        </p>
+
+        <table class="table-white" *ngIf="documentsSelected.length > 0">
+          <thead>
+            <tr>
+              <th>Folio</th>
+              <th>Monto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of documentsSelected">
+              <td>{{ item.folio }}</td>
+              <td class="text-right">{{ item.monto | currencyFormat }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer p-0">
+        <button
+          name="openModalSelectedItem"
+          class="btn btn-lg btn-secondary btn-block text-center"
+          (click)="openModalSelectedItem()"
+          [disabled]="documentToPay.length == 0"
+        >
+          Pagar {{ total | currencyFormat }}
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
-
 <ng-template #modalPaymentMethods>
-
-    <div class="modal-header">
-        <h4 class="modal-title pull-left">Métodos de pagos</h4>
-        <button name="modalPaymentMethodsRef" type="button" class="close pull-right" aria-label="Close" (click)="modalPaymentMethodsRef.hide()">
-            <span aria-hidden="true">&times;</span>
-        </button>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Métodos de pagos</h4>
+    <button
+      name="modalPaymentMethodsRef"
+      type="button"
+      class="close pull-right"
+      aria-label="Close"
+      (click)="modalPaymentMethodsRef.hide()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-loading-element
+      *ngIf="loadingPayment"
+      text="Conectando al banco"
+    ></app-loading-element>
+    <div class="content-total">
+      <span> Monto a pagar </span>
+      <span class="font-weight-bold">
+        {{ totalToPay | currencyFormat }}
+      </span>
     </div>
-    <div class="modal-body">
-        <app-loading-element *ngIf="loadingPayment" text="Conectando al banco"></app-loading-element>
-        <div class="content-total">
-            <span>
-                Monto a pagar
-            </span>
-            <span class="font-weight-bold">
-                {{totalToPay | currencyFormat}}
-            </span>
-        </div>
-        <div *ngFor="let item of paymentBtns" class="content-img" (click)="setPaymentMethod(item)"
-            [ngClass]="{'active': item.selected}">
-            <img class="bank-logo lazyload" [src]="item.image" [alt]="item.title" [ngClass]="{'disabled': item.disabled}">
-        </div>
+    <div
+      *ngFor="let item of paymentBtns"
+      class="content-img"
+      (click)="setPaymentMethod(item)"
+      [ngClass]="{ active: item.selected }"
+    >
+      <img
+        class="bank-logo lazyload"
+        [src]="item.image"
+        [alt]="item.title"
+        [ngClass]="{ disabled: item.disabled }"
+      />
     </div>
+  </div>
 
-    <div class="modal-footer">
-        <button name="Cancelar" [disabled]="loadingPayment" class="btn btn-danger" (click)="modalPaymentMethodsRef.hide();"> <i
-                class="fas fa-ban"></i>
-            Cancelar</button>
-        <button name="Pagar" [disabled]="loadingPayment" class="btn btn-secondary" (click)="generatePayment();"> <i
-                class="far fa-credit-card"></i> Pagar</button>
-    </div>
-
+  <div class="modal-footer">
+    <button
+      name="Cancelar"
+      [disabled]="loadingPayment"
+      class="btn btn-danger"
+      (click)="modalPaymentMethodsRef.hide()"
+    >
+      <i class="fas fa-ban"></i> Cancelar
+    </button>
+    <button
+      name="Pagar"
+      [disabled]="loadingPayment"
+      class="btn btn-secondary"
+      (click)="generatePayment()"
+    >
+      <i class="far fa-credit-card"></i> Pagar
+    </button>
+  </div>
 </ng-template>

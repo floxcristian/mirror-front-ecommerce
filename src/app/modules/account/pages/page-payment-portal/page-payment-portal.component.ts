@@ -11,11 +11,11 @@ import { environment } from '../../../../../environments/environment';
 @Component({
   selector: 'app-page-payment-portal',
   templateUrl: './page-payment-portal.component.html',
-  styleUrls: ['./page-payment-portal.component.scss']
+  styleUrls: ['./page-payment-portal.component.scss'],
 })
 export class PagePaymentPortalComponent implements OnInit {
-
-  @ViewChild('modalPaymentMethods', { static: false }) modalPaymentMethods!: TemplateRef<any>;
+  @ViewChild('modalPaymentMethods', { static: false })
+  modalPaymentMethods!: TemplateRef<any>;
 
   modalPaymentMethodsRef!: BsModalRef;
   dtOptions: DataTables.Settings = {};
@@ -23,8 +23,8 @@ export class PagePaymentPortalComponent implements OnInit {
   user!: Usuario;
   customerDebt: any;
   loading = true;
-  documentToPay:any[] = [];
-  documentsSelected:any[] = [];
+  documentToPay: any[] = [];
+  documentsSelected: any[] = [];
   total = 0;
   totalExpired = 0;
   totalDocuments = 0;
@@ -35,31 +35,28 @@ export class PagePaymentPortalComponent implements OnInit {
       title: 'Banco Satander',
       image: 'assets/images/logo bancos/Logotipo_del_Banco_Santander.jpg',
       selected: false,
-      disabled: false
+      disabled: false,
     },
     {
       id: 'bchile',
       title: 'Banco Chile',
       image: 'assets/images/logo bancos/bancochile.jpg',
       selected: false,
-      disabled: false
-
+      disabled: false,
     },
     {
       id: 'bbci',
       title: 'Banco BCI',
       image: 'assets/images/logo bancos/bci.jpg',
       selected: false,
-      disabled: false
-    }
+      disabled: false,
+    },
   ];
 
   paymentSelected = '';
   loadingPayment = false;
   paymentMsgSuccess = false;
   innerWidth: any;
-
-
 
   constructor(
     private clientsService: ClientsService,
@@ -74,47 +71,39 @@ export class PagePaymentPortalComponent implements OnInit {
     this.user = this.root.getDataSesionUsuario();
     this.getData();
     this.dtOptions = this.root.simpleDtOptions;
-
   }
   getData() {
-
     const data = {
       where: {
-        rut: this.user.rut
-      }
+        rut: this.user.rut,
+      },
     };
 
     this.clientsService.getCustomerDebt(data).subscribe((r: ResponseApi) => {
-
       this.customerDebt = r.data[0].documento_cobros;
       this.dtTrigger.next('');
       this.addCheckBoxs(this.customerDebt);
       this.calcTotalSelected();
       this.loading = false;
 
-      this.customerDebt.forEach((e:any) => {
-
+      this.customerDebt.forEach((e: any) => {
         var date_string = e.fechaVencimiento;
-        var diff = +(new Date()) - +(new Date(date_string));
+        var diff = +new Date() - +new Date(date_string);
         e.days = Math.ceil(diff / (1000 * 3600 * 24));
-
       });
-
     });
-
   }
 
-  addCheckBoxs(docs:any) {
-    docs.map((item:any) => {
+  addCheckBoxs(docs: any) {
+    docs.map((item: any) => {
       item.check = false;
     });
   }
 
-  addCheck(item:any) {
+  addCheck(item: any) {
     item.check = !item.check;
     this.calcTotalSelected();
   }
-
 
   // calcula el total de documentos seleccionados
   calcTotalSelected() {
@@ -136,7 +125,7 @@ export class PagePaymentPortalComponent implements OnInit {
         //console.log(item.check);
         const obj = {
           folio: item.folio,
-          monto: item.saldo
+          monto: item.saldo,
         };
         this.documentToPay.push(item);
         this.documentsSelected.push(obj);
@@ -144,23 +133,23 @@ export class PagePaymentPortalComponent implements OnInit {
         this.total += item.saldo;
         this.totalToPay += item.saldo;
       }
-
-
     }
   }
 
   openModal() {
-    this.modalPaymentMethodsRef = this.modalService.show(this.modalPaymentMethods);
+    this.modalPaymentMethodsRef = this.modalService.show(
+      this.modalPaymentMethods
+    );
     // console.log(this.documentToPay);
   }
 
-  setPaymentMethod(item:any) {
-    this.paymentBtns.map(i => {
+  setPaymentMethod(item: any) {
+    this.paymentBtns.map((i) => {
       i.selected = false;
     });
     item.selected = true;
     this.paymentSelected = item.id;
-  };
+  }
 
   // cuando es pago seleccionado
   openModalSelectedItem() {
@@ -170,7 +159,6 @@ export class PagePaymentPortalComponent implements OnInit {
 
   // cuando es pago seleccionado
   openModalTotalExpired() {
-
     this.totalToPay = 0;
     this.totalExpired = 0;
     this.documentToPay = [];
@@ -181,7 +169,6 @@ export class PagePaymentPortalComponent implements OnInit {
         this.totalToPay += item.saldo;
         this.totalExpired += item.saldo;
       }
-
     }
 
     this.openModal();
@@ -189,7 +176,6 @@ export class PagePaymentPortalComponent implements OnInit {
 
   // cuando es pago seleccionado
   openModalTotalDocuments() {
-
     this.totalToPay = 0;
     this.totalDocuments = 0;
     this.documentToPay = [];
@@ -202,48 +188,44 @@ export class PagePaymentPortalComponent implements OnInit {
   }
 
   generatePayment() {
-
     const data = {
       payment_method: this.paymentSelected,
       item: this.documentToPay,
       order_total: this.totalToPay,
       client_email: this.user.email,
       client_code: this.user.rut,
-      client_name: this.user.company
+      client_name: this.user.company,
     };
 
-
-
     this.loadingPayment = true;
-    this.clientsService.generatePayment(data).subscribe((r: ResponseApi) => {
-      this.loadingPayment = false;
+    this.clientsService.generatePayment(data).subscribe(
+      (r: ResponseApi) => {
+        this.loadingPayment = false;
 
-      if (r.error) {
-        this.toastr.error(r.msg, 'Error');
+        if (r.error) {
+          this.toastr.error(r.msg, 'Error');
+          this.paymentMsgSuccess = false;
+          return;
+        }
+
+        // si el pago se ingreso redirijimos
+        this.paymentMsgSuccess = true;
+        this.redirectPaymentImplementos(r.data.order_id);
+        this.resetPayment();
+      },
+      (err) => {
+        this.toastr.error('Error de comunicación con el servidor');
         this.paymentMsgSuccess = false;
-        return;
       }
-
-      // si el pago se ingreso redirijimos
-      this.paymentMsgSuccess = true;
-      this.redirectPaymentImplementos(r.data.order_id);
-      this.resetPayment();
-
-    }, err => {
-      this.toastr.error('Error de comunicación con el servidor');
-      this.paymentMsgSuccess = false;
-    });
-
+    );
   }
 
-  redirectPaymentImplementos(orderId:any) {
+  redirectPaymentImplementos(orderId: any) {
     const url = `${environment.urlPagosImplementos}metodo_pago/resumen.php?order_id=${orderId}`;
     window.open(url);
   }
 
   resetPayment() {
-
-
     this.calcTotalSelected();
     this.paymentMsgSuccess = true;
     this.modalPaymentMethodsRef.hide();
@@ -251,13 +233,12 @@ export class PagePaymentPortalComponent implements OnInit {
     for (const item of this.customerDebt) {
       item.check = false;
     }
-
   }
 
   closeAlert() {
     this.paymentMsgSuccess = false;
   }
-  onResize(event:any) {
+  onResize(event: any) {
     this.innerWidth = event.target.innerWidth;
   }
 }

@@ -1,0 +1,163 @@
+<ng-container *ngIf="!confirmar">
+  <div class="row">
+    <div class="ml-2 mb-3 mr-3 col-12 col-lg-12 mt-3">
+      <div class="form-group">
+        <label>Contacto de Seguimiento</label>
+        <select
+          class="form-control form-control-lg"
+          [(ngModel)]="id"
+          (change)="chageSelected()"
+        >
+          <option [ngValue]="null">Seleccion de contacto</option>
+          <option *ngFor="let item of contactos" value="{{ item.contactoId }}">
+            <strong>{{ item.nombre }} {{ item.apellido }}</strong>
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div
+    style="border-bottom: solid 1px; border-color: #80808030; margin-top: -10px"
+  ></div>
+  <div class="row ml-2 mb-3 mt-3" style="margin-top: -10px">
+    <div class="col-sm-12">
+      <div class="custom-control custom-switch">
+        <input
+          type="checkbox"
+          class="custom-control-input"
+          [(ngModel)]="edit"
+          (change)="Editar()"
+          id="customSwitches"
+        />
+        <label class="custom-control-label" for="customSwitches">Editar</label>
+      </div>
+    </div>
+  </div>
+  <form [formGroup]="formContacto">
+    <div class="row ml-1 mb-3 mt-3" style="margin-top: -10px">
+      <div class="col-sm-6">
+        <label style="margin-bottom: 5px">Email</label>
+        <input
+          class="form-control form-control-lg"
+          formControlName="email"
+          id="email"
+          type="text"
+          placeholder="Email *"
+          disabled
+        />
+      </div>
+      <div class="col-sm-6">
+        <label style="margin-bottom: 5px">Telefono</label>
+        <input
+          class="form-control form-control-lg"
+          formControlName="telefono"
+          id="telefono"
+          type="text"
+          placeholder="Contacto *"
+          disabled
+        />
+      </div>
+    </div>
+
+    <div class="row ml-1 mb-3 mt-3" style="margin-top: -10px">
+      <div class="col-sm-6">
+        <button
+          [disabled]="!formContacto.valid"
+          (click)="ConfirmarContacto()"
+          class="btn btn-secondary btn-lg"
+        >
+          Confirmar Contacto
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-container>
+
+<ng-container *ngIf="confirmar">
+  <div
+    *ngIf="!procesarPago"
+    class="alert border border-warning text-center"
+    style="margin-top: 20px"
+    role="alert"
+  >
+    <hr />
+    <p>
+      <i
+        class="fa-solid fa-circle-info"
+        style="margin-left: 10px; font-size: 20px"
+      ></i>
+      El contacto de seguimiento para esta compra sera asignado a
+      <strong> {{ nombre | titlecase }}</strong>
+    </p>
+    <p>
+      Cuya información de contacto es la siguiente: telefono:
+      <strong>{{ telefono }}</strong
+      >, email: <strong>{{ email }}</strong>
+    </p>
+    <hr />
+    <p>
+      <strong
+        >Si dicha informacion no es correcta o esta desactualizada, puede volver
+        a editar o elegir otro contacto.</strong
+      >
+    </p>
+    <hr />
+    <div
+      class="row ml-1 mb-3 mt-3 d-flex justify-content-center"
+      style="margin-top: -10px"
+    >
+      <button
+        style="margin-right: 20px"
+        class="btn btn-secondary btn-lg"
+        (click)="Confirmar()"
+      >
+        <i class="fa-solid fa-circle-check" style="margin-right: 5px"></i>
+        Confirmar
+      </button>
+
+      <button (click)="reChoose()" class="btn btn-success btn-lg">
+        <i class="fa-solid fa-pen-to-square" style="margin-right: 5px"></i>
+        Editar Contacto
+      </button>
+    </div>
+  </div>
+
+  <div
+    *ngIf="procesarPago"
+    class="alert border border-success text-center"
+    style="margin-top: 20px"
+    role="alert"
+  >
+    <h5>¡Contacto de Seguimiento Confirmado!</h5>
+    <hr />
+    <p>
+      <i
+        class="fa-solid fa-circle-check"
+        style="margin-left: 10px; font-size: 20px"
+      ></i>
+      <strong> {{ nombre | titlecase }}</strong> es el contacto seleccionado
+      para las notificaciones de esta compra.
+    </p>
+    <p>
+      telefono: <strong>{{ telefono }}</strong
+      >, email: <strong>{{ email }}</strong>
+    </p>
+    <hr />
+    <p>
+      <strong
+        >Puede proceder su compra haciendo clic en el boton "Ir a
+        pagar".</strong
+      >
+    </p>
+    <hr />
+    <div
+      class="row ml-1 mb-3 mt-3 d-flex justify-content-center"
+      style="margin-top: -10px"
+    >
+      <button (click)="reChoose()" class="btn btn-success btn-lg">
+        <i class="fa-solid fa-pen-to-square" style="margin-right: 5px"></i>
+        Seleccionar Contacto
+      </button>
+    </div>
+  </div>
+</ng-container>

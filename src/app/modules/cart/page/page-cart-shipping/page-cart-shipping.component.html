@@ -1,0 +1,978 @@
+<div class="container container-cart site_b2c margencarro" (window:resize)="onResize($event)">
+  <app-guided-steps step="2"></app-guided-steps>
+
+  <div class="row">
+    <div class="col-12 col-lg-7 col-xl-8" *ngIf="!isLogin">
+      <div class="card" *ngIf="!usuarioInvitado && !isLogin">
+        <div class="card-body">
+          <app-login-register [innerWidth]="innerWidth" (outInvitado)="usuarioVisita($event)" [invitado]="invitado">
+          </app-login-register>
+        </div>
+      </div>
+    </div>
+    <div
+      class="col-12"
+      *ngIf="
+        (usuarioInvitado || isLogin) &&
+        shippingSelected &&
+        HideResumen() &&
+        select_grupos &&
+        (recibeType == 'yo' || recibeType == 'otra')
+      "
+    >
+      <div class="card" style="padding-bottom: 0px">
+        <div class="card-header row align-items-center" style="margin-bottom: 0px !important; color: #0063b9 !important">
+          <div class="col-7">
+            {{ tituloDespacho }}
+          </div>
+          <div class="col-5">
+            <div
+              class="btn btn-link float-right"
+              style="color: #0063b9 !important"
+              (click)="modificarSelectedAddress()"
+              [attr.title]="(cart.shippingType$ | async) == 'despacho' ? 'Cambiar dirección' : 'Cambiar tienda'"
+            >
+              <i class="fa-solid fa-pen-to-square" style="margin-right: 10px"></i>Cambiar
+            </div>
+          </div>
+        </div>
+        <div class="card-body d-flex flex-wrap align-items-lg-center mt-2" style="margin-bottom: 10px">
+          <div class="col-12 col-sm-7">
+            <span style="font-weight: bold; color: #0063b9 !important">{{ direccionName | lowercase | titlecase }}</span
+            ><br />
+            <p
+              *ngIf="tienda && retiroFlag"
+              class="subtitle"
+              style="font-weight: normal; padding: 0.5rem 2px; margin-bottom: 0px; color: #0063b9 !important"
+            >
+              {{ tienda.direccion }}
+            </p>
+            <ng-container *ngIf="select_grupos">
+              <p
+                *ngFor="let item of fechas; let i = index"
+                class="subtitle"
+                style="font-weight: normal; padding: 0 2px; margin-bottom: 0px; font-size: 0.8rem; color: #0063b9 !important"
+              >
+                <strong>Entrega {{ i + 1 }}/{{ fechas.length }}</strong> {{ item | date : 'EEEE dd MMMM, y ' | titlecase }}
+              </p>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="col-12"
+      *ngIf="(usuarioInvitado || isLogin) && shippingSelected && HideResumen() && select_grupos && tituloRecibe.length > 0"
+    >
+      <div class="card" style="margin-top: 5px; padding-bottom: 0px">
+        <div class="card-header" style="margin-bottom: 0px !important">
+          {{ tituloRecibe }}
+        </div>
+        <div class="card-body mt-2">
+          <div class="col-12 col-lg-9" *ngIf="recibeOtraname.length > 0">{{ recibeOtraname | titlecase }}</div>
+          <div class="col-12 col-lg-9" *ngIf="recibeOtraname.length === 0">{{ recibeYoname | titlecase }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="container ml-4" *ngIf="innerWidth < 450">
+      <div
+        class="cart-address-container ml-3 col-12 col-lg-12 pt-3 pb-2 pl-2"
+        style="color: #0063b9; margin-bottom: 10px"
+        [ngStyle]="{ width: innerWidth > 450 ? '96%' : '92%' }"
+      >
+        <div class="row" *ngIf="usuarioInvitado || isLogin">
+          <div class="col-2 d-flex justify-content-center" tyle=" color: #0063b9">
+            <i class="fa-solid fa-cart-shopping" style="font-size: 21px !important; color: #0063b9"></i>
+          </div>
+          <div class="col-10">
+            <p style="font-weight: bold; margin-bottom: 5px" [ngStyle]="{ 'font-size': innerWidth < 450 ? '16px' : '18px' }">
+              Carro de compra
+            </p>
+            <ng-container *ngIf="items.length > 1">
+              <font style="font-weight: normal">({{ ' ' + items.length + ' PRODUCTOS' + ' ' }})</font>
+            </ng-container>
+            <ng-container *ngIf="items.length == 1">
+              <font style="font-weight: normal">({{ ' ' + items.length + ' PRODUCTO' + ' ' }})</font>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-7 col-xl-8 col-xs-12" *ngIf="!select_grupos && (usuarioInvitado || isLogin)">
+      <div class="card h-100">
+        <div class="card-header" style="color: #0063b9; margin-left: 17px">ELIGE EL TIPO DE ENTREGA</div>
+        <div class="card-body">
+          <div name="detalleDespacho">
+            <tabset [justified]="true" #tabsShipping>
+              <!-- TAB retiro en tienda -->
+              <tab [disabled]="loadingShipping" (selectTab)="onSelect($event, 'retiro')">
+                <ng-template tabHeading>
+                  <i class="fa-sharp fa-solid fa-store" style="margin-right: 10px"></i>
+                  <span class="title">Retirar en tienda</span>
+                </ng-template>
+
+                <div class="mb-3 mr-3 col-12 col-lg-12 mt-3" [hidden]="shippingStore.length == 0 ? true : false">
+                  <ng-select
+                    [clearable]="false"
+                    [searchable]="true"
+                    [items]="shippingStore"
+                    bindLabel="direccionCompleta"
+                    bindValue="recid"
+                    class="form-control-select form-control-lg"
+                    [(ngModel)]="selectedShippingIdStore"
+                    placeholder="Seleccione una tienda"
+                    [disabled]="loadingShippingStore"
+                    #select
+                    (change)="obtieneRetiro(); select.blur()"
+                  >
+                    <ng-template ng-option-tmp let-item="item" let-index="index">
+                      <p>
+                        <b>{{ item.direccionCompleta }}</b>
+                      </p>
+
+                      <p style="margin-top: -10px">
+                        <span class="text-justify">
+                          <small>{{ item.direccion }}</small></span
+                        >
+                      </p>
+                    </ng-template>
+                  </ng-select>
+                  <!-- <p *ngIf="tienda" class="subtitle" style="font-weight:normal;padding:0.5rem 2px">{{ tienda.direccion }}</p> -->
+                </div>
+                <div
+                  class="cart-address-container ml-3 col-12 col-lg-12 pt-3 pb-2 pl-2"
+                  style="color: #0063b9; margin-bottom: 10px"
+                  [ngStyle]="{ width: innerWidth > 450 ? '96%' : '92%' }"
+                >
+                  <div class="row">
+                    <div class="col-2 d-flex justify-content-center">
+                      <i class="fa-solid fa-store" style="font-size: 21px !important; color: #0063b9"></i>
+                    </div>
+                    <div *ngIf="tienda" class="col-10" style="font-size: 14px">
+                      <div class="row">
+                        <div class="col-sm-6 mt-1">
+                          {{ tienda.direccion }}
+                        </div>
+                        <div class="col-sm-6" style="font-weight: bold; font-size: 18px">{{ retiro | uppercase }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <app-loading-element
+                  *ngIf="loadingShippingStore || (shippingStore.length === 0 && !TiendasCargadas)"
+                  text="Cargando fechas"
+                >
+                </app-loading-element>
+
+                <div *ngIf="shippingDaysStore.length == 0" class="no-shipping">
+                  <div class="col-12 col-lg-12">
+                    <div class="alert border border-warning" style="width: 99%; color: #0063b9">
+                      <h3 *ngIf="isLogin">
+                        Producto no disponible! . . . <i class="fas fa-store-alt"></i
+                        ><i class="fas fa-exclamation-circle mt-2 float-right text-warning"></i>
+                      </h3>
+                      <p style="font-size: 12px">
+                        Este producto no está disponible para la
+                        <strong>{{ tienda_actual.tiendaSelecciona.nombre }}</strong
+                        >, seleccione otra tienda para continuar.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <ng-container *ngFor="let item_0 of shippingDaysStore; let i = index">
+                    <div style="margin-bottom: 30px; border: 1px solid #0063b9; border-radius: 5px; border-top: none">
+                      <app-grupo-detalle-productos
+                        (eliminarGrupo)="eliminarGrupo($event)"
+                        [index]="item_0.grupo"
+                        [length]="shippingDaysStore.length"
+                        [grupo_producto]="item_0.productodespacho"
+                      >
+                      </app-grupo-detalle-productos>
+                      <app-grupo-detalle-fechas
+                        *ngIf="innerWidth > 1720"
+                        [DIAS_SEMANA]="10"
+                        (itemSeleccionado)="setSeleccionarEnvio($event, i)"
+                        [index]="i"
+                        [fletes]="item_0.fechas"
+                      >
+                      </app-grupo-detalle-fechas>
+                      <app-grupo-detalle-fechas
+                        *ngIf="innerWidth > 1420 && innerWidth <= 1720"
+                        [DIAS_SEMANA]="8"
+                        (itemSeleccionado)="setSeleccionarEnvio($event, i)"
+                        [index]="i"
+                        [fletes]="item_0.fechas"
+                      >
+                      </app-grupo-detalle-fechas>
+                      <app-grupo-detalle-fechas
+                        *ngIf="innerWidth > 450 && innerWidth <= 1420"
+                        [DIAS_SEMANA]="7"
+                        (itemSeleccionado)="setSeleccionarEnvio($event, i)"
+                        [index]="i"
+                        [fletes]="item_0.fechas"
+                      >
+                      </app-grupo-detalle-fechas>
+                      <app-grupo-detalle-fechas-mobile
+                        *ngIf="innerWidth <= 450"
+                        (itemSeleccionado)="setSeleccionarEnvioMobile($event, i)"
+                        [index]="i"
+                        [fletes]="item_0.fechas"
+                      ></app-grupo-detalle-fechas-mobile>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="form-row ml-2 mt-4" *ngIf="shippingDaysStore.length > 0">
+                  <div class="form-group col-12" style="color: #0063b9">
+                    <label>Seleccione quien retira el pedido</label>
+                    <div class="clearfix"></div>
+
+                    <div class="row ml-2 mt-3 mx-0">
+                      <div class="col-sm p-0">
+                        <div class="form-check form-check-lg">
+                          <span class="form-check-input input-check">
+                            <span class="input-check__body">
+                              <input
+                                (click)="setRecibe('yo')"
+                                name="retiroYo"
+                                class="input-check__input"
+                                type="radio"
+                                id="retiroYo"
+                                [checked]="recibeType == 'yo'"
+                              />
+                              <span class="input-check__box"></span>
+                              <app-icon class="input-check__icon" name="check-9x7" size="19x19"></app-icon>
+                            </span>
+                          </span>
+                          <label class="form-check-label" for="retiroYo">Yo retiro</label>
+                        </div>
+                      </div>
+
+                      <div class="col-sm p-0">
+                        <div class="form-check form-check-lg">
+                          <span class="form-check-input input-check">
+                            <span class="input-check__body">
+                              <input
+                                (click)="setRecibe('otra')"
+                                name="retiraOtro"
+                                class="input-check__input"
+                                type="radio"
+                                id="retiraOtro"
+                                [checked]="recibeType == 'otra'"
+                              />
+                              <span class="input-check__box"></span>
+                              <app-icon class="input-check__icon" name="check-9x7" size="19x19"></app-icon>
+                            </span>
+                          </span>
+                          <label class="form-check-label" for="retiraOtro">Retira otra persona</label>
+                        </div>
+                      </div>
+                      <div class="col-sm p-0" (mousedown)="toggleMap()" style="cursor: pointer">
+                        <i class="fa-solid fa-map-location-dot" style="font-size: 28px; color: #0063b9"></i>
+                        {{ showMap ? 'Ocultar Mapa' : 'Ver Mapa' }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row mr-1" *ngIf="recibeType == 'otra' && recibeOtraname.length > 0">
+                    <div class="col-12">
+                      <p class="subtitle" style="color: #0063b9">Persona que recibe</p>
+                    </div>
+                    <div class="col-12 col-sm-10 ml-1">
+                      <div
+                        class="cart-address-container pt-3 pb-3 pl-2"
+                        [ngClass]="HideResumen() ? '' : 'd-flex align-items-center'"
+                      >
+                        <div class="row">
+                          <div class="col-12 col-sm-7">
+                            {{ recibeOtraname | titlecase }}
+                          </div>
+                          <div class="col-12 col-sm-5">
+                            <button
+                              type="button"
+                              class="btn btn-link text-left"
+                              (click)="setRecibe('otra'); recibeOtraname = ''"
+                              style="text-decoration: none; padding-left: 0px"
+                            >
+                              <i class="fa-solid fa-pen-to-square" style="font-size: 20px !important; margin-right: 10px"></i>
+                              Cambiar
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" *ngIf="recibeType == 'otra' && recibeOtraname.length == 0">
+                  <div class="col-sm-12">
+                    <app-register-reception (returnReceptionEvent)="reciboPedido($event)"> </app-register-reception>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12" style="padding-left: 32px; padding-right: 32px; margin-top: 10px">
+                    <app-map *ngIf="tienda && showMap" [infoWindowContent]="tienda.direccion" [tienda]="tienda"> </app-map>
+                  </div>
+                </div>
+                <br />
+              </tab>
+
+              <!-- End tab retiro en tienda -->
+              <tab [disabled]="loadingShippingStore" (selectTab)="onSelect($event, 'despacho')">
+                <div [hidden]="showNewAddress">
+                  <ng-template tabHeading>
+                    <i class="fas fa-truck"></i>
+                    <ng-container *ngIf="innerWidth >= 450">
+                      <span class="title">Despacho a domicilio</span>
+                    </ng-container>
+                    <ng-container *ngIf="innerWidth < 450">
+                      <span class="title">Despacho</span>
+                    </ng-container>
+                  </ng-template>
+
+                  <app-loading-element *ngIf="loadingShippingAll" text="Cargando direcciones"> </app-loading-element>
+
+                  <!-- Tarjeta de direcciones del usuario -->
+                  <div class="row mt-3" *ngIf="isLogin" style="margin-left: 0px; margin-right: 0px">
+                    <!-- Listado de direcciones de un usuario logeado -->
+
+                    <div *ngFor="let direccion of addresses" class="col-12">
+                      <div
+                        class="cart-address-container"
+                        *ngIf="direccion.recid === selectedShippingId || showAllAddress"
+                        [ngClass]="showAllAddress ? 'mb-4' : ''"
+                      >
+                        <div class="row pb-3 pt-3 d-flex align-items-sm-center pl-2">
+                          <div class="col-12 col-sm-6">
+                            <i class="fa-solid fa-location-dot" style="margin-right: 10px; font-size: 20px"></i>
+                            {{ direccion.direccionCompleta }}
+                          </div>
+                          <div class="col-12 col-sm-6 d-flex flex-sm-row-reverse" *ngIf="!showAllAddress">
+                            <button
+                              type="button"
+                              (click)="viewAllAddress()"
+                              class="btn btn-link"
+                              style="padding-left: 0px; text-decoration: none; color: #0063b9"
+                            >
+                              <i class="fa-solid fa-pen-to-square" style="font-size: 20px !important; margin-right: 10px"></i>
+                              Cambiar
+                            </button>
+                          </div>
+                          <div class="col-12 col-sm-6 d-flex flex-row-reverse" *ngIf="showAllAddress">
+                            <button
+                              type="button"
+                              (click)="changeAddress(direccion.recid)"
+                              style="text-decoration: none; color: #0063b9"
+                              class="btn btn-link"
+                            >
+                              Usar Dirección
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-12">
+                      <div
+                        class="cart-new-address-container"
+                        [ngClass]="showAllAddress ? 'mb-4' : ''"
+                        *ngIf="showAllAddress || addresses.length === 0"
+                      >
+                        <div class="row pb-3 pt-3 d-flex flex-wrap align-items-sm-center pl-2">
+                          <div class="col-12 col-sm-6">
+                            <i class="fas fa-plus" style="font-size: 20px !important; margin-right: 10px"></i> Nueva Dirección
+                          </div>
+                          <div class="col-12 col-sm-6 d-flex flex-row-reverse">
+                            <button
+                              name="open"
+                              name="openModal"
+                              title="Agregar Dirección"
+                              data-toggle="collapse"
+                              (click)="showNewAddress = !showNewAddress"
+                              data-target="#collapsenewAddress"
+                              class="btn btn-link"
+                              style="text-decoration: none; color: white"
+                            >
+                              Agregar dirección
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- End Listado de direcciones de un usuario logeado -->
+                  </div>
+                  <!-- END tarjeta de direcciones del usuario -->
+
+                  <!-- Tarjeta de direcciones del invitado -->
+                  <app-add-address
+                    invitado="true"
+                    *ngIf="usuarioInvitado && !direccion"
+                    (respuestaInvitado)="direccionVisita($event)"
+                  ></app-add-address>
+
+                  <div *ngIf="usuarioInvitado && direccion">
+                    <div class="row ml-2 mt-3">
+                      <div class="col-12 col-lg-6">
+                        <p class="subtitle my-0 pt-0">Dirección de despacho</p>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-lg-12 ml-3 mt-3">
+                      <div class="cart-address-container">
+                        <div class="row pb-3 pt-3 d-flex flex-wrap align-items-sm-center pl-2 mr-1">
+                          <div class="col-12 col-sm-7">
+                            <div>
+                              {{ usuarioInv.calle }} {{ usuarioInv.numero }}, depto/casa: {{ usuarioInv.depto }},
+                              {{ usuarioInv.comuna }}
+                            </div>
+                            <!-- <div *ngIf="usuarioInv.depto.length <= 0"> {{usuarioInv.calle}} {{usuarioInv.numero}}, {{usuarioInv.comuna}} </div> -->
+                          </div>
+                          <div class="col-12 col-sm-5 d-flex flex-sm-row-reverse">
+                            <button
+                              title="Cambiar dirección"
+                              (click)="removeAddressInvitado()"
+                              class="btn btn-link text-center;"
+                              style="text-decoration: none; padding-left: 0px"
+                            >
+                              Modificar
+                              <div class="mr-1 hidetabletLandscape" style="display: inline-block">
+                                dirección
+                                <i class="fas fa-pencil-alt ml-2 editIcon" style="font-size: 15px !important"></i>
+                              </div>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- END tarjeta de direcciones del invitado -->
+
+                  <div class="container-shipping position-relative" style="margin-left: 0px 10px">
+                    <app-loading-element
+                      *ngIf="(loadingShipping && !usuarioInvitado) || (loadingShipping && direccion && usuarioInvitado)"
+                      text="Cargando fechas"
+                    >
+                    </app-loading-element>
+
+                    <div *ngIf="shippingDays.length == 0" class="no-shipping">
+                      <p class="subtitle" *ngIf="selectedShippingId == null && isLogin">
+                        Seleccione una dirección para proponer días de despacho
+                      </p>
+
+                      <div *ngIf="isLogin" class="col-12 col-lg-12">
+                        <div class="alert border border-warning" style="width: 99%; color: #0063b9">
+                          <h2 *ngIf="isLogin">
+                            Oops! . . . <i class="fas fa-shipping-fast mt-2"></i
+                            ><i class="fas fa-exclamation-circle mt-2 float-right text-warning"></i>
+                          </h2>
+                          <p class="subtitle">
+                            Este producto no está disponible para despacho a domicilio, seleccione retiro en tienda para
+                            continuar.
+                          </p>
+                          <!-- <p class="subtitle" *ngIf="(selectedShippingId!=null && !usuarioInvitado) || (usuarioInvitado && direccion && selectedShippingId!=null )">
+                                                        No existe stock disponible para los productos seleccionados.</p> -->
+                        </div>
+                      </div>
+                      <div *ngIf="!isLogin && direccion" class="col-12 col-lg-12">
+                        <div class="alert border border-warning" style="width: 99%">
+                          <h2 *ngIf="isLogin">
+                            Oops! . . . <i class="fas fa-shipping-fast mt-2"></i
+                            ><i class="fas fa-exclamation-circle mt-2 float-right text-warning"></i>
+                          </h2>
+                          <p class="subtitle">
+                            Este producto no está disponible para despacho a domicilio, seleccione retiro en tienda para
+                            continuar.
+                          </p>
+                          <!-- <p class="subtitle" *ngIf="(selectedShippingId!=null && !usuarioInvitado) || (usuarioInvitado && direccion && selectedShippingId!=null )">
+                                                        No existe stock disponible para los productos seleccionados.</p> -->
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Segmento correspondiente a la seleccion de dias de despacho. tanto para invitados como logeados. -->
+                    <div *ngIf="(isLogin && selectedShippingId) || (usuarioInvitado && direccion)">
+                      <!-- Segmento correspondiente al formulario asociado a la persona que recibe el producto-->
+                      <div class="form-row ml-2 mt-4" *ngIf="shippingDays.length > 0">
+                        <!-- Formulario de  dias para despacho -->
+
+                        <div class="row col-12">
+                          <div class="col-12" style="padding-right: 0px">
+                            <ng-container *ngFor="let item_0 of shippingDays; let i = index">
+                              <div style="margin-bottom: 30px; border: solid 1px #0063b9; border-top: none; border-radius: 5px">
+                                <app-grupo-detalle-productos
+                                  (eliminarGrupo)="eliminarGrupo($event)"
+                                  [index]="item_0.grupo"
+                                  [length]="shippingDays.length"
+                                  [grupo_producto]="item_0.productodespacho"
+                                ></app-grupo-detalle-productos>
+
+                                <app-grupo-detalle-fechas
+                                  *ngIf="innerWidth > 1720"
+                                  [DIAS_SEMANA]="10"
+                                  (itemSeleccionado)="setSeleccionarEnvio($event, i)"
+                                  [index]="i"
+                                  [fletes]="item_0.fechas"
+                                ></app-grupo-detalle-fechas>
+                                <app-grupo-detalle-fechas
+                                  *ngIf="innerWidth > 1420 && innerWidth <= 1720"
+                                  [DIAS_SEMANA]="8"
+                                  (itemSeleccionado)="setSeleccionarEnvio($event, i)"
+                                  [index]="i"
+                                  [fletes]="item_0.fechas"
+                                ></app-grupo-detalle-fechas>
+                                <app-grupo-detalle-fechas
+                                  *ngIf="innerWidth > 450 && innerWidth <= 1420"
+                                  [DIAS_SEMANA]="7"
+                                  (itemSeleccionado)="setSeleccionarEnvio($event, i)"
+                                  [index]="i"
+                                  [fletes]="item_0.fechas"
+                                ></app-grupo-detalle-fechas>
+                                <app-grupo-detalle-fechas-mobile
+                                  *ngIf="innerWidth <= 450"
+                                  (itemSeleccionado)="setSeleccionarEnvioMobile($event, i)"
+                                  [index]="i"
+                                  [fletes]="item_0.fechas"
+                                ></app-grupo-detalle-fechas-mobile>
+                              </div>
+                            </ng-container>
+                          </div>
+                        </div>
+                        <!-- Fin Formulario de  dias para despacho -->
+
+                        <div class="form-group col-12" style="color: #0063b9">
+                          <div class="row ml-2 mt-3 mx-0">
+                            <div class="col p-0">
+                              <div class="form-check form-check-lg">
+                                <span class="form-check-input input-check">
+                                  <span class="input-check__body">
+                                    <input
+                                      (click)="setRecibe('yo')"
+                                      name="tipoDocumento"
+                                      class="input-check__input"
+                                      type="radio"
+                                      id="check-factura"
+                                      [checked]="recibeType == 'yo'"
+                                    />
+                                    <span class="input-check__box"></span>
+                                    <app-icon class="input-check__icon" name="check-9x7" size="19x19"></app-icon>
+                                  </span>
+                                </span>
+                                <label class="form-check-label" for="check-factura">Yo recibo</label>
+                              </div>
+                            </div>
+
+                            <div class="col p-0">
+                              <div class="form-check form-check-lg">
+                                <span class="form-check-input input-check">
+                                  <span class="input-check__body">
+                                    <input
+                                      (click)="setRecibe('otra')"
+                                      name="tipoDocumento"
+                                      class="input-check__input"
+                                      type="radio"
+                                      id="check-cotizacion"
+                                      [checked]="recibeType == 'otra'"
+                                    />
+                                    <span class="input-check__box"></span>
+                                    <app-icon class="input-check__icon" name="check-9x7" size="19x19"></app-icon>
+                                  </span>
+                                </span>
+                                <label class="form-check-label" for="check-cotizacion">Recibe otra persona</label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row mr-1" *ngIf="recibeType == 'otra' && recibeOtraname.length > 0">
+                          <div class="col-12">
+                            <p class="subtitle" style="color: #0063b9 !important">Persona que recibe</p>
+                          </div>
+                          <div class="col-12 ml-1">
+                            <div
+                              class="cart-address-container pt-3 pb-3 pl-2"
+                              [ngClass]="HideResumen() ? '' : 'd-flex align-items-center'"
+                            >
+                              <div class="row col-12">
+                                <div class="col-12 col-sm-7">
+                                  {{ recibeOtraname | titlecase }}
+                                </div>
+                                <div class="col-12 col-sm-5">
+                                  <button
+                                    type="button"
+                                    class="btn btn-link text-left"
+                                    (click)="setRecibe('otra'); recibeOtraname = ''"
+                                    style="text-decoration: none; padding-left: 0px; color: #0063b9"
+                                  >
+                                    Cambiar
+                                    <div class="hidetabletLandscape" style="display: inline-block">
+                                      datos <i class="fas fa-pencil-alt ml-2" style="font-size: 15px !important"></i>
+                                    </div>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row" *ngIf="recibeType == 'otra' && recibeOtraname.length == 0">
+                        <div class="col-sm-12">
+                          <app-register-reception (returnReceptionEvent)="reciboPedido($event)"> </app-register-reception>
+                        </div>
+                      </div>
+                      <!-- Fin Segmento correspondiente al formulario asociado a la persona que recibe el producto-->
+                    </div>
+                  </div>
+                </div>
+                <div class="row" *ngIf="showNewAddress">
+                  <div class="col-12 collapse" id="collapsenewAddress">
+                    <app-add-address [invitado]="false" (respuesta)="respuesta($event)"></app-add-address>
+                  </div>
+                </div>
+              </tab>
+              <!-- retiro chilexpress -->
+              <tab *ngIf="false" (selectTab)="onSelect($event, 'sucursal')">
+                <ng-template tabHeading>
+                  <i class="fas fa-store-alt"></i>
+                  <span class="title">Oficinas Chilexpress</span>
+                </ng-template>
+                <div class="row" style="margin-top: 15px; margin-left: 5px; margin-right: 0px">
+                  <div class="col-12">
+                    <h3>Oficinas Chilexpress</h3>
+                  </div>
+                </div>
+                <hr />
+                <app-page-cart-chilexpress
+                  *ngIf="loadingSucursal"
+                  [shippingStore]="shippingStore"
+                  (chilexpress)="obtieneChilexpress(true, $event)"
+                ></app-page-cart-chilexpress>
+                <div class="row" style="margin-left: 0px; margin-right: 0px">
+                  <div
+                    *ngIf="
+                      (shippingDays.length > 0 && !select_grupos && recibeType == 'otra' && recibeOtraname.length > 0) ||
+                      recibeType == 'yo'
+                    "
+                    class="col-12"
+                  >
+                    <ng-container *ngFor="let item_0 of shippingDays; let i = index">
+                      <div *ngIf="i == 0" style="margin-bottom: 30px">
+                        <app-grupo-detalle-fechas
+                          *ngIf="innerWidth > 1720"
+                          [DIAS_SEMANA]="10"
+                          (itemSeleccionado)="setSeleccionarEnvioChilexpress($event, i)"
+                          [index]="i"
+                          [fletes]="item_0.fechas"
+                        ></app-grupo-detalle-fechas>
+                        <app-grupo-detalle-fechas
+                          *ngIf="innerWidth > 1420 && innerWidth <= 1720"
+                          [DIAS_SEMANA]="8"
+                          (itemSeleccionado)="setSeleccionarEnvioChilexpress($event, i)"
+                          [index]="i"
+                          [fletes]="item_0.fechas"
+                        ></app-grupo-detalle-fechas>
+                        <app-grupo-detalle-fechas
+                          *ngIf="innerWidth > 450 && innerWidth <= 1420"
+                          [DIAS_SEMANA]="7"
+                          (itemSeleccionado)="setSeleccionarEnvioChilexpress($event, i)"
+                          [index]="i"
+                          [fletes]="item_0.fechas"
+                        ></app-grupo-detalle-fechas>
+                        <app-grupo-detalle-fechas-mobile
+                          *ngIf="innerWidth <= 450"
+                          (itemSeleccionado)="setSeleccionarEnvioChilexpress($event, i)"
+                          [index]="i"
+                          [fletes]="item_0.fechas"
+                        ></app-grupo-detalle-fechas-mobile>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </tab>
+              <!-- End chilexpress -->
+            </tabset>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Segmento asociado al detalle del pedido.
+        <div class="col-12 col-lg-5 col-xl-4" >
+            <div class="card" >
+                <div class="card-header" style="margin-bottom: 1px !important;">
+                    <div class="mostrarResumen">
+                        <div class="ml-1" style="display: inline-block;"> Ubicación de la tienda de entrega </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    <!-- Segmento asociado al detalle del pedido. -->
+    <ng-container *ngIf="innerWidth >= 992; px">
+      <div
+        class="col-12 col-lg-5 col-xl-4"
+        [hidden]="showAllAddress ? true : false"
+        style="padding: 15px; background-color: #e3e3e3"
+      >
+        <div class="card h-100">
+          <div class="card-header" style="margin-bottom: 1px !important">
+            <div class="mostrarResumen" (click)="showDetalleProductos = !showDetalleProductos">
+              <div class="ml-1" style="display: inline-block; color: #0063b9">Resumen de tu compra</div>
+              <div *ngIf="!shippingSelected && HideResumen()" style="display: inline-block" class="float-right">
+                <div style="float: right">
+                  <i [class]="showDetalleProductos ? 'fas fa-chevron-down' : 'fas fa-chevron-up'"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr />
+
+          <div class="card-body" [hidden]="valshowDetalleProductos() ? false : true">
+            <app-loading-element *ngIf="loadingResumen && innerWidth > 700" text="Actualizando total"> </app-loading-element>
+            <app-detalle-carro-productos
+              *ngIf="!loadingResumen"
+              [shippingType]="shippingType"
+              [productCart]="productCart"
+            ></app-detalle-carro-productos>
+
+            <ng-container *ngIf="innerWidth >= 450">
+              <div class="d-flex">
+                <div class="mt-3 col-6 pl-0 pr-1">
+                  <a
+                    [routerLink]="['/', 'carro-compra']"
+                    (click)="removeDespacho()"
+                    class="btn btn-border-primary btn-block btn-lg text-center"
+                  >
+                    <i class="fas fa-chevron-left"></i> Anterior
+                  </a>
+                </div>
+
+                <div class="mt-3 col-6 pr-0 pl-1">
+                  <button
+                    name="next"
+                    *ngIf="userSession.user_role != 'comprador'"
+                    [disabled]="
+                      shippingSelected == null || cartSession?.recidDireccion == 0 || !productsValidate.length || recibeOtra
+                    "
+                    (click)="next()"
+                    class="btn btn-lg btn-secondary btn-block text-center"
+                  >
+                    Ir a pagar <i class="fas fa-chevron-right"></i>
+                  </button>
+
+                  <button
+                    name="selectedShippingId"
+                    *ngIf="userSession.user_role == 'comprador'"
+                    [disabled]="shippingSelected == null"
+                    (click)="next()"
+                    class="btn btn-lg btn-secondary btn-block text-center"
+                  >
+                    Siguiente <i class="fas fa-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+
+            <div
+              class="row text-primary mt-3"
+              *ngIf="documentType != 'cotizacion' && userSession.user_role !== 'compradorb2c' && !invitado"
+            >
+              <div class="col-12 text-right">
+                <div class="cotizacionBtn" (click)="documentType = 'cotizacion'" style="color: #0063b9 !important">
+                  Obtener cotización <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+              </div>
+            </div>
+            <ng-container *ngIf="documentType == 'cotizacion'">
+              <div class="w-100 text-center mt-5">
+                <i class="far fa-file-pdf text-blue"></i>
+                <p class="text-center subtitle w-100 text-blue">
+                  Ha elegido generar una cotización, presione el boton continuar si esta seguro.
+                </p>
+                <button type="button" name="finishQuotation" class="btn btn-outline-primary mr-3" (click)="finishQuotation()">
+                  Confirmar
+                </button>
+                <button type="button" name="cancelarQuotation" class="btn btn-outline-warning" (click)="documentType = 'factura'">
+                  Cancelar
+                </button>
+              </div>
+            </ng-container>
+            <app-loading-element *ngIf="loadingCotizacion" text="Generando cotización..."> </app-loading-element>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- End Segmento asociado al detalle del pedido. -->
+    <!--- Segmento asociado el detalle del pedido en tabler-->
+    <ng-container *ngIf="innerWidth >= 450 && innerWidth < 992; px">
+      <div
+        class="col-12 col-lg-5 col-xl-4"
+        style="margin-top: 10px; margin-bottom: 10px; padding: 15px; background-color: #e3e3e3"
+        [hidden]="showAllAddress ? true : false"
+      >
+        <div class="card h-100">
+          <div class="card-header" style="margin-bottom: 1px !important">
+            <div class="mostrarResumen" (click)="setShowDetalleProductos = !setShowDetalleProductos">
+              <div class="ml-1" style="display: inline-block">Resumen de tu compra</div>
+            </div>
+            <hr />
+          </div>
+          <div class="card-body">
+            <app-loading-element *ngIf="loadingResumen && innerWidth > 700" text="Actualizando total"> </app-loading-element>
+            <app-detalle-carro-productos [shippingType]="shippingType" [productCart]="productCart"> </app-detalle-carro-productos>
+
+            <ng-container *ngIf="innerWidth >= 450">
+              <div class="d-flex">
+                <div class="mt-3 col-6 pl-0 pr-1">
+                  <a
+                    [routerLink]="['/', 'carro-compra']"
+                    (click)="removeDespacho()"
+                    class="btn btn-border-primary btn-block btn-lg text-center"
+                  >
+                    <i class="fas fa-chevron-left"></i> Anterior
+                  </a>
+                </div>
+
+                <div class="mt-3 col-6 pr-0 pl-1">
+                  <button
+                    name="next"
+                    *ngIf="userSession.user_role != 'comprador'"
+                    [disabled]="
+                      shippingSelected == null || cartSession?.recidDireccion == 0 || !productsValidate.length || recibeOtra
+                    "
+                    (click)="next()"
+                    class="btn btn-lg btn-secondary btn-block text-center"
+                  >
+                    Ir a pagar <i class="fas fa-chevron-right"></i>
+                  </button>
+
+                  <button
+                    name="selectedShippingId"
+                    *ngIf="userSession.user_role == 'comprador'"
+                    [disabled]="shippingSelected == null"
+                    (click)="next()"
+                    class="btn btn-lg btn-secondary btn-block text-center"
+                  >
+                    Siguiente <i class="fas fa-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<ng-container *ngIf="(usuarioInvitado || isLogin) && innerWidth < 450">
+  <div *ngIf="!shippingSelected" [ngStyle]="{ 'margin-bottom': showDetalleProductos == true ? '265px' : '195px' }"></div>
+  <div
+    *ngIf="shippingSelected && !select_grupos"
+    [ngStyle]="{ 'margin-bottom': showDetalleProductos == true ? '265px' : '195px' }"
+  ></div>
+  <div
+    *ngIf="shippingSelected && select_grupos"
+    class="ml-3 mr-3"
+    style="margin-top: 5px"
+    [ngStyle]="{ 'margin-bottom': showDetalleProductos == true ? '265px' : '195px' }"
+    [hidden]="showAllAddress ? true : false"
+  >
+    <div class="card" [ngClass]="valshowDetalleProductos() ? 'h-100' : ''">
+      <div class="card-header" style="margin-bottom: 1px !important">
+        <div (click)="setShowDetalleProductos(!showDetalleProductos)">
+          <div class="ml-1 text-justify" style="color: #0063b9">
+            <strong> Resumen de tu compra</strong>
+          </div>
+        </div>
+        <hr />
+      </div>
+      <div class="card-body text-justify">
+        <app-loading-element *ngIf="loadingResumen && innerWidth > 700" text="Actualizando total"></app-loading-element>
+        <app-detalle-carro-productos [shippingType]="shippingType" [seePrices]="false" [productCart]="productCart">
+        </app-detalle-carro-productos>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-page" style="z-index: 900">
+    <div class="ml-3 mr-3" style="margin-top: 5px; margin-bottom: -13px" [hidden]="showAllAddress ? true : false">
+      <div class="card" [ngClass]="valshowDetalleProductos() ? 'h-100' : ''">
+        <div class="card-header" style="margin-bottom: 1px !important">
+          <div class="row d-flex" (click)="showDetalleProductos = !showDetalleProductos">
+            <div class="col-9 text-justify" style="font-size: 16px; margin-bottom: -20px; color: #0063b9">
+              <strong>Resumen de tu Compra</strong>
+            </div>
+            <div *ngIf="HideResumen()" class="col-3 text-right">
+              <i [class]="showDetalleProductos ? 'fas fa-chevron-down' : 'fas fa-chevron-up'"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-body text-justify" style="font-size: 14px" *ngIf="showDetalleProductos">
+          <app-loading-element *ngIf="loadingResumen && innerWidth > 700" text="Actualizando total"> </app-loading-element>
+          <app-detalle-carro-productos [shippingType]="shippingType" [seeProducts]="false" [productCart]="productCart">
+          </app-detalle-carro-productos>
+        </div>
+        <!-- <div class="card-body" *ngIf="!showDetalleProductos">
+                    <app-loading-element *ngIf="loadingResumen && innerWidth > 700" text="Actualizando total"></app-loading-element>
+                    <app-detalle-carro-productos [shippingType] = 'shippingType' [seeProducts]="false" [show]="false" [productCart]="productCart"></app-detalle-carro-productos>
+                </div> -->
+        <div *ngIf="!showDetalleProductos" class="card-body text-justify">
+          <div class="dropcart__totals text-justify">
+            <table>
+              <tr style="font-size: 14px; color: #0063b9">
+                <th>Total</th>
+                <td class="font-weight-bold">{{ cart.total$ | async | currencyFormat }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="row m-0">
+          <!-- <div class="mt-3 col-6 pl-0 pr-1" >
+                <a [routerLink]="['/','carro-compra']" (click)="removeDespacho()" class="btn btn-border-primary btn-block btn-lg text-center" style="background-color:white;">
+                    <i class="fas fa-chevron-left"></i> Anterior
+                </a>
+            </div> -->
+
+          <div class="mt-3 col-12 pr-0 pl-1">
+            <button
+              name="next"
+              *ngIf="userSession.user_role != 'comprador'"
+              [disabled]="
+                shippingSelected == null ||
+                cartSession?.recidDireccion == 0 ||
+                !productsValidate.length ||
+                recibeOtra ||
+                !select_grupos
+              "
+              (click)="next()"
+              class="btn btn-lg btn-secondary btn-block text-center"
+            >
+              Ir a pagar <i class="fas fa-chevron-right"></i>
+            </button>
+
+            <button
+              name="selectedShippingId"
+              *ngIf="userSession.user_role == 'comprador'"
+              [disabled]="shippingSelected == null"
+              (click)="next()"
+              class="btn btn-lg btn-secondary btn-block text-center"
+            >
+              Siguiente <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+          <div class="mt-3 col-12 pl-0 pr-1">
+            <a href="https://www.implementos.cl" style="color: #118565; text-align: center; font-weight: bold">
+              Seguir comprando</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<!-- <ng-template #modalAddress>
+    <app-address-modal [modalAddressRef]="modalAddressRef" (respuesta)="respuesta($event)"></app-address-modal>
+</ng-template> -->

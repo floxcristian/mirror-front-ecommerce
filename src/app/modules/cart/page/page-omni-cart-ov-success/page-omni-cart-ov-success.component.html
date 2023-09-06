@@ -1,0 +1,31 @@
+<div class="container container-cart site_b2c" *ngIf="showFolioMsj && numeroCarro">
+
+    <div class="row justify-content-md-center msgStatus">
+        <div class="col-12 col-md-9 col-xl-6 mx-auto mb-3">
+            <div appDragDrop class="block-drop-down-file mx-auto d-flex   align-items-center justify-content-center">
+                <div *ngIf="loadingCart">
+                    <app-loading-element></app-loading-element>
+                </div>
+                <div *ngIf="!loadingCart && cartData">
+                    <div class="d-block text-center">
+                        <i class="fas fa-check-circle mb-3"></i>
+                        <h1>Hemos recibido su compra</h1>
+                        <h1>N° {{numeroCarro}}</h1>
+                        <p>
+                            Estimado cliente, su pago fue procesado correctamente, le estaremos enviando un correo con
+                            la confirmación de su compra.
+                        </p>
+                        <p>
+                            Muchas gracias por visitar Implementos.cl
+                        </p>
+
+                        <a [routerLink]="['/','inicio']" class="mt-5 link-primary btn-block text-center">
+                            <i class="fas fa-home "></i>
+                            Ir al home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

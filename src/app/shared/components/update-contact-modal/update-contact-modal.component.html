@@ -1,0 +1,164 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">Actualizar Contacto</h4>
+  <button
+    name="modalAddContactRef"
+    type="button"
+    class="close pull-right"
+    aria-label="Close"
+    (click)="modalUpdateContactRef.hide()"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <app-loading-element
+    *ngIf="loadingForm"
+    [text]="'Actualizando Contacto'"
+  ></app-loading-element>
+
+  <form [formGroup]="formContacto">
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group mb-0">
+          <label>Rut (*)</label>
+          <input
+            formControlName="contactRut"
+            type="text"
+            class="form-control px-0"
+          />
+        </div>
+        <p
+          *ngIf="
+            formContacto.controls['contactRut'].invalid &&
+            formContacto.controls['contactRut'].touched
+          "
+          class="text-danger float-left"
+        >
+          El RUT ingresado no es válido
+        </p>
+        <p class="float-right mr-2">
+          <i>Ej: 12345678-9</i>
+        </p>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <label>Cargo (*)</label>
+          <ng-select
+            [clearable]="false"
+            [searchable]="true"
+            [items]="cargos"
+            bindLabel="titleid"
+            bindValue="titleid"
+            formControlName="cargo"
+            class="form-control-select"
+            placeholder="Cargo *"
+          >
+          </ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <label>Nombres (*)</label>
+          <input
+            formControlName="nombre"
+            type="text"
+            class="form-control px-0"
+          />
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <label>Apellidos (*)</label>
+          <input
+            formControlName="apellido"
+            type="text"
+            class="form-control px-0"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <label>Celular</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <button
+                class="btn btn-outline-secondary dropdown-toggle"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <i
+                  [ngClass]="
+                    tipo_fono == '+569'
+                      ? 'fa-solid fa-mobile-screen'
+                      : 'fa-solid fa-phone'
+                  "
+                  style="margin-right: 1px"
+                ></i>
+                {{ tipo_fono }}
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" (click)="Select_fono('+569')"
+                  ><i
+                    class="fa-solid fa-mobile-screen"
+                    style="margin-right: 1px"
+                  ></i
+                  >+569</a
+                >
+                <a class="dropdown-item" (click)="Select_fono('+56')"
+                  ><i class="fa-solid fa-phone" style="margin-right: 1px"></i
+                  >+56</a
+                >
+              </div>
+            </div>
+            <input
+              formControlName="telefono"
+              type="text"
+              class="form-control pl-2"
+              appRutChars
+            />
+          </div>
+
+          <p
+            *ngIf="
+              formContacto.controls['telefono'].invalid &&
+              formContacto.controls['telefono'].touched
+            "
+            class="text-danger"
+          >
+            El número de contacto no es válido.
+          </p>
+        </div>
+      </div>
+      <div class="col-6">
+        <label>Email</label>
+        <div class="form-group">
+          <autocomplete #emailValidate [domainNames]="domains"></autocomplete>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button
+    name="cerrar"
+    class="btn btn-danger"
+    (click)="modalUpdateContactRef.hide()"
+  >
+    Cancelar
+  </button>
+  <button
+    name="agregarDireccion"
+    class="btn btn-secondary"
+    (click)="actualizarContacto(emailValidate)"
+    [disabled]="!formContacto.valid || loadingForm"
+  >
+    Actualizar
+  </button>
+</div>

@@ -1,54 +1,74 @@
-<!-- <app-page-header [header]="'Mi perfil '" [headerSubtitle]="'Bienvenido Hernando Ulloa'"
-    [textLast]="'<em>Último acceso 10-10-2010  14:58</em>'"></app-page-header> -->
-
-
-<div class="top-bar-categories d-flex  align-items-center mb-3" [class.p-0]="innerWidth < 450"
-    [class.pl-4]="innerWidth < 450" (window:resize)="onResize($event)">
-    <div class="title d-flex align-items-center mr-auto ">
-        <i _ngcontent-serverapp-c11="" class="fas  fa-tachometer-alt mr-3"></i>
-        <h5>Mi perfil</h5>
-        <h2 class="float-left"> Bienvenido(a) {{ usuario.first_name | titlecase }} {{ usuario.last_name | titlecase}}
-        </h2>
-
-    </div>
-
+<div
+  class="top-bar-categories d-flex align-items-center mb-3"
+  [class.p-0]="innerWidth < 450"
+  [class.pl-4]="innerWidth < 450"
+  (window:resize)="onResize($event)"
+>
+  <div class="title d-flex align-items-center mr-auto">
+    <i _ngcontent-serverapp-c11="" class="fas fa-tachometer-alt mr-3"></i>
+    <h5>Mi perfil</h5>
+    <h2 class="float-left">
+      Bienvenido(a) {{ usuario.first_name | titlecase }}
+      {{ usuario.last_name | titlecase }}
+    </h2>
+  </div>
 </div>
 
 <div class="dashboard row mx-4">
+  <div class="col-xl-4 col-lg-4 col-md-6 pr-lg-0 mt-2">
+    <app-card-dashboard
+      title="Compras del periodo"
+      [value]="ventaMes | currency : 'CLP'"
+      iconClass="fas fa-chart-bar"
+      iconContainerClass="bg-green"
+      [subtitle]="detalleVenta"
+    >
+    </app-card-dashboard>
+  </div>
 
-    <div class="col-xl-4 col-lg-4 col-md-6 pr-lg-0 mt-2">
-        <app-card-dashboard title="Compras del periodo" [value]="ventaMes|currency:'CLP'" iconClass="fas fa-chart-bar"
-            iconContainerClass="bg-green"
-            [subtitle]="detalleVenta">
-        </app-card-dashboard>
-    </div>
+  <div class="col-xl-4 col-lg-4 col-md-6 pr-lg-0 mt-2">
+    <app-card-dashboard-no-chart
+      titulo="Mi crédito"
+      iconClass="fas fa-credit-card"
+      iconContainerClass="bg-purple"
+      [data]="miCredito"
+    >
+    </app-card-dashboard-no-chart>
+  </div>
 
-
-    <div class="col-xl-4 col-lg-4 col-md-6 pr-lg-0 mt-2">
-        <app-card-dashboard-no-chart titulo="Mi crédito" iconClass="fas fa-credit-card" iconContainerClass="bg-purple"
-            [data]="miCredito">
-        </app-card-dashboard-no-chart>
-    </div>
-
-    <div class="col-xl-4 col-lg-4 col-md-6 mt-2">
-        <app-card-dashboard-no-chart titulo="Mis facturas por pagar" iconClass="fas fa-file-invoice-dollar"
-            iconContainerClass="bg-danger" [data]="misFacturas">
-        </app-card-dashboard-no-chart>
-    </div>
-
-
+  <div class="col-xl-4 col-lg-4 col-md-6 mt-2">
+    <app-card-dashboard-no-chart
+      titulo="Mis facturas por pagar"
+      iconClass="fas fa-file-invoice-dollar"
+      iconContainerClass="bg-danger"
+      [data]="misFacturas"
+    >
+    </app-card-dashboard-no-chart>
+  </div>
 </div>
 
 <div class="row mx-4 mb-5">
-    <div class="col-12 mt-4">
-        <app-card-dashboard-line-chart titulo="Últimos 12 períodos" iconClass="fas fa-chart-line"
-            iconContainerClass="bg-fuchsia" [estado]="lineEstado" [lineChartLabels]="lineChartLabels"
-            [lineChartOptions]="lineChartOptions" [lineChartData]="lineChartData"></app-card-dashboard-line-chart>
-    </div>
+  <div class="col-12 mt-4">
+    <app-card-dashboard-line-chart
+      titulo="Últimos 12 períodos"
+      iconClass="fas fa-chart-line"
+      iconContainerClass="bg-fuchsia"
+      [estado]="lineEstado"
+      [lineChartLabels]="lineChartLabels"
+      [lineChartOptions]="lineChartOptions"
+      [lineChartData]="lineChartData"
+    ></app-card-dashboard-line-chart>
+  </div>
 
-    <div class="col-12  mt-4">
-        <app-card-dashboard-horizontal-bar-chart titulo="Ventas por categoría" iconClass="fas fa-chart-bar"
-            iconContainerClass="bg-info" [estado]="barEstado" [barChartLabels]="barChartLabels"
-            [barChartOptions]="barChartOptions" [barChartData]="barChartData"></app-card-dashboard-horizontal-bar-chart>
-    </div>
+  <div class="col-12 mt-4">
+    <app-card-dashboard-horizontal-bar-chart
+      titulo="Ventas por categoría"
+      iconClass="fas fa-chart-bar"
+      iconContainerClass="bg-info"
+      [estado]="barEstado"
+      [barChartLabels]="barChartLabels"
+      [barChartOptions]="barChartOptions"
+      [barChartData]="barChartData"
+    ></app-card-dashboard-horizontal-bar-chart>
+  </div>
 </div>

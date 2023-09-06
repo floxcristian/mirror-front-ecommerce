@@ -1,0 +1,55 @@
+<div (window:resize)="onResize($event)">
+  <div
+    class="mt-2 ml-2 mr-2 mb-3"
+    style="background: #f4f4f4; padding-top: 10px"
+  >
+    <!-- begin:: days table -->
+    <div class="col-sm-12">
+      <h4 style="color: #0063b9; font-size: 14px">
+        Seleccione una fecha para su pedido
+      </h4>
+    </div>
+    <div class="table-responsive pb-2 pb-lg-0 overflow-auto">
+      <table class="tabla-dias">
+        <tbody>
+          <tr>
+            <td
+              [ngClass]="
+                fecha.habilitado
+                  ? 'dia-container-habilitado'
+                  : 'dia-container-deshabilitado'
+              "
+              *ngFor="let fecha of semanas[semanaActual].fechas"
+            >
+              <div>
+                <div
+                  (click)="SeleccionarEnvio(fecha)"
+                  [ngClass]="
+                    itemSelectedindex == fecha.index
+                      ? 'dia-container-activado'
+                      : 'dia-container-desactivado'
+                  "
+                >
+                  <div style="font-size: 14px">
+                    <i class="fa-regular fa-calendar-clock"></i>
+                  </div>
+                  <div style="font-size: 12px">
+                    {{ fecha.diaSemana }}. {{ fecha.numeroDia }}-{{ fecha.mes }}
+                  </div>
+                  <div *ngIf="fecha.valor > 0" style="font-size: 12px">
+                    <strong>{{
+                      fecha.habilitado ? (fecha.valor | currency : "CLP") : ""
+                    }}</strong>
+                  </div>
+                  <div *ngIf="fecha.valor == 0" style="font-size: 12px">
+                    <strong>Gratis</strong>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

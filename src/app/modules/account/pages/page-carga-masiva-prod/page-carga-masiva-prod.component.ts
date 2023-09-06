@@ -60,9 +60,9 @@ export class PageCargaMasivaProdComponent implements OnInit {
     this.idArchivo = uuidv1();
   }
 
-  // onFileChange(files: Files) {
-    onFileChange(files: any) {
-    if (files.length > 0) {
+  onFileChange(event: any) {
+    const files = event.target?.files as FileList;
+    if (files?.length) {
       const partes = files[0].name.split('.');
       const extension = partes[partes.length - 1];
       const aux: Archivo = {

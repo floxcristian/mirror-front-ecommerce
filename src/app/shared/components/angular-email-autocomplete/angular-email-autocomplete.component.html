@@ -1,0 +1,14 @@
+<span dropdown id="span-email">
+    <input class="input-panel form-control" autocomplete="off" [(ngModel)]="inputValue" type="email"
+        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$"
+        [placeholder]="givenPlaceHolder ? givenPlaceHolder : placeholder" [disabled]="disabled"
+        (keyup)="onInputChange($event)" dropdownToggle>
+    <ul id="basic-link-dropdown" *dropdownMenu class="dropdown-menu" role="menu">
+        <li style='cursor:pointer;' *ngFor="let domain of dropDownValues" (click)="handleSelect(domain.value)">
+            <a class="dropdown-item">{{domain.value}}</a>
+        </li>
+    </ul>
+</span>
+<p *ngIf="correoValido == false && inputValue" class="text-error-form-2">
+    El Email ingresado no es válido
+</p>

@@ -15,14 +15,14 @@ import { tap, map, switchMap } from 'rxjs/operators';
 //import { fromPromise } from 'rxjs/observable/fromPromise';
 import { Observable, of } from 'rxjs';
 /*import { MapsAPILoader, MouseEvent } from '@agm/core';
-declare var google: any;
+declare var google: any;*/
 
 export interface DireccionMap {
   direccion: string;
   zona: string;
   lat?: string;
   lon?: string;
-}*/
+}
 
 @Component({
   selector: 'app-map',
@@ -30,12 +30,8 @@ export interface DireccionMap {
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit, OnChanges {
-  ngOnChanges(changes: SimpleChanges): void {}
-
-  ngOnInit(): void {}
-  // FIXME: START
-  /*@Input() titulo!: string;
-  @Input() tienda!: DireccionMap;
+  @Input() titulo!: string;
+  @Input() tienda!: DireccionMap | null;
   @Input() autocompletado!: boolean;
   @Input() infoWindowContent!: string;
   @ViewChild('search', { static: true }) public searchElementRef!: ElementRef;
@@ -49,7 +45,11 @@ export class MapComponent implements OnInit, OnChanges {
   @Output() public clearAdress = new EventEmitter<any>();
   @Output() public setDireccion = new EventEmitter<any>();
 
-  constructor(
+  // Temporal
+  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnInit(): void {}
+  // FIXME: START
+  /*constructor(
     private mapLoader: MapsAPILoader,
     private ref: ChangeDetectorRef,
     private mapsAPILoader: MapsAPILoader,

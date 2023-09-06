@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { GeoLocationService } from './geo-location.service';
 import { RootService } from './root.service';
+import { Observable } from 'rxjs';
+import { ResponseApi } from '../interfaces/response-api';
 
 @Injectable({
   providedIn: 'root',
@@ -68,8 +70,8 @@ export class ProductsService {
     );
   }
 
-  getRecommendedProductsList(params: any) {
-    return this.http.get(
+  getRecommendedProductsList(params: any): Observable<ResponseApi> {
+    return this.http.get<ResponseApi>(
       environment.apiImplementosCatalogo + 'catalogo/productosasugerir',
       { params }
     );

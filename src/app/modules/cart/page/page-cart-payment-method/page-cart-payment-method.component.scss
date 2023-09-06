@@ -1,0 +1,267 @@
+.fa-file-pdf {
+  font-size: 3rem;
+  color: #b2b2b2;
+}
+
+.block-drop-down-file:hover {
+  border: 2px dashed #007bff;
+  background-color: rgba(174, 190, 207, 0.25);
+  cursor: pointer;
+}
+.cart-address-container {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f4f4f4;
+  color: #0063b9 !important;
+}
+.files-list {
+  color: #1c8adb;
+  clear: both;
+}
+
+.cotizacionBtn:hover {
+  cursor: pointer;
+}
+
+.cotizacionBtn {
+  font-weight: 600;
+}
+
+.methodPaymentLogo {
+  width: 95%;
+  height: 60px;
+}
+
+.files-list p {
+  font-size: 12px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  text-align: left;
+  color: #228ff5;
+  float: left;
+  margin-right: 15px;
+  margin-top: 15px;
+}
+
+.files-list button {
+  border: none;
+  background: no-repeat;
+  padding-top: 12px;
+}
+
+.subtitle {
+  padding-top: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.block-payment {
+  display: flex;
+  justify-self: center;
+  align-items: center;
+  height: 90px;
+  border: 2px solid #ccc;
+  padding-left: 10px;
+  /*    text-align: center; */
+}
+
+.block-payment i {
+  font-size: 2.5rem;
+}
+
+/* .block-payment img {
+    height: 85px;
+} */
+
+.alert-cart {
+  width: 100%;
+  border: 1px solid #0063b9;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.alert-cart h3 {
+  color: #0063b9;
+}
+
+.alert-text {
+  font-size: 1.2rem;
+}
+
+.mostrarResumen:hover {
+  cursor: pointer;
+}
+
+.custom-control-label::before {
+  -ms-transform: scale(1.5);
+  /* IE 9 */
+  -webkit-transform: scale(1.5);
+  /* Chrome, Safari, Opera */
+  transform: scale(1.5);
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+  background-color: #0063b9;
+  border-color: #0063b9;
+}
+
+$color_despacho: black;
+.block_despacho .card-header {
+  color: #005db9;
+  text-shadow: -1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.tipo-entrega-icon {
+  height: 6rem;
+  width: 6rem;
+  -background: #f3f3f3;
+  display: block;
+  -border-radius: 4.8125rem;
+  text-align: center;
+  -color: #b2b2b2;
+  font-size: 1rem;
+  font-weight: 700;
+  padding-top: 0.5rem;
+  -border: 2px solid #b2b2b2;
+}
+
+.tipo-entrega-icon i {
+  font-size: 60px;
+  margin-top: 10px;
+  color: #005db9;
+  text-shadow: -1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+ul.lista_despacho li.list-group-item {
+  padding-left: 15px;
+  border: none;
+  border-bottom: 1px solid #005db9;
+  border-left: 1px solid #005db9;
+  border-right: 1px solid #005db9;
+  border-radius: 0px;
+  font-size: small;
+
+  color: $color_despacho;
+}
+
+ul.lista_despacho li.list-group-item i {
+  font-size: 1.1rem;
+  margin-right: 10px;
+  color: $color_despacho;
+}
+
+div #stockAlertModal.show {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+@media (max-width: 479px) {
+  .tipo-entrega-icon {
+    height: 4rem;
+    width: 4rem;
+  }
+  .tipo-entrega-icon i {
+    font-size: 50px;
+    margin-top: 0px;
+  }
+  .methodPaymentLogo {
+    width: 95%;
+  }
+}
+
+.footer_page {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 20px;
+  z-index: 2;
+  background-color: #eaeaea;
+  text-align: center;
+}
+//  .container-cart {
+// margin-top: -50px;
+// }
+
+// @media (min-width: 0px) and (max-width: 991px){
+// .container-cart {
+// margin-top: 34px;
+// }
+// }
+.col-md-6-pagos {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+.col-1-pagos {
+  flex: 0 0 8.333333%;
+  max-width: 8.333333%;
+}
+
+.col-11-pagos {
+  flex: 0 0 91.666667%;
+  max-width: 91.666667%;
+  padding-left: 2px;
+  padding-right: 5px;
+}
+
+.col-md-6-pagos,
+.col-1-pago {
+  position: relative;
+  width: 100%;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+.margen-pagos {
+  position: relative;
+  width: 100%;
+  padding-right: 0px !important;
+  padding-left: 0px !important;
+}
+
+.col-11-pagos {
+  position: relative;
+  width: 100%;
+}
+.row-pagos {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+@media (max-width: 1265px) {
+  .col-md-6-pagos {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .col-md-6-pagos,
+  .col-1-pago {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  .margen-pagos {
+    position: relative;
+    width: 100%;
+    padding-right: 15px !important;
+    padding-left: 15px !important;
+  }
+  .row-pagos {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+
+  .card {
+    box-shadow: none !important;
+  }
+}

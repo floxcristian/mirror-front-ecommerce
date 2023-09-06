@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Usuario } from '../../../../shared/interfaces/login';
 import { RootService } from '../../../../shared/services/root.service';
@@ -19,23 +19,18 @@ class DataTablesResponse {
 @Component({
   selector: 'app-page-orders-list',
   templateUrl: './page-orders-list.component.html',
-  styleUrls: ['./page-orders-list.component.scss']
+  styleUrls: ['./page-orders-list.component.scss'],
 })
 export class PageOrdersListComponent implements OnInit {
   usuario: Usuario;
   loadingData = true;
-  rows: String[] = [];
+  rows: any[] = [];
   datatableElement!: DataTableDirective;
   dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject();
   innerWidth: any;
 
-  constructor(
-    private root: RootService,
-    private toastr: ToastrService,
-
-    private httpClient: HttpClient
-  ) {
+  constructor(private root: RootService, private httpClient: HttpClient) {
     this.usuario = this.root.getDataSesionUsuario();
     this.loadingData = false;
     this.innerWidth = window.innerWidth;
@@ -45,13 +40,13 @@ export class PageOrdersListComponent implements OnInit {
     this.construir_tabla();
   }
 
-  onResize(event:any) {
+  onResize(event: any) {
     this.innerWidth = event.target.innerWidth;
   }
 
   async construir_tabla() {
     let user: any = {
-      rut: this.usuario.rut
+      rut: this.usuario.rut,
     };
 
     this.dtOptions = {
@@ -59,7 +54,7 @@ export class PageOrdersListComponent implements OnInit {
       pageLength: 10,
       lengthMenu: [
         [10, 50, 100],
-        [10, 50, 100]
+        [10, 50, 100],
       ],
       serverSide: true,
 
@@ -68,14 +63,17 @@ export class PageOrdersListComponent implements OnInit {
       order: [[3, 'desc']],
       language: {
         url: '//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json',
-        processing: 'Cargando Ordenes de ventas..'
+        processing: 'Cargando Ordenes de ventas..',
       },
 
-      ajax: (dataTablesParameters: any, callback:any) => {
+      ajax: (dataTablesParameters: any, callback: any) => {
         //datos set de ordenamiento//
         this.loadingData = true;
 
-        user.data_sort = dataTablesParameters.columns[dataTablesParameters.order[0].column].data;
+        user.data_sort =
+          dataTablesParameters.columns[
+            dataTablesParameters.order[0].column
+          ].data;
         user.data_order = dataTablesParameters.order[0].dir;
         this.rows = [];
         let params = Object.assign(dataTablesParameters, user);
@@ -85,19 +83,22 @@ export class PageOrdersListComponent implements OnInit {
         let authdata = window.btoa(username + ':' + password);
         let head = {
           Authorization: `Basic ${authdata}`,
-          'Access-Control-Allow-Headers': 'Authorization, Access-Control-Allow-Headers'
+          'Access-Control-Allow-Headers':
+            'Authorization, Access-Control-Allow-Headers',
         };
         let headers = new HttpHeaders(head);
-        this.httpClient.post<DataTablesResponse>(url, params, { headers: headers }).subscribe((resp: any) => {
-          this.rows = resp.data;
+        this.httpClient
+          .post<DataTablesResponse>(url, params, { headers: headers })
+          .subscribe((resp: any) => {
+            this.rows = resp.data;
 
-          this.loadingData = false;
-          callback({
-            recordsTotal: resp.totalRegistros[0].count,
-            recordsFiltered: resp.totalRegistros[0].count,
-            data: []
+            this.loadingData = false;
+            callback({
+              recordsTotal: resp.totalRegistros[0].count,
+              recordsFiltered: resp.totalRegistros[0].count,
+              data: [],
+            });
           });
-        });
       },
       columns: [
         { data: 'ordenVenta', width: '15%' },
@@ -108,8 +109,8 @@ export class PageOrdersListComponent implements OnInit {
         { data: 'vendedor' },
         { data: 'neto' },
         { data: 'iva' },
-        { data: 'total' }
-      ]
+        { data: 'total' },
+      ],
     };
   }
 }

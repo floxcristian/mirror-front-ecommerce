@@ -28,7 +28,7 @@ export class PageUsuariosComponent implements OnInit {
   usuario: Usuario | any;
   selectedUsuario!: Usuario | null;
   loadingData = true;
-  users: String[] = [];
+  users: any[] = [];
   modalRef!: BsModalRef;
   formUsuario!: FormGroup;
   editUser = false;
