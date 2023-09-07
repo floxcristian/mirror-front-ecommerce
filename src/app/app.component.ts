@@ -78,20 +78,17 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.seoService.generarMetaTag({});
 
     const usuario: Usuario = this.root.getDataSesionUsuario();
-    if (
-      usuario.user_role === 'supervisor' ||
-      usuario.user_role === 'comprador'
-    ) {
+    if (['supervisor', 'comprador'].includes(usuario.user_role || '')) {
       const data: FormData = new FormData();
 
       usuario.fechaControl = moment();
       data.append('usuario', JSON.stringify(usuario));
       this.login
-        .registroSesion(data, usuario.id_sesion || '', 'cierre')
+        .registroSesion(data, usuario.id_sesion || '0', 'cierre')
         .then((r: any) => {
           delete usuario.fechaControl;
           this.login
-            .registroSesion(data, usuario.id_sesion || '', 'ingreso')
+            .registroSesion(data, usuario.id_sesion || '0', 'ingreso')
             .then((resp: any) => {
               console.log('resp al iniciar sesión: ', resp);
               usuario.id_sesion = resp.id_sesion;
