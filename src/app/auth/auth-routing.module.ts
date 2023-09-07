@@ -137,23 +137,23 @@ const routes: Routes = [
       },
     ],
   },
-  // {
-  //     path: 'sitio',
-  //     component: LayoutComponent,
-  //     data: {
-  //         headerLayout: 'classic'
-  //     },
-  //     children: [
-  //         {
-  //             path: '',
-  //             loadChildren: () => import('../modules/site/site.module').then(m => m.SiteModule)
-  //         }
-  //     ]
-  // },
-  // {
-  //     path: 'tiendas',
-  //     redirectTo: 'sitio/tiendas'
-  // },
+  {
+      path: 'sitio',
+      component: LayoutComponent,
+      data: {
+          headerLayout: 'classic'
+      },
+      children: [
+          {
+              path: '',
+              loadChildren: () => import('../modules/site/site.module').then(m => m.SiteModule)
+          }
+      ]
+  },
+  {
+      path: 'tiendas',
+      redirectTo: 'sitio/tiendas'
+  },
   {
       path: '**',
       redirectTo: 'not-found'
