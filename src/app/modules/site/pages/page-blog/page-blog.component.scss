@@ -1,0 +1,58 @@
+.btn-primary {
+  background-color: #007bff !important;
+}
+.bg-gris {
+  background-color: #373737;
+  color: white;
+}
+hr {
+  height: 6px;
+  width: 12em;
+  background-color: white;
+  margin-left: 0px !important;
+  margin-top: 0px;
+}
+
+.footer-newsletter__social-links {
+  display: flex;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.footer-newsletter__social-link {
+  a {
+    width: 4rem;
+    height: 4rem;
+    border: 1px solid #ffffff;
+    i {
+      font-size: xx-large;
+    }
+  }
+  a:hover {
+    opacity: 0.8;
+  }
+}
+.footer-newsletter__social-link a {
+  color: #ffffff;
+}
+
+.bl {
+  border-left: 6px solid #ffffff;
+  height: 10em;
+}
+.tamano {
+  width: 75%;
+}
+.font {
+  font-size: 2rem;
+}
+.font-R {
+  font-size: 1.5rem !important;
+}
+
+.breadcrumb-item {
+  font-size: 1rem;
+  letter-spacing: normal;
+  text-align: right;
+  color: #0063b9;
+}

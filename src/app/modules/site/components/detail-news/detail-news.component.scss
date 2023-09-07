@@ -1,0 +1,29 @@
+.p {
+  font-size: larger;
+  text-align: justify;
+}
+
+.btn-primary {
+  background-color: #007bff !important;
+
+  margin: 10px;
+}
+.card-icon {
+  background-color: #0063b9;
+
+  margin-left: 15px;
+  float: left;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top: 20px;
+
+  height: 95px;
+  width: 95px;
+}
+
+.breadcrumb-item {
+  font-size: 1rem;
+  letter-spacing: normal;
+  text-align: right;
+  color: #0063b9;
+}

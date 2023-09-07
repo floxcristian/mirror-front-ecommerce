@@ -209,21 +209,21 @@ export class ClientsService {
   }
 
   register(data: any) {
-    return this.http.post(environment.apiImplementosClientes + `nuevo`, data);
+    return this.http.post<ResponseApi>(environment.apiImplementosClientes + `nuevo`, data);
   }
 
   registerb2b(data: any) {
-    return this.http.post(
+    return this.http.post<ResponseApi>(
       environment.apiImplementosClientes + `nuevob2b`,
       data
     );
   }
   validateCustomer(rut: any) {
-    return this.http.get(environment.apiImplementosClientes + `rut?rut=${rut}`);
+    return this.http.get<ResponseApi>(environment.apiImplementosClientes + `rut?rut=${rut}`);
   }
 
   validateCustomerb2b(rut: any) {
-    return this.http.get(
+    return this.http.get<ResponseApi>(
       environment.apiImplementosClientes + `rutb2b?rut=${rut}`
     );
   }

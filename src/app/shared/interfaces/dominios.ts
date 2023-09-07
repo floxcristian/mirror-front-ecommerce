@@ -1,8 +1,8 @@
 export interface Dominios {
-    status: String;
+    status: string;
     data: ListaDominios;
 }
 
 export interface ListaDominios {
-    dominio: String;
+    dominio: string;
 }

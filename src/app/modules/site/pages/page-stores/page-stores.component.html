@@ -1,0 +1,157 @@
+<div class="row">
+  <img class="img-fluid" src="/assets/images/stores/banner2.JPG" />
+</div>
+
+<div class="row" class="bg-primary">
+  <a id="informacionTienda"></a>
+  <h1 class="text-center text-white py-2 mb-0" *ngIf="innerWidth > 768">29 TIENDAS A LO LARGO DE CHILE</h1>
+  <h4 class="text-center text-white py-2 mb-0" *ngIf="innerWidth <= 768">29 TIENDAS A LO LARGO DE CHILE</h4>
+</div>
+
+<div class="row" class="text-white bg-dark">
+  <h1 class="text-center py-2" *ngIf="innerWidth > 768">Desde Arica a Punta Arenas</h1>
+  <h5 class="text-center py-2" *ngIf="innerWidth <= 768">Desde Arica a Punta Arenas</h5>
+</div>
+
+<div class="container" (window:resize)="onResize($event)">
+  <div class="row justify-content-center mb-5" *ngIf="innerWidth > 426">
+    <div class="col-md-12 card-deck">
+      <div class="card" *ngIf="tienda">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-6">
+              <app-map [tienda]="tienda"></app-map>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6 px-0" style="background-color: #e5e5e5">
+              <div class="card-header bg-primary text-white text-center py-2 px-1">
+                <h4>Tienda {{ tienda.zona }}</h4>
+              </div>
+              <div class="card-body p-5" *ngIf="tienda">
+                <div class="row" style="font-size: large">
+                  <div class="col-md-12 mt-3">
+                    <div class="row pl-4">
+                      <div class="col-md-4 pr-0"><i class="fas fa-home"></i> Dirección :</div>
+                      <div class="col-6 col-sm-8 pl-2">
+                        <span class="pl-1" [ngStyle]="{ 'font-size': innerWidth <= 768 ? '15px' : '1em' }">
+                          {{ tienda.direccion }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-12">
+                    <div class="row pl-4">
+                      <div class="col-md-4 pr-0"><i class="fas fa-phone-alt"></i> Fono :</div>
+                      <div class="col-6 col-sm-8 pl-2">
+                        <span class="pl-1" [ngStyle]="{ 'font-size': innerWidth <= 768 ? '15px' : '1em' }">
+                          <a href="tel:800330088">800330088</a>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="row pl-4">
+                      <div class="col-md-4 pr-0"><i class="fas fa-map-marker-alt"></i> Maps :</div>
+                      <div class="col-6 col-sm-8 pl-2">
+                        <a class="pl-1" [href]="tienda.url_mapa" target="_blank" rel="noopener noreferrer"> Ver mapa </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-12 mb-3">
+                    <div class="row pl-4">
+                      <div class="col-md-4 pr-0"><i class="far fa-clock"></i> Horarios :</div>
+                      <div class="col-6 col-sm-8 pl-2">
+                        <span class="pl-1" [ngStyle]="{ 'font-size': innerWidth <= 768 ? '12px' : '1em' }">
+                          {{ tienda.horarios }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center my-5" *ngIf="rows">
+    <div class="col-md-4 card-deck">
+      <div class="card p-0">
+        <div class="card-header bg-primary text-white text-center py-2 px-1">
+          <h6>ZONA NORTE</h6>
+        </div>
+        <div class="card-body px-1">
+          <div *ngFor="let tienda of rows | slice : 0 : 6; index as i">
+            <div
+              (click)="mostrarTienda(tienda)"
+              aria-expanded="false "
+              aria-controls="collapseExample "
+              class="pointer box text-left"
+            >
+              <h4 class="tienda">
+                <img class="inline-icon lazyload" src="./assets/images/next.png " alt="Icono " />{{ tienda.zona }}
+              </h4>
+            </div>
+
+            <div [collapse]="tienda.colapse" class="caja-detalle">
+              <app-colapse [tienda]="tienda" [innerWidth]="innerWidth"></app-colapse>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 card-deck">
+      <div class="card p-0">
+        <div class="card-header bg-primary text-white text-center py-2 px-1">
+          <h6>ZONA CENTRO</h6>
+        </div>
+        <div class="card-body px-1">
+          <div *ngFor="let tienda of rows | slice : 6 : 16; index as i">
+            <div
+              (click)="mostrarTienda(tienda)"
+              aria-expanded="false "
+              aria-controls="collapseExample "
+              class="pointer box text-left"
+            >
+              <h4 class="tienda">
+                <img class="inline-icon lazyload" src="./assets/images/next.png " alt="Icono " />{{ tienda.zona }}
+              </h4>
+            </div>
+
+            <div [collapse]="tienda.colapse" class="caja-detalle">
+              <app-colapse [tienda]="tienda" [innerWidth]="innerWidth"></app-colapse>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 card-deck">
+      <div class="card p-0">
+        <div class="card-header bg-primary text-white text-center py-2 px-1">
+          <h6>ZONA SUR</h6>
+        </div>
+        <div class="card-body">
+          <div *ngFor="let tienda of rows | slice : 16; index as i">
+            <div
+              (click)="mostrarTienda(tienda)"
+              aria-expanded="false "
+              aria-controls="collapseExample "
+              class="pointer box text-left"
+            >
+              <h4 class="tienda">
+                <img class="inline-icon lazyload" src="./assets/images/next.png " alt="Icono " />{{ tienda.zona }}
+              </h4>
+            </div>
+
+            <div [collapse]="tienda?.colapse" class="caja-detalle">
+              <app-colapse [tienda]="tienda" [innerWidth]="innerWidth"></app-colapse>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

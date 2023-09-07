@@ -86,10 +86,10 @@ const routes: Routes = [
         path: '',
         component: PageHomeOneComponent,
       },
-      // {
-      //     path: 'productos',
-      //     loadChildren: () => import('../modules/shop/shop.module').then(m => m.ShopModule)
-      // },
+      {
+          path: 'productos',
+          loadChildren: () => import('../modules/shop/shop.module').then(m => m.ShopModule)
+      },
       /*{
         path: 'mi-cuenta',
         loadChildren: () =>
@@ -154,10 +154,10 @@ const routes: Routes = [
   //     path: 'tiendas',
   //     redirectTo: 'sitio/tiendas'
   // },
-  // {
-  //     path: '**',
-  //     redirectTo: 'not-found'
-  // },
+  {
+      path: '**',
+      redirectTo: 'not-found'
+  },
 
   {
     path: '',

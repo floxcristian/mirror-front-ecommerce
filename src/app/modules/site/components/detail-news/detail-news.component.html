@@ -1,0 +1,56 @@
+<app-header-blog></app-header-blog>
+<br />
+<div class="container">
+    <ol class="breadcrumb flex-nowrap my-2">
+        <li class="breadcrumb-item pr-2 d-flex align-items-center">
+            <a [routerLink]="['/inicio']">Inicio</a>
+            <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+        </li>
+        <li class="breadcrumb-item pr-2 d-flex align-items-center">
+            <a [routerLink]="['/sitio/blog']">Impleblog</a>
+            <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+        </li>
+        <li class="breadcrumb-item active">
+            {{ noticia.titulo }}
+        </li>
+    </ol>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">
+                <font color="white"> <i class="fas fa-newspaper fa-3x"></i></font>
+            </div>
+            <h1 class="text-center mt-3">{{ noticia.titulo }}</h1>
+        </div>
+    </div>
+
+
+
+    <div class="card mt-5">
+        <div class="row ">
+
+            <div *ngIf="noticia.imagen" class="col-md-12 text-center" style="margin-bottom: 20px;">
+                <img [src]="noticia.imagen" class="card-img-top img-fluid lazyload" alt="noticia">
+            </div>
+
+
+        </div>
+        <hr />
+        <div class="row ">
+            <div class="container">
+                <div class="col-sm-12 ml-auto mr-auto" alig5n="justify" style="font-size: 95%;">
+                    <p *ngIf="noticia.texto" [innerHTML]="noticia.texto"></p>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-sm-8 ml-auto mr-auto text-center">
+
+                        <a [routerLink]="[ '/sitio/blog']" class="btn btn-primary btn-lg"><i class="fab fa-blogger-b"
+                                style="margin-right: 10px;"></i>
+                            <font style="font-family:'Open Sans', sans-serif;margin-left:10px;">Volver al blog</font>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

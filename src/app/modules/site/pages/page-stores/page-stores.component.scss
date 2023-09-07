@@ -1,0 +1,91 @@
+.pointer {
+    cursor: pointer;
+}
+
+.caja {
+    // box-shadow: 0 0 15px rgba(88, 87, 87, 0.2);
+    // background-color: #d3d6d844;
+    margin: 0;
+    padding: 10px;
+}
+
+.box {
+    padding: 5px;
+}
+
+.tienda {
+    font-size: 18px;
+    // font-weight: 100;
+}
+
+.box:hover {
+    // box-shadow: 0 0 11px rgba(209, 79, 79, 0.2);
+    background-color: #393c3f;
+    color: white;
+    font-weight: 700;
+}
+
+.active {
+    background-color: #393c3f;
+    color: white;
+    font-weight: 700;
+}
+
+li {
+    list-style: none !important;
+}
+
+.cuerpo {
+    font-weight: 300;
+    color: black;
+    margin-left: 15px;
+    background-color: white;
+}
+
+.img {
+    width: 300px;
+}
+
+.bg-primary {
+    background-color: #0063b9 !important;
+}
+
+.svg {
+    width: 16%;
+}
+
+.svgM {
+    width: 9%;
+}
+
+.svgT {
+    width: 13%;
+}
+
+.mapa {
+    width: 80%;
+}
+
+.inline-icon {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.caja-detalle {
+    background-color: rgba(255, 255, 255, 0.781);
+    border: rgba(88, 87, 87, 0.2) solid 0.5px;
+}
+
+.img-fluid {
+    display: block;
+    width: 100%;
+}
+.card-deck{
+    margin-right: 0px !important;
+     margin-left: 0px !important;
+}
+
+.icon{
+    height: auto;
+    width: 34%;
+}

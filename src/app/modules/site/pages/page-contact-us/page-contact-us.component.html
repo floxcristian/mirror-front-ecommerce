@@ -1,0 +1,148 @@
+
+<div class="card container mb-5 py-5">
+
+  <div class="block">
+    <div class="container">
+      <div class="card mb-0">
+        <div class="card-body contact-us">
+          <div class="contact-us__container">
+            <div class="row">
+              <div class="col-lg-6">
+                <h4 class="contact-us__header card-title">Escribir Un Mensaje</h4>
+
+                <form [formGroup]="formContacto" (ngSubmit)="enviarCorreo()">
+                  <div class="form-row">
+                    <div class="form-group col-md-12">
+                      <label for="form-subject">Asunto</label>
+                      <select
+                        (change)="tipoAsunto($event)"
+                        class="form-control"
+                        formControlName="asunto"
+                        [class.is-valid]="formContacto.get('asunto')?.valid"
+                        [class.is-invalid]="!formContacto.get('asunto')?.valid && formContacto.get('asunto')?.touched"
+                      >
+                        <option disabled [ngValue]="null">Seleccione el asunto...</option>
+                        <option *ngFor="let asunto of asuntos" [ngValue]="asunto">{{ asunto }}</option>
+                      </select>
+                    </div>
+                    <ng-container *ngIf="formContacto.get('asunto')?.value == 'Cotización'">
+                      <div class="form-group col-md-6">
+                        <label for="form-name">Rut</label>
+                        <input
+                          formControlName="rut"
+                          type="text"
+                          class="form-control"
+                          placeholder=""
+                          formatRut
+                          appRutChars
+                          [class.is-valid]="formContacto.get('rut')?.valid"
+                          [class.is-invalid]="!formContacto.get('rut')?.valid && formContacto.get('rut')?.touched"
+                        />
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="form-name">Telefono</label>
+
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">+56 9</span>
+                            </div>
+                            <input
+                              formControlName="telefono"
+                              type="text"
+                              maxLength="8"
+                              min="1"
+                              max="99999999"
+                              appPhoneChar
+                              class="form-control"
+                              placeholder=""
+                              [class.is-valid]="formContacto.get('telefono')?.valid"
+                              [class.is-invalid]="!formContacto.get('telefono')?.valid && formContacto.get('telefono')?.touched"
+                            />
+                          </div>
+
+                          <p
+                            *ngIf="formContacto.controls['telefono'].invalid && formContacto.controls['telefono'].touched"
+                            class="text-error-form-2"
+                          >
+                            El Teléfono ingresado no es válido
+                          </p>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <div class="form-group col-md-6">
+                      <label for="form-name">Nombre</label>
+                      <input
+                        formControlName="nombre"
+                        type="text"
+                        id="form-name"
+                        class="form-control"
+                        placeholder=""
+                        [class.is-valid]="formContacto.get('nombre')?.valid"
+                        [class.is-invalid]="!formContacto.get('nombre')?.valid && formContacto.get('nombre')?.touched"
+                      />
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="form-email">Correo Electrónico</label>
+                      <input
+                        formControlName="para"
+                        type="email"
+                        id="form-email"
+                        class="form-control"
+                        placeholder=""
+                        [class.is-valid]="formContacto.get('para')?.valid"
+                        [class.is-invalid]="!formContacto.get('para')?.valid && formContacto.get('para')?.touched"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="form-message">Mensaje</label>
+                    <textarea
+                      formControlName="html"
+                      id="form-message"
+                      class="form-control"
+                      rows="4"
+                      [class.is-valid]="formContacto.get('html')?.valid"
+                      [class.is-invalid]="!formContacto.get('html')?.valid && formContacto.get('html')?.touched"
+                    ></textarea>
+                  </div>
+                  <button name="enviarCorreo" type="submit" class="btn btn-primary" [disabled]="!formContacto.valid">
+                    Enviar Mensaje
+                  </button>
+                </form>
+              </div>
+              <div class="col-lg-6" style="margin-top: 1rem">
+                <div class="col-lg-12" style="margin-left: 0rem">
+                  <h4 class="contact-us__header card-title">Nuestra Dirección</h4>
+                </div>
+
+                <div class="contact-us__address col-lg-12">
+                  <p>
+                    Av. Gral Velásquez N° 10701, San Bernardo, Santiago.<br />
+                    Servicio Cliente: <a href="tel:800330088">800 330 088</a>
+                  </p>
+
+                  <p>
+                    <strong>Horario De Atención </strong><br />
+                    Lu-Vie: 9:00 a 18:30 hrs. <br />
+                    Sab: 9:00 a 13:00 hrs.
+                  </p>
+
+                  <p>
+                    Implementos es la red de repuestos insumos y accesorios para camiones, buses y remolques más grande del país.
+                  </p>
+                </div>
+                <div class="col-lg-12">
+                  <a class="topbar-link" target="_blank" name="ver" class="btn btn-primary ml-auto" href="/sitio/tiendas">
+                    Ver Tiendas y Horarios
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

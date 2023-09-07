@@ -37,7 +37,7 @@ import { FooterModule } from '../footer/footer.module';
 
 @NgModule({
   declarations: [
-    // PageCategoryComponent, // ARREGLANDO FAP
+    PageCategoryComponent,
     PageProductComponent,
     ProductComponent,
     ProductStockComponent,
@@ -58,13 +58,13 @@ import { FooterModule } from '../footer/footer.module';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    /*BlocksModule,*/
+    BlocksModule,
     SharedModule,
     ShopRoutingModule,
-    //WidgetsModule,
+    WidgetsModule,
     NgSelectModule,
-    /*FooterModule,
-    HeaderModule,*/
+    FooterModule,
+    HeaderModule,
   ],
 })
 export class ShopModule {}

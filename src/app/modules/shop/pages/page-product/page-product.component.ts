@@ -96,7 +96,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private router: Router,
     private productoService: ProductsService,
     private toastr: ToastrService,
-    private root: RootService,
+    public root: RootService,
     private capitalize: CapitalizeFirstPipe,
     private seoService: SeoService,
     private cart: CartService,

@@ -452,14 +452,14 @@
                     tooltip="Precio con descuento cliente"
                     class="text-price-product mr-2 text-danger"
                     style="font-size: 2rem"
-                    >{{ product?.precio?.precio | currencyFormat }}</span
+                    >{{ product.precio.precio | currencyFormat }}</span
                   >
 
                   <span
                     *ngIf="product?.precio?.rut == 0"
                     class="text-price-product mr-2"
                     style="font-size: 2rem"
-                    >{{ product?.precio?.precio | currencyFormat }}</span
+                    >{{ product.precio.precio | currencyFormat }}</span
                   >
 
                   <span
@@ -467,7 +467,7 @@
                     tooltip="Precio normal"
                     class="product__old-price mr-2"
                     style="font-size: 2rem"
-                    >{{ product?.precioComun | currencyFormat }}</span
+                    >{{ product.precioComun | currencyFormat }}</span
                   >
 
                   <span class="text-civa">

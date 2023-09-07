@@ -105,7 +105,7 @@
               role="tabpanel"
               aria-labelledby="descripcion-tab"
             >
-              <app-descripcion #descripcionDesktop [sku]="product?.sku">
+              <app-descripcion #descripcionDesktop [sku]="product.sku">
               </app-descripcion>
             </div>
 
@@ -126,7 +126,7 @@
                 role="tabpanel"
                 aria-labelledby="descripcion-tab"
               >
-                <app-product-stock #stockDesktop [sku]="product?.sku">
+                <app-product-stock #stockDesktop [sku]="product.sku">
                 </app-product-stock>
               </div>
             </ng-container>
@@ -203,7 +203,7 @@
                     : 'none'
               }"
             >
-              <app-descripcion #descripcionMobile [sku]="product?.sku">
+              <app-descripcion #descripcionMobile [sku]="product.sku">
               </app-descripcion>
             </div>
             <hr />
@@ -277,7 +277,7 @@
         </div>
 
         <hr />
-        <div class="mt-3" *ngIf="matrixProducts?.length > 0 && isB2B">
+        <div class="mt-3" *ngIf="matrixProducts.length > 0 && isB2B">
           <div class="d-flex flex-column align-items-center mb-3">
             <div
               class="text-center"
@@ -448,7 +448,7 @@
         href="http://schema.org/NewCondition"
         content="new"
       />
-      <meta itemprop="price" [content]="product?.precio?.precio" />
+      <meta itemprop="price" [content]="product.precio.precio" />
       <meta itemprop="priceCurrency" content="CLP" />
     </div>
   </div>

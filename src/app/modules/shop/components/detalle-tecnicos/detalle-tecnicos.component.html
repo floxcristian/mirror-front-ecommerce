@@ -13,7 +13,7 @@
           <tbody style="border: 1px solid #e7e7e7 !important">
             <tr *ngIf="producto?.numero_parte">
               <th [class.pl-3]="!w100" style="width: 40%">Numero de parte</th>
-              <td>{{ producto?.numero_parte || "-" }}</td>
+              <td>{{ producto.numero_parte || "-" }}</td>
             </tr>
             <tr *ngFor="let a of producto?.atributos">
               <th

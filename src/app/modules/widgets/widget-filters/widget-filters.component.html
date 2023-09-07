@@ -25,10 +25,10 @@
         </ng-container>
 
 
+        <!-- FIXME: START -->
 
 
-
-    <div class="widget-filters__list widget-filters__list-body">
+    <!-- <div class="widget-filters__list widget-filters__list-body">
         <div *ngFor="let filter of filters; let i = index;" class="widget-filters__item">
 
             <div class="filter " [ngClass]="{'filter--opened': !filter.collapsed}" appCollapseItem="filter--opened" #collapse="appCollapseItem">
@@ -151,13 +151,12 @@
             </div>
 
         </div>
-    </div>
+    </div> -->
 
 </div>
 
-<!-- ver todos los resultados (categorias) -->
 <ng-template #template_buscador>
-    <div class="modal-header" style="background-color: #baddfc;">
+    <!-- <div class="modal-header" style="background-color: #baddfc;">
         <h3 class="modal-title pull-left" style="font-size: 16px; color: #0060b4;">Todas las categorías</h3>
         <button  name="modalRef"  type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
             <span aria-hidden="true">&times;</span>
@@ -187,7 +186,7 @@
                     <div *ngIf="filter.type === 'categories'" class="filter-categories">
                     <ul class="filter-categories__list ">
                         <li *ngFor="let item of filter.options.items|slice:5; let i=index" class="filter-categories__item filter-categories__item--{{ item.type }}">
-                            <a routerLinkActive="active" [routerLink]="item.url" [queryParams]="item.queryParams" (click)="marcarCategorias(item)" [ngClass]="{'active': item.checked}" style="font-size: 14px; line-height: 1.6;">
+                            <a routerLinkActive="active" [routerLink]="item.url" [queryParams]="item.queryParams" (click)="marcarCategorias(item)" [ngClass]="{'active': item.checked }" style="font-size: 14px; line-height: 1.6;">
                             {{ item.name | capitalizeFirst }} ({{ item.count }})
                             </a>
                         </li>
@@ -198,6 +197,7 @@
             </div>
         </div>
         </div>
-    </div>
+    </div> -->
     </ng-template>
 
+<!-- FIXME: END -->

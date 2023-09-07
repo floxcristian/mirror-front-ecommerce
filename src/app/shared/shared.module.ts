@@ -44,7 +44,7 @@ import { CapitalizeFirstPipe } from './pipes/capitalize.pipe';
 import { TitleCasePipe } from './pipes/title-case.pipe';
 
 // components
-// import { AlertComponent } from './components/alert/alert.component';
+import { AlertComponent } from './components/alert/alert.component';
 import { IconComponent } from './components/icon/icon.component';
 import { InputNumberComponent } from './components/input-number/input-number.component';
 import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
@@ -62,10 +62,10 @@ import { ProductSlideshowComponent } from './components/product-slideshow/produc
 import { MapComponent } from './components/map/map.component';
 import { UpdateAddressModalComponent } from './components/update-address-modal/update-address-modal.component';
 import { LoginComponent } from '../modules/header/components/login/login.component';
-//import { RegisterComponent } from './components/register/register.component';
+import { RegisterComponent } from './components/register/register.component';
 //import { WidgetProductsComponent } from '../modules/widgets/widget-products/widget-products.component';
 //import { LoadingComponent } from './components/loading/loading.component';
-//import { AddcartButtonComponent } from './components/addcart-button/addcart-button.component';
+import { AddcartButtonComponent } from './components/addcart-button/addcart-button.component';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
@@ -158,7 +158,7 @@ const NGU_CAROUSEL_MODULES = [
     CapitalizeFirstPipe,
 
     // components
-    // AlertComponent,
+    AlertComponent,
     IconComponent,
     InputNumberComponent,
     LoadingBarComponent,
@@ -174,13 +174,13 @@ const NGU_CAROUSEL_MODULES = [
     // ViewPdfComponent,
     MapComponent,
     LoginComponent,
-    // RegisterComponent,
+    RegisterComponent,
     // WidgetProductsComponent,
     ProductSlideshowComponent,
     ProductSlideshowSpecialsComponent,
     ProductsViewComponent,
     // LoadingComponent,
-    // AddcartButtonComponent,
+    AddcartButtonComponent,
     ConfirmModalComponent,
     SafeHtmlPipe,
     ReplacePipe,
@@ -277,7 +277,7 @@ const NGU_CAROUSEL_MODULES = [
     ReplacePipe,
 
     // components
-    // AlertComponent,
+    AlertComponent,
     IconComponent,
     InputNumberComponent,
     LoadingBarComponent,
@@ -293,13 +293,13 @@ const NGU_CAROUSEL_MODULES = [
     // ProductFeatureSpecialComponent,
     MapComponent,
     LoginComponent,
-    // RegisterComponent,
+    RegisterComponent,
     // WidgetProductsComponent,
     ProductSlideshowComponent,
     ProductSlideshowSpecialsComponent,
     ProductsViewComponent,
     // LoadingComponent,
-    // AddcartButtonComponent,
+    AddcartButtonComponent,
     ConfirmModalComponent,
     // VideoComponent,
     // ViewPdfComponent,
@@ -321,8 +321,8 @@ const NGU_CAROUSEL_MODULES = [
     CarouselModule,
     // PerfectScrollbarModule,
     FiltroMagicoModule,
-    // NguCarouselModule,
     MenuCategoriaComponent,
+    ...NGU_CAROUSEL_MODULES,
   ],
   providers: [
     /*{

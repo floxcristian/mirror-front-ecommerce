@@ -1,0 +1,454 @@
+<div class="row">
+  <div class="col-md-12 d-flex">
+    <div class="card m-0 shadow-none">
+      <div class="card-body m-0">
+        <app-loading-element *ngIf="loadingForm" [text]="'Registrando la información'"></app-loading-element>
+
+        <h3 class="card-title">Registro de Usuario</h3>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <div class="col p-0">
+                <div class="form-check form-check-lg">
+                  <span class="form-check-input input-check">
+                    <span class="input-check__body">
+                      <input
+                        (click)="invoice()"
+                        name="tipoDocumento"
+                        class="input-check__input"
+                        type="checkbox"
+                        id="check-factura"
+                        [checked]="isInvoice && !checkBoxPersona"
+                      />
+                      <span class="input-check__box"></span>
+                      <app-icon class="input-check__icon" name="check-9x7" size="19x19"> </app-icon>
+                    </span>
+                  </span>
+                  <label class="form-check-label" for="check-factura" style="color: #0063b9">Soy Empresa</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <div class="col p-0">
+                <div class="form-check form-check-lg">
+                  <span class="form-check-input input-check">
+                    <span class="input-check__body">
+                      <input
+                        name="tipoDocumento"
+                        (click)="invoice()"
+                        [checked]="checkBoxPersona"
+                        class="input-check__input"
+                        type="checkbox"
+                        id="check-persona"
+                      />
+                      <span class="input-check__box"></span>
+                      <app-icon class="input-check__icon" name="check-9x7" size="19x19"> </app-icon>
+                    </span>
+                  </span>
+                  <label class="form-check-label" for="check-persona" style="color: #0063b9">Soy Persona</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="alert alert-info" *ngIf="!isInvoice">
+              <p class="text-center m-0">
+                <i class="fa-regular fa-circle-info" style="margin-right: 10px"></i> Al registrarse como Persona, el tipo de
+                documento siempre será: BOLETA
+              </p>
+            </div>
+            <div class="alert alert-info" *ngIf="isInvoice">
+              <p class="text-center m-0" style="color: #0063b9">
+                <i class="fa-regular fa-circle-info" style="margin-right: 10px"></i> Al registrarse como Empresa, el tipo de
+                documento siempre será: FACTURA
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <form [formGroup]="formUsuario">
+          <div class="form-row">
+            <!-- rut -->
+            <ng-container *ngIf="isInvoice">
+              <h2 class="form-title col-md-12" style="color: #0063b9">Datos Empresa</h2>
+              <div class="col-md-12">
+                <label style="color: #0063b9; font-weight: 100">Rut *(ej:11111111-1)</label>
+                <div class="input-group">
+                  <!-- <label>RUT</label> -->
+                  <input
+                    formControlName="rut"
+                    [(ngModel)]="rut"
+                    class="form-control"
+                    [disabled]="rutDisabled"
+                    [placeholder]="isInvoice ? 'Rut Empresa*' : 'Rut'"
+                    (focusout)="validateCustomer($event)"
+                    [maxlength]="cantMaxRut"
+                    appRutChars
+                  />
+                  <div class="input-group-append">
+                    <button class="btn btn-sm btn-secondary" *ngIf="!rutDisabled" type="button">
+                      <i class="fa fa-search fa-lg"></i>
+                    </button>
+                    <button class="btn btn-sm btn-secondary" (click)="clearRut()" *ngIf="rutDisabled" type="button">
+                      <i class="fa fa-times fa-lg"></i>
+                    </button>
+                  </div>
+                </div>
+                <p
+                  *ngIf="formUsuario.controls['rut'].invalid && formUsuario.controls['rut'].touched"
+                  class="text-error-form-2 float-left"
+                >
+                  El RUT ingresado no es válido
+                </p>
+              </div>
+              <div class="col-md-12 mt-3">
+                <div class="form-group">
+                  <!-- <label>Email</label> -->
+                  <input formControlName="razonsocial" type="text" class="form-control" placeholder="Razón social*" />
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <!-- <label>Email</label> -->
+                  <ng-select
+                    [clearable]="false"
+                    [searchable]="true"
+                    [items]="giros"
+                    bindLabel="nombre"
+                    bindValue="codigo"
+                    formControlName="giro"
+                    class="form-control-select"
+                    placeholder="Giro*"
+                  >
+                  </ng-select>
+                </div>
+              </div>
+            </ng-container>
+
+            <h2 class="form-title col-md-12" style="color: #0063b9">
+              <span *ngIf="isInvoice">Datos Contacto</span>
+              <span *ngIf="!isInvoice">Datos Cliente</span>
+            </h2>
+            <div class="col-md-12" *ngIf="!isInvoice">
+              <label style="color: #0063b9; font-weight: 100">Rut *(ej:11111111-1)</label>
+              <div class="input-group">
+                <!-- <label>RUT</label> -->
+                <input
+                  formControlName="rut"
+                  [(ngModel)]="rut"
+                  class="form-control"
+                  [disabled]="rutDisabled"
+                  [placeholder]="isInvoice ? 'Rut Empresa*' : 'Rut*'"
+                  (focusout)="validateCustomer($event)"
+                  [maxlength]="cantMaxRut"
+                  appRutChars
+                />
+                <div class="input-group-append">
+                  <button class="btn btn-sm btn-secondary" *ngIf="!rutDisabled" type="button">
+                    <i class="fa fa-search fa-lg"></i>
+                  </button>
+                  <button class="btn btn-sm btn-secondary" (click)="clearRut()" *ngIf="rutDisabled" type="button">
+                    <i class="fa fa-times fa-lg"></i>
+                  </button>
+                </div>
+              </div>
+              <p
+                *ngIf="formUsuario.controls['rut'].invalid && formUsuario.controls['rut'].touched"
+                class="text-error-form-2 float-left"
+              >
+                El RUT ingresado no es válido
+              </p>
+            </div>
+
+            <div class="col-12" *ngIf="isInvoice">
+              <label style="color: #0063b9; font-weight: 100">Rut *(ej:11111111-1)</label>
+              <div class="input-group">
+                <input formControlName="contactRut" class="form-control" placeholder="Rut*" [maxlength]="cantMaxRut" appRutChars />
+              </div>
+              <p
+                *ngIf="formUsuario.controls['contactRut'].invalid && formUsuario.controls['contactRut'].touched"
+                class="text-danger float-left"
+              >
+                El RUT ingresado no es válido
+              </p>
+            </div>
+
+            <div class="col-12 mt-3" *ngIf="isInvoice">
+              <div class="form-group">
+                <ng-select
+                  [clearable]="false"
+                  [searchable]="true"
+                  [items]="cargos"
+                  bindLabel="titleid"
+                  bindValue="titleid"
+                  formControlName="cargo"
+                  class="form-control-select"
+                  placeholder="Cargo *"
+                >
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-12" *ngIf="!isInvoice"></div>
+
+            <!-- nombre -->
+            <div class="col-md-12 mt-3">
+              <div class="form-group">
+                <!-- <label>Nombre</label> -->
+                <input formControlName="nombre" type="text" class="form-control" placeholder="Nombres*" appLettersChar />
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <!-- <label>Apellido</label> -->
+                <input formControlName="apellido" type="text" class="form-control" placeholder="Apellidos*" appLettersChar />
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <label style="color: #0063b9; font-weight: 100"
+                  ><font style="margin-right: 10px">Codigo *</font> <font>Telefono Fijo/Celular</font></label
+                >
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <button
+                      class="btn btn-outline-secondary dropdown-toggle"
+                      type="button"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <i
+                        [ngClass]="tipo_fono == '+569' ? 'fa-solid fa-mobile-screen' : 'fa-solid fa-phone'"
+                        style="margin-right: 1px"
+                      ></i>
+                      {{ tipo_fono }}
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" (click)="Select_fono('+569')"
+                        ><i class="fa-solid fa-mobile-screen" style="margin-right: 1px"></i>+569</a
+                      >
+                      <a class="dropdown-item" (click)="Select_fono('+56')"
+                        ><i class="fa-solid fa-phone" style="margin-right: 1px"></i>+56</a
+                      >
+                    </div>
+                  </div>
+                  <input
+                    formControlName="telefono"
+                    type="text"
+                    class="form-control"
+                    placeholder="Número*"
+                    maxlength="9"
+                    appPhoneChar
+                  />
+                </div>
+
+                <p
+                  *ngIf="formUsuario.controls['telefono'].invalid && formUsuario.controls['telefono'].touched"
+                  class="text-error-form-2"
+                >
+                  El número de contacto no es válido
+                </p>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <autocomplete #emailValidate givenPlaceHolder="Email" [disabled]="!isValidRut" [domainNames]="domains">
+                </autocomplete>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <input type="password" formControlName="pwd" class="form-control" placeholder="Contraseña" />
+                <p *ngIf="formUsuario.controls['pwd'].invalid && formUsuario.controls['pwd'].touched" class="text-error-form-2">
+                  La contraseña no puede tener menos de 6 caracteres
+                </p>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <input type="password" formControlName="confirmPwd" class="form-control" placeholder="Repita contraseña" />
+                <p class="text-error-form-2" *ngIf="formUsuario.errors?.['doesMatchPassword']">
+                  Las contraseñas no son iguales, por favor intente nuevamente.
+                </p>
+
+                <p
+                  class="text-error-form-2"
+                  *ngIf="formUsuario.controls['confirmPwd'].errors?.['required'] && formUsuario.controls['confirmPwd'].touched"
+                >
+                  El campo confirme contraseña es requerido
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-12">
+              <app-map
+                [autocompletado]="autocompletado"
+                (clearAdress)="clearAddress()"
+                [tienda]="direccion"
+                (setDireccion)="setDireccion($event)"
+                (geolocalizacion)="geolocalizacion($event)"
+                [titulo]="isInvoice ? 'Ingrese Dirección de Facturación' : 'Ingrese Dirección de Despacho'"
+              >
+              </app-map>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="row m-0">
+              <div class="col-md-9 pl-0" [class.pr-0]="innerWidth < 427" [class.mb-3]="innerWidth < 427">
+                <input
+                  formControlName="calle"
+                  type="text"
+                  class="form-control"
+                  [attr.disabled]="disableDireccion"
+                  (blur)="cargarDireccion()"
+                  placeholder="Dirección* "
+                />
+              </div>
+
+              <div class="col-md-3 p-0">
+                <input
+                  formControlName="numero"
+                  type="text"
+                  class="form-control"
+                  placeholder="Número* "
+                  (blur)="cargarDireccion()"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="row m-0">
+              <div class="col-md-6 pl-0" [class.pr-0]="innerWidth < 427" [class.mb-3]="innerWidth < 427">
+                <input formControlName="departamento" type="text" class="form-control" placeholder="Departamento" />
+              </div>
+
+              <div class="col-md-6 pr-0" [class.pl-0]="innerWidth < 427">
+                <ng-select
+                  [clearable]="false"
+                  [searchable]="true"
+                  [items]="comunas"
+                  bindLabel="value"
+                  bindValue="id"
+                  formControlName="comuna"
+                  class="form-control-select"
+                  (blur)="cargarDireccion()"
+                  placeholder="Comuna*"
+                >
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-12 px-0">
+            <textarea
+              class="form-control"
+              placeholder="Ingrese una referencia para su dirección"
+              formControlName="referencia"
+            ></textarea>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <div class="col p-0">
+                  <div class="form-check form-check-lg">
+                    <span class="form-check-input input-check">
+                      <span class="input-check__body">
+                        <input
+                          (click)="registrar()"
+                          name="tipoSuscripcion"
+                          class="input-check__input"
+                          type="checkbox"
+                          id="check-inscripcion"
+                          [checked]="checkBoxSuscribir"
+                        />
+                        <span class="input-check__box"></span>
+                        <app-icon class="input-check__icon" name="check-9x7" size="19x19"> </app-icon>
+                      </span>
+                    </span>
+                    <label class="form-check-label" for="check-inscripcion" style="color: #0063b9; font-weight: bold"
+                      >Quiero suscribirme a implementos.cl</label
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <div class="col p-0">
+                  <div class="form-check form-check-lg">
+                    <span class="form-check-input input-check">
+                      <span class="input-check__body">
+                        <input
+                          name="tipoTermino"
+                          (click)="acepto()"
+                          [checked]="checkBoxTerminos"
+                          class="input-check__input"
+                          type="checkbox"
+                          id="check-acepto"
+                        />
+                        <span class="input-check__box"></span>
+                        <app-icon class="input-check__icon" name="check-9x7" size="19x19"> </app-icon>
+                      </span>
+                    </span>
+                    <label class="form-check-label" for="check-acepto" style="color: #0063b9; font-weight: bold"
+                      >Acepto terminos y condiciones *</label
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <ng-container *ngIf="innerWidth >= 450">
+        <div class="card-footer p-0">
+          <button
+            name="REGISTRARSE"
+            (click)="registerUser(emailValidate)"
+            type="button"
+            [disabled]="!formUsuario.valid || !checkBoxTerminos || loadingForm || !emailValidate.correoValido"
+            class="btn btn-lg btn-secondary btn-block text-center"
+          >
+            REGISTRARSE
+          </button>
+
+          <a class="link-primary link-primary-lg d-block text-center mt-3" [routerLink]="['/sitio', 'iniciar-sesion']">
+            Volver a Iniciar sesión
+          </a>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <ng-container *ngIf="innerWidth < 450">
+    <div class="col-sm-12" style="margin-top: 100px">
+      <div class="footer-page">
+        <div class="card">
+          <div class="card-body">
+            <button
+              name="REGISTRARSE"
+              (click)="registerUser(emailValidate)"
+              type="button"
+              [disabled]="!formUsuario.valid || loadingForm || !emailValidate.correoValido"
+              class="btn btn-lg btn-secondary btn-block text-center"
+            >
+              REGISTRARSE
+            </button>
+
+            <a class="link-primary link-primary-lg d-block text-center mt-3" [routerLink]="['/sitio', 'iniciar-sesion']">
+              Volver a Iniciar sesión
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

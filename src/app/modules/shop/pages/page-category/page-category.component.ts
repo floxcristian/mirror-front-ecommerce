@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit, ɵConsole } from '@angular/core';
-import { Product, ProductCategory, ProductPrecio } from '../../../../shared/interfaces/product';
-import { ActivatedRoute, Router, NavigationStart, NavigationEnd, NavigationError, Event } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Product, ProductCategory } from '../../../../shared/interfaces/product';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   ProductFilter,
   ProductFilterCategory,
@@ -14,7 +14,7 @@ import { Usuario } from '../../../../shared/interfaces/login';
 import { ElasticSearch } from '../../../../shared/interfaces/search';
 import { LoginService } from '../../../../shared/services/login.service';
 import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
-// import * as fastSort from 'fast-sort';
+import { sort } from 'fast-sort';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { CartService } from '../../../../shared/services/cart.service';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
@@ -42,7 +42,6 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 })
 export class PageCategoryComponent implements OnInit, OnDestroy {
 
-  // FIXME: START
   products: Product[] = [];
   ultimosProductos!: Product[];
   filters: ProductFilter[] = [];
@@ -663,7 +662,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
 
     atributos?.map(r => {
 
-      r.values = fastSort(r.values).asc();
+      r.values = sort(r.values).asc();
 
       let collapsed = true;
       const field = 'filter_' + r.name;
@@ -2306,5 +2305,4 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     let parametros: any = this.parametrosBusqueda;
     this.cargarCatalogoProductos(parametros, this.textToSearch, false);
   }
-  // FIXME: END
 }

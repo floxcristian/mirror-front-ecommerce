@@ -5,7 +5,7 @@ import { DirectionService } from '../../../shared/services/direction.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductsService } from '../../../shared/services/products.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import * as uuid from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 
 
 @Component({
@@ -37,7 +37,7 @@ export class WidgetFiltersComponent {
 
         Object.keys(arr).map((field, index) => {
             if (Array.isArray(arr[field])) {
-                arr[field].map(e => {
+                arr[field].map((e:any) => {
                     const obj = {
                         field,
                         value: e
@@ -80,7 +80,7 @@ export class WidgetFiltersComponent {
         private productsService: ProductsService
     ) {
         this.rightToLeft = this.direction.isRTL();
-        this.id = uuid();
+        this.id = uuidv4();
     }
 
     openUserForm(template: TemplateRef<any>) {
@@ -94,7 +94,7 @@ export class WidgetFiltersComponent {
         this.filters.map(item => {
             if (item.type === 'checkbox') {
                 // const value = [];
-                item.options.items.map(v => {
+                item.options.items.map((v:any) => {
                     if (v.checked) {
                         filters[prefix + item.name] = v.label;
                         return;

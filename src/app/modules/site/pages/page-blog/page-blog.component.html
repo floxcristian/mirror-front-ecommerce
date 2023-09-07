@@ -1,0 +1,38 @@
+<app-header-blog></app-header-blog>
+<div class="container mt-3" (window:resize)="onResize($event)">
+    <ol class="breadcrumb flex-nowrap">
+        <li class="breadcrumb-item pr-2 d-flex align-items-center">
+            <a [routerLink]="['/inicio']">Inicio</a>
+            <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+        </li>
+        <li class="breadcrumb-item active">
+            Impleblog
+        </li>
+    </ol>
+    <div>
+        <h5 class="card-header text-center">CONSEJOS ÚTILES PARA LA RUTA</h5>
+
+        <p class="card-subtitle text-center">Datos de interés · Compras · Carreteras · Curiosidad · Humor</p>
+        <div class="card-body">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4 mt-3 card-deck" *ngFor="let noticia of noticias">
+
+                    <div class="card">
+                        <img [src]="noticia.imagen" class="card-img-top" alt="">
+                        <div class="card-body mt-5 d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="card-title">{{noticia.titulo}}</h5>
+                                <p class="card-text mb-3">{{noticia.bajada}}</p>
+                            </div>
+                            <div>
+                                <a href="javascript:" class="btn btn-primary" (click)="verNoticia(noticia)">Ver más</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
