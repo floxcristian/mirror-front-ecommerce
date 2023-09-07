@@ -1,0 +1,28 @@
+<div class="indicator--trigger--click position-relative" appDropdown="indicator--opened" #modalRRSS="appDropdown">
+    <span class="button" (click)="modalRRSS.toggle()">
+        <i class="fas fa-share-alt fa-lg"></i>
+    </span>
+    <div class="indicator__dropdown socialContainer py-2">
+        <div class="caret"></div>
+        <div class="socialIcon">
+            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{url}}">
+                <i class="fab fa-facebook-f fa-lg"></i>
+            </a>
+        </div>
+        <div class="socialIcon">
+        <a target="_blank" href="https://twitter.com/share?url={{mensaje}}">
+            <i class="fab fa-twitter fa-lg"></i>
+        </a>
+        </div>
+        <div class="socialIcon">
+            <a target="_blank" href="https://api.whatsapp.com/send?text={{mensaje}}">
+                <i class="fab fa-whatsapp fa-lg"></i>
+            </a>
+        </div>
+        <div class="socialIcon">
+            <a target="_blank" href="mailto:?subject={{asunto}}&body={{url}}">
+                <i class="fas fa-envelope fa-lg"></i>
+            </a>
+        </div>
+    </div>
+</div>

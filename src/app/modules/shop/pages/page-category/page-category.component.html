@@ -1,5 +1,5 @@
 <!-- FIXME: START -->
-<!--
+
 <ng-container *ngIf="innerWidth <= 1025">
     <app-page-header [breadcrumbs]="breadcrumbs" [textToSearch]="textToSearch" [totalRegistros]="PagTotalRegistros">
     </app-page-header>
@@ -57,7 +57,6 @@
 
         <div class="block">
 
-          
             <app-products-view *ngIf="origen !==undefined" [paramsCategory]="paramsCategory" [origen]="origen"
                 [breadcrumbs]="breadcrumbs" [textToSearch]="textToSearch" [currentPage]="currentPage"
                 [showProductOptions]="true" [cargandoCatalogo]="cargandoCatalogo"
@@ -71,5 +70,5 @@
     </div>
     <ng-container *ngIf="sidebarPosition === 'end'" [ngTemplateOutlet]="sidebar"></ng-container>
 </div>
--->
+
 <!-- FIXME: END -->

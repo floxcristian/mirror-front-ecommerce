@@ -1,0 +1,203 @@
+<div class="widget-filters widget" appCollapse >
+
+        <ng-container *ngIf="removableFiltersArray.length > 0 || removableCategory.length > 0 || removableFiltersFlotaArray.length > 0">
+            <div class="widget-filters__list">
+                <div class="widget-filters__item filter--opened">
+                    <div class="filter__title"> Filtros seleccionados <i title="Quitar todos los filtros"
+                            (click)="removeAllFilter()" class="fas fa-times"></i></div>
+                    <div class="filter__body m-0">
+                        <div class="filter__container pt-2">
+
+                            <h1 *ngFor="let item of this.removableCategory" (click)="removeCategory(item)"
+                                class="filter-selected">{{item.text}}
+                                <i class="fas fa-times"></i>
+                            </h1>
+
+                            <h1 *ngFor="let item of this.removableFiltersArray" (click)="removeFilter(item)"
+                                class="filter-selected">{{item.value}}
+                                <i class="fas fa-times"></i>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="div-separated"></div>
+        </ng-container>
+
+
+
+
+
+    <div class="widget-filters__list widget-filters__list-body">
+        <div *ngFor="let filter of filters; let i = index;" class="widget-filters__item">
+
+            <div class="filter " [ngClass]="{'filter--opened': !filter.collapsed}" appCollapseItem="filter--opened" #collapse="appCollapseItem">
+
+                <button  name="collapse"  type="button" class="filter__title" (click)="collapse.toggle()" *ngIf="['checkbox', 'radio'].includes(filter.type) && !filtrosOculto" >
+                    {{ filter.name  | capitalizeFirst }}
+                    <i class="fimanager flaticon-027-down-arrow"></i>
+                </button>
+                <button  name="toggle"  type="button" class="filter__title" (click)="collapse.toggle()" *ngIf="filter.type=='categories'" >
+                    {{ filter.name  | capitalizeFirst }}
+                    <i class="fimanager flaticon-027-down-arrow"></i>
+                </button>
+
+
+
+                <div *ngIf="(filter.type=='checkbox' && i==1)  && filtrosOculto" class="col text-center mensaje-filtros-ocultos">
+                    <i class="fas fa-filter"></i>
+                    Debe seleccionar una categoría para ver los filtros
+                </div>
+
+
+                <div class="filter__body" appCollapseContent>
+                    <div class="filter__container">
+
+                        <div *ngIf="filter.type === 'categories'" class="filter-categories">
+
+                            <ul class="filter-categories__list ">
+                                <li *ngFor="let item of filter.options.items|slice:0:5; let i=index" class="filter-categories__item filter-categories__item--{{ item.type }}">
+                                    <a routerLinkActive="active" [routerLink]="item.url" [queryParams]="item.queryParams" (click)="marcarCategorias(item)" [ngClass]="{'active': item.checked}">
+                                    {{ item.name | capitalizeFirst }} ({{ item.count }})
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <div *ngIf="filter.options.items.length>5" style="display: flex; justify-content: center;">
+                                <a (click)="openUserForm(template_buscador)" style="color: #0063b9;">Ver todas las categorías</a>
+                            </div>
+
+                            <hr />
+
+                            <button  name="filtros"  _ngcontent-serverapp-c20="" class="filter__title" type="button">
+                                <i class="fas fa-sliders-h"></i>
+                                Filtros
+                            </button>
+
+                        </div>
+
+                        <div *ngIf="['checkbox', 'radio'].includes(filter.type) && !filtrosOculto" class="filter-list">
+
+                            <div class="filter-list__list">
+                                <label *ngFor="let item of filter.options.items" class="filter-list__item"
+                                    [ngClass]="{'filter-list__item--disabled': item.disabled}">
+
+                                    <span *ngIf="filter.type === 'checkbox'" class="filter-list__input input-check">
+                                        <span class="input-check__body">
+                                            <input class="input-check__input" type="checkbox" [checked]="item.checked"
+                                                [(ngModel)]="item.checked" [disabled]="item.disabled"
+                                                (change)="marcaCheckBox()" [value]="item.label">
+                                            <span class="input-check__box"></span>
+                                            <app-icon class="input-check__icon" name="check-9x7" size="19x19">
+                                            </app-icon>
+                                        </span>
+                                    </span>
+
+                                    <span *ngIf="filter.type === 'radio'" class="filter-list__input input-radio">
+                                        <span class="input-radio__body">
+                                            <input class="input-radio__input" [name]="filter.options.name" type="radio"
+                                                [checked]="item.checked" [disabled]="item.disabled">
+                                            <span class="input-radio__circle"></span>
+                                        </span>
+                                    </span>
+
+                                    <span class="filter-list__title">{{ item.label  | capitalizeFirst }}</span>
+
+                                </label>
+                            </div>
+                            <hr />
+                        </div>
+
+                        <div *ngIf="filter.type === 'color'" class="filter-color">
+                            <div class="filter-color__list">
+                                <label *ngFor="let item of filter.options.items" class="filter-color__item">
+                                    <span class="filter-color__check input-check-color" [ngClass]="{
+                                        'input-check-color--white': item.white,
+                                        'input-check-color--light': item.light
+                                    }" [style.color]="item.color">
+                                        <label class="input-check-color__body">
+                                            <input class="input-check-color__input" type="checkbox"
+                                                [checked]="item.checked" [disabled]="item.disabled">
+                                            <span class="input-check-color__box"></span>
+                                            <app-icon class="input-check-color__icon" name="check-12x9" size="12x9">
+                                            </app-icon>
+                                            <span class="input-check-color__stick"></span>
+                                        </label>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div *ngIf="filter.type === 'price' && isPlatformBrowser" class="filter-price">
+                            <div class="filter-price__slider">
+                                <div class="ng5-slider-custom">
+                                    <ng5-slider [value]="filter.options.from" [highValue]="filter.options.to"
+                                        [options]="{animate: false, mouseEventsInterval: 10, rightToLeft: rightToLeft, floor: filter.options.min, ceil: filter.options.max, step: 1}"
+                                        #slider></ng5-slider>
+                                </div>
+                            </div>
+                            <div class="filter-price__title">
+                                Precio:
+                                <span
+                                    class="filter-price__min-value">{{ (rightToLeft ? slider.highValue : slider.value)|currencyFormat }}</span>
+                                –
+                                <span
+                                    class="filter-price__max-value">{{ (rightToLeft ? slider.value : slider.highValue)|currencyFormat }}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- ver todos los resultados (categorias) -->
+<ng-template #template_buscador>
+    <div class="modal-header" style="background-color: #baddfc;">
+        <h3 class="modal-title pull-left" style="font-size: 16px; color: #0060b4;">Todas las categorías</h3>
+        <button  name="modalRef"  type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+
+        <div class=".container-fluid">
+        <div class="row">
+            <div class="col">
+                <div *ngFor="let filter of filters">
+                    <div *ngIf="filter.type === 'categories'" class="filter-categories">
+                    <ul class="filter-categories__list ">
+                        <li *ngFor="let item of filter.options.items|slice:0:5; let i=index" class="filter-categories__item filter-categories__item--{{ item.type }}">
+                            <a routerLinkActive="active" [routerLink]="item.url" [queryParams]="item.queryParams" (click)="marcarCategorias(item)"  style="font-size: 14px; line-height: 1.6;">
+                            {{ item.name | capitalizeFirst }} ({{ item.count }})
+                            </a>
+                        </li>
+                    </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col" >
+
+                <div *ngFor="let filter of filters|slice:0:5">
+                    <div *ngIf="filter.type === 'categories'" class="filter-categories">
+                    <ul class="filter-categories__list ">
+                        <li *ngFor="let item of filter.options.items|slice:5; let i=index" class="filter-categories__item filter-categories__item--{{ item.type }}">
+                            <a routerLinkActive="active" [routerLink]="item.url" [queryParams]="item.queryParams" (click)="marcarCategorias(item)" [ngClass]="{'active': item.checked}" style="font-size: 14px; line-height: 1.6;">
+                            {{ item.name | capitalizeFirst }} ({{ item.count }})
+                            </a>
+                        </li>
+                    </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        </div>
+    </div>
+    </ng-template>
+

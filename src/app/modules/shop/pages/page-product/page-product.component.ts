@@ -9,11 +9,9 @@ import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { Product, ProductPrecio } from '../../../../shared/interfaces/product';
 import { ActivatedRoute, Router } from '@angular/router';
 import { categories } from '../../../../../data/shop-widget-categories';
-// import { map } from 'rxjs/operators';
 import { ProductsService } from '../../../../shared/services/products.service';
 import { ToastrService } from 'ngx-toastr';
 import { RootService } from '../../../../shared/services/root.service';
-import { RouterExtService } from '../../../../shared/services/router.service';
 import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
 import { Usuario } from '../../../../shared/interfaces/login';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
@@ -36,10 +34,7 @@ declare let fbq: any;
   styleUrls: ['./page-product.component.scss'],
 })
 export class PageProductComponent implements OnInit, OnDestroy {
-  ngOnInit(): void {}
-  ngOnDestroy(): void {}
-  // FIXME: START
-  /*categories = categories;
+  categories = categories;
   product!: Product;
   recommendedProducts: Product[] = [];
   matrixProducts: Product[] = [];
@@ -56,12 +51,12 @@ export class PageProductComponent implements OnInit, OnDestroy {
   innerWidth: number;
   window = window;
 
-  public paramsCategory = {
+  paramsCategory = {
     firstCategory: '',
     secondCategory: '',
     thirdCategory: '',
   };
-  breadcrumbs = [];
+  breadcrumbs: any[] = [];
 
   relleno: any[] = [1, 2, 3, 4];
   carouselOptions = {
@@ -73,7 +68,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
     ],
     dots: true,
     slideBy: 'page',
-    // loop: true,
     responsive: {
       1366: { items: 4 },
       1100: { items: 4 },
@@ -108,8 +102,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private cart: CartService,
     private geoLocationService: GeoLocationService,
     private canonicalService: CanonicalService,
-    private buscadorService: BuscadorService,
-    private direction: DirectionService
+    private buscadorService: BuscadorService
   ) {
     // cambio de sucursal
     this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
@@ -125,13 +118,13 @@ export class PageProductComponent implements OnInit, OnDestroy {
       this.user.user_role === 'supervisor' ||
       this.user.user_role === 'comprador';
 
-    this.route.data.subscribe((data) => {
+    this.route.data.subscribe((data: any) => {
       this.layout = 'layout' in data ? data.layout : this.layout;
       this.sidebarPosition =
         'sidebarPosition' in data ? data.sidebarPosition : this.sidebarPosition;
     });
 
-    this.route.params.subscribe((params) => {
+    this.route.params.subscribe((params: any) => {
       // Seteamos el origen del ingreso a la ficha del producto.
       let origenHistory: string[] = this.cart.getOrigenHistory();
       this.origen = origenHistory.length > 0 ? origenHistory : ['link', ''];
@@ -153,15 +146,11 @@ export class PageProductComponent implements OnInit, OnDestroy {
         const sku = params.id.split('-').reverse()[0];
         console.log(sku);
         this.getDetailProduct(sku);
-        //this.getRecommendedProducts(sku);
         this.getMixProducts(sku);
-        // this.getSuggestedProductos(sku);
         this.getMatrixProducts(sku);
-        // this.getRelatedProducts(sku);
-        // this.getPopularProducts(sku);
         this.productoService.getStockProduct(sku).subscribe((r: any) => {
           let stockTienda = 0;
-          r.map(async (stock) => {
+          r.map(async (stock: any) => {
             stockTienda += stock.cantidad;
           });
           stockTienda > 0 ? (this.stock = true) : (this.stock = false);
@@ -182,7 +171,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     this.buscadorService.filtrosVisibles(false);
   }
 
-  setBreadcrumbs(product) {
+  setBreadcrumbs(product: any) {
     this.breadcrumbs = [];
     this.breadcrumbs.push({ label: 'Inicio', url: ['/', 'inicio'] });
     if (this.paramsCategory.firstCategory !== '') {
@@ -245,7 +234,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     });
   }
 
-  getDetailProduct(sku) {
+  getDetailProduct(sku: any) {
     let params = null;
     const usuario = this.root.getDataSesionUsuario();
 
@@ -260,8 +249,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
         r.data.chassis == null || r.data.chassis == undefined
           ? (r.data.chassis = '')
           : r.data.chassis;
-        const producto: Product = r.data;
-        delete producto.precio;
+        const producto: any = r.data;
+        delete producto?.precio;
 
         this.product = { ...producto };
 
@@ -271,7 +260,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
         console.log(this.product);
         this.productFacebook(this.product);
         this.setBreadcrumbs(this.product);
-        // this.root.limpiaAtributos(this.product);
       },
       (error) => {
         this.toastr.error('Error de conexión, para obtener los articulos');
@@ -302,8 +290,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
     };
     this.seoService.generarMetaTag(meta);
 
-    // console.log(product);
-
     if (isPlatformBrowser(this.platformId)) {
       this.canonicalService.setCanonicalURL(location.href);
     }
@@ -328,8 +314,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
     });
   }
 
-  getSuggestedProductos(sku) {
-    let obj = {
+  getSuggestedProductos(sku: any) {
+    let obj: any = {
       listaSku: [sku],
       rut: '',
       cantidad: 10,
@@ -339,12 +325,12 @@ export class PageProductComponent implements OnInit, OnDestroy {
     }
   }
 
-  getMatrixProducts(sku) {
+  getMatrixProducts(sku: any) {
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    let obj = {
+    let obj: any = {
       sku,
       rut: '',
-      sucursal: tiendaSeleccionada.codigo,
+      sucursal: tiendaSeleccionada?.codigo,
     };
 
     if (this.user != null) {
@@ -363,8 +349,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
     );
   }
 
-  getRelatedProducts(sku) {
-    let obj = {
+  getRelatedProducts(sku: any) {
+    let obj: any = {
       sku,
       rut: '',
     };
@@ -385,10 +371,9 @@ export class PageProductComponent implements OnInit, OnDestroy {
     );
   }
 
-  getPopularProducts(sku) {
+  getPopularProducts(sku: any) {
     this.productoService.getPropularProducts({ sku }).subscribe(
       (r: ResponseApi) => {
-        //console.log(r);
         this.popularProducts = r.data;
       },
       (e) => {
@@ -399,19 +384,19 @@ export class PageProductComponent implements OnInit, OnDestroy {
     );
   }
 
-  getMixProducts(sku) {
+  getMixProducts(sku: any) {
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
 
-    const obj = {
+    const obj: any = {
       sku,
       rut: '',
-      sucursal: tiendaSeleccionada.codigo,
+      sucursal: tiendaSeleccionada?.codigo,
     };
 
-    const obj1 = {
+    const obj1: any = {
       listaSku: [sku],
       rut: '',
-      sucursal: tiendaSeleccionada.codigo,
+      sucursal: tiendaSeleccionada?.codigo,
       cantidad: 10,
     };
 
@@ -448,9 +433,9 @@ export class PageProductComponent implements OnInit, OnDestroy {
     $('#evaluacion').addClass('active show');
 
     $('#evaluacion').tab('show');
-    document.querySelector('#ancla').scrollIntoView();
+    document.querySelector('#ancla')?.scrollIntoView();
   }
-  over(event) {
+  over(event: any) {
     let el: any = event.target.parentNode;
     let clase: any = el.classList;
     while (!clase.contains('owl-item')) {
@@ -461,7 +446,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     el.style['box-shadow'] = '0 4px 4px 0 rgb(0 0 0 / 50%)';
   }
 
-  leave(event) {
+  leave(event: any) {
     let el: any = event.target.parentNode;
     let clase: any = el.classList;
     while (!clase.contains('owl-item')) {
@@ -471,7 +456,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
     el.style['box-shadow'] = 'none';
   }
-  onResize(event) {
+  onResize(event: any) {
     this.innerWidth = event.target.innerWidth;
   }
 
@@ -483,6 +468,5 @@ export class PageProductComponent implements OnInit, OnDestroy {
     } else {
       this.acordion[indice].abierto = true;
     }
-  }*/
-  // FIXME: END
+  }
 }

@@ -13,7 +13,7 @@ import { SharedModule } from '../../shared/shared.module';
 // widgets
 
 // import { WidgetCategoriesComponent } from './widget-categories/widget-categories.component';
-// import { WidgetFiltersComponent } from './widget-filters/widget-filters.component';
+import { WidgetFiltersComponent } from './widget-filters/widget-filters.component';
 // import { WidgetPostsComponent } from './widget-posts/widget-posts.component';
 
 import { FormsModule } from '@angular/forms';
@@ -23,7 +23,7 @@ import { FormsModule } from '@angular/forms';
     // widgets
 
     // WidgetCategoriesComponent,
-    // WidgetFiltersComponent,
+    WidgetFiltersComponent,
     // WidgetPostsComponent
   ],
   imports: [
@@ -40,7 +40,7 @@ import { FormsModule } from '@angular/forms';
     // widgets
 
     // WidgetCategoriesComponent,
-    // WidgetFiltersComponent,
+    WidgetFiltersComponent,
     // WidgetPostsComponent
   ]
 })

@@ -18,7 +18,7 @@ import { PageCategoryComponent } from './pages/page-category/page-category.compo
 
 // Ficha Producto
 
-//import { ProductComponent } from '../../shared/components/product/product.component';
+import { ProductComponent } from '../../shared/components/product/product.component';
 import { ProductStockComponent } from '../../shared/components/product-stock/product-stock.component';
 import { ProductTabsComponent } from './components/product-tabs/product-tabs.component';
 //import { ProductLineBossComponent } from '../../shared/components/product-line-boss/product-line-boss.component';
@@ -37,9 +37,9 @@ import { FooterModule } from '../footer/footer.module';
 
 @NgModule({
   declarations: [
-    /*PageCategoryComponent,
-    PageProductComponent,*/
-    //ProductComponent,
+    // PageCategoryComponent, // ARREGLANDO FAP
+    PageProductComponent,
+    ProductComponent,
     ProductStockComponent,
     ProductTabsComponent,
     /*ProductLineBossComponent,

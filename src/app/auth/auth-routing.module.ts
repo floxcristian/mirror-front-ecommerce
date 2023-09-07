@@ -66,14 +66,15 @@ const routes: Routes = [
     component: VerificarpagoComponent,
   },
 
-  // {
-  //     path: 'carro-compra',
-  //     component: LayoutComponent,
-  //     data: {
-  //         headerLayout: 'classic'
-  //     },
-  //     loadChildren: () => import('../modules/cart/page-cart.module').then(m => m.ShopModule)
-  // },
+  {
+    path: 'carro-compra',
+    component: LayoutComponent,
+    data: {
+      headerLayout: 'classic',
+    },
+    loadChildren: () =>
+      import('../modules/cart/page-cart.module').then((m) => m.ShopModule),
+  },
   {
     path: 'inicio',
     component: LayoutComponent,
@@ -89,13 +90,13 @@ const routes: Routes = [
       //     path: 'productos',
       //     loadChildren: () => import('../modules/shop/shop.module').then(m => m.ShopModule)
       // },
-      {
+      /*{
         path: 'mi-cuenta',
         loadChildren: () =>
           import('../modules/account/account.module').then(
             (m) => m.AccountModule
           ),
-      },
+      },*/
       // {
       //     path: 'page-home-cms',
       //     loadChildren: () => import('../modules/page-home-cms/page-home-cms.module').then(m => m.PageHomeCmsModule)

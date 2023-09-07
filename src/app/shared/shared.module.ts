@@ -92,10 +92,16 @@ import { FiltroMagicoModule } from './components/filtro-magico/filtro-magico.mod
 import { ProductoSelectBusquedaComponent } from './components/producto-select-busqueda/producto-select-busqueda.component';
 import { AgregarListaProductosUnitariaModalComponent } from './components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
 import { MenuCategoriaComponent } from './components/menu-categoria/menu-categoria.component';
-/*
-import { NguCarouselModule } from '@ngu/carousel';
+
+import {
+  NguCarousel,
+  NguCarouselDefDirective,
+  NguCarouselNextDirective,
+  NguCarouselPrevDirective,
+  NguItemComponent,
+} from '@ngu/carousel';
 import { ShareButtonComponent } from './components/share-button/share-button.component';
-import { ProductRatingComponent } from './components/product-rating/product-rating.component';*/
+import { ProductRatingComponent } from './components/product-rating/product-rating.component';
 import { AddCommentModalComponent } from './components/add-comment-modal/add-comment-modal.component';
 import { StarSelectComponent } from './components/add-comment-modal/components/star-select/star-select.component';
 import { LoadingElementComponent } from './components/loading-element/loading-element.component';
@@ -103,7 +109,7 @@ import { ProductCardB2cFichaComponent } from './components/product-card-b2c-fich
 import { AddContactModalComponent } from './components/add-contact-modal/add-contact-modal.component';
 import { UpdateContactModalComponent } from './components/update-contact-modal/update-contact-modal.component';
 // import { Productb2bComponent } from './components/productb2b/productb2b.component';
-// import { AvisoStockComponent } from './components/aviso-stock/aviso-stock.component';
+import { AvisoStockComponent } from './components/aviso-stock/aviso-stock.component';
 import { CountdownTimerModule } from './../../../projects/countdown-timer/src/lib/countdown-timer.module';
 import { ProductCardB2cCmsComponent } from './components/product-card-b2c-cms/product-card-b2c-cms.component';
 import { ButtonsSlideshowComponent } from './components/buttons-slideshow/buttons-slideshow.component';
@@ -117,6 +123,14 @@ import { ProductSlideshowSpecialsComponent } from '../pages/product-slideshow-sp
 // };
 
 const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
+const NGU_CAROUSEL_MODULES = [
+  NguCarousel,
+  NguCarousel,
+  NguCarouselDefDirective,
+  NguCarouselNextDirective,
+  NguCarouselPrevDirective,
+  NguItemComponent,
+];
 
 @NgModule({
   declarations: [
@@ -136,7 +150,7 @@ const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
     DisableControlDirective,
     RutCharsDirective,
     LazyImgDirective,
-    /*AvisoStockComponent,*/
+    AvisoStockComponent,
     // pipe
     CurrencyFormatPipe,
     SlugifyPipe,
@@ -189,8 +203,8 @@ const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
     ProductoSelectBusquedaComponent,
     AgregarListaProductosUnitariaModalComponent,
     MenuCategoriaComponent,
-    // ShareButtonComponent,
-    // ProductRatingComponent,
+    ShareButtonComponent,
+    ProductRatingComponent,
     AddCommentModalComponent,
     StarSelectComponent,
     ProductCardB2cFichaComponent,
@@ -227,7 +241,7 @@ const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
     //   libraries: ['places']
     // }),
     // Ng2Rut,
-    // NguCarouselModule,
+    ...NGU_CAROUSEL_MODULES,
     NgChartsModule,
     FiltroMagicoModule,
     InfiniteScrollModule,
@@ -292,8 +306,8 @@ const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
     AngularEmailAutocompleteComponent,
     ProductoSelectBusquedaComponent,
     ProductCardB2cCmsComponent,
-    // ShareButtonComponent,
-    // ProductRatingComponent,
+    ShareButtonComponent,
+    ProductRatingComponent,
     ProductCardB2cFichaComponent,
     UpdateAddressModalComponent,
     AddContactModalComponent,

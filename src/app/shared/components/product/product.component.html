@@ -1,0 +1,714 @@
+<div class="product product--layout--{{ layout }}" *ngIf="product">
+  <div class="product__content_232 d-flex row px-sm-4">
+    <!--  NOMBRE VERSION MOVIL -->
+    <div class="col-12 d-block d-sm-none">
+      <h5 class="mb-1 text-left">{{ product.nombre | capitalizeFirst }}</h5>
+    </div>
+
+    <!-- DESKTOP  TABLET  MOBILE -->
+    <!-- Imagenes -->
+    <div class="product__gallery mb-0 col-12 col-lg-6 pr-lg-0">
+      <div class="product-gallery" *ngIf="showGallery">
+        <div class="row justify-content-center">
+          <div
+            class="col-sm-3 d-none d-lg-flex justify-content-center align-items-center"
+            style="cursor: pointer; position: relative; max-width: 100px"
+          >
+            <ngu-carousel
+              #myCarousel
+              [inputs]="carouselConfig"
+              [dataSource]="carouselItems"
+              (carouselLoad)="carouselTileLoad($event)"
+              style="position: unset"
+            >
+              <div *nguCarouselDef="let item" class="item">
+                <div
+                  class="tile"
+                  (click)="featuredCarousel.to(item.id); setActiveImage(item)"
+                >
+                  <img
+                    *ngIf="!item.video"
+                    [ngClass]="{
+                      'product-gallery__carousel-item--active': item.active
+                    }"
+                    [src]="item.url"
+                    (error)="root.errorLoadImage($event)"
+                    alt=""
+                    width="100"
+                    height="100"
+                  />
+                </div>
+              </div>
+
+              <div NguCarouselPrev class="leftRs">
+                <i class="fas fa-chevron-up fa-lg" style="color: #10826c"></i>
+              </div>
+              <div NguCarouselNext class="rightRs">
+                <i class="fas fa-chevron-down fa-lg" style="color: #10826c"></i>
+              </div>
+            </ngu-carousel>
+          </div>
+          <div class="col-12 col-lg-9 pr-lg-0">
+            <div
+              class="product-gallery__featured position-relative"
+              style="border: 1px solid #aaa"
+            >
+              <div
+                class="col float-right"
+                *ngIf="product.cyber || product.cyberMonday"
+                style="position: absolute; top: 2px; right: 2px; z-index: 2"
+              >
+                <picture *ngIf="(product?.cyberMonday || 0) > 0">
+                  <source
+                    srcset="assets/images/cyberMondaySquare.webp"
+                    type="image/webp"
+                  />
+                  <source
+                    srcset="assets/images/cyberMondaySquare.png"
+                    type="image/png"
+                  />
+                  <img
+                    src="assets/images/cyberMondaySquare.png"
+                    height="100px"
+                    width="100px"
+                    class="float-right"
+                  />
+                </picture>
+
+                <picture
+                  *ngIf="(product.cyber || 0) > 0 && product.cyberMonday === 0"
+                >
+                  <source
+                    srcset="assets/images/cyberCircle.webp"
+                    type="image/webp"
+                  />
+                  <source
+                    srcset="assets/images/cyberCircle.png"
+                    type="image/png"
+                  />
+                  <img
+                    src="assets/images/cyberCircle.png"
+                    alt=""
+                    height="80px"
+                    width="80px"
+                    class="float-right"
+                  />
+                </picture>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  bottom: 10px;
+                  right: 2px;
+                  z-index: 100;
+                "
+              >
+                <div
+                  class="float-right"
+                  *ngIf="
+                    product.marca == 'BLACKSMITH' ||
+                    product.marca == 'SUNTECH' ||
+                    product.marca == 'INDIANA' ||
+                    product.marca == 'RANDON'
+                  "
+                >
+                  <img
+                    src="https://images.implementos.cl/marcas/small/{{
+                      product.marca
+                    }}.PNG"
+                    alt="{{ product.marca }}"
+                  />
+                </div>
+              </div>
+
+              <owl-carousel-o
+                [options]="carouselOptions"
+                (changed)="featuredCarouselTranslated($event)"
+                appOwlPreventClick
+                #featuredCarousel
+              >
+                <ng-container *ngFor="let image of images">
+                  <ng-template
+                    carouselSlide
+                    [id]="image.id"
+                    *ngIf="!image.video"
+                  >
+                    <a
+                      appClick
+                      (click)="openPhotoSwipe($event, image)"
+                      href="{{ image.url }}"
+                      target="_blank"
+                    >
+                      <img
+                        [src]="image.url"
+                        [alt]="product.nombre"
+                        class="lazyload"
+                        (load)="onLoadImage()"
+                        (error)="root.errorLoadImage($event)"
+                        #imageElement
+                      />
+                    </a>
+                  </ng-template>
+                </ng-container>
+              </owl-carousel-o>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESKTOP  TABLET -->
+    <!-- Información Ficha -->
+    <div class="col-12 col-lg-6 pl-lg-4 mt-3 mt-lg-0 d-none d-sm-block">
+      <div>
+        <div class="d-flex justify-content-between mb-1">
+          <div>
+            {{
+              product.marca
+                | replace : "^SIN MARCA$" : "IMPLEMENTOS"
+                | replace : "^0$" : "IMPLEMENTOS"
+            }}
+          </div>
+          <app-product-rating
+            [producto]="product"
+            (comentarioGuardado)="comentarioGuardado.emit(true)"
+            (leerComentarios)="leerComentarios.emit(true)"
+          ></app-product-rating>
+        </div>
+        <div class="d-flex justify-content-between">
+          <h5 class="product__name mb-1">
+            {{ product.nombre | capitalizeFirst }}
+          </h5>
+          <app-share-button
+            [producto]="product"
+            class="mt-2"
+          ></app-share-button>
+        </div>
+        <div class="row">
+          <div class="col">
+            <p class="mb-2">
+              <span class="text-lowercase">{{ product.descripcion }}</span>
+            </p>
+          </div>
+        </div>
+        <div class="row justify-content-start px-3">
+          <div style="color: black">
+            <strong>SKU {{ product.sku }}</strong>
+            <span class="ml-2" *ngIf="stock" style="color: #408b00"
+              ><strong>EN STOCK</strong></span
+            >
+            <span class="ml-2 text-danger" *ngIf="!stock"
+              ><strong>AGOTADO TEMPORALMENTE</strong></span
+            >
+          </div>
+          <div></div>
+        </div>
+
+        <hr class="mb-0" />
+        <div
+          class="row justify-content-start px-3 my-2"
+          *ngIf="preciosEscalas.length > 1"
+        >
+          <div
+            class="masXmenosTitle"
+            (click)="verPreciosEscala()"
+            style="cursor: pointer"
+          >
+            <img
+              src="../../../../assets/images/llevaMasPagaMenos/200x50_rectangular.jpg"
+              style="z-index: 3"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="clearfix"></div>
+
+      <div>
+        <div class="product__sidebar col-12 p-0">
+          <div
+            class="product__prices"
+            [class.my-4]="preciosEscalas.length <= 1"
+            [class.my-0]="preciosEscalas.length > 1"
+          >
+            <ng-container *ngIf="product.precio">
+              <div class="row">
+                <div class="col-md-12">
+                  <span
+                    *ngIf="product?.precio?.rut != 0"
+                    tooltip="Precio con descuento cliente"
+                    class="text-price-product mr-2 text-danger"
+                    [ngStyle]="{
+                      'font-size.rem': preciosEscalas.length > 1 ? '1.6' : '2'
+                    }"
+                    >{{ product.precio.precio | currencyFormat }}</span
+                  >
+
+                  <span
+                    *ngIf="product?.precio?.rut == 0"
+                    class="text-price-product mr-2"
+                    [ngStyle]="{
+                      'font-size.rem': preciosEscalas.length > 1 ? '1.6' : '2'
+                    }"
+                    >{{ product.precio.precio | currencyFormat }}</span
+                  >
+
+                  <span
+                    *ngIf="product?.precioComun != product?.precio?.precio"
+                    tooltip="Precio normal"
+                    class="product__old-price mr-2"
+                    [ngStyle]="{
+                      'font-size.rem': preciosEscalas.length > 1 ? '1.6' : '2'
+                    }"
+                    >{{ product.precioComun | currencyFormat }}</span
+                  >
+
+                  <span class="text-civa">
+                    {{
+                      !isVacio(usuario.iva)
+                        ? usuario.iva
+                          ? "c/iva"
+                          : "s/iva"
+                        : "c/iva"
+                    }}</span
+                  >
+                </div>
+              </div>
+            </ng-container>
+
+            <span
+              *ngIf="!product.precio"
+              class="d-block w-100 text-left text-uppercase"
+              >...</span
+            >
+          </div>
+          <hr class="mt-0" />
+
+          <form class="product__options" *ngIf="innerWidth > 450">
+            <div class="mb-2">
+              <div class="row m-0 align-items-center">
+                <div class="col-sm-5 pr-5">
+                  <div class="d-flex flex-column">
+                    <span> Cantidad </span>
+                    <app-input-number
+                      aria-label="Quantity"
+                      class="product__quantity number-quantity text-center w-100"
+                      size="lg"
+                      [min]="1"
+                      [formControl]="quantity"
+                      (quantity)="updateCart($event)"
+                    >
+                    </app-input-number>
+                  </div>
+                </div>
+
+                <!-- BOTON PARA DESKTOP y TABLET -->
+                <div class="col-sm-7 d-none d-sm-block">
+                  <button
+                    *ngIf="
+                      disponibilidad &&
+                      (!sinStockOtrasTiendas ||
+                        !sinStockSuficienteDespacho ||
+                        !sinStockSuficienteTiendaActual)
+                    "
+                    name="Agregar "
+                    type="button "
+                    class="btn btn-secondary btn-lg btn-block text-center btn-add-cart w-100"
+                    [ngClass]="{
+                      'btn-loading': addingToCart
+                    }"
+                    appClick
+                    (click)="addToCart()"
+                  >
+                    <i class="fas fa-shopping-cart"></i> AGREGAR
+                  </button>
+                  <button
+                    *ngIf="!disponibilidad"
+                    disabled
+                    name="Agregar "
+                    type="button"
+                    class="btn btn-warning btn-lg btn-block text-center btn-add-cart w-100"
+                    [ngClass]="{ 'btn-loading': addingToCart }"
+                    appClick
+                    style="background-color: #8a8984"
+                  >
+                    <i
+                      class="fas fa-shopping-cart"
+                      style="margin-right: 5px"
+                    ></i>
+                    SIN STOCK
+                  </button>
+                  <button
+                    *ngIf="
+                      disponibilidad &&
+                      sinStockOtrasTiendas &&
+                      sinStockSuficienteDespacho &&
+                      sinStockSuficienteTiendaActual
+                    "
+                    disabled
+                    name="Agregar "
+                    type="button "
+                    class="btn btn-warning btn-lg btn-block text-center btn-add-cart w-100"
+                    [ngClass]="{ 'btn-loading': addingToCart }"
+                    appClick
+                    style="background-color: #8a8984"
+                  >
+                    <i class="fas fa-shopping-cart mr-1"></i>Seleccione otra
+                    Cantidad
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="row px-3"
+              *ngIf="cantidadFaltantePrecioEscala >= 1 && !isB2B"
+            >
+              <div
+                class="col-12 text-danger px-3"
+                *ngIf="cantidadFaltantePrecioEscala === 1"
+              >
+                <small
+                  >Falta {{ cantidadFaltantePrecioEscala }} producto para llevar
+                  más y pagar menos</small
+                >
+              </div>
+              <div
+                class="col-12 text-danger px-3"
+                *ngIf="cantidadFaltantePrecioEscala > 1"
+              >
+                <small
+                  >Faltan {{ cantidadFaltantePrecioEscala }} productos para
+                  llevar más y pagar menos</small
+                >
+              </div>
+            </div>
+          </form>
+
+          <hr />
+
+          <div class="row px-3 justify-content-end">
+            <div class="col-12" style="margin-bottom: 10px">
+              <app-despacho
+                *ngIf="tiendaActual && !estado"
+                [product]="product"
+                [tiendaActual]="tiendaActual"
+                [sinStockSuficienteDespacho]="sinStockSuficienteDespacho"
+                [sinStockSuficienteTiendaActual]="
+                  sinStockSuficienteTiendaActual
+                "
+                [stockProgramado]="stockProgramado"
+                [cantidad]="quantity.value"
+              ></app-despacho>
+            </div>
+
+            <!-- SOLO B2B -->
+
+            <div *ngIf="isB2B" class="listaBotones d-flex">
+              <button
+                name="addingToWishlist"
+                class="addListaBoton btn btn-light btn-svg-icon px-2"
+                type="button"
+                appClick
+                (click)="addToWishlistOptions()"
+                [ngStyle]="{ color: favorito ? '#10753d' : '#3d464d' }"
+                [ngClass]="{ 'btn-loading': addingToWishlist }"
+              >
+                <i class="fa-solid fa-list-check fa-lg mr-2"></i>
+                {{ favorito ? "Agregado a tus listas" : "Agregar a una lista" }}
+              </button>
+            </div>
+            <div
+              *ngIf="!stock"
+              class="listaBotones d-flex"
+              style="margin-left: 10px"
+            >
+              <button
+                name="addingToWishlist"
+                class="addListaBoton btn btn-light btn-svg-icon px-2"
+                type="button"
+                [ngStyle]="{ color: favorito ? '#10753d' : '#3d464d' }"
+                (click)="OpenAvisoStock()"
+                [ngClass]="{ 'btn-loading': addingToWishlist }"
+              >
+                {{ " Avisar Disponibilidad " }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE -->
+    <!-- Información Ficha -->
+    <div class="col-12 col-lg-6 pl-lg-4 mt-0 mt-lg-0 d-block d-sm-none">
+      <div>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="product__prices my-3">
+            <ng-container *ngIf="product.precio">
+              <div class="row">
+                <div class="col-md-12">
+                  <span
+                    *ngIf="product?.precio?.rut != 0"
+                    tooltip="Precio con descuento cliente"
+                    class="text-price-product mr-2 text-danger"
+                    style="font-size: 2rem"
+                    >{{ product?.precio?.precio | currencyFormat }}</span
+                  >
+
+                  <span
+                    *ngIf="product?.precio?.rut == 0"
+                    class="text-price-product mr-2"
+                    style="font-size: 2rem"
+                    >{{ product?.precio?.precio | currencyFormat }}</span
+                  >
+
+                  <span
+                    *ngIf="product?.precioComun != product?.precio?.precio"
+                    tooltip="Precio normal"
+                    class="product__old-price mr-2"
+                    style="font-size: 2rem"
+                    >{{ product?.precioComun | currencyFormat }}</span
+                  >
+
+                  <span class="text-civa">
+                    {{
+                      !isVacio(usuario.iva)
+                        ? usuario.iva
+                          ? "c/iva"
+                          : "s/iva"
+                        : "c/iva"
+                    }}</span
+                  >
+                </div>
+              </div>
+            </ng-container>
+
+            <span
+              *ngIf="!product.precio"
+              class="d-block w-100 text-left text-uppercase"
+              >...</span
+            >
+          </div>
+          <div>
+            <app-share-button
+              [producto]="product"
+              class="mt-2"
+            ></app-share-button>
+          </div>
+        </div>
+        <div class="row justify-content-start px-3 mb-1">
+          <div style="color: #bbb">
+            SKU {{ product.sku }}
+            <span class="ml-2" *ngIf="stock" style="color: #408b00"
+              ><strong>EN STOCK</strong></span
+            >
+            <span class="ml-2 text-danger" *ngIf="!stock"
+              ><strong>AGOTADO TEMPORALMENTE</strong></span
+            >
+          </div>
+          <div></div>
+        </div>
+        <div class="d-flex justify-content-start mb-1">
+          <div>
+            {{
+              product.marca
+                | replace : "^SIN MARCA$" : "IMPLEMENTOS"
+                | replace : "^0$" : "IMPLEMENTOS"
+            }}
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col">
+            <p class="mb-2">
+              <span class="text-lowercase">{{ product.descripcion }}</span>
+            </p>
+          </div>
+        </div>
+        <form class="product__options">
+          <div class="row" *ngIf="cantidadFaltantePrecioEscala >= 1 && !isB2B">
+            <div class="col-12 text-danger">
+              <small
+                style="font-weight: bolder !important"
+                *ngIf="cantidadFaltantePrecioEscala === 1"
+                >Falta {{ cantidadFaltantePrecioEscala }} producto para llevar
+                más y pagar menos</small
+              >
+              <small
+                style="font-weight: bolder !important"
+                *ngIf="cantidadFaltantePrecioEscala > 1"
+                >Faltan {{ cantidadFaltantePrecioEscala }} productos para llevar
+                más y pagar menos</small
+              >
+            </div>
+          </div>
+        </form>
+
+        <hr class="mb-0" />
+        <div
+          class="row justify-content-start px-3 my-2"
+          *ngIf="preciosEscalas.length > 1 && !isB2B"
+        >
+          <div class="masXmenosTitle" (click)="verPreciosEscala()">
+            <img
+              src="../../../../assets/images/llevaMasPagaMenos/200x50_rectangular.jpg"
+              style="z-index: 3"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="clearfix"></div>
+
+      <div>
+        <div class="product__sidebar col-12 p-0">
+          <hr />
+          <div class="row px-3">
+            <div class="col-12">
+              <app-despacho
+                *ngIf="tiendaActual && !estado"
+                [product]="product"
+                [tiendaActual]="tiendaActual"
+                [sinStockSuficienteDespacho]="sinStockSuficienteDespacho"
+                [sinStockSuficienteTiendaActual]="
+                  sinStockSuficienteTiendaActual
+                "
+                [stockProgramado]="stockProgramado"
+                [cantidad]="quantity.value"
+              ></app-despacho>
+            </div>
+          </div>
+          <hr />
+          <div>
+            <div class="d-flex justify-content-center">
+              <app-product-rating
+                [producto]="product"
+                (comentarioGuardado)="comentarioGuardado.emit(true)"
+                (leerComentarios)="leerComentarios.emit(true)"
+              ></app-product-rating>
+            </div>
+          </div>
+
+          <!-- SOLO B2B -->
+          <div *ngIf="isB2B" class="listaBotones d-flex">
+            <button
+              name="addingToWishlist"
+              class="addListaBoton btn btn-light btn-svg-icon px-2"
+              type="button"
+              appClick
+              (click)="addToWishlist()"
+              [ngStyle]="{ color: favorito ? '#10753d' : '#3d464d' }"
+              [ngClass]="{ 'btn-loading': addingToWishlist }"
+            >
+              {{ favorito ? "Agregado a tus listas" : "Agregar a una lista" }}
+            </button>
+            <button
+              name="addingToWishlistOptions"
+              style="width: 40px"
+              class="optionsListaBoton btn btn-light btn-svg-icon px-2"
+              type="button"
+              appClick
+              (click)="addToWishlistOptions()"
+              [ngClass]="{ 'btn-loading': addingToWishlist }"
+            >
+              <i class="fas fa-ellipsis-v fa-lg"></i>
+            </button>
+          </div>
+
+          <!-- ficha para facebook-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- botton add card en movile -->
+<app-addcart-button
+  [disponibilidad]="disponibilidad"
+  [sinStockOtrasTiendas]="sinStockOtrasTiendas"
+  [sinStockSuficienteDespacho]="sinStockSuficienteDespacho"
+  [sinStockSuficienteTiendaActual]="sinStockSuficienteTiendaActual"
+  (quantity)="updateCart($event)"
+  class="d-block d-sm-none"
+></app-addcart-button>
+<!-- botton add card en movile / end -->
+
+<ng-template #modalStock>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Stock otras tiendas</h4>
+    <button
+      name="modalRefStock "
+      type="button "
+      class="close pull-right"
+      aria-label="Close "
+      (click)="modalRefStock.hide()"
+    >
+      <span aria-hidden="true ">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body"></div>
+</ng-template>
+
+<ng-template #modalEscala>
+  <div class="modal-header">
+    <button type="button" class="close" (click)="modalEscalaRef.hide()">
+      <i class="fas fa-times-circle" style="color: #00549d"></i>
+    </button>
+  </div>
+  <div class="modal-body" style="min-height: 140px">
+    <div
+      class="w-100 d-flex justify-content-center"
+      style="margin-bottom: -20px"
+    >
+      <img
+        src="../../../../assets/images/llevaMasPagaMenos/200x50_rectangular.jpg"
+        style="z-index: 3"
+      />
+    </div>
+    <div class="card text-white bg-implementos mb-3">
+      <div class="card-body">
+        <div
+          class="text-center"
+          style="margin-bottom: -10px; font-weight: bold"
+        >
+          Precios Escalas
+        </div>
+        <table>
+          <thead>
+            <tr style="background-color: #00549d !important">
+              <td class="text-center">Volumen</td>
+              <td class="text-center">Precio</td>
+            </tr>
+          </thead>
+          <tbody class="table_paga" *ngIf="preciosEscalas">
+            <ng-container *ngFor="let precio of preciosEscalas; let i = index">
+              <tr
+                *ngIf="i > 0"
+                style="color: #00549d"
+                [ngStyle]="{
+                  'background-color': (i + 1) % 2 !== 0 ? '#ffff' : '#efefef'
+                }"
+              >
+                <td style="width: 50%; border-right: solid 2px; color: #00549d">
+                  {{ precio.desde }} a {{ precio.hasta }} und.
+                </td>
+                <td
+                  class="text-center"
+                  style="width: 50%; border-left: solid 2px; color: #00549d"
+                >
+                  {{
+                    (!isVacio(usuario.iva)
+                      ? usuario.iva
+                        ? precio.precio
+                        : precio.precio / (1 + IVA)
+                      : precio.precio
+                    ) | currencyFormat
+                  }}
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -77,15 +77,15 @@ export class ProductsService {
     );
   }
 
-  getMatrixProducts(params: any) {
-    return this.http.get(
+  getMatrixProducts(params: any): Observable<ResponseApi> {
+    return this.http.get<ResponseApi>(
       environment.apiImplementosCatalogo + 'catalogo/matrizproducto',
       { params }
     );
   }
 
-  getRelatedProducts(params: any) {
-    return this.http.get(
+  getRelatedProducts(params: any): Observable<ResponseApi> {
+    return this.http.get<ResponseApi>(
       environment.apiImplementosCatalogo + 'catalogo/relacionadoproducto',
       { params }
     );
@@ -98,8 +98,8 @@ export class ProductsService {
     );
   }
 
-  getPropularProducts(params: any) {
-    return this.http.get(
+  getPropularProducts(params: any): Observable<ResponseApi> {
+    return this.http.get<ResponseApi>(
       environment.apiImplementosCatalogo + 'catalogo/popularesproducto',
       { params }
     );

@@ -25,6 +25,7 @@
     "@angular/router": "^16.2.0",
     "@ng-bootstrap/ng-bootstrap": "^15.1.1",
     "@ng-select/ng-select": "^11.1.1",
+    "@ngu/carousel": "^8.0.0",
     "@nguniversal/express-engine": "^16.2.0",
     "@popperjs/core": "^2.11.6",
     "angular-datatables": "^16.0.0",
