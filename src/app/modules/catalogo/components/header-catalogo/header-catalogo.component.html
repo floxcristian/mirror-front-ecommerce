@@ -1,0 +1,25 @@
+<div class="mobile-header">
+
+    <div class="mobile-header__panel">
+        <div class="container">
+            <div class="mobile-header__body">
+                <a class="mobile-header__logo mr-auto" [routerLink]="['/','inicio']">
+                    <img height="50" src="assets/images/logos/logo_header4.png" alt="logo-implementos" class="lazyload">
+                </a>
+
+                <div class="mobile-header__indicators">
+                    
+                    <div class="indicator indicator--mobile">
+                        <a [routerLink]="['/','carro-compra']" class="indicator__button">
+                            <span class="indicator__area">
+                                <app-icon name="cart-20" size="30"></app-icon>
+                                <span class="indicator__value">{{ cart.quantity$|async }}</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

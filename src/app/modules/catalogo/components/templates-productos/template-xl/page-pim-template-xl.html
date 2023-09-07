@@ -1,0 +1,288 @@
+<div
+  *ngIf="plana.productos.tipo == 'banner' || plana.productos.tipo == 'portadaImg' || plana.productos.tipo == 'contraPortadaImg' "
+>
+  <div>
+    <img
+      class="img-fluid"
+      style="height: 750px; width: 100%"
+      src="{{plana.productos.url}}"
+      onError="this.src='./assets/img/place-150x150.png'"
+      alt=""
+    />
+    <!-- height: 46.4rem; -->
+  </div>
+</div>
+
+<!-- Relleno en caso de template vacío con intención de dejar ese espacio -->
+<div *ngIf="plana.productos.length == 0">
+  <div style="padding: 0rem; height: 750px"></div>
+</div>
+
+<div *ngIf="plana.productos.tipo == 'producto'">
+  <div
+    class="container rounded justify-content-center"
+    style="border-color: rgb(214, 214, 214); border-width: 1px; border-style: solid"
+  >
+    <div class="row" style="padding: 0rem; height: 750px; text-align: left">
+      <div class="col-md-12 col-sm-12 p-0" style="padding: 0rem; text-align: left; height: 160px">
+        <img
+          *ngIf="imagen"
+          src="https://images.implementos.cl/marcas/small/{{plana.productos.atributos[5].valor | uppercase}}.png"
+          alt="{{plana.productos.atributos[5].valor}}"
+          (error)="existeIMG()"
+          style="padding: 0rem 4.3rem 0rem 0.4rem; height: 35px"
+        />
+
+        <div
+          *ngIf="!imagen && plana.productos.atributos[5].valor != '0'"
+          class="pr-0 mb-1"
+          style="
+            color: #000000;
+            font-size: 20px;
+            font-weight: 400 !important;
+            padding: 0.3rem 4.3rem 0rem 0.5rem;
+            text-align: left;
+            margin-top: 0rem;
+          "
+        >
+          {{ plana.productos.atributos[5].valor }}
+        </div>
+
+        <div
+          *ngIf="plana.productos.atributos[5].valor == '0'"
+          class="pr-0 mb-1"
+          style="
+            color: #000000;
+            font-size: 20px;
+            font-weight: 400 !important;
+            padding: 0.3rem 4.3rem 0rem 0.5rem;
+            text-align: left;
+            margin-top: 0rem;
+          "
+        >
+          IMPLEMENTOS
+        </div>
+
+        <div
+          class="col-md-12 col-sm-12 pr-0 mb-1 card-headertext-center pb-1"
+          style="text-align: left; line-height: 1; font-size: 22px; padding: 0rem 4.3rem 0rem 0.5rem; color: black"
+        >
+          <b>{{ plana.productos.atributos[1].valor | slice:0:50 }}</b>
+        </div>
+
+        <div
+          class="col-md-12 col-sm-12 pr-0 mb-1"
+          style="
+            font-size: 20px;
+            text-align: left;
+            line-height: 1;
+            font-weight: 400;
+            padding: 0rem 4.3rem 0rem 0.5rem;
+            color: black;
+          "
+        >
+          {{ plana.productos.atributos[2].valor | titlecase | slice:0:90 }}
+        </div>
+
+        <div
+          class="col-md-12 col-sm-12"
+          style="font-size: 20px; text-align: left; color: #000000; padding: 0rem 0rem 0rem 0.5rem"
+        >
+          SKU {{ plana.productos.atributos[0].valor | uppercase }}
+        </div>
+      </div>
+
+      <div class="col-md-12 col-sm-12">
+        <div class="row text-center" style="height: 450px">
+          <div *ngIf="visibleImg1" class="col-md-8 col-sm-8 p-1" style="margin-bottom: 0rem !important">
+            <img
+              class="img-fluid"
+              src="https://images.implementos.cl/img/450/{{plana.productos.producto}}-{{ordenImg1}}.jpg"
+              onError="this.src='./assets/images/catalogo/place-150x150.png'"
+              alt=""
+            />
+          </div>
+
+          <div class="col-md-4 col-sm-4">
+            <div class="row align-self-center p-0">
+              <div class="pt-2" *ngIf="visibleImg2">
+                <img
+                  class="img-fluid"
+                  src="https://images.implementos.cl/img/150/{{plana.productos.producto}}-{{ordenImg2}}.jpg"
+                  onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                />
+              </div>
+              <div class="pt-2" *ngIf="visibleImg3">
+                <img
+                  class="img-fluid"
+                  src="https://images.implementos.cl/img/150/{{plana.productos.producto}}-{{ordenImg3}}.jpg"
+                  onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                />
+              </div>
+              <div class="pt-2" *ngIf="visibleImg4">
+                <img
+                  class="img-fluid"
+                  src="https://images.implementos.cl/img/150/{{plana.productos.producto}}-{{ordenImg4}}.jpg"
+                  onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="plana.productos.precioEscala && plana.productos.cyber === 1 && precios">
+        <div class="col-md-12 d-flex p-0">
+          <img
+            style="width: 100px; border-radius: 2px; position: absolute; margin-top: 440px; z-index: 999; margin-left: -602px"
+            src="assets/images/catalogo/llevaMasPagaMenos/mas_menos_rectangular.svg"
+            loading="lazy"
+          />
+
+          <div style="width: 50px; position: absolute; margin-top: 430px; margin-left: -485px; z-index: 999">
+            <!-- <img style="width: 50px" src="assets/images/cyberCircle.png" loading="lazy" /> -->
+            <picture>
+              <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
+              <source srcset="assets/images/cyberCircle.png" type="image/png" />
+              <img src="assets/images/cyberCircle.png" style="width: 50px" loading="lazy" />
+            </picture>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="plana.productos.precioEscala && plana.productos.cyber == 0 && precios">
+        <img
+          style="width: 100px; border-radius: 2px; position: absolute; margin-top: 440px; z-index: 999; margin-left: -602px"
+          src="assets/images/catalogo/llevaMasPagaMenos/mas_menos_rectangular.svg"
+          loading="lazy"
+        />
+      </div>
+
+      <div
+        style="width: 50px; position: absolute; margin-top: 585px; margin-left: 5px; z-index: 999"
+        *ngIf="plana.productos.cyber === 1 && !plana.productos.precioEscala"
+      >
+        <!-- <img style="width: 50px" src="assets/images/cyberCircle.png" loading="lazy" /> -->
+        <picture>
+          <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
+          <source srcset="assets/images/cyberCircle.png" type="image/png" />
+          <img src="assets/images/cyberCircle.png" style="width: 50px" loading="lazy" />
+        </picture>
+      </div>
+
+      <div *ngIf="precios" class="col-md-12 col-sm-12 d-flex" style="padding-left: 5px; color: black; font-size: 1rem">
+        <div class="col-md-9 col-sm-9 p-0">
+          <div class="row h-100 w-100" style="align-items: flex-end">
+            <div class="col-md-12">
+              <div *ngIf="preciosLista.length === 3">
+                <table class="table p-0 m-0 borderless" style="border-spacing: 0px !important">
+                  <tbody>
+                    <tr *ngIf="precioEspecial">
+                      <td class="p-0 txtNormal">Unidad</td>
+                      <td class="p-0 pull-right txtNormal" title="Precio con descuento cliente">
+                        {{ preciosLista[0].precio | currencyFormat}} c/iva
+                      </td>
+                    </tr>
+                    <tr *ngIf="!precioEspecial">
+                      <td class="p-0 txtNormal">Unidad</td>
+                      <td class="p-0 pull-right txtNormal" title="Precio normal">
+                        {{ preciosLista[0].precio | currencyFormat}} c/iva
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="p-0 txtNormal">{{ preciosLista[1].desde }} a {{ preciosLista[1].hasta }} UN</td>
+                      <td class="p-0 pull-right txtNormal">{{ preciosLista[1].precio | currencyFormat }} c/iva</td>
+                    </tr>
+                    <tr>
+                      <td class="p-0 txtNormal font-weight-bold">{{ preciosLista[2].desde }} {{ preciosLista[2].hasta }} UN</td>
+                      <td class="p-0 pull-right txtDestacado">{{ preciosLista[2].precio | currencyFormat }} c/iva</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div *ngIf="preciosLista.length === 2">
+                <table class="table p-0 m-0 borderless">
+                  <tbody>
+                    <tr>
+                      <td class="p-0 txtNormal">&nbsp;</td>
+                      <td class="p-0 pull-right txtNormal">&nbsp;</td>
+                    </tr>
+                    <tr *ngIf="precioEspecial">
+                      <td class="p-0 txtNormal">Unidad</td>
+                      <td class="p-0 pull-right txtNormal" title="Precio con descuento cliente">
+                        {{ preciosLista[0].precio | currencyFormat}} c/iva
+                      </td>
+                    </tr>
+                    <tr *ngIf="!precioEspecial">
+                      <td class="p-0 txtNormal text-left">Unidad</td>
+                      <td class="p-0 pull-right txtNormal" title="Precio normal">
+                        {{ preciosLista[0].precio | currencyFormat}} c/iva
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="p-0 txtNormal font-weight-bold text-left">
+                        {{ preciosLista[1].desde }} {{ preciosLista[1].hasta }} UN
+                      </td>
+                      <td class="p-0 pull-right txtDestacado">{{ preciosLista[1].precio | currencyFormat }} c/iva</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div *ngIf="preciosLista.length === 1">
+                <table class="table p-0 m-0 borderless">
+                  <tbody>
+                    <tr>
+                      <td class="p-0 txtNormal">&nbsp;</td>
+                      <td class="p-0 pull-right txtNormal">&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td class="p-0 txtNormal">&nbsp;</td>
+                      <td class="p-0 pull-right txtNormal">&nbsp;</td>
+                    </tr>
+                    <tr *ngIf="precioEspecial">
+                      <td class="p-0 txtNormal font-weight-bold text-left">Unidad</td>
+                      <td class="p-0 pull-right txtDestacado" title="Precio con descuento cliente">
+                        {{ preciosLista[0].precio | currencyFormat}} c/iva
+                      </td>
+                    </tr>
+                    <tr *ngIf="!precioEspecial">
+                      <td class="p-0 txtNormal font-weight-bold text-left">Unidad</td>
+                      <td class="p-0 pull-right txtPrecioNormal" title="Precio normal">
+                        {{ preciosLista[0].precio | currencyFormat}} c/iva
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COMPARTIR Y CARRO -->
+        <div class="col-md-3 col-sm-3 pb-2">
+          <div class="row h-100 w-100" style="align-items: flex-end">
+            <div class="col-md-12 d-flex">
+              <app-icon
+                *ngIf="carro"
+                name="cart-20"
+                size="18"
+                class="icon-chat shadow-lg pl-2 pt-2 pointer mr-3 mt-2"
+                (click)="addToCart(plana.productos)"
+              ></app-icon>
+              <app-share-button
+                *ngIf="carro"
+                [producto]="plana.productos"
+                class="mt-2"
+                style="margin-top: 5px !important"
+                [catalogo]="true"
+                style="font-size: 20px"
+              ></app-share-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

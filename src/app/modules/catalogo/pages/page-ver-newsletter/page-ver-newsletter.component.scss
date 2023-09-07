@@ -1,0 +1,267 @@
+.flip-book {
+  display: flex;
+  background-size: 100% 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.page {
+  padding: 20px;
+  overflow: hidden;
+  opacity: 1;
+  background-color: white;
+
+  .img-menu {
+    background-repeat: no-repeat !important;
+    background-size: 100% 100%;
+  }
+
+  .page-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: normal;
+
+    h2 {
+      font-family: 'Courier New', Courier, monospace !important;
+      font-style: italic;
+      font-weight: 800;
+      font-size: 2em;
+      text-align: end;
+      text-shadow: 10px 20px 40px rgba(255, 255, 255, 0.5);
+    }
+
+    .page-header {
+      height: 30px;
+      font-size: 100%;
+      text-transform: uppercase;
+      text-align: center;
+
+      .btn-page {
+        height: 2rem;
+      }
+    }
+
+    .page-image {
+      height: 100%;
+      background-size: contain;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    .page-text {
+      height: 100%;
+      flex-grow: 1;
+      font-size: 80%;
+      text-align: justify;
+      margin-top: 10px;
+      padding-top: 10px;
+      box-sizing: border-box;
+      border-top: solid 1px hsl(35, 55, 90);
+    }
+
+    .page-footer {
+      height: 30px;
+      border-top: solid 1px hsl(35, 55, 90);
+      font-size: 80%;
+      color: hsl(35, 20, 50);
+    }
+  }
+
+  &.--left {
+    // for left page (property will be added automatically)
+    border-right: 0;
+    box-shadow: inset -7px 0 30px -7px rgba(0, 0, 0, 0);
+  }
+
+  &.--right {
+    // for right page (property will be added automatically)
+    border-left: 0;
+    box-shadow: inset 7px 0 30px -7px rgba(0, 0, 0, 0);
+
+    .page-footer {
+      text-align: right;
+    }
+  }
+
+  &.page-cover {
+    // color: hsl(35, 35, 35);
+    // border: solid 1px hsl(35, 20, 50);
+
+    h2 {
+      text-align: center;
+      padding-top: 50%;
+      font-size: 210%;
+    }
+
+    &.page-cover-top {
+      box-shadow: inset 0px 0 30px 0px rgba(36, 10, 3, 0.5), -2px 0 5px 2px rgba(0, 0, 0, 0.4);
+
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-image: var(--cover-image) !important;
+
+      // background-image: url('https://me-images.gxmundoweb.cl/177649a5426485a7-19530-crispy-french-fries-with-ketchup-mayonnaise1150-26588avif.avif');
+    }
+
+    &.page-cover-bottom {
+      box-shadow: inset 0px 0 30px 0px rgba(36, 10, 3, 0.5), 10px 0 8px 0px rgba(0, 0, 0, 0.4);
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+  }
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pointer-device {
+  cursor: pointer;
+}
+
+.card {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.container-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tamano-m-white {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 0.5em;
+}
+
+.container-tamano-m {
+  display: grid;
+  grid-template-columns: 40% 55%;
+  grid-template-rows: auto;
+  grid-gap: 10px;
+  height: 100%;
+  padding: 5% 0 2% 0;
+
+  .column-one {
+    grid-column: 1 / 2;
+  }
+
+  .column-two {
+    grid-column: 2 / 3;
+    display: flex;
+
+    img {
+      border-radius: 0.8em;
+    }
+  }
+
+  .row-one {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    align-items: end;
+
+    .tamano-m-lbl-price {
+      font-size: 1.2em;
+      font-style: italic;
+      font-weight: 700;
+    }
+  }
+}
+
+.h-15 {
+  height: 15% !important;
+}
+
+.h-10 {
+  height: 10% !important;
+}
+
+.h-95 {
+  height: 95% !important;
+}
+
+.h-70 {
+  height: 70% !important;
+}
+
+.h-45 {
+  height: 45% !important;
+}
+
+.h-20 {
+  height: 19% !important;
+}
+
+.h-5 {
+  height: 5% !important;
+}
+
+.button-cart {
+  position: fixed;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+/* @media (max-width: 440px) {
+    .button-cart {
+        position: fixed;
+        bottom: 22px !important;
+        left: 2px !important;
+        z-index: 1 !important;
+    }
+}
+
+@media (max-width: 1000px) {
+    .button-cart {
+        position: fixed;
+        bottom: 0% !important;
+        left: 2% !important;
+        z-index: 1 !important;
+    }
+
+}
+
+@media (min-width: 1001px) {
+    .button-cart {
+        position: fixed;
+        bottom: 0% !important;
+        left: 2% !important;
+        z-index: 1 !important;
+    }
+
+}
+ */
+.spn-tittle-dark {
+  align-items: center;
+
+  span {
+    padding: 0 20px 3px 20px;
+    font-style: italic;
+    background-color: #495057;
+    color: white;
+    border-radius: 2px 10px;
+  }
+}
+
+.spn-tittle-white {
+  align-items: center;
+  span {
+    padding: 0 8px 3px 8px;
+    font-style: italic;
+    background-color: white;
+    color: black;
+    border-radius: 2px 10px;
+  }
+}

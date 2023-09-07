@@ -1,0 +1,147 @@
+<div class="cargandoCent text-center" *ngIf="cargandoCat">
+  <i class="fak fa-implementos fa-bounce"></i>
+  <div
+    class="fa-beat-fade"
+    style="--fa-beat-fade-opacity: 0.67; --fa-beat-fade-scale: 1.075"
+  >
+    Cargando cat&aacute;logo...
+  </div>
+</div>
+
+<ng-container *ngIf="innerWidth < 427">
+  <app-header-catalogo></app-header-catalogo>
+</ng-container>
+
+<div
+  class="row m-0 mt-2 justify-content-center"
+  [class.mt-mb]="innerWidth < 426"
+  (window:resize)="onResize()"
+  *ngIf="objeto"
+  [ngClass]="{ dash: innerWidth > 426 }"
+>
+  <ng-container *ngIf="innerWidth > 767">
+    <div class="col-md-1 text-center" style="padding-top: 20rem">
+      <button
+        class="btn btn-transparent float-left"
+        style="padding: 0px !important"
+        (click)="cambiarPagina(false)"
+        [disabled]="page == 0"
+      >
+        <!-- <app-icon-svg [name]="'flecha-hacia-la-izquierda'" [size]="40"></app-icon-svg> -->
+        <i class="fas fa-chevron-left" style="font-size: 40px"></i>
+      </button>
+    </div>
+  </ng-container>
+
+  <app-template-portada
+    *ngIf="objeto.id == 'portada' || objeto.id == 'contraportada'"
+    [objeto]="objeto"
+    [innerWidth]="innerWidth"
+    class="col-md-10 p-0"
+  ></app-template-portada>
+  <app-template-un-producto
+    *ngIf="objeto.id == 'unproducto'"
+    [objeto]="objeto"
+    [tipoCatalogo]="tipoCatalogo"
+    [innerWidth]="innerWidth"
+    class="{{ objeto.class }} p-0"
+  >
+  </app-template-un-producto>
+  <app-template-tabla-productos
+    *ngIf="objeto.id == 'tablaproductos'"
+    [objeto]="objeto"
+    [tipoCatalogo]="tipoCatalogo"
+    class="{{ objeto.class }}"
+  >
+  </app-template-tabla-productos>
+  <app-template-productos-vertical
+    *ngIf="objeto.id == 'productosVertical'"
+    [objeto]="objeto"
+    [tipoCatalogo]="tipoCatalogo"
+    [page]="page"
+    class="{{ objeto.class }} p-0"
+    [class.px-0]="innerWidth < 427"
+    [innerWidth]="innerWidth"
+  >
+  </app-template-productos-vertical>
+  <app-template-productos-horizontal
+    *ngIf="objeto.id == 'productosHorizontal'"
+    [objeto]="objeto"
+    [tipoCatalogo]="tipoCatalogo"
+    class="{{ objeto.class }}"
+  ></app-template-productos-horizontal>
+  <app-template-productos-dinamico
+    *ngIf="objeto.id == 'dinamico'"
+    [objeto]="objeto"
+    [tipoCatalogo]="tipoCatalogo"
+    class="{{ objeto.class }}"
+    [class.px-0]="innerWidth < 427"
+    [innerWidth]="innerWidth"
+  ></app-template-productos-dinamico>
+
+  <ng-container *ngIf="innerWidth > 767">
+    <div class="col-md-1 text-center" style="padding-top: 20rem">
+      <button
+        class="btn btn-transparent float-right"
+        style="padding: 0px !important"
+        (click)="cambiarPagina(true)"
+        [disabled]="page == catalogo.length - 1"
+      >
+        <i class="fas fa-chevron-right" style="font-size: 40px"></i>
+      </button>
+    </div>
+  </ng-container>
+</div>
+
+<ng-container *ngIf="innerWidth > 426">
+  <div class="row justify-content-center">
+    <div class="col-5 col-md-2 text-center" style="background: #fff9f9"></div>
+    <div
+      class="col-2 col-md-3 text-center pt-2"
+      style="background: #fff9f9"
+      *ngIf="!cargandoCat"
+    >
+      <span class="align-self-center">{{ page + 1 }}/{{ longitud }}</span>
+    </div>
+    <div class="col-5 col-md-2 text-center" style="background: #fff9f9"></div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="innerWidth < 427">
+  <app-footer-catalogo
+    [page]="page"
+    [longitud]="longitud"
+    (cambiar)="cambiarPagina($event)"
+    [catalogo]="catalogoMovil"
+  ></app-footer-catalogo>
+</ng-container>
+
+<ng-container *ngIf="innerWidth > 426">
+  <div class="icon-chat shadow-lg pointer">
+    <div
+      class="indicator--trigger--click"
+      appDropdown="indicator--opened"
+      #cartDropdown="appDropdown"
+      *ngIf="cart.isDropCartActive$ | async"
+    >
+      <a
+        [href]="root.url('/productos/caro-compra')"
+        class="indicator__button flex-column mt-3"
+        (click)="$event.preventDefault(); cartDropdown.toggle()"
+      >
+        <span class="indicator__area indicator__area-cart">
+          <app-icon name="cart-20" size="40"></app-icon>
+          <span
+            *ngIf="((cart.quantity$ | async) || 0) > 0"
+            class="indicator__value"
+            >{{ cart.quantity$ | async }}</span
+          >
+        </span>
+      </a>
+
+      <div class="indicator__dropdown">
+        <app-header-dropcart></app-header-dropcart>
+      </div>
+    </div>
+  </div>
+</ng-container>

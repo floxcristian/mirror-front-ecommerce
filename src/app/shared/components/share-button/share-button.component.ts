@@ -9,7 +9,7 @@ import { Product } from '../../interfaces/product';
   styleUrls: ['./share-button.component.scss'],
 })
 export class ShareButtonComponent implements OnInit {
-  @Input() producto!: Product;
+  @Input() producto!: any; //Product;
   @Input() catalogo!: boolean;
   url!: string;
   mensaje!: string;

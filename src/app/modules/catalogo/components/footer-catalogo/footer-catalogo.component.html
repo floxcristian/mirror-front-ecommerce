@@ -1,0 +1,20 @@
+<div class="mobile-footer">
+    <div class="container">
+
+        <div class="row ">
+            <div class="col-4 text-center">
+                <button class="btn btn-transparent " (click)="cambiarPagina(false)" [disabled]="page ==0">
+                    <i class="fas fa-chevron-left" style="font-size: 20px;"></i>
+                </button>
+            </div>
+            <div class="col-4 text-center pt-2"><span class="align-self-center">{{page+1}}/{{longitud}}</span>
+            </div>
+            <div class="col-4 text-center">
+                <button class="btn btn-transparent" (click)="cambiarPagina(true)" [disabled]="page+1 == longitud">
+                    <i class="fas fa-chevron-right" style="font-size: 20px;"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>

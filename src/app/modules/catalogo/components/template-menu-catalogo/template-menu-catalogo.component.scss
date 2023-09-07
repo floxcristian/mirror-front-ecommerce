@@ -1,0 +1,32 @@
+.element {
+  background: #005db9;
+  color: #ffff;
+  text-transform: uppercase;
+  padding: 10px 10px;
+  text-align: center;
+  height: 50px;
+  width: 100%;
+  margin: 0.1rem;
+}
+
+.element2 {
+  text-align: center;
+  cursor: pointer;
+  font-size: 1rem;
+  align-items: center;
+}
+.element:hover {
+  -webkit-transform: scale(0.98);
+  -ms-transform: scale(0.98);
+  transform: scale(0.98);
+  transition: 0.1s linear;
+}
+
+.p2 {
+  margin-top: 0.75rem;
+}
+
+.test2 {
+  width: auto !important;
+  background: #005db9 !important;
+}

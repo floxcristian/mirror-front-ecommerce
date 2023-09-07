@@ -1,0 +1,42 @@
+<div class="my-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="row" [class.py-6]="!lstCatalogos">
+                <app-loading-element [text]="'Cargando Catalogos'" *ngIf="!lstCatalogos"></app-loading-element>
+                <ng-container *ngFor="let catalogo of lstCatalogos; let i = index">
+                    <div class="col-md-4" style="margin-bottom: 20px;">
+                        <div class="card p-0">
+                            <div class="row no-gutters">
+                                <div class="col-md-4  p-2 align-self-center box">
+                                    <img [src]="catalogo.portada" [alt]="catalogo.nombre" class="card-img">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body py-3 pl-3">
+                                        <table style="font-size: 13px;">
+                                            <tr>
+                                                <td colspan="2">
+                                                    <h5>{{catalogo.nombre}}</h5>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width: 110px;"><small class="text-muted">FECHA VIGENCIA: </small></td>
+                                                <td>{{catalogo.fechaVig | date:'dd/MM/yyyy'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><small class="text-muted">FECHA EXPIRACI&Oacute;N: </small></td>
+                                                <td>{{catalogo.fechaEx | date:'dd/MM/yyyy'}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="card-footer  py-3 pl-3">
+                                        <button class="btn" (click)="verCatalogo(catalogo)" style="background-color: #009579; color: #ffffff;">ver catalogo</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,142 @@
+.container {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+.precio1 {
+  font-weight: bolder;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  //color: #898987;
+  color: #000000;
+  font-weight: 600 !important;
+  //font-family: Arial;
+}
+
+.precio2 {
+  font-weight: bolder;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  color: #ff0000;
+  font-weight: 600 !important;
+  // font-family: Arial;
+}
+
+@keyframes latidos {
+  from {
+    transform: none;
+  }
+  10% {
+    transform: scale(1.1);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.icon-chat {
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  //animation: latidos 1.3s infinite;
+  background-color: #0063b9;
+}
+
+app-icon {
+  fill: #ffffff !important;
+}
+
+.table {
+  border-right: none;
+  border-left: none;
+  border-bottom: none;
+}
+
+.borderless td,
+.borderless th {
+  border: none !important;
+}
+
+.table > tbody > tr > td,
+.table > tbody > tr > th,
+.table > tfoot > tr > td,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > thead > tr > th {
+  padding: 0 !important;
+}
+
+.div_img_cyber {
+  float: right !important;
+  position: absolute;
+  margin-top: 110px;
+  z-index: 9999;
+}
+
+.div_img_cyber_escala {
+  float: right !important;
+  position: absolute;
+  margin-top: -55px;
+  z-index: 9999;
+}
+
+.altoDescripcion {
+  height: 10.5rem;
+}
+
+.altoDescripcion3Precios {
+  height: 9rem;
+}
+.text-implementos {
+  color: #036ebb !important;
+}
+
+.txtNormal {
+  color: rgb(0, 0, 0);
+  font-size: 17px;
+  border-top: none;
+  vertical-align: middle;
+}
+
+.txtDestacado {
+  color: red;
+  font-weight: 600;
+  font-size: 22px;
+  border-top: none;
+}
+.txtPrecioNormal {
+  color: rgb(0, 0, 0);
+  font-weight: 600;
+  font-size: 22px;
+  border-top: none;
+}
+
+.center {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.product-card__old-price,
+.product-card__save-price {
+  font-weight: 600;
+  font-size: 22px;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.36;
+  letter-spacing: normal;
+  color: #b2b2b2;
+}
+.badge-primary-custom {
+  background-color: #036ebb !important;
+  color: white !important;
+}
+
+.badge-implementos {
+  background-color: #009479 !important;
+  color: white !important;
+}
+
+em {
+  font-size: 1.2rem;
+}

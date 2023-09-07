@@ -1,0 +1,215 @@
+<div class="container-fluid" style="padding: 7px 20px;" *ngIf="!config">
+    <div class="row">
+        <div class="col-12 box" *ngIf="!dataTv">
+            <img class="img-offe" src="\assets\images\catalogo\fondoOffline.png" style="width: 100%;">
+        </div>
+
+        <div *ngFor="let item of dataTv" class="col-{{item.col}}" [class.col-prod]="item.col === 4" style="padding:7px">
+
+            <div class="box video" *ngIf="item.tipo === 'videoTv'" [innerHTML]="videoTag" [class.box-height-2]="item.height ==='height:290px'">
+            </div>
+
+            <ng-container *ngIf="item.tipo === 'producto'">
+                <div class="c-slider mb-29">
+                    <div class="slider" id="slider-{{item.index}}-{{0}}" [ngStyle]="{'width': (item.contenido.length/item.division) * 100 + '%'}">
+                        <ng-container *ngFor="let producto of item.contenido | slice:0:(item.contenido.length/item.division)">
+                            <section>
+                                <div class="comp-prod row">
+                                    <div class="col-4 text-center">
+                                        <!--*ngIf="dataTv[0].col === 4 || dataTv[1].col === 4" -->
+                                        <img class="img-prod" src="https://images.implementos.cl/img/250/{{producto.producto}}-1.jpg" onError="this.src='./assets/img/place-150x150.png'" alt="{{producto.sku}}">
+                                        <div class=" mb-0 sku">
+                                            {{producto?.producto }}
+                                        </div>
+                                    </div>
+                                    <div class="col-8" style="padding: 15px;">
+                                        <ng-container *ngFor="let atributo of producto.atributos">
+                                            <div class="body-producto px-2">
+                                                <div class=" mb-0 {{atributo.nombre}}" *ngIf="atributo.nombre =='nombre'">
+                                                    {{atributo.valor | titlecase | slice:0:42}}
+                                                </div>
+                                                <div class=" mb-0 {{atributo.nombre}}" *ngIf="atributo.nombre=='descripcion'">
+                                                    {{atributo.valor | titlecase | slice:0:76}}
+                                                </div>
+                                                <div class=" mb-0 {{atributo.nombre}}" *ngIf="atributo.nombre=='precio'">
+                                                    {{atributo.valor | currencyFormat }}
+                                                    <em> c/iva </em>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </section>
+                        </ng-container>
+                    </div>
+                </div>
+                <!-- Segundo producto -->
+                <div class="c-slider">
+                    <div class="slider" id="slider-{{item.index}}-{{1}}" [ngStyle]="{'width': (item.contenido.length/item.division) * 100 + '%'}">
+                        <ng-container *ngFor="let producto of item.contenido | slice:(item.contenido.length/item.division):item.divElement2">
+                            <section>
+                                <div class="comp-prod row">
+                                    <div class="col-4 text-center">
+                                        <!--*ngIf="dataTv[0].col === 4 || dataTv[1].col === 4" -->
+                                        <img class="img-prod" src="https://images.implementos.cl/img/250/{{producto.producto}}-1.jpg" onError="this.src='./assets/img/place-150x150.png'" alt="{{producto.sku}}">
+                                        <div class=" mb-0 sku">
+                                            {{producto.producto }}
+                                        </div>
+                                    </div>
+                                    <div class="col-8" style="padding: 15px;">
+                                        <ng-container *ngFor="let atributo of producto.atributos">
+                                            <div class="body-producto px-2">
+                                                <div class=" mb-0 {{atributo.nombre}}" *ngIf="atributo.nombre =='nombre'">
+                                                    {{atributo.valor | titlecase | slice:0:42}}
+                                                </div>
+                                                <div class=" mb-0 {{atributo.nombre}}" *ngIf="atributo.nombre=='descripcion'">
+                                                    {{atributo.valor | titlecase | slice:0:76}}
+                                                </div>
+                                                <div class=" mb-0 {{atributo.nombre}}" *ngIf="atributo.nombre=='precio'">
+                                                    {{atributo.valor | currencyFormat }}
+                                                    <em> c/iva </em>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </section>
+                        </ng-container>
+                    </div>
+                </div>
+                <!-- tercer producto -->
+                <div class="c-slider mt-4" *ngIf="item.division === 3">
+                    <div class="slider" id="slider-{{item.index}}-{{2}}" [ngStyle]="{'width': (item.contenido.length/item.division) * 100 + '%'}">
+                        <ng-container *ngFor="let producto of item.contenido | slice:((item.contenido.length/item.division)*2):item.contenido.length">
+                            <section>
+                                <div class="comp-prod row">
+                                    <div class="col-4 text-center">
+                                        <!--*ngIf="dataTv[0].col === 4 || dataTv[1].col === 4" -->
+                                        <img class="img-prod" src="https://images.implementos.cl/img/250/{{producto.producto}}-1.jpg" onError="this.src='./assets/img/place-150x150.png'" alt="{{producto.sku}}">
+                                        <div class=" mb-0 sku">
+                                            {{producto.producto }}
+                                        </div>
+                                    </div>
+                                    <div class="col-8" style="padding: 15px;">
+                                        <ng-container *ngFor="let atributo of producto.atributos">
+                                            <div class="body-producto px-2">
+                                                <div class=" mb-0 {{atributo.nombre}}" *ngIf="atributo.nombre =='nombre'">
+                                                    {{atributo.valor | titlecase | slice:0:42}}
+                                                </div>
+                                                <div class=" mb-0 {{atributo.nombre}}" *ngIf="atributo.nombre=='descripcion'">
+                                                    {{atributo.valor | titlecase | slice:0:76}}
+                                                </div>
+                                                <div class=" mb-0 {{atributo.nombre}}" *ngIf="atributo.nombre=='precio'">
+                                                    {{atributo.valor | currencyFormat }}
+                                                    <em> c/iva </em>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </section>
+                        </ng-container>
+                    </div>
+                </div>
+                <!-- </ng-container> -->
+            </ng-container>
+
+            <div class="box" *ngIf="item.tipo === 'imagenesTv'" [class.box-height-2]="item.height ==='height:290px'" [class.box-height-12]="item.height ==='height:87px' || item.height ==='height:116px'" [class.box-height-8]="item.height ==='height:174px'">
+                <div class="c-fade">
+                    <ul class="slideShow" [id]="item.id">
+                        <ng-container *ngFor="let brandArr of item.contenido; index as e;">
+                            <li id="fade-{{ brandArr.id}}-{{e}}" [class.displayOne]="idOne[item.id] == true"><img width="100%" [class.box-height-2]="item.height ==='height:290px'" [src]="brandArr.url"></li>
+                        </ng-container>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8" style="padding-right: 0;padding-left: 7px;">
+            <div style="background-color: #009373;height: 110px;color: #fff;line-height: 1.1;font-weight: bold;">
+                <ng-container *ngIf="uf">
+                    <div class="col-4 hora" *ngIf="uf"><span style="font-size: 60%;">UF</span><br> <span style="font-size: 75%;">$</span> {{uf}}</div>
+                    <div class="col-4 hora" *ngIf="dolar"><span style="font-size: 60%;">DOLAR OBS.</span><br> <span style="font-size: 75%;">$</span> {{dolar}}</div>
+                    <div class="col-4 hora" *ngIf="ipc"><span style="font-size: 60%;">IPC</span><br> {{ipc}} <span style="font-size: 75%;">%</span></div>
+                </ng-container>
+            </div>
+        </div>
+        <div class="col-2" style="height: 100px;" *ngIf="tempClima">
+            <div class="cont-reloj" style="background-color: #0063b9;">
+                <div style="max-height: 66px;">
+                    <div style="display: inline-block;width: 120px;">
+                        <img *ngIf="imgClima" src="https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/{{imgClima}}.png" style="max-height: 90px;margin-top: -15px;">
+                    </div>
+                    <div class="hora">
+                        <div>{{tempClima}}&deg;</div>
+                    </div>
+                </div>
+                <div style="text-align: right;">{{descClima | titlecase}}</div>
+            </div>
+        </div>
+        <div class="col-2" style="padding-left: 0;padding-right: 7px;" *ngIf="reloj">
+            <div class="cont-reloj">
+                <div>{{fecha}}</div>
+                <div class="hora" style="display: inherit;">{{reloj}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Configuracion -->
+<div class="container mt-5" *ngIf="config">
+    <div class="row">
+        <div class="col-3">
+            <div class="row">
+                <div class="col-12">
+                    <i class="fa-solid fa-bookmark" style="margin: 0 3px;"></i> Etiqueta:<br>
+                    <input type="text" class="form-control mb-3" id="etiqueta" [value]="etiqueta" placeholder="Identificador unico por pantalla">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <i class="fa-solid fa-shop"></i> Seleccione tienda
+                    <select class="custom-select round-input" id="tienda">
+                        <option value="">SELECCIONE...</option>
+                        <option *ngFor="let tienda of tiendas" [value]="tienda.codigo" [selected]="tiendaSel === tienda.zona?true:false">{{tienda.zona}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <button class="btn btn-primary mt-3" (click)="saveConfig()">Guardar configuraci&oacute;n</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-9">
+            <i class="fa-solid fa-arrows-repeat-1"></i> Seleccione cronograma
+            <div class="row">
+                <div class="col-4 mb-3" style="cursor: pointer;" *ngFor="let item of cronogramas" (click)="selectCrono(item._id)">
+                    <div class="card" [class.seleccion]="idCrono === item._id" [class.noSelec]="idCrono !== item._id">
+                        <div class="card-header" style="color: #3f51b5;">{{item.nombre}}</div>
+                        <div class="card-body" style="font-size: 12px;">
+                            <div class="row">
+                                <div class="col-12">
+                                    <table>
+                                        <tr>
+                                            <td>Fecha Inicio:&nbsp;</td>
+                                            <td>{{item.fechaIni | date:'short'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fecha Fin:&nbsp;</td>
+                                            <td>{{item.fechaFin | date:'short'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Autor:&nbsp;</td>
+                                            <td>{{item.autor}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

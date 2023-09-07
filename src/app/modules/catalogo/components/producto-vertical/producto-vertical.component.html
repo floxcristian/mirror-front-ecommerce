@@ -1,0 +1,117 @@
+<div class="card h-product">
+  <div class="div_img_escala" *ngIf="producto.precioEscala">
+    <picture>
+      <source srcset="assets/images/llevaMasPagaMenos/50x50_cuadrado.webp" type="image/webp" />
+      <source srcset="assets/images/llevaMasPagaMenos/50x50_cuadrado.jpg" type="image/jpg" />
+      <img src="assets/images/llevaMasPagaMenos/50x50_cuadrado.jpg" class="img_escala" loading="lazy" />
+    </picture>
+  </div>
+  <div class="div_img_cyber" *ngIf="producto.cyber == 0">
+    <picture>
+      <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
+      <source srcset="assets/images/cyberCircle.png" type="image/png" />
+      <img src="assets/images/cyberCircle.png" class="img_escala" loading="lazy" />
+    </picture>
+  </div>
+  <div class="text-center">
+    <img
+      class="img-prod"
+      src="https://images.implementos.cl/img/250/{{ producto.sku }}-1.jpg"
+      onError="this.src='./assets/img/place-150x150.png'"
+      alt="{{ producto.sku }}"
+    />
+  </div>
+  <div class="body-producto px-2">
+    <div
+      *ngIf="producto.atributos[5].valor == ''"
+      class="mb-0"
+      style="color: #10753d; font-size: 1rem; font-weight: 700 !important"
+    >
+      <br />
+    </div>
+    <div
+      *ngIf="producto.atributos[5].valor != ''"
+      class="mb-0"
+      style="color: #10753d; font-size: 1rem; font-weight: 700 !important"
+    >
+      {{ producto.atributos[5].valor }}
+    </div>
+    <ng-container *ngFor="let atributo of producto.atributos">
+      <div class="mb-0" *ngIf="atributo.nombre == 'nombre'" style="font-size: 0.9rem; font-family: AvenirLTStd, sans-serif">
+        {{ atributo.valor }}
+      </div>
+
+      <div class="mb-0" *ngIf="atributo.nombre == 'descripcion'" style="font-size: 0.6rem; font-family: AvenirLTStd, sans-serif">
+        {{ atributo.valor }}
+      </div>
+    </ng-container>
+    <div class="mb-0" style="color: #4d4d4d; font-size: 0.7rem">SKU: {{ producto.atributos[0].valor }}</div>
+  </div>
+
+  <div *ngIf="carro" class="positCar">
+    <app-icon
+      name="cart-20"
+      size="20"
+      class="float-left icon-chat shadow-lg pl-small pt-2 pointer"
+      (click)="addToCart(producto)"
+    ></app-icon>
+  </div>
+  <div class="card-footer p-0 px-2 pb-2 precio" *ngIf="producto.precio && precios">
+    <table>
+      <tr *ngIf="producto.rut == '0' && producto.precioEsp == 0">
+        <td class="unitScal">
+          <em class="emScal">UNIDAD</em>
+        </td>
+        <td
+          [class.product-card__new-price-scala]="producto.preciosScal.length > 0"
+          [class.product-card__new-price]="innerWidth > 427"
+          [class.product-card__new-price_mobile]="innerWidth < 427"
+        >
+          {{ producto.precio | currencyFormat }} <em> c/iva </em>
+        </td>
+      </tr>
+      <tr *ngIf="producto.precio != producto.precioEsp">
+        <td class="unitScal">
+          <em class="emScal">UNIDAD</em>
+        </td>
+        <td
+          tooltip="Precio con descuento cliente"
+          class="product-card__new-price text-danger"
+          [class.product-card__new-price-scala]="producto.preciosScal && producto.preciosScal.length > 0"
+        >
+          {{ producto.precioEsp | currencyFormat }} <em> c/iva </em>
+        </td>
+      </tr>
+      <tr *ngIf="producto.precio != producto.precioEsp && producto.preciosScal && producto.preciosScal.length == 0">
+        <td class="unitScal">&nbsp;</td>
+        <td
+          tooltip="Precio normal"
+          class="product-card__old-price"
+          [class.product-card__new-price-scala]="producto.preciosScal.length > 0"
+        >
+          {{ producto.precio | currencyFormat }} <em> c/iva </em>
+        </td>
+      </tr>
+      <tr *ngIf="producto.precio == producto.precioEsp">
+        <td class="unitScal">
+          <em class="emScal">UNIDAD</em>
+        </td>
+        <td class="product-card__new-price" [class.product-card__new-price-scala]="producto.preciosScal.length > 0">
+          {{ producto.precio | currencyFormat }} <em> c/iva </em>
+        </td>
+      </tr>
+      <ng-container *ngIf="producto.preciosScal && producto.preciosScal.length > 0">
+        <tr
+          *ngFor="let scala of producto.preciosScal | slice : -2; let i = index"
+          [class.product-scala-sub]="(producto.preciosScal.length >= 2 && i == 1) || (producto.preciosScal.length <= 1 && i == 0)"
+        >
+          <td class="unitScal">
+            <em class="emScal" *ngIf="scala.hasta !== 'y mas.'">{{ scala.desde }} - {{ scala.hasta }}</em>
+            <em class="emScal" *ngIf="scala.hasta === 'y mas.'">DESDE {{ scala.desde }}</em>
+          </td>
+          <td class="product-card__new-price-scala">{{ scala.precio | currencyFormat }} <em> c/iva </em></td>
+        </tr>
+      </ng-container>
+    </table>
+  </div>
+</div>

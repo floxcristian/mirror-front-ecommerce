@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 // Components
 import { LayoutComponent } from '../layout/layout.component';
 // Routing
-// import { CatalogoRoutingModule } from '../modules/catalogo/catalogo-routing.module';
+import { CatalogoRoutingModule } from '../modules/catalogo/catalogo-routing.module';
 // Pages
 import { PageNotFoundComponent } from '../pages/page-not-found/page-not-found.component';
 import { PageHomeOneComponent } from '../pages/page-home-one/page-home-one.component';
@@ -87,20 +87,10 @@ const routes: Routes = [
         component: PageHomeOneComponent,
       },
       {
-          path: 'productos',
-          loadChildren: () => import('../modules/shop/shop.module').then(m => m.ShopModule)
-      },
-      /*{
-        path: 'mi-cuenta',
+        path: 'productos',
         loadChildren: () =>
-          import('../modules/account/account.module').then(
-            (m) => m.AccountModule
-          ),
-      },*/
-      // {
-      //     path: 'page-home-cms',
-      //     loadChildren: () => import('../modules/page-home-cms/page-home-cms.module').then(m => m.PageHomeCmsModule)
-      // },
+          import('../modules/shop/shop.module').then((m) => m.ShopModule),
+      },
       {
         path: '**',
         component: PageNotFoundComponent,
@@ -138,25 +128,26 @@ const routes: Routes = [
     ],
   },
   {
-      path: 'sitio',
-      component: LayoutComponent,
-      data: {
-          headerLayout: 'classic'
+    path: 'sitio',
+    component: LayoutComponent,
+    data: {
+      headerLayout: 'classic',
+    },
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('../modules/site/site.module').then((m) => m.SiteModule),
       },
-      children: [
-          {
-              path: '',
-              loadChildren: () => import('../modules/site/site.module').then(m => m.SiteModule)
-          }
-      ]
+    ],
   },
   {
-      path: 'tiendas',
-      redirectTo: 'sitio/tiendas'
+    path: 'tiendas',
+    redirectTo: 'sitio/tiendas',
   },
   {
-      path: '**',
-      redirectTo: 'not-found'
+    path: '**',
+    redirectTo: 'not-found',
   },
 
   {
@@ -175,8 +166,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  // imports: [RouterModule.forChild(routes), CatalogoRoutingModule],
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(routes), CatalogoRoutingModule],
   exports: [RouterModule],
 })
 export class AuthRoutingModule {}

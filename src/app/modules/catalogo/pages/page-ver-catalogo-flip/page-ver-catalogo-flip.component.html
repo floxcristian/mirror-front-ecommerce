@@ -1,0 +1,1167 @@
+<div class="cargandoCent text-center" *ngIf="cargandoCat">
+  <i class="fak fa-implementos fa-bounce"></i>
+  <div
+    class="fa-beat-fade"
+    style="--fa-beat-fade-opacity: 0.67; --fa-beat-fade-scale: 1.075"
+  >
+    Cargando cat&aacute;logo...
+  </div>
+</div>
+<div *ngIf="dispositivo === 'smartphone'">
+  <div class="container m-0 p-0">
+    <div class="mobile-header" *ngIf="getTags().length">
+      <app-template-menu-catalogo
+        [tags]="tags"
+        [tipoDispositivo]="dispositivo"
+        [origen]="this"
+        nameOrigen="ver-catalogo-flip"
+      ></app-template-menu-catalogo>
+    </div>
+    <div
+      class="flip-book"
+      id="demoBookExample"
+      [ngClass]="tags.length > 0 ? 'tags' : 'notags'"
+    >
+      <div
+        class="page page-cover page-cover-top p-0"
+        data-density="hard"
+        *ngIf="tipoCatalogo == 'Automatico' && !Generico"
+      >
+        <div class="page-content" data-density="hard">
+          <div class="containerP">
+            <div class="text-white text-overlaym" *ngIf="nombreCliente">
+              <p class="text-center">
+                {{ nombreCliente | slice : 14 }}
+              </p>
+              <p class="text-center">Productos recomendados para ti!!</p>
+            </div>
+            <img
+              class="img-fluid"
+              src="{{ portada }}"
+              onError="this.src='./assets/images/catalogo/place-150x150.png'"
+              alt=""
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="page page-cover page-cover-top p-0"
+        data-density="hard"
+        *ngIf="tipoCatalogo != 'Automatico' || Generico"
+      >
+        <div class="page-content" data-density="hard">
+          <img
+            class="img-fluid"
+            src="{{ portada }}"
+            onError="this.src='./assets/images/catalogo/place-150x150.png'"
+            alt=""
+          />
+        </div>
+      </div>
+      <ng-container
+        *ngFor="let pagina of paginasMobile; let i = index; let ultimo = last"
+      >
+        <div class="page p-0" *ngIf="pagina[0].tipo != 'portada'">
+          <div class="page-content">
+            <div>
+              <div>
+                <div
+                  class="container-fluid p-2 justify-content-between"
+                  style="background-color: #00967f"
+                >
+                  <div class="row justify-content-between">
+                    <div class="col-9 col-sm-9">
+                      <div>
+                        <img
+                          style="margin-top: 5px; width: 75%; height: 75%"
+                          class="img-fluid"
+                          src="/assets/images/catalogo/header-footer/Header-movil_1.SVG"
+                          alt="www.implementos.cl"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-3 col-sm-3" *ngIf="!folio">
+                      <div class="mobile-header__indicators">
+                        <div class="indicator indicator--mobile">
+                          <a
+                            [routerLink]="['/', 'carro-compra']"
+                            class="indicator__button"
+                          >
+                            <span class="indicator__area">
+                              <app-icon name="cart-20" size="30"></app-icon>
+                              <span class="indicator__value">{{
+                                cart.quantity$ | async
+                              }}</span>
+                            </span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style="
+                    color: rgb(255, 255, 255);
+                    background-color: #575756;
+                    padding: 2px;
+                    padding-left: 10px;
+                  "
+                >
+                  <b>{{ pagina[0].titulo }}</b>
+                </div>
+              </div>
+
+              <div class="container">
+                <div class="row pl-3 pr-3">
+                  <div
+                    class="col-6 col-sm-6"
+                    *ngIf="pagina[0] && pagina[0].productos"
+                  >
+                    <app-template-mobile
+                      [plana]="pagina[0]"
+                      [tipo]="tipoCatalogo"
+                      style="z-index: 999"
+                      [iva]="iva"
+                      [folio]="folio"
+                    >
+                    </app-template-mobile>
+                  </div>
+                  <div
+                    class="col-6 col-sm-6"
+                    *ngIf="pagina[1] && pagina[1].productos"
+                  >
+                    <app-template-mobile
+                      [plana]="pagina[1]"
+                      [tipo]="tipoCatalogo"
+                      style="z-index: 999"
+                      [iva]="iva"
+                      [folio]="folio"
+                    >
+                    </app-template-mobile>
+                  </div>
+                  <div
+                    class="col-6 col-sm-6"
+                    *ngIf="pagina[2] && pagina[2].productos"
+                  >
+                    <app-template-mobile
+                      [plana]="pagina[2]"
+                      [tipo]="tipoCatalogo"
+                      style="z-index: 999"
+                      [iva]="iva"
+                      [folio]="folio"
+                    >
+                    </app-template-mobile>
+                  </div>
+                  <div
+                    class="col-6 col-sm-6"
+                    *ngIf="pagina[3] && pagina[3].productos"
+                  >
+                    <app-template-mobile
+                      [plana]="pagina[3]"
+                      [tipo]="tipoCatalogo"
+                      style="z-index: 999"
+                      [iva]="iva"
+                      [folio]="folio"
+                    >
+                    </app-template-mobile>
+                  </div>
+                  <div
+                    class="col-6 col-sm-6"
+                    *ngIf="pagina[4] && pagina[4].productos"
+                  >
+                    <app-template-mobile
+                      [plana]="pagina[4]"
+                      [tipo]="tipoCatalogo"
+                      style="z-index: 999"
+                      [iva]="iva"
+                      [folio]="folio"
+                    >
+                    </app-template-mobile>
+                  </div>
+                  <div
+                    class="col-6 col-sm-6"
+                    *ngIf="pagina[5] && pagina[5].productos"
+                  >
+                    <app-template-mobile
+                      [plana]="pagina[5]"
+                      [tipo]="tipoCatalogo"
+                      style="z-index: 999"
+                      [iva]="iva"
+                      [folio]="folio"
+                    >
+                    </app-template-mobile>
+                  </div>
+                  <div
+                    class="col-6 col-sm-6"
+                    *ngIf="pagina[6] && pagina[6].productos"
+                  >
+                    <app-template-mobile
+                      [plana]="pagina[6]"
+                      [tipo]="tipoCatalogo"
+                      style="z-index: 999"
+                      [iva]="iva"
+                      [folio]="folio"
+                    >
+                    </app-template-mobile>
+                  </div>
+                  <div
+                    class="col-6 col-sm-6"
+                    *ngIf="pagina[7] && pagina[7].productos"
+                  >
+                    <app-template-mobile
+                      [plana]="pagina[7]"
+                      [tipo]="tipoCatalogo"
+                      style="z-index: 999"
+                      [iva]="iva"
+                      [folio]="folio"
+                    >
+                    </app-template-mobile>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="container-fluid"
+                style="background-color: #0070ba; padding: 12px"
+              >
+                <div class="justify-content-between">
+                  <img
+                    class="p-1"
+                    style="width: 18%; height: 18%"
+                    src="/assets/images/catalogo/header-footer/Icono_1.SVG"
+                    alt="www.implementos.cl"
+                  />
+                  <img
+                    class="p-1"
+                    style="width: 30%; height: 30%"
+                    src="/assets/images/catalogo/header-footer/Icono_2.SVG"
+                    alt="www.implementos.cl"
+                  />
+                  <img
+                    class="p-1"
+                    style="width: 20%; height: 20%"
+                    src="/assets/images/catalogo/header-footer/Icono_3.SVG"
+                    alt="www.implementos.cl"
+                  />
+                  <img
+                    class="p-1"
+                    style="width: 30%; height: 30%"
+                    src="/assets/images/catalogo/header-footer/Icono_4.SVG"
+                    alt="www.implementos.cl"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <div class="page page-cover page-cover-bottom">
+        <div class="page-content">
+          <img
+            class="img-fluid"
+            src="{{ contraPortada }}"
+            onError="this.src='./assets/images/catalogo/place-150x150.png'"
+            alt=""
+          />
+        </div>
+      </div>
+    </div>
+    <div class="mobile-footer" *ngIf="!cargandoCat">
+      <div class="container">
+        <div class="row pt-1">
+          <div class="col-4 text-center">
+            <button
+              class="btn"
+              style="padding-top: 1rem !important"
+              (click)="prevPage()"
+            >
+              <i class="fas fa-chevron-left" style="font-size: 20px"></i>
+            </button>
+          </div>
+          <div
+            class="col-4 text-center"
+            style="
+              padding-top: 0.5rem !important;
+              font-size: 20px;
+              font-weight: 700;
+            "
+          >
+            <span>{{ pageCurrent }}</span> de
+            <span class="page-total">{{ pageTotal }}</span>
+          </div>
+          <div class="col-4 text-center">
+            <button
+              class="btn"
+              style="padding-top: 1rem !important"
+              (click)="nextPage()"
+            >
+              <i class="fas fa-chevron-right" style="font-size: 20px"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="dispositivo === 'web'">
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-10" *ngIf="tags.length > 0">
+      <app-template-menu-catalogo
+        [tags]="tags"
+        [tipoDispositivo]="dispositivo"
+        [origen]="this"
+        nameOrigen="ver-catalogo-flip"
+        [tipoCatalogo]="tipoCatalogo"
+      ></app-template-menu-catalogo>
+    </div>
+  </div>
+  <!-- Carro de compras -->
+  <div class="icon-chat shadow-lg pointer" *ngIf="!cargandoCat && !folio">
+    <div
+      class="indicator--trigger--click"
+      appDropdown="indicator--opened"
+      #cartDropdown="appDropdown"
+      *ngIf="cart.isDropCartActive$ | async"
+    >
+      <a
+        [href]="root.url('/productos/caro-compra')"
+        class="indicator__button flex-column mt-3"
+        (click)="$event.preventDefault(); cartDropdown.toggle()"
+      >
+        <span class="indicator__area indicator__area-cart">
+          <app-icon name="cart-20" size="40"></app-icon>
+          <span
+            *ngIf="((cart.quantity$ | async) || 0) > 0"
+            class="indicator__value"
+            >{{ cart.quantity$ | async }}</span
+          >
+        </span>
+      </a>
+      <div class="indicator__dropdown">
+        <app-header-dropcart></app-header-dropcart>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center mt-3">
+    <div class="col-md-1 col-sm-4 pr-1">
+      <div
+        *ngIf="!cargandoCat && tipoCatalogo != 'Automatico'"
+        class="float-left align-middle"
+        style="margin-top: 24rem"
+      >
+        <button
+          class="btn btn-transparent float-left"
+          style="padding: 0px !important"
+          (click)="prevPage()"
+        >
+          <i class="fas fa-chevron-left" style="font-size: 40px"></i>
+        </button>
+      </div>
+      <div
+        *ngIf="!cargandoCat && tipoCatalogo == 'Automatico'"
+        class="float-left align-middle"
+        style="margin-top: 24rem"
+      >
+        <button class="btn btn-transparent float-left" (click)="prevPage()">
+          <i
+            class="fa-sharp fa-light fa-circle-chevron-left fa-2xl"
+            style="font-size: 40px"
+          ></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="col-md-10 col-sm-10">
+      <div class="flip-book" id="demoBookExample" style="margin: 0 auto">
+        <!-- Portada -->
+        <div
+          class="page page-cover page-cover-top"
+          data-density="soft"
+          *ngIf="tipoCatalogo == 'Automatico' && !Generico"
+        >
+          <div class="page-content" data-density="soft">
+            <div class="containerP">
+              <div class="text-white text-overlay" *ngIf="nombreCliente">
+                <p class="text-center">
+                  {{ nombreCliente | slice : 14 }}
+                </p>
+                <p class="text-center">Productos recomendados para ti!!</p>
+              </div>
+              <img
+                class="img-fluid"
+                style="height: 83%; width: 100%"
+                src="{{ portada }}"
+                onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="page page-cover page-cover-top"
+          data-density="soft"
+          *ngIf="tipoCatalogo != 'Automatico' || Generico"
+        >
+          <div class="page-content" data-density="soft">
+            <img
+              class="img-fluid"
+              style="height: 100%"
+              src="{{ portada }}"
+              onError="this.src='./assets/images/catalogo/place-150x150.png'"
+              alt=""
+            />
+          </div>
+        </div>
+        <!-- Page -->
+        <ng-container *ngFor="let pagina of paginas; let i = index">
+          <div class="page" *ngIf="pagina[0].tipo != 'portada'">
+            <div class="page-content">
+              <div *ngIf="i % 2 === 0; else otro">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="headerLeft">
+                      <img
+                        style="height: 40px"
+                        src="./assets/images/catalogo/header-footer/Header-movil_1.SVG"
+                        alt="www.implementos.cl"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  *ngIf="pagina.tituloA && tipoCatalogo != 'Automatico'"
+                  style="
+                    color: black;
+                    font-weight: 700;
+                    font-size: 1rem;
+                    text-align: left;
+                    margin-top: 0.2rem;
+                  "
+                >
+                  <span style="padding-left: 0.5rem">{{ pagina.tituloA }}</span>
+                </div>
+                <div class="tituloAutomatico" style="height: 27px !important">
+                  <span
+                    style="padding-left: 0.5rem"
+                    *ngIf="pagina.tituloA && tipoCatalogo === 'Automatico'"
+                    >{{ pagina.tituloA }}</span
+                  >
+                </div>
+
+                <!-- LISTA DE MARCAS A -->
+                <div
+                  *ngIf="!pagina.tituloA && tipoCatalogo != 'Automatico'"
+                  class="container"
+                >
+                  <div
+                    *ngIf="pagina.marcas"
+                    class="row justify-content-around d-flex lista-marcas"
+                  >
+                    <div class="col">
+                      <img
+                        src="https://images.implementos.cl/marcas/small/{{
+                          pagina.marcas[0] | uppercase
+                        }}.png"
+                        alt="{{ pagina.marcas[0] }}"
+                        style="height: 35px"
+                        onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                      />
+                    </div>
+                    <div class="col">
+                      <img
+                        src="https://images.implementos.cl/marcas/small/{{
+                          pagina.marcas[1] | uppercase
+                        }}.png"
+                        alt="{{ pagina.marcas[1] }}"
+                        style="height: 35px"
+                        onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                      />
+                    </div>
+                    <div class="col">
+                      <img
+                        src="https://images.implementos.cl/marcas/small/{{
+                          pagina.marcas[2] | uppercase
+                        }}.png"
+                        alt="{{ pagina.marcas[2] }}"
+                        style="height: 35px"
+                        onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                      />
+                    </div>
+                    <div class="col">
+                      <img
+                        src="https://images.implementos.cl/marcas/small/{{
+                          pagina.marcas[3] | uppercase
+                        }}.png"
+                        alt="{{ pagina.marcas[3] }}"
+                        style="height: 35px"
+                        onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                      />
+                    </div>
+                    <div class="col">
+                      <img
+                        src="https://images.implementos.cl/marcas/small/{{
+                          pagina.marcas[4] | uppercase
+                        }}.png"
+                        alt="{{ pagina.marcas[4] }}"
+                        style="height: 35px"
+                        onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                      />
+                    </div>
+                    <div class="col">
+                      <img
+                        src="https://images.implementos.cl/marcas/small/{{
+                          pagina.marcas[5] | uppercase
+                        }}.png"
+                        alt="{{ pagina.marcas[5] }}"
+                        style="height: 35px"
+                        onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ng-template #otro>
+                <div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="headerRight">
+                        <img
+                          style="height: 30%"
+                          src="./assets/images/catalogo/header-footer/Header-movil_2.SVG"
+                          alt="www.implementos.cl"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    *ngIf="pagina.tituloB && tipoCatalogo != 'Automatico'"
+                    style="
+                      color: black;
+                      font-weight: 700;
+                      font-size: 1rem;
+                      text-align: left;
+                      margin-top: 0.2rem;
+                    "
+                  >
+                    <span style="padding-left: 0.5rem">{{
+                      pagina.tituloB
+                    }}</span>
+                  </div>
+                  <div class="tituloAutomatico" style="height: 27px !important">
+                    <span
+                      style="padding-left: 0.5rem"
+                      *ngIf="pagina.tituloB && tipoCatalogo === 'Automatico'"
+                      >{{ pagina.tituloB }}</span
+                    >
+                  </div>
+
+                  <!-- LISTA DE MARCAS B -->
+                  <div
+                    *ngIf="!pagina.tituloB && tipoCatalogo != 'Automatico'"
+                    class="container"
+                  >
+                    <div
+                      *ngIf="pagina.marcas"
+                      class="row justify-content-around d-flex lista-marcas"
+                    >
+                      <div class="col">
+                        <img
+                          src="https://images.implementos.cl/marcas/small/{{
+                            pagina.marcas[0] | uppercase
+                          }}.png"
+                          alt="{{ pagina.marcas[0] }}"
+                          style="height: 35px"
+                          onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                        />
+                      </div>
+                      <div class="col">
+                        <img
+                          src="https://images.implementos.cl/marcas/small/{{
+                            pagina.marcas[1] | uppercase
+                          }}.png"
+                          alt="{{ pagina.marcas[1] }}"
+                          style="height: 35px"
+                          onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                        />
+                      </div>
+                      <div class="col">
+                        <img
+                          src="https://images.implementos.cl/marcas/small/{{
+                            pagina.marcas[2] | uppercase
+                          }}.png"
+                          alt="{{ pagina.marcas[2] }}"
+                          style="height: 35px"
+                          onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                        />
+                      </div>
+                      <div class="col">
+                        <img
+                          src="https://images.implementos.cl/marcas/small/{{
+                            pagina.marcas[3] | uppercase
+                          }}.png"
+                          alt="{{ pagina.marcas[3] }}"
+                          style="height: 35px"
+                          onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                        />
+                      </div>
+                      <div class="col">
+                        <img
+                          src="https://images.implementos.cl/marcas/small/{{
+                            pagina.marcas[4] | uppercase
+                          }}.png"
+                          alt="{{ pagina.marcas[4] }}"
+                          style="height: 35px"
+                          onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                        />
+                      </div>
+                      <div class="col">
+                        <img
+                          src="https://images.implementos.cl/marcas/small/{{
+                            pagina.marcas[5] | uppercase
+                          }}.png"
+                          alt="{{ pagina.marcas[5] }}"
+                          style="height: 35px"
+                          onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+              <div class="row">
+                <ng-container *ngFor="let plana of pagina">
+                  <!-- Producto S - size:1  -->
+                  <div *ngIf="plana.size == 1">
+                    <app-template-s
+                      [plana]="plana"
+                      [tipo]="tipoCatalogo"
+                      [iva]="iva"
+                      [folio]="folio"
+                    >
+                    </app-template-s>
+                  </div>
+                  <!-- Producto M - size:2  -->
+                  <div *ngIf="plana.size == 2">
+                    <app-template-m [plana]="plana" [tipo]="tipoCatalogo">
+                    </app-template-m>
+                  </div>
+                  <!-- Producto L - size:3  -->
+                  <div *ngIf="plana.size == 3">
+                    <app-template-l [plana]="plana" [tipo]="tipoCatalogo">
+                    </app-template-l>
+                  </div>
+                  <!-- Producto XL - size:4  -->
+                  <div *ngIf="plana.size == 4">
+                    <app-template-xl [plana]="plana" [tipo]="tipoCatalogo">
+                    </app-template-xl>
+                  </div>
+                </ng-container>
+              </div>
+
+              <div *ngIf="i % 2 === 0; else otroFooter">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div *ngIf="folio">
+                      <img
+                        class="img-fluid"
+                        src="./assets/images/catalogo/header-footer/footer1.jpg"
+                        alt="www.implementos.cl"
+                      />
+                    </div>
+                    <div class="text-left footerLeft" *ngIf="!folio">
+                      <img
+                        class="p-1"
+                        style="height: 90%"
+                        src="./assets/images/catalogo/header-footer/Icono_1.SVG"
+                        alt="www.implementos.cl"
+                      />
+                      <img
+                        class="p-1"
+                        style="height: 90%"
+                        src="./assets/images/catalogo/header-footer/Icono_2.SVG"
+                        alt="www.implementos.cl"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ng-template #otroFooter>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="text-right" *ngIf="folio">
+                      <img
+                        class="img-fluid"
+                        src="./assets/images/catalogo/header-footer/footer1.jpg"
+                        alt="www.implementos.cl"
+                      />
+                    </div>
+                    <div class="footerRight text-right" *ngIf="!folio">
+                      <img
+                        class="p-1"
+                        style="height: 90%"
+                        src="./assets/images/catalogo/header-footer/Icono_3.SVG"
+                        alt="www.implementos.cl"
+                      />
+                      <img
+                        class="p-1"
+                        style="height: 90%"
+                        src="./assets/images/catalogo/header-footer/Icono_4.SVG"
+                        alt="www.implementos.cl"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </ng-container>
+        <!-- ContraPortada -->
+        <div class="page page-cover page-cover-bottom">
+          <div class="page-content">
+            <img
+              class="img-fluid"
+              style="height: 100%"
+              src="{{ contraPortada }}"
+              onError="this.src='./assets/images/catalogo/place-150x150.png'"
+              alt=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-1 col-sm-1 pl-1">
+      <div
+        *ngIf="!cargandoCat && tipoCatalogo != 'Automatico'"
+        class="float-right align-middle"
+        style="margin-top: 24rem"
+      >
+        <button
+          class="btn btn-transparent float-right"
+          style="padding: 0px !important"
+          (click)="nextPage()"
+        >
+          <i class="fas fa-chevron-right" style="font-size: 40px"></i>
+        </button>
+      </div>
+      <div
+        *ngIf="!cargandoCat && tipoCatalogo == 'Automatico'"
+        class="float-right align-middle"
+        style="margin-top: 24rem"
+      >
+        <button
+          class="btn btn-transparent float-right"
+          style="padding-right: 8rem"
+          (click)="nextPage()"
+        >
+          <i
+            class="fa-sharp fa-light fa-circle-chevron-right fa-2xl"
+            style="font-size: 40px"
+          ></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!cargandoCat" class="row">
+    <div class="col-12 text-center mt-2 h6">
+      <span>{{ pageCurrent }}</span> de
+      <span class="page-total">{{ pageTotal }}</span>
+    </div>
+  </div>
+</div>
+<div *ngIf="dispositivo === 'tablet'" class="tablet">
+  <div class="row justify-content-center">
+    <div class="flip-book" id="demoBookExample">
+      <!-- Portada -->
+      <div
+        class="page page-cover page-cover-top"
+        data-density="soft"
+        *ngIf="tipoCatalogo == 'Automatico' && !Generico"
+      >
+        <div class="page-content" data-density="soft">
+          <div class="containerP">
+            <div class="text-white text-overlay" *ngIf="nombreCliente">
+              <p class="text-center">
+                {{ nombreCliente | slice : 14 }}
+              </p>
+              <p class="text-center">Productos recomendados para ti!!</p>
+            </div>
+            <img
+              class="img-fluid"
+              style="height: 83%; width: 100%"
+              src="{{ portada }}"
+              onError="this.src='./assets/images/catalogo/place-150x150.png'"
+              alt=""
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="page page-cover page-cover-top"
+        data-density="soft"
+        *ngIf="tipoCatalogo != 'Automatico' || Generico"
+      >
+        <div class="page-content" data-density="soft">
+          <img
+            class="img-fluid"
+            style="height: 100%"
+            src="{{ portada }}"
+            onError="this.src='./assets/images/catalogo/place-150x150.png'"
+            alt=""
+          />
+        </div>
+      </div>
+      <!-- Page -->
+      <ng-container *ngFor="let pagina of paginas; let i = index">
+        <div class="page" *ngIf="pagina[0].tipo != 'portada'">
+          <div class="page-content">
+            <div>
+              <div
+                class="container-fluid p-2 justify-content-between"
+                style="background-color: #00967f"
+              >
+                <div class="row justify-content-between">
+                  <div class="col-9">
+                    <div>
+                      <img
+                        style="margin-top: 5px; width: 45%; height: 45%"
+                        src="/assets/images/catalogo/header-footer/Header-movil_1.SVG"
+                        alt="www.implementos.cl"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-3" *ngIf="!folio">
+                    <div class="mobile-header__indicators">
+                      <div class="indicator indicator--mobile">
+                        <a
+                          [routerLink]="['/', 'carro-compra']"
+                          class="indicator__button"
+                        >
+                          <span class="indicator__area">
+                            <app-icon name="cart-20" size="30"></app-icon>
+                            <span class="indicator__value">{{
+                              cart.quantity$ | async
+                            }}</span>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="i % 2 === 0; else otro">
+                <div
+                  *ngIf="pagina.tituloA && tipoCatalogo != 'Automatico'"
+                  style="
+                    color: black;
+                    font-weight: 700;
+                    font-size: 1rem;
+                    text-align: left;
+                    margin-top: 0.2rem;
+                  "
+                >
+                  <span style="padding-left: 0.5rem">{{ pagina.tituloA }}</span>
+                </div>
+                <div
+                  *ngIf="pagina.tituloA && tipoCatalogo === 'Automatico'"
+                  class="tituloAutomatico"
+                >
+                  <span style="padding-left: 0.5rem">{{ pagina.tituloA }}</span>
+                </div>
+
+                <!-- LISTA DE MARCAS A -->
+                <div
+                  *ngIf="!pagina.tituloA && tipoCatalogo != 'Automatico'"
+                  class="container"
+                >
+                  <div
+                    *ngIf="pagina.marcas"
+                    class="row justify-content-around d-flex lista-marcas"
+                  >
+                    <div class="col">
+                      <img
+                        src="https://images.implementos.cl/marcas/small/{{
+                          pagina.marcas[0] | uppercase
+                        }}.png"
+                        alt="{{ pagina.marcas[0] }}"
+                        style="height: 35px"
+                        onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                      />
+                    </div>
+                    <div class="col">
+                      <img
+                        src="https://images.implementos.cl/marcas/small/{{
+                          pagina.marcas[1] | uppercase
+                        }}.png"
+                        alt="{{ pagina.marcas[1] }}"
+                        style="height: 35px"
+                        onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                      />
+                    </div>
+                    <div class="col">
+                      <img
+                        src="https://images.implementos.cl/marcas/small/{{
+                          pagina.marcas[2] | uppercase
+                        }}.png"
+                        alt="{{ pagina.marcas[2] }}"
+                        style="height: 35px"
+                        onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                      />
+                    </div>
+                    <div class="col">
+                      <img
+                        src="https://images.implementos.cl/marcas/small/{{
+                          pagina.marcas[3] | uppercase
+                        }}.png"
+                        alt="{{ pagina.marcas[3] }}"
+                        style="height: 35px"
+                        onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                      />
+                    </div>
+                    <div class="col">
+                      <img
+                        src="https://images.implementos.cl/marcas/small/{{
+                          pagina.marcas[4] | uppercase
+                        }}.png"
+                        alt="{{ pagina.marcas[4] }}"
+                        style="height: 35px"
+                        onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                      />
+                    </div>
+                    <div class="col">
+                      <img
+                        src="https://images.implementos.cl/marcas/small/{{
+                          pagina.marcas[5] | uppercase
+                        }}.png"
+                        alt="{{ pagina.marcas[5] }}"
+                        style="height: 35px"
+                        onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ng-template #otro>
+                <div>
+                  <div
+                    *ngIf="pagina.tituloB && tipoCatalogo != 'Automatico'"
+                    style="
+                      color: black;
+                      font-weight: 700;
+                      font-size: 1rem;
+                      text-align: left;
+                      margin-top: 0.2rem;
+                    "
+                  >
+                    <span style="padding-left: 0.5rem">{{
+                      pagina.tituloB
+                    }}</span>
+                  </div>
+                  <div
+                    *ngIf="pagina.tituloB && tipoCatalogo === 'Automatico'"
+                    class="tituloAutomatico"
+                  >
+                    <span style="padding-left: 0.5rem">{{
+                      pagina.tituloB
+                    }}</span>
+                  </div>
+
+                  <!-- LISTA DE MARCAS B -->
+                  <div
+                    *ngIf="!pagina.tituloB && tipoCatalogo != 'Automatico'"
+                    class="container"
+                  >
+                    <div
+                      *ngIf="pagina.marcas"
+                      class="row justify-content-around d-flex lista-marcas"
+                    >
+                      <div class="col">
+                        <img
+                          src="https://images.implementos.cl/marcas/small/{{
+                            pagina.marcas[0] | uppercase
+                          }}.png"
+                          alt="{{ pagina.marcas[0] }}"
+                          style="height: 35px"
+                          onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                        />
+                      </div>
+                      <div class="col">
+                        <img
+                          src="https://images.implementos.cl/marcas/small/{{
+                            pagina.marcas[1] | uppercase
+                          }}.png"
+                          alt="{{ pagina.marcas[1] }}"
+                          style="height: 35px"
+                          onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                        />
+                      </div>
+                      <div class="col">
+                        <img
+                          src="https://images.implementos.cl/marcas/small/{{
+                            pagina.marcas[2] | uppercase
+                          }}.png"
+                          alt="{{ pagina.marcas[2] }}"
+                          style="height: 35px"
+                          onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                        />
+                      </div>
+                      <div class="col">
+                        <img
+                          src="https://images.implementos.cl/marcas/small/{{
+                            pagina.marcas[3] | uppercase
+                          }}.png"
+                          alt="{{ pagina.marcas[3] }}"
+                          style="height: 35px"
+                          onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                        />
+                      </div>
+                      <div class="col">
+                        <img
+                          src="https://images.implementos.cl/marcas/small/{{
+                            pagina.marcas[4] | uppercase
+                          }}.png"
+                          alt="{{ pagina.marcas[4] }}"
+                          style="height: 35px"
+                          onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                        />
+                      </div>
+                      <div class="col">
+                        <img
+                          src="https://images.implementos.cl/marcas/small/{{
+                            pagina.marcas[5] | uppercase
+                          }}.png"
+                          alt="{{ pagina.marcas[5] }}"
+                          style="height: 35px"
+                          onError="this.src='./assets/images/catalogo/place-150x150.png'"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+
+            <ng-container *ngFor="let plana of pagina">
+              <!-- Producto S - size:1  -->
+              <div *ngIf="plana.size == 1">
+                <app-template-s
+                  [plana]="plana"
+                  [tipo]="tipoCatalogo"
+                  [iva]="iva"
+                  [folio]="folio"
+                >
+                </app-template-s>
+              </div>
+              <!-- Producto M - size:2  -->
+              <div *ngIf="plana.size == 2">
+                <app-template-m [plana]="plana" [tipo]="tipoCatalogo">
+                </app-template-m>
+              </div>
+              <!-- Producto L - size:3  -->
+              <div *ngIf="plana.size == 3">
+                <app-template-l [plana]="plana" [tipo]="tipoCatalogo">
+                </app-template-l>
+              </div>
+              <!-- Producto XL - size:4  -->
+              <div *ngIf="plana.size == 4">
+                <app-template-xl [plana]="plana" [tipo]="tipoCatalogo">
+                </app-template-xl>
+              </div>
+            </ng-container>
+
+            <div
+              class="container-fluid"
+              style="background-color: #0070ba; padding: 12px"
+            >
+              <div class="justify-content-between">
+                <img
+                  class="p-1"
+                  style="width: 16%; height: 16%"
+                  src="/assets/images/catalogo/header-footer/Icono_1.SVG"
+                  alt="www.implementos.cl"
+                />
+                <img
+                  class="p-1"
+                  style="width: 28%; height: 28%"
+                  src="/assets/images/catalogo/header-footer/Icono_2.SVG"
+                  alt="www.implementos.cl"
+                />
+                <img
+                  class="p-1"
+                  style="width: 18%; height: 18%"
+                  src="/assets/images/catalogo/header-footer/Icono_3.SVG"
+                  alt="www.implementos.cl"
+                />
+                <img
+                  class="p-1"
+                  style="width: 28%; height: 28%"
+                  src="/assets/images/catalogo/header-footer/Icono_4.SVG"
+                  alt="www.implementos.cl"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <!-- ContraPortada -->
+      <div class="page page-cover page-cover-bottom">
+        <div class="page-content">
+          <img
+            class="img-fluid"
+            style="height: 100%"
+            src="{{ contraPortada }}"
+            onError="this.src='./assets/images/catalogo/place-150x150.png'"
+            alt=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="col-md-12"
+    class="mobile-header"
+    *ngIf="tags.length > 0"
+    style="font-size: 16px"
+  >
+    <app-template-menu-catalogo
+      [tags]="tags"
+      [tipoDispositivo]="dispositivo"
+      [origen]="this"
+      nameOrigen="ver-catalogo-flip"
+    ></app-template-menu-catalogo>
+  </div>
+  <div class="mobile-footer" *ngIf="!cargandoCat">
+    <div class="row">
+      <div class="col-4 text-center">
+        <button
+          class="btn"
+          style="padding-top: 1rem !important"
+          (click)="prevPage()"
+        >
+          <i class="fas fa-chevron-left" style="font-size: 20px"></i>
+        </button>
+      </div>
+      <div
+        class="col-4 text-center"
+        style="
+          padding-top: 0.5rem !important;
+          font-size: 20px;
+          font-weight: 700;
+        "
+      >
+        <span>{{ pageCurrent }}</span> de
+        <span class="page-total">{{ pageTotal }}</span>
+      </div>
+      <div class="col-4 text-center">
+        <button
+          class="btn"
+          style="padding-top: 1rem !important"
+          (click)="nextPage()"
+        >
+          <i class="fas fa-chevron-right" style="font-size: 20px"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

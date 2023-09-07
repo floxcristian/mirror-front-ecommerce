@@ -1,0 +1,504 @@
+<div *ngIf="plana.productos.tipo == 'banner'">
+  <div style="height: 130px">
+    <img
+      class="img-fluid"
+      src="{{plana.productos.url}}"
+      onError="this.src='./assets/img/place-150x150.png'"
+    />
+  </div>
+</div>
+<div
+  *ngIf="plana.productos.tipo == 'producto' "
+  class="container rounded text-dark border bg-mobile"
+  [ngClass]="folio? 'new' : esWeb ? 'esWeb' : 'noWeb'"
+  style="border-color: rgb(214, 214, 214)"
+  [ngStyle]="{ 'font-family': folio ? 'Lato, sans-serif': 'AvenirLTStd, sans-serif' }"
+  (click)="abrirEnlace('https://www.implementos.cl/inicio/productos/ficha/'+plana.productos.atributos[0].valor,folio)"
+>
+  <div class="row p-0 m-0">
+    <!-- IMAGENES -->
+    <div
+      class="col-sm-12 col-12 text-center"
+      style="height: 150px"
+      *ngIf="!folio"
+    >
+      <div
+        *ngIf="plana.productos.precioEscala && plana.productos.cyber === 1 && precios"
+      >
+        <!-- LOGO ESCALA -->
+        <div class="div_img_escala">
+          <img
+            src="assets/images/catalogo/llevaMasPagaMenos/lleva_mas_paga_menos.SVG"
+            loading="lazy"
+          />
+        </div>
+        <!-- LOGO CYBER -->
+        <div class="div_img_cyber">
+          <picture>
+            <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
+            <source srcset="assets/images/cyberCircle.png" type="image/png" />
+            <img
+              src="assets/images/cyberCircle.png"
+              style="margin-top: 70px !important"
+              loading="lazy"
+            />
+          </picture>
+        </div>
+      </div>
+
+      <!-- LOGO ESCALA -->
+      <div
+        class="div_img_escala"
+        *ngIf="plana.productos.precioEscala && plana.productos.cyber == 0 && precios && !folio"
+      >
+        <img
+          src="assets/images/catalogo/llevaMasPagaMenos/lleva_mas_paga_menos.SVG"
+          loading="lazy"
+        />
+      </div>
+
+      <!-- LOGO CYBER -->
+      <div
+        class="div_img_cyber"
+        *ngIf="plana.productos.cyber === 1 && !plana.productos.precioEscala && !folio"
+      >
+        <picture>
+          <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
+          <source srcset="assets/images/cyberCircle.png" type="image/png" />
+          <img src="assets/images/cyberCircle.png" loading="lazy" />
+        </picture>
+      </div>
+
+      <img
+        class="img-fluid"
+        src="https://images.implementos.cl/img/250/{{plana.productos.producto}}-{{img}}.jpg"
+        onError="this.src='./assets/images/catalogo/place-150x150.png'"
+        alt=""
+      />
+    </div>
+
+    <div
+      class="col-sm-12 col-12 text-center p-0"
+      style="height: 130px"
+      *ngIf="folio"
+    >
+      <img
+        class="img-fluid3"
+        src="https://images.implementos.cl/img/250/{{plana.productos.producto}}-{{img}}.jpg"
+        onError="this.src='./assets/images/catalogo/place-150x150.png'"
+        alt=""
+      />
+    </div>
+    <!-- DESCRIPCIÓN -->
+    <div class="col-sm-12 col-12 mt-1 p-1" style="min-height: 130px">
+      <div
+        *ngIf="imagen"
+        class="col-md-1 align-items justify-content-between d-flex"
+      >
+        <img
+          class="img-fluid"
+          style="max-height: 40px"
+          src="https://images.implementos.cl/marcas/small/{{plana.productos.atributos[5].valor | uppercase}}.png"
+          alt="{{plana.productos.atributos[5].valor}}"
+          (error)="existeIMG()"
+        />
+      </div>
+      <div
+        *ngIf="!imagen && plana.productos.atributos[5].valor != '0'"
+        class="marca"
+      >
+        <b>{{ plana.productos.atributos[5].valor }}</b>
+      </div>
+      <div *ngIf="plana.productos.atributos[5].valor == '0'" class="marca">
+        <b>IMPLEMENTOS</b>
+      </div>
+      <div class="nombre">
+        <b
+          >{{ plana.productos.atributos[1].valor | slice:0:30 | capitalizeFirst
+          }}</b
+        >
+      </div>
+      <div class="nombre pt-2" style="font-size: 12px !important" *ngIf="folio">
+        {{ plana.productos.atributos[2].valor | slice:0:50 | capitalizeFirst }}
+      </div>
+      <div class="sku" *ngIf="!folio">
+        SKU {{ plana.productos.atributos[0].valor | uppercase }}
+      </div>
+    </div>
+
+    <!-- PRECIOS ESCALA -->
+    <div
+      *ngIf="precios && !folio"
+      class="col-sm-12 col-12 mt-4 p-1"
+      style="height: 80px; line-height: normal"
+    >
+      <div
+        *ngIf="preciosLista.length === 3 && tipo!='Automatico'"
+        class="col-12 col-sm-12 p-0"
+      >
+        <div *ngIf="precioEspecial" class="col-12 col-sm-12 p-0 unidadNormal">
+          Unidad
+        </div>
+        <div
+          *ngIf="precioEspecial"
+          class="col-12 col-sm-12 p-0 precioNormal pb-1"
+        >
+          {{ preciosLista[0].precio | currencyFormat }} c/iva
+        </div>
+        <div *ngIf="!precioEspecial" class="col-12 col-sm-12 p-0 unidadNormal">
+          Unidad
+        </div>
+        <div
+          *ngIf="!precioEspecial"
+          class="col-12 col-sm-12 p-0 precioNormal pb-1"
+        >
+          {{ preciosLista[0].precio | currencyFormat }} c/iva
+        </div>
+        <div class="col-12 col-sm-12 p-0 unidadNormal">
+          {{ preciosLista[1].desde }} a {{ preciosLista[1].hasta }} UN
+        </div>
+        <div class="col-12 col-sm-12 p-0 precioNormal pb-1">
+          {{ preciosLista[1].precio | currencyFormat }} c/iva
+        </div>
+        <div class="col-12 col-sm-12 p-0 unidadDestacado">
+          {{ preciosLista[2].desde }} {{ preciosLista[2].hasta }} UN
+        </div>
+        <div class="col-12 col-sm-12 p-0 precioDestacado">
+          {{ preciosLista[2].precio | currencyFormat }} c/iva
+        </div>
+      </div>
+      <div
+        *ngIf="preciosLista.length === 3 && tipo=='Automatico'"
+        class="col-12 col-sm-12 p-0"
+      >
+        <div *ngIf="precioEspecial" class="col-12 col-sm-12 p-0 unidadNormal">
+          Unidad
+        </div>
+        <div
+          *ngIf="precioEspecial"
+          class="col-12 col-sm-12 p-0 precioNormal pb-1"
+        >
+          {{ preciosLista[0].precio | currencyFormat }}
+          <em>
+            <span
+              [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+            >
+              {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+            >
+          </em>
+        </div>
+        <div *ngIf="!precioEspecial" class="col-12 col-sm-12 p-0 unidadNormal">
+          Unidad
+        </div>
+        <div
+          *ngIf="!precioEspecial"
+          class="col-12 col-sm-12 p-0 precioNormal pb-1"
+        >
+          {{ preciosLista[0].precio | currencyFormat }}
+          <em>
+            <span
+              [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+            >
+              {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+            >
+          </em>
+        </div>
+        <div class="col-12 col-sm-12 p-0 unidadNormal">
+          {{ preciosLista[1].desde }} a {{ preciosLista[1].hasta }} UN
+        </div>
+        <div class="col-12 col-sm-12 p-0 precioNormal pb-1">
+          {{ preciosLista[1].precio | currencyFormat }}
+          <em>
+            <span
+              [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+            >
+              {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+            >
+          </em>
+        </div>
+        <div class="col-12 col-sm-12 p-0 unidadDestacado">
+          {{ preciosLista[2].desde }} {{ preciosLista[2].hasta }} UN
+        </div>
+        <div class="col-12 col-sm-12 p-0 precioDestacado">
+          {{ preciosLista[2].precio | currencyFormat }}
+          <em>
+            <span
+              [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+            >
+              {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+            >
+          </em>
+        </div>
+      </div>
+
+      <div
+        *ngIf="preciosLista.length === 2 && tipo!='Automatico'"
+        class="col-12 col-sm-12 p-0"
+      >
+        <div *ngIf="precioEspecial" class="col-12 col-sm-12 p-0 unidadNormal">
+          Unidad
+        </div>
+        <div
+          *ngIf="precioEspecial"
+          class="col-12 col-sm-12 p-0 precioNormal pb-1"
+        >
+          {{ preciosLista[0].precio | currencyFormat }} c/iva
+        </div>
+        <div *ngIf="!precioEspecial" class="col-12 col-sm-12 p-0 unidadNormal">
+          Unidad
+        </div>
+        <div
+          *ngIf="!precioEspecial"
+          class="col-12 col-sm-12 p-0 precioNormal pb-1"
+        >
+          {{ preciosLista[0].precio | currencyFormat }} c/iva
+        </div>
+        <div class="col-12 col-sm-12 p-0 unidadDestacado">
+          {{ preciosLista[1].desde }} {{ preciosLista[1].hasta }} UN
+        </div>
+        <div class="col-12 col-sm-12 p-0 precioDestacado">
+          {{ preciosLista[1].precio | currencyFormat }} c/iva
+        </div>
+      </div>
+      <div
+        *ngIf="preciosLista.length === 2 && tipo=='Automatico'"
+        class="col-12 col-sm-12 p-0"
+      >
+        <div *ngIf="precioEspecial" class="col-12 col-sm-12 p-0 unidadNormal">
+          Unidad
+        </div>
+        <div
+          *ngIf="precioEspecial"
+          class="col-12 col-sm-12 p-0 precioNormal pb-1"
+        >
+          {{ preciosLista[0].precio | currencyFormat }}
+          <em>
+            <span
+              [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+            >
+              {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+            >
+          </em>
+        </div>
+        <div *ngIf="!precioEspecial" class="col-12 col-sm-12 p-0 unidadNormal">
+          Unidad
+        </div>
+        <div
+          *ngIf="!precioEspecial"
+          class="col-12 col-sm-12 p-0 precioNormal pb-1"
+        >
+          {{ preciosLista[0].precio | currencyFormat }}
+          <em>
+            <span
+              [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+            >
+              {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+            >
+          </em>
+        </div>
+        <div class="col-12 col-sm-12 p-0 unidadDestacado">
+          {{ preciosLista[1].desde }} {{ preciosLista[1].hasta }} UN
+        </div>
+        <div class="col-12 col-sm-12 p-0 precioDestacado">
+          {{ preciosLista[1].precio | currencyFormat }} c/iva
+        </div>
+      </div>
+
+      <div *ngIf="preciosLista.length === 1" class="col-12 col-sm-12 p-0">
+        <div *ngIf="tipo!='Automatico'">
+          <div
+            *ngIf="precioEspecial"
+            class="col-12 col-sm-12 p-0 unidadDestacado"
+          >
+            Unidad
+          </div>
+          <div
+            *ngIf="precioEspecial"
+            class="col-12 col-sm-12 p-0 precioDestacado"
+          >
+            {{ preciosLista[0].precio | currencyFormat }} c/iva
+          </div>
+        </div>
+        <div *ngIf="tipo==='Automatico' && !folio">
+          <div
+            *ngIf="precioEspecial"
+            class="col-12 col-sm-12 p-0 precioDestacado product-card__old-price"
+          >
+            {{ this.plana.productos.precio|currencyFormat}}
+            <em>
+              <span>
+                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+              >
+            </em>
+          </div>
+          <div
+            *ngIf="precioEspecial"
+            class="col-12 col-sm-12 p-0 unidadDestacado"
+          >
+            Unidad
+          </div>
+          <div
+            *ngIf="precioEspecial"
+            class="col-12 col-sm-12 p-0 precioDestacado"
+          >
+            {{ preciosLista[0].precio | currencyFormat }}
+            <em>
+              <span
+                [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+              >
+                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+              >
+            </em>
+          </div>
+        </div>
+        <div *ngIf="tipo==='Automatico' && !folio">
+          <div
+            *ngIf="!precioEspecial"
+            class="col-12 col-sm-12 p-0 unidadNormalB"
+          >
+            Unidad
+          </div>
+          <div
+            *ngIf="!precioEspecial"
+            class="col-12 col-sm-12 p-0 precioNormalB"
+          >
+            {{ preciosLista[0].precio | currencyFormat }}
+            {{plana.productos.cantidad}}
+            <em>
+              <span
+                [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+              >
+                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+              >
+            </em>
+          </div>
+        </div>
+        <div *ngIf="tipo==='Automatico' && folio">
+          <div
+            *ngIf="precioEspecial"
+            class="col-12 col-sm-12 p-0 precioDestacado product-card__old-price"
+          >
+            {{ this.plana.productos.precio|currencyFormat}}
+            <em>
+              <span>
+                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+              >
+            </em>
+          </div>
+          <div
+            *ngIf="precioEspecial"
+            class="col-12 col-sm-12 p-0 unidadDestacado"
+          >
+            Precio
+          </div>
+          <div
+            *ngIf="precioEspecial"
+            class="col-12 col-sm-12 p-0 precioDestacado"
+          >
+            {{ preciosLista[0].precio | currencyFormat }}
+            <em>
+              <span
+                [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+              >
+                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+              >
+            </em>
+          </div>
+          <div *ngIf="plana.productos.cantidad" colspan="2">
+            <span style="font-size: xx-small">
+              *precio sujeto a la cantidad minima de
+              {{plana.productos.cantidad}}</span
+            >
+          </div>
+        </div>
+        <div *ngIf="tipo!='Automatico'">
+          <div
+            *ngIf="!precioEspecial"
+            class="col-12 col-sm-12 p-0 unidadNormalB"
+          >
+            Unidad
+          </div>
+          <div
+            *ngIf="!precioEspecial"
+            class="col-12 col-sm-12 p-0 precioNormalB"
+          >
+            {{ preciosLista[0].precio | currencyFormat }} c/iva
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="folio" class="col-sm-12">
+      <div class="col-sm-12 p-0">
+        <div *ngIf="tipo==='Automatico' && folio">
+          <div class="col-sm-12 p-0 precioDestacado">
+            {{ plana.productos.precioEsp | currencyFormat }}
+            <em>
+              <span
+                [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+              >
+                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+              >
+            </em>
+          </div>
+          <div
+            *ngIf="plana.productos.precio > plana.productos.precioEsp"
+            class="col-sm-12 p-0 precioDestacado product-card__old-price"
+          >
+            {{ plana.productos.precio|currencyFormat}}
+            <em>
+              <span>
+                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+              >
+            </em>
+          </div>
+
+          <div *ngIf="plana.productos.cantidad" colspan="2">
+            <span style="font-size: xx-small">
+              *precio sujeto a la cantidad minima de
+              {{plana.productos.cantidad}}</span
+            >
+          </div>
+        </div>
+        <div *ngIf="tipo!='Automatico'">
+          <div
+            *ngIf="!precioEspecial"
+            class="col-12 col-sm-12 p-0 unidadNormalB"
+          >
+            Unidad
+          </div>
+          <div
+            *ngIf="!precioEspecial"
+            class="col-12 col-sm-12 p-0 precioNormalB"
+          >
+            {{ preciosLista[0].precio | currencyFormat }} c/iva
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARTIR Y CARRO -->
+    <div
+      class="col-sm-12 col-12"
+      [ngClass]="esWeb ? 'conMT' : 'sinMT'"
+      *ngIf="!folio"
+    >
+      <div class="row justify-content-around">
+        <app-share-button
+          [producto]="plana.productos"
+          [catalogo]="true"
+          style="font-size: 24px; margin-top: 10px"
+        ></app-share-button>
+
+        <app-icon
+          *ngIf="carro"
+          name="cart-20"
+          size="22"
+          class="float-left icon-chat pl-3 pt-3 pointer"
+          (click)="addToCart(plana.productos)"
+        >
+        </app-icon>
+      </div>
+    </div>
+  </div>
+</div>

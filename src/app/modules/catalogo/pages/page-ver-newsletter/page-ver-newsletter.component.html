@@ -1,0 +1,253 @@
+<div
+  *ngIf="data"
+  [ngStyle]="dispositivo === 'smartphone' ? { 'padding-top': '17%' } : {}"
+>
+  <div *ngIf="dispositivo === 'smartphone'">
+    <div class="container-menu w-100 h-100 row m-0 p-0" style="z-index: 6">
+      <div
+        style="
+          z-index: 6;
+          display: flex;
+          overflow: hidden;
+          position: absolute;
+          background-color: red;
+          width: 100%;
+          height: 35%;
+          opacity: 0%;
+          pointer-events: inherit;
+          margin-top: 10rem;
+        "
+      ></div>
+      <div class="flip-book" id="demoBookExample" style="overflow: hidden">
+        <div class="page page-cover page-cover-top p-0" data-density="hard">
+          <div
+            class="page-content img-menu"
+            [ngStyle]="{ 'background-image': 'url(\'' + portada + '\')' }"
+          ></div>
+        </div>
+
+        <ng-container
+          *ngFor="let item of data.paginas; let i = index; let ultimo = last"
+        >
+          <div class="page p-0" *ngIf="item.link">
+            <a
+              class="page-content img-menu"
+              [ngStyle]="{
+                'background-image': 'url(\'' + item.imagen + '\')',
+                cursor: item.link !== '' ? 'pointer' : 'auto'
+              }"
+              (click)="abrirEnlace(item.link)"
+            ></a>
+          </div>
+          <div class="page p-0" *ngIf="!item.link">
+            <div
+              class="page-content img-menu"
+              [ngStyle]="{
+                'background-image': 'url(\'' + item.imagen + '\')',
+                cursor: item.link !== '' ? 'pointer' : 'auto'
+              }"
+            ></div>
+          </div>
+        </ng-container>
+
+        <div class="page page-cover page-cover-bottom" data-density="hard">
+          <div
+            class="page-content img-menu"
+            [ngStyle]="{ 'background-image': 'url(\'' + contraportada + '\')' }"
+          ></div>
+        </div>
+      </div>
+
+      <div class="mobile-footer" style="z-index: 8">
+        <div class="container">
+          <div class="row pt-1">
+            <div class="col-2 text-center">
+              <button
+                class="btn"
+                style="padding-top: 1rem !important"
+                (click)="prevPage()"
+              >
+                <i
+                  class="fa-sharp fa-light fa-circle-chevron-left fa-xl"
+                  style="font-size: 20px"
+                ></i>
+              </button>
+            </div>
+            <div
+              class="col-8 text-center"
+              style="
+                padding-top: 0.5rem !important;
+                font-size: 20px;
+                font-weight: 700;
+              "
+            >
+              <span>{{ pageCurrent }}</span> de
+              <span class="page-total">{{ data.paginas.length + 2 }}</span>
+            </div>
+            <div class="col-2 text-center">
+              <button
+                class="btn"
+                style="padding-top: 1rem !important"
+                (click)="flipNext()"
+              >
+                <i
+                  class="fa-sharp fa-light fa-circle-chevron-right fa-xl"
+                  style="font-size: 20px"
+                ></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="dispositivo === 'web'">
+    <!-- Carro de compras -->
+
+    <div class="container-menu w-100 h-100 row m-0 p-0 justify-content-center">
+      <div class="col-md-2 col-sm-4 pr-1">
+        <div class="float-right" style="margin-top: 2rem">
+          <button class="btn btn-transparent float-left" (click)="prevPage()">
+            <i
+              class="fa-sharp fa-light fa-circle-chevron-left fa-2xl"
+              style="font-size: 30px"
+            ></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-9 col-sm-9 mx-auto">
+        <div class="flip-book" id="demoBookExample" style="overflow: hidden">
+          <!-- Portada -->
+          <div class="page page-cover page-cover-top" data-density="hard">
+            <div
+              class="page-content img-menu"
+              [ngStyle]="{ 'background-image': 'url(\'' + portada + '\')' }"
+            ></div>
+          </div>
+
+          <!-- Page -->
+
+          <div class="page" *ngFor="let item of data.paginas">
+            <div
+              class="page-content img-menu"
+              (click)="abrirEnlace(item.link)"
+              [ngStyle]="{
+                'background-image': 'url(\'' + item.imagen + '\')',
+                cursor: item.link !== '' ? 'pointer' : 'auto'
+              }"
+            ></div>
+          </div>
+          <!-- ContraPortada -->
+          <div class="page page-cover page-cover-bottom" data-density="hard">
+            <div
+              class="page-content img-menu"
+              [ngStyle]="{
+                'background-image': 'url(\'' + contraportada + '\')'
+              }"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-1 col-sm-1 pl-1">
+        <div class="float-left" style="margin-top: 2rem">
+          <button
+            class="btn btn-transparent float-right"
+            style="padding-right: 8rem"
+            (click)="nextPage()"
+          >
+            <i
+              class="fa-sharp fa-light fa-circle-chevron-right fa-2xl"
+              style="font-size: 30px"
+            ></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!cargandoCat" class="row">
+      <div class="col-12 text-center mt-2 h6">
+        <span>{{ pageCurrent }}</span> de
+        <span class="page-total">{{ data.paginas.length }}</span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="dispositivo === 'tablet' || dispositivo === 'vertical'">
+    <div class="container-menu w-100 h-100 row m-0 p-0">
+      <div class="flip-book" id="demoBookExample" style="overflow: hidden">
+        <!-- Portada -->
+        <div class="page page-cover page-cover-top p-0" data-density="soft">
+          <div
+            class="page-content img-menu"
+            [ngStyle]="{ 'background-image': 'url(\'' + portada + '\')' }"
+          ></div>
+        </div>
+
+        <!-- Page -->
+        <ng-container *ngFor="let item of data.paginas; let i = index">
+          <div class="page p-0" *ngIf="item.link">
+            <a
+              class="page-content img-menu"
+              [ngStyle]="{
+                'background-image': 'url(\'' + item.imagen + '\')',
+                cursor: item.link !== '' ? 'pointer' : 'auto'
+              }"
+              (click)="abrirEnlace(item.link)"
+            ></a>
+          </div>
+          <div class="page p-0" *ngIf="!item.link">
+            <div
+              class="page-content img-menu"
+              [ngStyle]="{
+                'background-image': 'url(\'' + item.imagen + '\')',
+                cursor: item.link !== '' ? 'pointer' : 'auto'
+              }"
+            ></div>
+          </div>
+        </ng-container>
+        <!-- ContraPortada -->
+        <div class="page page-cover page-cover-bottom" data-density="hard">
+          <div
+            class="page-content img-menu"
+            [ngStyle]="{ 'background-image': 'url(\'' + contraportada + '\')' }"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-footer" *ngIf="!cargandoCat">
+      <div class="row">
+        <div class="col-4 text-center">
+          <button
+            class="btn"
+            style="padding-top: 1rem !important"
+            (click)="prevPage()"
+          >
+            <i class="fas fa-chevron-left" style="font-size: 20px"></i>
+          </button>
+        </div>
+        <div
+          class="col-4 text-center"
+          style="
+            padding-top: 0.5rem !important;
+            font-size: 20px;
+            font-weight: 700;
+          "
+        >
+          <span>{{ pageCurrent }}</span> de
+          <span class="page-total">{{ data.paginas.length }}</span>
+        </div>
+        <div class="col-4 text-center">
+          <button
+            class="btn"
+            style="padding-top: 1rem !important"
+            (click)="nextPage()"
+          >
+            <i class="fas fa-chevron-right" style="font-size: 20px"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

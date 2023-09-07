@@ -1,0 +1,222 @@
+
+.body-producto{
+    flex-grow: 1;
+    font-weight: 700;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.25;
+    letter-spacing: normal;
+    text-align: left;
+    color: #000;
+}
+.marca{
+   color: #0063b9!important;
+   font-size: 0.675rem !important;
+}
+.sku{
+    color: #5c6063!important;
+    font-size: 0.675rem !important;
+}
+.nombre{
+    text-transform: capitalize !important;
+    font-size: 15px !important;
+}
+.descripcion{
+    text-transform: lowercase !important;
+    font-weight: 100 !important;
+    font-size: .8rem;
+    text-align: justify;
+}
+
+.btn-transparent:hover{
+    background: #f3f3f3;
+    cursor: pointer;
+}
+
+.bg-primary{
+    background-color: #0063b9!important
+ }
+
+.card{
+    padding: 0px !important;
+}
+
+.img-prod{
+    width: 50%;
+    height: auto;
+}
+
+.card.h-product{
+    height: 18.8810625rem;
+}
+
+.shadow-lg {
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
+}
+
+@keyframes latidos {
+    from {
+        transform: none;
+    }
+    10% {
+        transform: scale(1.1);
+    }
+    to {
+        transform: none;
+    }
+}
+
+app-icon{
+    fill: #ffffff !important;
+}
+.icon-chat {
+   
+    width: 33px;
+    height: 33px;
+  
+    border-radius: 50px;
+    animation: latidos 1.3s infinite;
+    background-color: #0063b9;
+}
+.img-banner{
+    height: 18rem;
+}
+.img-background{
+    /*background-image: url(../../../../../assets/images/bg_camion.jpg);*/
+    background-size: cover;
+    background-attachment: unset;
+    background-position: center;
+} 
+
+
+.product-card__new-price {
+    font-size: 1.8rem;
+    font-weight: 700;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 0.95;
+    letter-spacing: normal;
+    text-align: right;
+    color: #000000;
+    width: 100%;
+}
+
+
+.product-card__old-price,
+.product-card__save-price {
+    font-size: 1.3rem;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.36;
+    letter-spacing: normal;
+    text-align: left;
+    color: #b2b2b2;
+}
+
+
+.product-card__old-price {
+    float: right;
+    color: #b3b3b3;
+    font-weight: 400;
+    font-size: 0.8125rem;
+    text-decoration: line-through;
+}
+
+.pl-small{
+    padding-left: .4rem;
+}
+
+
+/* responsive template vertical */
+@import "../../../../../scss/variables";
+@import "../../../../../scss/functions";
+// MOVIL
+@media (min-width: breakpoint(xs-start)) and (max-width: breakpoint(xs-end)) {
+    .img-banner{
+        height: 16rem;
+    }
+    .card.h-product{
+        height: 16.8810625rem;
+    }
+}
+
+@media (min-width: breakpoint(lg-start)) and (max-width: breakpoint(xl-end)) {
+    
+    
+}
+
+@media (min-width: breakpoint(xxl-start)) and (max-width: breakpoint(xxl-end)) {
+    .img-banner{
+        height: 18rem;
+    }
+
+    .img-prod{
+        width: 50%;
+        height: auto;
+    }
+    .card.h-product{
+        height: 18.8810625rem;
+    }
+}
+// FULL HD
+@media (min-width: breakpoint(full-end)) {
+    .img-prod{
+        width: 60%;
+        height: auto;
+    }
+    .card.h-product{
+        height: 22rem;
+    }
+}
+
+
+
+.px-3{
+    padding-left:1.1rem!important;
+    padding-right: 1.1rem!important;
+}
+.card {
+    padding: 0px !important;
+}
+.mb-img {
+    margin-bottom: 2.5rem;
+}
+.img-banner {
+    height: 18rem;
+}
+.img-background {
+/*    background-image: url(../../../../../assets/images/bg_camion.jpg);*/
+    background-size: cover;
+    background-attachment: unset;
+    background-position: center;
+}
+/* responsive template vertical */
+@import "../../../../../scss/variables";
+@import "../../../../../scss/functions";
+@media (min-width: breakpoint(xs-start)) and (max-width: breakpoint(xs-end)) {
+    .img-banner {
+        height: 12rem;
+    }   
+    .mb-img {
+        margin-bottom: 1rem;
+    }
+}
+
+
+@media (min-width: breakpoint(xxl-start)) and (max-width: breakpoint(xxl-end)) {
+    .img-banner {
+        height: 18rem;
+    }
+}
+// FULL HD
+@media (min-width: breakpoint(full-end)) {
+    .img-banner {
+        height: 20rem;
+    }
+    .mb-img {
+        margin-bottom: 3.5rem;
+    }
+}
+
+/* end responsive template vertical */

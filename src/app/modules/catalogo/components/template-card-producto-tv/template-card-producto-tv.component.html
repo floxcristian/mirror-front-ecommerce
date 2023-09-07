@@ -1,0 +1,42 @@
+<ng-container *ngFor="let prod of productos; index as pr">
+  <owl-carousel-o [options]="customOptions">
+    <ng-container *ngFor="let slide of prod.arr; index as i">
+      <ng-template carouselSlide [id]="i.toString()">
+        <div class="card prod-card" [class.mb-0]="productos.length === pr + 1">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-4">
+                <img
+                  class="prod-img"
+                  src="https://images.implementos.cl/img/250/{{
+                    slide.producto
+                  }}-1.jpg "
+                />
+                <div class="foot-sku text-center">{{ slide.producto }}</div>
+              </div>
+              <div class="col-8" style="padding: 0">
+                <div class="prod-title">
+                  {{ slide.nombre | slice : 0 : 42 }}
+                </div>
+                <ng-container *ngFor="let atrib of slide.atributos">
+                  <div
+                    class="prod-descrip"
+                    *ngIf="atrib.nombre === 'descripcion'"
+                  >
+                    {{ atrib.valor | slice : 0 : 70 }}
+                  </div>
+                  <div class="prod-precio" *ngIf="atrib.nombre === 'precio'">
+                    {{ atrib.valor | currencyFormat }}
+                    <em> c/iva </em>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </owl-carousel-o>
+</ng-container>
+
+<div class="relleno" *ngIf="colsRe === 3"></div>

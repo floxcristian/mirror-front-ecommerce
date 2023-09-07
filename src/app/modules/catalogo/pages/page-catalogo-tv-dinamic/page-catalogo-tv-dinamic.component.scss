@@ -1,0 +1,25 @@
+.container-set {
+    padding: 7px 22px;
+    min-height: 1080px;
+}
+
+.timing {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    margin-left: 5px;
+    font-size: 10px;
+}
+
+.pd7 {
+    padding: 7px !important;
+}
+
+.seleccion {
+    border: solid 4px #03a9f4;
+}
+
+.noSelec {
+    border: solid 4px #fff;
+}

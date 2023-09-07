@@ -1,0 +1,121 @@
+.container {
+  padding-left: 1rem !important;
+  padding-right: 1.2rem !important;
+}
+
+.precio1 {
+  font-weight: bolder;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  //color: #898987;
+  color: #000000;
+  font-weight: 600 !important;
+  //font-family: Arial;
+}
+
+.precio2 {
+  font-weight: bolder;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  color: #ff0000;
+  font-weight: 600 !important;
+  // font-family: Arial;
+}
+
+.div_img_escala {
+  position: absolute;
+  display: flex;
+  right: 0;
+  //flex-direction: column;
+  //align-items: flex-start;
+  z-index: 1;
+  //margin-top: 10px;
+  margin-right: 0.5rem;
+  //animation: 1.3s infinite latidos;
+  box-shadow: 0 2px 10px -1px;
+  width: 50px;
+  height: 50px;
+}
+
+@keyframes latidos {
+  from {
+    transform: none;
+  }
+  10% {
+    transform: scale(1.1);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.icon-chat {
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  //animation: latidos 1.3s infinite;
+  background-color: #0063b9;
+}
+
+app-icon {
+  fill: #ffffff !important;
+}
+
+.table {
+  border-right: none;
+  border-left: none;
+  border-bottom: none;
+}
+
+.borderless td,
+.borderless th {
+  border: none !important;
+}
+
+.table > tbody > tr > td,
+.table > tbody > tr > th,
+.table > tfoot > tr > td,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > thead > tr > th {
+  padding: 0 !important;
+}
+
+.div_img_cyber img {
+  width: 50px;
+  position: absolute;
+  margin-top: -40px;
+  margin-left: 110px;
+  z-index: 999;
+
+  // position: absolute;
+  // display: flex;
+  // right: 0;
+  // z-index: 1;
+  // margin-right: 0.5rem;
+
+  //animation: 1.3s infinite latidos;
+  //box-shadow: 0 2px 10px -1px;
+}
+
+.txtNormal {
+  color: rgb(0, 0, 0);
+  font-size: 19px;
+  border-top: none;
+  vertical-align: middle;
+}
+
+.txtDestacado {
+  color: red;
+  font-weight: 600;
+  font-size: 24px;
+  border-top: none;
+}
+.txtPrecioNormal {
+  color: rgb(0, 0, 0);
+  font-weight: 600;
+  font-size: 24px;
+  border-top: none;
+}

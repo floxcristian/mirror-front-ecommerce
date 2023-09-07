@@ -1,0 +1,89 @@
+<div class="container-fluid backGr">
+    <div class="p-5 container-fluid" *ngIf="!config">
+        <div class="d-flex justify-content-between">
+            <div class="leyendaStat">
+                <div class="status" style="background-color: #00bcd4;"><i class="fa-solid fa-shop"></i></div> Retiro Cliente
+                <div class="status" style="background-color: #e91e63;"><i class="fa-solid fa-exclamation"></i></div> Entrega Inmediata
+            </div>
+            <div class="leyendaStat" *ngIf="tiendaTv === 'SAN BRNRDO'">
+                <div class="status" style="background-color: #ff9800;"><i class="fa-solid fa-r"></i></div> Solicitud Recibida
+                <div class="status" style="background-color: #00bcd4;"><i class="fa-solid fa-p"></i></div> Pedido en Preparación
+                <div class="status" style="background-color: #8bc34a;"><i class="fa-solid fa-g"></i></div> Pedido Preparado
+            </div>
+        </div>
+        <div class="difuminado" id="difuminado">
+            <div class="row" *ngIf="ovs">
+                <div class="col-12 p-5" style="padding-top:1rem !important">
+                    <div class="row">
+                        <div class="col-12 p-4 pt-3 pb-3 contenedor back" *ngFor="let item of ovs | slice:0:10">
+                            <table>
+                                <tr>
+                                    <td class="text-ov" style="width: 13%;">{{item.ordenSeguimiento}}</td>
+                                    <td class="text-timer text-left">{{item.nombreCliente | slice:0:40}}</td>
+                                    <td class="text-timer text-center" style="width: 10%;">
+                                        <div class="canal">{{item.canal}}</div>
+                                    </td>
+                                    <td class="text-timer text-center" style="width: 10%;" *ngIf="!item.statFecha">{{item.diff}}</td>
+                                    <td class="text-center" style="width: 10%;" *ngIf="item.statFecha">m&aacute;s de 1 d&iacute;a</td>
+                                    <td class="text-center" style="width: 6%;" *ngIf="tiendaTv === 'SAN BRNRDO'">
+                                        <div class="status" *ngIf="item.ultimoCodigoEstado === 4" style="background-color: #ff9800;"><i class="fa-solid fa-r"></i></div>
+                                        <div class="status" *ngIf="item.ultimoCodigoEstado === 5" style="background-color: #00bcd4;"><i class="fa-solid fa-p"></i></div>
+                                        <div class="status" *ngIf="item.ultimoCodigoEstado === 10" style="background-color: #8bc34a;"><i class="fa-solid fa-g"></i></div>
+                                    </td>
+                                    <td class="text-center" style="width: 6%;">
+                                        <div class="status" *ngIf="item.modoEntrega === 'VEN- RPTDA'" style="background-color: #00bcd4;"><i class="fa-solid fa-shop"></i></div>
+                                        <div class="status" *ngIf="item.modoEntrega === 'VEN- RTCLI'" style="background-color: #e91e63;"><i class="fa-solid fa-exclamation"></i></div>
+                                    </td>
+                                    <td class="text-center" style="width: 6%;"><i class="fa-solid fa-circle {{item.stat}}" [ngClass]="item.beat && item.stat === 'red'? 'beat' : ''"></i></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="ovs">
+                <div class="col-12 p-2" *ngIf="ovs.length == 0">
+                    <div class="contenedor text-center" [ngStyle]="{'height':heightScreen + 'px','padding-top':'15%'}">
+                        <i class="fa-solid fa-circle-check" style="font-size: 22rem;"></i>
+                        <div style="font-size: 6rem;">Sin Ordenes</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="config">
+        <div class="col-4 offset-4 difuminado mt-5 pt-3">
+            <div class="h4 mb-4">Configuraci&oacute;n de pantalla</div>
+
+            <div class="row">
+                <div class="col-4"><i class="fa-solid fa-bookmark" style="margin: 0 3px;"></i> Etiqueta:</div>
+                <div class="col-6">
+                    <input type="text" class="form-control mb-3" id="etiqueta" [value]="etiquetaTv" placeholder="Identificador unico por pantalla">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <i class="fa-solid fa-shop"></i> Seleccione tienda:
+                </div>
+                <div class="col-6">
+                    <select class="custom-select round-input mb-3" id="tienda">
+                        <option>SELECCIONE...</option>
+                        <option [value]="tienda.codigo" *ngFor="let tienda of tiendas" [selected]="tiendaTv === tienda.codigo?true:false">{{tienda.nombre}}</option>tV
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-right">
+                    <button class="btn btn-primary" (click)="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+                </div>
+            </div>
+
+            <br>
+        </div>
+    </div>
+</div>
+<footer>
+    <img src="assets/images/icon-svg/icon_blanco.svg">
+    <div class="float-right text-hora">{{reloj}}</div>
+</footer>

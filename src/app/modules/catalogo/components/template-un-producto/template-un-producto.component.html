@@ -1,0 +1,466 @@
+<div class="card" style="height: 57rem" *ngIf="innerWidth > 426">
+  <div class="card-header" style="padding: 0px 0.98rem 0px 0.98rem !important">
+    <div
+      class="row"
+      style="
+        background: linear-gradient(
+          180deg,
+          rgba(0, 147, 121, 1) 90%,
+          rgba(0, 99, 185, 1) 90%
+        );
+      "
+    >
+      <div class="col-12 p-0" style="text-align: center">
+        <img [src]="objeto.header" class="img-fluid" />
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="row align-self-center text-center"
+    style="width: 100%; justify-content: left"
+  >
+    <h3
+      style="
+        position: absolute;
+        z-index: 1;
+        padding: 1rem 2rem;
+        font-family: din-bold;
+      "
+    >
+      {{ objeto.tituloEditable }}
+    </h3>
+  </div>
+
+  <div class="card-body" style="padding-top: 4rem; height: 40rem !important">
+    <div class="container p-0 mb-5" style="height: 100%">
+      <div
+        class="row"
+        style="height: 100%; padding: 0px 30px 0px 30px !important"
+      >
+        <div class="col-md-7">
+          <div class="row text-center">
+            <div class="col-md-12">
+              <div
+                class="div_img_escala"
+                *ngIf="objeto.productos.precioEscala.length > 0"
+              >
+                <picture>
+                  <source
+                    srcset="assets/images/llevaMasPagaMenos/50x50_cuadrado.webp"
+                    type="image/webp"
+                  />
+                  <source
+                    srcset="assets/images/llevaMasPagaMenos/50x50_cuadrado.jpg"
+                    type="image/jpg"
+                  />
+                  <img
+                    src="assets/images/llevaMasPagaMenos/50x50_cuadrado.jpg"
+                    class="img_escala"
+                    loading="lazy"
+                  />
+                </picture>
+              </div>
+              <img
+                class="img-fluid"
+                style="height: 15.6rem"
+                src="https://images.implementos.cl/img/600/{{
+                  objeto.productos.producto
+                }}-1.jpg"
+                onError="this.src='./assets/img/place-150x150.png'"
+                alt=""
+              />
+            </div>
+            <div class="col-sm-6">
+              <img
+                class="img-fluid"
+                src="https://images.implementos.cl/img/450/{{
+                  objeto.productos.producto
+                }}-2.jpg"
+                onError="this.src='./assets/img/place-150x150.png'"
+                alt="PROMAS0001"
+                style="height: 10rem"
+              />
+            </div>
+            <div class="col-sm-6">
+              <img
+                class="img-fluid"
+                src="https://images.implementos.cl/img/450/{{
+                  objeto.productos.producto
+                }}-3.jpg"
+                onError="this.src='./assets/img/place-150x150.png'"
+                alt="PROMAS0001"
+                style="height: 10rem"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-5" *ngIf="objeto.productos.atributos">
+          <div class="card h-100" style="box-shadow: none">
+            <div>
+              <h4>{{ objeto.productos.atributos[1].valor }}</h4>
+            </div>
+
+            <div class="card-body px-2">
+              <div
+                *ngFor="
+                  let atributo of objeto.productos.atributos;
+                  let odd = odd;
+                  let even = even;
+                  let i = index
+                "
+              >
+                <div
+                  class="row odd"
+                  *ngIf="
+                    atributo.nombre !== 'nombre' &&
+                    atributo.nombre !== 'precio' &&
+                    atributo.nombre !== 'precio escala' &&
+                    atributo.valor &&
+                    i == 0
+                  "
+                >
+                  <div class="col-5">
+                    <strong>{{ atributo.nombre | uppercase }}</strong>
+                  </div>
+                  <div class="col-7">
+                    <p class="text-justify">{{ atributo.valor | uppercase }}</p>
+                  </div>
+                </div>
+                <div
+                  class="row"
+                  *ngIf="
+                    atributo.nombre !== 'nombre' &&
+                    atributo.nombre !== 'precio' &&
+                    atributo.nombre !== 'precio escala' &&
+                    atributo.valor &&
+                    i > 0
+                  "
+                  [ngClass]="{ odd: odd, even: even }"
+                >
+                  <div class="col-5">
+                    <strong>{{ atributo.nombre | uppercase }}</strong>
+                  </div>
+                  <div class="col-7">
+                    <p class="text-justify">{{ atributo.valor | uppercase }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="precios" class="card-footer px-0">
+              <table>
+                <ng-container *ngIf="objeto.productos.precio">
+                  <app-icon
+                    *ngIf="carro"
+                    name="cart-20"
+                    size="50"
+                    class="float-left icon-chat shadow-lg pl-2 pt-3 pointer"
+                    (click)="addToCart(objeto.productos)"
+                  ></app-icon>
+
+                  <tr
+                    *ngIf="
+                      objeto.productos.rut == '0' &&
+                      objeto.productos.precioEsp == 0
+                    "
+                  >
+                    <td><em class="emScal">UNIDAD</em></td>
+                    <td class="product-card__new-price p-2">
+                      {{ objeto.productos.precio | currencyFormat }}
+                      <em> c/iva</em>
+                    </td>
+                  </tr>
+                  <tr
+                    *ngIf="
+                      objeto.productos.rut != '0' &&
+                      objeto.productos.precio != objeto.productos.precioEsp
+                    "
+                    tooltip="Precio con descuento cliente"
+                  >
+                    <td><em class="emScal">UNIDAD</em></td>
+                    <td class="product-card__new-price text-danger p-2">
+                      {{ objeto.productos.precioEsp | currencyFormat }}
+                      <em> c/iva </em>
+                    </td>
+                  </tr>
+                  <tr
+                    *ngIf="
+                      objeto.productos.rut != '0' &&
+                      objeto.productos.precio != objeto.productos.precioEsp
+                    "
+                    tooltip="Precio normal"
+                  >
+                    <td>&nbsp;</td>
+                    <td class="product-card__old-price p-2">
+                      {{ objeto.productos.precio | currencyFormat }}
+                      <em> c/iva </em>
+                    </td>
+                  </tr>
+                  <tr
+                    *ngIf="
+                      objeto.productos.precio == objeto.productos.precioEsp
+                    "
+                  >
+                    <td><em class="emScal">UNIDAD</em></td>
+                    <td class="product-card__new-price p-2">
+                      {{ objeto.productos.precio | currencyFormat }}
+                      <em> c/iva </em>
+                    </td>
+                  </tr>
+                </ng-container>
+                <ng-container
+                  *ngIf="objeto.productos.precioEscala.length"
+                  class="card-footer"
+                >
+                  <tr
+                    *ngFor="
+                      let escala of objeto.productos.precioEscala | slice : -2;
+                      let i = index
+                    "
+                    class="mb-3"
+                    [class.product-scala-sub]="
+                      i == 1 || objeto.productos.precioEscala.length == 1
+                    "
+                  >
+                    <td>
+                      <em class="emScal" *ngIf="escala.hasta !== 'y mas.'"
+                        >{{ escala.desde }} - {{ escala.hasta }}</em
+                      >
+                      <em class="emScal" *ngIf="escala.hasta === 'y mas.'"
+                        >DESDE {{ escala.desde }}</em
+                      >
+                    </td>
+                    <td
+                      class="p-2"
+                      [ngClass]="{
+                        'precio-escala':
+                          i == 1 || objeto.productos.precioEscala.length == 1,
+                        'precio-escala-secundario':
+                          i < 1 && objeto.productos.precioEscala.length > 1
+                      }"
+                    >
+                      {{ escala.precio | currencyFormat }}
+                      <span style="font-size: small">c/iva</span>
+                    </td>
+                  </tr></ng-container
+                >
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="card-footer py-0 px-3 bg-primary"
+    style="
+      border-radius: 0px 0px 0px 0px !important;
+      background-color: #005dba !important;
+    "
+  >
+    <div class="row" style="text-align: center">
+      <div class="col-12 p-0">
+        <img [src]="objeto.footer" class="img-fluid" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="height: auto" *ngIf="innerWidth < 450">
+
+
+  <div class="row align-self-center text-center" style="margin-top: 1rem">
+    <h3 style="z-index: 1; font-family: din-bold">
+      {{ objeto.tituloEditable }}
+    </h3>
+  </div>
+
+  <div class="card-body" style="height: 40rem !important">
+    <div class="container p-0 mb-5">
+      <div class="row" style="height: 100%">
+        <div class="col-md-7">
+          <div class="row text-center">
+            <div class="col-md-12">
+              <div class="div_img_escala" *ngIf="objeto.productos.precioEscala">
+                <picture>
+                  <source
+                    srcset="assets/images/llevaMasPagaMenos/50x50_cuadrado.webp"
+                    type="image/webp"
+                  />
+                  <source
+                    srcset="assets/images/llevaMasPagaMenos/50x50_cuadrado.jpg"
+                    type="image/jpg"
+                  />
+                  <img
+                    src="assets/images/llevaMasPagaMenos/50x50_cuadrado.jpg"
+                    class="img_escala"
+                    loading="lazy"
+                  />
+                </picture>
+              </div>
+              <img
+                class="img-fluid"
+                style="height: 15.6rem"
+                src="https://images.implementos.cl/img/600/{{
+                  objeto.productos.producto
+                }}-1.jpg"
+                onError="this.src='./assets/img/place-150x150.png'"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="col-md-5"
+          *ngIf="objeto.productos.atributos"
+          style="height: 100%"
+        >
+          <div class="card h-100" style="box-shadow: none">
+            <div>
+              <h4>{{ objeto.productos.atributos[1].valor }}</h4>
+            </div>
+
+            <div class="card-body px-2">
+              <div
+                *ngFor="
+                  let atributo of objeto.productos.atributos;
+                  let odd = odd;
+                  let even = even
+                "
+                [ngClass]="{ odd: odd, even: even }"
+              >
+                <div
+                  *ngIf="
+                    atributo.nombre !== 'nombre' &&
+                    atributo.nombre !== 'precio' &&
+                    atributo.nombre !== 'precio escala' &&
+                    atributo.valor
+                  "
+                  class="row"
+                >
+                  <div class="col-5">
+                    <strong>{{ atributo.nombre | titlecase }}</strong>
+                  </div>
+                  <div class="col-7">
+                    <p class="text-justify">{{ atributo.valor | titlecase }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer px-0 pr-3 mb-5">
+           
+              <table *ngIf="precios">
+                <ng-container *ngIf="objeto.productos.precio">
+         
+                  <app-icon
+                    *ngIf="carro"
+                    name="cart-20"
+                    size="50"
+                    class="float-left icon-chat shadow-lg pl-2 pt-3 pointer"
+                    (click)="addToCart(objeto.productos)"
+                  ></app-icon>
+              
+                  <tr
+                    *ngIf="
+                      objeto.productos.rut == '0' &&
+                      objeto.productos.precioEsp == 0
+                    "
+                  >
+                    <td><em class="emScal">UNIDAD</em></td>
+                    <td class="product-card__new-price p-2">
+                      {{ objeto.productos.precio | currencyFormat }}
+                      <em> c/iva</em>
+                    </td>
+                  </tr>
+                  <tr
+                    *ngIf="
+                      objeto.productos.rut != '0' &&
+                      objeto.productos.precio != objeto.productos.precioEsp
+                    "
+                    tooltip="Precio con descuento cliente"
+                  >
+                    <td><em class="emScal">UNIDAD</em></td>
+                    <td class="product-card__new-price text-danger p-2">
+                      {{ objeto.productos.precioEsp | currencyFormat }}
+                      <em> c/iva </em>
+                    </td>
+                  </tr>
+                  <tr
+                    *ngIf="
+                      objeto.productos.rut != '0' &&
+                      objeto.productos.precio != objeto.productos.precioEsp
+                    "
+                    tooltip="Precio normal"
+                  >
+                    <td>&nbsp;</td>
+                    <td class="product-card__old-price p-2">
+                      {{ objeto.productos.precio | currencyFormat }}
+                      <em> c/iva </em>
+                    </td>
+                  </tr>
+                  <tr
+                    *ngIf="
+                      objeto.productos.precio == objeto.productos.precioEsp
+                    "
+                  >
+                    <td><em class="emScal">UNIDAD</em></td>
+                    <td class="product-card__new-price p-2">
+                      {{ objeto.productos.precio | currencyFormat }}
+                      <em> c/iva </em>
+                    </td>
+                  </tr>
+
+          
+                </ng-container>
+                <ng-container
+                  *ngIf="objeto.productos.precioEscala.length > 0"
+                  class="card-footer"
+                >
+  
+                  <tr
+                    *ngFor="
+                      let escala of objeto.productos.precioEscala | slice : -2;
+                      let i = index
+                    "
+                    class="mb-3"
+                    [class.product-scala-sub]="
+                      i == 1 || objeto.productos.precioEscala.length == 1
+                    "
+                  >
+                    <td>
+                      <em class="emScal" *ngIf="escala.hasta !== 'y mas.'"
+                        >{{ escala.desde }} - {{ escala.hasta }}</em
+                      >
+                      <em class="emScal" *ngIf="escala.hasta === 'y mas.'"
+                        >DESDE {{ escala.desde }}</em
+                      >
+                    </td>
+                    <td
+                      class="p-2"
+                      [ngClass]="{
+                        'precio-escala':
+                          i == 1 || objeto.productos.precioEscala.length == 1,
+                        'precio-escala-secundario':
+                          i < 1 && objeto.productos.precioEscala.length > 1
+                      }"
+                    >
+                      {{ escala.precio | currencyFormat }}
+                      <span style="font-size: small">c/iva</span>
+                    </td>
+                
+                  </tr></ng-container
+                >
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

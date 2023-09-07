@@ -93,6 +93,7 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.login
             .registroSesion(data, usuario.id_sesion || '', 'ingreso')
             .then((resp: any) => {
+              console.log('resp al iniciar sesión: ', resp);
               usuario.id_sesion = resp.id_sesion;
               delete usuario.ultimoCierre;
               this.localS.set('usuario', usuario);

@@ -27,10 +27,9 @@ import { LocalStorageService } from './core/modules/local-storage/local-storage.
 import { LocalStorageModule } from './core/modules/local-storage/local-storage.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
-import { TestComponent } from './test/test.component';
 
 @NgModule({
-  declarations: [AppComponent, TestComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     // BrowserModule.withServerTransition({ appId: 'serverApp' }),
