@@ -1,44 +1,57 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>FrontEcommerce</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <title>FrontEcommerce</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <meta name="facebook-domain-verification" content="e69r86d3sw9c65t1r3a162pjhr35d1" />
+    <meta
+      name="facebook-domain-verification"
+      content="e69r86d3sw9c65t1r3a162pjhr35d1"
+    />
 
-  <!-- font - fontawesome -->
-  <link rel="stylesheet" rel="preload"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-  <link rel="stylesheet" href="https://cdn.rawgit.com/iconic/open-iconic/master/font/css/open-iconic-bootstrap.css"
-    type="text/css" />
+    <!-- font - fontawesome -->
+    <!--<link
+      rel="stylesheet"
+      rel="preload"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    /> -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.rawgit.com/iconic/open-iconic/master/font/css/open-iconic-bootstrap.css"
+      type="text/css"
+    />
 
-  <!-- font - stroyka -->
-  <!-- <link rel="stylesheet" rel="preload" href="assets/fonts/stroyka/stroyka.css" />
+    <!-- font - stroyka -->
+    <!-- <link rel="stylesheet" rel="preload" href="assets/fonts/stroyka/stroyka.css" />
   <link rel="stylesheet" href="assets/leaflet/leaflet.css" />
   <script src="./assets/leaflet/leaflet.js"></script> -->
 
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<style>
-  @keyframes site-preloader-animation {
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <script
+      src="https://kit.fontawesome.com/445c44934c.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <style>
+    @keyframes site-preloader-animation {
       from {
-          transform: rotateZ(0deg);
+        transform: rotateZ(0deg);
       }
 
       to {
-          transform: rotateZ(360deg);
+        transform: rotateZ(360deg);
       }
-  }
+    }
 
-  body {
+    body {
       overflow: hidden !important;
       overflow-y: scroll !important;
       height: 100% !important;
-  }
+    }
 
-  .site-preloader {
+    .site-preloader {
       position: fixed;
       left: 0;
       top: 0;
@@ -47,11 +60,11 @@
       background-color: #fff;
       z-index: 99999;
       opacity: 1;
-  }
+    }
 
-  .site-preloader::before {
+    .site-preloader::before {
       box-sizing: border-box;
-      content: '';
+      content: "";
       display: block;
       position: absolute;
       left: calc(50% - 50px);
@@ -65,16 +78,15 @@
       animation-duration: 0.5s;
       animation-timing-function: linear;
       animation-iteration-count: infinite;
-  }
+    }
 
-  .site-preloader__fade {
+    .site-preloader__fade {
       transition: opacity 0.3s;
       opacity: 0;
-  }
-
-</style>
-<div class="site-preloader"></div>
-<body>
-  <app-root></app-root>
-</body>
+    }
+  </style>
+  <div class="site-preloader"></div>
+  <body>
+    <app-root></app-root>
+  </body>
 </html>
