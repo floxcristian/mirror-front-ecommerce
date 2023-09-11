@@ -84,7 +84,6 @@ import { ProductListCardComponent } from './components/product-list-card/product
 import { EditarListaProductosComponent } from './components/editar-lista-productos/editar-lista-productos.component';
 import { AgregarListaProductosMasivaModalComponent } from './components/agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
 import { ProductListModalComponent } from './components/product-list-card/components/product-list-modal/product-list-modal.component';
-// import { PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface, PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { AngularEmailAutocompleteComponent } from './components/angular-email-autocomplete/angular-email-autocomplete.component';
 import { MonedaPipe } from './pipes/moneda.pipe';
