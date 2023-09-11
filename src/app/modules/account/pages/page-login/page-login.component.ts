@@ -22,8 +22,6 @@ export class PageLoginComponent {
     private login: LoginService
   ) {
     const u: Usuario = this.root.getDataSesionUsuario();
-    console.log('usuario: ', u);
-    // FIXME: problema con el u.id_sesion que no existe. En que parte se crea?
 
     if (u.user_role === 'supervisor' || u.user_role === 'comprador') {
       // isB2B

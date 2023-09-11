@@ -10,7 +10,6 @@ import { RouterModule } from '@angular/router';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-//import { Ng2Rut, RutValidator } from 'ng2-rut';
 //import { AgmCoreModule } from '@agm/core';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 //import { InlineSVGModule } from 'ng-inline-svg';

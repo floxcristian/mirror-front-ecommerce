@@ -1,13 +1,12 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { Usuario } from '../../interfaces/login';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-// import { RutValidator } from 'ng2-rut';
-import { data } from 'jquery';
+import { rutValidator } from '../../utils/utilidades';
 
 @Component({
   selector: 'app-register-reception',
   templateUrl: './register-reception.component.html',
-  styleUrls: ['./register-reception.component.scss']
+  styleUrls: ['./register-reception.component.scss'],
 })
 export class RegisterReceptionComponent {
   @Output() returnReceptionEvent: EventEmitter<any> = new EventEmitter();
@@ -16,8 +15,6 @@ export class RegisterReceptionComponent {
   public formRecibe!: FormGroup;
   tipo_fono = '+569';
   slices = 8;
-  //  FIXME: RUT VALIDATOR
-  // constructor(private fb: FormBuilder, private rutValidator: RutValidator) {
   constructor(private fb: FormBuilder) {
     this.formDefault();
   }
@@ -27,9 +24,7 @@ export class RegisterReceptionComponent {
       nombre: [, Validators.required],
       apellido: [, Validators.required],
       telefono: [, [Validators.required]],
-      // FIXME: RUT ERROR
-      // rut: [, [Validators.required, this.rutValidator]]
-      rut: [, [Validators.required]]
+      rut: [, [Validators.required, rutValidator]],
     });
 
     this.Select_fono(this.tipo_fono);
@@ -44,7 +39,7 @@ export class RegisterReceptionComponent {
     this.returnReceptionEvent.emit(usuarioVisita);
   }
 
-  async setUsuario(formulario:any) {
+  async setUsuario(formulario: any) {
     if (formulario.telefono.slice(0, 4) !== '+569') {
       this.slices = 9;
       this.tipo_fono = '+56';
@@ -55,18 +50,26 @@ export class RegisterReceptionComponent {
       first_name: formulario.nombre,
       last_name: formulario.apellido,
       phone: formulario.telefono.slice(-this.slices),
-      rut: formulario.rut
+      rut: formulario.rut,
     };
     return await usuario;
   }
 
-  Select_fono(tipo:any) {
+  Select_fono(tipo: any) {
     this.tipo_fono = tipo;
 
     if (this.tipo_fono === '+569')
-      this.formRecibe.controls['telefono'].setValidators([Validators.required, Validators.minLength(8), Validators.maxLength(8)]);
+      this.formRecibe.controls['telefono'].setValidators([
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(8),
+      ]);
     else
-      this.formRecibe.controls['telefono'].setValidators([Validators.required, Validators.minLength(9), Validators.maxLength(9)]);
+      this.formRecibe.controls['telefono'].setValidators([
+        Validators.required,
+        Validators.minLength(9),
+        Validators.maxLength(9),
+      ]);
 
     this.formRecibe.get('telefono')?.updateValueAndValidity();
   }

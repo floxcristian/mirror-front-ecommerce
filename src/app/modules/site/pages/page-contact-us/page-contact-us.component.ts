@@ -1,14 +1,18 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormControl,
+  Validators,
+} from '@angular/forms';
 import { ContactUsService } from '../../../../shared/services/contact-us.service';
 import { ToastrService } from 'ngx-toastr';
 import { rutValidator } from 'src/app/shared/utils/utilidades';
-// import { RutValidator } from 'ng2-rut';
 
 @Component({
   selector: 'app-contact-us',
   templateUrl: './page-contact-us.component.html',
-  styleUrls: ['./page-contact-us.component.scss']
+  styleUrls: ['./page-contact-us.component.scss'],
 })
 export class PageContactUsComponent {
   formContacto: FormGroup;
@@ -23,12 +27,12 @@ export class PageContactUsComponent {
       para: new FormControl(null, [
         Validators.required,
         Validators.email,
-        Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$')
+        Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$'),
       ]),
       asunto: new FormControl(null, Validators.required),
       rut: [, rutValidator],
       telefono: new FormControl(null),
-      html: new FormControl(null, Validators.required)
+      html: new FormControl(null, Validators.required),
     });
   }
 
@@ -69,7 +73,12 @@ export class PageContactUsComponent {
         <strong>Mensaje: </strong>
         <p> ${html}</p>`;
     html = cuerpo;
-    let respuesta = await this.contactUService.enviarCorreoContacto({ nombre, para, asunto, html });
+    let respuesta = await this.contactUService.enviarCorreoContacto({
+      nombre,
+      para,
+      asunto,
+      html,
+    });
     if (respuesta == 'ok') {
       this.toastr.success(`Correo Enviado correctamente`);
       this.formContacto.reset();
@@ -79,23 +88,26 @@ export class PageContactUsComponent {
   }
 
   async agregarEmail() {
-    let correos = 'ruben.espinoza@implementos.cl;freddy.rodriguez@implementos.cl;claudio.montoya@implementos.cl';
+    let correos =
+      'ruben.espinoza@implementos.cl;freddy.rodriguez@implementos.cl;claudio.montoya@implementos.cl';
 
     return correos;
   }
 
-  tipoAsunto(event:any) {
+  tipoAsunto(event: any) {
     let asunto = this.formContacto.get('asunto')?.value;
     if (asunto == 'Cotización') {
       this.formContacto.get('rut')?.reset();
 
       this.formContacto.get('rut')?.setValidators([Validators.required]);
       this.formContacto.get('telefono')?.reset();
-      this.formContacto.get('telefono')?.setValidators([
+      this.formContacto
+        .get('telefono')
+        ?.setValidators([
           Validators.required,
           Validators.pattern('[1-9][0-9]{0,9}'),
           Validators.minLength(8),
-          Validators.maxLength(8)
+          Validators.maxLength(8),
         ]);
     } else {
       this.formContacto.get('rut')?.clearValidators();

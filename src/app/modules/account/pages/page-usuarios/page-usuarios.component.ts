@@ -6,7 +6,6 @@ import { ToastrService } from 'ngx-toastr';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DataTableDirective } from 'angular-datatables';
-// import { RutValidator } from 'ng2-rut';
 import { environment } from '../../../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { rutValidator } from '../../../../shared/utils/utilidades';
@@ -44,7 +43,6 @@ export class PageUsuariosComponent implements OnInit {
     private clients: ClientsService,
     private modalService: BsModalService,
     private fb: FormBuilder,
-    //private rutValidator: rutValidator,
     private httpClient: HttpClient
   ) {
     this.usuario = this.root.getDataSesionUsuario();

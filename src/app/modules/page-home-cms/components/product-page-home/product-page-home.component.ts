@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   Component,
   HostListener,
   Input,
@@ -18,6 +17,14 @@ import { VerMasProductoComponent } from '../ver-mas-producto/ver-mas-producto.co
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
+interface ITempProduct {
+  _id: any;
+  skus: any[];
+  url: any;
+  title: any;
+  image: any;
+}
+
 @Component({
   selector: 'app-product-page-home',
   templateUrl: './product-page-home.component.html',
@@ -31,8 +38,11 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
   @Input() lstProductos: any[] = [];
   @Input() url: any[] = [];
   @ViewChild('popoverContent', { static: false }) myPopover!: NgbPopover;
+  // Variables no existentes.
+  isB2B!: boolean;
+  popoverContent!: any;
 
-  tipo_producto!: any[];
+  tipo_producto!: ITempProduct[];
   user!: Usuario;
   id!: string;
   layout = 'grid-lg';

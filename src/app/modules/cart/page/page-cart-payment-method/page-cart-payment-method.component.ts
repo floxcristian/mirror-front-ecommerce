@@ -127,7 +127,6 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private root: RootService,
     private toast: ToastrService,
     private paymentService: PaymentService,
-    // private rutValidator: RutValidator,
     private logistics: LogisticsService,
     private clientsService: ClientsService
   ) {
@@ -410,8 +409,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFileChange(event:any) {
-    let files = event.target.files
+  onFileChange(event: any) {
+    let files = event.target.files;
     if (files.length > 0) {
       this.archivo = this.cargaArchivo(files[0]);
 
@@ -874,7 +873,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       document.getElementById('openModalButton')?.click();
       this.paymentService.sendEmailError(
         `Productos sin stock: <br> ${JSON.stringify(
-          this.productosSinStock.map((producto:any) => {
+          this.productosSinStock.map((producto: any) => {
             return `sku: ${producto.sku}, cantidad: ${producto.cantidad}`;
           })
         )} <br><br> Carro: <br> ${JSON.stringify(this.cartSession)}`,

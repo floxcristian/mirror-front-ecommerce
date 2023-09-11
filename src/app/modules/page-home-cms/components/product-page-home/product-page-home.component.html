@@ -15,6 +15,92 @@
   </div>
 </div>
 
+<ng-container *ngIf="!cargando && screenWidth > 1024 && tipo_producto">
+  <ul ngbNav #nav="ngbNav" class="nav-tabs">
+    <li ngbNavItem *ngFor="let item of tipo_producto; let i = index">
+      <button ngbNavLink>{{ item.title }}</button>
+      <ng-template ngbNavContent>
+        <div class="row" style="margin-top: 20px">
+          <div *ngIf="screenWidth > 1024" class="col-sm-6 d-flex">
+            <a [href]="item.url">
+              <div class="container-image" *ngIf="item.image != undefined">
+                <div
+                  class="overlay d-flex flex-column justify-content-center align-items-center"
+                >
+                  <p align="center" style="margin-bottom: -10px">
+                    <span> Ver más </span>
+                  </p>
+
+                  <p align="center">
+                    <span
+                      ><i
+                        class="fa-solid fa-hand-back-point-up"
+                        style="color: white; font-size: 20px"
+                      ></i
+                    ></span>
+                  </p>
+                </div>
+
+                <img
+                  [src]="item.image"
+                  class="img-fluid-product lazyload"
+                  alt="Ver más"
+                />
+              </div>
+            </a>
+            <div class="container-image" *ngIf="item.image === undefined">
+              <div
+                class="overlay d-flex justify-content-center align-items-center"
+              >
+                <a [href]="item.url"> Ver mas </a>
+              </div>
+              <a [href]="item.url">
+                <img
+                  src="../../../../../assets/img/no-image-ficha.jpg"
+                  alt="no imgagen"
+                  class="img-fluid-product"
+              /></a>
+            </div>
+          </div>
+          <!-- cambio de pantalla-->
+
+          <div
+            *ngIf="screenWidth > 1024"
+            class="col-sm-6 d-flex justify-content-center"
+          >
+            <div class="row">
+              <div
+                class="col-6-producto d-flex"
+                style="padding-left: 5px; padding-right: 5px"
+                *ngFor="let product of item.skus | slice : 0 : 4; let i = index"
+              >
+                <div
+                  class="card-body-producto"
+                  [ngStyle]="{ 'margin-bottom': i < 2 ? '30px' : '0px' }"
+                  data-layout="grid-5-full"
+                  data-with-features="false"
+                >
+                  <app-product-card-b2c-cms
+                    *ngIf="!isB2B"
+                    [product]="product"
+                    [origen]="[ruta, '', product.nombre.trim(), '']"
+                    [home]="true"
+                    [layout]="layout"
+                    [cartClass]="true"
+                    [popoverContent]="popoverContent"
+                    (precioEscalaEvent)="get_precioEscala($event)"
+                  ></app-product-card-b2c-cms>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </li>
+  </ul>
+  <div [ngbNavOutlet]="nav"></div>
+</ng-container>
+
 <!-- FIXME: reemplazar esto por ng-nav
 <ngb-tabset *ngIf="!cargando && screenWidth > 1024 && tipo_producto">
   <ngb-tab *ngFor="let item of tipo_producto; let i = index">

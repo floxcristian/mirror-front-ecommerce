@@ -40,11 +40,7 @@ export class LoginService {
   }
 
   registroSesion(data: any, idSesion: string, accion: string) {
-    // FIXME: idSession vacío.
-    console.log('idSession: ', idSesion);
-    console.log('accion: ', accion);
     const apiUrl = `${environment.apiCMS}users/sesion/${idSesion}/${accion}`;
-    console.log('apiUrl: ', apiUrl);
     return this.http
       .post(`${environment.apiCMS}users/sesion/${idSesion}/${accion}`, data)
       .toPromise();

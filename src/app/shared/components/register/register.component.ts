@@ -10,7 +10,10 @@ import { PasswordValidator } from '../../validations/password';
 import { Usuario } from '../../interfaces/login';
 import { Router } from '@angular/router';
 import { Dominios } from '../../interfaces/dominios';
-import { CargoContacto, CargosContactoResponse } from '../../interfaces/cargoContacto';
+import {
+  CargoContacto,
+  CargosContactoResponse,
+} from '../../interfaces/cargoContacto';
 import { rutValidator } from '../../utils/utilidades';
 import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete/angular-email-autocomplete.component';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
@@ -18,11 +21,11 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
   @Output() returnLoginEvent: EventEmitter<any> = new EventEmitter();
-  @Input() linkLogin!:any;
+  @Input() linkLogin!: any;
   @Input() innerWidth!: number;
   giros!: any[];
   comunas!: any[];
@@ -42,11 +45,11 @@ export class RegisterComponent implements OnInit {
   checkBoxTerminos = false;
   checkBoxSuscribir = false;
   checkBoxEmpresa!: boolean;
-  domains:any[] = [];
+  domains: any[] = [];
   cargos: CargoContacto[] = [];
   rut = '';
   JSON = JSON;
-  cantMaxRut:number = 10
+  cantMaxRut: number = 10;
 
   constructor(
     private clientService: ClientsService,
@@ -90,10 +93,10 @@ export class RegisterComponent implements OnInit {
         departamento: [],
 
         pwd: [, [Validators.required, Validators.minLength(6)]],
-        confirmPwd: [, [Validators.required, Validators.minLength(6)]]
+        confirmPwd: [, [Validators.required, Validators.minLength(6)]],
       },
       {
-        validator: PasswordValidator.validate.bind(this)
+        validator: PasswordValidator.validate.bind(this),
       }
     );
 
@@ -101,8 +104,6 @@ export class RegisterComponent implements OnInit {
   }
 
   getDominios() {
-    // FIXME: DOMINIOS RARO
-    // this.clientService.getDominiosFrecuentes().subscribe((response: Dominios) => {
     this.clientService.getDominiosFrecuentes().subscribe((response: any) => {
       Object.keys(response.data).map((key) => {
         let aux_dominio = { value: response.data[key].dominio };
@@ -116,7 +117,7 @@ export class RegisterComponent implements OnInit {
       (r: any) => {
         this.giros = r;
       },
-      error => {
+      (error) => {
         this.toastr.error(error.error.msg);
       }
     );
@@ -126,23 +127,26 @@ export class RegisterComponent implements OnInit {
     this.logisticsService.obtieneComunas().subscribe(
       (r: any) => {
         this.coleccionComuna = r.data;
-        this.comunas = r.data.map((record:any) => {
-          const v = record.comuna + '@' + record.provincia + '@' + record.region;
+        this.comunas = r.data.map((record: any) => {
+          const v =
+            record.comuna + '@' + record.provincia + '@' + record.region;
           return { id: v, value: record.comuna };
         });
       },
-      error => {
+      (error) => {
         this.toastr.error(error.error.msg);
       }
     );
   }
 
   getCargos() {
-    this.clientService.getCargosContacto().subscribe((response: CargosContactoResponse) => {
-      if (!response.error) {
-        this.cargos = response.data;
-      }
-    });
+    this.clientService
+      .getCargosContacto()
+      .subscribe((response: CargosContactoResponse) => {
+        if (!response.error) {
+          this.cargos = response.data;
+        }
+      });
   }
 
   registerUser(email: AngularEmailAutocompleteComponent) {
@@ -161,7 +165,9 @@ export class RegisterComponent implements OnInit {
     // validamos si es boleta o factura
     if (this.isInvoice) {
       dataSave.tipoCliente = 2;
-      dataSave.nombreGiro = this.giros.find(g => g.codigo === dataSave.giro).nombre;
+      dataSave.nombreGiro = this.giros.find(
+        (g) => g.codigo === dataSave.giro
+      ).nombre;
     } else {
       dataSave.tipoCliente = 1;
       dataSave.contactRut = this.rut;
@@ -173,7 +179,7 @@ export class RegisterComponent implements OnInit {
 
     // guardamos id de carro actual
     const user: Usuario = this.localS.get('usuario');
-    let userIdOld:any = null;
+    let userIdOld: any = null;
     if (user !== null) {
       userIdOld = user.email;
     }
@@ -186,11 +192,13 @@ export class RegisterComponent implements OnInit {
           this.toastr.error(r.msg);
           return;
         }
-        this.toastr.success('Se ha registrado existosamente, puede continuar con el proceso de compra');
+        this.toastr.success(
+          'Se ha registrado existosamente, puede continuar con el proceso de compra'
+        );
 
         const dataLogin = {
           username: dataSave.email,
-          password: this.formUsuario.value.pwd
+          password: this.formUsuario.value.pwd,
         };
 
         this.loginService.iniciarSesion(dataLogin).subscribe(
@@ -203,11 +211,13 @@ export class RegisterComponent implements OnInit {
               if (userIdOld !== null) {
                 const dataPut = {
                   origen: userIdOld,
-                  destino: data.email
+                  destino: data.email,
                 };
-                this.cartService.cartTransfer(dataPut).subscribe((res: ResponseApi) => {
-                  this.cartService.load();
-                });
+                this.cartService
+                  .cartTransfer(dataPut)
+                  .subscribe((res: ResponseApi) => {
+                    this.cartService.load();
+                  });
               } else {
                 this.cartService.load();
               }
@@ -216,12 +226,12 @@ export class RegisterComponent implements OnInit {
               this.toastr.error(`${r.errors[0]}`);
             }
           },
-          e => {
+          (e) => {
             this.toastr.error(e.error.msg);
           }
         );
       },
-      error => {
+      (error) => {
         this.toastr.error('Error de conexión con el servidor');
       }
     );
@@ -242,7 +252,9 @@ export class RegisterComponent implements OnInit {
     // validamos si es boleta o factura
     if (this.isInvoice) {
       dataSave.tipoCliente = 2;
-      dataSave.nombreGiro = this.giros.find(g => g.codigo === dataSave.giro).nombre;
+      dataSave.nombreGiro = this.giros.find(
+        (g) => g.codigo === dataSave.giro
+      ).nombre;
     } else {
       dataSave.tipoCliente = 1;
       dataSave.contactRut = this.rut;
@@ -254,14 +266,14 @@ export class RegisterComponent implements OnInit {
 
     // guardamos id de carro actual
     const user: Usuario = this.localS.get('usuario');
-    let userIdOld:any = null;
+    let userIdOld: any = null;
     if (user !== null) {
       userIdOld = user.email;
     }
 
     const dataLogin = {
       username: this.formUsuario.value.email,
-      password: this.formUsuario.value.pwd
+      password: this.formUsuario.value.pwd,
     };
 
     this.loginService.iniciarSesion(dataLogin).subscribe(
@@ -274,11 +286,13 @@ export class RegisterComponent implements OnInit {
           if (userIdOld !== null) {
             const dataPut = {
               origen: userIdOld,
-              destino: data.username
+              destino: data.username,
             };
-            this.cartService.cartTransfer(dataPut).subscribe((res: ResponseApi) => {
-              this.cartService.load();
-            });
+            this.cartService
+              .cartTransfer(dataPut)
+              .subscribe((res: ResponseApi) => {
+                this.cartService.load();
+              });
           } else {
             this.cartService.load();
           }
@@ -286,7 +300,7 @@ export class RegisterComponent implements OnInit {
           this.toastr.error(`${r.errors[0]}`);
         }
       },
-      e => {
+      (e) => {
         this.toastr.error(e.error.msg);
       }
     );
@@ -295,14 +309,14 @@ export class RegisterComponent implements OnInit {
   login() {
     const user: Usuario = this.localS.get('usuario');
 
-    let userIdOld:any = null;
+    let userIdOld: any = null;
     if (user !== null) {
       userIdOld = user.email;
     }
 
     const dataLogin = {
       username: this.formUsuario.value.email,
-      password: this.formUsuario.value.pwd
+      password: this.formUsuario.value.pwd,
     };
 
     this.loginService.iniciarSesion(dataLogin).subscribe(
@@ -316,11 +330,13 @@ export class RegisterComponent implements OnInit {
           if (userIdOld !== null) {
             const dataPut = {
               origen: userIdOld,
-              destino: data.email
+              destino: data.email,
             };
-            this.cartService.cartTransfer(dataPut).subscribe((res: ResponseApi) => {
-              this.cartService.load();
-            });
+            this.cartService
+              .cartTransfer(dataPut)
+              .subscribe((res: ResponseApi) => {
+                this.cartService.load();
+              });
           } else {
             this.cartService.load();
           }
@@ -328,7 +344,7 @@ export class RegisterComponent implements OnInit {
           this.toastr.error(`${r.errors[0]}`);
         }
       },
-      e => {
+      (e) => {
         this.toastr.error(e.error.msg);
       }
     );
@@ -341,7 +357,9 @@ export class RegisterComponent implements OnInit {
       window.scrollTo({ top: 0 });
       this.formUsuario.get('rut')?.setValue(null);
       this.formUsuario.get('contactRut')?.setValue(null);
-      this.formUsuario.get('contactRut')?.setValidators([Validators.required, rutValidator]);
+      this.formUsuario
+        .get('contactRut')
+        ?.setValidators([Validators.required, rutValidator]);
       this.formUsuario.get('cargo')?.setValidators([Validators.required]);
       this.formUsuario.get('razonsocial')?.setValidators([Validators.required]);
       this.formUsuario.get('giro')?.setValidators([Validators.required]);
@@ -363,7 +381,7 @@ export class RegisterComponent implements OnInit {
     this.returnLoginEvent.emit(true);
   }
 
-  validateCustomer(e:any) {
+  validateCustomer(e: any) {
     let value = e.target.value;
     if (this.formUsuario.controls['rut'].status === 'VALID') {
       value = value.replace(/\./g, '');
@@ -373,14 +391,16 @@ export class RegisterComponent implements OnInit {
             if (r.data) {
               this.isValidRut = false;
               this.formBlock();
-              this.toastr.warning('El RUT ingresado ya se encuentra registrado en nuestros sistemas ');
+              this.toastr.warning(
+                'El RUT ingresado ya se encuentra registrado en nuestros sistemas '
+              );
             } else {
               this.isValidRut = true;
               this.formBlock();
             }
           }
         },
-        error => {
+        (error) => {
           this.toastr.error('Error de conexión con el servidor');
         }
       );
@@ -441,26 +461,36 @@ export class RegisterComponent implements OnInit {
       this.disableDireccion = false;
 
       if (this.getAddressData(data[0], 'locality')) {
-        this.formUsuario.controls['comuna'].setValue(this.findComuna(this.getAddressData(data[0], 'locality')));
+        this.formUsuario.controls['comuna'].setValue(
+          this.findComuna(this.getAddressData(data[0], 'locality'))
+        );
       } else {
         this.formUsuario.controls['comuna'].setValue(
-          this.findComuna(this.getAddressData(data[0], 'administrative_area_level_3'))
+          this.findComuna(
+            this.getAddressData(data[0], 'administrative_area_level_3')
+          )
         );
       }
-      this.formUsuario.controls['calle'].setValue(this.getAddressData(data[0], 'route'));
-      this.formUsuario.controls['numero'].setValue(this.getAddressData(data[0], 'street_number'));
+      this.formUsuario.controls['calle'].setValue(
+        this.getAddressData(data[0], 'route')
+      );
+      this.formUsuario.controls['numero'].setValue(
+        this.getAddressData(data[0], 'street_number')
+      );
       this.formUsuario.controls['latitud'].setValue(data[1].lat);
       this.formUsuario.controls['longitud'].setValue(data[1].lng);
 
-      this.obtenerLocalidades({ id: this.formUsuario.controls['comuna'].value });
+      this.obtenerLocalidades({
+        id: this.formUsuario.controls['comuna'].value,
+      });
       this.cargarDireccion();
     }
   }
 
-  getAddressData(address_components:any, tipo: string) {
+  getAddressData(address_components: any, tipo: string) {
     let value = '';
 
-    address_components.forEach((element:any) => {
+    address_components.forEach((element: any) => {
       if (element.types[0] == tipo) {
         value = element.long_name;
         return;
@@ -499,7 +529,9 @@ export class RegisterComponent implements OnInit {
     if (nombre != '') {
       nombre = this.quitarAcentos(nombre);
 
-      const result = this.comunas.find(data => this.quitarAcentos(data.value) === nombre);
+      const result = this.comunas.find(
+        (data) => this.quitarAcentos(data.value) === nombre
+      );
 
       if (result && result.id) {
         this.obtenerLocalidades(result);
@@ -517,7 +549,9 @@ export class RegisterComponent implements OnInit {
     if (nombre != '') {
       nombre = this.quitarAcentos(nombre);
 
-      const result = this.localidades.find(data => this.quitarAcentos(data.localidad) === nombre);
+      const result = this.localidades.find(
+        (data) => this.quitarAcentos(data.localidad) === nombre
+      );
 
       if (result && result.localidad) {
         this.formUsuario.controls['localizacion'].setValue(result.localidad);
@@ -556,40 +590,44 @@ export class RegisterComponent implements OnInit {
 
       this.direccion = {
         direccion: `${calle} ${numero}`,
-        zona: `${comunaArr[0]} ${localizacion}`
+        zona: `${comunaArr[0]} ${localizacion}`,
       };
     } else {
       return;
     }
   }
 
-  obtenerLocalidades(event:any) {
-    const localidades:any[] = [];
+  obtenerLocalidades(event: any) {
+    const localidades: any[] = [];
     const comunaArr = event.id.split('@');
-    const comunas = this.coleccionComuna.filter(comuna => comuna.comuna == comunaArr[0]);
-    comunas.map(comuna => comuna.localidades.map((localidad:any) => localidades.push(localidad)));
+    const comunas = this.coleccionComuna.filter(
+      (comuna) => comuna.comuna == comunaArr[0]
+    );
+    comunas.map((comuna) =>
+      comuna.localidades.map((localidad: any) => localidades.push(localidad))
+    );
     this.localidades = localidades;
   }
 
-  geolocalizacion(event:any) {
+  geolocalizacion(event: any) {
     this.formUsuario.controls['latitud'].setValue(event.lat);
     this.formUsuario.controls['longitud'].setValue(event.lng);
   }
 
-  Select_fono(tipo:any) {
+  Select_fono(tipo: any) {
     this.tipo_fono = tipo;
 
     if (this.tipo_fono === '+569')
       this.formUsuario.controls['telefono'].setValidators([
         Validators.required,
         Validators.minLength(8),
-        Validators.maxLength(8)
+        Validators.maxLength(8),
       ]);
     else
       this.formUsuario.controls['telefono'].setValidators([
         Validators.required,
         Validators.minLength(9),
-        Validators.maxLength(9)
+        Validators.maxLength(9),
       ]);
 
     this.formUsuario.get('telefono')?.updateValueAndValidity();
