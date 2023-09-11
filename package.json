@@ -35,7 +35,6 @@
     "datatables.net": "^1.11.3",
     "datatables.net-dt": "^1.11.3",
     "express": "^4.15.2",
-    "fast-sort": "^3.4.0",
     "jquery": "^3.6.0",
     "moment": "^2.29.4",
     "ng2-charts": "^5.0.3",

@@ -149,7 +149,6 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('pdp');
           $('.webchatStartButtonContainer').show();
         } else {
-          //alert('entro');
           this.document.body.classList.add('home');
           this.document.body.classList.remove('pdp');
           this.document.body.classList.remove('carrito');
