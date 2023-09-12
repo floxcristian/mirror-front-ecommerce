@@ -57,6 +57,7 @@ export interface Archivo {
   styleUrls: ['./page-cart-payment-method.component.scss'],
 })
 export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
+  isInvoice!: boolean;
   private destroy$: Subject<void> = new Subject();
   items: any[] = [];
   inconsistencia = false;

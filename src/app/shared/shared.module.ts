@@ -115,9 +115,6 @@ import { ButtonComponent } from './components/buttons-slideshow/components/butto
 import { NgbNavModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProductSlideshowSpecialsComponent } from '../pages/product-slideshow-specials/product-slideshow-specials.component';
-// const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-//   suppressScrollX: true
-// };
 
 const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
 const NGU_CAROUSEL_MODULES = [

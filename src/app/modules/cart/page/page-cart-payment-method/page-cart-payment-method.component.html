@@ -185,7 +185,11 @@
                           class="fa-solid fa-calendar-days"
                           style="margin-right: 10px; color: #0063b9"
                         ></i>
-                        {{ item ? (item | date : "EEEE dd MMMM, y ") : '' | titlecase }}
+                        {{
+                          item
+                            ? (item | date : "EEEE dd MMMM, y ")
+                            : ("" | titlecase)
+                        }}
                       </div>
                     </div>
                   </li>
@@ -299,8 +303,7 @@
                         >
                       </div>
                       <div class="col-12" style="color: #0063b9">
-                        <!-- FIXME: -->
-                        <!-- <span
+                        <span
                           ><i
                             class="fa-solid fa-circle-check"
                             style="color: #118565"
@@ -313,10 +316,12 @@
                             cartSession.observacion ==
                             "Persona que recibe: Titular de la Venta"
                               ? "Titular de la compra"
-                              : cartSession.observacion.split("Celular")[0]
+                              : (cartSession.observacion || "")
+                                  .split("Celular")[0]
                                   .split("Recibe:")[1]
-                          }}</span> -->
-                          <span
+                          }}</span
+                        >
+                        <span
                           ><i
                             class="fa-solid fa-circle-check"
                             style="color: #118565"
@@ -330,7 +335,8 @@
                             "Persona que recibe: Titular de la Venta"
                               ? "Titular de la compra"
                               : ""
-                          }}</span>
+                          }}</span
+                        >
                       </div>
                     </div>
                   </li>
@@ -356,7 +362,11 @@
                           class="fa-solid fa-calendar-days"
                           style="margin-right: 10px; color: #0063b9"
                         ></i>
-                        {{ item ? (item | date : "EEEE dd MMMM, y ") : '' | titlecase }}
+                        {{
+                          item
+                            ? (item | date : "EEEE dd MMMM, y ")
+                            : ("" | titlecase)
+                        }}
                       </div>
                     </div>
                   </li>
@@ -416,13 +426,13 @@
                             >
                               El RUT ingresado no es válido
                             </p>
-                            <!-- FIXME: Variebla no existe -->
-                            <!-- <p
+
+                            <p
                               *ngIf="isInvoice"
                               class="text-error-form-2 pull-right"
                             >
                               Debes ingresar el rut de empresa.
-                            </p> -->
+                            </p>
                             <p
                               *ngIf="false"
                               class="text-error-form-2 pull-right"
@@ -963,13 +973,13 @@
                             >
                               El RUT ingresado no es válido
                             </p>
-                            <!-- FIXME: variable no existe  -->
-                            <!-- <p
+
+                            <p
                               *ngIf="isInvoice"
                               class="text-error-form-2 pull-right"
                             >
                               Debes ingresar el rut de empresa.
-                            </p> -->
+                            </p>
                             <p
                               *ngIf="false"
                               class="text-error-form-2 pull-right"
@@ -1817,7 +1827,11 @@
                               class="fa-solid fa-calendar-days"
                               style="margin-right: 10px; color: #0063b9"
                             ></i>
-                            {{ item ? (item | date : "EEEE dd MMMM, y ")  : '' | titlecase }}
+                            {{
+                              item
+                                ? (item | date : "EEEE dd MMMM, y ")
+                                : ("" | titlecase)
+                            }}
                           </div>
                         </div>
                       </div>
@@ -1970,24 +1984,21 @@
                             <i
                               class="fas fa-people-carry"
                               style="color: #005db9 !important"
-                            ></i>\
-                            <!-- FIXME: SPLIT A NULO -->
-                            <!-- <span>{{
-                              cartSession.observacion ==
-                              "Persona que recibe: Titular de la
-                                                    Venta"
-                                ? "Titular de la
-                                                    compra"
-                                : cartSession.observacion
-                                    .split("Celular")[0]
-                                    .split("Recibe:")[1]
-                            }}</span> -->
+                            ></i
+                            >\
+
                             <span>{{
                               cartSession.observacion ==
-                              "Persona que recibe: Titular de la
-                                                    Venta"
-                                ? "Titular de la
-                                                    compra"
+                              "Persona que recibe: Titular de la Venta"
+                                ? "Titular de la compra"
+                                : (cartSession.observacion || "")
+                                    .split("Celular")[0]
+                                    .split("Recibe:")[1]
+                            }}</span>
+                            <span>{{
+                              cartSession.observacion ==
+                              "Persona que recibe: Titular de la Venta"
+                                ? "Titular de la compra"
                                 : ""
                             }}</span>
                           </div>
@@ -2023,7 +2034,11 @@
                               class="fa-solid fa-calendar-days"
                               style="margin-right: 10px; color: #0063b9"
                             ></i>
-                            {{ item ? (item | date : "EEEE dd MMMM, y ") : '' | titlecase }}
+                            {{
+                              item
+                                ? (item | date : "EEEE dd MMMM, y ")
+                                : ("" | titlecase)
+                            }}
                           </div>
                         </div>
                       </div>
@@ -2091,13 +2106,6 @@
           ></div>
 
           <div class="card-body text-justify" style="font-size: 14px">
-            <!-- FIXME: NO EXISTE productCart -->
-            <!-- <app-detalle-carro-productos
-              [shippingType]="cartSession.despacho?.tipo"
-              [seeProducts]="false"
-              [productCart]="productCart"
-            >
-            </app-detalle-carro-productos> -->
             <app-detalle-carro-productos
               [shippingType]="cartSession.despacho?.tipo"
               [seeProducts]="false"

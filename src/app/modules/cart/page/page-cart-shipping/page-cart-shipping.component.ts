@@ -89,7 +89,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   shippingSelected!: ShippingService | null;
 
   userSession!: Usuario;
-  cartSession!: CartData;
+  cartSession!: any; //CartData;
   recidDireccion = 0;
   showMap: boolean = false;
 
@@ -471,6 +471,9 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     const consulta: any = await this.logistics.obtienRetiro(data).toPromise();
     if (consulta.error) {
       this.shippingDaysStore = [];
+      this.toast.error(
+        'Ha ocurrido un error al traer las opciones de retiro en tienda.'
+      );
     } else {
       if (consulta.length) {
         this.shippingDaysStore = [];
