@@ -7,7 +7,7 @@
 <app-product-slideshow *ngIf="isB2B"></app-product-slideshow>
 
 <app-block-brands *ngIf="marcas && isB2B" [brands]="brands"></app-block-brands>
-<!-- FIXME: falta -->
+
 <app-page-home *ngIf="!isB2B"></app-page-home>
 <div
   *ngIf="marcas && !isB2B"
