@@ -26,7 +26,6 @@ import {
 } from './directives/collapse.directive';
 import { DepartmentsAreaDirective } from './directives/departments-area.directive';
 import { DropdownDirective } from './directives/dropdown.directive';
-import { FakeSlidesDirective } from './directives/fake-slides.directive';
 import { OwlPreventClickDirective } from './directives/owl-prevent-click.directive';
 import { DragDropDirective } from './directives/drag-drop.directive';
 import { PhoneCharDirective } from './directives/phone-char.directive';
@@ -139,7 +138,7 @@ const NGU_CAROUSEL_MODULES = [
     CollapseItemDirective,
     DepartmentsAreaDirective,
     DropdownDirective,
-    FakeSlidesDirective,
+
     OwlPreventClickDirective,
     DragDropDirective,
     PhoneCharDirective,
@@ -261,7 +260,6 @@ const NGU_CAROUSEL_MODULES = [
     CollapseItemDirective,
     DepartmentsAreaDirective,
     DropdownDirective,
-    FakeSlidesDirective,
     OwlPreventClickDirective,
     LazyImgDirective,
 
