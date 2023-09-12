@@ -28,10 +28,10 @@
         <!-- FIXME: START -->
 
 
-    <!-- <div class="widget-filters__list widget-filters__list-body">
+    <div class="widget-filters__list widget-filters__list-body">
         <div *ngFor="let filter of filters; let i = index;" class="widget-filters__item">
 
-            <div class="filter " [ngClass]="{'filter--opened': !filter.collapsed}" appCollapseItem="filter--opened" #collapse="appCollapseItem">
+            <div class="filter " [ngClass]="{'filter--opened': !filter?.collapsed}" appCollapseItem="filter--opened" #collapse="appCollapseItem">
 
                 <button  name="collapse"  type="button" class="filter__title" (click)="collapse.toggle()" *ngIf="['checkbox', 'radio'].includes(filter.type) && !filtrosOculto" >
                     {{ filter.name  | capitalizeFirst }}
@@ -62,9 +62,10 @@
                                     </a>
                                 </li>
                             </ul>
-
-                            <div *ngIf="filter.options.items.length>5" style="display: flex; justify-content: center;">
-                                <a (click)="openUserForm(template_buscador)" style="color: #0063b9;">Ver todas las categorías</a>
+                            <div *ngIf="filter.options.items">
+                                <div *ngIf="filter.options.items.length>5" style="display: flex; justify-content: center;">
+                                    <a (click)="openUserForm(template_buscador)" style="color: #0063b9;">Ver todas las categorías</a>
+                                </div>
                             </div>
 
                             <hr />
@@ -76,12 +77,11 @@
 
                         </div>
 
-                        <div *ngIf="['checkbox', 'radio'].includes(filter.type) && !filtrosOculto" class="filter-list">
-
+                        <!-- <div *ngIf="['checkbox', 'radio'].includes(filter.type) && !filtrosOculto" class="filter-list"> -->
+                        <div *ngIf="(filter.type === 'radio' || filter.type === 'checkbox') && !filtrosOculto" class="filter-list">
                             <div class="filter-list__list">
                                 <label *ngFor="let item of filter.options.items" class="filter-list__item"
                                     [ngClass]="{'filter-list__item--disabled': item.disabled}">
-
                                     <span *ngIf="filter.type === 'checkbox'" class="filter-list__input input-check">
                                         <span class="input-check__body">
                                             <input class="input-check__input" type="checkbox" [checked]="item.checked"
@@ -92,7 +92,6 @@
                                             </app-icon>
                                         </span>
                                     </span>
-
                                     <span *ngIf="filter.type === 'radio'" class="filter-list__input input-radio">
                                         <span class="input-radio__body">
                                             <input class="input-radio__input" [name]="filter.options.name" type="radio"
@@ -100,9 +99,7 @@
                                             <span class="input-radio__circle"></span>
                                         </span>
                                     </span>
-
                                     <span class="filter-list__title">{{ item.label  | capitalizeFirst }}</span>
-
                                 </label>
                             </div>
                             <hr />
@@ -129,7 +126,7 @@
                         </div>
 
                         <div *ngIf="filter.type === 'price' && isPlatformBrowser" class="filter-price">
-                            <div class="filter-price__slider">
+                            <!-- <div class="filter-price__slider">
                                 <div class="ng5-slider-custom">
                                     <ng5-slider [value]="filter.options.from" [highValue]="filter.options.to"
                                         [options]="{animate: false, mouseEventsInterval: 10, rightToLeft: rightToLeft, floor: filter.options.min, ceil: filter.options.max, step: 1}"
@@ -143,7 +140,7 @@
                                 –
                                 <span
                                     class="filter-price__max-value">{{ (rightToLeft ? slider.value : slider.highValue)|currencyFormat }}</span>
-                            </div>
+                            </div> -->
                         </div>
 
                     </div>
@@ -151,12 +148,12 @@
             </div>
 
         </div>
-    </div> -->
+    </div>
 
 </div>
 
 <ng-template #template_buscador>
-    <!-- <div class="modal-header" style="background-color: #baddfc;">
+    <div class="modal-header" style="background-color: #baddfc;">
         <h3 class="modal-title pull-left" style="font-size: 16px; color: #0060b4;">Todas las categorías</h3>
         <button  name="modalRef"  type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
             <span aria-hidden="true">&times;</span>
@@ -197,7 +194,7 @@
             </div>
         </div>
         </div>
-    </div> -->
+    </div>
     </ng-template>
 
 <!-- FIXME: END -->

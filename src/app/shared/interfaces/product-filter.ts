@@ -12,13 +12,15 @@ export interface ProductFilterCategory extends ProductFilterBase {
             name: string;
             url?: any;
             queryParams: any,
-            children: any
+            children: any,
+            checked?: boolean;
         }[];
     };
 }
 
 export interface ProductFilterPrice extends ProductFilterBase {
     type: 'price';
+    collapsed?: boolean;
     options: {
         min: number;
         max: number;
@@ -57,6 +59,7 @@ export interface ProductFilterCheckboxFlota extends ProductFilterBase {
 
 export interface ProductFilterRadio extends ProductFilterBase {
     type: 'radio';
+    collapsed?: boolean;
     options: {
         name: string;
         items: {
@@ -70,6 +73,7 @@ export interface ProductFilterRadio extends ProductFilterBase {
 
 export interface ProductFilterColor extends ProductFilterBase {
     type: 'color';
+    collapsed?: boolean;
     options: {
         items: {
             label: string;
