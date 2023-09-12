@@ -22,36 +22,42 @@ export class WidgetFiltersComponent {
 
     @Input() set removableFilters(arr:any) {
         this.removableFiltersArray = [];
-
-        Object.keys(arr).map((field, index) => {
-            const obj = {
-                field,
-                value: arr[field]
-            };
-            this.removableFiltersArray.push(obj);
-        });
-    }
-
-    @Input() set removableFiltersFlota(arr:any){
-        this.removableFiltersFlotaArray = [];
-
-        Object.keys(arr).map((field, index) => {
-            if (Array.isArray(arr[field])) {
-                arr[field].map((e:any) => {
-                    const obj = {
-                        field,
-                        value: e
-                    };
-                    this.removableFiltersFlotaArray.push(obj);
-                });
-            } else {
+        console.log('arr filters',arr)
+        if(arr){
+            console.log('arr filters',arr)
+            Object.keys(arr).map((field, index) => {
                 const obj = {
                     field,
                     value: arr[field]
                 };
-                this.removableFiltersFlotaArray.push(obj);
-            }
-        });
+                this.removableFiltersArray.push(obj);
+            });
+        }
+    }
+
+    @Input() set removableFiltersFlota(arr:any){
+        this.removableFiltersFlotaArray = [];
+        console.log('arr filters flota',arr)
+        if(arr){
+            console.log('arr filters flota',arr)
+            Object.keys(arr).map((field, index) => {
+                if (Array.isArray(arr[field])) {
+                    arr[field].map((e:any) => {
+                        const obj = {
+                            field,
+                            value: e
+                        };
+                        this.removableFiltersFlotaArray.push(obj);
+                    });
+                } else {
+                    const obj = {
+                        field,
+                        value: arr[field]
+                    };
+                    this.removableFiltersFlotaArray.push(obj);
+                }
+            });
+        }
     }
 
     @Input() removableCategory: any = [];

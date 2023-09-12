@@ -226,7 +226,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       }
 
       // 01. Marca
-      if (query['_value'].hasOwnProperty('filter_MARCA')) {
+      if (query['_value']?.hasOwnProperty('filter_MARCA')) {
         const marca = query['_value']['filter_MARCA'];
         const meta = {
           title: marca,
