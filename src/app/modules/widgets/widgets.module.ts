@@ -5,29 +5,25 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 // Modules
 import { SharedModule } from '../../shared/shared.module';
+// import { Ng5SliderModule } from 'ng5-slider';
+
 // Components
 import { WidgetFiltersComponent } from './widget-filters/widget-filters.component';
-// import { Ng5SliderModule } from 'ng5-slider';
-// import { WidgetCategoriesComponent } from './widget-categories/widget-categories.component';
-// import { WidgetPostsComponent } from './widget-posts/widget-posts.component';
+
 
 @NgModule({
   declarations: [
-    // WidgetCategoriesComponent,
     WidgetFiltersComponent,
-    // WidgetPostsComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
-    // Ng5SliderModule,
     SharedModule,
     FormsModule,
+     // Ng5SliderModule,
   ],
   exports: [
-    // WidgetCategoriesComponent,
     WidgetFiltersComponent,
-    // WidgetPostsComponent
   ],
 })
 export class WidgetsModule {}

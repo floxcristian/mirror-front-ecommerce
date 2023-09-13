@@ -29,9 +29,6 @@
   </div>
 
   <div class="header_nav" id="sticky_header_b2c_nav"></div>
-  <app-header-nav
-    [ngStyle]="{ display: tipo === 'b2b' ? 'none' : 'none' }"
-  ></app-header-nav>
 
   <app-search-vin-b2b *ngIf="tipo === 'b2b'"></app-search-vin-b2b>
 </div>
