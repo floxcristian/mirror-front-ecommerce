@@ -29,7 +29,6 @@ export class UsersService {
 
   public uploadExcel(data: any) {
     const formData: FormData = new FormData();
-    // tslint:disable-next-line: forin
     for (const key in data) {
       formData.append(key, data[key]);
     }

@@ -1,23 +1,23 @@
+// Angular
 import { NgModule } from '@angular/core';
-
-// modules (angular)
 import { CommonModule, DecimalPipe, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgSelectModule } from '@ng-select/ng-select';
 import { RouterModule } from '@angular/router';
-
-// modules (third-party)
+// Libs
+import { NgSelectModule } from '@ng-select/ng-select';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-//import { AgmCoreModule } from '@agm/core';
-import { CollapseModule } from 'ngx-bootstrap/collapse';
-//import { InlineSVGModule } from 'ng-inline-svg';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { NgbNavModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
-
-// directives
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { NgChartsModule, ThemeService } from 'ng2-charts';
+//import { AgmCoreModule } from '@agm/core';
+// Directives
 import { ClickDirective } from './directives/click.directive';
 import {
   CollapseContentDirective,
@@ -34,14 +34,13 @@ import { DisableControlDirective } from './directives/disable-control.directive'
 import { OnlyNumbersDirective } from './directives/only-numbers.directive';
 import { RutCharsDirective } from './directives/rut-chars.directive';
 import { LazyImgDirective } from './directives/lazy-img.directive';
-
-// pipes
+// Pipes
 import { CurrencyFormatPipe } from './pipes/currency-format.pipe';
 import { SlugifyPipe } from './pipes/slugify.pipe';
 import { CapitalizeFirstPipe } from './pipes/capitalize.pipe';
 import { TitleCasePipe } from './pipes/title-case.pipe';
-
-// components
+import { MonedaPipe } from './pipes/moneda.pipe';
+// Components
 import { AlertComponent } from './components/alert/alert.component';
 import { IconComponent } from './components/icon/icon.component';
 import { InputNumberComponent } from './components/input-number/input-number.component';
@@ -76,15 +75,15 @@ import { ProductCardB2cComponent } from './components/product-card-b2c/product-c
 import { UpdateFlotaModalComponent } from './components/update-flota-modal/update-flota-modal.component';
 import { PorductoTrComponent } from './components/tabla-producto/porducto-tr/producto-tr.component';
 import { InputNumberProductComponent } from './components/input-number-product/input-number-product.component';
-import { NgChartsModule, ThemeService } from 'ng2-charts';
+
 import { WishListModalComponent } from './components/wish-list-modal/wish-list-modal.component';
 import { ProductListCardComponent } from './components/product-list-card/product-list-card.component';
 import { EditarListaProductosComponent } from './components/editar-lista-productos/editar-lista-productos.component';
 import { AgregarListaProductosMasivaModalComponent } from './components/agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
 import { ProductListModalComponent } from './components/product-list-card/components/product-list-modal/product-list-modal.component';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+
 import { AngularEmailAutocompleteComponent } from './components/angular-email-autocomplete/angular-email-autocomplete.component';
-import { MonedaPipe } from './pipes/moneda.pipe';
+
 import { FiltroMagicoModule } from './components/filtro-magico/filtro-magico.module';
 import { ProductoSelectBusquedaComponent } from './components/producto-select-busqueda/producto-select-busqueda.component';
 import { AgregarListaProductosUnitariaModalComponent } from './components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
@@ -111,9 +110,6 @@ import { CountdownTimerModule } from './../../../projects/countdown-timer/src/li
 import { ProductCardB2cCmsComponent } from './components/product-card-b2c-cms/product-card-b2c-cms.component';
 import { ButtonsSlideshowComponent } from './components/buttons-slideshow/buttons-slideshow.component';
 import { ButtonComponent } from './components/buttons-slideshow/components/button/button.component';
-// Bootstrap
-import { NgbNavModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProductSlideshowSpecialsComponent } from '../pages/product-slideshow-specials/product-slideshow-specials.component';
 
 const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
@@ -128,14 +124,12 @@ const NGU_CAROUSEL_MODULES = [
 
 @NgModule({
   declarations: [
-    // directives
     ClickDirective,
     CollapseContentDirective,
     CollapseDirective,
     CollapseItemDirective,
     DepartmentsAreaDirective,
     DropdownDirective,
-
     OwlPreventClickDirective,
     DragDropDirective,
     PhoneCharDirective,
@@ -145,13 +139,10 @@ const NGU_CAROUSEL_MODULES = [
     RutCharsDirective,
     LazyImgDirective,
     AvisoStockComponent,
-    // pipe
     CurrencyFormatPipe,
     SlugifyPipe,
     TitleCasePipe,
     CapitalizeFirstPipe,
-
-    // components
     AlertComponent,
     IconComponent,
     InputNumberComponent,
@@ -211,7 +202,6 @@ const NGU_CAROUSEL_MODULES = [
     ButtonComponent,
   ],
   imports: [
-    // modules (angular)
     CommonModule,
     NgSelectModule,
     RouterModule,
@@ -219,16 +209,13 @@ const NGU_CAROUSEL_MODULES = [
     ReactiveFormsModule,
     NgbModule,
     ...BOOSTRAP_MODULES,
-    // modules (third-party)
     CarouselModule,
     ModalModule.forRoot(),
     TabsModule.forRoot(),
     TooltipModule.forRoot(),
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
-    // InlineSVGModule.forRoot(),
     NgxPaginationModule,
-    // PerfectScrollbarModule,
     CountdownTimerModule,
     // AgmCoreModule.forRoot({
     //   apiKey: 'AIzaSyD_HuwF5F8X8fOSR_1Ai_hFT115caUq4vI',
@@ -241,16 +228,11 @@ const NGU_CAROUSEL_MODULES = [
     InfiniteScrollModule,
   ],
   exports: [
-    // modules (third-party)
     CollapseModule,
     ModalModule,
     TabsModule,
-    //Ng2Rut,
-
     NgChartsModule,
     InfiniteScrollModule,
-
-    // directives
     ClickDirective,
     CollapseContentDirective,
     CollapseDirective,
@@ -259,8 +241,6 @@ const NGU_CAROUSEL_MODULES = [
     DropdownDirective,
     OwlPreventClickDirective,
     LazyImgDirective,
-
-    // pipes
     CurrencyFormatPipe,
     SlugifyPipe,
     DecimalPipe,
@@ -268,8 +248,6 @@ const NGU_CAROUSEL_MODULES = [
     CapitalizeFirstPipe,
     SafeHtmlPipe,
     ReplacePipe,
-
-    // components
     AlertComponent,
     IconComponent,
     InputNumberComponent,
@@ -307,21 +285,14 @@ const NGU_CAROUSEL_MODULES = [
     UpdateContactModalComponent,
     ButtonsSlideshowComponent,
     ButtonComponent,
-
-    // a evaluar
     CountdownTimerModule,
     NgSelectModule,
     CarouselModule,
-    // PerfectScrollbarModule,
     FiltroMagicoModule,
     MenuCategoriaComponent,
     ...NGU_CAROUSEL_MODULES,
   ],
   providers: [
-    /*{
-      provide: PERFECT_SCROLLBAR_CONFIG,
-      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
-    },*/
     SlugifyPipe,
     DecimalPipe,
     CapitalizeFirstPipe,

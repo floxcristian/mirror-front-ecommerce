@@ -1,8 +1,6 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
-// Libs
-// import { MetaModule } from '@ngx-meta/core';
 
 const routes: Routes = [
   {
@@ -18,7 +16,6 @@ const routes: Routes = [
       anchorScrolling: 'enabled',
       preloadingStrategy: PreloadAllModules,
     }),
-    // MetaModule.forRoot()
   ],
   exports: [RouterModule],
 })

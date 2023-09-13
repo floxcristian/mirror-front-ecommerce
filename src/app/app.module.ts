@@ -37,10 +37,6 @@ import { RouterModule } from '@angular/router';
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
-    /*LocalStorageModule.forRoot({
-      prefix: 'ImplementosB2B',
-      storageType: 'localStorage'
-    }),*/
     LocalStorageModule,
     ToastrModule.forRoot(),
     HttpClientModule,

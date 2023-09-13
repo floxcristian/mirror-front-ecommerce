@@ -59,7 +59,7 @@
       content: "";
       width: $local-dot-size;
       height: $local-dot-size;
-      border-radius: $local-dot-size / 2;
+      border-radius: calc($local-dot-size / 2);
       background: currentColor;
       margin: 6px;
     }

@@ -1,5 +1,7 @@
+// Angular
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+// Pages
 import { PageAboutUsComponent } from './pages/page-about-us/page-about-us.component';
 import { PageContactUsComponent } from './pages/page-contact-us/page-contact-us.component';
 import { PageContactUsAltComponent } from './pages/page-contact-us-alt/page-contact-us-alt.component';
@@ -14,99 +16,99 @@ import { PageComponentsComponent } from './pages/page-components/page-components
 import { PageTypographyComponent } from './pages/page-typography/page-typography.component';
 import { PageBlogComponent } from './pages/page-blog/page-blog.component';
 import { PageInicioSesionComponent } from './pages/page-inicio-sesion/page-inicio-sesion.component';
-import { DetailNewsComponent } from './components/detail-news/detail-news.component';
 import { PageRegistroUsuarioComponent } from './pages/page-registro-usuario/page-registro-usuario.component';
-import { PageRegistroUsuarioB2BComponent } from './pages/page-registro-usuario-b2b/page-registro-usuario-b2b.component';
 import { PageBasesConcursoComponent } from './pages/page-bases-concurso/page-bases-concurso.component';
+import { PageRegistroUsuarioB2BComponent } from './pages/page-registro-usuario-b2b/page-registro-usuario-b2b.component';
 import { PagePoliticasImplementosComponent } from './pages/page-politicas-implementos/page-politicas-implementos.component';
+import { DetailNewsComponent } from './components/detail-news/detail-news.component';
 
 const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'acerca-de-nosotros'
+    redirectTo: 'acerca-de-nosotros',
   },
   {
     path: 'acerca-de-nosotros',
-    component: PageAboutUsComponent
+    component: PageAboutUsComponent,
   },
   {
     path: 'contacto',
-    component: PageContactUsComponent
+    component: PageContactUsComponent,
   },
   {
     path: 'contact-us-alt',
-    component: PageContactUsAltComponent
+    component: PageContactUsAltComponent,
   },
   {
     path: 'termino-y-condiciones',
-    component: PageTermsComponent
+    component: PageTermsComponent,
   },
   {
     path: 'politicas-de-privacidad',
-    component: PagePolicyComponent
+    component: PagePolicyComponent,
   },
   {
     path: 'politicas/:tipo',
-    component: PagePoliticasImplementosComponent
+    component: PagePoliticasImplementosComponent,
   },
 
   {
     path: 'tiendas',
-    component: PageStoresComponent
+    component: PageStoresComponent,
   },
   {
     path: 'catalogos-zonas',
-    component: PageSelectCatalogComponent
+    component: PageSelectCatalogComponent,
   },
   {
     path: 'recover',
-    component: PageRecoveringComponent
+    component: PageRecoveringComponent,
   },
   {
     path: 'change/:id',
-    component: PageRecoveringChangeComponent
+    component: PageRecoveringChangeComponent,
   },
   {
     path: 'faq',
-    component: PageFaqComponent
+    component: PageFaqComponent,
   },
   {
     path: 'components',
-    component: PageComponentsComponent
+    component: PageComponentsComponent,
   },
   {
     path: 'typography',
-    component: PageTypographyComponent
+    component: PageTypographyComponent,
   },
   {
     path: 'blog',
-    component: PageBlogComponent
+    component: PageBlogComponent,
   },
   {
     path: 'iniciar-sesion',
-    component: PageInicioSesionComponent
+    component: PageInicioSesionComponent,
   },
   {
     path: 'registro-usuario',
-    component: PageRegistroUsuarioComponent
+    component: PageRegistroUsuarioComponent,
   },
   {
     path: 'registro-usuario-b2b',
-    component: PageRegistroUsuarioB2BComponent
+    component: PageRegistroUsuarioB2BComponent,
   },
   {
     path: 'detail-news/:id',
-    component: DetailNewsComponent
+    component: DetailNewsComponent,
   },
   {
     path: 'bases-concurso',
-    component: PageBasesConcursoComponent
-  }
+    component: PageBasesConcursoComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class SiteRoutingModule {}

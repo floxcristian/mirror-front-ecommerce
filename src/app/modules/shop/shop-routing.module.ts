@@ -1,5 +1,7 @@
+// Angular
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+// Pages
 import { PageCategoryComponent } from './pages/page-category/page-category.component';
 import { PageProductComponent } from './pages/page-product/page-product.component';
 
