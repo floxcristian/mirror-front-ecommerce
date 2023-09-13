@@ -1,6 +1,8 @@
 /*
 // .tooltip
 */
+@use "sass:math";
+
 @import "../variables";
 
 $local-arrow-size: 8px;
@@ -34,8 +36,7 @@ $local-square-root-of-two: 1.414213;
     background: $tooltip-color;
     transform: rotateZ(45deg)
       scale(
-        $local-arrow-size /
-          (floor($local-square-root-of-two * $local-arrow-size) - 0.5)
+        math.div($local-arrow-size, floor($local-square-root-of-two * $local-arrow-size) - 0.5)
       );
   }
 }
