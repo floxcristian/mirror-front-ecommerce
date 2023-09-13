@@ -1,27 +1,17 @@
+// Angular
 import { NgModule } from '@angular/core';
-
-// modules (angular)
 import { CommonModule } from '@angular/common';
-
-// modules
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+// Libs
+import { DataTablesModule } from 'angular-datatables';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { PaginationModule, PaginationConfig } from 'ngx-bootstrap/pagination';
+// Routing
 import { AccountRoutingModule } from './account-routing.module';
+// Modules
 import { SharedModule } from '../../shared/shared.module';
-
-// components
-import { LayoutComponent } from './components/layout/layout.component';
-
-// Entry components
-/*
-ModalComponent,
-AddFlotaModalComponent,
-UpdateFlotaModalComponent,
-EditarListaProductosComponent,
-AgregarListaProductosMasivaModalComponent,
-AgregarListaProductosUnitariaModalComponent,
-AddCentroCostoModalComponent,
-EditCentroCostoModalComponent*/
-
-// pages
+// Pages
 import { PageAddressesListComponent } from './pages/page-addresses-list/page-addresses-list.component';
 import { PageDashboardComponent } from './pages/page-dashboard/page-dashboard.component';
 import { PageLoginComponent } from './pages/page-login/page-login.component';
@@ -34,63 +24,45 @@ import { PageNewProductsComponent } from './pages/page-new-products/page-new-pro
 import { PageSlidesComponent } from './pages/page-slides/page-slides.component';
 import { PagePasswordComponent } from './pages/page-password/page-password.component';
 import { PageProfileComponent } from './pages/page-profile/page-profile.component';
-import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
-import { OrderApprovalComponent } from './components/order-approval/order-approval.component';
 import { PagePendingOrdersComponent } from './pages/page-pending-orders/page-pending-orders.component';
-import { DataTablesModule } from 'angular-datatables';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { PageQuotationComponent } from './pages/page-quotation/page-quotation.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PurchaseRequestComponent } from './pages/purchase-request/purchase-request.component';
 import { PagePaymentPortalComponent } from './pages/page-payment-portal/page-payment-portal.component';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PageTrackingComponent } from './pages/page-tracking/page-tracking.component';
 import { PageSaveCartComponent } from './pages/page-save-cart/page-save-cart.component';
-import { AddressModalComponent } from '../../shared/components/address-modal/address-modal.component';
-// import { CardDashboardChartComponent } from '../../shared/components/card-dashboard-chart/card-dashboard-chart.component';
-import { CardDashboardComponent } from '../../shared/components/card-dashboard/card-dashboard.component';
-import { OrderDetailsComponent } from '../../shared/components/order-details/order-details.component';
-
-// import { DragDropModule } from '@angular/cdk/drag-drop';
-import { PageCajaConceptoComponent } from './pages/page-caja-concepto/page-caja-concepto.component';
-import { PageCajaConceptoDemoComponent } from './pages/page-caja-concepto/page-caja-concepto-demo/page-caja-concepto-demo.component';
 import { PageCargaMasivaProdComponent } from './pages/page-carga-masiva-prod/page-carga-masiva-prod.component';
-import { ModalComponent } from '../../shared/components/modal/modal.component';
 import { DetalleTrakingOvComponent } from './pages/page-detalle-traking-ov/page-detalle-traking-ov.component';
 import { PageListaPreciosComponent } from './pages/page-lista-precios/page-lista-precios.component';
 import { PageFlotaComponent } from './pages/page-flota/page-flota.component';
-import { AddFlotaModalComponent } from '../../shared/components/add-flota-modal/add-flota-modal.component';
-import { UpdateFlotaModalComponent } from '../../shared/components/update-flota-modal/update-flota-modal.component';
-import { CardDashboardNoChartComponent } from '../../shared/components/card-dashboard-no-chart/card-dashboard-no-chart.component';
-import { PageTrackingOvComponent } from './pages/page-tracking-ov/page-tracking-ov.component';
 import { PageListasDeProductosComponent } from './pages/page-listas-de-productos/page-listas-de-productos.component';
-import { EditarListaProductosComponent } from '../../shared/components/editar-lista-productos/editar-lista-productos.component';
-import { AgregarListaProductosMasivaModalComponent } from '../../shared/components/agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
-import { AgregarListaProductosUnitariaModalComponent } from '../../shared/components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
 import { PageCentrosCostoComponent } from './pages/page-centros-costo/page-centros-costo.component';
 import { AddCentroCostoModalComponent } from './pages/page-centros-costo/components/add-centro-costo-modal/add-centro-costo-modal.component';
 import { EditCentroCostoModalComponent } from './pages/page-centros-costo/components/edit-centro-costo-modal/edit-centro-costo-modal.component';
 import { Trakingb2cComponent } from './pages/trakingb2c/trakingb2c.component';
-
 import { PageGestionUsuarioComponent } from './pages/page-gestion-usuario/page-gestion-usuario.component';
+import { PageComprasComponent } from './pages/page-compras/page-compras.component';
+import { PageTrackingOvComponent } from './pages/page-tracking-ov/page-tracking-ov.component';
+// Components
+import { LayoutComponent } from './components/layout/layout.component';
+import { DetallePedidoComponent } from './components/detalle-pedido/detalle-pedido.component';
 import { TablaUsuarioComponent } from './components/tabla-usuario/tabla-usuario.component';
 import { ModaluserComponent } from './components/modaluser/modaluser.component';
 import { FiltroCategoriasComponent } from './components/filtro-categorias/filtro-categorias.component';
 import { Modal_reciboComponent } from './components/modal_recibo/modal_recibo/modal_recibo.component';
-import { PageComprasComponent } from './pages/page-compras/page-compras.component';
-import { DetallePedidoComponent } from './components/detalle-pedido/detalle-pedido.component';
-import { PaginationModule, PaginationConfig } from 'ngx-bootstrap/pagination';
-import { TrackingStepsComponent } from 'src/app/shared/components/tracking-steps/tracking-steps.component';
+// Shared components (se deben pasar al account.module ya que solo se usan aquí)
 import { CardDashboardHorizontalBarChartComponent } from 'src/app/shared/components/card-dashboard-horizontal-bar-chart/card-dashboard-horizontal-bar-chart.component';
 import { CardDashboardLineChartComponent } from 'src/app/shared/components/card-dashboard-line-chart/card-dashboard-line-chart.component';
 import { PasswordModalComponent } from 'src/app/shared/components/password-modal/password-modal.component';
 import { EditProfileModalComponent } from 'src/app/shared/components/edit-profile-modal/edit-profile-modal.component';
+import { TrackingStepsComponent } from 'src/app/shared/components/tracking-steps/tracking-steps.component';
+import { AddressModalComponent } from '../../shared/components/address-modal/address-modal.component';
+import { CardDashboardComponent } from '../../shared/components/card-dashboard/card-dashboard.component';
+import { OrderDetailsComponent } from '../../shared/components/order-details/order-details.component';
+import { CardDashboardNoChartComponent } from '../../shared/components/card-dashboard-no-chart/card-dashboard-no-chart.component';
 
 @NgModule({
   declarations: [
-    // components
     LayoutComponent,
-    // pages
     PageAddressesListComponent,
     PageDashboardComponent,
     PageLoginComponent,
@@ -103,8 +75,6 @@ import { EditProfileModalComponent } from 'src/app/shared/components/edit-profil
     PageSlidesComponent,
     PagePasswordComponent,
     PageProfileComponent,
-    EditProfileComponent,
-    OrderApprovalComponent,
     PagePendingOrdersComponent,
     PageQuotationComponent,
     PurchaseRequestComponent,
@@ -118,8 +88,6 @@ import { EditProfileModalComponent } from 'src/app/shared/components/edit-profil
     OrderDetailsComponent,
     PasswordModalComponent,
     TrackingStepsComponent,
-    PageCajaConceptoComponent,
-    PageCajaConceptoDemoComponent,
     PageCargaMasivaProdComponent,
     DetalleTrakingOvComponent,
     PageListaPreciosComponent,
@@ -142,7 +110,6 @@ import { EditProfileModalComponent } from 'src/app/shared/components/edit-profil
   ],
   imports: [
     CommonModule,
-    // modules
     AccountRoutingModule,
     SharedModule,
     DataTablesModule,

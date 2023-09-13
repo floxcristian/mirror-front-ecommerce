@@ -6,9 +6,9 @@ import { RootService } from '../../../../shared/services/root.service';
 @Component({
   selector: 'app-detalle-pedido',
   templateUrl: './detalle-pedido.component.html',
-  styleUrls: ['./detalle-pedido.component.scss']
+  styleUrls: ['./detalle-pedido.component.scss'],
 })
-export class DetallePedidoComponent implements OnInit {
+export class DetallePedidoComponent {
   @Input() set ordenVenta(value: any) {
     this.n_ov = value;
   }
@@ -18,9 +18,11 @@ export class DetallePedidoComponent implements OnInit {
   addingToCart = false;
   @Input() productos: any = [];
   @Input() index: Number = 0;
-  constructor(public root: RootService, private cart: CartService, private toastr: ToastrService) {}
-
-  async ngOnInit() {}
+  constructor(
+    public root: RootService,
+    private cart: CartService,
+    private toastr: ToastrService
+  ) {}
 
   addCart(item: any) {
     if (this.addingToCart) {
@@ -28,11 +30,13 @@ export class DetallePedidoComponent implements OnInit {
     }
 
     this.addingToCart = true;
-    this.cart.add(item, 1).subscribe(resp => {
+    this.cart.add(item, 1).subscribe((resp) => {
       {
         this.addingToCart = false;
         if (!resp.error) {
-          this.toastr.success(`Productos "${item.sku}" agregado al carro correctamente.`);
+          this.toastr.success(
+            `Productos "${item.sku}" agregado al carro correctamente.`
+          );
         }
       }
     });

@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ClientsService } from '../../services/clients.service';
 import { PasswordValidator } from '../../validations/password';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-password-modal',
