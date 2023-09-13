@@ -34,6 +34,4 @@ export class PromesaService {
       productos,
     });
   }
-
-  //funcion para seleccionar la tienda//
 }
