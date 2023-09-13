@@ -1,6 +1,5 @@
 import { Component, Input, Inject } from '@angular/core';
 import { DirectionService } from '../../../shared/services/direction.service';
-// import { WINDOW } from 'ngx-owl-carousel-o/lib/services/window-ref.service';  // no se usa
 
 @Component({
   selector: 'app-block-brands',
