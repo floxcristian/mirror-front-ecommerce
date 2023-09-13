@@ -1,7 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { LoginService } from '../../../../shared/services/login.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-//import { LocalStorageService } from 'angular-2-local-storage';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CartService } from '../../../../shared/services/cart.service';
@@ -9,8 +8,6 @@ import { Usuario } from '../../../../shared/interfaces/login';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
-import { LogisticsService } from '../../../../shared/services/logistics.service';
-import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 @Component({
@@ -33,13 +30,11 @@ export class LoginComponent implements OnInit {
   constructor(
     private loginService: LoginService,
     private fb: FormBuilder,
-    //private localS: LocalStorageService,
     private router: Router,
     private toastr: ToastrService,
     private cart: CartService,
     private clientsService: ClientsService,
     private localStorage: LocalStorageService,
-    private logisticsService: LogisticsService
   ) {
     this.form = this.fb.group({
       username: ['', Validators.required],

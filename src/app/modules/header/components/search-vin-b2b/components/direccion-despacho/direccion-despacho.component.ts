@@ -1,5 +1,4 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
-// import { LocalStorageService } from 'angular-2-local-storage';
 import { ShippingAddress } from '../../../../../../shared/interfaces/address';
 import { PreferenciasCliente } from '../../../../../../shared/interfaces/preferenciasCliente';
 import { ResponseApi } from '../../../../../../shared/interfaces/response-api';

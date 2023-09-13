@@ -8,12 +8,10 @@ import {
 } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { departments } from '../../../../../data/header-departments';
 import { DepartmentsService } from '../../../../shared/services/departments.service';
 import { NavigationLink } from '../../../../shared/interfaces/navigation-link';
 import { isPlatformBrowser } from '@angular/common';
 import { CategoryService } from '../../../../shared/services/category.service';
-import { categories } from '../../../../../data/shop-widget-categories';
 import { CategoryApi } from '../../../../shared/interfaces/category-api';
 import { SlugifyPipe } from '../../../../shared/pipes/slugify.pipe';
 import { ToastrService } from 'ngx-toastr';

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CartService } from '../../../../shared/services/cart.service';
 import { ProductCart } from '../../../../shared/interfaces/cart-item';
 import { RootService } from '../../../../shared/services/root.service';
@@ -6,8 +6,6 @@ import { Subject } from 'rxjs';
 import { FormControl, Validators } from '@angular/forms';
 import { takeUntil, map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
-// import { LocalStorageService } from 'angular-2-local-storage';
-import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { Usuario } from '../../../../shared/interfaces/login';
 import { environment } from '../../../../../environments/environment';
 import { isVacio } from '../../../../shared/utils/utilidades';

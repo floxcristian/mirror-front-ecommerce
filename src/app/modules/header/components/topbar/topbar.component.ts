@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { CurrencyService } from '../../../../shared/services/currency.service';
 import { Usuario } from '../../../../shared/interfaces/login';
 import { LoginService } from '../../../../shared/services/login.service';
-// import { LocalStorageService } from 'angular-2-local-storage';
 import { Router } from '@angular/router';
 import { environment } from '../../../../../environments/environment';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
