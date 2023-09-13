@@ -1,27 +1,27 @@
 
-       <div class="table-responsive">
-        <table class="tabla-dias">
-          <tbody>
-            <tr>
-              <td
-                class='dia-container-habilitado'
-                *ngFor="let fecha of promesas | slice:0:5"
-              >
-                
-                  <div style="color: #00549d;">
-                    <p style="font-size: 12px"><strong>{{ fecha.fechaDia | uppercase }}</strong></p>
-                    <p style="font-size: 12px;margin-top: -15px;">{{ fecha.fecha | date: 'dd-MM'}}</p>
-                    <p *ngIf="fecha.valor > 0" style="font-size: 13px;;margin-top: -15px;">
-                      <strong>{{  fecha.valor | currency: 'CLP' }}</strong>
-                    </p>
-                    <p *ngIf="fecha.valor == 0" style="font-size: 13px;;margin-top: -15px;"><strong>Gratis</strong></p>
-                </div>
-             
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div> 
+<div class="table-responsive">
+  <table class="tabla-dias">
+    <tbody>
+      <tr>
+        <td
+          class='dia-container-habilitado'
+          *ngFor="let fecha of promesas | slice:0:5"
+        >
+          
+            <div style="color: #00549d;">
+              <p style="font-size: 12px"><strong>{{ fecha.fechaDia | uppercase }}</strong></p>
+              <p style="font-size: 12px;margin-top: -15px;">{{ fecha.fecha | date: 'dd-MM'}}</p>
+              <p *ngIf="fecha.valor > 0" style="font-size: 13px;;margin-top: -15px;">
+                <strong>{{  fecha.valor | currency: 'CLP' }}</strong>
+              </p>
+              <p *ngIf="fecha.valor == 0" style="font-size: 13px;;margin-top: -15px;"><strong>Gratis</strong></p>
+          </div>
+        
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
       
     
  

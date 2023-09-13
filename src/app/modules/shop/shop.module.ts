@@ -16,19 +16,16 @@ import { HeaderModule } from '../header/header.module';
 import { PageProductComponent } from './pages/page-product/page-product.component';
 import { PageCategoryComponent } from './pages/page-category/page-category.component';
 // Components
-import { DescripcionComponent } from './components/descripcion/descripcion.component';
-import { DespachoComponent } from './components/despacho/despacho.component';
-import { FechasPromesasComponent } from './components/fechas-promesas/fechas-promesas.component';
-import { MapaFichasComponent } from './components/despacho/mapa-fichas/mapa-fichas.component';
-import { DetalleTecnicosComponent } from './components/detalle-tecnicos/detalle-tecnicos.component';
 import { ComentariosComponent } from './components/comentarios/comentarios.component';
+import { DescripcionComponent } from './components/descripcion/descripcion.component';
+import { MapaFichasComponent } from './components/despacho/mapa-fichas/mapa-fichas.component';
+import { DespachoComponent } from './components/despacho/despacho.component';
+import { DetalleTecnicosComponent } from './components/detalle-tecnicos/detalle-tecnicos.component';
+import { FechasPromesasComponent } from './components/fechas-promesas/fechas-promesas.component';
+
+//shared
 import { ProductComponent } from '../../shared/components/product/product.component';
 import { ProductStockComponent } from '../../shared/components/product-stock/product-stock.component';
-import { ProductTabsComponent } from './components/product-tabs/product-tabs.component';
-
-//import { ProductLineBossComponent } from '../../shared/components/product-line-boss/product-line-boss.component';
-//import { QuickviewComponent } from '../../shared/components/quickview/quickview.component';
-//import { RatingComponent } from '../../shared/components/rating/rating.component';
 
 @NgModule({
   declarations: [
@@ -36,12 +33,6 @@ import { ProductTabsComponent } from './components/product-tabs/product-tabs.com
     PageProductComponent,
     ProductComponent,
     ProductStockComponent,
-    ProductTabsComponent,
-    /*ProductLineBossComponent,
-
-    // Evaluar si se van a ocupar sino eliminar
-    QuickviewComponent,
-    RatingComponent,*/
     DescripcionComponent,
     DespachoComponent,
     FechasPromesasComponent,
