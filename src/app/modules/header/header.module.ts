@@ -15,10 +15,12 @@ import { BlocksModule } from '../blocks/blocks.module';
 // Components
 import { AccountComponent } from './components/account/account.component';
 
-//revisar 
+// FIXME: revisar
 import { DepartmentsComponent } from './components/departments/departments.component';
-import { LinksComponent } from './components/links/links.component';
+// FIXME: No tiene logica...
 import { MegamenuComponent } from './components/megamenu/megamenu.component';
+// FIXME: No se invoca
+import { LinksComponent } from './components/links/links.component';
 
 import { DropcartComponent } from './components/dropcart/dropcart.component';
 import { HeaderComponent } from './header.component';
