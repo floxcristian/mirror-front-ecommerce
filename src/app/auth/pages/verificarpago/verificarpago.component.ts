@@ -8,7 +8,7 @@ import { PaymentService } from '../../../shared/services/payment.service';
   templateUrl: './verificarpago.component.html',
   styleUrls: ['./verificarpago.component.scss'],
 })
-export class VerificarpagoComponent implements OnInit {
+export class VerificarpagoComponent {
   SubscriptionQueryParams: Subscription;
   constructor(
     private route: ActivatedRoute,
@@ -18,8 +18,6 @@ export class VerificarpagoComponent implements OnInit {
       this.manejaRespuesta(query);
     });
   }
-
-  ngOnInit() {}
 
   async manejaRespuesta(query: any) {
     let consulta: any = await this.paymentService
