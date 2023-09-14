@@ -1,80 +1,112 @@
 <div class="row justify-content-center" [class.mb-2]="!inHeader">
-    <!-- FILTROS -->
-    <div class="col-12 d-flex" [class.col-7]="inHeader" [class.col-9]="!inHeader">
-
-        <div class="card card-filtro p-0 d-flex flex-column align-items-center">
-
-            <div class="d-flex flex-column w-100">
-                <tabset class="miTabset" [ngStyle]="{'border': inHeader ? '1px solid #ccc' : '0px'}">
-                    <tab heading="FILTRAR POR VIN O PATENTE">
-                        <div>
-                            <div class="row justify-content-center mt-1">
-                                <div class="col-9">
-                                    <div class="input-group">
-                                        <input type="search" class="form-control form-control-sm"
-                                            placeholder="Ingrese VIN, usualmente N° de 17 dígitos o patente"
-                                            (keyup)="chasisPatente = chasisPatente.toUpperCase();" aria-label="VIN"
-                                            [(ngModel)]="chasisPatente">
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <button class="btn btn-secondary btn-sm btn-block" type="button"
-                                        (click)="buscarChassis()">FILTRAR <i
-                                            class="fas fa-search fa-lg ml-2"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </tab>
-
-                    <tab heading="FILTRAR POR MARCA, MODELO Y AÑO">
-                        <div>
-                            <div class="row">
-                                <div class="col-3">
-                                    <div class="input-group">
-                                        <select class="form-control form-control-sm bootstrap-select" [(ngModel)]="anio"
-                                            (change)="seleccionaAnio()">
-                                            <option selected [value]="''">Seleccione año...</option>
-                                            <option *ngFor="let item of anios" [value]="item">{{item}}</option>
-                                        </select>
-
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="input-group">
-                                        <select class="form-control form-control-sm bootstrap-select"
-                                            [(ngModel)]="marca" (change)="seleccionaMarca()" [disabled]="anio === ''">
-                                            <option selected [value]="''">Seleccione marca...</option>
-                                            <option *ngFor="let item of marcas" [value]="item">{{item}}</option>
-                                        </select>
-                                        <div class="mensaje" *ngIf="anio === ''">Seleccione un año primero
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="input-group">
-                                        <select class="form-control form-control-sm bootstrap-select"
-                                            [(ngModel)]="modelo" [disabled]="anio === '' || marca === ''">
-                                            <option selected [value]="''">Seleccione modelo...</option>
-                                            <option *ngFor="let item of modelos" [value]="item">{{item}}</option>
-                                        </select>
-                                        <div class="mensaje" *ngIf="anio === '' || marca === ''">
-                                            Seleccione una marca primero</div>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <button class="btn btn-sm btn-block btn-secondary" type="button"
-                                        [disabled]="anio === '' || marca === '' || modelo === ''"
-                                        (click)="buscarVehiculo()">FILTRAR <i
-                                            class="fas fa-search fa-lg ml-2"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </tab>
-                </tabset>
+  <!-- FILTROS -->
+  <div class="col-12 d-flex" [class.col-7]="inHeader" [class.col-9]="!inHeader">
+    <div class="card card-filtro p-0 d-flex flex-column align-items-center">
+      <div class="d-flex flex-column w-100">
+        <tabset
+          class="miTabset"
+          [ngStyle]="{ border: inHeader ? '1px solid #ccc' : '0px' }"
+        >
+          <tab heading="FILTRAR POR VIN O PATENTE">
+            <div>
+              <div class="row justify-content-center mt-1">
+                <div class="col-9">
+                  <div class="input-group">
+                    <input
+                      type="search"
+                      class="form-control form-control-sm"
+                      placeholder="Ingrese VIN, usualmente N° de 17 dígitos o patente"
+                      (keyup)="chasisPatente = chasisPatente.toUpperCase()"
+                      aria-label="VIN"
+                      [(ngModel)]="chasisPatente"
+                    />
+                  </div>
+                </div>
+                <div class="col-3">
+                  <button
+                    class="btn btn-secondary btn-sm btn-block"
+                    type="button"
+                    (click)="buscarChassis()"
+                  >
+                    FILTRAR <i class="fas fa-search fa-lg ms-2"></i>
+                  </button>
+                </div>
+              </div>
             </div>
-        </div>
+          </tab>
+
+          <tab heading="FILTRAR POR MARCA, MODELO Y AÑO">
+            <div>
+              <div class="row">
+                <div class="col-3">
+                  <div class="input-group">
+                    <select
+                      class="form-control form-control-sm bootstrap-select"
+                      [(ngModel)]="anio"
+                      (change)="seleccionaAnio()"
+                    >
+                      <option selected [value]="''">Seleccione año...</option>
+                      <option *ngFor="let item of anios" [value]="item">
+                        {{ item }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="input-group">
+                    <select
+                      class="form-control form-control-sm bootstrap-select"
+                      [(ngModel)]="marca"
+                      (change)="seleccionaMarca()"
+                      [disabled]="anio === ''"
+                    >
+                      <option selected [value]="''">Seleccione marca...</option>
+                      <option *ngFor="let item of marcas" [value]="item">
+                        {{ item }}
+                      </option>
+                    </select>
+                    <div class="mensaje" *ngIf="anio === ''">
+                      Seleccione un año primero
+                    </div>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="input-group">
+                    <select
+                      class="form-control form-control-sm bootstrap-select"
+                      [(ngModel)]="modelo"
+                      [disabled]="anio === '' || marca === ''"
+                    >
+                      <option selected [value]="''">
+                        Seleccione modelo...
+                      </option>
+                      <option *ngFor="let item of modelos" [value]="item">
+                        {{ item }}
+                      </option>
+                    </select>
+                    <div class="mensaje" *ngIf="anio === '' || marca === ''">
+                      Seleccione una marca primero
+                    </div>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <button
+                    class="btn btn-sm btn-block btn-secondary"
+                    type="button"
+                    [disabled]="anio === '' || marca === '' || modelo === ''"
+                    (click)="buscarVehiculo()"
+                  >
+                    FILTRAR <i class="fas fa-search fa-lg ms-2"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </tab>
+        </tabset>
+      </div>
     </div>
-    <!-- <div class="imagen col-5 d-none">
+  </div>
+  <!-- <div class="imagen col-5 d-none">
             <div class="card card-filtro p-0" *ngIf="!collapsed">
                 <tabset class="miTabset">
                     <tab heading="TIPO DE VEHÍCULO: SEMIRREMOLQUE">

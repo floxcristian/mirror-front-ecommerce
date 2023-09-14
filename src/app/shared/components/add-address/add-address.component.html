@@ -98,7 +98,7 @@
           <button name="cerrar" class="btn btn-danger" *ngIf="invitado === false" (click)="hideNewAddress()">Cancelar</button>
           <button
             name="agregarDireccion"
-            class="btn btn-secondary ml-1"
+            class="btn btn-secondary ms-1"
             (click)="emitirDireccion()"
             [disabled]="!formDireccion.valid && !tienda"
           >

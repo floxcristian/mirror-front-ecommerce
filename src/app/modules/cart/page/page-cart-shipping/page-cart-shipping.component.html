@@ -121,9 +121,9 @@
         </div>
       </div>
     </div>
-    <div class="container ml-4" *ngIf="innerWidth < 450">
+    <div class="container ms-4" *ngIf="innerWidth < 450">
       <div
-        class="cart-address-container ml-3 col-12 col-lg-12 pt-3 pb-2 pl-2"
+        class="cart-address-container ms-3 col-12 col-lg-12 pt-3 pb-2 pl-2"
         style="color: #0063b9; margin-bottom: 10px"
         [ngStyle]="{ width: innerWidth > 450 ? '96%' : '92%' }"
       >
@@ -218,7 +218,7 @@
                   <!-- <p *ngIf="tienda" class="subtitle" style="font-weight:normal;padding:0.5rem 2px">{{ tienda.direccion }}</p> -->
                 </div>
                 <div
-                  class="cart-address-container ml-3 col-12 col-lg-12 pt-3 pb-2 pl-2"
+                  class="cart-address-container ms-3 col-12 col-lg-12 pt-3 pb-2 pl-2"
                   style="color: #0063b9; margin-bottom: 10px"
                   [ngStyle]="{ width: innerWidth > 450 ? '96%' : '92%' }"
                 >
@@ -334,14 +334,14 @@
                 </div>
 
                 <div
-                  class="form-row ml-2 mt-4"
+                  class="form-row ms-2 mt-4"
                   *ngIf="shippingDaysStore.length > 0"
                 >
                   <div class="form-group col-12" style="color: #0063b9">
                     <label>Seleccione quien retira el pedido</label>
                     <div class="clearfix"></div>
 
-                    <div class="row ml-2 mt-3 mx-0">
+                    <div class="row ms-2 mt-3 mx-0">
                       <div class="col-sm p-0">
                         <div class="form-check form-check-lg">
                           <span class="form-check-input input-check">
@@ -416,7 +416,7 @@
                         Persona que recibe
                       </p>
                     </div>
-                    <div class="col-12 col-sm-10 ml-1">
+                    <div class="col-12 col-sm-10 ms-1">
                       <div
                         class="cart-address-container pt-3 pb-3 pl-2"
                         [ngClass]="
@@ -618,13 +618,13 @@
                   ></app-add-address>
 
                   <div *ngIf="usuarioInvitado && direccion">
-                    <div class="row ml-2 mt-3">
+                    <div class="row ms-2 mt-3">
                       <div class="col-12 col-lg-6">
                         <p class="subtitle my-0 pt-0">Dirección de despacho</p>
                       </div>
                     </div>
 
-                    <div class="col-12 col-lg-12 ml-3 mt-3">
+                    <div class="col-12 col-lg-12 ms-3 mt-3">
                       <div class="cart-address-container">
                         <div
                           class="row pb-3 pt-3 d-flex flex-wrap align-items-sm-center pl-2 mr-1"
@@ -653,7 +653,7 @@
                               >
                                 dirección
                                 <i
-                                  class="fas fa-pencil-alt ml-2 editIcon"
+                                  class="fas fa-pencil-alt ms-2 editIcon"
                                   style="font-size: 15px !important"
                                 ></i>
                               </div>
@@ -740,7 +740,7 @@
                     >
                       <!-- Segmento correspondiente al formulario asociado a la persona que recibe el producto-->
                       <div
-                        class="form-row ml-2 mt-4"
+                        class="form-row ms-2 mt-4"
                         *ngIf="shippingDays.length > 0"
                       >
                         <!-- Formulario de  dias para despacho -->
@@ -809,7 +809,7 @@
                         <!-- Fin Formulario de  dias para despacho -->
 
                         <div class="form-group col-12" style="color: #0063b9">
-                          <div class="row ml-2 mt-3 mx-0">
+                          <div class="row ms-2 mt-3 mx-0">
                             <div class="col p-0">
                               <div class="form-check form-check-lg">
                                 <span class="form-check-input input-check">
@@ -882,7 +882,7 @@
                               Persona que recibe
                             </p>
                           </div>
-                          <div class="col-12 ml-1">
+                          <div class="col-12 ms-1">
                             <div
                               class="cart-address-container pt-3 pb-3 pl-2"
                               [ngClass]="
@@ -913,7 +913,7 @@
                                     >
                                       datos
                                       <i
-                                        class="fas fa-pencil-alt ml-2"
+                                        class="fas fa-pencil-alt ms-2"
                                         style="font-size: 15px !important"
                                       ></i>
                                     </div>
@@ -1037,7 +1037,7 @@
             <div class="card" >
                 <div class="card-header" style="margin-bottom: 1px !important;">
                     <div class="mostrarResumen">
-                        <div class="ml-1" style="display: inline-block;"> Ubicación de la tienda de entrega </div>
+                        <div class="ms-1" style="display: inline-block;"> Ubicación de la tienda de entrega </div>
                     </div>
                 </div>
             </div>
@@ -1055,7 +1055,7 @@
               class="mostrarResumen"
               (click)="showDetalleProductos = !showDetalleProductos"
             >
-              <div class="ml-1" style="display: inline-block; color: #0063b9">
+              <div class="ms-1" style="display: inline-block; color: #0063b9">
                 Resumen de tu compra
               </div>
               <div
@@ -1214,13 +1214,13 @@
           <div class="card-header" style="margin-bottom: 1px !important">
             <!-- FIXME: NI IDEA QUE HACEN -->
             <!-- <div class="mostrarResumen" (click)="setShowDetalleProductos = !setShowDetalleProductos">
-              <div class="ml-1" style="display: inline-block">Resumen de tu compra</div>
+              <div class="ms-1" style="display: inline-block">Resumen de tu compra</div>
             </div> -->
             <div
               class="mostrarResumen"
               (click)="setShowDetalleProductos(!showDetalleProductos)"
             >
-              <div class="ml-1" style="display: inline-block">
+              <div class="ms-1" style="display: inline-block">
                 Resumen de tu compra
               </div>
             </div>
@@ -1312,7 +1312,7 @@
   ></div>
   <div
     *ngIf="shippingSelected && select_grupos"
-    class="ml-3 mr-3"
+    class="ms-3 mr-3"
     style="margin-top: 5px"
     [ngStyle]="{
       'margin-bottom': showDetalleProductos == true ? '265px' : '195px'
@@ -1322,7 +1322,7 @@
     <div class="card" [ngClass]="valshowDetalleProductos() ? 'h-100' : ''">
       <div class="card-header" style="margin-bottom: 1px !important">
         <div (click)="setShowDetalleProductos(!showDetalleProductos)">
-          <div class="ml-1 text-justify" style="color: #0063b9">
+          <div class="ms-1 text-justify" style="color: #0063b9">
             <strong> Resumen de tu compra</strong>
           </div>
         </div>
@@ -1345,7 +1345,7 @@
 
   <div class="footer-page" style="z-index: 900">
     <div
-      class="ml-3 mr-3"
+      class="ms-3 mr-3"
       style="margin-top: 5px; margin-bottom: -13px"
       [hidden]="showAllAddress ? true : false"
     >

@@ -1,4 +1,3 @@
-
 <div class="container">
   <div class="mt-2">
     <app-page-header
@@ -9,6 +8,7 @@
     </app-page-header>
   </div>
 </div>
+
 <ng-container *ngIf="layout !== 'sidebar'">
   <div>
     <div class="container">
@@ -33,7 +33,7 @@
             id="tabs"
           >
             <li
-              class="nav-item mr-5"
+              class="nav-item me-5"
               [ngStyle]="{
                 display:
                   descripcionDesktop?.visible && descripcionMobile?.visible
@@ -61,7 +61,7 @@
               </a>
               <div class="w-100"></div>
             </li>
-            <li class="nav-item mr-5">
+            <li class="nav-item me-5">
               <a
                 class="nav-link"
                 id="detallesTecnicos-tab"
@@ -73,11 +73,12 @@
                 role="tab"
                 aria-controls="detallesTecnicos"
                 aria-selected="false"
-                >Detalles Técnicos</a
               >
+                Detalles Técnicos
+              </a>
               <div class="w-100"></div>
             </li>
-            <li class="nav-item mr-5">
+            <li class="nav-item me-5">
               <a
                 class="nav-link"
                 id="evaluacion-tab"
@@ -86,8 +87,9 @@
                 role="tab"
                 aria-controls="evaluacion"
                 aria-selected="false"
-                >Evaluación</a
               >
+                Evaluación
+              </a>
               <div class="w-100"></div>
             </li>
           </ul>
@@ -105,8 +107,10 @@
               role="tabpanel"
               aria-labelledby="descripcion-tab"
             >
-              <app-descripcion #descripcionDesktop [sku]="product.sku">
-              </app-descripcion>
+              <app-descripcion
+                #descripcionDesktop
+                [sku]="product.sku"
+              ></app-descripcion>
             </div>
 
             <ng-container
@@ -126,8 +130,10 @@
                 role="tabpanel"
                 aria-labelledby="descripcion-tab"
               >
-                <app-product-stock #stockDesktop [sku]="product.sku">
-                </app-product-stock>
+                <app-product-stock
+                  #stockDesktop
+                  [sku]="product.sku"
+                ></app-product-stock>
               </div>
             </ng-container>
             <div
@@ -157,6 +163,7 @@
             </div>
           </div>
         </div>
+
         <div class="d-block d-sm-none mt-4">
           <div class="accordion" id="accordionExample">
             <div
@@ -203,8 +210,10 @@
                     : 'none'
               }"
             >
-              <app-descripcion #descripcionMobile [sku]="product.sku">
-              </app-descripcion>
+              <app-descripcion
+                #descripcionMobile
+                [sku]="product.sku"
+              ></app-descripcion>
             </div>
             <hr />
             <div id="headingTwo">
@@ -320,8 +329,7 @@
                       *ngIf="isB2B"
                       [product]="item"
                       [origen]="[origen[0], origen[1], origen[2], 'matriz']"
-                    >
-                    </app-product-card-b2b>
+                    ></app-product-card-b2b>
                   </ng-template>
                 </div>
                 <div *ngIf="matrixProducts.length < 4">
@@ -384,14 +392,12 @@
                       *ngIf="isB2B"
                       [product]="item"
                       [origen]="[origen[0], origen[1], origen[2], 'matriz']"
-                    >
-                    </app-product-card-b2b>
+                    ></app-product-card-b2b>
                     <app-product-card-b2c-ficha
                       *ngIf="!isB2B"
                       [product]="item"
                       [origen]="[origen[0], origen[1], origen[2], 'matriz']"
-                    >
-                    </app-product-card-b2c-ficha>
+                    ></app-product-card-b2c-ficha>
                   </ng-template>
                 </div>
                 <div *ngIf="mixProducts.length < 4">
@@ -453,4 +459,3 @@
     </div>
   </div>
 </ng-container>
-

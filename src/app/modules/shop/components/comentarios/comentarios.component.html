@@ -1,101 +1,157 @@
 <div class="card shadow-none pt-sm-0" *ngIf="comentarios.length === 0">
-    <div class="card-header pb-2">
-        <h4 style="color: #094cac"><strong>Comentarios</strong></h4>
-    </div>
+  <div class="card-header pb-2">
+    <h4 style="color: #094cac"><strong>Comentarios</strong></h4>
+  </div>
 
-    <div class="d-flex flex-column pb-3 mb-3">
-        <div class="w-100 text-center mt-2">
-            <h5>Sin comentarios</h5>
-        </div>
-        <div class="d-none d-sm-flex justify-content-end">
-            <button class="btn btn-sm btn-primary" (click)="escribirComentario()"><i class="fas fa-pencil-alt mr-2"></i>Escribir comentario</button>
-        </div>
-        <div class="d-block d-sm-none mt-2">
-            <button class="btn btn-block" style="color: #0d61bb; border: 1px solid #0d61bb; font-size: 1rem;" (click)="escribirComentario()">Escribir comentario</button>
-        </div>
+  <div class="d-flex flex-column pb-3 mb-3">
+    <div class="w-100 text-center mt-2">
+      <h5>Sin comentarios</h5>
     </div>
+    <div class="d-none d-sm-flex justify-content-end">
+      <button class="btn btn-sm btn-primary" (click)="escribirComentario()">
+        <i class="fas fa-pencil-alt mr-2"></i>Escribir comentario
+      </button>
+    </div>
+    <div class="d-block d-sm-none mt-2">
+      <button
+        class="btn btn-block"
+        style="color: #0d61bb; border: 1px solid #0d61bb; font-size: 1rem"
+        (click)="escribirComentario()"
+      >
+        Escribir comentario
+      </button>
+    </div>
+  </div>
 </div>
 <div class="card shadow-none pt-sm-0" *ngIf="comentarios.length > 0">
-    <div class="card-header pb-2">
-        <h4 style="color: #094cac"><strong>Comentarios</strong></h4>
+  <div class="card-header pb-2">
+    <h4 style="color: #094cac"><strong>Comentarios</strong></h4>
+  </div>
+
+  <div class="card-body pb-3 mb-3">
+    <div class="d-flex mb-3 mb-sm-2 justify-content-between align-items-center">
+      <div class="d-flex flex-column">
+        <h6 class="mt-2" style="color: #094cac">
+          <strong>Calificación general</strong>
+        </h6>
+        <div class="d-flex">
+          <span class="starsHeader">
+            <span [ngStyle]="{ width: anchoPintado + 'px' }"></span>
+          </span>
+          <div class="ms-2 text" style="cursor: pointer">
+            {{ rating }} ({{ total }} comentarios)
+          </div>
+        </div>
+      </div>
+      <div class="d-none d-sm-block">
+        <button class="btn btn-sm btn-primary" (click)="escribirComentario()">
+          <i class="fas fa-pencil-alt mr-2"></i>Escribir comentario
+        </button>
+      </div>
     </div>
 
-    <div class="card-body pb-3 mb-3">
-        <div class="d-flex mb-3 mb-sm-2 justify-content-between align-items-center">
-            <div class="d-flex flex-column">
-                <h6 class="mt-2" style="color: #094cac"><strong>Calificación general</strong></h6>
-                <div class="d-flex">
-                    <span class="starsHeader">
-                        <span [ngStyle]="{'width': anchoPintado + 'px'}"></span>
-                    </span>
-                    <div class="ml-2 text" style="cursor: pointer;">{{ rating }} ({{ total }} comentarios)</div>
-                </div>
-            </div>
-            <div class="d-none d-sm-block">
-                <button class="btn btn-sm btn-primary" (click)="escribirComentario()"><i class="fas fa-pencil-alt mr-2"></i>Escribir comentario</button>
-            </div>
-        </div>
-
-        <div class="d-block d-sm-none mb-3">
-            <button class="btn btn-block" style="color: #0d61bb; border: 1px solid #0d61bb; font-size: 1rem;" (click)="escribirComentario()">Escribir comentario</button>
-        </div>
-
-        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-end">
-            <div class="d-flex flex-column py-2 resumen">
-                <div *ngFor="let item of resumen" class="d-flex">
-                    <div class="d-flex align-items-center nowrap mr-2">
-                        <div>{{ item.estrellas }}</div>
-                        <div>
-                            <img class="ml-1" src="../../../../assets/svg/star-yellow.svg"
-                                style="width: 20px; height: 20px; margin-bottom: 3px;">
-                        </div>
-                    </div>
-                    <div style="width: 80%;">
-                        <div class="progress" style="height: 16px; margin-top: 3px;">
-                            <div class="progress-bar" style="background-color: #0d61bb;" role="progressbar" [ngStyle]="{'width.%': item.porcentaje}" aria-valuemin="0"
-                                aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                    <div class="ml-2 text-nowrap" style="width: 30px;">{{ item.cantidad }}</div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="mb-0" style="color: #094cac"><small>Ordenado Por:</small></label>
-                <select class="form-control mb-0" [(ngModel)]="orden" (change)="cargaDetalle()">
-                    <option value="recientes">Más recientes</option>
-                    <option value="mayorMenor">De mayor a menor calificación</option>
-                    <option value="menorMayor">De menor a mayor calificación</option>
-                </select>
-            </div>
-        </div>
+    <div class="d-block d-sm-none mb-3">
+      <button
+        class="btn btn-block"
+        style="color: #0d61bb; border: 1px solid #0d61bb; font-size: 1rem"
+        (click)="escribirComentario()"
+      >
+        Escribir comentario
+      </button>
     </div>
 
-    <div class="d-flex flex-column col-lg-6 col-12 p-0" style="color: #011935;">
-        <div class="d-flex flex-column mb-4" *ngFor="let item of comentarios">
-            <div class="d-flex flex-column flex-sm-row">
-                <div class="mr-4">
-                    <strong>{{ item.titulo | capitalizeFirst}}</strong>
-                </div>
-                <div class="mr-4">
-                    <span class="starsDetalle">
-                        <span [ngStyle]="{'width': (Math.max(0, (Math.min(5, item.calificacion))) * 20) + 'px'}"></span>
-                    </span>
-                </div>
-                <div *ngIf="item.recomienda">
-                    <small><strong>Recomienda este producto</strong><i class="fas fa-check-circle text-success mx-1"></i>Sí</small>
-                </div>
+    <div
+      class="d-flex flex-column flex-sm-row justify-content-between align-items-end"
+    >
+      <div class="d-flex flex-column py-2 resumen">
+        <div *ngFor="let item of resumen" class="d-flex">
+          <div class="d-flex align-items-center nowrap mr-2">
+            <div>{{ item.estrellas }}</div>
+            <div>
+              <img
+                class="ms-1"
+                src="../../../../assets/svg/star-yellow.svg"
+                style="width: 20px; height: 20px; margin-bottom: 3px"
+              />
             </div>
-            <div class="mb-2">
-                <small><span class="mr-3">Por {{item.nombre}}</span> Hace {{ item.tiempo }} {{ item.unidadTiempo }}</small>
+          </div>
+          <div style="width: 80%">
+            <div class="progress" style="height: 16px; margin-top: 3px">
+              <div
+                class="progress-bar"
+                style="background-color: #0d61bb"
+                role="progressbar"
+                [ngStyle]="{ 'width.%': item.porcentaje }"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
             </div>
-            <div class="text-justify">
-                {{ item.comentario | capitalizeFirst }}
-            </div>
+          </div>
+          <div class="ms-2 text-nowrap" style="width: 30px">
+            {{ item.cantidad }}
+          </div>
         </div>
-    </div>
+      </div>
 
-    <div class="text-center">
-        <button class="btn btn-link" style="color: #094cac;" *ngIf="slice && comentariosOriginal.length > 4" (click)="sliceToggle()">Mostrar más comentarios</button>
+      <div class="form-group">
+        <label class="mb-0" style="color: #094cac"
+          ><small>Ordenado Por:</small></label
+        >
+        <select
+          class="form-control mb-0"
+          [(ngModel)]="orden"
+          (change)="cargaDetalle()"
+        >
+          <option value="recientes">Más recientes</option>
+          <option value="mayorMenor">De mayor a menor calificación</option>
+          <option value="menorMayor">De menor a mayor calificación</option>
+        </select>
+      </div>
     </div>
+  </div>
+
+  <div class="d-flex flex-column col-lg-6 col-12 p-0" style="color: #011935">
+    <div class="d-flex flex-column mb-4" *ngFor="let item of comentarios">
+      <div class="d-flex flex-column flex-sm-row">
+        <div class="mr-4">
+          <strong>{{ item.titulo | capitalizeFirst }}</strong>
+        </div>
+        <div class="mr-4">
+          <span class="starsDetalle">
+            <span
+              [ngStyle]="{
+                width: Math.max(0, Math.min(5, item.calificacion)) * 20 + 'px'
+              }"
+            ></span>
+          </span>
+        </div>
+        <div *ngIf="item.recomienda">
+          <small
+            ><strong>Recomienda este producto</strong
+            ><i class="fas fa-check-circle text-success mx-1"></i>Sí</small
+          >
+        </div>
+      </div>
+      <div class="mb-2">
+        <small
+          ><span class="mr-3">Por {{ item.nombre }}</span> Hace
+          {{ item.tiempo }} {{ item.unidadTiempo }}</small
+        >
+      </div>
+      <div class="text-justify">
+        {{ item.comentario | capitalizeFirst }}
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center">
+    <button
+      class="btn btn-link"
+      style="color: #094cac"
+      *ngIf="slice && comentariosOriginal.length > 4"
+      (click)="sliceToggle()"
+    >
+      Mostrar más comentarios
+    </button>
+  </div>
 </div>

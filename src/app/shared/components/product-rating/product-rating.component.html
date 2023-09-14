@@ -1,37 +1,66 @@
 <div class="d-flex align-items-center">
-    <div class="cont-stars d-flex position-relative indicator--trigger--click" (click)="detalle.toggle()"
-        appDropdown="indicator--opened" #detalle="appDropdown">
-        <span class="stars">
-            <span [ngStyle]="{'width': anchoPintado + 'px'}"></span>
-        </span>
-        <div class="ml-2 text" style="cursor: pointer;">{{ rating }} ({{ total }})</div>
-
-        <div class="indicator__dropdown detalleContainer">
-            <div class="caret"></div>
-            <div class="d-flex flex-column py-2" style="width: 100%; font-size: 15px;">
-                <div *ngFor="let item of resumen" class="d-flex px-3 mb-1" style="width: 100%">
-                    <div class="d-flex align-items-center nowrap mr-2">
-                        <div>{{ item.estrellas }}</div>
-                        <div>
-                            <img class="ml-1" src="../../../../assets/svg/star-yellow.svg"
-                                style="width: 20px; height: 20px; margin-bottom: 3px;">
-                        </div>
-                    </div>
-                    <div style="width: 80%;">
-                        <div class="progress" style="height: 14px; margin-top: 3px;">
-                            <div class="progress-bar" style="background-color: #0d61bb;" role="progressbar"
-                                [ngStyle]="{'width.%': item.porcentaje}" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                    <div class="ml-2">{{ item.cantidad }}</div>
-                </div>
-                <div *ngIf="total > 0" class="text-center">
-                    <button class="btn btn-sm btn-link ml-2 p-0" style="color: black;"
-                        (click)="leerComentarios.emit(true)">Leer {{ total }} comentarios</button>
-                </div>
-            </div>
-        </div>
+  <div
+    class="cont-stars d-flex position-relative indicator--trigger--click"
+    (click)="detalle.toggle()"
+    appDropdown="indicator--opened"
+    #detalle="appDropdown"
+  >
+    <span class="stars">
+      <span [ngStyle]="{ width: anchoPintado + 'px' }"></span>
+    </span>
+    <div class="ms-2 text" style="cursor: pointer">
+      {{ rating }} ({{ total }})
     </div>
-    <button class="btn btn-sm btn-link ml-2 p-0" style="color: black" (click)="escribirComentario()">Escribir
-        comentario</button>
+
+    <div class="indicator__dropdown detalleContainer">
+      <div class="caret"></div>
+      <div class="d-flex flex-column py-2" style="width: 100%; font-size: 15px">
+        <div
+          *ngFor="let item of resumen"
+          class="d-flex px-3 mb-1"
+          style="width: 100%"
+        >
+          <div class="d-flex align-items-center nowrap mr-2">
+            <div>{{ item.estrellas }}</div>
+            <div>
+              <img
+                class="ms-1"
+                src="../../../../assets/svg/star-yellow.svg"
+                style="width: 20px; height: 20px; margin-bottom: 3px"
+              />
+            </div>
+          </div>
+          <div style="width: 80%">
+            <div class="progress" style="height: 14px; margin-top: 3px">
+              <div
+                class="progress-bar"
+                style="background-color: #0d61bb"
+                role="progressbar"
+                [ngStyle]="{ 'width.%': item.porcentaje }"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+          </div>
+          <div class="ms-2">{{ item.cantidad }}</div>
+        </div>
+        <div *ngIf="total > 0" class="text-center">
+          <button
+            class="btn btn-sm btn-link ms-2 p-0"
+            style="color: black"
+            (click)="leerComentarios.emit(true)"
+          >
+            Leer {{ total }} comentarios
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    class="btn btn-sm btn-link ms-2 p-0"
+    style="color: black"
+    (click)="escribirComentario()"
+  >
+    Escribir comentario
+  </button>
 </div>

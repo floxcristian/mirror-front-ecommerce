@@ -36,7 +36,7 @@
     </button>
     {{ paginaActual }} / {{ totalPaginas }}
     <button
-      class="btn btm-sm btn-link ml-1"
+      class="btn btm-sm btn-link ms-1"
       (click)="derecha()"
       [disabled]="paginaActual == totalPaginas"
     >
@@ -110,14 +110,14 @@
             <div
               class="col-8 col-sm-2 flex-sm-column justify-content-xl-end justify-content-center d-flex align-items-center"
             >
-              <span class="product-sku ml-2 d-none d-sm-block">
+              <span class="product-sku ms-2 d-none d-sm-block">
                 {{
                   item.producto.codigos && item.producto.codigos.length > 0
                     ? item.producto.codigos[0].codigoCliente
                     : ""
                 }}
               </span>
-              <span class="product-sku text-gray-2 ml-2 d-none d-sm-block">
+              <span class="product-sku text-gray-2 ms-2 d-none d-sm-block">
                 {{ item.producto.sku }}
               </span>
             </div>
@@ -132,7 +132,7 @@
                 }}</span>
                 {{ iva ? "c/iva" : "s/iva" }}</span
               >
-              <span class="precio-price-value text-danger ml-3 ml-sm-0"
+              <span class="precio-price-value text-danger ms-3 ms-sm-0"
                 >{{
                   iva
                     ? (item._id.precio | currencyFormat)

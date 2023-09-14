@@ -5,7 +5,7 @@
     [formGroup]="formBuscar"
     (ngSubmit)="buscarOrden(formBuscar.value)"
   >
-    <div class="form-group ml-0 mr-sm-3 mb-2">
+    <div class="form-group ms-0 mr-sm-3 mb-2">
       <input
         type="text"
         class="form-control"
@@ -13,7 +13,7 @@
         placeholder="Número orden"
       />
     </div>
-    <button class="btn btn-secondary mb-2 ml-1" [disabled]="!formBuscar.valid">
+    <button class="btn btn-secondary mb-2 ms-1" [disabled]="!formBuscar.valid">
       Buscar
     </button>
   </form>

@@ -1,99 +1,156 @@
 <div class="modal-header">
-    <h5 class="modal-title pull-left">
-        <i class="fas fa-file-upload mr-2"></i>
-        <span style="font-size: 16px;">Cargar productos</span>
-    </h5>
+  <h5 class="modal-title pull-left">
+    <i class="fas fa-file-upload mr-2"></i>
+    <span style="font-size: 16px">Cargar productos</span>
+  </h5>
 </div>
 <div class="modal-body px-4">
-    <div>
-        <div class="row">
-            <ng-container *ngIf="creandoLista === false && seleccionandoLista === false">
-                <div class="col-6">
-                    <button class="btn btn-link btn-sm btn-block text-decoration-none"
-                        (click)="creandoLista = true; seleccionandoLista = false;">
-                        <i class="fas fa-plus fa-lg fa-fw mr-2"></i>Crear nueva lista
-                    </button>
-                </div>
-
-                <div class="col-6">
-                    <button class="btn btn-link btn-sm btn-block text-decoration-none"
-                        (click)="creandoLista = false; seleccionandoLista = true;">
-                        <i class="fas fa-list fa-lg fa-fw mr-2"></i>Seleccionar lista existente
-                    </button>
-                </div>
-            </ng-container>
-            <div class="col-12 text-center" *ngIf="creandoLista || seleccionandoLista">
-                <div *ngIf="creandoLista"><label>Crear una nueva lista</label></div>
-                <div *ngIf="seleccionandoLista"><label>Selccionar una lista existente</label></div>
-                <span class="position-absolute" style="right: 30px; top:2px">
-                    <button class="btn btn-sm btn-link p-0" (click)="creandoLista = false; seleccionandoLista = false;">
-                        <span class="d-none d-sm-inline p-0">Volver</span><i class="fas fa-undo-alt ml-2"></i>
-                    </button>
-                </span>
-            </div>
+  <div>
+    <div class="row">
+      <ng-container
+        *ngIf="creandoLista === false && seleccionandoLista === false"
+      >
+        <div class="col-6">
+          <button
+            class="btn btn-link btn-sm btn-block text-decoration-none"
+            (click)="creandoLista = true; seleccionandoLista = false"
+          >
+            <i class="fas fa-plus fa-lg fa-fw mr-2"></i>Crear nueva lista
+          </button>
         </div>
 
-        <div class="row" *ngIf="modo === 'lotes'">
-            <div *ngIf="creandoLista" class="col-12 mt-2">
-                <div class="input-group">
-                    <input type="search" class="form-control form-control-sm" maxlength="40" [disabled]="guardando"
-                        (search)="cantCaracteres = nombre.length" (keyup)="ingresaNombre()" (keydown)="ingresaNombre()"
-                        (keypress)="ingresaNombre()" placeholder="Escriba el nombre de la lista" aria-label="nombre"
-                        [(ngModel)]="nombre">
-                    <div class="w-100 d-flex justify-content-end mt-1">
-                        <div class="max-caracteres">{{ cantCaracteres }} / {{ maxCaracteres }}</div>
-                    </div>
-                </div>
-            </div>
-            <div *ngIf="seleccionandoLista" class="col-12 mt-2">
-                <div class="input-group">
-                    <select class="form-control form-control-sm bootstrap-select" [disabled]="guardando"
-                        [(ngModel)]="lista">
-                        <option selected [value]="undefined">Seleccione lista...</option>
-                        <option *ngFor="let item of listas" [ngValue]="item">{{item.nombre}}</option>
-                    </select>
-                </div>
-            </div>
+        <div class="col-6">
+          <button
+            class="btn btn-link btn-sm btn-block text-decoration-none"
+            (click)="creandoLista = false; seleccionandoLista = true"
+          >
+            <i class="fas fa-list fa-lg fa-fw mr-2"></i>Seleccionar lista
+            existente
+          </button>
         </div>
+      </ng-container>
+      <div
+        class="col-12 text-center"
+        *ngIf="creandoLista || seleccionandoLista"
+      >
+        <div *ngIf="creandoLista"><label>Crear una nueva lista</label></div>
+        <div *ngIf="seleccionandoLista">
+          <label>Selccionar una lista existente</label>
+        </div>
+        <span class="position-absolute" style="right: 30px; top: 2px">
+          <button
+            class="btn btn-sm btn-link p-0"
+            (click)="creandoLista = false; seleccionandoLista = false"
+          >
+            <span class="d-none d-sm-inline p-0">Volver</span
+            ><i class="fas fa-undo-alt ms-2"></i>
+          </button>
+        </span>
+      </div>
     </div>
-    <hr>
-    <h6 class="mb-2">Busque un Artículo</h6>
-    <app-producto-select-busqueda #search (articulosSeleccionados)="onFiltrosCambiados($event); search.articulos = [];"
-        [multiple]="false"></app-producto-select-busqueda>
 
-    <div class="mt-3" style="max-height: 500px; overflow-x: auto;">
-        <table class="table">
-            <thead class="thead-primary">
-                <th>Imagen</th>
-                <th>SKU</th>
-                <th>Nombre</th>
-                <th>Acción</th>
-            </thead>
-            <tbody>
-                <tr *ngIf="skus.length == 0">
-                    <td colspan="4" class="text-center">Agregue artículos a la lista</td>
-                </tr>
-                <tr *ngFor="let item of skus; let i = index;">
-                    <td>
-                        <img [src]="item.image" width="48px" height="48px" alt="image" *ngIf="item.image">
-                    </td>
-                    <td>{{ item.sku }}</td>
-                    <td>{{ item.nombre }}</td>
-                    <td>
-                        <button class="btn btn-sm btn-link p-0" ngbTooltip="Eliminar Artículo" placement="top"
-                            (click)="eliminarArticulo(i)">
-                            <i class="fas fa-trash-alt text-danger"></i>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="row" *ngIf="modo === 'lotes'">
+      <div *ngIf="creandoLista" class="col-12 mt-2">
+        <div class="input-group">
+          <input
+            type="search"
+            class="form-control form-control-sm"
+            maxlength="40"
+            [disabled]="guardando"
+            (search)="cantCaracteres = nombre.length"
+            (keyup)="ingresaNombre()"
+            (keydown)="ingresaNombre()"
+            (keypress)="ingresaNombre()"
+            placeholder="Escriba el nombre de la lista"
+            aria-label="nombre"
+            [(ngModel)]="nombre"
+          />
+          <div class="w-100 d-flex justify-content-end mt-1">
+            <div class="max-caracteres">
+              {{ cantCaracteres }} / {{ maxCaracteres }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="seleccionandoLista" class="col-12 mt-2">
+        <div class="input-group">
+          <select
+            class="form-control form-control-sm bootstrap-select"
+            [disabled]="guardando"
+            [(ngModel)]="lista"
+          >
+            <option selected [value]="undefined">Seleccione lista...</option>
+            <option *ngFor="let item of listas" [ngValue]="item">
+              {{ item.nombre }}
+            </option>
+          </select>
+        </div>
+      </div>
     </div>
+  </div>
+  <hr />
+  <h6 class="mb-2">Busque un Artículo</h6>
+  <app-producto-select-busqueda
+    #search
+    (articulosSeleccionados)="onFiltrosCambiados($event); search.articulos = []"
+    [multiple]="false"
+  ></app-producto-select-busqueda>
+
+  <div class="mt-3" style="max-height: 500px; overflow-x: auto">
+    <table class="table">
+      <thead class="thead-primary">
+        <th>Imagen</th>
+        <th>SKU</th>
+        <th>Nombre</th>
+        <th>Acción</th>
+      </thead>
+      <tbody>
+        <tr *ngIf="skus.length == 0">
+          <td colspan="4" class="text-center">Agregue artículos a la lista</td>
+        </tr>
+        <tr *ngFor="let item of skus; let i = index">
+          <td>
+            <img
+              [src]="item.image"
+              width="48px"
+              height="48px"
+              alt="image"
+              *ngIf="item.image"
+            />
+          </td>
+          <td>{{ item.sku }}</td>
+          <td>{{ item.nombre }}</td>
+          <td>
+            <button
+              class="btn btn-sm btn-link p-0"
+              ngbTooltip="Eliminar Artículo"
+              placement="top"
+              (click)="eliminarArticulo(i)"
+            >
+              <i class="fas fa-trash-alt text-danger"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <div class="modal-footer">
-    <button name="Cerrar" class="btn btn-link text-danger mr-2" (click)="close(false)"
-        [disabled]="guardando">Cancelar</button>
-    <button name="Guardar" class="btn btn-secondary" [ngClass]="{'btn-loading': guardando}"
-        (click)="guardar()">Guardar</button>
+  <button
+    name="Cerrar"
+    class="btn btn-link text-danger mr-2"
+    (click)="close(false)"
+    [disabled]="guardando"
+  >
+    Cancelar
+  </button>
+  <button
+    name="Guardar"
+    class="btn btn-secondary"
+    [ngClass]="{ 'btn-loading': guardando }"
+    (click)="guardar()"
+  >
+    Guardar
+  </button>
 </div>

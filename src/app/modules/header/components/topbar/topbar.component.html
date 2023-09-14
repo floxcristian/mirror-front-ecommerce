@@ -1,8 +1,8 @@
-<!-- .topbar -->
+<!-- Cambios en Bootstrap 5 -->
 <div class="site-header__topbar topbar" *ngIf="tipo === 'b2b'">
   <div class="topbar__container container d-flex align-items-center">
     <div class="topbar__row">
-      <div class="topbar__item topbar__item--link mr-3" *ngIf="logo == '1'">
+      <div class="topbar__item topbar__item--link me-3" *ngIf="logo == '1'">
         <a [routerLink]="['/', 'inicio']">
           <img
             height="40px"
@@ -12,29 +12,29 @@
           />
         </a>
       </div>
-      <div class="topbar__item topbar__item--link mr-3">
+      <div class="topbar__item topbar__item--link me-3">
         <i class="fas fa-phone" aria-hidden="true"></i>
-        <span class="subtitle pl-0 pr-3"> Venta Telefonica </span>
+        <span class="subtitle ps-0 pe-3"> Venta Telefonica </span>
         <a href="tel:800330088" style="color: white; font-weight: 700">
-          800 330 088</a
-        >
-      </div>
-
-      <div class="topbar__item topbar__item--link mr-3">
-        <a class="topbar-link" [routerLink]="['/', 'sitio', 'contacto']">
-          <i class="far fa-envelope" aria-hidden="true"></i>
-          <span class="subtitle pl-0"> Contacto </span>
+          800 330 088
         </a>
       </div>
 
-      <div class="topbar__item topbar__item--link mr-3 tiendas-btn">
+      <div class="topbar__item topbar__item--link me-3">
+        <a class="topbar-link" [routerLink]="['/', 'sitio', 'contacto']">
+          <i class="far fa-envelope" aria-hidden="true"></i>
+          <span class="subtitle ps-0"> Contacto </span>
+        </a>
+      </div>
+
+      <div class="topbar__item topbar__item--link me-3 tiendas-btn">
         <a class="topbar-link" [routerLink]="['/', 'sitio', 'tiendas']">
           <i class="fas fa-home"></i>
           <span class="subtitle"> TIENDAS Y HORARIOS </span>
         </a>
       </div>
 
-      <div class="topbar__item topbar__item--link mr-3 tiendas-btn">
+      <div class="topbar__item topbar__item--link me-3 tiendas-btn">
         <a
           class="topbar-link"
           target="_blank"
@@ -49,6 +49,7 @@
     <div class="topbar__row" *ngIf="tipo === 'b2c'"></div>
   </div>
 </div>
+
 <div class="menu_b2c" [hidden]="Hide_menub2c() ? true : false">
   <div class="row">
     <div class="col-sm-3" style="margin-top: 10px">
@@ -66,7 +67,7 @@
     <div class="col-sm-3 d-flex justify-content-start align-items-center p-0">
       <div class="site-header_info">
         <i
-          class="fak fa-menu-14"
+          class="fas fa-bars fa-lg"
           style="margin-top: 15px; margin-right: 10px; font-size: 20px"
         ></i
         >Venta Telefónica 800 330 088
@@ -75,7 +76,7 @@
     <div class="col-sm-3 d-flex justify-content-start align-items-center p-0">
       <div class="site-header_info">
         <i
-          class="fak fa-menu-16"
+          class="fas fa-envelope fa-lg"
           style="margin-top: 15px; margin-right: 10px; font-size: 20px"
         ></i>
         contacto@implementos.cl
@@ -84,7 +85,7 @@
     <div class="col-sm-3 d-flex justify-content-start align-items-center p-0">
       <div class="site-header_info">
         <i
-          class="fak fa-menu-9"
+          class="fas fa-truck fa-lg"
           style="margin-top: 15px; margin-right: 10px; font-size: 20px"
         ></i
         >Despacho por todo Chile
@@ -92,6 +93,7 @@
     </div>
   </div>
 </div>
+
 <div
   class="site-header__topbar topbar"
   *ngIf="tipo === 'b2c' && desde !== 'omni'"
@@ -101,9 +103,8 @@
     class="topbar__container container d-flex align-items-center justify-content-center"
   >
     <div class="topbar__row">
-      <i class="fa-thin fa-truck fa-lg mr-2"></i>Por compras mayores a $60.000
+      <i class="fas fa-truck fa-lg me-2"></i>Por compras mayores a $60.000
       despacho GRATIS
     </div>
   </div>
 </div>
-<!-- .topbar / end -->

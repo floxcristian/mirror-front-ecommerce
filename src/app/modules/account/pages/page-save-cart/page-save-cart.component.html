@@ -22,7 +22,7 @@
     </button>
     {{ paginaActual }} / {{ totalPaginas }}
     <button
-      class="btn btm-sm btn-link ml-1"
+      class="btn btm-sm btn-link ms-1"
       (click)="derecha()"
       [disabled]="paginaActual == totalPaginas"
     >
@@ -56,7 +56,7 @@
             *ngIf="lstCart && lstCart.length > 0"
           >
             <div class="col-md-2 d-none d-md-block">
-              <span class="ml-3">Cantidad </span>
+              <span class="ms-3">Cantidad </span>
             </div>
             <div class="col-md-3 d-none d-md-block">
               <span> Fecha Creación </span>
@@ -80,7 +80,7 @@
                   >
                     <i class="fas fa fa-shopping-cart mr-1"></i
                     >{{ cart.productos.length
-                    }}<span class="d-none d-xl-inline ml-1">artículo(s)</span>
+                    }}<span class="d-none d-xl-inline ms-1">artículo(s)</span>
                   </div>
                   <div class="col-md-3 d-none d-md-block">
                     {{ cart.creacion | date : "dd-MM-yyyy" }}
@@ -175,12 +175,12 @@
                         {{ item.nombre | titlecase }}
                       </span>
                       <span
-                        class="product-sku text-gray-2 ml-2 d-none d-xl-block"
+                        class="product-sku text-gray-2 ms-2 d-none d-xl-block"
                       >
                         {{ item.sku }}
                       </span>
                       <span
-                        class="product-sku text-gray-2 ml-2 d-none d-xl-block"
+                        class="product-sku text-gray-2 ms-2 d-none d-xl-block"
                       >
                         {{ item.marca }}
                       </span>
@@ -205,7 +205,7 @@
                       <span class="cart-subtitle d-none d-md-block"
                         >Sub Total</span
                       >
-                      <span class="cart-price-value ml-2">{{
+                      <span class="cart-price-value ms-2">{{
                         item.precio * item.cantidad | currencyFormat
                       }}</span>
                     </div>

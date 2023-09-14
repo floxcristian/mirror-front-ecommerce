@@ -1,6 +1,6 @@
 <ng-container *ngIf="!confirmar">
   <div class="row">
-    <div class="ml-2 mb-3 mr-3 col-12 col-lg-12 mt-3">
+    <div class="ms-2 mb-3 mr-3 col-12 col-lg-12 mt-3">
       <div class="form-group">
         <label>Contacto de Seguimiento</label>
         <select
@@ -19,7 +19,7 @@
   <div
     style="border-bottom: solid 1px; border-color: #80808030; margin-top: -10px"
   ></div>
-  <div class="row ml-2 mb-3 mt-3" style="margin-top: -10px">
+  <div class="row ms-2 mb-3 mt-3" style="margin-top: -10px">
     <div class="col-sm-12">
       <div class="form-check form-switch">
         <input
@@ -34,7 +34,7 @@
     </div>
   </div>
   <form [formGroup]="formContacto">
-    <div class="row ml-1 mb-3 mt-3" style="margin-top: -10px">
+    <div class="row ms-1 mb-3 mt-3" style="margin-top: -10px">
       <div class="col-sm-6">
         <label style="margin-bottom: 5px">Email</label>
         <input
@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <div class="row ml-1 mb-3 mt-3" style="margin-top: -10px">
+    <div class="row ms-1 mb-3 mt-3" style="margin-top: -10px">
       <div class="col-sm-6">
         <button
           [disabled]="!formContacto.valid"
@@ -103,7 +103,7 @@
     </p>
     <hr />
     <div
-      class="row ml-1 mb-3 mt-3 d-flex justify-content-center"
+      class="row ms-1 mb-3 mt-3 d-flex justify-content-center"
       style="margin-top: -10px"
     >
       <button
@@ -151,7 +151,7 @@
     </p>
     <hr />
     <div
-      class="row ml-1 mb-3 mt-3 d-flex justify-content-center"
+      class="row ms-1 mb-3 mt-3 d-flex justify-content-center"
       style="margin-top: -10px"
     >
       <button (click)="reChoose()" class="btn btn-success btn-lg">

@@ -1,83 +1,136 @@
-<div class="modal-body" style="height: auto;">
-    <ng-container *ngIf="filtrandoPorVin === false && filtrandoPorMarca === false">
-        <div class="row">
-            <div class="col-12 col-md-6">
-                <button class="btn btn-link btn-sm btn-block text-decoration-none"
-                    (click)="filtrandoPorVin = true; filtrandoPorMarca = false;">
-                    <i class="fas fa-filter fa-lg fa-fw mr-2"></i>Filtrar por vin o patente
-                </button>
-            </div>
-
-            <div class="col-12 col-md-6">
-                <button class="btn btn-link btn-sm btn-block text-decoration-none"
-                    (click)="filtrandoPorVin = false; filtrandoPorMarca = true;">
-                    <i class="fas fa-filter fa-lg fa-fw mr-2"></i>Filtrar por marca, modelo y año
-                </button>
-            </div>
-        </div>
-    </ng-container>
+<div class="modal-body" style="height: auto">
+  <ng-container
+    *ngIf="filtrandoPorVin === false && filtrandoPorMarca === false"
+  >
     <div class="row">
-        <div class="col-12 text-center" *ngIf="filtrandoPorVin || filtrandoPorMarca">
-            <div *ngIf="filtrandoPorVin"><label>Filtrar por vin o patente</label></div>
-            <div *ngIf="filtrandoPorMarca"><label>Filtrar por marca, modelo y año</label></div>
-            <span class="position-absolute" style="right: 30px; top:2px">
-                <button class="btn btn-sm btn-link p-0"
-                    (click)="filtrandoPorVin = false; filtrandoPorMarca = false;">
-                    <span class="d-none d-sm-inline p-0">Volver</span><i class="fas fa-undo-alt ml-2"></i>
-                </button>
-            </span>
-        </div>
-    </div>
-    <div class="row justify-content-center mt-3" *ngIf="filtrandoPorVin || filtrandoPorMarca">
-        <div *ngIf="filtrandoPorVin" class="col-12">
-            <div class="input-group">
-                <input type="search" class="form-control form-control-sm"
-                    placeholder="Ingrese VIN, usualmente N° de 17 dígitos o patente"
-                    (keyup)="chasisPatente = chasisPatente.toUpperCase();" aria-label="VIN"
-                    [(ngModel)]="chasisPatente">
-            </div>
-        </div>
-        <div *ngIf="filtrandoPorMarca" class="col-12">
-            <div class="col-12">
-                <div class="input-group">
-                    <select class="form-control form-control-sm bootstrap-select" [(ngModel)]="anio"
-                        (change)="seleccionaAnio()">
-                        <option selected [value]="''">Seleccione año...</option>
-                        <option *ngFor="let item of anios" [value]="item">{{item}}</option>
-                    </select>
+      <div class="col-12 col-md-6">
+        <button
+          class="btn btn-link btn-sm btn-block text-decoration-none"
+          (click)="filtrandoPorVin = true; filtrandoPorMarca = false"
+        >
+          <i class="fas fa-filter fa-lg fa-fw mr-2"></i>Filtrar por vin o
+          patente
+        </button>
+      </div>
 
-                </div>
-            </div>
-            <div class="col-12 mt-3">
-                <div class="input-group">
-                    <select class="form-control form-control-sm bootstrap-select" [(ngModel)]="marca"
-                        (change)="seleccionaMarca()" [disabled]="anio === ''">
-                        <option selected [value]="''">Seleccione marca...</option>
-                        <option *ngFor="let item of marcas" [value]="item">{{item}}</option>
-                    </select>
-                    <div class="mensaje" *ngIf="anio === ''">Seleccione un año primero
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 mt-2">
-                <div class="input-group">
-                    <select class="form-control form-control-sm bootstrap-select" [(ngModel)]="modelo"
-                        [disabled]="anio === '' || marca === ''">
-                        <option selected [value]="''">Seleccione modelo...</option>
-                        <option *ngFor="let item of modelos" [value]="item">{{item}}</option>
-                    </select>
-                    <div class="mensaje" *ngIf="anio === '' || marca === ''">
-                        Seleccione una marca primero</div>
-                </div>
-            </div>
-        </div>
+      <div class="col-12 col-md-6">
+        <button
+          class="btn btn-link btn-sm btn-block text-decoration-none"
+          (click)="filtrandoPorVin = false; filtrandoPorMarca = true"
+        >
+          <i class="fas fa-filter fa-lg fa-fw mr-2"></i>Filtrar por marca,
+          modelo y año
+        </button>
+      </div>
     </div>
+  </ng-container>
+  <div class="row">
+    <div
+      class="col-12 text-center"
+      *ngIf="filtrandoPorVin || filtrandoPorMarca"
+    >
+      <div *ngIf="filtrandoPorVin">
+        <label>Filtrar por vin o patente</label>
+      </div>
+      <div *ngIf="filtrandoPorMarca">
+        <label>Filtrar por marca, modelo y año</label>
+      </div>
+      <span class="position-absolute" style="right: 30px; top: 2px">
+        <button
+          class="btn btn-sm btn-link p-0"
+          (click)="filtrandoPorVin = false; filtrandoPorMarca = false"
+        >
+          <span class="d-none d-sm-inline p-0">Volver</span
+          ><i class="fas fa-undo-alt ms-2"></i>
+        </button>
+      </span>
+    </div>
+  </div>
+  <div
+    class="row justify-content-center mt-3"
+    *ngIf="filtrandoPorVin || filtrandoPorMarca"
+  >
+    <div *ngIf="filtrandoPorVin" class="col-12">
+      <div class="input-group">
+        <input
+          type="search"
+          class="form-control form-control-sm"
+          placeholder="Ingrese VIN, usualmente N° de 17 dígitos o patente"
+          (keyup)="chasisPatente = chasisPatente.toUpperCase()"
+          aria-label="VIN"
+          [(ngModel)]="chasisPatente"
+        />
+      </div>
+    </div>
+    <div *ngIf="filtrandoPorMarca" class="col-12">
+      <div class="col-12">
+        <div class="input-group">
+          <select
+            class="form-control form-control-sm bootstrap-select"
+            [(ngModel)]="anio"
+            (change)="seleccionaAnio()"
+          >
+            <option selected [value]="''">Seleccione año...</option>
+            <option *ngFor="let item of anios" [value]="item">
+              {{ item }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col-12 mt-3">
+        <div class="input-group">
+          <select
+            class="form-control form-control-sm bootstrap-select"
+            [(ngModel)]="marca"
+            (change)="seleccionaMarca()"
+            [disabled]="anio === ''"
+          >
+            <option selected [value]="''">Seleccione marca...</option>
+            <option *ngFor="let item of marcas" [value]="item">
+              {{ item }}
+            </option>
+          </select>
+          <div class="mensaje" *ngIf="anio === ''">
+            Seleccione un año primero
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mt-2">
+        <div class="input-group">
+          <select
+            class="form-control form-control-sm bootstrap-select"
+            [(ngModel)]="modelo"
+            [disabled]="anio === '' || marca === ''"
+          >
+            <option selected [value]="''">Seleccione modelo...</option>
+            <option *ngFor="let item of modelos" [value]="item">
+              {{ item }}
+            </option>
+          </select>
+          <div class="mensaje" *ngIf="anio === '' || marca === ''">
+            Seleccione una marca primero
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-link text-danger" (click)="close(false)">
-        Cancelar </button>
-    <button *ngIf="filtrandoPorVin" class="btn btn-secondary" (click)="buscarChassis(); close(true);">
-        Filtrar </button>
-    <button *ngIf="filtrandoPorMarca" class="btn btn-secondary" (click)="buscarVehiculo(); close(true);">
-        Filtrar </button>
+  <button class="btn btn-link text-danger" (click)="close(false)">
+    Cancelar
+  </button>
+  <button
+    *ngIf="filtrandoPorVin"
+    class="btn btn-secondary"
+    (click)="buscarChassis(); close(true)"
+  >
+    Filtrar
+  </button>
+  <button
+    *ngIf="filtrandoPorMarca"
+    class="btn btn-secondary"
+    (click)="buscarVehiculo(); close(true)"
+  >
+    Filtrar
+  </button>
 </div>

@@ -1,9 +1,13 @@
+// Angular
 import { Component, Input } from '@angular/core';
-import { CurrencyService } from '../../../../shared/services/currency.service';
-import { Usuario } from '../../../../shared/interfaces/login';
-import { LoginService } from '../../../../shared/services/login.service';
 import { Router } from '@angular/router';
+// Environment
 import { environment } from '../../../../../environments/environment';
+// Models
+import { Usuario } from '../../../../shared/interfaces/login';
+// Services
+import { CurrencyService } from '../../../../shared/services/currency.service';
+import { LoginService } from '../../../../shared/services/login.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 @Component({
