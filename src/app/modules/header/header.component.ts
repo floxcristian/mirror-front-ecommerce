@@ -40,7 +40,7 @@ export class HeaderComponent implements AfterViewInit {
     private route: Router,
     private rootService: RootService,
     private localS: LocalStorageService,
-    private logisticsService: LogisticsService
+    private logisticsService: LogisticsService,
   ) {
     // this.obtieneTienda();
 

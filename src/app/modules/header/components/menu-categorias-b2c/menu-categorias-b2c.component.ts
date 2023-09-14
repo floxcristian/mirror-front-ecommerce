@@ -42,6 +42,7 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
 
   obtieneCategorias() {
     this.categoriesService.$categoriasHeader.subscribe((r) => {
+      console.log('categorias', r)
       const categorias: CategoryApi[] = r.data;
       this.sortCategories(categorias);
       this.formatCategories(categorias);
