@@ -1,3 +1,6 @@
+// Angular
+import { NavigationEnd, Router } from '@angular/router';
+import { isPlatformBrowser, ViewportScroller, DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -8,25 +11,27 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+// Libs
 import { ToastrService } from 'ngx-toastr';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import * as moment from 'moment';
+import * as $ from 'jquery';
+// Services
 import { CartService } from './shared/services/cart.service';
 import { CompareService } from './shared/services/compare.service';
 import { WishlistService } from './shared/services/wishlist.service';
-import { NavigationEnd, Router } from '@angular/router';
-import { isPlatformBrowser, ViewportScroller, DOCUMENT } from '@angular/common';
 import { CurrencyService } from './shared/services/currency.service';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { ProductCart } from './shared/interfaces/cart-item';
-import { AlertCartMinComponent } from './shared/components/alert-cart-min/alert-cart-min.component';
 import { SeoService } from './shared/services/seo.service';
 import { GeoLocationService } from './shared/services/geo-location.service';
 import { LoginService } from './shared/services/login.service';
-import { Usuario } from './shared/interfaces/login';
 import { RootService } from './shared/services/root.service';
-import * as moment from 'moment';
-import * as $ from 'jquery';
-import { GeoLocation } from './shared/interfaces/geo-location';
 import { LocalStorageService } from './core/modules/local-storage/local-storage.service';
+// Models
+import { ProductCart } from './shared/interfaces/cart-item';
+import { GeoLocation } from './shared/interfaces/geo-location';
+import { Usuario } from './shared/interfaces/login';
+// Components
+import { AlertCartMinComponent } from './shared/components/alert-cart-min/alert-cart-min.component';
 
 @Component({
   selector: 'app-root',
@@ -34,11 +39,6 @@ import { LocalStorageService } from './core/modules/local-storage/local-storage.
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements AfterViewInit, OnInit {
-  modalRef!: BsModalRef;
-  productCard!: ProductCart;
-  showAlertCartStatus = false;
-  s: any;
-  node: any;
   @ViewChild('alertCartModal', { read: TemplateRef, static: false })
   template!: TemplateRef<any>;
   @ViewChild(AlertCartMinComponent, {
@@ -46,6 +46,11 @@ export class AppComponent implements AfterViewInit, OnInit {
     static: false,
   })
   alert!: AlertCartMinComponent;
+
+  modalRef!: BsModalRef;
+  productCard!: ProductCart;
+  s: any;
+  node: any;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -66,7 +71,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     private localS: LocalStorageService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     console.log('amiguito');
     this.currency.options = {
       code: 'CLP',
@@ -208,13 +213,14 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
   }
 
-  openModal(template: TemplateRef<any>) {
+  openModal(template: TemplateRef<any>): void {
     this.modalRef = this.modalService.show(
       template,
       Object.assign({}, { class: 'modal-alert-cart-dialog' })
     );
   }
-  showAlertCart(status: any) {
+
+  showAlertCart(status: boolean): void {
     this.alert.hide();
     this.alert.show(status);
   }

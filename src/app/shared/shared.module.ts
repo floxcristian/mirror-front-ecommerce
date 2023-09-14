@@ -16,6 +16,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { NgChartsModule, ThemeService } from 'ng2-charts';
+import {
+  NguCarousel,
+  NguCarouselDefDirective,
+  NguCarouselNextDirective,
+  NguCarouselPrevDirective,
+  NguItemComponent,
+} from '@ngu/carousel';
 //import { AgmCoreModule } from '@agm/core';
 // Directives
 import { ClickDirective } from './directives/click.directive';
@@ -75,27 +82,16 @@ import { ProductCardB2cComponent } from './components/product-card-b2c/product-c
 import { UpdateFlotaModalComponent } from './components/update-flota-modal/update-flota-modal.component';
 import { PorductoTrComponent } from './components/tabla-producto/porducto-tr/producto-tr.component';
 import { InputNumberProductComponent } from './components/input-number-product/input-number-product.component';
-
 import { WishListModalComponent } from './components/wish-list-modal/wish-list-modal.component';
 import { ProductListCardComponent } from './components/product-list-card/product-list-card.component';
 import { EditarListaProductosComponent } from './components/editar-lista-productos/editar-lista-productos.component';
 import { AgregarListaProductosMasivaModalComponent } from './components/agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
 import { ProductListModalComponent } from './components/product-list-card/components/product-list-modal/product-list-modal.component';
-
 import { AngularEmailAutocompleteComponent } from './components/angular-email-autocomplete/angular-email-autocomplete.component';
-
 import { FiltroMagicoModule } from './components/filtro-magico/filtro-magico.module';
 import { ProductoSelectBusquedaComponent } from './components/producto-select-busqueda/producto-select-busqueda.component';
 import { AgregarListaProductosUnitariaModalComponent } from './components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
 import { MenuCategoriaComponent } from './components/menu-categoria/menu-categoria.component';
-
-import {
-  NguCarousel,
-  NguCarouselDefDirective,
-  NguCarouselNextDirective,
-  NguCarouselPrevDirective,
-  NguItemComponent,
-} from '@ngu/carousel';
 import { ShareButtonComponent } from './components/share-button/share-button.component';
 import { ProductRatingComponent } from './components/product-rating/product-rating.component';
 import { AddCommentModalComponent } from './components/add-comment-modal/add-comment-modal.component';

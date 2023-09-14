@@ -1,26 +1,24 @@
 // Angular
 import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
-import localeCL from '@angular/common/locales/es-CL';
-
-registerLocaleData(localeCL, 'CLP');
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import localeCL from '@angular/common/locales/es-CL';
+registerLocaleData(localeCL, 'CLP');
 // Libs
 import { ToastrModule } from 'ngx-toastr';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule, BsModalRef } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-
+// Components
 import { AppComponent } from './app.component';
 // Routing
 import { AppRoutingModule } from './app-routing.module';
 // Modules
 import { SharedModule } from './shared/shared.module';
 import { WidgetsModule } from './modules/widgets/widgets.module';
-
 // Interceptor
 import { BasicAuthInterceptor } from './core/interceptors/basic-auth.interceptor';
 import { LocalStorageService } from './core/modules/local-storage/local-storage.service';
