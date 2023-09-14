@@ -13,19 +13,16 @@
   </button>
 </div>
 <div class="modal-body px-4">
-  <div
-    class="custom-control custom-checkbox align-items-center d-flex"
-    *ngFor="let item of listas"
-  >
+  <div class="form-check align-items-center d-flex" *ngFor="let item of listas">
     <div class="flex-shrink-1 flex-grow-1">
       <input
         type="checkbox"
-        class="custom-control-input listas"
+        class="form-check-input listas"
         [checked]="item.checked"
         [id]="'ID-' + item._id"
         (change)="seleccionaLista(item)"
       />
-      <label class="custom-control-label" [for]="'ID-' + item._id">{{
+      <label class="form-check-label" [for]="'ID-' + item._id">{{
         item.nombre
       }}</label>
     </div>

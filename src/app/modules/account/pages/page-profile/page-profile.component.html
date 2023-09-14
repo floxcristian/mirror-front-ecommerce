@@ -89,10 +89,10 @@
         <div class="row mt-3">
           <div class="col-5 title2 m-0"><span>Precios productos:</span></div>
           <div class="col-7 text-left">
-            <div class="custom-control custom-switch">
+            <div class="form-check form-switch">
               <input
                 type="checkbox"
-                class="custom-control-input"
+                class="form-check-input"
                 id="iva"
                 [checked]="!isVacio(usuario.iva) ? usuario.iva : false"
                 [disabled]="cargandoIVA"
@@ -100,7 +100,7 @@
                 style="cursor: pointer"
               />
               <label
-                class="custom-control-label"
+                class="form-check-label"
                 for="iva"
                 style="cursor: pointer; font-weight: normal"
                 >{{

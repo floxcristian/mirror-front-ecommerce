@@ -1,103 +1,102 @@
 .product-title {
-    font-size: 1rem;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1.25;
-    letter-spacing: normal;
-    text-align: left;
-    color: #000000;
+  font-size: 1rem;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  text-align: left;
+  color: #000000;
 }
 
 .precio-meson {
-    color: #888 !important;
-    text-decoration: line-through;
+  color: #888 !important;
+  text-decoration: line-through;
 }
 
 .precio-img {
-    width: 3rem;
+  width: 3rem;
 }
 
 .product-sku {
-    font-size: 0.875rem;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1.29;
-    letter-spacing: normal;
-    text-align: left;
+  font-size: 0.875rem;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.29;
+  letter-spacing: normal;
+  text-align: left;
 }
 
 .precio-price-value {
-    font-size: 15px;
-    font-weight: 900;
-    color: #000000;
+  font-size: 15px;
+  font-weight: 900;
+  color: #000000;
 }
 
 @media (max-width: 576px) {
-    .btn {
-        padding: 0.375rem 0.75rem !important;
-    }
+  .btn {
+    padding: 0.375rem 0.75rem !important;
+  }
 
-    .accordion-header {
-        div:first-child {
-            font-size: 14px;
-        }
+  .accordion-header {
+    div:first-child {
+      font-size: 14px;
     }
+  }
 
-    .product-title {
-        font-size: 13px !important;
-        line-height: 15px !important;
-    }
+  .product-title {
+    font-size: 13px !important;
+    line-height: 15px !important;
+  }
 
-    .product-sku {
-        font-size: 12px !important;
-    }
+  .product-sku {
+    font-size: 12px !important;
+  }
 
-    .item {
-        font-size: 12px;
-        margin-right: 4px;
-    }
+  .item {
+    font-size: 12px;
+    margin-right: 4px;
+  }
 
-    .precio-img {
-        width: 4.5rem !important;
-    }
+  .precio-img {
+    width: 4.5rem !important;
+  }
 
-    .precio-price-value {
-        font-size: 15px;
-    }
-
+  .precio-price-value {
+    font-size: 15px;
+  }
 }
 
 @media (min-width: 576px) and (max-width: 1199.98px) {
-    .product-title {
-        font-size: 13px !important;
-        line-height: 15px !important;
-    }
+  .product-title {
+    font-size: 13px !important;
+    line-height: 15px !important;
+  }
 
-    .product-sku {
-        font-size: 13px !important;
-    }
+  .product-sku {
+    font-size: 13px !important;
+  }
 
-    .item {
-        font-size: 12px;
-        margin-right: 4px;
-    }
+  .item {
+    font-size: 12px;
+    margin-right: 4px;
+  }
 
-    .precio-img {
-        width: 4rem;
-    }
+  .precio-img {
+    width: 4rem;
+  }
 
-    .precio-price-value {
-        font-size: 14px;
-    }
+  .precio-price-value {
+    font-size: 14px;
+  }
 }
 
-.custom-control-input:checked~.custom-control-label::before {
-    color: #fff;
-    background-color: green;
-    border-color:green;
-    outline: 0;
-    -webkit-box-shadow: none;
-    box-shadow: none;
- }
+.form-check-input:checked ~ .form-check-label::before {
+  color: #fff;
+  background-color: green;
+  border-color: green;
+  outline: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}

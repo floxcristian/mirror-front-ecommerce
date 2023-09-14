@@ -1,26 +1,37 @@
-<div class="col-sm-12 d-flex align-justify-center" style="color:#0063b9">
-    <h5>Metodos de pagos</h5>
+<div class="col-sm-12 d-flex align-justify-center" style="color: #0063b9">
+  <h5>Metodos de pagos</h5>
 </div>
 <hr />
-<div *ngFor="let item of paymentMethods" class="col-sm-12" style="margin-bottom: 5px;">
-    <div id="pagos_weypaid" class="block-payment" [ngClass]="{'active': this.paymentMethodActive==item.cod}"
-        (click)="activepaymentMethod(item)">
-
-        <div class="col-sm-2 d-flex justify-content-center align-items-center">
-
-            <div class="custom-control custom-radio">
-                <input type="radio" [checked]="paymentMethodActive === item.cod ? true : false"
-                    class="custom-control-input">
-                <label class="custom-control-label"></label>
-            </div>
-
-        </div>
-        <div class="col-sm-10">
-            <span style="color: black">
-                <img *ngIf="item.iconImage" [src]="item.iconImage" class="methodPaymentLogo">
-                <label *ngIf="!item.iconImage">{{item.name | titlecase }}</label>
-            </span>
-        </div>
-
+<div
+  *ngFor="let item of paymentMethods"
+  class="col-sm-12"
+  style="margin-bottom: 5px"
+>
+  <div
+    id="pagos_weypaid"
+    class="block-payment"
+    [ngClass]="{ active: this.paymentMethodActive == item.cod }"
+    (click)="activepaymentMethod(item)"
+  >
+    <div class="col-sm-2 d-flex justify-content-center align-items-center">
+      <div class="form-check">
+        <input
+          type="radio"
+          [checked]="paymentMethodActive === item.cod ? true : false"
+          class="form-check-input"
+        />
+        <label class="form-check-label"></label>
+      </div>
     </div>
+    <div class="col-sm-10">
+      <span style="color: black">
+        <img
+          *ngIf="item.iconImage"
+          [src]="item.iconImage"
+          class="methodPaymentLogo"
+        />
+        <label *ngIf="!item.iconImage">{{ item.name | titlecase }}</label>
+      </span>
+    </div>
+  </div>
 </div>

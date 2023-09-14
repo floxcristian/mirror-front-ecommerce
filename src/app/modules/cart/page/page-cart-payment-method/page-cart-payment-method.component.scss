@@ -96,7 +96,7 @@
   cursor: pointer;
 }
 
-.custom-control-label::before {
+.form-check-label::before {
   -ms-transform: scale(1.5);
   /* IE 9 */
   -webkit-transform: scale(1.5);
@@ -104,7 +104,7 @@
   transform: scale(1.5);
 }
 
-.custom-control-input:checked ~ .custom-control-label::before {
+.form-check-input:checked ~ .form-check-label::before {
   background-color: #0063b9;
   border-color: #0063b9;
 }

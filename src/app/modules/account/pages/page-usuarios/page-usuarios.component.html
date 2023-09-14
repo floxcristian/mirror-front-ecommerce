@@ -35,18 +35,15 @@
             <td>{{ user.last_name }}</td>
             <td>{{ user.user_role }}</td>
             <td align="center">
-              <div class="custom-control custom-switch">
+              <div class="form-check form-switch">
                 <input
                   type="checkbox"
-                  class="custom-control-input"
+                  class="form-check-input"
                   id="s{{ user._id }}"
                   [disabled]="true"
                   [checked]="user.active"
                 />
-                <label
-                  class="custom-control-label"
-                  for="s{{ user._id }}"
-                ></label>
+                <label class="form-check-label" for="s{{ user._id }}"></label>
               </div>
             </td>
             <td align="center">
@@ -88,14 +85,14 @@
           formControlName="_id"
         />
       </div>
-      <div class="form-group custom-control custom-switch">
+      <div class="form-group form-check form-switch">
         <input
           type="checkbox"
-          class="custom-control-input"
+          class="form-check-input"
           formControlName="active"
           id="active"
         />
-        <label class="custom-control-label" for="active">Activo</label>
+        <label class="form-check-label" for="active">Activo</label>
       </div>
       <div class="form-group">
         <label for="username">Usuario:</label>

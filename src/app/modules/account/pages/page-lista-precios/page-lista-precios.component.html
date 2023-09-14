@@ -9,17 +9,17 @@
     <i _ngcontent-serverapp-c11="" class="fas fa-truck-moving mr-3"></i>
     <h5>Lista de Precios</h5>
   </div>
-  <div class="custom-control custom-switch mr-3">
+  <div class="form-check form-switch mr-3">
     <input
       type="checkbox"
-      class="custom-control-input"
+      class="form-check-input"
       id="iva"
       checked
       [disabled]="showLoading"
       (change)="iva = !iva"
       style="cursor: pointer"
     />
-    <label class="custom-control-label" for="iva" style="cursor: pointer">{{
+    <label class="form-check-label" for="iva" style="cursor: pointer">{{
       iva ? "c/IVA" : "s/IVA"
     }}</label>
   </div>
