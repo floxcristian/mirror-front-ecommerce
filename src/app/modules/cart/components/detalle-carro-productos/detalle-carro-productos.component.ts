@@ -21,7 +21,7 @@ export class DetalleCarroProductosComponent implements OnInit, OnDestroy {
   shippingTypeSubs!: Subscription;
   shippinGroup: any = {};
 
-  @Input() shippingType:any = 'retiro';
+  @Input() shippingType: any = 'retiro';
   shippingTypeTitle = '';
   totals: any = [];
 
@@ -38,7 +38,7 @@ export class DetalleCarroProductosComponent implements OnInit, OnDestroy {
 
     this.shippingTypeSubs = this.cart.shippingType$.subscribe((resp) => {
       this.shippingType = resp;
-      console.log(resp);
+
       if (this.shippingType == 'retiro' || this.shippingType == 'TIENDA') {
         this.shippingTypeTitle = 'Retiro en Tienda';
       } else if (

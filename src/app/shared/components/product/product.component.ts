@@ -175,7 +175,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     return this.dataLayout;
   }
 
-  @Input() set product(value: Product) {
+  @Input() set product(value: Product | undefined) {
     if (typeof value === 'undefined') {
       return;
     }

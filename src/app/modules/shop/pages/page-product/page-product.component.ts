@@ -35,7 +35,7 @@ declare let fbq: any;
 })
 export class PageProductComponent implements OnInit, OnDestroy {
   categories = categories;
-  product!: Product;
+  product!: Product | undefined;
   recommendedProducts: Product[] = [];
   matrixProducts: Product[] = [];
   relatedProducts: Product[] = [];
@@ -106,9 +106,11 @@ export class PageProductComponent implements OnInit, OnDestroy {
   ) {
     // cambio de sucursal
     this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
-      this.cart.cargarPrecioEnProducto(this.product);
-      this.getMixProducts(this.product.sku);
-      this.getMatrixProducts(this.product.sku);
+      if (this.product) {
+        this.cart.cargarPrecioEnProducto(this.product);
+        this.getMixProducts(this.product.sku);
+        this.getMatrixProducts(this.product.sku);
+      }
     });
 
     this.innerWidth = window.innerWidth;
@@ -144,7 +146,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
         }
 
         const sku = params.id.split('-').reverse()[0];
-        console.log(sku);
         this.getDetailProduct(sku);
         this.getMixProducts(sku);
         this.getMatrixProducts(sku);
@@ -254,12 +255,12 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
         this.product = { ...producto };
 
-        this.cart.cargarPrecioEnProducto(this.product);
-
-        this.setMeta(this.product);
-        console.log(this.product);
-        this.productFacebook(this.product);
-        this.setBreadcrumbs(this.product);
+        if (this.product) {
+          this.cart.cargarPrecioEnProducto(this.product);
+          this.setMeta(this.product);
+          this.productFacebook(this.product);
+          this.setBreadcrumbs(this.product);
+        }
       },
       (error) => {
         this.toastr.error('Error de conexión, para obtener los articulos');

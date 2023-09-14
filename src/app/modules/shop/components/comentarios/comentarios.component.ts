@@ -24,7 +24,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
   styleUrls: ['./comentarios.component.scss'],
 })
 export class ComentariosComponent implements OnChanges {
-  @Input() producto!: Product;
+  @Input() producto!: Product | undefined;
   rating = 0;
   starWidth = 25;
   anchoPintado = 0;

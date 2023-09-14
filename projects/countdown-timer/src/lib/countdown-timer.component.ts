@@ -5,7 +5,7 @@ import { map } from 'rxjs/internal/operators/map';
 @Component({
   selector: 'ctimer-countdown-timer',
   templateUrl: './countdown-timer.component.html',
-  styleUrls: ['./countdown-timer.component.scss']
+  styleUrls: ['./countdown-timer.component.scss'],
 })
 export class CountdownTimerComponent implements OnInit {
   time!: {
@@ -24,18 +24,18 @@ export class CountdownTimerComponent implements OnInit {
       days: 0,
       hours: 0,
       minutes: 0,
-      seconds: 0
+      seconds: 0,
     };
     // Creamos la fecha a partir de la fecha en formato string AAAA-MM-dd HH:mm:ss
     this.finishDate = new Date(this.finishDateString);
 
-    let counterTimer$ = this.start().subscribe(_ => {
+    let counterTimer$ = this.start().subscribe((_) => {
       if (this.time.seconds <= 0 && this.time.minutes <= 0) {
         this.time = {
           hours: 0,
           minutes: 0,
           seconds: 0,
-          days: 0
+          days: 0,
         };
         this.dateEnd.emit(true);
         counterTimer$.unsubscribe();
@@ -46,7 +46,6 @@ export class CountdownTimerComponent implements OnInit {
   updateTime() {
     const now = new Date();
     const diff = this.finishDate.getTime() - now.getTime();
-    console.log(diff);
 
     // Cálculos para sacar lo que resta hasta ese tiempo objetivo / final
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
