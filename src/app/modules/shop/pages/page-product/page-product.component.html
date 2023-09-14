@@ -320,7 +320,7 @@
                 [options]="carouselOptions"
                 appOwlPreventClick
               >
-                <div
+                <ng-container
                   *ngFor="let item of matrixProducts"
                   class="products-list__item"
                 >
@@ -331,7 +331,7 @@
                       [origen]="[origen[0], origen[1], origen[2], 'matriz']"
                     ></app-product-card-b2b>
                   </ng-template>
-                </div>
+                </ng-container>
                 <div *ngIf="matrixProducts.length < 4">
                   <ng-template
                     carouselSlide
@@ -383,10 +383,10 @@
                 [options]="carouselOptions"
                 appOwlPreventClick
               >
-                <div
-                  *ngFor="let item of mixProducts"
-                  class="products-list__item"
-                >
+              <ng-container
+                *ngFor="let item of mixProducts"
+                class="products-list__item"
+              >
                   <ng-template carouselSlide>
                     <app-product-card-b2b
                       *ngIf="isB2B"
@@ -399,7 +399,7 @@
                       [origen]="[origen[0], origen[1], origen[2], 'matriz']"
                     ></app-product-card-b2c-ficha>
                   </ng-template>
-                </div>
+                </ng-container>
                 <div *ngIf="mixProducts.length < 4">
                   <ng-template
                     carouselSlide

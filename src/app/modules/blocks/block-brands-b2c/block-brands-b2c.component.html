@@ -2,12 +2,12 @@
   <app-block-header [header]="'Nuestras Marcas'" colorText="text-primary"></app-block-header>
 
   <owl-carousel-o class="marcas" [options]="carouselOptions" appOwlPreventClick>
-    <div *ngFor="let item of brands" class="products-list__item">
-      <ng-template carouselSlide>
-        <a href="/inicio/productos/todos?filter_MARCA={{ item.brand | uppercase }}">
-          <img [src]="item.image" alt="marcas" class="lazyload" style="width: 100px" />
-        </a>
-      </ng-template>
-    </div>
+    <ng-container *ngFor="let item of brands" >
+        <ng-template carouselSlide>
+          <a href="/inicio/productos/todos?filter_MARCA={{ item.brand | uppercase }}">
+            <img [src]="item.image" alt="marcas" class="lazyload" style="width: 100px" />
+          </a>
+        </ng-template>
+    </ng-container>
   </owl-carousel-o>
 </div>
