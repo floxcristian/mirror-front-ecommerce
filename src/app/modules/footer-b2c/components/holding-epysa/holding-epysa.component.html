@@ -11,7 +11,13 @@
   </div>
 </div>
 <div *ngIf="screenWidth < 1025">
-  <div class="col-sm-12" data-toggle="collapse" data-target="#holding" [attr.aria-expanded]="terminos" aria-controls="holding">
+  <div
+    class="col-sm-12"
+    data-bs-toggle="collapse"
+    data-target="#holding"
+    [attr.aria-expanded]="terminos"
+    aria-controls="holding"
+  >
     <div class="row">
       <div class="col-8 d-flex justify-content-start">
         <h5 class="font-weight-bold text-left">Holding EPYSA CHILE</h5>
@@ -23,7 +29,11 @@
   </div>
   <hr class="my-2" style="background-color: #646462" />
 
-  <div class="collapse multi-collapse" [ngClass]="terminos ? 'show' : ''" id="holding">
+  <div
+    class="collapse multi-collapse"
+    [ngClass]="terminos ? 'show' : ''"
+    id="holding"
+  >
     <ul>
       <li class="pl-3" *ngFor="let link of links">
         <a [href]="link.link">{{ link.label }}</a>

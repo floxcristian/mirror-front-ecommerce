@@ -5,7 +5,8 @@
         <h3 class="card-title" style="color: #0063b9">Comprar como invitado</h3>
         <small>
           <p style="color: #0063b9">
-            Al comprar como Invitado , el documento emitido siempre será :<strong style="margin-left: 10px">BOLETA</strong> <br />
+            Al comprar como Invitado , el documento emitido siempre será
+            :<strong style="margin-left: 10px">BOLETA</strong> <br />
             Si necesita <strong>FACTURA</strong> , por favor inicie sesión o
             <a
               [routerLink]="['/sitio', 'registro-usuario']"
@@ -29,48 +30,80 @@
                   appLettersChar
                   autocomplete="off"
                 />
-                <p *ngIf="formVisita.controls['rut'].invalid && formVisita.controls['rut'].touched" class="text-error-form-2">
-                  Rut no válido, estimado usario su rut debe ingresarse sin '.', Ejemplo rut valido (17007900-0)
+                <p
+                  *ngIf="
+                    formVisita.controls['rut'].invalid &&
+                    formVisita.controls['rut'].touched
+                  "
+                  class="text-error-form-2"
+                >
+                  Rut no válido, estimado usario su rut debe ingresarse sin '.',
+                  Ejemplo rut valido (17007900-0)
                 </p>
               </div>
             </div>
             <div class="col-md-12">
               <div class="form-group">
-                <input formControlName="nombre" type="text" class="form-control" placeholder="Nombres*" appLettersChar />
+                <input
+                  formControlName="nombre"
+                  type="text"
+                  class="form-control"
+                  placeholder="Nombres*"
+                  appLettersChar
+                />
               </div>
             </div>
             <div class="col-md-12">
               <div class="form-group">
-                <input formControlName="apellido" type="text" class="form-control" placeholder="Apellidos*" appLettersChar />
+                <input
+                  formControlName="apellido"
+                  type="text"
+                  class="form-control"
+                  placeholder="Apellidos*"
+                  appLettersChar
+                />
               </div>
             </div>
 
             <div class="col-md-12">
               <div class="form-group" style="color: #0063b9">
                 <label style="color: #0063b9; font-weight: bold"
-                  ><font style="margin-right: 10px">Codigo*</font> Teléfono Fijo/Celular</label
+                  ><font style="margin-right: 10px">Codigo*</font> Teléfono
+                  Fijo/Celular</label
                 >
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <button
                       class="btn btn-outline-secondary dropdown-toggle"
                       type="button"
-                      data-toggle="dropdown"
+                      data-bs-toggle="dropdown"
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
                       <i
-                        [ngClass]="tipo_fono == '+569' ? 'fa-solid fa-mobile-screen' : 'fa-solid fa-phone'"
+                        [ngClass]="
+                          tipo_fono == '+569'
+                            ? 'fa-solid fa-mobile-screen'
+                            : 'fa-solid fa-phone'
+                        "
                         style="margin-right: 1px"
                       ></i>
                       {{ tipo_fono }}
                     </button>
                     <div class="dropdown-menu">
                       <a class="dropdown-item" (click)="Select_fono('+569')"
-                        ><i class="fa-solid fa-mobile-screen" style="margin-right: 1px"></i>+569</a
+                        ><i
+                          class="fa-solid fa-mobile-screen"
+                          style="margin-right: 1px"
+                        ></i
+                        >+569</a
                       >
                       <a class="dropdown-item" (click)="Select_fono('+56')"
-                        ><i class="fa-solid fa-phone" style="margin-right: 1px"></i>+56</a
+                        ><i
+                          class="fa-solid fa-phone"
+                          style="margin-right: 1px"
+                        ></i
+                        >+56</a
                       >
                     </div>
                   </div>
@@ -83,7 +116,13 @@
                   />
                 </div>
 
-                <p *ngIf="formVisita.controls['telefono'].invalid && formVisita.controls['telefono'].touched" class="text-error-form-2">
+                <p
+                  *ngIf="
+                    formVisita.controls['telefono'].invalid &&
+                    formVisita.controls['telefono'].touched
+                  "
+                  class="text-error-form-2"
+                >
                   El número de contacto que ha ingresado no es válido
                 </p>
               </div>
@@ -98,7 +137,13 @@
                   placeholder="Email*"
                 />
 
-                <p *ngIf="formVisita.controls['email'].invalid && formVisita.controls['email'].touched" class="text-error-form-2">
+                <p
+                  *ngIf="
+                    formVisita.controls['email'].invalid &&
+                    formVisita.controls['email'].touched
+                  "
+                  class="text-error-form-2"
+                >
                   El Email ingresado no es válido
                 </p>
               </div>
@@ -110,7 +155,10 @@
         <div class="card-footer p-0">
           <div class="row">
             <div class="col-sm-12" style="margin-bottom: 10px">
-              <div class="btn btn-success btn-block text-center btn-lg" [routerLink]="['/sitio', 'registro-usuario']">
+              <div
+                class="btn btn-success btn-block text-center btn-lg"
+                [routerLink]="['/sitio', 'registro-usuario']"
+              >
                 Quiero factura
               </div>
             </div>
@@ -131,7 +179,10 @@
         <div class="card-footer p-0">
           <div class="row">
             <div class="col-md-6" style="margin-bottom: 10px">
-              <div class="btn btn-success btn-block text-center btn-lg" [routerLink]="['/sitio', 'registro-usuario']">
+              <div
+                class="btn btn-success btn-block text-center btn-lg"
+                [routerLink]="['/sitio', 'registro-usuario']"
+              >
                 Quiero factura
               </div>
             </div>

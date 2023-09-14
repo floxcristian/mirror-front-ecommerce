@@ -1,48 +1,83 @@
 <div *ngIf="screenWidth >= 1025">
-    <h6 class="font-weight-bold">Sobre Nosotros</h6>
-    <hr class="my-2" style="background-color: #646462" />
+  <h6 class="font-weight-bold">Sobre Nosotros</h6>
+  <hr class="my-2" style="background-color: #646462" />
 
-    <div>
-        <ul>
-            <li *ngFor="let link of links">
-                <a [routerLink]="link.url">{{ link.label }}</a>
-            </li>
-        </ul>
-    </div>
+  <div>
+    <ul>
+      <li *ngFor="let link of links">
+        <a [routerLink]="link.url">{{ link.label }}</a>
+      </li>
+    </ul>
+  </div>
 
-    <h6 class="font-weight-bold mt-5">Síguenos</h6>
-    <hr class="mb-2 mt-0" style="background-color: #646462" />
+  <h6 class="font-weight-bold mt-5">Síguenos</h6>
+  <hr class="mb-2 mt-0" style="background-color: #646462" />
 
-    <a class="mr-1" href="https://www.facebook.com/IMPLEMENTOSREPUESTOS/" rel="noopener" target="_blank">
-        <img src="../../../../../assets/svg/17.svg" style="width: 20px; height: 20px" alt="facebook" />
-    </a>
-    <a class="mr-2" href="https://www.instagram.com/implementosrepuestos/" target="_blank" rel="noopener">
-        <img src="../../../../../assets/svg/18.svg" style="width: 20px; height: 20px" alt="instagram" />
-    </a>
-    <a href="https://www.linkedin.com/company/epysa-implementos/about/" target="_blank" rel="noopener">
-        <img src="../../../../../assets/svg/19.svg" style="width: 20px; height: 20px" alt="linkedin" />
-    </a>
+  <a
+    class="mr-1"
+    href="https://www.facebook.com/IMPLEMENTOSREPUESTOS/"
+    rel="noopener"
+    target="_blank"
+  >
+    <img
+      src="../../../../../assets/svg/17.svg"
+      style="width: 20px; height: 20px"
+      alt="facebook"
+    />
+  </a>
+  <a
+    class="mr-2"
+    href="https://www.instagram.com/implementosrepuestos/"
+    target="_blank"
+    rel="noopener"
+  >
+    <img
+      src="../../../../../assets/svg/18.svg"
+      style="width: 20px; height: 20px"
+      alt="instagram"
+    />
+  </a>
+  <a
+    href="https://www.linkedin.com/company/epysa-implementos/about/"
+    target="_blank"
+    rel="noopener"
+  >
+    <img
+      src="../../../../../assets/svg/19.svg"
+      style="width: 20px; height: 20px"
+      alt="linkedin"
+    />
+  </a>
 </div>
 <div *ngIf="screenWidth < 1025">
-    <div class="col-sm-12" data-toggle="collapse" data-target="#nosotros" [attr.aria-expanded]="terminos"
-        aria-controls="nosotros">
-        <div class="row">
-            <div class="col-8 d-flex justify-content-start">
-                <h5 class="font-weight-bold text-center">Sobre Nosotros</h5>
-            </div>
-            <div class="col-4 d-flex justify-content-end">
-                <i class="fa-solid fa-chevron-down"></i>
-            </div>
-        </div>
+  <div
+    class="col-sm-12"
+    data-bs-toggle="collapse"
+    data-target="#nosotros"
+    [attr.aria-expanded]="terminos"
+    aria-controls="nosotros"
+  >
+    <div class="row">
+      <div class="col-8 d-flex justify-content-start">
+        <h5 class="font-weight-bold text-center">Sobre Nosotros</h5>
+      </div>
+      <div class="col-4 d-flex justify-content-end">
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
     </div>
-    <hr class="my-2" style="background-color: #646462" />
+  </div>
+  <hr class="my-2" style="background-color: #646462" />
 
-    <div class="collapse multi-collapse" [ngClass]="terminos ? 'show' : ''" id="nosotros">
-        <ul>
-            <li *ngFor="let link of links">
-                <a [routerLink]="link.url">{{ link.label }}</a>
-            </li>
-        </ul>
-        <hr class="my-2" style="background-color: #646462" />
-    </div>
+  <div
+    class="collapse multi-collapse"
+    [ngClass]="terminos ? 'show' : ''"
+    id="nosotros"
+  >
+    <ul>
+      <li *ngFor="let link of links">
+        <a [routerLink]="link.url">{{ link.label }}</a>
+      </li>
+    </ul>
+    <hr class="my-2" style="background-color: #646462" />
+  </div>
 </div>

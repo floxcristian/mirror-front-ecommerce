@@ -1,48 +1,76 @@
 <div *ngIf="data" class="row">
-    <div class="col-sm-6 d-flex justify-content-end">
-        <div class="row">
-            <div class="col-sm-12" style="padding-left: 19px; padding-right: 15px">
-                <img [src]="data.data.image" class="img-fluid-product" alt="impleblog" />
-            </div>
-        </div>
+  <div class="col-sm-6 d-flex justify-content-end">
+    <div class="row">
+      <div class="col-sm-12" style="padding-left: 19px; padding-right: 15px">
+        <img
+          [src]="data.data.image"
+          class="img-fluid-product"
+          alt="impleblog"
+        />
+      </div>
     </div>
-    <div class="col-sm-6 d-flex justify-content-center">
-        <div class="row">
-            <div class="col-sm-12">
-                <!-- header -->
-                <a href="https://www.implementos.cl/sitio/blog">
-                    <div class="titleBlog" style="text-align: center; margin-bottom: 1.8rem">
-                        <h1 class="text-h1">
-                            {{ data.data.title | uppercase }}
-                        </h1>
-                        <h4 class="text-h2">
-                            {{ data.data.description }}
-                        </h4>
-                    </div>
-                </a>
-                <!-- header -->
+  </div>
+  <div class="col-sm-6 d-flex justify-content-center">
+    <div class="row">
+      <div class="col-sm-12">
+        <!-- header -->
+        <a href="https://www.implementos.cl/sitio/blog">
+          <div
+            class="titleBlog"
+            style="text-align: center; margin-bottom: 1.8rem"
+          >
+            <h1 class="text-h1">
+              {{ data.data.title | uppercase }}
+            </h1>
+            <h4 class="text-h2">
+              {{ data.data.description }}
+            </h4>
+          </div>
+        </a>
+        <!-- header -->
 
-                <!-- <button (click)="openFirst()">Abrir el primero</button> -->
-                <!--  -->
-                <div id="accordion" *ngFor="let item of blogs; let i = index"
-                    style="border-bottom: 3px solid #0d61bb; padding: 1.7rem 0">
-                    <!-- Start::header entrada blog. -->
-                    <div class="row" style="cursor: pointer" data-toggle="collapse" [attr.data-target]="'#expand-' + i"
-                        [attr.aria-expanded]="item.collapsed" [attr.aria-controls]="'expand-' + i"
-                        (click)="clickCollapse(i)">
-                        <div class="col-sm-10" style="display: flex; align-items: center">
-                            <h5 class="text-titulo">{{ i + 1 }}. {{ item.titulo | uppercase }}</h5>
-                        </div>
-                        <div class="col-sm-2" style="text-align: right; padding-right: 2rem">
-                            <!-- item.collapsed: {{ item.collapsed }} - -->
-                            <span class="fas fa-chevron-{{ item.collapsed ? 'down' : 'right' }}"
-                                style="cursor: pointer; color: #0d61bb"></span>
-                        </div>
-                    </div>
-                    <!-- End::header entrada blog. -->
-                    <!--  [class.show]="item.collapsed" -->
-                    <div class="collapse" [ngbCollapse]="!item.collapsed" style="padding-right: 3rem">
-                        <p style="
+        <!-- <button (click)="openFirst()">Abrir el primero</button> -->
+        <!--  -->
+        <div
+          id="accordion"
+          *ngFor="let item of blogs; let i = index"
+          style="border-bottom: 3px solid #0d61bb; padding: 1.7rem 0"
+        >
+          <!-- Start::header entrada blog. -->
+          <div
+            class="row"
+            style="cursor: pointer"
+            data-bs-toggle="collapse"
+            [attr.data-target]="'#expand-' + i"
+            [attr.aria-expanded]="item.collapsed"
+            [attr.aria-controls]="'expand-' + i"
+            (click)="clickCollapse(i)"
+          >
+            <div class="col-sm-10" style="display: flex; align-items: center">
+              <h5 class="text-titulo">
+                {{ i + 1 }}. {{ item.titulo | uppercase }}
+              </h5>
+            </div>
+            <div
+              class="col-sm-2"
+              style="text-align: right; padding-right: 2rem"
+            >
+              <!-- item.collapsed: {{ item.collapsed }} - -->
+              <span
+                class="fas fa-chevron-{{ item.collapsed ? 'down' : 'right' }}"
+                style="cursor: pointer; color: #0d61bb"
+              ></span>
+            </div>
+          </div>
+          <!-- End::header entrada blog. -->
+          <!--  [class.show]="item.collapsed" -->
+          <div
+            class="collapse"
+            [ngbCollapse]="!item.collapsed"
+            style="padding-right: 3rem"
+          >
+            <p
+              style="
                 margin-top: 16px;
                 overflow: hidden;
                 color: black;
@@ -52,16 +80,27 @@
                 -webkit-line-clamp: 2; /* number of lines to show */
                 line-clamp: 2;
                 -webkit-box-orient: vertical;
-              ">
-                            {{ item.bajada }}
-                        </p>
-                        <div style="text-align: right; padding: 0.1rem 0.5rem 0.1rem 0; font-size: 20px">
-                            <button class="btn btn-sm btn-secondary" (click)="showBlogPost(item.page_id, i)">Mostrar
-                                más</button>
-                        </div>
-                    </div>
-                </div>
+              "
+            >
+              {{ item.bajada }}
+            </p>
+            <div
+              style="
+                text-align: right;
+                padding: 0.1rem 0.5rem 0.1rem 0;
+                font-size: 20px;
+              "
+            >
+              <button
+                class="btn btn-sm btn-secondary"
+                (click)="showBlogPost(item.page_id, i)"
+              >
+                Mostrar más
+              </button>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
