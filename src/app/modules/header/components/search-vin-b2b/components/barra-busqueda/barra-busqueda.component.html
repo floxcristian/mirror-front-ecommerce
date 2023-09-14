@@ -231,16 +231,15 @@
           aria-label="Site search"
           autocomplete="off"
         />
-        <div class="input-group-append">
-          <button
-            class="btn btn-sm btn-primary"
-            style="padding-top: 10px"
-            type="button"
-            (click)="buscar(); menuSearch.close()"
-          >
-            <i class="fas fa-search fa-lg"></i>
-          </button>
-        </div>
+
+        <button
+          class="btn btn-sm btn-primary input-group-text"
+          style="padding-top: 10px"
+          type="button"
+          (click)="buscar(); menuSearch.close()"
+        >
+          <i class="fas fa-search fa-lg"></i>
+        </button>
       </div>
 
       <div class="indicator__dropdown">

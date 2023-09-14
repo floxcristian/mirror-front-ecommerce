@@ -77,10 +77,31 @@
   padding-left: 15px;
 }
 
+.text-justify {
+  text-align: justify !important;
+}
+
+a:not([href]),
+a:not([href]):hover {
+  color: inherit;
+  text-decoration: none;
+}
+
 /* You can add global styles to this file, and also import other style files */
 
 @import "bootstrap/scss/bootstrap";
 @import "scss/style";
+
+a {
+  text-decoration: none;
+  background-color: transparent;
+  color: #005db9;
+}
+
+a:hover {
+  color: #005db9;
+  text-decoration: none;
+}
 
 agm-map {
   height: 300px;
