@@ -69,12 +69,12 @@ export class PageProductComponent implements OnInit, OnDestroy {
     dots: true,
     slideBy: 'page',
     responsive: {
-      1366: { items: 4 },
-      1100: { items: 4 },
-      920: { items: 4 },
-      680: { items: 3 },
-      500: { items: 3 },
       0: { items: 2 },
+      500: { items: 3 },
+      680: { items: 3 },
+      920: { items: 4 },
+      1100: { items: 4 },
+      1366: { items: 4 },
     },
   };
 

@@ -58,10 +58,10 @@
 
 <div *ngIf="screenWidth <= 500" class="gallery-tablet">
   <owl-carousel-o class="carouselConcepto" [options]="carouselOptions">
-    <div *ngFor="let item of grid_layout; let i = index" class="products-list__item">
+    <ng-container *ngFor="let item of grid_layout; let i = index" class="products-list__item">
       <ng-template carouselSlide>
         <app-concepto-mobile [concepto]="concepto_array[i]" [tipo]="'slide'"></app-concepto-mobile>
       </ng-template>
-    </div>
+    </ng-container>
   </owl-carousel-o>
 </div>
