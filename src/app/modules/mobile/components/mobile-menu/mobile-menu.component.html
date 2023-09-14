@@ -13,7 +13,7 @@
             (click)="abrirModalTiendas()"
           >
             <h6 class="mb-0">
-              <i class="fas fa-map-marked-alt mr-2 pt-1"></i
+              <i class="fas fa-map-marked-alt me-2 pt-1"></i
               >{{ tiendaSeleccionada?.zona }}
             </h6>
           </button>
@@ -39,7 +39,7 @@
           >
             <h6 class="mb-0" *ngIf="isVacio(direccion)">Sin dirección...</h6>
             <h6 class="mb-0" *ngIf="!isVacio(direccion)">
-              <i class="fas fa-map-marked-alt mr-2 pt-1"></i
+              <i class="fas fa-map-marked-alt me-2 pt-1"></i
               >{{
                 ((direccion?.calle + " " + direccion?.numero).length > 20
                   ? (direccion?.calle + " " + direccion?.numero).substring(
@@ -55,7 +55,7 @@
       </div>
       <div class="d-flex flex-wrap mt-2">
         <div class="col-sm-10">
-          <span class="mr-3">Venta Telefónica </span>
+          <span class="me-3">Venta Telefónica </span>
           <i
             class="footer-contacts__icon fas fa-phone center"
             style="font-weight: 700"

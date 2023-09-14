@@ -5,8 +5,8 @@
   [class.pr-3]="innerWidth < 450"
   (window:resize)="onResize($event)"
 >
-  <div class="title d-flex align-items-center mr-auto">
-    <i _ngcontent-serverapp-c11="" class="fas fa-truck-moving mr-3"></i>
+  <div class="title d-flex align-items-center me-auto">
+    <i _ngcontent-serverapp-c11="" class="fas fa-truck-moving me-3"></i>
     <h5>Carros Guardados</h5>
   </div>
   <div
@@ -14,7 +14,7 @@
     *ngIf="lstCart && lstCart.length > 0 && totalPaginas > 1"
   >
     <button
-      class="btn btm-sm btn-link mr-1"
+      class="btn btm-sm btn-link me-1"
       (click)="izquierda()"
       [disabled]="paginaActual == 1"
     >
@@ -68,7 +68,7 @@
               <span> Opciones </span>
             </div>
             <div class="col-md-2 d-none d-md-block text-right">
-              <span class="mr-3"> Ver Detalle </span>
+              <span class="me-3"> Ver Detalle </span>
             </div>
           </div>
           <div class="accordion" id="DetalleCarro">
@@ -78,7 +78,7 @@
                   <div
                     class="col-md-2 col-sm-3 d-none d-sm-flex align-items-center"
                   >
-                    <i class="fas fa fa-shopping-cart mr-1"></i
+                    <i class="fas fa fa-shopping-cart me-1"></i
                     >{{ cart.productos.length
                     }}<span class="d-none d-xl-inline ms-1">artículo(s)</span>
                   </div>
@@ -92,7 +92,7 @@
                   </div>
                   <div class="col-md-3 col-sm-4 d-none d-xl-block">
                     <button
-                      class="btn btn-sm btn-secondary mr-2"
+                      class="btn btn-sm btn-secondary me-2"
                       style="font-size: 12px"
                       (click)="updateCart(cart._id, 'abierto')"
                     >
@@ -110,7 +110,7 @@
                     class="col-md-3 col-sm-4 col-5 d-xl-none d-block text-nowrap"
                   >
                     <button
-                      class="btn btn-secondary btn-sm mr-sm-2 mr-1"
+                      class="btn btn-secondary btn-sm me-sm-2 me-1"
                       style="font-size: 12px"
                       title="Activar Carro"
                       (click)="updateCart(cart._id, 'abierto')"
@@ -128,7 +128,7 @@
                   </div>
                   <div class="col-md-1 col-sm-1 col-2 text-right">
                     <span
-                      class="fas fa-search mr-1"
+                      class="fas fa-search me-1"
                       style="cursor: pointer"
                       data-bs-toggle="collapse"
                       [attr.data-target]="'#ID' + cart._id"
@@ -189,7 +189,7 @@
                     <div
                       class="col-3 col-sm-2 d-flex align-items-center text-nowrap"
                     >
-                      <span class="precio d-none d-md-block mr-1">{{
+                      <span class="precio d-none d-md-block me-1">{{
                         item.precio | currencyFormat
                       }}</span
                       ><span class="cantidad d-none d-sm-block">

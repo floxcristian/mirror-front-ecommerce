@@ -1,6 +1,6 @@
 <div class="dropcart container-cart">
   <div class="dropcart-title mb-3" style="color: #0d61bb">
-    <i class="fas fa-shopping-cart mr-1" style="color: #0d61bb"></i>
+    <i class="fas fa-shopping-cart me-1" style="color: #0d61bb"></i>
     Carro de compra
   </div>
 
@@ -10,7 +10,7 @@
   <ng-container *ngIf="(cart.items$ | async)?.length">
     <div class="dropcart__products-list">
       <div *ngFor="let item of items; let i = index" class="cart-row d-flex">
-        <div class="dropcart__product-image mr-3">
+        <div class="dropcart__product-image me-3">
           <a
             [routerLink]="
               root.product(item.ProductCart.sku, item.ProductCart.nombre)

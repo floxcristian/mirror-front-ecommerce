@@ -7,7 +7,7 @@
       class="indicator position-relative indicator--trigger--click"
       (click)="menuCategorias.open(null, null)"
     >
-      <span class="indicator__button mr-3" style="cursor: pointer">
+      <span class="indicator__button me-3" style="cursor: pointer">
         <i class="fa-regular fa-bars hamburguesa"></i>
       </span>
     </div>
@@ -16,7 +16,7 @@
     </div>
   </div>
 
-  <div class="search__form col p-0 mr-5">
+  <div class="search__form col p-0 me-5">
     <div
       class="indicator indicator--trigger--click position-relative dropdown-search col p-0"
       appDropdown="indicator--opened"
@@ -314,7 +314,7 @@
         #menuTienda="appDropdown"
       >
         <span
-          class="indicator__button flex-column mt-2 mr-3"
+          class="indicator__button flex-column mt-2 me-3"
           style="cursor: pointer"
           (click)="$event.preventDefault(); menuTienda.toggle()"
         >
@@ -377,7 +377,7 @@
         (click)="validarCuenta()"
       >
         <span
-          class="indicator__button flex-column mt-2 mr-3"
+          class="indicator__button flex-column mt-2 me-3"
           style="cursor: pointer"
         >
           <img
@@ -396,7 +396,7 @@
         #cartDropdown="appDropdown"
       >
         <span
-          class="indicator__button flex-column mr-4 mt-2"
+          class="indicator__button flex-column me-4 mt-2"
           style="cursor: pointer"
           (click)="$event.preventDefault(); verificarCarro(cartDropdown)"
         >

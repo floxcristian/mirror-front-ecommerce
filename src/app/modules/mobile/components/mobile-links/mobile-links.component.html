@@ -16,7 +16,7 @@
           (click)="onItemClick(link)"
           [routerLink]="link.url"
         >
-          <i *ngIf="link.icon" class="{{ link.icon }} mr-2"></i>
+          <i *ngIf="link.icon" class="{{ link.icon }} me-2"></i>
           {{ link.label }}
         </a>
         <a
@@ -24,7 +24,7 @@
           class="mobile-links__item-link"
           (click)="onItemClick(link)"
         >
-          <i *ngIf="link.icon" class="{{ link.icon }} mr-2"></i>
+          <i *ngIf="link.icon" class="{{ link.icon }} me-2"></i>
 
           {{ link.label }}
         </a>

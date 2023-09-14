@@ -1,35 +1,67 @@
-<div *ngIf="cargando" class="d-flex flex-wrap flex-column justify-content-center align-content-center mt-4">
-  <div class="text-center"><i class="fas fa-spinner fa-2x fa-spin fa-fw"></i></div>
+<div
+  *ngIf="cargando"
+  class="d-flex flex-wrap flex-column justify-content-center align-content-center mt-4"
+>
+  <div class="text-center">
+    <i class="fas fa-spinner fa-2x fa-spin fa-fw"></i>
+  </div>
   <div class="mt-1">Cargando</div>
 </div>
 
-<div class="mb-5 mt-2" *ngIf="lstProductos.length > 0" (window:resize)="onResize($event)">
+<div
+  class="mb-5 mt-2"
+  *ngIf="lstProductos.length > 0"
+  (window:resize)="onResize($event)"
+>
   <ng-container>
     <div *ngFor="let obj of lstProductos; let i = index">
       <div class="shop-layout shop-layout--sidebar-- mb-3">
         <div class="shop-layout__content container">
           <a href="{{ url[i]?.url }}" *ngIf="!isB2B">
-            <div class="barra_titulo text-center bg-primary mt-3 d-flex justify-content-between align-items-center">
+            <div
+              class="barra_titulo text-center bg-primary mt-3 d-flex justify-content-between align-items-center"
+            >
               <div style="visibility: hidden">
-                <i class="d-block d-md-none fas fa-chevron-right latiendo" style="padding-right: 5px; margin-left: 5px"></i>
-                <span class="d-none d-md-block ver-mas" style="padding-right: 5px">Ver más...</span>
+                <i
+                  class="d-block d-md-none fas fa-chevron-right latiendo"
+                  style="padding-right: 5px; margin-left: 5px"
+                ></i>
+                <span
+                  class="d-none d-md-block ver-mas"
+                  style="padding-right: 5px"
+                  >Ver más...</span
+                >
               </div>
-              <h1 class="block-header__title text-white pt-0" [ngStyle]="{ 'font-size': innerWidth <= 425 ? '16px' : '22px' }">
+              <h1
+                class="block-header__title text-white pt-0"
+                [ngStyle]="{ 'font-size': innerWidth <= 425 ? '16px' : '22px' }"
+              >
                 {{ obj.nombre | uppercase }}
               </h1>
               <div>
                 <i
                   class="d-block d-md-none fas fa-chevron-right latiendo"
                   style="padding-right: 5px"
-                  [ngStyle]="{ 'font-size': innerWidth <= 425 ? '16px' : '22px' }"
+                  [ngStyle]="{
+                    'font-size': innerWidth <= 425 ? '16px' : '22px'
+                  }"
                 ></i>
-                <span class="d-none d-md-block ver-mas mostrar" style="padding-right: 5px; margin-right: 5px">Ver más...</span>
+                <span
+                  class="d-none d-md-block ver-mas mostrar"
+                  style="padding-right: 5px; margin-right: 5px"
+                  >Ver más...</span
+                >
               </div>
             </div>
           </a>
           <div *ngIf="isB2B">
-            <div class="barra_titulo text-center mt-3 d-flex justify-content-center align-items-center">
-              <h3 class="block-header__title m-0" [ngStyle]="{ 'font-size': innerWidth <= 425 ? '16px' : '22px' }">
+            <div
+              class="barra_titulo text-center mt-3 d-flex justify-content-center align-items-center"
+            >
+              <h3
+                class="block-header__title m-0"
+                [ngStyle]="{ 'font-size': innerWidth <= 425 ? '16px' : '22px' }"
+              >
                 {{ obj.nombre | uppercase }}
               </h3>
             </div>
@@ -41,8 +73,14 @@
               data-layout="grid-5-full"
               data-with-features="false"
             >
-              <div *ngIf="innerWidth > 426 && !isB2B" class="products-list__body w-100">
-                <div *ngFor="let item of obj.skus | slice: 0:5" class="products-list__item">
+              <div
+                *ngIf="innerWidth > 426 && !isB2B"
+                class="products-list__body w-100"
+              >
+                <div
+                  *ngFor="let item of obj.skus | slice : 0 : 5"
+                  class="products-list__item"
+                >
                   <app-product-card-b2c
                     [origen]="[ruta, '', obj.nombre.trim(), '']"
                     [product]="item"
@@ -52,7 +90,11 @@
               </div>
 
               <div *ngIf="innerWidth > 426 && isB2B">
-                <owl-carousel-o class="carouselHome" [options]="carouselOptionsB2B" appOwlPreventClick>
+                <owl-carousel-o
+                  class="carouselHome"
+                  [options]="carouselOptionsB2B"
+                  appOwlPreventClick
+                >
                   <ng-container *ngFor="let item of obj.skus">
                     <ng-template carouselSlide>
                       <app-product-card-b2b
@@ -63,14 +105,23 @@
                     </ng-template>
                   </ng-container>
                   <div *ngIf="obj.skus.length < 5">
-                    <ng-template carouselSlide *ngFor="let item of relleno | slice: 0:5 - obj.skus.length">
+                    <ng-template
+                      carouselSlide
+                      *ngFor="
+                        let item of relleno | slice : 0 : 5 - obj.skus.length
+                      "
+                    >
                       <div class="d-flex w-100"></div>
                     </ng-template>
                   </div>
                 </owl-carousel-o>
               </div>
               <div *ngIf="innerWidth < 427">
-                <owl-carousel-o class="carouselHome" [options]="carouselOptions" appOwlPreventClick>
+                <owl-carousel-o
+                  class="carouselHome"
+                  [options]="carouselOptions"
+                  appOwlPreventClick
+                >
                   <ng-container *ngFor="let item of obj.skus">
                     <ng-template carouselSlide>
                       <app-product-card-b2b
@@ -88,7 +139,13 @@
                     </ng-template>
                   </ng-container>
                   <div *ngIf="obj.skus.length < getCantSlides()">
-                    <ng-template carouselSlide *ngFor="let item of relleno | slice: 0:getCantSlides() - obj.skus.length">
+                    <ng-template
+                      carouselSlide
+                      *ngFor="
+                        let item of relleno
+                          | slice : 0 : getCantSlides() - obj.skus.length
+                      "
+                    >
                       <div class="d-flex w-100"></div>
                     </ng-template>
                   </div>
@@ -102,53 +159,105 @@
     <div *ngIf="isB2B">
       <div class="shop-layout shop-layout--sidebar-- mb-3">
         <div class="shop-layout__content container">
-          <div class="d-flex justify-content-center align-items-end position-relative">
-            <div class="barra_titulo text-center mt-3 d-flex flex-column justify-content-center align-items-center">
-              <h3 class="block-header__title m-0" [ngStyle]="{ 'font-size': innerWidth <= 425 ? '16px' : '22px' }">
-                {{ 'Mis listas de productos' | uppercase }}
+          <div
+            class="d-flex justify-content-center align-items-end position-relative"
+          >
+            <div
+              class="barra_titulo text-center mt-3 d-flex flex-column justify-content-center align-items-center"
+            >
+              <h3
+                class="block-header__title m-0"
+                [ngStyle]="{ 'font-size': innerWidth <= 425 ? '16px' : '22px' }"
+              >
+                {{ "Mis listas de productos" | uppercase }}
               </h3>
-              <h5 *ngIf="listas.length === 0" class="block-header__subtitle mt-2">No tiene listas creadas</h5>
+              <h5
+                *ngIf="listas.length === 0"
+                class="block-header__subtitle mt-2"
+              >
+                No tiene listas creadas
+              </h5>
             </div>
             <div class="position-absolute" style="right: 0px; top: 20px">
               <button class="btn btn-sm btn-link p-0" (click)="cargaMasiva()">
-                <i class="fas fa-plus mr-2"></i><span class="d-none d-md-inline p-0">Agregar productos por lotes</span>
+                <i class="fas fa-plus me-2"></i
+                ><span class="d-none d-md-inline p-0"
+                  >Agregar productos por lotes</span
+                >
               </button>
             </div>
           </div>
-          <div class="products-view" style="margin-top: 15px" *ngIf="listas.length > 0">
-            <div class="products-view__list products-list mx-0" data-layout="grid-5-full" data-with-features="false">
+          <div
+            class="products-view"
+            style="margin-top: 15px"
+            *ngIf="listas.length > 0"
+          >
+            <div
+              class="products-view__list products-list mx-0"
+              data-layout="grid-5-full"
+              data-with-features="false"
+            >
               <div *ngIf="innerWidth > 426">
-                <owl-carousel-o class="carouselHome listCards" [options]="carouselOptionsB2BLista">
+                <owl-carousel-o
+                  class="carouselHome listCards"
+                  [options]="carouselOptionsB2BLista"
+                >
                   <ng-container *ngFor="let lista of listas">
                     <ng-template carouselSlide>
                       <app-product-list-card
                         [lista]="lista"
-                        [origen]="['lista', lista.nombre, 'lista-de-productos', '']"
+                        [origen]="[
+                          'lista',
+                          lista.nombre,
+                          'lista-de-productos',
+                          ''
+                        ]"
                         (getListas)="cargarListas()"
                       ></app-product-list-card>
                     </ng-template>
                   </ng-container>
                   <div *ngIf="listas.length < getCantSlides('lista')">
-                    <ng-template carouselSlide *ngFor="let item of relleno | slice: 0:getCantSlides('lista') - listas.length">
+                    <ng-template
+                      carouselSlide
+                      *ngFor="
+                        let item of relleno
+                          | slice : 0 : getCantSlides('lista') - listas.length
+                      "
+                    >
                       <div class="d-flex w-100"></div>
                     </ng-template>
                   </div>
                 </owl-carousel-o>
               </div>
               <div *ngIf="innerWidth < 427">
-                <owl-carousel-o class="carouselHome listCards" [options]="carouselOptionsB2BLista" appOwlPreventClick>
+                <owl-carousel-o
+                  class="carouselHome listCards"
+                  [options]="carouselOptionsB2BLista"
+                  appOwlPreventClick
+                >
                   <ng-container *ngFor="let lista of listas">
                     <ng-template carouselSlide>
                       <app-product-list-card
                         class="d-flex w-100 flex-shrink-0"
                         [lista]="lista"
-                        [origen]="['lista', lista.nombre, 'lista-de-productos', '']"
+                        [origen]="[
+                          'lista',
+                          lista.nombre,
+                          'lista-de-productos',
+                          ''
+                        ]"
                         (getListas)="cargarListas()"
                       ></app-product-list-card>
                     </ng-template>
                   </ng-container>
                   <div *ngIf="listas.length < getCantSlides('lista')">
-                    <ng-template carouselSlide *ngFor="let item of relleno | slice: 0:getCantSlides('lista') - listas.length">
+                    <ng-template
+                      carouselSlide
+                      *ngFor="
+                        let item of relleno
+                          | slice : 0 : getCantSlides('lista') - listas.length
+                      "
+                    >
                       <div class="d-flex w-100"></div>
                     </ng-template>
                   </div>

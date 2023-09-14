@@ -10,7 +10,7 @@
         </button>
     </div>
 </div>
-<div class="mr-1 ms-1">
+<div class="me-1 ms-1">
     <agm-map [latitude]="lat" [mapTypeId]="autocompletado === true ? 'hybrid' : 'roadmap'" [longitude]="lng"
         [zoom]="zoom" [disableDefaultUI]="autocompletado === true ? true : false">
         <agm-marker [latitude]="lat" [longitude]="lng" [markerDraggable]="autocompletado === true ? true : false"

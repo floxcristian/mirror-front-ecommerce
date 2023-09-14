@@ -98,7 +98,7 @@
               >
                 <ng-container *ngIf="convertir">
                   <ng-container *ngIf="!tomorrow">
-                    <i class="fas fa-shipping-fast mr-2"></i>
+                    <i class="fas fa-shipping-fast me-2"></i>
                     <i style="color: black; font-weight: bold"
                       >Llega el {{ fecha | titlecase }}</i
                     >
@@ -106,7 +106,7 @@
 
                   <ng-container *ngIf="tomorrow">
                     <div class="d-flex align-items-center">
-                      <i class="fas fa-shipping-fast mr-2"></i>
+                      <i class="fas fa-shipping-fast me-2"></i>
                       <div
                         style="
                           margin-top: 2px;
@@ -123,7 +123,7 @@
                   </ng-container>
                 </ng-container>
                 <ng-container *ngIf="!convertir">
-                  <i class="fas fa-shipping-fast mr-2"></i>
+                  <i class="fas fa-shipping-fast me-2"></i>
                   <i style="color: black; font-weight: bold">{{
                     productData.fechaEntrega | date : "dd/MM/yyyy" | uppercase
                   }}</i>
@@ -135,14 +135,14 @@
                   productData.fechaEntrega == null
                 "
               >
-                <i class="fas fa-shipping-fast mr-2" style="color: grey"></i>
+                <i class="fas fa-shipping-fast me-2" style="color: grey"></i>
                 <i style="color: grey">No disponible</i>
               </ng-container>
             </div>
             <div class="col-12 col-lg-12" style="margin-top: 10px">
               <ng-container *ngIf="productData.retiro">
                 <div class="d-flex align-items-center">
-                  <i class="fas fa-store mr-2"></i>
+                  <i class="fas fa-store me-2"></i>
                   <div
                     style="
                       margin-top: 2px;
@@ -162,7 +162,7 @@
                 "
               >
                 <div style="margin-top: 2px">
-                  <i class="fas fa-store mr-2" style="color: grey"></i>
+                  <i class="fas fa-store me-2" style="color: grey"></i>
                   <i style="color: grey">No disponible</i>
                 </div>
               </ng-container>

@@ -5,7 +5,7 @@
     style="background-color: #0063b9"
   >
     <div class="p-0">
-      <div class="ms-4 mr-3">
+      <div class="ms-4 me-3">
         <a [routerLink]="['/', 'inicio']">
           <img
             src="assets/images/logos/logo_header1.png"
@@ -91,17 +91,17 @@
   >
     <div class="d-flex">
       <div
-        class="indicator position-relative indicator--trigger--click mr-4"
+        class="indicator position-relative indicator--trigger--click me-4"
         (click)="menu.open()"
       >
         <a [href]="">
-          <i class="fas fa-bars fa-lg mr-2"></i>
+          <i class="fas fa-bars fa-lg me-2"></i>
           <span class="icon-title text-left" style="font-size: 1rem"
             ><strong> Todas las categorías</strong></span
           >
         </a>
       </div>
-      <div class="d-flex align-items-center mr-4">
+      <div class="d-flex align-items-center me-4">
         <a
           [href]=""
           class="d-flex"
@@ -118,7 +118,7 @@
           }}"
         >
           <div class="d-flex align-items-center">
-            <i class="fas fa-map-marker-alt fa-lg mr-2"></i>
+            <i class="fas fa-map-marker-alt fa-lg me-2"></i>
           </div>
           <div class="d-flex">
             <span class="icon-title">Enviar a: &nbsp;</span>
@@ -139,12 +139,12 @@
         </a>
       </div>
       <div
-        class="indicator position-relative indicator--trigger--click mr-4"
+        class="indicator position-relative indicator--trigger--click me-4"
         appDropdown="indicator--opened"
         #menuTienda="appDropdown"
       >
         <a [href]="" (click)="$event.preventDefault(); menuTienda.toggle()">
-          <i class="fas fa-map-marked-alt fa-lg mr-2"></i>
+          <i class="fas fa-map-marked-alt fa-lg me-2"></i>
           <span class="icon-title mt-1"> {{ tiendaSeleccionada?.zona }}</span>
         </a>
 
@@ -182,7 +182,7 @@
 
     <div class="d-flex">
       <div
-        class="indicator indicator--trigger--click mr-4"
+        class="indicator indicator--trigger--click me-4"
         *ngIf="!isVacio(usuario.vendedor)"
       >
         <a
@@ -198,38 +198,38 @@
           <img
             src="../../../../../assets/images/logos/whatsapp.png"
             style="width: 23px"
-            class="mr-2"
+            class="me-2"
           />
           <span class="icon-title mt-1">{{ usuario.vendedor.nombre }}</span>
         </a>
       </div>
 
       <div
-        class="indicator indicator--trigger--click mr-4"
+        class="indicator indicator--trigger--click me-4"
         (click)="validarCuenta()"
       >
         <a [href]="">
-          <i class="fas fa-truck-moving fa-lg mr-2"></i>
+          <i class="fas fa-truck-moving fa-lg me-2"></i>
           <span class="icon-title mt-1"> Seguimiento</span>
         </a>
       </div>
 
-      <div class="indicator indicator--trigger--click mr-4">
+      <div class="indicator indicator--trigger--click me-4">
         <a [routerLink]="['/', 'mi-cuenta', 'carga-masiva-prod']">
-          <i class="fas fa-file-upload fa-lg mr-2"></i>
+          <i class="fas fa-file-upload fa-lg me-2"></i>
           <span class="icon-title mt-1"> Carga Masiva</span>
         </a>
       </div>
 
-      <div class="indicator indicator--trigger--click mr-4">
+      <div class="indicator indicator--trigger--click me-4">
         <a [routerLink]="['/', 'mi-cuenta', 'resumen']">
-          <i class="fas fa-hand-holding-usd fa-lg mr-2"></i>
+          <i class="fas fa-hand-holding-usd fa-lg me-2"></i>
           <span class="icon-title mt-1"> Estado de Cuenta</span>
         </a>
       </div>
-      <div class="indicator indicator--trigger--click mr-4">
+      <div class="indicator indicator--trigger--click me-4">
         <a [routerLink]="['/', 'mi-cuenta', 'portal-de-pagos']">
-          <i class="fas fa-file-invoice-dollar fa-lg mr-2"></i>
+          <i class="fas fa-file-invoice-dollar fa-lg me-2"></i>
           <span class="icon-title mt-1"> Pagos</span>
         </a>
       </div>

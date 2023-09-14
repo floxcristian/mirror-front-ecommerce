@@ -7,7 +7,7 @@
       #menuSearch="appDropdown"
     >
       <div class="input-group">
-        <div dropdown #dropdown="bs-dropdown" class="input-group-prepend mr-0">
+        <div dropdown #dropdown="bs-dropdown" class="input-group-prepend me-0">
           <button
             dropdownToggle
             class="btn btn-primary dropdown-toggle"
@@ -56,7 +56,7 @@
           >
             <div class="d-flex justify-content-between align-items-center">
               <h6 class="dropdown-header">Mi Flota</h6>
-              <span class="mr-4">
+              <span class="me-4">
                 <small
                   >Buscar:
                   <input
@@ -87,7 +87,7 @@
                 *ngFor="let item of flotaFiltrada"
               >
                 <div
-                  class="mr-3 d-flex align-items-center"
+                  class="me-3 d-flex align-items-center"
                   [tooltip]="tooltipImgVehiculo"
                   placement="right"
                   [delay]="300"

@@ -183,7 +183,7 @@
                 </ng-template>
 
                 <div
-                  class="mb-3 mr-3 col-12 col-lg-12 mt-3"
+                  class="mb-3 me-3 col-12 col-lg-12 mt-3"
                   [hidden]="shippingStore.length == 0 ? true : false"
                 >
                   <ng-select
@@ -408,7 +408,7 @@
                   </div>
 
                   <div
-                    class="row mr-1"
+                    class="row me-1"
                     *ngIf="recibeType == 'otra' && recibeOtraname.length > 0"
                   >
                     <div class="col-12">
@@ -627,7 +627,7 @@
                     <div class="col-12 col-lg-12 ms-3 mt-3">
                       <div class="cart-address-container">
                         <div
-                          class="row pb-3 pt-3 d-flex flex-wrap align-items-sm-center pl-2 mr-1"
+                          class="row pb-3 pt-3 d-flex flex-wrap align-items-sm-center pl-2 me-1"
                         >
                           <div class="col-12 col-sm-7">
                             <div>
@@ -648,7 +648,7 @@
                             >
                               Modificar
                               <div
-                                class="mr-1 hidetabletLandscape"
+                                class="me-1 hidetabletLandscape"
                                 style="display: inline-block"
                               >
                                 dirección
@@ -869,7 +869,7 @@
                         </div>
 
                         <div
-                          class="row mr-1"
+                          class="row me-1"
                           *ngIf="
                             recibeType == 'otra' && recibeOtraname.length > 0
                           "
@@ -1172,7 +1172,7 @@
                 <button
                   type="button"
                   name="finishQuotation"
-                  class="btn btn-outline-primary mr-3"
+                  class="btn btn-outline-primary me-3"
                   (click)="finishQuotation()"
                 >
                   Confirmar
@@ -1312,7 +1312,7 @@
   ></div>
   <div
     *ngIf="shippingSelected && select_grupos"
-    class="ms-3 mr-3"
+    class="ms-3 me-3"
     style="margin-top: 5px"
     [ngStyle]="{
       'margin-bottom': showDetalleProductos == true ? '265px' : '195px'
@@ -1345,7 +1345,7 @@
 
   <div class="footer-page" style="z-index: 900">
     <div
-      class="ms-3 mr-3"
+      class="ms-3 me-3"
       style="margin-top: 5px; margin-bottom: -13px"
       [hidden]="showAllAddress ? true : false"
     >

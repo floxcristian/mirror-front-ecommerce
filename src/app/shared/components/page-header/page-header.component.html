@@ -10,12 +10,12 @@
     [ngClass]="HideOnFicha() ? '' : 'titleBusqueda'"
     [ngStyle]="{ 'margin-top': innerWidth < 530 ? '25px' : '0px' }"
   >
-    <div *ngIf="header || headerSubtitle" class="page-header__title mr-auto">
+    <div *ngIf="header || headerSubtitle" class="page-header__title me-auto">
       <h1 class="float-left">{{ header }}</h1>
       <h2 class="float-left">{{ headerSubtitle }}</h2>
     </div>
 
-    <div *ngIf="returnUrl != ''" class="mr-auto page-return my-auto">
+    <div *ngIf="returnUrl != ''" class="me-auto page-return my-auto">
       <a class="link" [routerLink]="returnUrl">
         <i class="fas fa-chevron-left"></i> Regresar
       </a>
@@ -23,7 +23,7 @@
     <ng-container *ngIf="innerWidth >= 530 && innerWidth < 1025; px">
       <div
         *ngIf="totalRegistros > 0 && !url.includes('_MARCA')"
-        class="col-12 pt-1 mr-1 textToSearch col-xs-12 textToSearchLocation"
+        class="col-12 pt-1 me-1 textToSearch col-xs-12 textToSearchLocation"
         [hidden]="HideOnFicha() ? true : false"
       >
         <div class="text-center">
@@ -38,7 +38,7 @@
       </div>
       <div
         *ngIf="totalRegistros > 0 && url.includes('_MARCA')"
-        class="col-12 pt-1 mr-1 textToSearch col-xs-12 textToSearchLocation"
+        class="col-12 pt-1 me-1 textToSearch col-xs-12 textToSearchLocation"
         [hidden]="HideOnFicha() ? true : false"
       >
         <div class="text-left">
@@ -57,7 +57,7 @@
     <ng-container *ngIf="innerWidth < 530">
       <div
         *ngIf="totalRegistros > 0 && !url.includes('_MARCA')"
-        class="col-12 pt-1 mr-1 textToSearch col-xs-12 textToSearchLocation"
+        class="col-12 pt-1 me-1 textToSearch col-xs-12 textToSearchLocation"
         [hidden]="HideOnFicha() ? true : false"
       >
         <div class="text-center">
@@ -72,7 +72,7 @@
       </div>
       <div
         *ngIf="totalRegistros > 0 && url.includes('_MARCA')"
-        class="col-12 pt-1 mr-1 textToSearch col-xs-12 textToSearchLocation"
+        class="col-12 pt-1 me-1 textToSearch col-xs-12 textToSearchLocation"
         [hidden]="HideOnFicha() ? true : false"
       >
         <div class="text-left">
@@ -91,7 +91,7 @@
 
     <div
       *ngIf="totalRegistros && totalRegistros === 0 && !breadcrumbs[0]?.label"
-      class="col-12 pt-1 mr-1 font-weight-bold textToSearch col-xs-12 textToSearchLocation"
+      class="col-12 pt-1 me-1 font-weight-bold textToSearch col-xs-12 textToSearchLocation"
       [hidden]="HideOnFicha() ? true : false"
     >
       <div class="container">

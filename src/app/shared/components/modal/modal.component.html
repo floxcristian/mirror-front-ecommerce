@@ -1,22 +1,52 @@
 <div class="modal-header">
-    <h5 class="modal-title pull-left">
-        <i *ngIf="tipoIcon === 1" class="fas fa-check-circle mr-2" style="color: green;"></i>
-        <i *ngIf="tipoIcon === 2" class="fas fa-info-circle  mr-2" style="color:rgb(0, 140, 255)"></i>
-        <i *ngIf="tipoIcon === 3" class="fas fa-exclamation-triangle mr-2" style="color: rgb(181, 145, 0);"></i>
-        <i *ngIf="tipoIcon === 4" class="fas fa-exclamation-circle mr-2" style="color: red;"></i>
-        <i *ngIf="tipoIcon === 5" class="fas fa-question-circle mr-2 text-info"></i>
-        <span style="font-size: 16px;">{{ titulo }}</span>
-    </h5>
-    <button name="modalRef" type="button" class="close pull-right" aria-label="Close" (click)="ModalRef.hide()">
-        <span aria-hidden="true">&times;</span>
-    </button>
+  <h5 class="modal-title pull-left">
+    <i
+      *ngIf="tipoIcon === 1"
+      class="fas fa-check-circle me-2"
+      style="color: green"
+    ></i>
+    <i
+      *ngIf="tipoIcon === 2"
+      class="fas fa-info-circle me-2"
+      style="color: rgb(0, 140, 255)"
+    ></i>
+    <i
+      *ngIf="tipoIcon === 3"
+      class="fas fa-exclamation-triangle me-2"
+      style="color: rgb(181, 145, 0)"
+    ></i>
+    <i
+      *ngIf="tipoIcon === 4"
+      class="fas fa-exclamation-circle me-2"
+      style="color: red"
+    ></i>
+    <i *ngIf="tipoIcon === 5" class="fas fa-question-circle me-2 text-info"></i>
+    <span style="font-size: 16px">{{ titulo }}</span>
+  </h5>
+  <button
+    name="modalRef"
+    type="button"
+    class="close pull-right"
+    aria-label="Close"
+    (click)="ModalRef.hide()"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 <div class="modal-body">
-    <div [innerHTML]="mensaje"></div>
+  <div [innerHTML]="mensaje"></div>
 </div>
 
 <div class="modal-footer">
-    <button *ngIf="tipoModal === 2" name="Cerrar" class="btn btn-link text-danger mr-2" (click)="clickBoton('NO')">{{ textoBotonNO }}</button>
-    <button name="Procesar" class="btn btn-secondary" (click)="clickBoton('SI')">{{ textoBotonSI }}</button>
-
+  <button
+    *ngIf="tipoModal === 2"
+    name="Cerrar"
+    class="btn btn-link text-danger me-2"
+    (click)="clickBoton('NO')"
+  >
+    {{ textoBotonNO }}
+  </button>
+  <button name="Procesar" class="btn btn-secondary" (click)="clickBoton('SI')">
+    {{ textoBotonSI }}
+  </button>
 </div>

@@ -9,7 +9,7 @@
     </div>
     <div class="d-none d-sm-flex justify-content-end">
       <button class="btn btn-sm btn-primary" (click)="escribirComentario()">
-        <i class="fas fa-pencil-alt mr-2"></i>Escribir comentario
+        <i class="fas fa-pencil-alt me-2"></i>Escribir comentario
       </button>
     </div>
     <div class="d-block d-sm-none mt-2">
@@ -45,7 +45,7 @@
       </div>
       <div class="d-none d-sm-block">
         <button class="btn btn-sm btn-primary" (click)="escribirComentario()">
-          <i class="fas fa-pencil-alt mr-2"></i>Escribir comentario
+          <i class="fas fa-pencil-alt me-2"></i>Escribir comentario
         </button>
       </div>
     </div>
@@ -65,7 +65,7 @@
     >
       <div class="d-flex flex-column py-2 resumen">
         <div *ngFor="let item of resumen" class="d-flex">
-          <div class="d-flex align-items-center nowrap mr-2">
+          <div class="d-flex align-items-center nowrap me-2">
             <div>{{ item.estrellas }}</div>
             <div>
               <img
@@ -113,10 +113,10 @@
   <div class="d-flex flex-column col-lg-6 col-12 p-0" style="color: #011935">
     <div class="d-flex flex-column mb-4" *ngFor="let item of comentarios">
       <div class="d-flex flex-column flex-sm-row">
-        <div class="mr-4">
+        <div class="me-4">
           <strong>{{ item.titulo | capitalizeFirst }}</strong>
         </div>
-        <div class="mr-4">
+        <div class="me-4">
           <span class="starsDetalle">
             <span
               [ngStyle]="{
@@ -134,7 +134,7 @@
       </div>
       <div class="mb-2">
         <small
-          ><span class="mr-3">Por {{ item.nombre }}</span> Hace
+          ><span class="me-3">Por {{ item.nombre }}</span> Hace
           {{ item.tiempo }} {{ item.unidadTiempo }}</small
         >
       </div>

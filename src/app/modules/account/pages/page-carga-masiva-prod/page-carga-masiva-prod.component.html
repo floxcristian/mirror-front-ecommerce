@@ -1,6 +1,6 @@
 <div class="top-bar-categories d-flex align-orders-center">
-  <div class="title d-flex align-orders-center mr-auto">
-    <i _ngcontent-serverapp-c11="" class="fas fa-file-upload mr-3"></i>
+  <div class="title d-flex align-orders-center me-auto">
+    <i _ngcontent-serverapp-c11="" class="fas fa-file-upload me-3"></i>
     <h5>Carga Masiva de Productos</h5>
   </div>
 </div>
@@ -28,7 +28,7 @@
 
         <div class="row mt-4">
           <div class="col-12 d-flex justify-content-start">
-            <label [for]="idArchivo" class="btn btn-sm btn-primary mr-2"
+            <label [for]="idArchivo" class="btn btn-sm btn-primary me-2"
               >Seleccionar Archivo</label
             >
             <input
@@ -44,7 +44,7 @@
             class="col-10 col-md-4 text-left text-truncate"
             style="font-size: 0.85rem"
           >
-            <i [class]="archivo.icon + ' mr-2'"></i> {{ archivo.nombre }}
+            <i [class]="archivo.icon + ' me-2'"></i> {{ archivo.nombre }}
           </div>
           <label
             class="btn btn-sm btn-min_pad p-0 m-0"
@@ -63,7 +63,7 @@
               [disabled]="isVacio(archivo)"
               [ngClass]="{ 'btn-loading': procesando }"
             >
-              <i class="fas fa-cloud-upload-alt mr-2"></i> Procesar archivo
+              <i class="fas fa-cloud-upload-alt me-2"></i> Procesar archivo
             </button>
           </div>
         </div>
@@ -131,17 +131,17 @@
                   correctamente
                 </div>
                 <div
-                  class="d-flex justify-content-end align-items-center flex-grow-1 flex-shrink-1 mr-4"
+                  class="d-flex justify-content-end align-items-center flex-grow-1 flex-shrink-1 me-4"
                   style="font-size: 15px; color: black; font-weight: bold"
                 >
                   <span>Total: {{ total | currencyFormat }}</span>
                 </div>
                 <div
                   style="float: right"
-                  class="mr-3 d-flex align-items-center"
+                  class="me-3 d-flex align-items-center"
                 >
                   <span
-                    class="fas fa-search mr-1"
+                    class="fas fa-search me-1"
                     style="cursor: pointer"
                   ></span>
                 </div>
@@ -202,8 +202,8 @@
                         <i
                           [ngClass]="
                             item.entregas.despacho
-                              ? 'fas fa-truck text-success mr-1'
-                              : 'fas fa-truck mr-1'
+                              ? 'fas fa-truck text-success me-1'
+                              : 'fas fa-truck me-1'
                           "
                           style="font-size: 18px"
                         ></i>
@@ -221,8 +221,8 @@
                         <i
                           [ngClass]="
                             item.entregas.retiroTienda
-                              ? 'fas fa-store text-success mr-1'
-                              : 'fas fa-store mr-1'
+                              ? 'fas fa-store text-success me-1'
+                              : 'fas fa-store me-1'
                           "
                           style="font-size: 18px"
                         ></i>
@@ -263,10 +263,10 @@
                 </div>
                 <div
                   style="float: right"
-                  class="mr-3 d-flex align-items-center"
+                  class="me-3 d-flex align-items-center"
                 >
                   <span
-                    class="fas fa-search mr-1"
+                    class="fas fa-search me-1"
                     style="cursor: pointer"
                   ></span>
                 </div>
@@ -335,10 +335,10 @@
                 </div>
                 <div
                   style="float: right"
-                  class="mr-3 d-flex align-items-center"
+                  class="me-3 d-flex align-items-center"
                 >
                   <span
-                    class="fas fa-search mr-1"
+                    class="fas fa-search me-1"
                     style="cursor: pointer"
                   ></span>
                 </div>

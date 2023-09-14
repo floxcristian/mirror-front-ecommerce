@@ -76,7 +76,7 @@
               class="layout-switcher__button w-auto"
               (click)="setVisibleFilter(true)"
             >
-              <i class="fas fa-filter mr-1"></i>
+              <i class="fas fa-filter me-1"></i>
               Filtros
             </button>
           </div>
@@ -93,7 +93,7 @@
               class="layout-switcher__button w-auto"
               (click)="setVisibleFilter(true)"
             >
-              <i class="fas fa-filter mr-1"></i>
+              <i class="fas fa-filter me-1"></i>
               Filtros
             </button>
           </div>
@@ -104,7 +104,7 @@
           [class.col-11]="!isB2B && innerWidth > 768"
           [class.col-8]="!isB2B && innerWidth <= 768"
           [class.col-10]="isB2B"
-          class="mr-2 w-100 d-flex justify-content-end"
+          class="me-2 w-100 d-flex justify-content-end"
         >
           <label for="view-options-sort">
             <i
@@ -148,7 +148,7 @@
         <ng-container *ngIf="class == 'grid'">
           <div
             *ngFor="let product of products"
-            class="products-list__item mb-1 mr-1"
+            class="products-list__item mb-1 me-1"
           >
             <app-product-card-b2b
               *ngIf="isB2B"

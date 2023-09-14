@@ -4,8 +4,8 @@
   [class.pl-4]="innerWidth < 450"
   (window:resize)="onResize($event)"
 >
-  <div class="title d-flex align-items-center mr-auto">
-    <i _ngcontent-serverapp-c11="" class="fas fa-tachometer-alt mr-3"></i>
+  <div class="title d-flex align-items-center me-auto">
+    <i _ngcontent-serverapp-c11="" class="fas fa-tachometer-alt me-3"></i>
     <h5>Mi perfil</h5>
     <h2 class="float-left">
       Bienvenido(a) {{ usuario.first_name | titlecase }}
@@ -206,13 +206,13 @@
                 <td class="text-left">
                   <button
                     *ngIf="item.tipo === 'Despacho'"
-                    class="btn btn-sm btn-link p-0 mr-3"
+                    class="btn btn-sm btn-link p-0 me-3"
                     tooltip="Actualizar dirección"
                     placement="top"
                     container="body"
                     (click)="openModalUpdateAddAddress(item)"
                   >
-                    <i class="fas fa-edit fa-lg mr-1"></i> Editar
+                    <i class="fas fa-edit fa-lg me-1"></i> Editar
                   </button>
                   <button
                     *ngIf="item.tipo === 'Despacho'"
@@ -222,7 +222,7 @@
                     container="body"
                     (click)="deleteAddress(item)"
                   >
-                    <i class="fas fa-trash-alt text-danger fa-lg mr-1"></i>
+                    <i class="fas fa-trash-alt text-danger fa-lg me-1"></i>
                     Eliminar
                   </button>
                 </td>
@@ -254,7 +254,7 @@
                 <td>
                   <button
                     *ngIf="item.tipo === 'Despacho'"
-                    class="btn btn-sm btn-link p-0 mr-3"
+                    class="btn btn-sm btn-link p-0 me-3"
                     tooltip="Actualizar dirección"
                     placement="top"
                     container="body"
@@ -368,13 +368,13 @@
                   <td class="text-left">
                     <button
                       *ngIf="item.contactoDe === 'COM'"
-                      class="btn btn-sm btn-link p-0 mr-3"
+                      class="btn btn-sm btn-link p-0 me-3"
                       tooltip="Actualizar contacto"
                       placement="top"
                       container="body"
                       (click)="openModalUpdateContact(item)"
                     >
-                      <i class="fas fa-edit fa-lg mr-1"></i> Editar
+                      <i class="fas fa-edit fa-lg me-1"></i> Editar
                     </button>
                     <button
                       *ngIf="item.contactoDe === 'COM'"
@@ -384,7 +384,7 @@
                       container="body"
                       (click)="deleteContact(item)"
                     >
-                      <i class="fas fa-trash-alt text-danger fa-lg mr-1"></i>
+                      <i class="fas fa-trash-alt text-danger fa-lg me-1"></i>
                       Eliminar
                     </button>
                   </td>
@@ -439,7 +439,7 @@
                   <td>
                     <button
                       *ngIf="item.contactoDe === 'COM'"
-                      class="btn btn-sm btn-link p-0 mr-3"
+                      class="btn btn-sm btn-link p-0 me-3"
                       tooltip="Actualizar contacto"
                       placement="top"
                       container="body"

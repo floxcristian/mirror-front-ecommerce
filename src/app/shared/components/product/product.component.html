@@ -237,7 +237,7 @@
                   <span
                     *ngIf="product?.precio?.rut != 0"
                     tooltip="Precio con descuento cliente"
-                    class="text-price-product mr-2 text-danger"
+                    class="text-price-product me-2 text-danger"
                     [ngStyle]="{
                       'font-size.rem': preciosEscalas.length > 1 ? '1.6' : '2'
                     }"
@@ -246,7 +246,7 @@
 
                   <span
                     *ngIf="product?.precio?.rut == 0"
-                    class="text-price-product mr-2"
+                    class="text-price-product me-2"
                     [ngStyle]="{
                       'font-size.rem': preciosEscalas.length > 1 ? '1.6' : '2'
                     }"
@@ -256,7 +256,7 @@
                   <span
                     *ngIf="product?.precioComun != product?.precio?.precio"
                     tooltip="Precio normal"
-                    class="product__old-price mr-2"
+                    class="product__old-price me-2"
                     [ngStyle]="{
                       'font-size.rem': preciosEscalas.length > 1 ? '1.6' : '2'
                     }"
@@ -353,7 +353,7 @@
                     appClick
                     style="background-color: #8a8984"
                   >
-                    <i class="fas fa-shopping-cart mr-1"></i>Seleccione otra
+                    <i class="fas fa-shopping-cart me-1"></i>Seleccione otra
                     Cantidad
                   </button>
                 </div>
@@ -413,7 +413,7 @@
                 [ngStyle]="{ color: favorito ? '#10753d' : '#3d464d' }"
                 [ngClass]="{ 'btn-loading': addingToWishlist }"
               >
-                <i class="fa-solid fa-list-check fa-lg mr-2"></i>
+                <i class="fa-solid fa-list-check fa-lg me-2"></i>
                 {{ favorito ? "Agregado a tus listas" : "Agregar a una lista" }}
               </button>
             </div>
@@ -450,14 +450,14 @@
                   <span
                     *ngIf="product?.precio?.rut != 0"
                     tooltip="Precio con descuento cliente"
-                    class="text-price-product mr-2 text-danger"
+                    class="text-price-product me-2 text-danger"
                     style="font-size: 2rem"
                     >{{ product.precio.precio | currencyFormat }}</span
                   >
 
                   <span
                     *ngIf="product?.precio?.rut == 0"
-                    class="text-price-product mr-2"
+                    class="text-price-product me-2"
                     style="font-size: 2rem"
                     >{{ product.precio.precio | currencyFormat }}</span
                   >
@@ -465,7 +465,7 @@
                   <span
                     *ngIf="product?.precioComun != product?.precio?.precio"
                     tooltip="Precio normal"
-                    class="product__old-price mr-2"
+                    class="product__old-price me-2"
                     style="font-size: 2rem"
                     >{{ product.precioComun | currencyFormat }}</span
                   >

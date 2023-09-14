@@ -13,7 +13,12 @@
     <button
       name="Agregar"
       type="button"
-      *ngIf="disponibilidad && (!sinStockOtrasTiendas || !sinStockSuficienteDespacho || !sinStockSuficienteTiendaActual)"
+      *ngIf="
+        disponibilidad &&
+        (!sinStockOtrasTiendas ||
+          !sinStockSuficienteDespacho ||
+          !sinStockSuficienteTiendaActual)
+      "
       class="btn btn-secondary btn-lg btn-block text-center btn-add-cart button-primary-medium-large w-50"
       [ngClass]="{ 'btn-loading': addingToCart }"
       appClick
@@ -36,7 +41,12 @@
       SIN STOCK
     </button>
     <button
-      *ngIf="disponibilidad && sinStockOtrasTiendas && sinStockSuficienteDespacho && sinStockSuficienteTiendaActual"
+      *ngIf="
+        disponibilidad &&
+        sinStockOtrasTiendas &&
+        sinStockSuficienteDespacho &&
+        sinStockSuficienteTiendaActual
+      "
       disabled
       name="Agregar "
       type="button "
@@ -45,7 +55,7 @@
       appClick
       style="background-color: #8a8984"
     >
-      <i class="fas fa-shopping-cart mr-1"></i>
+      <i class="fas fa-shopping-cart me-1"></i>
       Seleccione otra Cantidad
     </button>
   </div>

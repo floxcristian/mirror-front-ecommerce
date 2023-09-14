@@ -1,6 +1,6 @@
 <div class="modal-header">
   <h5 class="modal-title pull-left">
-    <i class="fas fa-file-upload mr-2"></i>
+    <i class="fas fa-file-upload me-2"></i>
     <span style="font-size: 16px">Cargar productos</span>
   </h5>
 </div>
@@ -15,7 +15,7 @@
             class="btn btn-link btn-sm btn-block text-decoration-none"
             (click)="creandoLista = true; seleccionandoLista = false"
           >
-            <i class="fas fa-plus fa-lg fa-fw mr-2"></i>Crear nueva lista
+            <i class="fas fa-plus fa-lg fa-fw me-2"></i>Crear nueva lista
           </button>
         </div>
 
@@ -24,7 +24,7 @@
             class="btn btn-link btn-sm btn-block text-decoration-none"
             (click)="creandoLista = false; seleccionandoLista = true"
           >
-            <i class="fas fa-list fa-lg fa-fw mr-2"></i>Seleccionar lista
+            <i class="fas fa-list fa-lg fa-fw me-2"></i>Seleccionar lista
             existente
           </button>
         </div>
@@ -139,7 +139,7 @@
 <div class="modal-footer">
   <button
     name="Cerrar"
-    class="btn btn-link text-danger mr-2"
+    class="btn btn-link text-danger me-2"
     (click)="close(false)"
     [disabled]="guardando"
   >

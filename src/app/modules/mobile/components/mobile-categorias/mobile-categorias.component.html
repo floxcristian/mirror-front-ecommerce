@@ -13,7 +13,7 @@
           [routerLink]="link.url"
           style="font-size: 13px"
         >
-          <i *ngIf="link.icon" class="{{ link.icon }} mr-2"></i>
+          <i *ngIf="link.icon" class="{{ link.icon }} me-2"></i>
 
           {{ link.label }}
         </a>
@@ -23,7 +23,7 @@
           (click)="onItemClick(link)"
           [routerLink]="link.url"
         >
-          <i *ngIf="link.icon" class="{{ link.icon }} mr-2"></i>
+          <i *ngIf="link.icon" class="{{ link.icon }} me-2"></i>
 
           {{ link.label | capitalizeFirst }}
         </a>

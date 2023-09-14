@@ -7,7 +7,7 @@
 >
   <li *ngFor="let item of items">
     <ng-template #link>
-      <img *ngIf="item.img" [src]="item.img" class="mr-3 lazyload" />
+      <img *ngIf="item.img" [src]="item.img" class="me-3 lazyload" />
 
       <i *ngIf="item.icon" class="{{ item.icon }}"></i>
       {{ item.label | titlecase }}
