@@ -1,11 +1,10 @@
 // Angular
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-// Storage
-//import { LocalStorageService } from 'angular-2-local-storage';
 // Services
 import { RootService } from '../shared/services/root.service';
 import { LocalStorageService } from '../core/modules/local-storage/local-storage.service';
+import { CategoryService } from '../shared/services/category.service';
 
 @Component({
   selector: 'app-layout',
@@ -20,7 +19,8 @@ export class LayoutComponent implements OnInit {
   constructor(
     private readonly rootService: RootService,
     private readonly route: ActivatedRoute,
-    private readonly localS: LocalStorageService
+    private readonly localS: LocalStorageService,
+    private categoriesService:CategoryService
   ) {}
 
   ngOnInit(): void {
@@ -28,6 +28,7 @@ export class LayoutComponent implements OnInit {
     this.isB2B = this.checkIsB2b();
     this.getQueryParams();
     console.log('hola entre');
+    this.categoriesService.obtieneCategoriasHeader().subscribe((r)=>{})
   }
 
   /**
