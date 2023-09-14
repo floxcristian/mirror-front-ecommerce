@@ -1,27 +1,43 @@
 <div class="row">
-  <img class="img-fluid" src="./assets/images/BANNER-WEB-LANDING-1920x400.jpg" style="margin-top: 10px;">
+  <img
+    class="img-fluid"
+    src="./assets/images/BANNER-WEB-LANDING-1920x400.jpg"
+    style="margin-top: 10px"
+  />
 </div>
 
-<div class="row " class="bg-primary ">
-  <h1 class="text-center text-white py-2 mb-0" *ngIf="innerWidth > 768">Catálogos</h1>
-  <h4 class="text-center text-white py-2 mb-0" *ngIf="innerWidth <= 768">Catálogos</h4>
+<div class="row" class="bg-primary">
+  <h1 class="text-center text-white py-2 mb-0" *ngIf="innerWidth > 768">
+    Catálogos
+  </h1>
+  <h4 class="text-center text-white py-2 mb-0" *ngIf="innerWidth <= 768">
+    Catálogos
+  </h4>
 </div>
 
 <div class="row" class="text-white bg-dark">
-  <h1 class="text-center py-2" *ngIf="innerWidth > 768">Para una mejor experiencia selecciona tu ciudad</h1>
-  <h5 class="text-center py-2" *ngIf="innerWidth <= 768">Para una mejor experiencia selecciona tu ciudad</h5>
+  <h1 class="text-center py-2" *ngIf="innerWidth > 768">
+    Para una mejor experiencia selecciona tu ciudad
+  </h1>
+  <h5 class="text-center py-2" *ngIf="innerWidth <= 768">
+    Para una mejor experiencia selecciona tu ciudad
+  </h5>
 </div>
 
-<div class="jumbotron contenedor-select-catalogo text-center">
-
+<div class="bg-light p-3 contenedor-select-catalogo text-center">
   <select name="selectCiudad" id="selectCiudad">
-    <option *ngFor="let row of rows; index as i;" value="{{ row.url_catalogo }}">
+    <option *ngFor="let row of rows; index as i" value="{{ row.url_catalogo }}">
       {{ row.zona }}
     </option>
   </select>
 
   <br /><br />
-  <button  name="ver" type="button" class="btn btn-secondary"
-    onclick="javascript: window.open(document.getElementById('selectCiudad').value);">Ver Catálogo</button>
-
+  <button
+    name="ver"
+    type="button"
+    class="btn btn-secondary"
+    onclick="javascript: window.open(document.getElementById('selectCiudad').value);"
+  >
+    Ver Catálogo
+  </button>
 </div>
