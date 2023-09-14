@@ -74,7 +74,6 @@ export class CmsService {
 
   deleteCache() {
     var call = environment.apiElastic + 'clear-cache';
-    //console.log(call);
     return this.http.get(call);
   }
 

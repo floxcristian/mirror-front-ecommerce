@@ -72,7 +72,6 @@ export class AppComponent implements AfterViewInit, OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('amiguito');
     this.currency.options = {
       code: 'CLP',
       // display: 'symbol',
@@ -146,7 +145,6 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.add('pdp');
           $('.webchatStartButtonContainer').show();
         } else if (event.url.includes('/especial/')) {
-          console.log('entro');
           this.document.body.classList.add('home');
           this.document.body.classList.remove('categoria');
           this.document.body.classList.remove('carrito');

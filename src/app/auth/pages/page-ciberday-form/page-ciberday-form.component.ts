@@ -69,11 +69,7 @@ export class PageCiberdayFormComponent implements OnInit {
     if (this.cargando) {
       return;
     }
-    console.log(
-      this.formulario.controls['MundoCamion'].value,
-      this.formulario.controls['MundoLiviano'].value,
-      this.formulario.controls['MundoAgro'].value
-    );
+
     this.cargando = true;
     this.clientsService
       .setCyberday(this.formulario.value)

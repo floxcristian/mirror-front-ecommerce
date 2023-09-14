@@ -24,13 +24,12 @@ export class VerificarpagoComponent {
       .Verificar_pagoKhipu(query)
       .toPromise();
     let status = consulta.status;
-    console.log(status);
+
     while (status !== 'done') {
       consulta = await this.paymentService
         .Verificar_pagoKhipu(query)
         .toPromise();
       status = consulta.status;
-      console.log(status);
     }
 
     let confirmar_pago: any = await this.paymentService

@@ -27,7 +27,6 @@ export class LayoutComponent implements OnInit {
     this.scrollTop();
     this.isB2B = this.checkIsB2b();
     this.getQueryParams();
-    console.log('hola entre');
   }
 
   /**
@@ -53,8 +52,6 @@ export class LayoutComponent implements OnInit {
    */
   getQueryParams(): void {
     this.route.queryParams.subscribe((params: Params) => {
-      console.log('[params on layout]: ', params);
-
       if (params['utm_campaign']) {
         this.utm_campaign = params['utm_campaign'];
         this.localS.set('utm_campaign', this.utm_campaign);

@@ -7,7 +7,7 @@ import { Product } from '../../../../shared/interfaces/product';
   styleUrls: ['./detalle-tecnicos.component.scss'],
 })
 export class DetalleTecnicosComponent implements OnInit {
-  @Input() producto!: Product;
+  @Input() producto!: Product | undefined;
 
   w100!: boolean;
   innerWidth!: number;

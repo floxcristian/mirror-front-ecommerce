@@ -88,7 +88,6 @@ export class ModaluserComponent implements OnInit {
   }
 
   openModalEditar() {
-    console.log(this.users.active);
     this.modalRef = this.modalService.show(this.modalUsuario, {
       backdrop: 'static',
       keyboard: false,

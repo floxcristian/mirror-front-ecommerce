@@ -335,7 +335,6 @@ export class CartService {
     this.loadingCart = true;
 
     const usuario: Usuario = this.localS.get('usuario') as any;
-    console.log('usuario : ', usuario);
     if (usuario == null) {
       return;
     }

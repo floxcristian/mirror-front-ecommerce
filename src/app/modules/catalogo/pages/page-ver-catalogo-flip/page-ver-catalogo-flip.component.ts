@@ -529,7 +529,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
 
   buscaTags(objeto: any[]) {
     let i = 0;
-    console.log('objeto: ', objeto);
     this.tags = [
       ...new Set(
         objeto.map((item) => {

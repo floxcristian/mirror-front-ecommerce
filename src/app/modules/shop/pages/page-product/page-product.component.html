@@ -30,7 +30,7 @@
         <div class="d-none d-sm-block">
           <ul
             class="nav mb-3 mt-5 justify-content-center justify-content-lg-start"
-            id="tabs"
+            id="myTab"
           >
             <li
               class="nav-item me-5"
@@ -47,7 +47,7 @@
                   descripcionDesktop?.visible && descripcionMobile?.visible
                 "
                 id="descripcion-tab"
-                data-toggle="tab"
+                data-bs-toggle="tab"
                 href="#descripcion"
                 role="tab"
                 aria-controls="descripcion"
@@ -65,7 +65,7 @@
               <a
                 class="nav-link"
                 id="detallesTecnicos-tab"
-                data-toggle="tab"
+                data-bs-toggle="tab"
                 href="#detallesTecnicos"
                 [class.active]="
                   !descripcionDesktop?.visible || !descripcionMobile?.visible
@@ -82,7 +82,7 @@
               <a
                 class="nav-link"
                 id="evaluacion-tab"
-                data-toggle="tab"
+                data-bs-toggle="tab"
                 href="#evaluacion"
                 role="tab"
                 aria-controls="evaluacion"
@@ -109,7 +109,7 @@
             >
               <app-descripcion
                 #descripcionDesktop
-                [sku]="product.sku"
+                [sku]="product?.sku"
               ></app-descripcion>
             </div>
 
@@ -132,7 +132,7 @@
               >
                 <app-product-stock
                   #stockDesktop
-                  [sku]="product.sku"
+                  [sku]="product?.sku"
                 ></app-product-stock>
               </div>
             </ng-container>
@@ -212,7 +212,7 @@
             >
               <app-descripcion
                 #descripcionMobile
-                [sku]="product.sku"
+                [sku]="product?.sku"
               ></app-descripcion>
             </div>
             <hr />
@@ -454,7 +454,11 @@
         href="http://schema.org/NewCondition"
         content="new"
       />
-      <meta itemprop="price" [content]="product.precio.precio" />
+      <meta
+        *ngIf="product.precio"
+        itemprop="price"
+        [content]="product.precio.precio"
+      />
       <meta itemprop="priceCurrency" content="CLP" />
     </div>
   </div>
