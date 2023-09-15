@@ -181,7 +181,7 @@
           {{ preciosLista[0].precio | currencyFormat }}
           <em>
             <span
-              [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+              [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
             >
               {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
             >
@@ -197,7 +197,7 @@
           {{ preciosLista[0].precio | currencyFormat }}
           <em>
             <span
-              [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+              [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
             >
               {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
             >
@@ -210,7 +210,7 @@
           {{ preciosLista[1].precio | currencyFormat }}
           <em>
             <span
-              [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+              [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
             >
               {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
             >
@@ -223,7 +223,7 @@
           {{ preciosLista[2].precio | currencyFormat }}
           <em>
             <span
-              [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+              [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
             >
               {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
             >
@@ -274,7 +274,7 @@
           {{ preciosLista[0].precio | currencyFormat }}
           <em>
             <span
-              [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+              [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
             >
               {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
             >
@@ -290,7 +290,7 @@
           {{ preciosLista[0].precio | currencyFormat }}
           <em>
             <span
-              [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+              [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
             >
               {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
             >
@@ -344,7 +344,7 @@
             {{ preciosLista[0].precio | currencyFormat }}
             <em>
               <span
-                [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+                [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
               >
                 {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
               >
@@ -366,7 +366,7 @@
             {{plana.productos.cantidad}}
             <em>
               <span
-                [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+                [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
               >
                 {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
               >
@@ -398,7 +398,7 @@
             {{ preciosLista[0].precio | currencyFormat }}
             <em>
               <span
-                [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+                [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
               >
                 {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
               >
@@ -435,7 +435,7 @@
             {{ plana.productos.precioEsp | currencyFormat }}
             <em>
               <span
-                [ngClass]="(!isVacio(iva) ? (iva ? 'badge-pill badge-implementos' : 'badge-pill badge-primary-custom') : 'badge-pill badge-implementos')"
+                [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
               >
                 {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
               >
@@ -494,7 +494,7 @@
           *ngIf="carro"
           name="cart-20"
           size="22"
-          class="float-left icon-chat pl-3 pt-3 pointer"
+          class="float-start icon-chat ps-3 pt-3 pointer"
           (click)="addToCart(plana.productos)"
         >
         </app-icon>

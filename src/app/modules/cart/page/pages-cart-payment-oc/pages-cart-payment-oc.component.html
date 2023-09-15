@@ -1,305 +1,443 @@
 <div *ngIf="usuarioTemp" class="d-flex justify-content-center">
-    <!-- FIXME: NO EXISTE RUTA -->
-    <!-- <app-header-login (muestraLogin)="validaLogin($event)" [ruta]="ruta" [linkRegister]="true">
+  <!-- FIXME: NO EXISTE RUTA -->
+  <!-- <app-header-login (muestraLogin)="validaLogin($event)" [ruta]="ruta" [linkRegister]="true">
     </app-header-login> -->
-    <app-header-login (muestraLogin)="validaLogin($event)" [linkRegister]="true">
-    </app-header-login>
+  <app-header-login (muestraLogin)="validaLogin($event)" [linkRegister]="true">
+  </app-header-login>
 </div>
 <div *ngIf="!usuarioTemp">
+  <div *ngIf="!propietario" class="row justify-content-md-center mt-5">
+    <div class="col-6sb mx-auto mb-3">
+      <div
+        appDragDrop
+        class="block-drop-down-file mx-auto d-flex align-items-center justify-content-center"
+      >
+        <input hidden type="file" #fileInput />
 
-    <div *ngIf="!propietario" class="row justify-content-md-center mt-5">
-        <div class="col-6sb mx-auto mb-3">
-            <div appDragDrop class="block-drop-down-file mx-auto d-flex align-items-center justify-content-center">
-                <input hidden type="file" #fileInput />
+        <div class="d-block text-center">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <h1>¡Informacion no le pertenece a este usuario!</h1>
 
-                <div class="d-block text-center">
-                    <i class="fa-solid fa-circle-exclamation"></i>
-                    <h1>¡Informacion no le pertenece a este usuario!</h1>
+          <div class="col-sm-12" style="margin-top: 10px">
+            Estimado Usuario, esta queriendo introducirse a una información que
+            no le pertenece, en unos momentos sera retirado de la pagina.
+          </div>
 
-                    <div class="col-sm-12" style="margin-top: 10px">
-                        Estimado Usuario, esta queriendo introducirse a una información que no le pertenece, en unos
-                        momentos sera retirado de
-                        la pagina.
-                    </div>
+          <a
+            [routerLink]="['/', 'inicio']"
+            class="mt-5 link-primary w-100 text-center"
+          >
+            <i class="fas fa-home"></i>
+            Ir al home
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="container card border border-primary"
+    style="margin-top: 10px"
+    *ngIf="items.length == 0"
+  >
+    <div class="cargandoCent text-center">
+      <i
+        class="fak fa-implementos fa-bounce"
+        style="font-size: 64px; color: #0063b9"
+      ></i>
+      <div
+        class="fa-beat-fade"
+        style="--fa-beat-fade-opacity: 0.67; --fa-beat-fade-scale: 1.075"
+      >
+        Cargando carro...
+      </div>
+    </div>
+  </div>
+  <div *ngIf="items.length && propietario">
+    <div class="container container-cart site_b2c" style="margin-top: 20px">
+      <!-- <h1 class="mt-4 mb-3">Carro de compra</h1> -->
 
-                    <a [routerLink]="['/', 'inicio']" class="mt-5 link-primary btn-block text-center">
-                        <i class="fas fa-home"></i>
-                        Ir al home
-                    </a>
-                </div>
+      <div class="row">
+        <div
+          class="col-12 col-xl-12 col-lg-12"
+          *ngIf="credito"
+          style="margin-bottom: 10px"
+        >
+          <div class="card h-100 border border-danger">
+            <div class="alert alert-info" role="alert">
+              <i
+                class="fa-solid fa-square-exclamation"
+                style="margin-left: 30px"
+              ></i>
+              Estimado usuario, Tiene limite de credito
+              <span *ngIf="usuario[0].credito.hasta !== -1"
+                >de
+                <strong>{{ usuario[0].credito.de | currencyFormat }}</strong>
+                hasta
+                <strong>{{ usuario[0].credito.hasta | currencyFormat }}</strong>
+              </span>
+              <span *ngIf="usuario[0].credito.hasta === -1"
+                >desde
+                <strong>{{ usuario[0].credito.de | currencyFormat }}</strong>
+                para arriba</span
+              >, por lo tanto no puede confirmar esta orden de venta. Favor
+              contactarse con personal de implementos.
             </div>
+          </div>
         </div>
-    </div>
-    <div class="container card border border-primary" style="margin-top: 10px" *ngIf="items.length == 0">
-        <div class="cargandoCent text-center">
-            <i class="fak fa-implementos fa-bounce" style="font-size: 64px; color: #0063b9"></i>
-            <div class="fa-beat-fade" style="--fa-beat-fade-opacity: 0.67; --fa-beat-fade-scale: 1.075">Cargando
-                carro...</div>
+
+        <div
+          class="col-12 col-xl-12 col-lg-12"
+          *ngIf="sinStock"
+          style="margin-bottom: 10px"
+        >
+          <div class="card h-100 border border-danger">
+            <div class="alert alert-danger" role="alert">
+              <i
+                class="fa-solid fa-square-exclamation"
+                style="margin-left: 30px"
+              ></i>
+              Estimado usuario, existen productos que no estan disponible para
+              efectuar esta orden, debe actualizar la compra para generar una
+              nueva OC
+            </div>
+          </div>
         </div>
-    </div>
-    <div *ngIf="items.length && propietario">
-        <div class="container container-cart site_b2c" style="margin-top: 20px">
-            <!-- <h1 class="mt-4 mb-3">Carro de compra</h1> -->
-
-            <div class="row">
-                <div class="col-12 col-xl-12 col-lg-12" *ngIf="credito" style="margin-bottom: 10px">
-                    <div class="card h-100 border border-danger">
-                        <div class="alert alert-info" role="alert">
-                            <i class="fa-solid fa-square-exclamation" style="margin-left: 30px"></i> Estimado usuario,
-                            Tiene limite de credito
-                            <span *ngIf="usuario[0].credito.hasta !== -1">de
-                                <strong>{{ usuario[0].credito.de | currencyFormat }}</strong> hasta
-                                <strong>{{ usuario[0].credito.hasta | currencyFormat }}</strong>
-                            </span>
-                            <span *ngIf="usuario[0].credito.hasta === -1">desde
-                                <strong>{{ usuario[0].credito.de | currencyFormat }}</strong> para arriba</span>, por lo
-                            tanto no puede
-                            confirmar esta orden de venta. Favor contactarse con personal de implementos.
-                        </div>
-                    </div>
+        <div class="col-12 col-xl-8 col-lg-8">
+          <div class="card h-100 border border-primary">
+            <div class="card-header" style="display: inline-block">
+              <div class="d-flex align-items-center">
+                <div
+                  class="col-9"
+                  style="color: #0063b9"
+                  [ngStyle]="{
+                    'font-size': innerWidth < 450 ? '16px' : '18px'
+                  }"
+                >
+                  Orden de Compra numero
+                  <strong>({{ cartSession.ordenCompra.folio }})</strong>
                 </div>
-
-                <div class="col-12 col-xl-12 col-lg-12" *ngIf="sinStock" style="margin-bottom: 10px">
-                    <div class="card h-100 border border-danger">
-                        <div class="alert alert-danger" role="alert">
-                            <i class="fa-solid fa-square-exclamation" style="margin-left: 30px"></i> Estimado usuario,
-                            existen productos que no
-                            estan disponible para efectuar esta orden, debe actualizar la compra para generar una nueva
-                            OC
-                        </div>
-                    </div>
+              </div>
+              <hr />
+            </div>
+            <div class="card-body">
+              <div class="cart-table">
+                <div class="col-12 mt-5" *ngIf="fechas.length > 0">
+                  <h5 style="color: #0063b9">
+                    ¿Desea cambiar la fecha de entrega?
+                  </h5>
                 </div>
-                <div class="col-12 col-xl-8 col-lg-8">
-                    <div class="card h-100 border border-primary">
-                        <div class="card-header" style="display: inline-block">
-                            <div class="d-flex align-items-center">
-                                <div class="col-9" style="color: #0063b9"
-                                    [ngStyle]="{ 'font-size': innerWidth < 450 ? '16px' : '18px' }">
-                                    Orden de Compra numero
-                                    <strong>({{ cartSession.ordenCompra.folio }})</strong>
-                                </div>
-                            </div>
-                            <hr />
-                        </div>
-                        <div class="card-body">
-                            <div class="cart-table">
-                                <div class="col-12 mt-5" *ngIf="fechas.length > 0">
-                                    <h5 style="color: #0063b9">¿Desea cambiar la fecha de entrega?</h5>
-                                </div>
-                                <div class="col-12 mt-4" *ngFor="let item of cartSession.grupos; let i = index">
-                                    <app-grupo-detalle-productos [index]="i + 1" [length]="fechas.length"
-                                        [grupo_producto]="item.productos"></app-grupo-detalle-productos>
+                <div
+                  class="col-12 mt-4"
+                  *ngFor="let item of cartSession.grupos; let i = index"
+                >
+                  <app-grupo-detalle-productos
+                    [index]="i + 1"
+                    [length]="fechas.length"
+                    [grupo_producto]="item.productos"
+                  ></app-grupo-detalle-productos>
 
-                                    <div style="margin-bottom: 30px">
-                                        <app-grupo-detalle-fechas *ngIf="innerWidth > 450 && fechas.length > 0"
-                                            [DIAS_SEMANA]="10" (itemSeleccionado)="setSeleccionarEnvio($event, i)"
-                                            [index]="i" [fletes]="fechas[i]">
-                                        </app-grupo-detalle-fechas>
-                                        <!-- FIXME: no existe función setSeleccionarEnvioMobile() -->
-                                        <!-- <app-grupo-detalle-fechas-mobile *ngIf="innerWidth <= 450 && fechas.length > 0"
+                  <div style="margin-bottom: 30px">
+                    <app-grupo-detalle-fechas
+                      *ngIf="innerWidth > 450 && fechas.length > 0"
+                      [DIAS_SEMANA]="10"
+                      (itemSeleccionado)="setSeleccionarEnvio($event, i)"
+                      [index]="i"
+                      [fletes]="fechas[i]"
+                    >
+                    </app-grupo-detalle-fechas>
+                    <!-- FIXME: no existe función setSeleccionarEnvioMobile() -->
+                    <!-- <app-grupo-detalle-fechas-mobile *ngIf="innerWidth <= 450 && fechas.length > 0"
                                             (itemSeleccionado)="setSeleccionarEnvioMobile($event, i)" [index]="i"
                                             [fletes]="fechas[i]"></app-grupo-detalle-fechas-mobile> -->
-                                            <app-grupo-detalle-fechas-mobile *ngIf="innerWidth <= 450 && fechas.length > 0"
-                                                [index]="i"
-                                                [fletes]="fechas[i]"></app-grupo-detalle-fechas-mobile>
-                                    </div>
-                                </div>
-
-                                <div *ngIf="sinStock" class="row">
-                                    <div class="col-sm-12 d-flex justify-content-start">
-                                        <button class="btn btn-lg btn-secondary" (click)="addList()">Generar nuevo
-                                            Carro</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <app-grupo-detalle-fechas-mobile
+                      *ngIf="innerWidth <= 450 && fechas.length > 0"
+                      [index]="i"
+                      [fletes]="fechas[i]"
+                    ></app-grupo-detalle-fechas-mobile>
+                  </div>
                 </div>
 
-                <ng-container *ngIf="innerWidth >= 992">
-                    <div class="col-xl-4 col-lg-4 col-md-6">
-                        <div class="card h-100 border border-primary">
-                            <div class="card-header" style="display: inline-block">
-                                <div class="d-flex align-items-center">
-                                    <div class="col-9" style="color: #0063b9">Resumen de tu compra</div>
-                                </div>
-                                <hr />
-                            </div>
-
-                            <div class="card-body">
-                                <app-detalle-carro-productos-oc [seeProducts]="true" [total]="total"
-                                    [productCart]="productCart" [cart]="cartSession" (sinStock)="verificarOc($event)"
-                                    (fechas)="Ver_fecha($event)" (productosDisponible)="agregar_lista($event)">
-                                </app-detalle-carro-productos-oc>
-
-                                <hr />
-                                <div class="mt-3 col-sm-12 p-0 d-flex justify-content-center">
-                                    <ng-container *ngIf="!verificar_oc">
-                                        <div class="row">
-                                            <div class="col-sm-6 p-0">
-                                                <button type="button" [disabled]="credito" (click)="refuseOrder()"
-                                                    class="btn btn-lg btn-danger btn-block text-center">
-                                                    Rechazar
-                                                </button>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <button type="button" [disabled]="credito || sinStock"
-                                                    class="btn btn-secondary btn-lg" (click)="aceptar_compra()">
-                                                    Aceptar
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </ng-container>
-                                    <app-codigo-oc *ngIf="verificar_oc" [id]="cartSession._id"
-                                        (verificar)="confirmar($event)" (renv_cod)="aceptar_compra()"></app-codigo-oc>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </ng-container>
-
-                <ng-container *ngIf="innerWidth >= 450 && innerWidth < 992">
-                    <div class="col-sm" style="margin-top: 20px">
-                        <div class="card h-100 border border-primary">
-                            <div class="card-header" style="display: inline-block">
-                                <div class="d-flex align-items-center">
-                                    <div class="col-9" style="color: #0063b9">Resumen de tu compra</div>
-                                </div>
-                                <hr />
-                            </div>
-
-                            <div class="card-body">
-                                <app-detalle-carro-productos-oc [seeProducts]="true" [total]="total"
-                                    [productCart]="productCart" [cart]="cartSession" (sinStock)="verificarOc($event)"
-                                    (productosDisponible)="agregar_lista($event)">
-                                </app-detalle-carro-productos-oc>
-
-                                <div class="mt-3 col p-0">
-                                    <app-codigo-oc *ngIf="verificar_oc" [id]="cartSession._id"
-                                        (verificar)="confirmar($event)"></app-codigo-oc>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </ng-container>
-            </div>
-
-            <div class="row" style="margin-top: 10px">
-                <div class="col-md-12">
-                    <div class="card h-100 border border-primary">
-                        <div class="card-body">
-                            <ng-container>
-                                <app-resumen-retiro [direccion]="direccion" [fechasEvent]="fecha_entrega"
-                                    [despacho]="cartSession.despacho" [shippingType]="shippingType">
-                                </app-resumen-retiro>
-                            </ng-container>
-
-                            <hr />
-                        </div>
-                    </div>
+                <div *ngIf="sinStock" class="row">
+                  <div class="col-sm-12 d-flex justify-content-start">
+                    <button
+                      class="btn btn-lg btn-secondary"
+                      (click)="addList()"
+                    >
+                      Generar nuevo Carro
+                    </button>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
+        </div>
 
-            <ng-container *ngIf="innerWidth < 450">
-                <div style="margin-top: 200px">
-                    <div class="footer_page">
-                        <div class="card h-100 border border-primary" style="margin-top: 5px; margin-bottom: -13px">
-                            <div class="card-header" style="display: inline-block"
-                                (mousedown)="showresumen = !showresumen">
-                                <div class="d-flex">
-                                    <div class="col-9 text-justify" style="font-size: 16px; color: #0063b9">
-                                        <strong>Resumen de tu compra</strong>
-                                    </div>
-                                    <div class="col-3">
-                                        <i [class]="showresumen ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div *ngIf="!showresumen" class="card-body text-justify">
-                                <div class="dropcart__totals text-justify">
-                                    <table>
-                                        <tr style="font-size: 14px">
-                                            <th>Total :</th>
-                                            <td class="font-weight-bold">{{ total.total | currencyFormat }}</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                            <ng-container *ngIf="showresumen != false">
-                                <div class="col-12"
-                                    style="border: 1px solid; margin-top: 5px; margin-bottom: 5px; color: rgba(0, 0, 0, 0.1)">
-                                </div>
+        <ng-container *ngIf="innerWidth >= 992">
+          <div class="col-xl-4 col-lg-4 col-md-6">
+            <div class="card h-100 border border-primary">
+              <div class="card-header" style="display: inline-block">
+                <div class="d-flex align-items-center">
+                  <div class="col-9" style="color: #0063b9">
+                    Resumen de tu compra
+                  </div>
+                </div>
+                <hr />
+              </div>
 
-                                <div class="card-body text-justify" style="font-size: 14px">
-                                    <app-detalle-carro-productos-oc [seeProducts]="true" [total]="total"
-                                        [productCart]="productCart" [cart]="cartSession"
-                                        (sinStock)="verificarOc($event)" (productosDisponible)="agregar_lista($event)">
-                                    </app-detalle-carro-productos-oc>
-                                </div>
-                            </ng-container>
+              <div class="card-body">
+                <app-detalle-carro-productos-oc
+                  [seeProducts]="true"
+                  [total]="total"
+                  [productCart]="productCart"
+                  [cart]="cartSession"
+                  (sinStock)="verificarOc($event)"
+                  (fechas)="Ver_fecha($event)"
+                  (productosDisponible)="agregar_lista($event)"
+                >
+                </app-detalle-carro-productos-oc>
 
-                            <app-codigo-oc *ngIf="verificar_oc" [id]="cartSession._id" (verificar)="confirmar($event)">
-                            </app-codigo-oc>
-                            <ng-container *ngIf="!verificar_oc">
-                                <hr />
-                                <div class="row">
-                                    <div class="col-sm-6" style="margin-top: 5px">
-                                        <button type="button" class="btn btn-lg btn-secondary btn-block text-center"
-                                            (click)="aceptar_compra()">
-                                            Aceptar <i class="fa-solid fa-circle-check" style="margin-left: 2px"></i>
-                                        </button>
-                                    </div>
-                                    <div class="col-sm-6" style="margin-top: 5px">
-                                        <button type="button" class="btn btn-lg btn-danger btn-block text-center"
-                                            (click)="refuseOrder()">
-                                            Rechazar <i class="fa-solid fa-ban" style="margin-left: 2px"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </div>
-                        <div class="row">
-                            <!-- <div class="mt-3 col-6 pl-0 pr-1 ">
+                <hr />
+                <div class="mt-3 col-sm-12 p-0 d-flex justify-content-center">
+                  <ng-container *ngIf="!verificar_oc">
+                    <div class="row">
+                      <div class="col-sm-6 p-0">
+                        <button
+                          type="button"
+                          [disabled]="credito"
+                          (click)="refuseOrder()"
+                          class="btn btn-lg btn-danger w-100 text-center"
+                        >
+                          Rechazar
+                        </button>
+                      </div>
+                      <div class="col-sm-6">
+                        <button
+                          type="button"
+                          [disabled]="credito || sinStock"
+                          class="btn btn-secondary btn-lg"
+                          (click)="aceptar_compra()"
+                        >
+                          Aceptar
+                        </button>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <app-codigo-oc
+                    *ngIf="verificar_oc"
+                    [id]="cartSession._id"
+                    (verificar)="confirmar($event)"
+                    (renv_cod)="aceptar_compra()"
+                  ></app-codigo-oc>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="innerWidth >= 450 && innerWidth < 992">
+          <div class="col-sm" style="margin-top: 20px">
+            <div class="card h-100 border border-primary">
+              <div class="card-header" style="display: inline-block">
+                <div class="d-flex align-items-center">
+                  <div class="col-9" style="color: #0063b9">
+                    Resumen de tu compra
+                  </div>
+                </div>
+                <hr />
+              </div>
+
+              <div class="card-body">
+                <app-detalle-carro-productos-oc
+                  [seeProducts]="true"
+                  [total]="total"
+                  [productCart]="productCart"
+                  [cart]="cartSession"
+                  (sinStock)="verificarOc($event)"
+                  (productosDisponible)="agregar_lista($event)"
+                >
+                </app-detalle-carro-productos-oc>
+
+                <div class="mt-3 col p-0">
+                  <app-codigo-oc
+                    *ngIf="verificar_oc"
+                    [id]="cartSession._id"
+                    (verificar)="confirmar($event)"
+                  ></app-codigo-oc>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="row" style="margin-top: 10px">
+        <div class="col-md-12">
+          <div class="card h-100 border border-primary">
+            <div class="card-body">
+              <ng-container>
+                <app-resumen-retiro
+                  [direccion]="direccion"
+                  [fechasEvent]="fecha_entrega"
+                  [despacho]="cartSession.despacho"
+                  [shippingType]="shippingType"
+                >
+                </app-resumen-retiro>
+              </ng-container>
+
+              <hr />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="innerWidth < 450">
+        <div style="margin-top: 200px">
+          <div class="footer_page">
+            <div
+              class="card h-100 border border-primary"
+              style="margin-top: 5px; margin-bottom: -13px"
+            >
+              <div
+                class="card-header"
+                style="display: inline-block"
+                (mousedown)="showresumen = !showresumen"
+              >
+                <div class="d-flex">
+                  <div
+                    class="col-9 text-justify"
+                    style="font-size: 16px; color: #0063b9"
+                  >
+                    <strong>Resumen de tu compra</strong>
+                  </div>
+                  <div class="col-3">
+                    <i
+                      [class]="
+                        showresumen ? 'fas fa-angle-down' : 'fas fa-angle-up'
+                      "
+                    ></i>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="!showresumen" class="card-body text-justify">
+                <div class="dropcart__totals text-justify">
+                  <table>
+                    <tr style="font-size: 14px">
+                      <th>Total :</th>
+                      <td class="font-weight-bold">
+                        {{ total.total | currencyFormat }}
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <ng-container *ngIf="showresumen != false">
+                <div
+                  class="col-12"
+                  style="
+                    border: 1px solid;
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                    color: rgba(0, 0, 0, 0.1);
+                  "
+                ></div>
+
+                <div class="card-body text-justify" style="font-size: 14px">
+                  <app-detalle-carro-productos-oc
+                    [seeProducts]="true"
+                    [total]="total"
+                    [productCart]="productCart"
+                    [cart]="cartSession"
+                    (sinStock)="verificarOc($event)"
+                    (productosDisponible)="agregar_lista($event)"
+                  >
+                  </app-detalle-carro-productos-oc>
+                </div>
+              </ng-container>
+
+              <app-codigo-oc
+                *ngIf="verificar_oc"
+                [id]="cartSession._id"
+                (verificar)="confirmar($event)"
+              >
+              </app-codigo-oc>
+              <ng-container *ngIf="!verificar_oc">
+                <hr />
+                <div class="row">
+                  <div class="col-sm-6" style="margin-top: 5px">
+                    <button
+                      type="button"
+                      class="btn btn-lg btn-secondary w-100 text-center"
+                      (click)="aceptar_compra()"
+                    >
+                      Aceptar
+                      <i
+                        class="fa-solid fa-circle-check"
+                        style="margin-left: 2px"
+                      ></i>
+                    </button>
+                  </div>
+                  <div class="col-sm-6" style="margin-top: 5px">
+                    <button
+                      type="button"
+                      class="btn btn-lg btn-danger w-100 text-center"
+                      (click)="refuseOrder()"
+                    >
+                      Rechazar
+                      <i class="fa-solid fa-ban" style="margin-left: 2px"></i>
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <div class="row">
+              <!-- <div class="mt-3 col-6 ps-0 pr-1 ">
                     <a [routerLink]="[ '/', 'carro-compra', 'metodo-de-envio'] "
-                        class="btn btn-border-primary btn-block btn-lg text-center " style="background-color: white;">
+                        class="btn btn-border-primary w-100 btn-lg text-center " style="background-color: white;">
                         <i class="fas fa-chevron-left "></i> Anterior
                     </a>
                 </div> -->
-                        </div>
-                    </div>
-                </div>
-            </ng-container>
+            </div>
+          </div>
         </div>
+      </ng-container>
     </div>
+  </div>
 </div>
 
 <ng-template #modalRefuse>
-    <div class="modal-header">
-        <h4 class="modal-title pull-left">Rechazar solicitud de compra</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRefuseRef.hide()">
-            <span aria-hidden="true">&times;</span>
-        </button>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Rechazar solicitud de compra</h4>
+    <button
+      type="button"
+      class="btn-close pull-right"
+      aria-label="Close"
+      (click)="modalRefuseRef.hide()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-body-min">
+    ¿Esta seguro que desea rechazar la solicitud de compra?
+
+    <div class="form-group mt-3">
+      <label>Observación</label>
+      <textarea
+        rows="3"
+        class="form-control"
+        [(ngModel)]="obsRefuse"
+      ></textarea>
     </div>
-    <div class="modal-body modal-body-min">
-        ¿Esta seguro que desea rechazar la solicitud de compra?
+  </div>
 
-        <div class="form-group mt-3">
-            <label>Observación</label>
-            <textarea rows="3" class="form-control" [(ngModel)]="obsRefuse"></textarea>
-        </div>
+  <div class="modal-footer">
+    <button class="btn btn-border-primary" (click)="modalRefuseRef.hide()">
+      <i class="fas fa-ban"></i>
+      Cancelar
+    </button>
 
-    </div>
-
-    <div class="modal-footer">
-        <button class="btn btn-border-primary" (click)="modalRefuseRef.hide();">
-            <i class="fas fa-ban"></i>
-            Cancelar
-        </button>
-
-        <button class="btn btn-danger" (click)="confirmRefuseOrder()">
-            <i class="fas fa-check"></i>
-            Aceptar
-        </button>
-
-    </div>
+    <button class="btn btn-danger" (click)="confirmRefuseOrder()">
+      <i class="fas fa-check"></i>
+      Aceptar
+    </button>
+  </div>
 </ng-template>

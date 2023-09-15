@@ -37,7 +37,7 @@
           </div>
           <div class="col-5">
             <div
-              class="btn btn-link float-right"
+              class="btn btn-link float-end"
               style="color: #0063b9 !important"
               (click)="modificarSelectedAddress()"
               [attr.title]="
@@ -123,7 +123,7 @@
     </div>
     <div class="container ms-4" *ngIf="innerWidth < 450">
       <div
-        class="cart-address-container ms-3 col-12 col-lg-12 pt-3 pb-2 pl-2"
+        class="cart-address-container ms-3 col-12 col-lg-12 pt-3 pb-2 ps-2"
         style="color: #0063b9; margin-bottom: 10px"
         [ngStyle]="{ width: innerWidth > 450 ? '96%' : '92%' }"
       >
@@ -218,7 +218,7 @@
                   <!-- <p *ngIf="tienda" class="subtitle" style="font-weight:normal;padding:0.5rem 2px">{{ tienda.direccion }}</p> -->
                 </div>
                 <div
-                  class="cart-address-container ms-3 col-12 col-lg-12 pt-3 pb-2 pl-2"
+                  class="cart-address-container ms-3 col-12 col-lg-12 pt-3 pb-2 ps-2"
                   style="color: #0063b9; margin-bottom: 10px"
                   [ngStyle]="{ width: innerWidth > 450 ? '96%' : '92%' }"
                 >
@@ -264,7 +264,7 @@
                         Producto no disponible! . . .
                         <i class="fas fa-store-alt"></i
                         ><i
-                          class="fas fa-exclamation-circle mt-2 float-right text-warning"
+                          class="fas fa-exclamation-circle mt-2 float-end text-warning"
                         ></i>
                       </h3>
                       <p style="font-size: 12px">
@@ -418,7 +418,7 @@
                     </div>
                     <div class="col-12 col-sm-10 ms-1">
                       <div
-                        class="cart-address-container pt-3 pb-3 pl-2"
+                        class="cart-address-container pt-3 pb-3 ps-2"
                         [ngClass]="
                           HideResumen() ? '' : 'd-flex align-items-center'
                         "
@@ -521,7 +521,7 @@
                         [ngClass]="showAllAddress ? 'mb-4' : ''"
                       >
                         <div
-                          class="row pb-3 pt-3 d-flex align-items-sm-center pl-2"
+                          class="row pb-3 pt-3 d-flex align-items-sm-center ps-2"
                         >
                           <div class="col-12 col-sm-6">
                             <i
@@ -577,7 +577,7 @@
                         *ngIf="showAllAddress || addresses.length === 0"
                       >
                         <div
-                          class="row pb-3 pt-3 d-flex flex-wrap align-items-sm-center pl-2"
+                          class="row pb-3 pt-3 d-flex flex-wrap align-items-sm-center ps-2"
                         >
                           <div class="col-12 col-sm-6">
                             <i
@@ -627,7 +627,7 @@
                     <div class="col-12 col-lg-12 ms-3 mt-3">
                       <div class="cart-address-container">
                         <div
-                          class="row pb-3 pt-3 d-flex flex-wrap align-items-sm-center pl-2 me-1"
+                          class="row pb-3 pt-3 d-flex flex-wrap align-items-sm-center ps-2 me-1"
                         >
                           <div class="col-12 col-sm-7">
                             <div>
@@ -694,7 +694,7 @@
                           <h2 *ngIf="isLogin">
                             Oops! . . . <i class="fas fa-shipping-fast mt-2"></i
                             ><i
-                              class="fas fa-exclamation-circle mt-2 float-right text-warning"
+                              class="fas fa-exclamation-circle mt-2 float-end text-warning"
                             ></i>
                           </h2>
                           <p class="subtitle">
@@ -717,7 +717,7 @@
                           <h2 *ngIf="isLogin">
                             Oops! . . . <i class="fas fa-shipping-fast mt-2"></i
                             ><i
-                              class="fas fa-exclamation-circle mt-2 float-right text-warning"
+                              class="fas fa-exclamation-circle mt-2 float-end text-warning"
                             ></i>
                           </h2>
                           <p class="subtitle">
@@ -884,7 +884,7 @@
                           </div>
                           <div class="col-12 ms-1">
                             <div
-                              class="cart-address-container pt-3 pb-3 pl-2"
+                              class="cart-address-container pt-3 pb-3 ps-2"
                               [ngClass]="
                                 HideResumen() ? '' : 'd-flex align-items-center'
                               "
@@ -1061,7 +1061,7 @@
               <div
                 *ngIf="!shippingSelected && HideResumen()"
                 style="display: inline-block"
-                class="float-right"
+                class="float-end"
               >
                 <div style="float: right">
                   <i
@@ -1094,17 +1094,17 @@
 
             <ng-container *ngIf="innerWidth >= 450">
               <div class="d-flex">
-                <div class="mt-3 col-6 pl-0 pr-1">
+                <div class="mt-3 col-6 ps-0 pr-1">
                   <a
                     [routerLink]="['/', 'carro-compra']"
                     (click)="removeDespacho()"
-                    class="btn btn-border-primary btn-block btn-lg text-center"
+                    class="btn btn-border-primary w-100 btn-lg text-center"
                   >
                     <i class="fas fa-chevron-left"></i> Anterior
                   </a>
                 </div>
 
-                <div class="mt-3 col-6 pr-0 pl-1">
+                <div class="mt-3 col-6 pr-0 ps-1">
                   <!-- FIXME: no es variables recidDireccion es recib -->
                   <!--
                   <pre style="background-color: yellow">
@@ -1126,7 +1126,7 @@
                       recibeOtra
                     "
                     (click)="next()"
-                    class="btn btn-lg btn-secondary btn-block text-center"
+                    class="btn btn-lg btn-secondary w-100 text-center"
                   >
                     Ir a pagar <i class="fas fa-chevron-right"></i>
                   </button>
@@ -1136,7 +1136,7 @@
                     *ngIf="userSession.user_role == 'comprador'"
                     [disabled]="shippingSelected == null"
                     (click)="next()"
-                    class="btn btn-lg btn-secondary btn-block text-center"
+                    class="btn btn-lg btn-secondary w-100 text-center"
                   >
                     Siguiente <i class="fas fa-chevron-right"></i>
                   </button>
@@ -1240,17 +1240,17 @@
 
             <ng-container *ngIf="innerWidth >= 450">
               <div class="d-flex">
-                <div class="mt-3 col-6 pl-0 pr-1">
+                <div class="mt-3 col-6 ps-0 pr-1">
                   <a
                     [routerLink]="['/', 'carro-compra']"
                     (click)="removeDespacho()"
-                    class="btn btn-border-primary btn-block btn-lg text-center"
+                    class="btn btn-border-primary w-100 btn-lg text-center"
                   >
                     <i class="fas fa-chevron-left"></i> Anterior
                   </a>
                 </div>
 
-                <div class="mt-3 col-6 pr-0 pl-1">
+                <div class="mt-3 col-6 pr-0 ps-1">
                   <!-- FIXME: no es variables recidDireccion es recib -->
                   <!-- <button
                     name="next"
@@ -1259,7 +1259,7 @@
                       shippingSelected == null || cartSession?.recidDireccion == 0 || !productsValidate.length || recibeOtra
                     "
                     (click)="next()"
-                    class="btn btn-lg btn-secondary btn-block text-center"
+                    class="btn btn-lg btn-secondary w-100 text-center"
                   >
                     Ir a pagar <i class="fas fa-chevron-right"></i>
                   </button> -->
@@ -1273,7 +1273,7 @@
                       recibeOtra
                     "
                     (click)="next()"
-                    class="btn btn-lg btn-secondary btn-block text-center"
+                    class="btn btn-lg btn-secondary w-100 text-center"
                   >
                     Ir a pagar2 <i class="fas fa-chevron-right"></i>
                   </button>
@@ -1283,7 +1283,7 @@
                     *ngIf="userSession.user_role == 'comprador'"
                     [disabled]="shippingSelected == null"
                     (click)="next()"
-                    class="btn btn-lg btn-secondary btn-block text-center"
+                    class="btn btn-lg btn-secondary w-100 text-center"
                   >
                     Siguiente <i class="fas fa-chevron-right"></i>
                   </button>
@@ -1406,13 +1406,13 @@
           </div>
         </div>
         <div class="row m-0">
-          <!-- <div class="mt-3 col-6 pl-0 pr-1" >
-                <a [routerLink]="['/','carro-compra']" (click)="removeDespacho()" class="btn btn-border-primary btn-block btn-lg text-center" style="background-color:white;">
+          <!-- <div class="mt-3 col-6 ps-0 pr-1" >
+                <a [routerLink]="['/','carro-compra']" (click)="removeDespacho()" class="btn btn-border-primary w-100 btn-lg text-center" style="background-color:white;">
                     <i class="fas fa-chevron-left"></i> Anterior
                 </a>
             </div> -->
 
-          <div class="mt-3 col-12 pr-0 pl-1">
+          <div class="mt-3 col-12 pr-0 ps-1">
             <!-- FIXME: no es variables recidDireccion es recib -->
             <!-- <button
               name="next"
@@ -1425,7 +1425,7 @@
                 !select_grupos
               "
               (click)="next()"
-              class="btn btn-lg btn-secondary btn-block text-center"
+              class="btn btn-lg btn-secondary w-100 text-center"
             >
               Ir a pagar <i class="fas fa-chevron-right"></i>
             </button> -->
@@ -1440,7 +1440,7 @@
                 !select_grupos
               "
               (click)="next()"
-              class="btn btn-lg btn-secondary btn-block text-center"
+              class="btn btn-lg btn-secondary w-100 text-center"
             >
               Ir a pagar3 <i class="fas fa-chevron-right"></i>
             </button>
@@ -1450,12 +1450,12 @@
               *ngIf="userSession.user_role == 'comprador'"
               [disabled]="shippingSelected == null"
               (click)="next()"
-              class="btn btn-lg btn-secondary btn-block text-center"
+              class="btn btn-lg btn-secondary w-100 text-center"
             >
               Siguiente <i class="fas fa-chevron-right"></i>
             </button>
           </div>
-          <div class="mt-3 col-12 pl-0 pr-1">
+          <div class="mt-3 col-12 ps-0 pr-1">
             <a
               href="https://www.implementos.cl"
               style="color: #118565; text-align: center; font-weight: bold"

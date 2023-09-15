@@ -64,7 +64,7 @@
     >
       <li class="list-group-item mb-2 p-0 border-0">
         <div
-          class="me-2 float-left"
+          class="me-2 float-start"
           [tooltip]="tooltipImgProducto"
           [delay]="300"
           containerClass="imgProductoTooltip"
@@ -110,7 +110,7 @@
 
     <div *ngIf="(lista.detalleSkus?.length || 0) > 5">
       <span
-        class="float-right text-primary"
+        class="float-end text-primary"
         style="cursor: pointer; font-size: 0.85rem"
         (click)="verMas()"
         >Ver todos...</span
@@ -139,7 +139,7 @@
     <div class="product-card__buttons">
       <button
         name="addToCart"
-        class="btn btn-secondary product-card__addtocart btn-block"
+        class="btn btn-secondary product-card__addtocart w-100"
         type="button"
         appClick
         (click)="addToCart()"

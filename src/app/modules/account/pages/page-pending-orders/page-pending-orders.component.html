@@ -37,10 +37,10 @@
                     <span
                       class="badge"
                       [ngClass]="{
-                        'badge-danger': item?.estado == 'rechazado',
-                        'badge-warning': item?.estado == 'pendiente',
-                        'badge-info': item?.estado == 'generado',
-                        'badge-success': item?.estado == 'finalizado'
+                        'bg-danger': item?.estado == 'rechazado',
+                        'bg-warning': item?.estado == 'pendiente',
+                        'bg-info': item?.estado == 'generado',
+                        'bg-success': item?.estado == 'finalizado'
                       }"
                     >
                       {{ item?.estado | capitalizeFirst }}

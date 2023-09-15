@@ -22,7 +22,7 @@
   <ng-container *ngIf="innerWidth > 767">
     <div class="col-md-1 text-center" style="padding-top: 20rem">
       <button
-        class="btn btn-transparent float-left"
+        class="btn btn-transparent float-start"
         style="padding: 0px !important"
         (click)="cambiarPagina(false)"
         [disabled]="page == 0"
@@ -82,7 +82,7 @@
   <ng-container *ngIf="innerWidth > 767">
     <div class="col-md-1 text-center" style="padding-top: 20rem">
       <button
-        class="btn btn-transparent float-right"
+        class="btn btn-transparent float-end"
         style="padding: 0px !important"
         (click)="cambiarPagina(true)"
         [disabled]="page == catalogo.length - 1"

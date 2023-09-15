@@ -1,228 +1,411 @@
-<div class="d-none d-lg-block" style="width: 100%;height: 100%; background-color:#121212">
-    <div class="container">
-        <img src="../../../assets/images/cyberImplementos/fondo.jpg" class="bg" />
+<div
+  class="d-none d-lg-block"
+  style="width: 100%; height: 100%; background-color: #121212"
+>
+  <div class="container">
+    <img src="../../../assets/images/cyberImplementos/fondo.jpg" class="bg" />
+    <div class="row">
+      <div class="offset-7 col-sm-3 form mt-5" style="color: white">
         <div class="row">
-            <div class="offset-7 col-sm-3 form mt-5" style="color: white;">
-                <div class="row">
-                    <span class="text-center h5">Sé el primero en enterarte de los productos que el IMPLECYBER tiene
-                        para
-                        ti</span>
-                </div>
-                <div class="row mt-1">
-                    <div class="col-12">
-                        <form [formGroup]="formulario">
-                            <div class="form-group">
-                                <span class="h6">Rut del comprador * <small>(sin puntos y con guión)</small></span>
-                                <input type="text" formControlName="rut" class="form-control form-control-sm" id="rut"
-                                    [(ngModel)]="datos.rut" autocomplete="off">
-                                <div class="invalid-feedback"
-                                    *ngIf="(formulario.get('rut')?.touched || formulario.get('rut')?.dirty) && formulario.get('rut')?.hasError('rutMalo')">
-                                    Rut no válido</div>
-                            </div>
-                            <div class="form-group">
-                                <span class="h6">Nombre del comprador *</span>
-                                <input type="text" formControlName="nombre" class="form-control form-control-sm"
-                                    id="nombre" [(ngModel)]="datos.nombre" autocomplete="off">
-                            </div>
-                            <div class="form-group">
-                                <span class="h6">Correo electrónico *</span>
-                                <input type="email" formControlName="email" class="form-control form-control-sm"
-                                    id="email" [(ngModel)]="datos.email" autocomplete="off">
-                                <div class="invalid-feedback"
-                                    *ngIf="(formulario.get('email')?.touched || formulario.get('email')?.dirty) && formulario.get('email')?.invalid">
-                                    Email no es válido</div>
-                            </div>
-                            <span class="h6">Celular *</span>
-                            <div class="input-group input-group-sm form-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="codigo">+56 9</span>
-                                </div>
-                                <input type="number" formControlName="celular" class="form-control form-control-sm"
-                                    [(ngModel)]="datos.celular" style="border-radius: 0px 4px 4px 0px !important"
-                                    id="celular" aria-describedby="codigo" aria-label="celular" autocomplete="off">
-                                <div class="invalid-feedback" style="bottom: -19px;"
-                                    *ngIf="(formulario.get('celular')?.touched || formulario.get('celular')?.dirty) && formulario.get('celular')?.invalid">
-                                    Número no válido</div>
-                            </div>
-                            <div class="form-group">
-                                <span class="h6 pl-3">¿Que información te interesa?</span>
-                                <div class="form-check mt-2">
-                                    <input class="form-check-input" type="checkbox" name="camion" id="interes"
-                                        value="Mundo Camion" formControlName="camion">
-                                    <label class="form-check-label">
-                                        Mundo Camión
-                                    </label>
-                                    <br>
-                                    <div class="descripcion-radio">
-                                        Control de cargas, baterias, lubricantes, filtros, llantas, neumáticos,
-                                        seguridad
-                                        vial, componentes equipos de carga, sistema de frenos, accesorios y cuidado
-                                        automotriz, embragues, iluminación, motores de partida, accesorios de camión,
-                                        seguridad personal.
-                                    </div>
-                                </div>
-                                <div class="form-check mt-2">
-                                    <input class="form-check-input" type="checkbox" name="liviano" id="interes"
-                                        value="Mundo Liviano" formControlName="liviano">
-                                    <label class="form-check-label">
-                                        Mundo Liviano
-                                    </label>
-                                    <br>
-                                    <div class="descripcion-radio">
-                                        Control de carga, baterías, lubricantes, filtros, llantas, neumáticos, seguridad
-                                        vial, accesorios y cuidado automotriz, iluminación.
-                                    </div>
-                                </div>
-                                <div class="form-check mt-2">
-                                    <input class="form-check-input" type="checkbox" name="bus" id="interes"
-                                        value="Mundo Bus" formControlName="bus">
-                                    <label class="form-check-label">
-                                        Mundo Bus
-                                    </label>
-                                    <br>
-                                    <div class="descripcion-radio">
-                                        Sistema de Alimentación, motor buses, carrocería, transmisión, dirección,
-                                        Iluminación, vidrios y parabrisas, suspensión, freno, filtración, climatización,
-                                        accesorios y cuidado para el bus.
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <button class="btn btn-lg btn-success w-100 text-center btn-custom"
-                            [ngClass]="{'btn-loading': cargando}" (click)="enviar()"
-                            [class.disabled]="formulario.invalid || (!formulario.value.camion && !formulario.value.liviano && !formulario.value.bus)"
-                            [disabled]="formulario.invalid || (!formulario.value.camion && !formulario.value.liviano && !formulario.value.bus)">ENVIAR</button>
-                    </div>
-                    <div class="col-12">
-                        <div class="footer mt-1">
-                            *Al enviar el formulario aceptas los términos y condiciones. <a class="verMas"
-                                target="_blank" href="https://www.implementos.cl/sitio/termino-y-condiciones">Ver
-                                más</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          <span class="text-center h5"
+            >Sé el primero en enterarte de los productos que el IMPLECYBER tiene
+            para ti</span
+          >
         </div>
+        <div class="row mt-1">
+          <div class="col-12">
+            <form [formGroup]="formulario">
+              <div class="form-group">
+                <span class="h6"
+                  >Rut del comprador *
+                  <small>(sin puntos y con guión)</small></span
+                >
+                <input
+                  type="text"
+                  formControlName="rut"
+                  class="form-control form-control-sm"
+                  id="rut"
+                  [(ngModel)]="datos.rut"
+                  autocomplete="off"
+                />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    (formulario.get('rut')?.touched ||
+                      formulario.get('rut')?.dirty) &&
+                    formulario.get('rut')?.hasError('rutMalo')
+                  "
+                >
+                  Rut no válido
+                </div>
+              </div>
+              <div class="form-group">
+                <span class="h6">Nombre del comprador *</span>
+                <input
+                  type="text"
+                  formControlName="nombre"
+                  class="form-control form-control-sm"
+                  id="nombre"
+                  [(ngModel)]="datos.nombre"
+                  autocomplete="off"
+                />
+              </div>
+              <div class="form-group">
+                <span class="h6">Correo electrónico *</span>
+                <input
+                  type="email"
+                  formControlName="email"
+                  class="form-control form-control-sm"
+                  id="email"
+                  [(ngModel)]="datos.email"
+                  autocomplete="off"
+                />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    (formulario.get('email')?.touched ||
+                      formulario.get('email')?.dirty) &&
+                    formulario.get('email')?.invalid
+                  "
+                >
+                  Email no es válido
+                </div>
+              </div>
+              <span class="h6">Celular *</span>
+              <div class="input-group input-group-sm form-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="codigo">+56 9</span>
+                </div>
+                <input
+                  type="number"
+                  formControlName="celular"
+                  class="form-control form-control-sm"
+                  [(ngModel)]="datos.celular"
+                  style="border-radius: 0px 4px 4px 0px !important"
+                  id="celular"
+                  aria-describedby="codigo"
+                  aria-label="celular"
+                  autocomplete="off"
+                />
+                <div
+                  class="invalid-feedback"
+                  style="bottom: -19px"
+                  *ngIf="
+                    (formulario.get('celular')?.touched ||
+                      formulario.get('celular')?.dirty) &&
+                    formulario.get('celular')?.invalid
+                  "
+                >
+                  Número no válido
+                </div>
+              </div>
+              <div class="form-group">
+                <span class="h6 ps-3">¿Que información te interesa?</span>
+                <div class="form-check mt-2">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="camion"
+                    id="interes"
+                    value="Mundo Camion"
+                    formControlName="camion"
+                  />
+                  <label class="form-check-label"> Mundo Camión </label>
+                  <br />
+                  <div class="descripcion-radio">
+                    Control de cargas, baterias, lubricantes, filtros, llantas,
+                    neumáticos, seguridad vial, componentes equipos de carga,
+                    sistema de frenos, accesorios y cuidado automotriz,
+                    embragues, iluminación, motores de partida, accesorios de
+                    camión, seguridad personal.
+                  </div>
+                </div>
+                <div class="form-check mt-2">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="liviano"
+                    id="interes"
+                    value="Mundo Liviano"
+                    formControlName="liviano"
+                  />
+                  <label class="form-check-label"> Mundo Liviano </label>
+                  <br />
+                  <div class="descripcion-radio">
+                    Control de carga, baterías, lubricantes, filtros, llantas,
+                    neumáticos, seguridad vial, accesorios y cuidado automotriz,
+                    iluminación.
+                  </div>
+                </div>
+                <div class="form-check mt-2">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="bus"
+                    id="interes"
+                    value="Mundo Bus"
+                    formControlName="bus"
+                  />
+                  <label class="form-check-label"> Mundo Bus </label>
+                  <br />
+                  <div class="descripcion-radio">
+                    Sistema de Alimentación, motor buses, carrocería,
+                    transmisión, dirección, Iluminación, vidrios y parabrisas,
+                    suspensión, freno, filtración, climatización, accesorios y
+                    cuidado para el bus.
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <button
+              class="btn btn-lg btn-success w-100 text-center btn-custom"
+              [ngClass]="{ 'btn-loading': cargando }"
+              (click)="enviar()"
+              [class.disabled]="
+                formulario.invalid ||
+                (!formulario.value.camion &&
+                  !formulario.value.liviano &&
+                  !formulario.value.bus)
+              "
+              [disabled]="
+                formulario.invalid ||
+                (!formulario.value.camion &&
+                  !formulario.value.liviano &&
+                  !formulario.value.bus)
+              "
+            >
+              ENVIAR
+            </button>
+          </div>
+          <div class="col-12">
+            <div class="footer mt-1">
+              *Al enviar el formulario aceptas los términos y condiciones.
+              <a
+                class="verMas"
+                target="_blank"
+                href="https://www.implementos.cl/sitio/termino-y-condiciones"
+                >Ver más</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
-<div class="d-flex d-lg-none justify-content-center"
-    style="width: 100%;height: 100%; overflow: auto; background-color: #121212;">
-    <div class="position-relative" style="max-width: 768px;height: 768px;">
-        <img class="w-100" src="../../../assets/images/cyberImplementos/fondo_tablet.png" />
-        <div class="row justify-content-start flex-column align-items-center" style="color: white;">
-            <div class="d-flex flex-column align-items-center justify-content-center mt-3" style="font-size: 1.45rem;">
-                <div class="row">
-                    <p class="mb-2 h6" style="padding-left: 60px; padding-right: 40px;">Sé el primero en enterarte de
-                        los
-                        productos que el IMPLECYBER tiene
-                        para
-                        ti</p>
-                </div>
-            </div>
-            <div class="col-10 mt-2 mb-2">
-                <form [formGroup]="formulario">
-                    <div class="form-group">
-                        <span class="h6">Rut del comprador * <small>(sin puntos y con guión)</small></span>
-                        <input type="text" formControlName="rut" class="form-control form-control-sm" id="rut"
-                            [(ngModel)]="datos.rut" autocomplete="off">
-                        <div class="invalid-feedback"
-                            *ngIf="(formulario.get('rut')?.touched || formulario.get('rut')?.dirty) && formulario.get('rut')?.hasError('rutMalo')">
-                            Rut no válido</div>
-                    </div>
-                    <div class="form-group">
-                        <span class="h6">Nombre del comprador *</span>
-                        <input type="text" formControlName="nombre" class="form-control form-control-sm" id="nombre"
-                            [(ngModel)]="datos.nombre" autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <span class="h6">Correo electrónico *</span>
-                        <input type="email" formControlName="email" class="form-control form-control-sm" id="email"
-                            [(ngModel)]="datos.email" autocomplete="off">
-                        <div class="invalid-feedback"
-                            *ngIf="(formulario.get('email')?.touched || formulario.get('email')?.dirty) && formulario.get('email')?.invalid">
-                            Email no es válido</div>
-                    </div>
-                    <span class="h6">Celular *</span>
-                    <div class="input-group input-group-sm form-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="codigo">+56 9</span>
-                        </div>
-                        <input type="number" formControlName="celular" class="form-control form-control-sm"
-                            [(ngModel)]="datos.celular" style="border-radius: 0px 4px 4px 0px !important" id="celular"
-                            aria-describedby="codigo" aria-label="celular" autocomplete="off">
-                        <div class="invalid-feedback" style="bottom: -19px;"
-                            *ngIf="(formulario.get('celular')?.touched || formulario.get('celular')?.dirty) && formulario.get('celular')?.invalid">
-                            Número no válido</div>
-                    </div>
-                    <div class="form-group">
-                        <span class="h6 pl-3">¿Que información te interesa?</span>
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="checkbox" name="camion" id="interes"
-                                value="Mundo Camion" formControlName="camion">
-                            <label class="form-check-label">
-                                Mundo Camión
-                            </label>
-                            <br>
-                            <div class="descripcion-radio">
-                                Control de cargas, baterias, lubricantes, filtros, llantas, neumáticos,
-                                seguridad
-                                vial, componentes equipos de carga, sistema de frenos, accesorios y cuidado
-                                automotriz, embragues, iluminación, motores de partida, accesorios de camión,
-                                seguridad personal.
-                            </div>
-                        </div>
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="checkbox" name="liviano" id="interes"
-                                value="Mundo Liviano" formControlName="liviano">
-                            <label class="form-check-label">
-                                Mundo Liviano
-                            </label>
-                            <br>
-                            <div class="descripcion-radio">
-                                Control de carga, baterías, lubricantes, filtros, llantas, neumáticos, seguridad
-                                vial, accesorios y cuidado automotriz, iluminación.
-                            </div>
-                        </div>
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="checkbox" name="bus" id="interes" value="Mundo Bus"
-                                formControlName="bus">
-                            <label class="form-check-label">
-                                Mundo Bus
-                            </label>
-                            <br>
-                            <div class="descripcion-radio">
-                                Sistema de Alimentación, motor buses, carrocería, transmisión, dirección,
-                                Iluminación, vidrios y parabrisas, suspensión, freno, filtración, climatización,
-                                accesorios y cuidado para el bus.
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-10 mb-2">
-                <button class="btn btn-lg btn-success w-100 text-center btn-custom"
-                    [ngClass]="{'btn-loading': cargando}" (click)="enviar()"
-                    [class.disabled]="formulario.invalid || (!formulario.value.camion && !formulario.value.liviano && !formulario.value.bus)"
-                    [disabled]="formulario.invalid || (!formulario.value.camion && !formulario.value.liviano && !formulario.value.bus)">ENVIAR</button>
-            </div>
-            <div class="col-10">
-                <div class="footer mt-1">
-                    *Al enviar el formulario aceptas los términos y condiciones. <a class="verMas" target="_blank"
-                        href="https://www.implementos.cl/sitio/termino-y-condiciones">Ver
-                        más</a>
-                </div>
-            </div>
-
-            <div class="row">
-                <div style="margin-top:20px; max-width: 768px">
-                    <img class="w-100" src="../../../assets/images/cyberImplementos/fondo_tablet_footer.png" />
-                </div>
-            </div>
+<div
+  class="d-flex d-lg-none justify-content-center"
+  style="width: 100%; height: 100%; overflow: auto; background-color: #121212"
+>
+  <div class="position-relative" style="max-width: 768px; height: 768px">
+    <img
+      class="w-100"
+      src="../../../assets/images/cyberImplementos/fondo_tablet.png"
+    />
+    <div
+      class="row justify-content-start flex-column align-items-center"
+      style="color: white"
+    >
+      <div
+        class="d-flex flex-column align-items-center justify-content-center mt-3"
+        style="font-size: 1.45rem"
+      >
+        <div class="row">
+          <p class="mb-2 h6" style="padding-left: 60px; padding-right: 40px">
+            Sé el primero en enterarte de los productos que el IMPLECYBER tiene
+            para ti
+          </p>
         </div>
+      </div>
+      <div class="col-10 mt-2 mb-2">
+        <form [formGroup]="formulario">
+          <div class="form-group">
+            <span class="h6"
+              >Rut del comprador * <small>(sin puntos y con guión)</small></span
+            >
+            <input
+              type="text"
+              formControlName="rut"
+              class="form-control form-control-sm"
+              id="rut"
+              [(ngModel)]="datos.rut"
+              autocomplete="off"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                (formulario.get('rut')?.touched ||
+                  formulario.get('rut')?.dirty) &&
+                formulario.get('rut')?.hasError('rutMalo')
+              "
+            >
+              Rut no válido
+            </div>
+          </div>
+          <div class="form-group">
+            <span class="h6">Nombre del comprador *</span>
+            <input
+              type="text"
+              formControlName="nombre"
+              class="form-control form-control-sm"
+              id="nombre"
+              [(ngModel)]="datos.nombre"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <span class="h6">Correo electrónico *</span>
+            <input
+              type="email"
+              formControlName="email"
+              class="form-control form-control-sm"
+              id="email"
+              [(ngModel)]="datos.email"
+              autocomplete="off"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                (formulario.get('email')?.touched ||
+                  formulario.get('email')?.dirty) &&
+                formulario.get('email')?.invalid
+              "
+            >
+              Email no es válido
+            </div>
+          </div>
+          <span class="h6">Celular *</span>
+          <div class="input-group input-group-sm form-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="codigo">+56 9</span>
+            </div>
+            <input
+              type="number"
+              formControlName="celular"
+              class="form-control form-control-sm"
+              [(ngModel)]="datos.celular"
+              style="border-radius: 0px 4px 4px 0px !important"
+              id="celular"
+              aria-describedby="codigo"
+              aria-label="celular"
+              autocomplete="off"
+            />
+            <div
+              class="invalid-feedback"
+              style="bottom: -19px"
+              *ngIf="
+                (formulario.get('celular')?.touched ||
+                  formulario.get('celular')?.dirty) &&
+                formulario.get('celular')?.invalid
+              "
+            >
+              Número no válido
+            </div>
+          </div>
+          <div class="form-group">
+            <span class="h6 ps-3">¿Que información te interesa?</span>
+            <div class="form-check mt-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="camion"
+                id="interes"
+                value="Mundo Camion"
+                formControlName="camion"
+              />
+              <label class="form-check-label"> Mundo Camión </label>
+              <br />
+              <div class="descripcion-radio">
+                Control de cargas, baterias, lubricantes, filtros, llantas,
+                neumáticos, seguridad vial, componentes equipos de carga,
+                sistema de frenos, accesorios y cuidado automotriz, embragues,
+                iluminación, motores de partida, accesorios de camión, seguridad
+                personal.
+              </div>
+            </div>
+            <div class="form-check mt-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="liviano"
+                id="interes"
+                value="Mundo Liviano"
+                formControlName="liviano"
+              />
+              <label class="form-check-label"> Mundo Liviano </label>
+              <br />
+              <div class="descripcion-radio">
+                Control de carga, baterías, lubricantes, filtros, llantas,
+                neumáticos, seguridad vial, accesorios y cuidado automotriz,
+                iluminación.
+              </div>
+            </div>
+            <div class="form-check mt-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="bus"
+                id="interes"
+                value="Mundo Bus"
+                formControlName="bus"
+              />
+              <label class="form-check-label"> Mundo Bus </label>
+              <br />
+              <div class="descripcion-radio">
+                Sistema de Alimentación, motor buses, carrocería, transmisión,
+                dirección, Iluminación, vidrios y parabrisas, suspensión, freno,
+                filtración, climatización, accesorios y cuidado para el bus.
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-10 mb-2">
+        <button
+          class="btn btn-lg btn-success w-100 text-center btn-custom"
+          [ngClass]="{ 'btn-loading': cargando }"
+          (click)="enviar()"
+          [class.disabled]="
+            formulario.invalid ||
+            (!formulario.value.camion &&
+              !formulario.value.liviano &&
+              !formulario.value.bus)
+          "
+          [disabled]="
+            formulario.invalid ||
+            (!formulario.value.camion &&
+              !formulario.value.liviano &&
+              !formulario.value.bus)
+          "
+        >
+          ENVIAR
+        </button>
+      </div>
+      <div class="col-10">
+        <div class="footer mt-1">
+          *Al enviar el formulario aceptas los términos y condiciones.
+          <a
+            class="verMas"
+            target="_blank"
+            href="https://www.implementos.cl/sitio/termino-y-condiciones"
+            >Ver más</a
+          >
+        </div>
+      </div>
+
+      <div class="row">
+        <div style="margin-top: 20px; max-width: 768px">
+          <img
+            class="w-100"
+            src="../../../assets/images/cyberImplementos/fondo_tablet_footer.png"
+          />
+        </div>
+      </div>
     </div>
+  </div>
 </div>

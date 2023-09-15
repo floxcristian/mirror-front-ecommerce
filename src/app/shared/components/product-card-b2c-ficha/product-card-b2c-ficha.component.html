@@ -67,7 +67,7 @@
     *ngIf="productData.cyberMonday || 0 > 0"
   >
     <div
-      class="badge_cyber float-right"
+      class="badge_cyber float-end"
       style="position: absolute; top: 5px; right: 1px"
     >
       <picture>
@@ -101,7 +101,7 @@
     *ngIf="productData.cyber || (0 > 0 && productData.cyberMonday === 0)"
   >
     <div
-      class="badge_cyber float-right"
+      class="badge_cyber float-end"
       style="position: absolute; top: 5px; right: 1px"
     >
       <!--
@@ -268,7 +268,7 @@
       <button
         name="addToCart"
         [disabled]="!productData.precio"
-        class="btn btn-secondary product-card__addtocart btn-block"
+        class="btn btn-secondary product-card__addtocart w-100"
         type="button"
         appClick
         (click)="addToCart()"

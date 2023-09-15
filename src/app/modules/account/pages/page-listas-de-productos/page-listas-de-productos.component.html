@@ -1,7 +1,7 @@
 <div
   class="top-bar-categories d-flex align-items-center mb-3"
   [class.p-0]="innerWidth < 450"
-  [class.pl-3]="innerWidth < 450"
+  [class.ps-3]="innerWidth < 450"
   [class.pr-3]="innerWidth < 450"
   (window:resize)="onResize($event)"
 >
@@ -114,13 +114,13 @@
       <div class="card-footer p-1">
         <h6 class="mb-2">Carga de productos:</h6>
         <button
-          class="btn btn-sm btn-secondary float-left"
+          class="btn btn-sm btn-secondary float-start"
           (click)="cargaUnitaria()"
         >
           Carga unitaria
         </button>
         <button
-          class="btn btn-sm btn-secondary float-right"
+          class="btn btn-sm btn-secondary float-end"
           (click)="cargaMasiva()"
         >
           Carga masiva

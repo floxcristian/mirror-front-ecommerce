@@ -1,10 +1,23 @@
-<div class="container container-cart site_b2c" *ngIf="showFolioMsj && numeroCarro">
-  <div class="row justify-content-md-center msgStatus mb-4" *ngIf="screenWidth > 450">
+<div
+  class="container container-cart site_b2c"
+  *ngIf="showFolioMsj && numeroCarro"
+>
+  <div
+    class="row justify-content-md-center msgStatus mb-4"
+    *ngIf="screenWidth > 450"
+  >
     <div class="col-12 col-md-9 col-xl-6 mx-auto mb-3">
-      <div appDragDrop class="block-drop-down-file mx-auto" style="background: #f5f5f5">
+      <div
+        appDragDrop
+        class="block-drop-down-file mx-auto"
+        style="background: #f5f5f5"
+      >
         <div class="row">
           <div class="col-4 d-flex justify-content-end align-items-center">
-            <i class="fa-solid fa-circle-check" style="color: #118565; font-size: 48px"></i>
+            <i
+              class="fa-solid fa-circle-check"
+              style="color: #118565; font-size: 48px"
+            ></i>
           </div>
           <div
             class="col-8 d-flex justify-content-center align-items-center"
@@ -14,26 +27,43 @@
           </div>
         </div>
         <div class="row mt-4">
-          <div class="col-12 text-justify" style="color: #0063b9 !important; font-size: 18px">
+          <div
+            class="col-12 text-justify"
+            style="color: #0063b9 !important; font-size: 18px"
+          >
             <p>
-              Estimado <strong>{{ ' ' + usuario.nombre_completo }}</strong
-              >, hemos recibido su compra y su pago de <strong> {{ ' ' + total | currencyFormat }}{{ ' ' }}</strong
+              Estimado <strong>{{ " " + usuario.nombre_completo }}</strong
+              >, hemos recibido su compra y su pago de
+              <strong> {{ " " + total | currencyFormat }}{{ " " }}</strong
               >fue procesado correctamente.
             </p>
             <p>
-              En breve le enviaremos un correo a <strong>{{ ' ' + usuario.email }}</strong> con la confirmación de su pedido:
+              En breve le enviaremos un correo a
+              <strong>{{ " " + usuario.email }}</strong> con la confirmación de
+              su pedido:
             </p>
           </div>
           <div class="col-12 mt-3">
-            <button class="btn btn-lg btn-secondary w-100 text-center" style="font-size: 24px; padding-bottom: 45px">
-              N° {{ ' ' + numeroCarro }}
+            <button
+              class="btn btn-lg btn-secondary w-100 text-center"
+              style="font-size: 24px; padding-bottom: 45px"
+            >
+              N° {{ " " + numeroCarro }}
             </button>
           </div>
           <div class="col-12 mt-4 text-center">
-            <h4 style="text-align: center; font-size: 22px">Muchas gracias por visitar Implementos.cl</h4>
+            <h4 style="text-align: center; font-size: 22px">
+              Muchas gracias por visitar Implementos.cl
+            </h4>
             <a
               href="https://www.implementos.cl"
-              style="text-align: center; color: #118565; font-size: 14px; font-weight: bold; margin-top: 40px"
+              style="
+                text-align: center;
+                color: #118565;
+                font-size: 14px;
+                font-weight: bold;
+                margin-top: 40px;
+              "
             >
               Volver al inicio</a
             >
@@ -43,10 +73,16 @@
     </div>
   </div>
   <div class="row mt-4 mb-4" *ngIf="screenWidth <= 450">
-    <div class="col-12" style="padding-left: 3rem; padding-right: 3rem; margin-top: 5px">
+    <div
+      class="col-12"
+      style="padding-left: 3rem; padding-right: 3rem; margin-top: 5px"
+    >
       <div class="row">
         <div class="col-4 d-flex justify-content-end align-items-center">
-          <i class="fa-solid fa-circle-check" style="color: #118565; font-size: 38px"></i>
+          <i
+            class="fa-solid fa-circle-check"
+            style="color: #118565; font-size: 38px"
+          ></i>
         </div>
         <div
           class="col-8 d-flex justify-content-center align-items-center"
@@ -56,24 +92,43 @@
         </div>
       </div>
       <div class="row mt-4">
-        <div class="col-12 text-justify" style="color: #0063b9; font-size: 16px">
+        <div
+          class="col-12 text-justify"
+          style="color: #0063b9; font-size: 16px"
+        >
           <p>
-            Estimado <strong>{{ ' ' + usuario.nombre_completo }}</strong
-            >, hemos recibido su compra y su pago de <strong> {{ ' ' + total | currencyFormat }}{{ ' ' }}</strong
+            Estimado <strong>{{ " " + usuario.nombre_completo }}</strong
+            >, hemos recibido su compra y su pago de
+            <strong> {{ " " + total | currencyFormat }}{{ " " }}</strong
             >fue procesado correctamente.
           </p>
           <p>
-            En breve le enviaremos un correo a <strong>{{ ' ' + usuario.email }}</strong> con la confirmación de su pedido:
+            En breve le enviaremos un correo a
+            <strong>{{ " " + usuario.email }}</strong> con la confirmación de su
+            pedido:
           </p>
         </div>
         <div class="col-12 mt-3">
-          <button class="btn btn-lg btn-secondary w-100 text-center" style="font-size: 24px">N° {{ ' ' + numeroCarro }}</button>
+          <button
+            class="btn btn-lg btn-secondary w-100 text-center"
+            style="font-size: 24px"
+          >
+            N° {{ " " + numeroCarro }}
+          </button>
         </div>
         <div class="col-12 mt-4 text-center">
-          <h4 style="text-align: center; font-size: 22px; margin-bottom: 15px">Muchas gracias por visitar Implementos.cl</h4>
+          <h4 style="text-align: center; font-size: 22px; margin-bottom: 15px">
+            Muchas gracias por visitar Implementos.cl
+          </h4>
           <a
             href="https://www.implementos.cl"
-            style="text-align: center; color: #118565; font-size: 18px; font-weight: bold; margin-top: 20px"
+            style="
+              text-align: center;
+              color: #118565;
+              font-size: 18px;
+              font-weight: bold;
+              margin-top: 20px;
+            "
           >
             Ir al HOME</a
           >
@@ -86,11 +141,24 @@
 <div class="container container-cart site_b2c" *ngIf="!showFolioMsj">
   <div class="row justify-content-md-center msgStatus">
     <div class="col-12 col-md-9 col-xl-6 mx-auto mb-3">
-      <div appDragDrop class="block-drop-down-file mx-auto d-flex align-items-center justify-content-center">
+      <div
+        appDragDrop
+        class="block-drop-down-file mx-auto d-flex align-items-center justify-content-center"
+      >
         <input hidden type="file" #fileInput />
         <div class="cargandoCent text-center" *ngIf="loadingCart">
-          <i class="fak fa-implementos fa-bounce" style="font-size: 64px; color: #0063b9"></i>
-          <div class="fa-beat-fade" style="--fa-beat-fade-opacity: 0.67; --fa-beat-fade-scale: 1.075; margin-top: 20px">
+          <i
+            class="fak fa-implementos fa-bounce"
+            style="font-size: 64px; color: #0063b9"
+          ></i>
+          <div
+            class="fa-beat-fade"
+            style="
+              --fa-beat-fade-opacity: 0.67;
+              --fa-beat-fade-scale: 1.075;
+              margin-top: 20px;
+            "
+          >
             Espere unos momentos, su compra es muy importante para nosotros.
           </div>
         </div>
@@ -101,17 +169,25 @@
           <h1>{{ numero }}</h1>
 
           <p>
-            Estamos validando la información para la entrega de sus productos. Le enviaremos una notificación con la confirmación
-            de su compra.
+            Estamos validando la información para la entrega de sus productos.
+            Le enviaremos una notificación con la confirmación de su compra.
           </p>
           <p>Muchas gracias por visitar Implementos.cl</p>
 
-          <a class="mt-3 link-primary" routerLink="/carro-compra/downloadpdf" [queryParams]="{ numero: numero }">
+          <a
+            class="mt-3 link-primary"
+            routerLink="/carro-compra/downloadpdf"
+            [queryParams]="{ numero: numero }"
+          >
             <i class="far fa-file-pdf"></i>
-            El archivo pdf se descargará automaticamente o presione aqui para descargar
+            El archivo pdf se descargará automaticamente o presione aqui para
+            descargar
           </a>
 
-          <a [routerLink]="['/', 'inicio']" class="mt-5 link-primary btn-block text-center">
+          <a
+            [routerLink]="['/', 'inicio']"
+            class="mt-5 link-primary w-100 text-center"
+          >
             <i class="fas fa-home"></i>
             Ir al home
           </a>

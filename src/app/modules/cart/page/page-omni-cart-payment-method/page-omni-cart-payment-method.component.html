@@ -1,126 +1,191 @@
-<div class="container" style="margin-top:20px">
-    <div class="col-sm-12">
-        <div class="cargandoCent text-center" *ngIf="loadCart">
-            <i class="fak fa-implementos fa-bounce"></i>
-            <div class="fa-beat-fade" style="--fa-beat-fade-opacity: 0.67; --fa-beat-fade-scale: 1.075;">Cargando
-                carro...</div>
-        </div>
-        <div class="alert alert-danger mt-5 w-50 mx-auto" role="alert" *ngIf="!loadCart && linkNoValido">
-            <div class="text-center">
-                Link de pago no válido o ya se encuentra pagado.
-            </div>
-            <a [routerLink]="['/','inicio']" class="mt-4 link-primary btn-block text-center">
-                <i class="fas fa-home "></i>
-                Ir al home
-            </a>
-        </div>
-        <div class="row" *ngIf="!loadCart && !linkNoValido">
-            <div class="col-sm-5" style="margin-bottom:10px;">
-                <div class="row">
-
-                    <div class="col-sm-12" style="margin-bottom:10px;">
-                        <div class="card">
-                            <div class="card-body">
-                                <app-resumen-retiro *ngIf="!loadCart" [direccion]="direccion"
-                                    [despacho]='cartSession.despacho' [shippingType]='shippingType'>
-                                </app-resumen-retiro>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-12" style="margin-bottom:10px;">
-                        <div class="card">
-                            <div class="card-body">
-                                <ng-container *ngIf="alertCartShow && alertCart">
-                                    <div class="alert-cart">
-                                        <div class="row" class="d-flex justify-content-center mb-3">
-                                            <div class="col-12" class="text-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"
-                                                    fill="currentColor" class="bi bi-exclamation-circle"
-                                                    viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                                    <path
-                                                        d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
-                                                </svg>
-                                            </div>
-                                        </div>
-                                        <h4 class="text-danger text-center">{{ rejectedCode != -11? 'Pago Rechazado' :
-                                            alertCart?.detalleMensaje }}</h4>
-                                        <ng-container *ngIf="rejectedCode != -11" class="mb-5">
-                                            <div class="row">
-                                                <div class="col-12  text-center font-weight-bold">
-                                                    <p *ngIf="alertCart?.detalleMensaje">{{alertCart?.detalleMensaje}}
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-3"
-                                                *ngIf="alertCart?.proceso!='Anulado' && !alertCart?.pagoValidado">
-                                                <div class="col-12 text-justify"
-                                                    style="font-size: 14px; font-weight: 600;">
-                                                    Si su dinero fue descontado será reversado en la proximas horas.
-                                                </div>
-                                            </div>
-                                        </ng-container>
-
-                                        <div class="col-12" class="text-center" *ngIf="!alertCart?.pagoValidado">
-                                            <button name="Volver" class="btn btn-lg btn-border-primary"
-                                                (click)="intentarPagoNuevamente()">Volver a intentarlo
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 p-0 text-center"
-                                        *ngIf="!alertCart?.pagoValidado || alertCart?.mostrarBotonVolverIntentar">
-                                    </div>
-
-                                </ng-container>
-                                <ng-container *ngIf="!alertCartShow">
-                                    <app-lista-pago (payment)="Activepayment($event)" *ngIf="!loadCart" [omni]="true">
-                                    </app-lista-pago>
-                                </ng-container>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-7" style="margin-bottom:10px;">
-                <div class="row">
-                    <div class="col-sm-12" style="margin-bottom:10px;">
-                        <div class="card">
-                            <div class="card-body">
-
-                                <app-detalle-carro-productos *ngIf="!loadCart" [shippingType]='shippingType'
-                                    [productCart]="productCart"></app-detalle-carro-productos>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-center">
-                                    <button name="paymentKhipu" [disabled]="!pago" (click)="payment()"
-                                        class="btn btn-lg btn-secondary btn-block text-center ">
-                                        Pagar <i class="far fa-thumbs-up " style="margin-left: 10px;"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- aparecer el form de transbanck-->
-                    <ng-container *ngIf="transBankToken">
-                        <form id="transBankForm" [action]="transBankToken.url" method="POST">
-                            <input type="hidden" name="token_ws" [value]="transBankToken.token" />
-                            <input type="hidden" value="Pagar" />
-                        </form>
-                        <!-- fin del formulario de transbank-->
-                    </ng-container>
-                </div>
-            </div>
-        </div>
+<div class="container" style="margin-top: 20px">
+  <div class="col-sm-12">
+    <div class="cargandoCent text-center" *ngIf="loadCart">
+      <i class="fak fa-implementos fa-bounce"></i>
+      <div
+        class="fa-beat-fade"
+        style="--fa-beat-fade-opacity: 0.67; --fa-beat-fade-scale: 1.075"
+      >
+        Cargando carro...
+      </div>
     </div>
+    <div
+      class="alert alert-danger mt-5 w-50 mx-auto"
+      role="alert"
+      *ngIf="!loadCart && linkNoValido"
+    >
+      <div class="text-center">
+        Link de pago no válido o ya se encuentra pagado.
+      </div>
+      <a
+        [routerLink]="['/', 'inicio']"
+        class="mt-4 link-primary w-100 text-center"
+      >
+        <i class="fas fa-home"></i>
+        Ir al home
+      </a>
+    </div>
+    <div class="row" *ngIf="!loadCart && !linkNoValido">
+      <div class="col-sm-5" style="margin-bottom: 10px">
+        <div class="row">
+          <div class="col-sm-12" style="margin-bottom: 10px">
+            <div class="card">
+              <div class="card-body">
+                <app-resumen-retiro
+                  *ngIf="!loadCart"
+                  [direccion]="direccion"
+                  [despacho]="cartSession.despacho"
+                  [shippingType]="shippingType"
+                >
+                </app-resumen-retiro>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12" style="margin-bottom: 10px">
+            <div class="card">
+              <div class="card-body">
+                <ng-container *ngIf="alertCartShow && alertCart">
+                  <div class="alert-cart">
+                    <div class="row" class="d-flex justify-content-center mb-3">
+                      <div class="col-12" class="text-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="50"
+                          height="50"
+                          fill="currentColor"
+                          class="bi bi-exclamation-circle"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                          />
+                          <path
+                            d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <h4 class="text-danger text-center">
+                      {{
+                        rejectedCode != -11
+                          ? "Pago Rechazado"
+                          : alertCart?.detalleMensaje
+                      }}
+                    </h4>
+                    <ng-container *ngIf="rejectedCode != -11" class="mb-5">
+                      <div class="row">
+                        <div class="col-12 text-center font-weight-bold">
+                          <p *ngIf="alertCart?.detalleMensaje">
+                            {{ alertCart?.detalleMensaje }}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div
+                        class="row mb-3"
+                        *ngIf="
+                          alertCart?.proceso != 'Anulado' &&
+                          !alertCart?.pagoValidado
+                        "
+                      >
+                        <div
+                          class="col-12 text-justify"
+                          style="font-size: 14px; font-weight: 600"
+                        >
+                          Si su dinero fue descontado será reversado en la
+                          proximas horas.
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <div
+                      class="col-12"
+                      class="text-center"
+                      *ngIf="!alertCart?.pagoValidado"
+                    >
+                      <button
+                        name="Volver"
+                        class="btn btn-lg btn-border-primary"
+                        (click)="intentarPagoNuevamente()"
+                      >
+                        Volver a intentarlo
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    class="col-12 p-0 text-center"
+                    *ngIf="
+                      !alertCart?.pagoValidado ||
+                      alertCart?.mostrarBotonVolverIntentar
+                    "
+                  ></div>
+                </ng-container>
+                <ng-container *ngIf="!alertCartShow">
+                  <app-lista-pago
+                    (payment)="Activepayment($event)"
+                    *ngIf="!loadCart"
+                    [omni]="true"
+                  >
+                  </app-lista-pago>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-7" style="margin-bottom: 10px">
+        <div class="row">
+          <div class="col-sm-12" style="margin-bottom: 10px">
+            <div class="card">
+              <div class="card-body">
+                <app-detalle-carro-productos
+                  *ngIf="!loadCart"
+                  [shippingType]="shippingType"
+                  [productCart]="productCart"
+                ></app-detalle-carro-productos>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-center">
+                  <button
+                    name="paymentKhipu"
+                    [disabled]="!pago"
+                    (click)="payment()"
+                    class="btn btn-lg btn-secondary w-100 text-center"
+                  >
+                    Pagar
+                    <i class="far fa-thumbs-up" style="margin-left: 10px"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- aparecer el form de transbanck-->
+          <ng-container *ngIf="transBankToken">
+            <form
+              id="transBankForm"
+              [action]="transBankToken.url"
+              method="POST"
+            >
+              <input
+                type="hidden"
+                name="token_ws"
+                [value]="transBankToken.token"
+              />
+              <input type="hidden" value="Pagar" />
+            </form>
+            <!-- fin del formulario de transbank-->
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <!-- modal khipu pago-->
 <ng-template #bankmodal let-c="close" let-d="dismiss">
-    <app-bancoslist></app-bancoslist>
+  <app-bancoslist></app-bancoslist>
 </ng-template>

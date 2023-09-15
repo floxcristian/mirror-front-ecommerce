@@ -5,7 +5,7 @@
   <button
     name="modalRef"
     type="button"
-    class="close pull-right"
+    class="btn-close pull-right"
     aria-label="Close"
     (click)="close()"
   >
@@ -33,7 +33,7 @@
 <div class="modal-footer">
   <div *ngIf="!creandoLista" class="col-12">
     <button
-      class="btn btn-link btn-sm btn-block text-decoration-none"
+      class="btn btn-link btn-sm w-100 text-decoration-none"
       (click)="creandoLista = !creandoLista"
     >
       <i class="fas fa-plus fa-lg fa-fw me-2"></i>Crear nueva lista
@@ -61,7 +61,7 @@
       </div>
     </div>
     <button
-      class="btn btn-link btn-sm mt-2 float-right text-decoration-none"
+      class="btn btn-link btn-sm mt-2 float-end text-decoration-none"
       (click)="crearLista()"
     >
       Crear

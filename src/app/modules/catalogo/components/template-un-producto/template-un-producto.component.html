@@ -156,7 +156,7 @@
                     *ngIf="carro"
                     name="cart-20"
                     size="50"
-                    class="float-left icon-chat shadow-lg pl-2 pt-3 pointer"
+                    class="float-start icon-chat shadow-lg ps-2 pt-3 pointer"
                     (click)="addToCart(objeto.productos)"
                   ></app-icon>
 
@@ -270,8 +270,6 @@
 </div>
 
 <div class="card" style="height: auto" *ngIf="innerWidth < 450">
-
-
   <div class="row align-self-center text-center" style="margin-top: 1rem">
     <h3 style="z-index: 1; font-family: din-bold">
       {{ objeto.tituloEditable }}
@@ -353,18 +351,16 @@
             </div>
 
             <div class="card-footer px-0 pr-3 mb-5">
-           
               <table *ngIf="precios">
                 <ng-container *ngIf="objeto.productos.precio">
-         
                   <app-icon
                     *ngIf="carro"
                     name="cart-20"
                     size="50"
-                    class="float-left icon-chat shadow-lg pl-2 pt-3 pointer"
+                    class="float-start icon-chat shadow-lg ps-2 pt-3 pointer"
                     (click)="addToCart(objeto.productos)"
                   ></app-icon>
-              
+
                   <tr
                     *ngIf="
                       objeto.productos.rut == '0' &&
@@ -414,14 +410,11 @@
                       <em> c/iva </em>
                     </td>
                   </tr>
-
-          
                 </ng-container>
                 <ng-container
                   *ngIf="objeto.productos.precioEscala.length > 0"
                   class="card-footer"
                 >
-  
                   <tr
                     *ngFor="
                       let escala of objeto.productos.precioEscala | slice : -2;
@@ -452,7 +445,6 @@
                       {{ escala.precio | currencyFormat }}
                       <span style="font-size: small">c/iva</span>
                     </td>
-                
                   </tr></ng-container
                 >
               </table>
@@ -462,5 +454,4 @@
       </div>
     </div>
   </div>
-
 </div>

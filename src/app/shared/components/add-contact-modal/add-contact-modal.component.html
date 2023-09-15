@@ -3,7 +3,7 @@
   <button
     name="modalAddContactRef"
     type="button"
-    class="close pull-right"
+    class="btn-close pull-right"
     aria-label="Close"
     (click)="modalAddContactRef.hide()"
   >
@@ -31,11 +31,11 @@
             formContacto.controls['contactRut'].invalid &&
             formContacto.controls['contactRut'].touched
           "
-          class="text-danger float-left mb-0"
+          class="text-danger float-start mb-0"
         >
           El RUT ingresado no es válido
         </p>
-        <p class="float-right me-2 mb-0">
+        <p class="float-end me-2 mb-0">
           <i>Ej: 12345678-9</i>
         </p>
       </div>

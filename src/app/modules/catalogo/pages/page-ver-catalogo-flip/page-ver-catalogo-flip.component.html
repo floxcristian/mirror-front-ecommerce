@@ -112,7 +112,7 @@
               </div>
 
               <div class="container">
-                <div class="row pl-3 pr-3">
+                <div class="row ps-3 pr-3">
                   <div
                     class="col-6 col-sm-6"
                     *ngIf="pagina[0] && pagina[0].productos"
@@ -346,11 +346,11 @@
     <div class="col-md-1 col-sm-4 pr-1">
       <div
         *ngIf="!cargandoCat && tipoCatalogo != 'Automatico'"
-        class="float-left align-middle"
+        class="float-start align-middle"
         style="margin-top: 24rem"
       >
         <button
-          class="btn btn-transparent float-left"
+          class="btn btn-transparent float-start"
           style="padding: 0px !important"
           (click)="prevPage()"
         >
@@ -359,10 +359,10 @@
       </div>
       <div
         *ngIf="!cargandoCat && tipoCatalogo == 'Automatico'"
-        class="float-left align-middle"
+        class="float-start align-middle"
         style="margin-top: 24rem"
       >
-        <button class="btn btn-transparent float-left" (click)="prevPage()">
+        <button class="btn btn-transparent float-start" (click)="prevPage()">
           <i
             class="fa-sharp fa-light fa-circle-chevron-left fa-2xl"
             style="font-size: 40px"
@@ -730,14 +730,14 @@
       </div>
     </div>
 
-    <div class="col-md-1 col-sm-1 pl-1">
+    <div class="col-md-1 col-sm-1 ps-1">
       <div
         *ngIf="!cargandoCat && tipoCatalogo != 'Automatico'"
-        class="float-right align-middle"
+        class="float-end align-middle"
         style="margin-top: 24rem"
       >
         <button
-          class="btn btn-transparent float-right"
+          class="btn btn-transparent float-end"
           style="padding: 0px !important"
           (click)="nextPage()"
         >
@@ -746,11 +746,11 @@
       </div>
       <div
         *ngIf="!cargandoCat && tipoCatalogo == 'Automatico'"
-        class="float-right align-middle"
+        class="float-end align-middle"
         style="margin-top: 24rem"
       >
         <button
-          class="btn btn-transparent float-right"
+          class="btn btn-transparent float-end"
           style="padding-right: 8rem"
           (click)="nextPage()"
         >

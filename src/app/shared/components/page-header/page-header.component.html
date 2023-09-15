@@ -1,5 +1,5 @@
 <div
-  class="page-header {{ class }} pl-5"
+  class="page-header {{ class }} ps-5"
   [ngClass]="{
     'px-lg-4': !class,
     'pl-C': header == 'Contacto'
@@ -11,8 +11,8 @@
     [ngStyle]="{ 'margin-top': innerWidth < 530 ? '25px' : '0px' }"
   >
     <div *ngIf="header || headerSubtitle" class="page-header__title me-auto">
-      <h1 class="float-left">{{ header }}</h1>
-      <h2 class="float-left">{{ headerSubtitle }}</h2>
+      <h1 class="float-start">{{ header }}</h1>
+      <h2 class="float-start">{{ headerSubtitle }}</h2>
     </div>
 
     <div *ngIf="returnUrl != ''" class="me-auto page-return my-auto">

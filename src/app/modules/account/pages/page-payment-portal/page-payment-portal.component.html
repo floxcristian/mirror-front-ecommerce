@@ -1,7 +1,7 @@
 <div
   class="top-bar-categories d-flex align-items-center mb-3"
   [class.p-0]="innerWidth < 450"
-  [class.pl-4]="innerWidth < 450"
+  [class.ps-4]="innerWidth < 450"
   (window:resize)="onResize($event)"
 >
   <div class="title d-flex align-items-center me-auto">
@@ -17,7 +17,7 @@
         <button
           name="closeAlert"
           type="button"
-          class="close pull-right"
+          class="btn-close pull-right"
           aria-label="Close"
           (click)="closeAlert()"
         >
@@ -123,8 +123,8 @@
                 <td
                   class="text-left badge"
                   [ngClass]="{
-                    'badge-danger': item.estado == 'VENCIDA',
-                    'badge-warning': item.estado == 'PENDIENTE'
+                    'bg-danger': item.estado == 'VENCIDA',
+                    'bg-warning': item.estado == 'PENDIENTE'
                   }"
                 >
                   {{ item.estado }}
@@ -195,8 +195,8 @@
                   <span
                     class="badge"
                     [ngClass]="{
-                      'badge-danger': item.estado == 'VENCIDA',
-                      'badge-warning': item.estado == 'PENDIENTE'
+                      'bg-danger': item.estado == 'VENCIDA',
+                      'bg-warning': item.estado == 'PENDIENTE'
                     }"
                   >
                     {{ item.estado }}
@@ -260,7 +260,7 @@
       <div class="card-footer p-0">
         <button
           name="openModalSelectedItem"
-          class="btn btn-lg btn-secondary btn-block text-center"
+          class="btn btn-lg btn-secondary w-100 text-center"
           (click)="openModalSelectedItem()"
           [disabled]="documentToPay.length == 0"
         >
@@ -277,7 +277,7 @@
     <button
       name="modalPaymentMethodsRef"
       type="button"
-      class="close pull-right"
+      class="btn-close pull-right"
       aria-label="Close"
       (click)="modalPaymentMethodsRef.hide()"
     >

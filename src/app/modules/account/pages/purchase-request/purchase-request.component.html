@@ -39,8 +39,8 @@
                     <span
                       class="badge"
                       [ngClass]="{
-                        'badge-danger': item?.estado == 'rechazado',
-                        'badge-warning': item?.estado == 'pendiente'
+                        'bg-danger': item?.estado == 'rechazado',
+                        'bg-warning': item?.estado == 'pendiente'
                       }"
                     >
                       {{ item?.estado | capitalizeFirst }}
@@ -150,7 +150,7 @@
               Atrás
             </button>
             <button
-              class="btn btn-border-primary mb-3 float-right"
+              class="btn btn-border-primary mb-3 float-end"
               (click)="approveOrder(order)"
               *ngIf="
                 order?.folio != null &&
@@ -162,7 +162,7 @@
               Aprobar compra
             </button>
             <button
-              class="btn btn-border-primary mb-3 float-right me-2"
+              class="btn btn-border-primary mb-3 float-end me-2"
               (click)="refuseOrder(order)"
               *ngIf="
                 order?.folio != null &&
@@ -174,7 +174,7 @@
               Rechazar compra
             </button>
             <button
-              class="btn btn-border-primary mb-3 float-right"
+              class="btn btn-border-primary mb-3 float-end"
               (click)="backToList()"
               *ngIf="
                 order?.folio == null &&
@@ -201,7 +201,7 @@
     <h4 class="modal-title pull-left">Aprobar solicitud de compra</h4>
     <button
       type="button"
-      class="close pull-right"
+      class="btn-close pull-right"
       aria-label="Close"
       (click)="modalApproveRef.hide()"
     >
@@ -230,7 +230,7 @@
     <h4 class="modal-title pull-left">Rechazar solicitud de compra</h4>
     <button
       type="button"
-      class="close pull-right"
+      class="btn-close pull-right"
       aria-label="Close"
       (click)="modalRefuseRef.hide()"
     >

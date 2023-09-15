@@ -1,10 +1,10 @@
 <div *ngIf="screenWidth >= 1025">
-  <h6 class="font-weight-bold pl-3">Holding EPYSA CHILE</h6>
+  <h6 class="font-weight-bold ps-3">Holding EPYSA CHILE</h6>
   <hr class="my-2" style="background-color: #646462" />
 
   <div>
     <ul>
-      <li class="pl-3" *ngFor="let link of links">
+      <li class="ps-3" *ngFor="let link of links">
         <a [href]="link.link">{{ link.label }}</a>
       </li>
     </ul>
@@ -35,7 +35,7 @@
     id="holding"
   >
     <ul>
-      <li class="pl-3" *ngFor="let link of links">
+      <li class="ps-3" *ngFor="let link of links">
         <a [href]="link.link">{{ link.label }}</a>
       </li>
     </ul>

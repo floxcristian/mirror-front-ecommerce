@@ -19,7 +19,7 @@
           !sinStockSuficienteDespacho ||
           !sinStockSuficienteTiendaActual)
       "
-      class="btn btn-secondary btn-lg btn-block text-center btn-add-cart button-primary-medium-large w-50"
+      class="btn btn-secondary btn-lg w-100 text-center btn-add-cart button-primary-medium-large w-50"
       [ngClass]="{ 'btn-loading': addingToCart }"
       appClick
       (click)="addToCart()"
@@ -32,7 +32,7 @@
       disabled
       name="Agregar "
       type="button"
-      class="btn btn-warning btn-lg btn-block text-center btn-add-cart w-50"
+      class="btn btn-warning btn-lg w-100 text-center btn-add-cart w-50"
       [ngClass]="{ 'btn-loading': addingToCart }"
       appClick
       style="background-color: #8a8984"
@@ -50,7 +50,7 @@
       disabled
       name="Agregar "
       type="button "
-      class="btn btn-warning btn-lg btn-block text-center btn-add-cart w-100"
+      class="btn btn-warning btn-lg w-100 text-center btn-add-cart w-100"
       [ngClass]="{ 'btn-loading': addingToCart }"
       appClick
       style="background-color: #8a8984"

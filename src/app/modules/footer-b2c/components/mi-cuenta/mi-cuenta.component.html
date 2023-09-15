@@ -1,16 +1,16 @@
 <div *ngIf="screenWidth >= 1025">
-  <h6 class="font-weight-bold pl-3">Mi cuenta</h6>
+  <h6 class="font-weight-bold ps-3">Mi cuenta</h6>
   <hr class="my-2" style="background-color: #646462" />
 
   <div>
     <ul>
-      <li class="pl-3" *ngFor="let link of links">
+      <li class="ps-3" *ngFor="let link of links">
         <span class="link" (click)="validarCuenta(link)">{{ link.label }}</span>
       </li>
     </ul>
   </div>
 
-  <div class="pl-3">
+  <div class="ps-3">
     <!-- <img src="../../../../../assets/images/mutual_01.png" style="width: 60px" /> -->
     <picture>
       <source srcset="assets/images/mutual_01.webp" type="image/webp" />
@@ -43,7 +43,7 @@
     id="account"
   >
     <ul>
-      <li class="pl-3" *ngFor="let link of links">
+      <li class="ps-3" *ngFor="let link of links">
         <span class="link" (click)="validarCuenta(link)">{{ link.label }}</span>
       </li>
     </ul>

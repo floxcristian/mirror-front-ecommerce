@@ -145,7 +145,7 @@
                     formUsuario.controls['rut'].invalid &&
                     formUsuario.controls['rut'].touched
                   "
-                  class="text-error-form-2 float-left"
+                  class="text-error-form-2 float-start"
                 >
                   El RUT ingresado no es válido
                 </p>
@@ -222,7 +222,7 @@
                   formUsuario.controls['rut'].invalid &&
                   formUsuario.controls['rut'].touched
                 "
-                class="text-error-form-2 float-left"
+                class="text-error-form-2 float-start"
               >
                 El RUT ingresado no es válido
               </p>
@@ -246,7 +246,7 @@
                   formUsuario.controls['contactRut'].invalid &&
                   formUsuario.controls['contactRut'].touched
                 "
-                class="text-danger float-left"
+                class="text-danger float-start"
               >
                 El RUT ingresado no es válido
               </p>
@@ -434,7 +434,7 @@
           <div class="form-group">
             <div class="row m-0">
               <div
-                class="col-md-9 pl-0"
+                class="col-md-9 ps-0"
                 [class.pr-0]="innerWidth < 427"
                 [class.mb-3]="innerWidth < 427"
               >
@@ -463,7 +463,7 @@
           <div class="form-group">
             <div class="row m-0">
               <div
-                class="col-md-6 pl-0"
+                class="col-md-6 ps-0"
                 [class.pr-0]="innerWidth < 427"
                 [class.mb-3]="innerWidth < 427"
               >
@@ -475,7 +475,7 @@
                 />
               </div>
 
-              <div class="col-md-6 pr-0" [class.pl-0]="innerWidth < 427">
+              <div class="col-md-6 pr-0" [class.ps-0]="innerWidth < 427">
                 <ng-select
                   [clearable]="false"
                   [searchable]="true"
@@ -582,7 +582,7 @@
               loadingForm ||
               !emailValidate.correoValido
             "
-            class="btn btn-lg btn-secondary btn-block text-center"
+            class="btn btn-lg btn-secondary w-100 text-center"
           >
             REGISTRARSE
           </button>
@@ -610,7 +610,7 @@
               [disabled]="
                 !formUsuario.valid || loadingForm || !emailValidate.correoValido
               "
-              class="btn btn-lg btn-secondary btn-block text-center"
+              class="btn btn-lg btn-secondary w-100 text-center"
             >
               REGISTRARSE
             </button>

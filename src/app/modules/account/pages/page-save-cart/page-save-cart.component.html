@@ -1,7 +1,7 @@
 <div
   class="top-bar-categories d-flex align-items-center mb-3"
   [class.p-0]="innerWidth < 450"
-  [class.pl-3]="innerWidth < 450"
+  [class.ps-3]="innerWidth < 450"
   [class.pr-3]="innerWidth < 450"
   (window:resize)="onResize($event)"
 >
@@ -10,7 +10,7 @@
     <h5>Carros Guardados</h5>
   </div>
   <div
-    class="float-right"
+    class="float-end"
     *ngIf="lstCart && lstCart.length > 0 && totalPaginas > 1"
   >
     <button
@@ -145,7 +145,7 @@
                 data-parent="#DetalleCarro"
               >
                 <div
-                  class="border-left border-right border-bottom d-flex flex-wrap justify-content-center flex-column"
+                  class="border-start border-end border-bottom d-flex flex-wrap justify-content-center flex-column"
                 >
                   <div
                     class="d-sm-flex d-block align-items-center flex-grow-1 flex-shrink-1 border-bottom"

@@ -54,7 +54,7 @@
               style="border: 1px solid #aaa"
             >
               <div
-                class="col float-right"
+                class="col float-end"
                 *ngIf="product.cyber || product.cyberMonday"
                 style="position: absolute; top: 2px; right: 2px; z-index: 2"
               >
@@ -71,7 +71,7 @@
                     src="assets/images/cyberMondaySquare.png"
                     height="100px"
                     width="100px"
-                    class="float-right"
+                    class="float-end"
                   />
                 </picture>
 
@@ -91,7 +91,7 @@
                     alt=""
                     height="80px"
                     width="80px"
-                    class="float-right"
+                    class="float-end"
                   />
                 </picture>
               </div>
@@ -104,7 +104,7 @@
                 "
               >
                 <div
-                  class="float-right"
+                  class="float-end"
                   *ngIf="
                     product.marca == 'BLACKSMITH' ||
                     product.marca == 'SUNTECH' ||
@@ -159,7 +159,7 @@
 
     <!-- DESKTOP  TABLET -->
     <!-- Información Ficha -->
-    <div class="col-12 col-lg-6 pl-lg-4 mt-3 mt-lg-0 d-none d-sm-block">
+    <div class="col-12 col-lg-6 ps-lg-4 mt-3 mt-lg-0 d-none d-sm-block">
       <div>
         <div class="d-flex justify-content-between mb-1">
           <div>
@@ -313,7 +313,7 @@
                     "
                     name="Agregar "
                     type="button "
-                    class="btn btn-secondary btn-lg btn-block text-center btn-add-cart w-100"
+                    class="btn btn-secondary btn-lg w-100 text-center btn-add-cart w-100"
                     [ngClass]="{
                       'btn-loading': addingToCart
                     }"
@@ -327,7 +327,7 @@
                     disabled
                     name="Agregar "
                     type="button"
-                    class="btn btn-warning btn-lg btn-block text-center btn-add-cart w-100"
+                    class="btn btn-warning btn-lg w-100 text-center btn-add-cart w-100"
                     [ngClass]="{ 'btn-loading': addingToCart }"
                     appClick
                     style="background-color: #8a8984"
@@ -348,7 +348,7 @@
                     disabled
                     name="Agregar "
                     type="button "
-                    class="btn btn-warning btn-lg btn-block text-center btn-add-cart w-100"
+                    class="btn btn-warning btn-lg w-100 text-center btn-add-cart w-100"
                     [ngClass]="{ 'btn-loading': addingToCart }"
                     appClick
                     style="background-color: #8a8984"
@@ -440,7 +440,7 @@
 
     <!-- MOBILE -->
     <!-- Información Ficha -->
-    <div class="col-12 col-lg-6 pl-lg-4 mt-0 mt-lg-0 d-block d-sm-none">
+    <div class="col-12 col-lg-6 ps-lg-4 mt-0 mt-lg-0 d-block d-sm-none">
       <div>
         <div class="d-flex justify-content-between align-items-center">
           <div class="product__prices my-3">
@@ -638,7 +638,7 @@
     <button
       name="modalRefStock "
       type="button "
-      class="close pull-right"
+      class="btn-close pull-right"
       aria-label="Close "
       (click)="modalRefStock.hide()"
     >
@@ -650,7 +650,7 @@
 
 <ng-template #modalEscala>
   <div class="modal-header">
-    <button type="button" class="close" (click)="modalEscalaRef.hide()">
+    <button type="button" class="btn-close" (click)="modalEscalaRef.hide()">
       <i class="fas fa-times-circle" style="color: #00549d"></i>
     </button>
   </div>

@@ -34,7 +34,7 @@
           <label class="me-3">Seleccione el archivo Excel: </label>
           <input
             formControlName="file"
-            class="pl-0 form-control-lg"
+            class="ps-0 form-control-lg"
             [disabled]="procesandoExcel"
             (change)="onFileChange($event)"
             type="file"
@@ -49,7 +49,7 @@
       >
         <div class="col-6">
           <button
-            class="btn btn-link btn-sm btn-block text-decoration-none"
+            class="btn btn-link btn-sm w-100 text-decoration-none"
             (click)="creandoLista = true; seleccionandoLista = false"
           >
             <i class="fas fa-plus fa-lg fa-fw me-2"></i>Crear nueva lista
@@ -58,7 +58,7 @@
 
         <div class="col-6">
           <button
-            class="btn btn-link btn-sm btn-block text-decoration-none"
+            class="btn btn-link btn-sm w-100 text-decoration-none"
             (click)="creandoLista = false; seleccionandoLista = true"
           >
             <i class="fas fa-list fa-lg fa-fw me-2"></i>Seleccionar lista
@@ -171,11 +171,11 @@
           style="max-height: 200px; overflow-y: scroll"
         >
           <div
-            class="border-left border-right border-bottom py-2 px-3 d-flex flex-wrap justify-content-center"
+            class="border-start border-end border-bottom py-2 px-3 d-flex flex-wrap justify-content-center"
           >
             <div class="producto" *ngFor="let item of productosCargados">
               <div>
-                <div class="me-2 float-left">
+                <div class="me-2 float-start">
                   <a
                     [routerLink]="
                       rootService.product(
@@ -243,7 +243,7 @@
           style="max-height: 200px; overflow-y: scroll"
         >
           <div
-            class="border-left border-right border-bottom pt-2 pb-2 pl-3 pr-3 d-flex flex-wrap justify-content-center"
+            class="border-start border-end border-bottom pt-2 pb-2 ps-3 pr-3 d-flex flex-wrap justify-content-center"
           >
             <div class="producto" *ngFor="let item of productosNoCargados">
               <div>
