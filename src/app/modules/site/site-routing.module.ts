@@ -4,16 +4,12 @@ import { Routes, RouterModule } from '@angular/router';
 // Pages
 import { PageAboutUsComponent } from './pages/page-about-us/page-about-us.component';
 import { PageContactUsComponent } from './pages/page-contact-us/page-contact-us.component';
-import { PageContactUsAltComponent } from './pages/page-contact-us-alt/page-contact-us-alt.component';
 import { PageTermsComponent } from './pages/page-terms/page-terms.component';
 import { PagePolicyComponent } from './pages/page-policy/page-policy.component';
 import { PageStoresComponent } from './pages/page-stores/page-stores.component';
 import { PageSelectCatalogComponent } from './pages/page-select-catalog/page-select-catalog.component';
 import { PageRecoveringComponent } from './pages/page-recover/page-recover.component';
 import { PageRecoveringChangeComponent } from './pages/page-recover-change/page-recover-change.component';
-import { PageFaqComponent } from './pages/page-faq/page-faq.component';
-import { PageComponentsComponent } from './pages/page-components/page-components.component';
-import { PageTypographyComponent } from './pages/page-typography/page-typography.component';
 import { PageBlogComponent } from './pages/page-blog/page-blog.component';
 import { PageInicioSesionComponent } from './pages/page-inicio-sesion/page-inicio-sesion.component';
 import { PageRegistroUsuarioComponent } from './pages/page-registro-usuario/page-registro-usuario.component';
@@ -35,10 +31,6 @@ const routes: Routes = [
   {
     path: 'contacto',
     component: PageContactUsComponent,
-  },
-  {
-    path: 'contact-us-alt',
-    component: PageContactUsAltComponent,
   },
   {
     path: 'termino-y-condiciones',
@@ -68,18 +60,6 @@ const routes: Routes = [
   {
     path: 'change/:id',
     component: PageRecoveringChangeComponent,
-  },
-  {
-    path: 'faq',
-    component: PageFaqComponent,
-  },
-  {
-    path: 'components',
-    component: PageComponentsComponent,
-  },
-  {
-    path: 'typography',
-    component: PageTypographyComponent,
   },
   {
     path: 'blog',

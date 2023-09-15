@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class PageStoresComponent {
     isCollapsed = false;
-    rows: string[] = [];
+    rows: any[] = [];
     innerWidth: number;
     tienda: any;
 
