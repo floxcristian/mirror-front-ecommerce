@@ -92,9 +92,9 @@
           <span class="d-blok">{{ item.nombre }}</span>
           <span class="d-block">{{ item.sku }}</span>
         </th>
-        <th class="text-right">{{ item.precio | currencyFormat }}</th>
-        <th class="text-right">{{ item.cantidad }}</th>
-        <th class="text-right">
+        <th class="text-end">{{ item.precio | currencyFormat }}</th>
+        <th class="text-end">{{ item.cantidad }}</th>
+        <th class="text-end">
           {{ item.cantidad * item.precio | currencyFormat }}
         </th>
       </tr>

@@ -15,8 +15,8 @@
     *ngIf="loadingForm"
     [text]="'Actualizando Dirección'"
   ></app-loading-element>
-  <div class="row mb-3">
-    <div class="col-12">
+  <div class="row g-3">
+    <div class="col-12 mb-3">
       <app-map
         (clearAdress)="clearAddress()"
         [tienda]="address"
@@ -27,8 +27,8 @@
     </div>
   </div>
   <form [formGroup]="formDireccion">
-    <div class="form-row">
-      <div class="form-group col-md-8">
+    <div class="row g-3">
+      <div class="col-md-8 mb-3">
         <label>Calle (*)</label>
         <input
           type="text"
@@ -38,7 +38,7 @@
         />
       </div>
 
-      <div class="form-group col-md-4">
+      <div class="col-md-4 mb-3">
         <label for="inputPassword4">Número</label>
         <input
           type="number"
@@ -51,7 +51,10 @@
           appPhoneChar
         />
       </div>
-      <div class="form-group col-md-6">
+
+      <!-- Start::fila de departamento y comuna -->
+
+      <div class="col-md-6 mb-3">
         <label>Departamento</label>
         <input
           type="text"
@@ -61,7 +64,7 @@
         />
       </div>
 
-      <div class="form-group col-md-6">
+      <div class="col-md-6 mb-3">
         <label>Comuna (*)</label>
         <ng-select
           [clearable]="false"
@@ -78,7 +81,9 @@
         </ng-select>
       </div>
 
-      <div class="form-group col-md-6" hidden>
+      <!-- End::fila de departamento y comuna -->
+
+      <div class="col-md-6 mb-3" hidden>
         <label for="inputPassword4">Localización (*)</label>
         <div *ngIf="!localidades">
           <p>Seleccione una comuna para ver localidades</p>
@@ -99,7 +104,7 @@
           </ng-select>
         </div>
       </div>
-      <div class="form-group col-md-12">
+      <div class="col-md-12 mb-3">
         <label for="validationTextarea">Referencia</label>
         <textarea
           class="form-control"

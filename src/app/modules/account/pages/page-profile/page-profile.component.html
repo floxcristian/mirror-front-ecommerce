@@ -88,7 +88,7 @@
         </app-loading-element>
         <div class="row mt-3">
           <div class="col-5 title2 m-0"><span>Precios productos:</span></div>
-          <div class="col-7 text-left">
+          <div class="col-7 text-start">
             <div class="form-check form-switch">
               <input
                 type="checkbox"
@@ -119,7 +119,7 @@
             <span>Dirección despacho predeterminada:</span>
           </div>
           <div class="col-7 d-flex align-items-center">
-            <div class="text-left">
+            <div class="text-start">
               {{
                 direccionDespacho?.calle + " " + direccionDespacho?.numero
                   | capitalizeFirst
@@ -152,7 +152,7 @@
           </div>
           <div
             class="col-6 col-md-6"
-            [class.text-right]="innerWidth > 450"
+            [class.text-end]="innerWidth > 450"
             [class.p-0]="innerWidth < 450"
           >
             <div class="btn-div-group ms-2">
@@ -174,36 +174,36 @@
           <div class="dropcart__totals" *ngFor="let item of addresses">
             <table>
               <tr>
-                <th class="font-weight-bold titilo-w">Tipo</th>
-                <td class="text-left">{{ item.tipo }}</td>
+                <th class="fw-bold titilo-w">Tipo</th>
+                <td class="text-start">{{ item.tipo }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Comuna</th>
-                <td class="text-left">{{ item.comuna }}</td>
+                <th class="fw-bold titilo-w">Comuna</th>
+                <td class="text-start">{{ item.comuna }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Localidad</th>
-                <td class="text-left">{{ item.localidad }}</td>
+                <th class="fw-bold titilo-w">Localidad</th>
+                <td class="text-start">{{ item.localidad }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Calle</th>
-                <td class="text-left">{{ item.calle }}</td>
+                <th class="fw-bold titilo-w">Calle</th>
+                <td class="text-start">{{ item.calle }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Número</th>
-                <td class="text-left">{{ item.numero }}</td>
+                <th class="fw-bold titilo-w">Número</th>
+                <td class="text-start">{{ item.numero }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Depto.</th>
-                <td class="text-left">{{ item.deptocasa }}</td>
+                <th class="fw-bold titilo-w">Depto.</th>
+                <td class="text-start">{{ item.deptocasa }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Referencia</th>
-                <td class="text-left">{{ item.referencia }}</td>
+                <th class="fw-bold titilo-w">Referencia</th>
+                <td class="text-start">{{ item.referencia }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Acciones</th>
-                <td class="text-left">
+                <th class="fw-bold titilo-w">Acciones</th>
+                <td class="text-start">
                   <button
                     *ngIf="item.tipo === 'Despacho'"
                     class="btn btn-sm btn-link p-0 me-3"
@@ -295,7 +295,7 @@
             </div>
             <div
               class="col-6 col-md-6"
-              [class.text-right]="innerWidth > 450"
+              [class.text-end]="innerWidth > 450"
               [class.p-0]="innerWidth < 450"
             >
               <div class="btn-div-group ms-2">
@@ -317,22 +317,22 @@
             <div class="dropcart__totals" *ngFor="let item of contacts">
               <table>
                 <tr>
-                  <th class="font-weight-bold titilo-w">Rut</th>
-                  <td class="text-left">{{ item.contactRut }}</td>
+                  <th class="fw-bold titilo-w">Rut</th>
+                  <td class="text-start">{{ item.contactRut }}</td>
                 </tr>
                 <tr>
-                  <th class="font-weight-bold titilo-w">Nombre</th>
-                  <td class="text-left">
+                  <th class="fw-bold titilo-w">Nombre</th>
+                  <td class="text-start">
                     {{ item.nombre }} {{ item.apellido }}
                   </td>
                 </tr>
                 <tr>
-                  <th class="font-weight-bold titilo-w">Cargo</th>
-                  <td class="text-left">{{ item.cargo }}</td>
+                  <th class="fw-bold titilo-w">Cargo</th>
+                  <td class="text-start">{{ item.cargo }}</td>
                 </tr>
                 <tr>
-                  <th class="font-weight-bold titilo-w">Telefono</th>
-                  <td class="text-left">
+                  <th class="fw-bold titilo-w">Telefono</th>
+                  <td class="text-start">
                     <a
                       *ngIf="item.telefono != '0'"
                       [href]="
@@ -346,8 +346,8 @@
                   </td>
                 </tr>
                 <tr>
-                  <th class="font-weight-bold titilo-w">Email</th>
-                  <td class="text-left">
+                  <th class="fw-bold titilo-w">Email</th>
+                  <td class="text-start">
                     <a
                       *ngIf="item.correo != '0'"
                       [href]="'mailto:' + item.correo"
@@ -358,14 +358,14 @@
                   </td>
                 </tr>
                 <tr>
-                  <th class="font-weight-bold titilo-w">Tipo</th>
-                  <td class="text-left">
+                  <th class="fw-bold titilo-w">Tipo</th>
+                  <td class="text-start">
                     <a href="javascript:"> {{ item.contactoDe }}</a>
                   </td>
                 </tr>
                 <tr>
-                  <th class="font-weight-bold titilo-w">Acciones</th>
-                  <td class="text-left">
+                  <th class="fw-bold titilo-w">Acciones</th>
+                  <td class="text-start">
                     <button
                       *ngIf="item.contactoDe === 'COM'"
                       class="btn btn-sm btn-link p-0 me-3"

@@ -89,4 +89,20 @@
   <body class="blue" id="body">
     <app-root></app-root>
   </body>
+  <script type="text/javascript">
+    (function () {
+      var proto = "https:";
+      var node = document.createElement("script");
+      node.type = "text/javascript";
+      node.async = true;
+      node.src =
+        proto +
+        "//webchat-cls3-cl.i6.inconcertcc.com/v3/click_to_chat?token=6436ADDF32C3F2240B1FC31C54D6AB3B";
+      var s = document.getElementsByTagName("script")[0];
+
+      if (window.location.href.indexOf("inicio") > -1) {
+        s.parentNode.insertBefore(node, s);
+      }
+    })();
+  </script>
 </html>

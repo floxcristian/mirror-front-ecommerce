@@ -27,7 +27,7 @@
         <div class="cart-product col-5 my-auto">
           <div class="text-truncate">
             <span
-              class="product-title font-weight-bold"
+              class="product-title fw-bold"
               title=" {{ item.ProductCart.nombre | capitalizeFirst }}"
             >
               {{ item.ProductCart.nombre | capitalizeFirst }}
@@ -44,7 +44,7 @@
           <div class="clearfix"></div>
 
           <span class="product-price">
-            <span class="price-save font-weight-bold">
+            <span class="price-save fw-bold">
               {{
                 (!isVacio(usuario.iva)
                   ? usuario.iva
@@ -78,7 +78,7 @@
         </div>
 
         <div class="cart-price col-2 my-auto text-center">
-          <span class="cart-price-value font-weight-bold"
+          <span class="cart-price-value fw-bold"
             >{{
               (!isVacio(usuario.iva)
                 ? (usuario.iva

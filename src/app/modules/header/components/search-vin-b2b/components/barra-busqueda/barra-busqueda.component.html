@@ -167,7 +167,7 @@
                 <div class="d-flex align-items-center">
                   <div class="flex-shrink-1 flex-grow-1">
                     <a
-                      class="dropdown-item pr-0"
+                      class="dropdown-item ps-0"
                       style="font-size: 1rem"
                       (click)="seleccionaFiltro(item); dropdown.hide()"
                     >
@@ -177,7 +177,7 @@
                   </div>
                   <div>
                     <button
-                      class="btn btn-sm btn-link pr-2"
+                      class="btn btn-sm btn-link ps-2"
                       tooltip="Agregar a mi flota"
                       (click)="agregarVinFlota(item)"
                     >
@@ -253,7 +253,7 @@
         >
           <div class="item item-no-found">
             <span> No se encontraron coincidencias para </span>
-            <span class="font-weight-bold">
+            <span class="fw-bold">
               <font color="blue">{{ textToSearch | capitalizeFirst }}</font>
             </span>
           </div>
@@ -331,7 +331,7 @@
                   *ngIf="(productosEncontrados?.length || 0) > 0"
                 >
                   <div
-                    class="font-weight-bold text-uppercase"
+                    class="fw-bold text-uppercase"
                     style="
                       padding: 0.5rem 0.75rem;
                       font-size: 0.9rem;
@@ -358,14 +358,14 @@
             </div>
           </div>
           <div
-            class="col-2 mb-2 pr-4"
+            class="col-2 mb-2 ps-4"
             style="
               border-left: solid 1px #094cac;
               border-right: solid 1px #094cac;
             "
           >
             <div
-              class="font-weight-bold text-uppercase"
+              class="fw-bold text-uppercase"
               style="padding: 0.5rem 0.75rem; font-size: 0.9rem; color: #094cac"
             >
               Marcas
@@ -393,7 +393,7 @@
           </div>
           <div class="col">
             <div
-              class="font-weight-bold text-uppercase"
+              class="fw-bold text-uppercase"
               style="padding: 0.5rem 0.75rem; font-size: 0.9rem; color: #094cac"
             >
               Resultados de Productos
@@ -431,7 +431,7 @@
                 <div class="row">
                   <div
                     *ngIf="item?.precio?.precioComun == item?.precio?.precio"
-                    class="col-12 font-weight-bold"
+                    class="col-12 fw-bold"
                     style="color: #094cac; font-size: 1.4rem"
                   >
                     {{ item?.precio?.precio | currencyFormat }} <em> c/iva </em>
@@ -439,7 +439,7 @@
 
                   <div
                     *ngIf="item?.precio?.precioComun != item?.precio?.precio"
-                    class="text-danger font-weight-bold col-12"
+                    class="text-danger fw-bold col-12"
                     style="font-size: 1.4rem"
                   >
                     {{ item?.precio?.precio | currencyFormat }} <em> c/iva </em>
@@ -465,7 +465,7 @@
           *ngIf="(productosEncontrados?.length || 0) > 0"
           style="border-top: solid 1px #094cac"
         >
-          <div class="col-12 products-list-search pr-5 p-2">
+          <div class="col-12 products-list-search ps-5 p-2">
             <div class="item justify-content-end d-flex">
               <a
                 (click)="menuSearch.toggle(); blurInput(); seleccionado = false"

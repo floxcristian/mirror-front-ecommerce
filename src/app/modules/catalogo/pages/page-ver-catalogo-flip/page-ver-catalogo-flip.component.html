@@ -112,7 +112,7 @@
               </div>
 
               <div class="container">
-                <div class="row ps-3 pr-3">
+                <div class="row ps-3 ps-3">
                   <div
                     class="col-6 col-sm-6"
                     *ngIf="pagina[0] && pagina[0].productos"
@@ -343,7 +343,7 @@
     </div>
   </div>
   <div class="row justify-content-center mt-3">
-    <div class="col-md-1 col-sm-4 pr-1">
+    <div class="col-md-1 col-sm-4 ps-1">
       <div
         *ngIf="!cargandoCat && tipoCatalogo != 'Automatico'"
         class="float-start align-middle"
@@ -668,7 +668,7 @@
                         alt="www.implementos.cl"
                       />
                     </div>
-                    <div class="text-left footerLeft" *ngIf="!folio">
+                    <div class="text-start footerLeft" *ngIf="!folio">
                       <img
                         class="p-1"
                         style="height: 90%"
@@ -688,14 +688,14 @@
               <ng-template #otroFooter>
                 <div class="row">
                   <div class="col-md-12">
-                    <div class="text-right" *ngIf="folio">
+                    <div class="text-end" *ngIf="folio">
                       <img
                         class="img-fluid"
                         src="./assets/images/catalogo/header-footer/footer1.jpg"
                         alt="www.implementos.cl"
                       />
                     </div>
-                    <div class="footerRight text-right" *ngIf="!folio">
+                    <div class="footerRight text-end" *ngIf="!folio">
                       <img
                         class="p-1"
                         style="height: 90%"

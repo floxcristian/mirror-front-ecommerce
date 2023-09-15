@@ -41,7 +41,7 @@
         class="col-12 pt-1 me-1 textToSearch col-xs-12 textToSearchLocation"
         [hidden]="HideOnFicha() ? true : false"
       >
-        <div class="text-left">
+        <div class="text-start">
           <div style="font-size: 18px">
             (<strong>{{ totalRegistros }}</strong
             >) Resultados en:
@@ -75,7 +75,7 @@
         class="col-12 pt-1 me-1 textToSearch col-xs-12 textToSearchLocation"
         [hidden]="HideOnFicha() ? true : false"
       >
-        <div class="text-left">
+        <div class="text-start">
           <div style="font-size: 15px">
             (<strong>{{ totalRegistros }}</strong
             >) Resultados en:
@@ -91,7 +91,7 @@
 
     <div
       *ngIf="totalRegistros && totalRegistros === 0 && !breadcrumbs[0]?.label"
-      class="col-12 pt-1 me-1 font-weight-bold textToSearch col-xs-12 textToSearchLocation"
+      class="col-12 pt-1 me-1 fw-bold textToSearch col-xs-12 textToSearchLocation"
       [hidden]="HideOnFicha() ? true : false"
     >
       <div class="container">
@@ -112,7 +112,7 @@
             <ng-container *ngIf="innerWidth >= 774">
               <li
                 *ngIf="!last"
-                class="breadcrumb-item pr-2 d-flex align-items-center"
+                class="breadcrumb-item ps-2 d-flex align-items-center"
               >
                 <a [routerLink]="breadcrumb.url">{{ breadcrumb?.label }}</a>
                 <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
@@ -123,13 +123,13 @@
             </ng-container>
             <li
               *ngIf="last"
-              class="breadcrumb-item pr-2 d-flex align-items-center"
+              class="breadcrumb-item ps-2 d-flex align-items-center"
             >
               <ng-container *ngIf="innerWidth < 774">
                 <i class="fas fa-chevron-right" style="margin-right: 10px"></i>
                 <ng-container *ngIf="breadcrumbs.length == 1">
                   <a
-                    class="text-left"
+                    class="text-start"
                     [routerLink]="breadcrumbs[breadcrumbs.length - 1].url"
                     >{{ breadcrumbs[breadcrumbs.length - 1].label }}</a
                   >
@@ -137,7 +137,7 @@
 
                 <ng-container *ngIf="breadcrumbs.length > 1">
                   <a
-                    class="text-left"
+                    class="text-start"
                     [routerLink]="breadcrumbs[breadcrumbs.length - 2].url"
                     >{{ breadcrumbs[breadcrumbs.length - 2].label }}</a
                   >

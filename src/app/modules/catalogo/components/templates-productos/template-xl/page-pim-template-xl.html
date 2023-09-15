@@ -42,7 +42,7 @@
 
         <div
           *ngIf="!imagen && plana.productos.atributos[5].valor != '0'"
-          class="pr-0 mb-1"
+          class="ps-0 mb-1"
           style="
             color: #000000;
             font-size: 20px;
@@ -57,7 +57,7 @@
 
         <div
           *ngIf="plana.productos.atributos[5].valor == '0'"
-          class="pr-0 mb-1"
+          class="ps-0 mb-1"
           style="
             color: #000000;
             font-size: 20px;
@@ -71,7 +71,7 @@
         </div>
 
         <div
-          class="col-md-12 col-sm-12 pr-0 mb-1 card-headertext-center pb-1"
+          class="col-md-12 col-sm-12 ps-0 mb-1 card-headertext-center pb-1"
           style="
             text-align: left;
             line-height: 1;
@@ -84,7 +84,7 @@
         </div>
 
         <div
-          class="col-md-12 col-sm-12 pr-0 mb-1"
+          class="col-md-12 col-sm-12 ps-0 mb-1"
           style="
             font-size: 20px;
             text-align: left;
@@ -277,7 +277,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <td class="p-0 txtNormal font-weight-bold">
+                      <td class="p-0 txtNormal fw-bold">
                         {{ preciosLista[2].desde }} {{ preciosLista[2].hasta }}
                         UN
                       </td>
@@ -306,7 +306,7 @@
                       </td>
                     </tr>
                     <tr *ngIf="!precioEspecial">
-                      <td class="p-0 txtNormal text-left">Unidad</td>
+                      <td class="p-0 txtNormal text-start">Unidad</td>
                       <td
                         class="p-0 pull-right txtNormal"
                         title="Precio normal"
@@ -315,7 +315,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <td class="p-0 txtNormal font-weight-bold text-left">
+                      <td class="p-0 txtNormal fw-bold text-start">
                         {{ preciosLista[1].desde }} {{ preciosLista[1].hasta }}
                         UN
                       </td>
@@ -339,9 +339,7 @@
                       <td class="p-0 pull-right txtNormal">&nbsp;</td>
                     </tr>
                     <tr *ngIf="precioEspecial">
-                      <td class="p-0 txtNormal font-weight-bold text-left">
-                        Unidad
-                      </td>
+                      <td class="p-0 txtNormal fw-bold text-start">Unidad</td>
                       <td
                         class="p-0 pull-right txtDestacado"
                         title="Precio con descuento cliente"
@@ -350,9 +348,7 @@
                       </td>
                     </tr>
                     <tr *ngIf="!precioEspecial">
-                      <td class="p-0 txtNormal font-weight-bold text-left">
-                        Unidad
-                      </td>
+                      <td class="p-0 txtNormal fw-bold text-start">Unidad</td>
                       <td
                         class="p-0 pull-right txtPrecioNormal"
                         title="Precio normal"

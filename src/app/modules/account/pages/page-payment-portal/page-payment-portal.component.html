@@ -29,7 +29,7 @@
           <div class="content-icon mb-3">
             <i class="fas fa-receipt"></i>
           </div>
-          <p class="font-weight-bold">
+          <p class="fw-bold">
             Se ha generado correctamente el cupon de pago, Una vez validado se
             verá reflejado en sus documentos. (Esto puede tomar unos minutos.)
           </p>
@@ -55,7 +55,7 @@
         ></app-loading-element>
         <div class="mb-3 row">
           <div class="col-lg-4">
-            <span class="font-weight-bold"> Pagar total facturas</span>
+            <span class="fw-bold"> Pagar total facturas</span>
             <div class="btn-div-group ms-2">
               <div class="btn-div">{{ totalDocuments | currencyFormat }}</div>
               <span
@@ -71,8 +71,8 @@
             <h5>{{ user.company }}</h5>
             <h6>Rut: {{ user.rut }}</h6>
           </div>
-          <div class="col-lg-4" [class.text-right]="innerWidth > 450">
-            <span class="font-weight-bold">Pagar facturas vencidas </span>
+          <div class="col-lg-4" [class.text-end]="innerWidth > 450">
+            <span class="fw-bold">Pagar facturas vencidas </span>
             <div class="btn-div-group ms-2">
               <div class="btn-div">{{ totalExpired | currencyFormat }}</div>
               <span
@@ -95,33 +95,33 @@
           >
             <table>
               <tr>
-                <th class="font-weight-bold titilo-w">Nota venta</th>
-                <td class="text-left">{{ item.nota_venta }}</td>
+                <th class="fw-bold titilo-w">Nota venta</th>
+                <td class="text-start">{{ item.nota_venta }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Factura</th>
-                <td class="text-left">{{ item.folio }}</td>
+                <th class="fw-bold titilo-w">Factura</th>
+                <td class="text-start">{{ item.folio }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Fecha</th>
-                <td class="text-left">
+                <th class="fw-bold titilo-w">Fecha</th>
+                <td class="text-start">
                   {{ item.fechaCreacion | date : "dd-MM-yyyy" }}
                 </td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Vencimiento</th>
-                <td class="text-left">
+                <th class="fw-bold titilo-w">Vencimiento</th>
+                <td class="text-start">
                   {{ item.fechaVencimiento | date : "dd-MM-yyyy" }}
                 </td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Adeudado</th>
-                <td class="text-left">{{ item.saldo | currencyFormat }}</td>
+                <th class="fw-bold titilo-w">Adeudado</th>
+                <td class="text-start">{{ item.saldo | currencyFormat }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Estado</th>
+                <th class="fw-bold titilo-w">Estado</th>
                 <td
-                  class="text-left badge"
+                  class="text-start badge"
                   [ngClass]="{
                     'bg-danger': item.estado == 'VENCIDA',
                     'bg-warning': item.estado == 'PENDIENTE'
@@ -190,7 +190,7 @@
                 <td>{{ item.folio }}</td>
                 <td>{{ item.fechaCreacion | date : "dd-MM-yyyy" }}</td>
                 <td>{{ item.fechaVencimiento | date : "dd-MM-yyyy" }}</td>
-                <td class="text-right">{{ item.saldo | currencyFormat }}</td>
+                <td class="text-end">{{ item.saldo | currencyFormat }}</td>
                 <td>
                   <span
                     class="badge"
@@ -252,7 +252,7 @@
           <tbody>
             <tr *ngFor="let item of documentsSelected">
               <td>{{ item.folio }}</td>
-              <td class="text-right">{{ item.monto | currencyFormat }}</td>
+              <td class="text-end">{{ item.monto | currencyFormat }}</td>
             </tr>
           </tbody>
         </table>
@@ -291,7 +291,7 @@
     ></app-loading-element>
     <div class="content-total">
       <span> Monto a pagar </span>
-      <span class="font-weight-bold">
+      <span class="fw-bold">
         {{ totalToPay | currencyFormat }}
       </span>
     </div>

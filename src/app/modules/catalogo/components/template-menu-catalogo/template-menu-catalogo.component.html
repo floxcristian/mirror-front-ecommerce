@@ -1,10 +1,10 @@
 <div class="row mb-3">
-  <div class="col-1 p-0 text-right" *ngIf="tipoCatalogo === 'Automatico'">
+  <div class="col-1 p-0 text-end" *ngIf="tipoCatalogo === 'Automatico'">
     <a class="btn p2" (click)="owlCar.prev()"
       ><i class="fa-sharp fa-light fa-circle-chevron-left fa-2xl"></i
     ></a>
   </div>
-  <div class="col-1 p-0 text-left" *ngIf="tipoCatalogo != 'Automatico'">
+  <div class="col-1 p-0 text-start" *ngIf="tipoCatalogo != 'Automatico'">
     <a class="btn p2" (click)="owlCar.prev()"
       ><i class="fa-solid fa-chevron-left"></i
     ></a>
@@ -22,12 +22,12 @@
       </ng-container>
     </owl-carousel-o>
   </div>
-  <div class="col-1 p-0 text-left" *ngIf="tipoCatalogo === 'Automatico'">
+  <div class="col-1 p-0 text-start" *ngIf="tipoCatalogo === 'Automatico'">
     <a class="btn p2" (click)="owlCar.next()"
       ><i class="fa-sharp fa-light fa-circle-chevron-right fa-2xl"></i
     ></a>
   </div>
-  <div class="col-1 p-0 text-left" *ngIf="tipoCatalogo != 'Automatico'">
+  <div class="col-1 p-0 text-start" *ngIf="tipoCatalogo != 'Automatico'">
     <a class="btn p2" (click)="owlCar.next()"
       ><i class="fa-solid fa-chevron-right"></i
     ></a>

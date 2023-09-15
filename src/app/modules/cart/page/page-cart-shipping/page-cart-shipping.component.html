@@ -430,7 +430,7 @@
                           <div class="col-12 col-sm-5">
                             <button
                               type="button"
-                              class="btn btn-link text-left"
+                              class="btn btn-link text-start"
                               (click)="setRecibe('otra'); recibeOtraname = ''"
                               style="text-decoration: none; padding-left: 0px"
                             >
@@ -896,7 +896,7 @@
                                 <div class="col-12 col-sm-5">
                                   <button
                                     type="button"
-                                    class="btn btn-link text-left"
+                                    class="btn btn-link text-start"
                                     (click)="
                                       setRecibe('otra'); recibeOtraname = ''
                                     "
@@ -1094,7 +1094,7 @@
 
             <ng-container *ngIf="innerWidth >= 450">
               <div class="d-flex">
-                <div class="mt-3 col-6 ps-0 pr-1">
+                <div class="mt-3 col-6 ps-0 ps-1">
                   <a
                     [routerLink]="['/', 'carro-compra']"
                     (click)="removeDespacho()"
@@ -1104,7 +1104,7 @@
                   </a>
                 </div>
 
-                <div class="mt-3 col-6 pr-0 ps-1">
+                <div class="mt-3 col-6 ps-0 ps-1">
                   <!-- FIXME: no es variables recidDireccion es recib -->
                   <!--
                   <pre style="background-color: yellow">
@@ -1152,7 +1152,7 @@
                 !invitado
               "
             >
-              <div class="col-12 text-right">
+              <div class="col-12 text-end">
                 <div
                   class="cotizacionBtn"
                   (click)="documentType = 'cotizacion'"
@@ -1240,7 +1240,7 @@
 
             <ng-container *ngIf="innerWidth >= 450">
               <div class="d-flex">
-                <div class="mt-3 col-6 ps-0 pr-1">
+                <div class="mt-3 col-6 ps-0 ps-1">
                   <a
                     [routerLink]="['/', 'carro-compra']"
                     (click)="removeDespacho()"
@@ -1250,7 +1250,7 @@
                   </a>
                 </div>
 
-                <div class="mt-3 col-6 pr-0 ps-1">
+                <div class="mt-3 col-6 ps-0 ps-1">
                   <!-- FIXME: no es variables recidDireccion es recib -->
                   <!-- <button
                     name="next"
@@ -1361,7 +1361,7 @@
             >
               <strong>Resumen de tu Compra</strong>
             </div>
-            <div *ngIf="HideResumen()" class="col-3 text-right">
+            <div *ngIf="HideResumen()" class="col-3 text-end">
               <i
                 [class]="
                   showDetalleProductos
@@ -1398,7 +1398,7 @@
             <table>
               <tr style="font-size: 14px; color: #0063b9">
                 <th>Total</th>
-                <td class="font-weight-bold">
+                <td class="fw-bold">
                   {{ cart.total$ | async | currencyFormat }}
                 </td>
               </tr>
@@ -1406,13 +1406,13 @@
           </div>
         </div>
         <div class="row m-0">
-          <!-- <div class="mt-3 col-6 ps-0 pr-1" >
+          <!-- <div class="mt-3 col-6 ps-0 ps-1" >
                 <a [routerLink]="['/','carro-compra']" (click)="removeDespacho()" class="btn btn-border-primary w-100 btn-lg text-center" style="background-color:white;">
                     <i class="fas fa-chevron-left"></i> Anterior
                 </a>
             </div> -->
 
-          <div class="mt-3 col-12 pr-0 ps-1">
+          <div class="mt-3 col-12 ps-0 ps-1">
             <!-- FIXME: no es variables recidDireccion es recib -->
             <!-- <button
               name="next"
@@ -1455,7 +1455,7 @@
               Siguiente <i class="fas fa-chevron-right"></i>
             </button>
           </div>
-          <div class="mt-3 col-12 ps-0 pr-1">
+          <div class="mt-3 col-12 ps-0 ps-1">
             <a
               href="https://www.implementos.cl"
               style="color: #118565; text-align: center; font-weight: bold"

@@ -23,38 +23,38 @@
           >
             <table>
               <tr>
-                <th class="font-weight-bold titilo-w">Alias</th>
-                <td class="text-left">{{ item.alias }}</td>
+                <th class="fw-bold titilo-w">Alias</th>
+                <td class="text-start">{{ item.alias }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">VIN</th>
-                <td class="text-left">{{ item.vehiculo.chasis }}</td>
+                <th class="fw-bold titilo-w">VIN</th>
+                <td class="text-start">{{ item.vehiculo.chasis }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Tipo</th>
-                <td class="text-left">{{ item.vehiculo.tipo }}</td>
+                <th class="fw-bold titilo-w">Tipo</th>
+                <td class="text-start">{{ item.vehiculo.tipo }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Marca</th>
-                <td class="text-left">{{ item.vehiculo.marca }}</td>
+                <th class="fw-bold titilo-w">Marca</th>
+                <td class="text-start">{{ item.vehiculo.marca }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Modelo</th>
-                <td class="text-left">{{ item.vehiculo.modelo }}</td>
+                <th class="fw-bold titilo-w">Modelo</th>
+                <td class="text-start">{{ item.vehiculo.modelo }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Año</th>
-                <td class="text-left">{{ item.vehiculo.anio }}</td>
+                <th class="fw-bold titilo-w">Año</th>
+                <td class="text-start">{{ item.vehiculo.anio }}</td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Fecha Busqueda</th>
-                <td class="text-left">
+                <th class="fw-bold titilo-w">Fecha Busqueda</th>
+                <td class="text-start">
                   {{ item.createdAt | date : "dd/MM/yyyy HH:mm" }}
                 </td>
               </tr>
               <tr>
-                <th class="font-weight-bold titilo-w">Acciones</th>
-                <td class="text-left">
+                <th class="fw-bold titilo-w">Acciones</th>
+                <td class="text-start">
                   <button
                     class="btn btn-sm btn-link"
                     (click)="actualizarVinFlota(item)"

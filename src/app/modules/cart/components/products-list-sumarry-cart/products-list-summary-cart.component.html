@@ -22,9 +22,7 @@
     </div>
 
     <div class="dropcart__product-meta">
-      <span class="dropcart__product-cant font-weight-bold"
-        >{{ item.cantidad }} X
-      </span>
+      <span class="dropcart__product-cant fw-bold">{{ item.cantidad }} X </span>
       <span class="dropcart__product-price" style="margin-left: 10px">{{
         item.precio | currencyFormat
       }}</span>
@@ -32,7 +30,7 @@
   </div>
 
   <div
-    class="dropcart__product-info col-4 text-right"
+    class="dropcart__product-info col-4 text-end"
     [ngStyle]="{ 'font-size': innerWidth < 450 ? '14px' : '16px' }"
   >
     {{ item.precio * item.cantidad | currencyFormat }}

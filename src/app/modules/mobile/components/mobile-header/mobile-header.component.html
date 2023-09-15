@@ -139,7 +139,7 @@
         >
           <div class="item item-no-found p-0">
             <span> No se encontraron coicidencias para </span>
-            <span class="font-weight-bold">{{ texto | capitalizeFirst }}</span>
+            <span class="fw-bold">{{ texto | capitalizeFirst }}</span>
           </div>
         </div>
 
@@ -208,7 +208,7 @@
                   *ngIf="productosEncontrados.length > 0"
                 >
                   <div
-                    class="font-weight-bold text-uppercase"
+                    class="fw-bold text-uppercase"
                     style="
                       padding: 0.5rem 0rem;
                       font-size: 1.1rem;
@@ -229,7 +229,7 @@
               </div>
               <div class="col-12 mt-2" style="border-bottom: 1px solid #094cac">
                 <div
-                  class="font-weight-bold text-uppercase"
+                  class="fw-bold text-uppercase"
                   style="
                     padding: 0.5rem 0rem;
                     font-size: 1.1rem;
@@ -261,7 +261,7 @@
             <div class="row list-products">
               <div class="col-12">
                 <div
-                  class="font-weight-bold"
+                  class="fw-bold"
                   style="
                     padding: 0.5rem 0rem;
                     font-size: 1.1rem;
@@ -280,7 +280,7 @@
                         [src]="root.getUrlImagenMiniatura150(item)"
                         alt=""
                         width="70px"
-                        class="pr-3"
+                        class="ps-3"
                         style="color: #000"
                         [alt]="item.nombre | titlecase"
                       />
@@ -305,7 +305,7 @@
                     class="fas fa-search fa-fw"
                     style="color: #0063b9; margin-right: 5px"
                   ></i>
-                  <span class="font-weight-bold">
+                  <span class="fw-bold">
                     <font color="#0063b9">Ver todos los resultados</font>
                   </span>
                 </a>
@@ -321,7 +321,7 @@
 <ng-template #modalsearchVin>
   <div class="modal-body modal-body-search">
     <div class="text-center">
-      <p class="font-weight-bold">Buscar por VIN</p>
+      <p class="fw-bold">Buscar por VIN</p>
     </div>
     <div>
       <div class="row d-flex">

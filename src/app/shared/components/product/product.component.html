@@ -2,12 +2,12 @@
   <div class="product__content_232 d-flex row px-sm-4">
     <!--  NOMBRE VERSION MOVIL -->
     <div class="col-12 d-block d-sm-none">
-      <h5 class="mb-1 text-left">{{ product.nombre | capitalizeFirst }}</h5>
+      <h5 class="mb-1 text-start">{{ product.nombre | capitalizeFirst }}</h5>
     </div>
 
     <!-- DESKTOP  TABLET  MOBILE -->
     <!-- Imagenes -->
-    <div class="product__gallery mb-0 col-12 col-lg-6 pr-lg-0">
+    <div class="product__gallery mb-0 col-12 col-lg-6 ps-lg-0">
       <div class="product-gallery" *ngIf="showGallery">
         <div class="row justify-content-center">
           <div
@@ -48,7 +48,7 @@
               </div>
             </ngu-carousel>
           </div>
-          <div class="col-12 col-lg-9 pr-lg-0">
+          <div class="col-12 col-lg-9 ps-lg-0">
             <div
               class="product-gallery__featured position-relative"
               style="border: 1px solid #aaa"
@@ -278,7 +278,7 @@
 
             <span
               *ngIf="!product.precio"
-              class="d-block w-100 text-left text-uppercase"
+              class="d-block w-100 text-start text-uppercase"
               >...</span
             >
           </div>
@@ -287,7 +287,7 @@
           <form class="product__options" *ngIf="innerWidth > 450">
             <div class="mb-2">
               <div class="row m-0 align-items-center">
-                <div class="col-sm-5 pr-5">
+                <div class="col-sm-5 ps-5">
                   <div class="d-flex flex-column">
                     <span> Cantidad </span>
                     <app-input-number
@@ -485,7 +485,7 @@
 
             <span
               *ngIf="!product.precio"
-              class="d-block w-100 text-left text-uppercase"
+              class="d-block w-100 text-start text-uppercase"
               >...</span
             >
           </div>

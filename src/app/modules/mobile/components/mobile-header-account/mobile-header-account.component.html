@@ -47,14 +47,14 @@
       *ngIf="mostrarMenu && mostrarBienvenida"
       class="alert-session card p-4 mt-4"
     >
-      <p class="font-weight-bold title-sesion">
+      <p class="fw-bold title-sesion">
         Bienvenido
         <span *ngIf="this.usuario != null">
           {{ usuario.first_name | capitalizeFirst : true }}
           {{ usuario.last_name | capitalizeFirst : true }}
         </span>
       </p>
-      <p class="font-weight-bold">
+      <p class="fw-bold">
         Se han cargado tus precios especiales de {{ usuario.company }}
       </p>
       <p class="text-gray-2 subtitle mb-2">

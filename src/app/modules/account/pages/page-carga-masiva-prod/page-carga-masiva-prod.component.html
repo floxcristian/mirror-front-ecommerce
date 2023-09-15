@@ -41,7 +41,7 @@
         </div>
         <div class="row mt-2" *ngIf="archivo">
           <div
-            class="col-10 col-md-4 text-left text-truncate"
+            class="col-10 col-md-4 text-start text-truncate"
             style="font-size: 0.85rem"
           >
             <i [class]="archivo.icon + ' me-2'"></i> {{ archivo.nombre }}
@@ -55,7 +55,7 @@
         </div>
 
         <div class="row mt-4">
-          <div class="col-12 text-left">
+          <div class="col-12 text-start">
             <button
               name="Procesar"
               class="btn btn-secondary"
@@ -154,7 +154,7 @@
               data-parent="#DetalleResultados"
             >
               <div
-                class="border-start border-end border-bottom pt-2 pb-2 ps-3 pr-3 d-flex flex-wrap justify-content-center"
+                class="border-start border-end border-bottom pt-2 pb-2 ps-3 ps-3 d-flex flex-wrap justify-content-center"
               >
                 <div class="producto" *ngFor="let item of productosCargados">
                   <div>
@@ -278,7 +278,7 @@
               data-parent="#DetalleResultados"
             >
               <div
-                class="border-start border-end border-bottom pt-2 pb-2 ps-3 pr-3 d-flex flex-wrap justify-content-center"
+                class="border-start border-end border-bottom pt-2 pb-2 ps-3 ps-3 d-flex flex-wrap justify-content-center"
               >
                 <div
                   class="producto"
@@ -350,7 +350,7 @@
               data-parent="#DetalleResultados"
             >
               <div
-                class="border-start border-end border-bottom pt-2 pb-2 ps-3 pr-3 d-flex flex-wrap justify-content-center"
+                class="border-start border-end border-bottom pt-2 pb-2 ps-3 ps-3 d-flex flex-wrap justify-content-center"
               >
                 <div class="producto" *ngFor="let item of productosNoCargados">
                   <div>

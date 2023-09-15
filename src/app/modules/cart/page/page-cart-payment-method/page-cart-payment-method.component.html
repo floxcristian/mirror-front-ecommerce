@@ -527,7 +527,7 @@
                 </h4>
                 <ng-container *ngIf="rejectedCode != -11" class="mb-5">
                   <div class="row">
-                    <div class="col-12 text-center font-weight-bold">
+                    <div class="col-12 text-center fw-bold">
                       <p *ngIf="alertCart?.detalleMensaje">
                         {{ alertCart?.detalleMensaje }}
                       </p>
@@ -732,7 +732,7 @@
                       </div>
                       <div class="row mt-12" *ngIf="archivo">
                         <div
-                          class="col-10 text-left text-truncate"
+                          class="col-10 text-start text-truncate"
                           style="font-size: 0.85rem"
                         >
                           <i
@@ -871,7 +871,7 @@
               !invitado
             "
           >
-            <div class="col-12 text-right">
+            <div class="col-12 text-end">
               <div
                 class="cotizacionBtn"
                 (click)="setDocumentType('cotizacion')"
@@ -1075,7 +1075,7 @@
 
                 <ng-container *ngIf="rejectedCode != -11" class="mb-5">
                   <div class="row">
-                    <div class="col-12 text-center font-weight-bold">
+                    <div class="col-12 text-center fw-bold">
                       <p *ngIf="alertCart?.detalleMensaje">
                         {{ alertCart?.detalleMensaje }}
                       </p>
@@ -1272,7 +1272,7 @@
                       </div>
                       <div class="row mt-2" *ngIf="archivo">
                         <div
-                          class="col-10 text-left text-truncate"
+                          class="col-10 text-start text-truncate"
                           style="font-size: 0.85rem"
                         >
                           <i
@@ -1374,7 +1374,7 @@
               !invitado
             "
           >
-            <div class="col-12 text-right" style="color: #0063b9 !important">
+            <div class="col-12 text-end" style="color: #0063b9 !important">
               <div
                 class="cotizacionBtn"
                 (click)="setDocumentType('cotizacion')"
@@ -1423,7 +1423,7 @@
               </div>
             </div>
             <div class="row m-0">
-              <div class="mt-3 col-6 ps-0 pr-1" *ngIf="!cd_ver">
+              <div class="mt-3 col-6 ps-0 ps-1" *ngIf="!cd_ver">
                 <a
                   [routerLink]="['/', 'carro-compra', 'metodo-de-envio']"
                   class="btn btn-border-primary w-100 btn-lg text-center"
@@ -1433,7 +1433,7 @@
                 </a>
               </div>
 
-              <div class="mt-3 col-6 pr-0 ps-1">
+              <div class="mt-3 col-6 ps-0 ps-1">
                 <button
                   name="paymentOv "
                   *ngIf="
@@ -1608,7 +1608,7 @@
                 </button>
               </div>
 
-              <div class="mt-3 col-12 ps-0 pr-1">
+              <div class="mt-3 col-12 ps-0 ps-1">
                 <em *ngIf="userSession.user_role == 'comprador'"
                   >* Se generará una solicitud de compra y debe ser aprobada por
                   tu supervisor antes de generar el pedido.
@@ -2086,7 +2086,7 @@
             <table>
               <tr style="font-size: 14px; color: #005db9">
                 <th>Total</th>
-                <td class="font-weight-bold">
+                <td class="fw-bold">
                   {{ cart.total$ | async | currencyFormat }}
                 </td>
               </tr>
@@ -2121,7 +2121,7 @@
         </app-codigo-oc>
 
         <div class="row">
-          <div class="mt-3 col-12 pr-3 ps-3">
+          <div class="mt-3 col-12 ps-3 ps-3">
             <button
               name="paymentOv "
               *ngIf="
@@ -2243,7 +2243,7 @@
           </div>
 
           <div
-            class="mt-3 col-12 ps-0 pr-1"
+            class="mt-3 col-12 ps-0 ps-1"
             *ngIf="userSession.user_role == 'comprador'"
           >
             <em
@@ -2252,7 +2252,7 @@
             </em>
           </div>
 
-          <div class="mt-3 col-12 ps-0 pr-1">
+          <div class="mt-3 col-12 ps-0 ps-1">
             <a
               href="https://www.implementos.cl"
               style="color: #118565; text-align: center; font-weight: bold"

@@ -176,7 +176,7 @@
               }"
             >
               <h6
-                class="d-flex justify-content-between align-items-center font-weight-normal mb-0"
+                class="d-flex justify-content-between align-items-center fw-normal mb-0"
               >
                 <div>Descripción</div>
                 <button
@@ -217,9 +217,7 @@
             </div>
             <hr />
             <div id="headingTwo">
-              <h6
-                class="d-flex justify-content-between font-weight-normal mb-0"
-              >
+              <h6 class="d-flex justify-content-between fw-normal mb-0">
                 <div>Detalles Técnicos</div>
                 <button
                   class="btn btn-link btn-sm collapsed"
@@ -249,9 +247,7 @@
             </div>
             <hr />
             <div id="headingThree">
-              <h6
-                class="d-flex justify-content-between font-weight-normal mb-0"
-              >
+              <h6 class="d-flex justify-content-between fw-normal mb-0">
                 <div>Evaluación</div>
                 <button
                   class="btn btn-link btn-sm collapsed"
@@ -383,10 +379,10 @@
                 [options]="carouselOptions"
                 appOwlPreventClick
               >
-              <ng-container
-                *ngFor="let item of mixProducts"
-                class="products-list__item"
-              >
+                <ng-container
+                  *ngFor="let item of mixProducts"
+                  class="products-list__item"
+                >
                   <ng-template carouselSlide>
                     <app-product-card-b2b
                       *ngIf="isB2B"

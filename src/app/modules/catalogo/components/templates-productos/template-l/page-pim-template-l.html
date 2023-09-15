@@ -53,10 +53,7 @@
             IMPLEMENTOS
           </div>
         </div>
-        <div
-          class="col-12 col-sm-12 font-weight-bold p-0"
-          style="font-size: 19px"
-        >
+        <div class="col-12 col-sm-12 fw-bold p-0" style="font-size: 19px">
           {{ plana.productos.atributos[1].valor | slice:0:46 }}
         </div>
         <div class="col-12 col-sm-12 p-0" style="font-size: 16px">
@@ -212,7 +209,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td class="p-0 txtNormal font-weight-bold">
+                  <td class="p-0 txtNormal fw-bold">
                     {{ preciosLista[2].desde }} {{ preciosLista[2].hasta }} UN
                   </td>
                   <td class="p-0 pull-right txtDestacado">
@@ -240,13 +237,13 @@
                   </td>
                 </tr>
                 <tr *ngIf="!precioEspecial">
-                  <td class="p-0 txtNormal text-left">Unidad</td>
+                  <td class="p-0 txtNormal text-start">Unidad</td>
                   <td class="p-0 pull-right txtNormal" title="Precio normal">
                     {{ preciosLista[0].precio | currencyFormat}} c/iva
                   </td>
                 </tr>
                 <tr>
-                  <td class="p-0 txtNormal font-weight-bold text-left">
+                  <td class="p-0 txtNormal fw-bold text-start">
                     {{ preciosLista[1].desde }} {{ preciosLista[1].hasta }} UN
                   </td>
                   <td class="p-0 pull-right txtDestacado">
@@ -269,9 +266,7 @@
                   <td class="p-0 pull-right txtNormal">&nbsp;</td>
                 </tr>
                 <tr *ngIf="precioEspecial">
-                  <td class="p-0 txtNormal font-weight-bold text-left">
-                    Unidad
-                  </td>
+                  <td class="p-0 txtNormal fw-bold text-start">Unidad</td>
                   <td
                     class="p-0 pull-right txtDestacado"
                     title="Precio con descuento cliente"
@@ -280,9 +275,7 @@
                   </td>
                 </tr>
                 <tr *ngIf="!precioEspecial">
-                  <td class="p-0 txtNormal font-weight-bold text-left">
-                    Unidad
-                  </td>
+                  <td class="p-0 txtNormal fw-bold text-start">Unidad</td>
                   <td
                     class="p-0 pull-right txtPrecioNormal"
                     title="Precio con descuento cliente"

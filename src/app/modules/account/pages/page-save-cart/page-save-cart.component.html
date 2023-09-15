@@ -2,7 +2,7 @@
   class="top-bar-categories d-flex align-items-center mb-3"
   [class.p-0]="innerWidth < 450"
   [class.ps-3]="innerWidth < 450"
-  [class.pr-3]="innerWidth < 450"
+  [class.ps-3]="innerWidth < 450"
   (window:resize)="onResize($event)"
 >
   <div class="title d-flex align-items-center me-auto">
@@ -51,10 +51,7 @@
               No tiene carros de compras guardados.
             </div>
           </div>
-          <div
-            class="row mb-3 font-weight-bold"
-            *ngIf="lstCart && lstCart.length > 0"
-          >
+          <div class="row mb-3 fw-bold" *ngIf="lstCart && lstCart.length > 0">
             <div class="col-md-2 d-none d-md-block">
               <span class="ms-3">Cantidad </span>
             </div>
@@ -67,7 +64,7 @@
             <div class="col-md-2 d-none d-md-block">
               <span> Opciones </span>
             </div>
-            <div class="col-md-2 d-none d-md-block text-right">
+            <div class="col-md-2 d-none d-md-block text-end">
               <span class="me-3"> Ver Detalle </span>
             </div>
           </div>
@@ -85,9 +82,7 @@
                   <div class="col-md-3 d-none d-md-block">
                     {{ cart.creacion | date : "dd-MM-yyyy" }}
                   </div>
-                  <div
-                    class="col-md-3 col-sm-4 col-5 text-nowrap font-weight-bolder"
-                  >
+                  <div class="col-md-3 col-sm-4 col-5 text-nowrap fw-bolder">
                     {{ getTotalCart(cart.productos) | currencyFormat }}
                   </div>
                   <div class="col-md-3 col-sm-4 d-none d-xl-block">
@@ -126,7 +121,7 @@
                       <i class="far fa-trash-alt"></i>
                     </button>
                   </div>
-                  <div class="col-md-1 col-sm-1 col-2 text-right">
+                  <div class="col-md-1 col-sm-1 col-2 text-end">
                     <span
                       class="fas fa-search me-1"
                       style="cursor: pointer"
@@ -197,7 +192,7 @@
                       </span>
                     </div>
                     <div
-                      class="col-12 col-sm-3 col-xl-2 text-right text-nowrap"
+                      class="col-12 col-sm-3 col-xl-2 text-end text-nowrap"
                       [ngClass]="
                         MobileView() ? '' : 'd-flex align-items-center'
                       "

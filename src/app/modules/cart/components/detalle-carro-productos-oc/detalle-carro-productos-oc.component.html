@@ -4,23 +4,29 @@
       <div class="row m-0" class="mensaje-entrega mb-3">
         <div class="header">
           <i class="fas fa-check-circle" style="margin-right: 10px"></i>
-          <span class="font-weight-bold"> Productos Disponible </span>
+          <span class="fw-bold"> Productos Disponible </span>
         </div>
-        <app-products-list-summary-cart [products]="products"> </app-products-list-summary-cart>
+        <app-products-list-summary-cart [products]="products">
+        </app-products-list-summary-cart>
       </div>
     </ng-container>
     <ng-container *ngIf="shippingNotSupported.length > 0">
       <div class="row m-0" class="conflicto-entrega mb-3">
         <div class="header">
           <i class="fas fa-check-circle" style="margin-right: 10px"></i>
-          <span class="font-weight-bold"> Productos Sin stock </span>
+          <span class="fw-bold"> Productos Sin stock </span>
         </div>
-        <app-products-list-summary-cart [products]="shippingNotSupported"> </app-products-list-summary-cart>
+        <app-products-list-summary-cart [products]="shippingNotSupported">
+        </app-products-list-summary-cart>
       </div>
     </ng-container>
   </div>
 
-  <div *ngIf="seePrices" class="dropcart__totals" [ngClass]="{ 'border-0': seeProducts == false }">
+  <div
+    *ngIf="seePrices"
+    class="dropcart__totals"
+    [ngClass]="{ 'border-0': seeProducts == false }"
+  >
     <table>
       <ng-container *ngIf="show">
         <tr>
@@ -37,7 +43,7 @@
         </tr>
         <tr>
           <th>Total</th>
-          <td class="font-weight-bold">{{ total.total | currencyFormat }}</td>
+          <td class="fw-bold">{{ total.total | currencyFormat }}</td>
         </tr>
       </ng-container>
     </table>
