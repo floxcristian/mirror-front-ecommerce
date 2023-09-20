@@ -253,7 +253,7 @@ export class PageDashboardComponent {
       {
         data: anioConsultado,
         label: this.anio.toString(),
-        yAxisID: 'y-axis-0',
+        yAxisID: 'yAxes',
         datalabels: {
           align: (context: Context) => {
             const data1 = context.dataset.data[context.dataIndex] || 0;
@@ -261,20 +261,27 @@ export class PageDashboardComponent {
               context.chart.data.datasets[1].data[context.dataIndex] || 0;
             return data1 > data2 ? 'end' : 'start';
           },
-          formatter: (value: any, context: any) => {
-            if (value >= 1000000) {
-              return (
-                (Math.round((value / 1000000) * 100) / 100).toString() + ' MM'
-              );
-            }
-            return '';
-          },
+          // formatter: (value: any, context: any) => {
+          //   if (value >= 1000000) {
+          //     return (
+          //       (Math.round((value / 1000000) * 100) / 100).toString() + ' MM'
+          //     );
+          //   }
+          //   return '';
+          // },
         },
+        backgroundColor: 'rgba(0,175,238,0.2)',
+        borderColor: 'rgba(0,175,238,1)',
+        pointBackgroundColor: 'rgba(148,159,177,1)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgba(148,159,177,0.8)',
+        fill:'origin'
       },
       {
         data: anioAnterior,
         label: (this.anio - 1).toString(),
-        yAxisID: 'y-axis-0',
+        yAxisID: 'yAxes',
         datalabels: {
           align: (context: Context) => {
             const data1 = context.dataset.data[context.dataIndex] || 0;
@@ -282,15 +289,22 @@ export class PageDashboardComponent {
               context.chart.data.datasets[0].data[context.dataIndex] || 0;
             return data1 > data2 ? 'end' : 'start';
           },
-          formatter: (value: any) => {
-            if (value >= 1000000) {
-              return (
-                (Math.round((value / 1000000) * 100) / 100).toString() + ' MM'
-              );
-            }
-            return '';
-          },
+          // formatter: (value: any) => {
+          //   if (value >= 1000000) {
+          //     return (
+          //       (Math.round((value / 1000000) * 100) / 100).toString() + ' MM'
+          //     );
+          //   }
+          //   return '';
+          // },
         },
+        backgroundColor: 'rgba(77,83,96,0.2)',
+        borderColor: 'rgba(77,83,96,1)',
+        pointBackgroundColor: 'rgba(77,83,96,1)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgba(77,83,96,1)',
+        fill:'origin'
       },
     ];
     /* calcula scala eje Y */
@@ -315,8 +329,11 @@ export class PageDashboardComponent {
       aspectRatio: 3 / 1,
       scales: {
         xAxes: {
-          display: true,
-          // labelString: 'Meses',
+          display: false,
+          title:{
+            display:true,
+            text:'Meses'
+          }
         },
 
         // xAxes: [
@@ -343,7 +360,6 @@ export class PageDashboardComponent {
         //   },
         // ],
         yAxes: {
-          // id: 'y-axis-0',
           position: 'left',
           min: 0,
           max: newMax,
@@ -351,7 +367,10 @@ export class PageDashboardComponent {
             stepSize: Math.ceil(newMax / steps),
           },
           display: true,
-          // labelString: 'Pesos ($)',
+          title:{
+            display:true,
+            text:'Pesos ($)'
+          }
         },
       },
     };

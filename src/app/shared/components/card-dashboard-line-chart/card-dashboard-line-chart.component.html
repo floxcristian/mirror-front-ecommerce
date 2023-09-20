@@ -8,11 +8,12 @@
   <div class="card-body">
     <div *ngIf="estado === ESTADO.OK">
       <div style="display: block">
-        <!-- FIXME: no reconoce canvas (CRIS)
+            <!-- <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
+                [colors]="lineChartColors" [legend]="lineChartLegend" [plugins]="lineChartPlugins"
+                [chartType]="lineChartType"></canvas> -->
                 <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
-                    [colors]="lineChartColors" [legend]="lineChartLegend" [plugins]="lineChartPlugins"
-                    [chartType]="lineChartType"></canvas>
-            -->
+                [type]="lineChartType" [plugins]="lineChartPlugins"
+                ></canvas>
       </div>
     </div>
 
