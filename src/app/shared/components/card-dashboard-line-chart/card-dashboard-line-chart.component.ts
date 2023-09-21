@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ChartDataset, ChartOptions, ChartType } from 'chart.js';
+import { ChartDataset, ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
@@ -13,9 +13,8 @@ export class CardDashboardLineChartComponent implements OnInit {
     @Input() iconContainerClass:any;
     @Input() estado:any;
 
-    @Input() lineChartData: ChartDataset[] = [];
+    @Input() lineChartData!: ChartConfiguration['data'];
     lineChartPlugins = [ChartDataLabels];
-    @Input() lineChartLabels: any[] = [];
     @Input() lineChartOptions: ChartOptions = {};
     lineChartLegend = true;
     lineChartType: ChartType = 'line';
