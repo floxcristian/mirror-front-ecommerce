@@ -8,10 +8,9 @@
   <div class="card-body">
     <div *ngIf="estado === ESTADO.OK">
       <div style="display: block">
-        <!-- FIXME: no reconoce canvas (CRIS)
-                <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
-                    [colors]="barChartColors" [legend]="barChartLegend" [plugins]="barChartPlugins"
-                    [chartType]="barChartType"></canvas> -->
+            <canvas baseChart [data]="barChartData" [options]="barChartOptions"
+            [legend]="barChartLegend" [plugins]="barChartPlugins"
+            [type]="barChartType"></canvas>
       </div>
     </div>
     <div

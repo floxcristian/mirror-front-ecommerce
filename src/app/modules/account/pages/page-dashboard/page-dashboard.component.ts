@@ -7,10 +7,8 @@ import { Usuario } from '../../../../shared/interfaces/login';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
 import { Data } from '../../../../shared/components/card-dashboard-no-chart/card-dashboard-no-chart.component';
 import { GraficoVentaValorada } from '../../../../shared/interfaces/graficoVentaValorada';
-// import { ChartDataSets, ChartOptions } from 'chart.js';
-import { ChartDataset, ChartOptions } from 'chart.js';
+import { ChartDataset, ChartConfiguration, ChartOptions } from 'chart.js';
 import { Context } from 'chartjs-plugin-datalabels';
-// import { Label } from 'ng2-charts';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { GraficoVentasPorUen } from '../../../../shared/interfaces/graficoVentaPorUen';
 import { isPlatformBrowser } from '@angular/common';
@@ -42,19 +40,15 @@ export class PageDashboardComponent {
 
   ESTADO = { BUSCANDO: 1, OK: 2, NO_ENCONTRADO: 3, ERROR: 4 };
   lineEstado = this.ESTADO.BUSCANDO;
-  lineChartData: ChartDataset[] = [];
-  // lineChartLabels!: Label[];
-  lineChartLabels!: any[];
+  lineChartData!: ChartConfiguration['data'];
   lineChartOptions: ChartOptions = {};
 
   barEstado = this.ESTADO.BUSCANDO;
-  barChartData: ChartDataset[] = [];
-  // barChartLabels!: Label[];
+  barChartData!: ChartConfiguration['data'];
   barChartLabels!: any[];
   barChartOptions: ChartOptions = {};
 
   constructor(
-    // private productService: ProductsService,
     private clientService: ClientsService,
     private toastr: ToastrService,
     private root: RootService,
@@ -113,21 +107,6 @@ export class PageDashboardComponent {
             icon: porcentaje - 100 >= 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down',
             textClass: porcentaje - 100 >= 0 ? 'text-success' : 'text-danger',
           };
-
-          this.lineChartLabels = [
-            'Enero',
-            'Febrero',
-            'Marzo',
-            'Abril',
-            'Mayo',
-            'Junio',
-            'Julio',
-            'Agosto',
-            'Septiembre',
-            'Octubre',
-            'Noviembre',
-            'Diciembre',
-          ];
           this.cargaDatosVentaValorada(data);
         },
         (error: any) => {
@@ -140,7 +119,6 @@ export class PageDashboardComponent {
       .graficoVentasPorUen({ anio: this.anio, mes: this.mes, rutCliente: rut })
       .subscribe(
         (resp: any) => {
-       
           const data: GraficoVentasPorUen[] = resp.data;
 
           this.barChartLabels = data.map((r) => r._id);
@@ -253,50 +231,80 @@ export class PageDashboardComponent {
       }
     }
 
-    this.lineChartData = [
-      {
-        data: anioConsultado,
-        label: this.anio.toString(),
-        yAxisID: 'y-axis-0',
-        datalabels: {
-          align: (context: Context) => {
-            const data1 = context.dataset.data[context.dataIndex] || 0;
-            const data2 =
-              context.chart.data.datasets[1].data[context.dataIndex] || 0;
-            return data1 > data2 ? 'end' : 'start';
+    this.lineChartData = {
+      labels: [
+        'Enero',
+        'Febrero',
+        'Marzo',
+        'Abril',
+        'Mayo',
+        'Junio',
+        'Julio',
+        'Agosto',
+        'Septiembre',
+        'Octubre',
+        'Noviembre',
+        'Diciembre',
+      ],
+      datasets: [
+        {
+          data: anioConsultado,
+          label: this.anio.toString(),
+          yAxisID: 'yAxes',
+          datalabels: {
+            align: (context: Context) => {
+              const data1 = context.dataset.data[context.dataIndex] || 0;
+              const data2 =
+                context.chart.data.datasets[1].data[context.dataIndex] || 0;
+              return data1 > data2 ? 'end' : 'start';
+            },
+            formatter: (value: any, context: any) => {
+              if (value >= 1000000) {
+                return (
+                  (Math.round((value / 1000000) * 100) / 100).toString() + ' MM'
+                );
+              }
+              return value;
+            },
           },
-          formatter: (value: any, context: any) => {
-            if (value >= 1000000) {
-              return (
-                (Math.round((value / 1000000) * 100) / 100).toString() + ' MM'
-              );
-            }
-            return '';
-          },
+          backgroundColor: 'rgba(0,175,238,0.2)',
+          borderColor: 'rgba(0,175,238,1)',
+          pointBackgroundColor: 'rgba(148,159,177,1)',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: 'rgba(148,159,177,0.8)',
+          fill: true,
         },
-      },
-      {
-        data: anioAnterior,
-        label: (this.anio - 1).toString(),
-        yAxisID: 'y-axis-0',
-        datalabels: {
-          align: (context: Context) => {
-            const data1 = context.dataset.data[context.dataIndex] || 0;
-            const data2 =
-              context.chart.data.datasets[0].data[context.dataIndex] || 0;
-            return data1 > data2 ? 'end' : 'start';
+        {
+          data: anioAnterior,
+          label: (this.anio - 1).toString(),
+          yAxisID: 'yAxes',
+          datalabels: {
+            align: (context: Context) => {
+              const data1 = context.dataset.data[context.dataIndex] || 0;
+              const data2 =
+                context.chart.data.datasets[0].data[context.dataIndex] || 0;
+              return data1 > data2 ? 'end' : 'start';
+            },
+            formatter: (value: any) => {
+              if (value >= 1000000) {
+                return (
+                  (Math.round((value / 1000000) * 100) / 100).toString() + ' MM'
+                );
+              }
+              return value;
+            },
           },
-          formatter: (value: any) => {
-            if (value >= 1000000) {
-              return (
-                (Math.round((value / 1000000) * 100) / 100).toString() + ' MM'
-              );
-            }
-            return '';
-          },
+          backgroundColor: 'rgba(77,83,96,0.2)',
+          borderColor: 'rgba(77,83,96,1)',
+          pointBackgroundColor: 'rgba(77,83,96,1)',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: 'rgba(77,83,96,1)',
+          fill: true,
         },
-      },
-    ];
+      ],
+    };
     /* calcula scala eje Y */
     const steps = 5;
 
@@ -316,38 +324,15 @@ export class PageDashboardComponent {
           formatter: Math.round,
         },
       },
-      aspectRatio: 3 / 1,
+      // aspectRatio: 2,
       scales: {
-        xAxes: {
-          display: true,
-          // labelString: 'Meses',
+        x: {
+          title: {
+            display: true,
+            text: 'Meses',
+          },
         },
-
-        // xAxes: [
-        //   {
-        //     scaleLabel: {
-        //       display: true,
-        //       labelString: 'Meses',
-        //     },
-        //   },
-        // ],
-        // yAxes: [
-        //   {
-        //     id: 'y-axis-0',
-        //     position: 'left',
-        //     ticks: {
-        //       min: 0,
-        //       max: newMax,
-        //       stepSize: Math.ceil(newMax / steps),
-        //     },
-        //     scaleLabel: {
-        //       display: true,
-        //       labelString: 'Pesos ($)',
-        //     },
-        //   },
-        // ],
         yAxes: {
-          // id: 'y-axis-0',
           position: 'left',
           min: 0,
           max: newMax,
@@ -355,7 +340,10 @@ export class PageDashboardComponent {
             stepSize: Math.ceil(newMax / steps),
           },
           display: true,
-          // labelString: 'Pesos ($)',
+          title: {
+            display: true,
+            text: 'Pesos ($)',
+          },
         },
       },
     };
@@ -370,22 +358,31 @@ export class PageDashboardComponent {
         e.total.$numberDecimal > max ? Math.trunc(e.total.$numberDecimal) : max;
     });
 
-    this.barChartData = [
-      {
-        data: data.map((r) => r.total.$numberDecimal),
-        datalabels: {
-          formatter: (value: any, context: any) => {
-            if (value >= 1000000) {
-              return (
-                (Math.round((value / 1000000) * 100) / 100).toString() + ' MM'
-              );
-            } else {
-              return Math.round(value);
-            }
+    this.barChartData = {
+      labels: this.barChartLabels,
+      datasets: [
+        {
+          data: data.map((r) => r.total.$numberDecimal),
+          datalabels: {
+            formatter: (value: any, context: any) => {
+              if (value >= 1000000) {
+                return (
+                  (Math.round((value / 1000000) * 100) / 100).toString() + ' MM'
+                );
+              } else {
+                return Math.round(value);
+              }
+            },
           },
+          backgroundColor: 'rgba(0,175,238,0.2)',
+          borderColor: 'rgba(0,175,238,1)',
+          pointBackgroundColor: 'rgba(148,159,177,1)',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: 'rgba(148,159,177,0.8)',
         },
-      },
-    ];
+      ],
+    };
     /* calcula scala eje X */
     const steps = 5;
 
@@ -395,6 +392,7 @@ export class PageDashboardComponent {
 
     this.barChartOptions = {
       responsive: true,
+      indexAxis: 'y',
       plugins: {
         datalabels: {
           backgroundColor: (context: Context) => {
@@ -410,43 +408,25 @@ export class PageDashboardComponent {
       },
       aspectRatio: 3 / 1,
       scales: {
-        // xAxes: [
-        //   {
-        //     ticks: {
-        //       min: 0,
-        //       max: newMax,
-        //       stepSize: Math.ceil(newMax / steps),
-        //     },
-        //     scaleLabel: {
-        //       display: true,
-        //       labelString: 'Pesos ($)',
-        //     },
-        //   },
-        // ],
-        // yAxes: [
-        //   {
-        //     id: 'y-axis-0',
-        //     position: 'left',
-        //     scaleLabel: {
-        //       display: true,
-        //       labelString: 'Categorías',
-        //     },
-        //   },
-        // ],
-        xAxes: {
+        x: {
           min: 0,
           max: newMax,
           ticks: {
             stepSize: Math.ceil(newMax / steps),
           },
           display: true,
-          // labelString: 'Pesos ($)',
+          title: {
+            display: true,
+            text: 'Pesos ($)',
+          },
         },
-        yAxes: {
-          // id: 'y-axis-0',
+        y: {
           position: 'left',
           display: true,
-          // labelString: 'Categorías',
+          title: {
+            display: true,
+            text: 'Categorías',
+          },
         },
       },
     };
