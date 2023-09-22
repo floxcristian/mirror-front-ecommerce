@@ -5,9 +5,12 @@ import {
   Output,
   EventEmitter,
   TemplateRef,
+  PLATFORM_ID,
+  Inject,
 } from '@angular/core';
 import { ProductCart } from '../../../../shared/interfaces/cart-item';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-grupo-detalle-productos',
@@ -24,8 +27,13 @@ export class GrupoDetalleProductosComponent implements OnInit {
   @Output() eliminarGrupo = new EventEmitter();
   modalRef!: BsModalRef;
 
-  constructor(private modalService: BsModalService) {
-    this.innerWidth = window.innerWidth;
+  constructor(
+    private modalService: BsModalService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   ngOnInit() {

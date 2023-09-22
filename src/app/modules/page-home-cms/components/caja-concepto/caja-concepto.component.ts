@@ -1,4 +1,12 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import {
+  Component,
+  HostListener,
+  Inject,
+  Input,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 import { CarouselConfig } from 'ngx-bootstrap/carousel';
 
 @Component({
@@ -39,9 +47,13 @@ export class CajaConceptoComponent implements OnInit {
   //variables para el slide
   noWrapSlides = false;
   showIndicator = true;
-  constructor() {
-    this.screenWidth = window.innerWidth;
-    this.screenHeight = window.innerHeight;
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.screenWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+    this.screenHeight = isPlatformBrowser(this.platformId)
+      ? window.innerHeight
+      : 900;
     //aqui comenzamos a realizar el width de elementos
     this.construir_grid();
   }
@@ -110,8 +122,12 @@ export class CajaConceptoComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.screenWidth = window.innerWidth;
-    this.screenHeight = window.innerHeight;
+    this.screenWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+    this.screenHeight = isPlatformBrowser(this.platformId)
+      ? window.innerHeight
+      : 900;
     this.construir_grid();
   }
 }

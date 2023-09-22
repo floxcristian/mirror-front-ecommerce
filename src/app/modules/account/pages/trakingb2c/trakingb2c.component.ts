@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, PLATFORM_ID } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { TrackingStep } from '../../../../shared/interfaces/tracking';
 import { CartService } from '../../../../shared/services/cart.service';
 import { TrackingService } from '../../../../shared/services/tracking.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-trakingb2c',
@@ -31,9 +32,12 @@ export class Trakingb2cComponent implements OnInit {
     private fb: FormBuilder,
     private _TrackingService: TrackingService,
     private toast: ToastrService,
-    private cart: CartService
+    private cart: CartService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
     this.formBuscar = this.fb.group({
       orden: new FormControl(null, Validators.required),
     });

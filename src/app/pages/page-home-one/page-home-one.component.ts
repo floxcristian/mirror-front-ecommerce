@@ -1,10 +1,4 @@
-import {
-  Component,
-  ɵConsole,
-  OnInit,
-  Inject,
-  PLATFORM_ID,
-} from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { posts } from '../../../data/blog-posts';
 import { brands } from '../../../data/shop-brands';
 import { products } from '../../../data/shop-products';
@@ -51,11 +45,13 @@ export class PageHomeOneComponent implements OnInit {
   isB2B!: boolean;
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: any,
+    @Inject(PLATFORM_ID) private platformId: Object,
     private cmsService: CmsService,
     private rootService: RootService
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   ngOnInit() {

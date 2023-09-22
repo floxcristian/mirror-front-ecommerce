@@ -1,4 +1,12 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import {
+  Component,
+  HostListener,
+  Inject,
+  Input,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 
 @Component({
   selector: 'app-banner',
@@ -14,16 +22,24 @@ export class BannerComponent implements OnInit {
   }
   bannerCms: any;
   elementoData: any;
-  constructor() {
-    this.screenWidth = window.innerWidth;
-    this.screenHeight = window.innerHeight;
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.screenWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+    this.screenHeight = isPlatformBrowser(this.platformId)
+      ? window.innerHeight
+      : 900;
   }
 
   ngOnInit() {}
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.screenWidth = window.innerWidth;
-    this.screenHeight = window.innerHeight;
+    this.screenWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+    this.screenHeight = isPlatformBrowser(this.platformId)
+      ? window.innerHeight
+      : 900;
   }
 }

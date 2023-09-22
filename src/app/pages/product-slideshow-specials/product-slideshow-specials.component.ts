@@ -1,4 +1,11 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  HostListener,
+  PLATFORM_ID,
+  Inject,
+} from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
@@ -8,6 +15,7 @@ import { DirectionService } from 'src/app/shared/services/direction.service';
 import { GeoLocation } from 'src/app/shared/interfaces/geo-location';
 import { GeoLocationService } from 'src/app/shared/services/geo-location.service';
 import { ProductsService } from 'src/app/shared/services/products.service';
+import { isPlatformBrowser } from '@angular/common';
 
 export type Layout = 'grid' | 'grid-with-features' | 'list';
 
@@ -57,9 +65,12 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     private direction: DirectionService,
     private geoLocationService: GeoLocationService,
     private localStorage: LocalStorageService,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
     this.onResize(event);
   }
 
@@ -84,7 +95,9 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
 
     if (this.innerWidth < 427) {
       this.cantItem = 4;

@@ -1,7 +1,14 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { DirectionService } from '../../../../shared/services/direction.service';
 import { PageHomeService } from '../../services/pageHome.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-slide-mundo',
@@ -39,9 +46,12 @@ export class SlideMundoComponent implements OnInit {
   slides: any[] = [];
   constructor(
     private direction: DirectionService,
-    private pageHomeService: PageHomeService
+    private pageHomeService: PageHomeService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   ngOnInit() {
@@ -49,7 +59,9 @@ export class SlideMundoComponent implements OnInit {
   }
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   async Carga_mundo() {

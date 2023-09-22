@@ -53,7 +53,6 @@ export class ProductCardB2bComponent implements OnInit, OnDestroy {
   @Input() set product(value: Product) {
     this.productData = value;
     this.productData.nombre = this.root.limpiarNombres(this.productData.nombre);
-    //console.log(this.productData);
     this.cargaPrecio();
     this.quality = this.root.setQuality(this.productData);
     this.root.limpiaAtributos(value);
@@ -110,9 +109,9 @@ export class ProductCardB2bComponent implements OnInit, OnDestroy {
     private modalService: BsModalService
   ) {
     this.usuario = this.root.getDataSesionUsuario();
-    this.isB2B =
-      this.usuario.user_role === 'supervisor' ||
-      this.usuario.user_role === 'comprador';
+    this.isB2B = ['supervisor', 'comprador'].includes(
+      this.usuario.user_role || ''
+    );
   }
 
   ngOnInit(): void {

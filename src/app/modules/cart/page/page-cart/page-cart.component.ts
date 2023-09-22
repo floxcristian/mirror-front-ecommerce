@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 import { CartService } from '../../../../shared/services/cart.service';
 import { FormControl, Validators } from '@angular/forms';
 import { ProductCart } from '../../../../shared/interfaces/cart-item';
@@ -20,6 +26,7 @@ import { DirectionService } from '../../../../shared/services/direction.service'
 import { environment } from '../../../../../environments/environment';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { isPlatformBrowser } from '@angular/common';
 declare let dataLayer: any;
 interface Item {
   ProductCart: ProductCart;
@@ -76,9 +83,12 @@ export class PageCartComponent implements OnInit, OnDestroy {
     private geoLocationService: GeoLocationService,
     private cmsService: CmsService,
     private productoService: ProductsService,
-    private direction: DirectionService // @Inject(WINDOW) private window: Window
+    private direction: DirectionService, // @Inject(WINDOW) private window: Window
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   ngOnInit(): void {
@@ -232,6 +242,8 @@ export class PageCartComponent implements OnInit, OnDestroy {
   }
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 }

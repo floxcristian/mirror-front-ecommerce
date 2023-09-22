@@ -1,6 +1,13 @@
-import { Component, HostListener, Input } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Inject,
+  Input,
+  PLATFORM_ID,
+} from '@angular/core';
 import { Link } from '../../interfaces/link';
 import { Router } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-page-header',
@@ -18,9 +25,14 @@ export class PageHeaderComponent {
   @Input() textToSearch = '';
   url: string;
   innerWidth: number;
-  constructor(private route: Router) {
-    this.url = window.location.href;
-    this.innerWidth = window.innerWidth;
+  constructor(
+    private route: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.url = isPlatformBrowser(this.platformId) ? window.location.href : '';
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   ngOnInit() {}
@@ -45,6 +57,8 @@ export class PageHeaderComponent {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 }

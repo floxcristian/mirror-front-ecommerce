@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 // import { theme } from '../../../data/theme'; // no se usa
 import { Link } from '../../shared/interfaces/link';
 import { LoginService } from '../../shared/services/login.service';
 import { Usuario } from '../../shared/interfaces/login';
 import { Router } from '@angular/router';
 import { HostListener } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-footer',
@@ -22,10 +23,16 @@ export class FooterComponent {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
-  constructor(public loginService: LoginService, public route: Router) {
+  constructor(
+    public loginService: LoginService,
+    public route: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     this.anio = new Date().getFullYear();
     this.linksPaginas = [
       {
@@ -91,7 +98,9 @@ export class FooterComponent {
       },
     ];
 
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   // Funcion utilizada para ocultar footer para dispositivos mobiles en las pantallas de seleccion de despacho y pago.

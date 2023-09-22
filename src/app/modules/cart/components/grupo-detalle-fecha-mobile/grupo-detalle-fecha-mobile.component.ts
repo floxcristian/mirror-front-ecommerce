@@ -1,3 +1,4 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   Component,
   OnInit,
@@ -5,6 +6,8 @@ import {
   Output,
   EventEmitter,
   TemplateRef,
+  PLATFORM_ID,
+  Inject,
 } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
@@ -46,8 +49,13 @@ export class GrupoDetalleFechaMobileComponent implements OnInit {
   modalRef!: BsModalRef;
   select: boolean = false;
   arreglo_fecha: any = [];
-  constructor(private modalService: BsModalService) {
-    this.innerWidth = window.innerWidth;
+  constructor(
+    private modalService: BsModalService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   ngOnInit() {

@@ -1,4 +1,11 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { Usuario } from '../../../../shared/interfaces/login';
@@ -7,6 +14,7 @@ import { Subject } from 'rxjs';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../../../../environments/environment';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-page-payment-portal',
@@ -62,9 +70,12 @@ export class PagePaymentPortalComponent implements OnInit {
     private clientsService: ClientsService,
     private root: RootService,
     private modalService: BsModalService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   ngOnInit() {
@@ -122,7 +133,7 @@ export class PagePaymentPortalComponent implements OnInit {
       }
       // guarda la seleccionadas
       if (item.check) {
-        //console.log(item.check);
+     
         const obj = {
           folio: item.folio,
           monto: item.saldo,
@@ -140,7 +151,7 @@ export class PagePaymentPortalComponent implements OnInit {
     this.modalPaymentMethodsRef = this.modalService.show(
       this.modalPaymentMethods
     );
-    // console.log(this.documentToPay);
+
   }
 
   setPaymentMethod(item: any) {

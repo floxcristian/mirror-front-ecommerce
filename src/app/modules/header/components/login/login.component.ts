@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
     private toastr: ToastrService,
     private cart: CartService,
     private clientsService: ClientsService,
-    private localStorage: LocalStorageService,
+    private localStorage: LocalStorageService
   ) {
     this.form = this.fb.group({
       username: ['', Validators.required],
@@ -77,7 +77,6 @@ export class LoginComponent implements OnInit {
           if (
             this.router.url.split('?')[0] != '/carro-compra/confirmar-orden-oc'
           ) {
-            console.log('entró');
             sub = this.cart.items$.subscribe((resp) => {
               //si realiza login en sitio/iniciar-sesion podra dirigirse a seguimiento
               if (this.router.url == '/sitio/iniciar-sesion' && this.ruta) {

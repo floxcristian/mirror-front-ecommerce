@@ -114,7 +114,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   preferenciaCliente!: PreferenciasCliente;
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: any,
+    @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
     private router: Router,
     private productsService: ProductsService,
@@ -131,7 +131,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     private clientsService: ClientsService,
     private buscadorService: BuscadorService
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
     if (this.innerWidth < 1025) {
       this.productosPorPagina = 12;
     } else {
@@ -553,7 +555,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       this.productsService
         .getMatrixProducts({ sku: producto.sku })
         .subscribe((r: ResponseApi) => {
-          // console.log(r.data);
           for (const item of r.data) {
             this.products.push(item);
           }
@@ -1027,7 +1028,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   }
 
   positionScroll(event: any) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
     this.scrollPosition = event.srcElement.children[0].scrollTop;
   }
 

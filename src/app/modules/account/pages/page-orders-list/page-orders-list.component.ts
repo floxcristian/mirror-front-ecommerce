@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 
 import { Usuario } from '../../../../shared/interfaces/login';
 import { RootService } from '../../../../shared/services/root.service';
@@ -8,6 +8,7 @@ import { environment } from '../../../../../environments/environment';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
+import { isPlatformBrowser } from '@angular/common';
 
 class DataTablesResponse {
   data!: any[];
@@ -30,10 +31,16 @@ export class PageOrdersListComponent implements OnInit {
   dtTrigger: Subject<any> = new Subject();
   innerWidth: any;
 
-  constructor(private root: RootService, private httpClient: HttpClient) {
+  constructor(
+    private root: RootService,
+    private httpClient: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     this.usuario = this.root.getDataSesionUsuario();
     this.loadingData = false;
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   ngOnInit() {

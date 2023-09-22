@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, PLATFORM_ID } from '@angular/core';
 import { Link } from '../../../../shared/interfaces/link';
 import { LoginService } from '../../../../shared/services/login.service';
 import { Usuario } from '../../../../shared/interfaces/login';
@@ -21,7 +21,8 @@ export class LinksComponent implements OnInit {
     private router: Router,
     private loginService: LoginService,
     private localStorage: LocalStorageService,
-    private root: RootService
+    private root: RootService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.innerWidth = window.innerWidth;
   }

@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+  ViewChild,
+} from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
 import { Usuario } from '../../../../shared/interfaces/login';
@@ -12,6 +18,7 @@ import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-page-quotation',
@@ -39,9 +46,12 @@ export class PageQuotationComponent implements OnInit {
     private clientsService: ClientsService,
     private cartService: CartService,
     private modalService: BsModalService,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   ngOnInit(): void {

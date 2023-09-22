@@ -5,6 +5,7 @@ import {
   Input,
   ViewChild,
   TemplateRef,
+  PLATFORM_ID,
 } from '@angular/core';
 import { CartService } from '../../../../shared/services/cart.service';
 import { FormControl } from '@angular/forms';
@@ -25,6 +26,7 @@ import * as moment from 'moment';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { isPlatformBrowser } from '@angular/common';
 
 interface Item {
   ProductCart: ProductCart;
@@ -90,7 +92,9 @@ export class PagesCartPaymentOcComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   constructor(
@@ -103,9 +107,12 @@ export class PagesCartPaymentOcComponent implements OnInit {
     private modalService: BsModalService,
     private route: ActivatedRoute,
     private router: Router,
-    private direction: DirectionService // @Inject(WINDOW) private window: Window
+    private direction: DirectionService, // @Inject(WINDOW) private window: Window
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   async ngOnInit() {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CatalogoService } from '../../../../shared/services/catalogo.service';
@@ -10,6 +10,7 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { environment } from '../../../../../environments/environment';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-page-ver-catalogo-flip',
@@ -52,7 +53,8 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     private toast: ToastrService,
     public cart: CartService,
     public root: RootService,
-    private responsive: BreakpointObserver
+    private responsive: BreakpointObserver,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   getTags() {
@@ -89,8 +91,12 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         }
       });
     this.validarParametros();
-    this.screenWidth = window.innerWidth;
-    this.screenHeight = window.innerHeight;
+    this.screenWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+    this.screenHeight = isPlatformBrowser(this.platformId)
+      ? window.innerHeight
+      : 900;
   }
 
   async validarParametros() {
@@ -112,13 +118,10 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       this.propuesta = await this.catalogoService.obtenerPropuesta(
         objeto.folioPropuesta
       );
-      console.log('testetet');
-      console.log(this.propuesta);
 
       this.tipoCatalogo = objeto.tipoCatalogo;
       this.folio = objeto.folioPropuesta;
       this.nombreCliente = objeto.nombre;
-      console.log(this.nombreCliente);
 
       if (this.nombreCliente === 'Catalogo para ') {
         this.Generico = true;

@@ -1,10 +1,17 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 import { Router } from '@angular/router';
 // import { LocalStorageService } from 'angular-2-local-storage';
 import { Usuario } from '../../../../shared/interfaces/login';
 import { LoginService } from '../../../../shared/services/login.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-mi-cuenta',
@@ -27,9 +34,12 @@ export class MiCuentaComponent implements OnInit {
     private router: Router,
     private loginService: LoginService,
     private localStorage: LocalStorageService,
-    private root: RootService
+    private root: RootService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.screenWidth = window.innerWidth;
+    this.screenWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   async ngOnInit() {
@@ -63,6 +73,8 @@ export class MiCuentaComponent implements OnInit {
   }
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.screenWidth = window.innerWidth;
+    this.screenWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 }

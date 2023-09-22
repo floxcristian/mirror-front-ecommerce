@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { CatalogoService } from '../../../../shared/services/catalogo.service';
 import { FlipSetting, PageFlip, SizeType } from 'page-flip';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-page-ver-newsletter',
@@ -24,7 +25,8 @@ export class PageVerNewsletterComponent implements OnInit {
 
   constructor(
     private responsive: BreakpointObserver,
-    private catalogoService: CatalogoService
+    private catalogoService: CatalogoService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit() {
@@ -57,8 +59,12 @@ export class PageVerNewsletterComponent implements OnInit {
           this.dispositivo = 'tablet';
         }
       });
-    this.screenWidth = window.innerWidth;
-    this.screenHeight = window.innerHeight;
+    this.screenWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+    this.screenHeight = isPlatformBrowser(this.platformId)
+      ? window.innerHeight
+      : 900;
     console.log(this.dispositivo);
     this.ObtenerDatos();
     setTimeout(() => {
@@ -92,8 +98,12 @@ export class PageVerNewsletterComponent implements OnInit {
   altoPantalla: number = 0;
   anchoPantalla: number = 0;
   ObtenerTamanoPantalla() {
-    this.altoPantalla = window.innerHeight;
-    this.anchoPantalla = window.innerWidth;
+    this.altoPantalla = isPlatformBrowser(this.platformId)
+      ? window.innerHeight
+      : 900;
+    this.anchoPantalla = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   dispositivo: string = '';

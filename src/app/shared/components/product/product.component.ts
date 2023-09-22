@@ -271,7 +271,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   stockTiendaActual: any = 0;
   MODOS = { RETIRO_TIENDA: 'retiroTienda', DESPACHO: 'domicilio' };
   constructor(
-    @Inject(PLATFORM_ID) private platformId: any,
+    @Inject(PLATFORM_ID) private platformId: Object,
     private cart: CartService,
     private wishlist: WishlistService,
     private compare: CompareService,
@@ -296,7 +296,9 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.isB2B =
       this.usuario.user_role === 'supervisor' ||
       this.usuario.user_role === 'comprador';
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
     // cambio de sucursal
     this.geoLocationServicePromise =
       this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
@@ -824,6 +826,8 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 }

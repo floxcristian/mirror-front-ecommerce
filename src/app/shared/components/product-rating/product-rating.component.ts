@@ -71,7 +71,6 @@ export class ProductRatingComponent implements OnChanges {
           this.rating = Number(this.rating.toFixed(1));
           this.pintaEstrellas(this.rating);
         } else {
-          //console.log(resp);
           this.toastrService.error(resp.msg);
         }
       });

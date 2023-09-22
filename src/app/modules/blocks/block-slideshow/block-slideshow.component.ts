@@ -51,8 +51,9 @@ export class BlockSlideshowComponent implements OnInit {
     private slidesService: SlidesService,
     private modalService: BsModalService
   ) {
-    // this.innerWidth = this.window.innerWidth;
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
     this.isBrowser = isPlatformBrowser('b2b');
   }
 

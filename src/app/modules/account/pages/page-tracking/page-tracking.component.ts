@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { TrackingStep } from '../../../../shared/interfaces/tracking';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-page-tracking',
@@ -22,9 +23,12 @@ export class PageTrackingComponent implements OnInit {
   usuario: any;
   constructor(
     private localS: LocalStorageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
     this.usuario = this.localS.get('usuario');
   }
 

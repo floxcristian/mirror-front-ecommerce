@@ -54,7 +54,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: any,
+    @Inject(PLATFORM_ID) private platformId: Object,
     public router: Router,
     private toastr: ToastrService,
     private cart: CartService,
@@ -100,13 +100,15 @@ export class AppComponent implements AfterViewInit, OnInit {
             });
         });
     }
-    window.onbeforeunload = (event) => {
-      const u: Usuario = this.root.getDataSesionUsuario();
-      if (u.user_role === 'supervisor' || u.user_role === 'comprador') {
-        u.ultimoCierre = moment();
-        this.localS.set('usuario', u);
-      }
-    };
+    if (isPlatformBrowser(this.platformId)) {
+      window.onbeforeunload = (event) => {
+        const u: Usuario = this.root.getDataSesionUsuario();
+        if (u.user_role === 'supervisor' || u.user_role === 'comprador') {
+          u.ultimoCierre = moment();
+          this.localS.set('usuario', u);
+        }
+      };
+    }
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {

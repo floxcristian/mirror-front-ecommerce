@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Inject,
+  Input,
+  PLATFORM_ID,
+} from '@angular/core';
 import { StoresService } from '../../shared/services/stores.service';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
@@ -9,6 +15,7 @@ import { LogisticsService } from '../../shared/services/logistics.service';
 import { RootService } from '../../shared/services/root.service';
 import { isVacio } from '../../shared/utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { isPlatformBrowser } from '@angular/common';
 
 interface Store {
   cod_almacen: string;
@@ -32,7 +39,9 @@ export class HeaderComponent implements AfterViewInit {
   innerWidth: any;
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   constructor(
@@ -41,6 +50,7 @@ export class HeaderComponent implements AfterViewInit {
     private rootService: RootService,
     private localS: LocalStorageService,
     private logisticsService: LogisticsService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     // this.obtieneTienda();
 

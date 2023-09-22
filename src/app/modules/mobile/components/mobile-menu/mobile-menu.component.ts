@@ -4,6 +4,8 @@ import {
   OnInit,
   ViewChild,
   TemplateRef,
+  PLATFORM_ID,
+  Inject,
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
@@ -32,6 +34,7 @@ import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -73,9 +76,12 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
     private categoriesService: CategoryService,
     private root: RootService,
     private geoLocationService: GeoLocationService,
-    private logisticsService: LogisticsService
+    private logisticsService: LogisticsService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
     this.obtieneCategorias();
 
     const role = this.root.getDataSesionUsuario().user_role;

@@ -91,7 +91,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: any,
+    @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
     private router: Router,
     private productoService: ProductsService,
@@ -113,7 +113,9 @@ export class PageProductComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
 
     this.user = this.root.getDataSesionUsuario();
     this.isB2B =

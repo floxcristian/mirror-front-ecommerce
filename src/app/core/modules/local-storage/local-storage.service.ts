@@ -1,12 +1,18 @@
-import { Injectable } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 
 @Injectable()
 export class LocalStorageService {
   private prefix: string = '';
 
-  constructor() {}
+  constructor(@Inject(PLATFORM_ID) private platformId: any) {}
+
+  private isLocalStorageAvailable(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
 
   get(key: string) {
+    if (!this.isLocalStorageAvailable()) return null;
     const data: any = localStorage.getItem(this.prefix + key) as any;
     try {
       return JSON.parse(data);
@@ -26,7 +32,7 @@ export class LocalStorageService {
   }*/
 
   set(key: string, value: any): void {
-    // TODO: verificar si la variable es un objeto
+    if (!this.isLocalStorageAvailable()) return;
     if (typeof value === 'object') {
       const data = JSON.stringify(value);
       localStorage.setItem(this.prefix + key, data);
@@ -53,7 +59,9 @@ export class LocalStorageService {
     }
   }
 
-  remove(key: string) {
-    localStorage.removeItem(`${this.prefix}${key}`);
+  remove(key: string): void {
+    if (this.isLocalStorageAvailable()) {
+      localStorage.removeItem(`${this.prefix}${key}`);
+    }
   }
 }

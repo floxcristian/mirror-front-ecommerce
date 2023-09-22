@@ -1,5 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+  ViewChild,
+} from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { Observable, Subject } from 'rxjs';
 import { Usuario } from '../../../../shared/interfaces/login';
@@ -44,7 +50,8 @@ export class PageListaPreciosComponent implements OnInit {
     private httpClient: HttpClient,
     public root: RootService,
     private localS: LocalStorageService,
-    private geoLocationService: GeoLocationService
+    private geoLocationService: GeoLocationService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.innerWidth = window.innerWidth;
     // cambio de sucursal

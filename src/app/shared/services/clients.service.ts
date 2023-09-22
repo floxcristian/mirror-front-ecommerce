@@ -63,8 +63,6 @@ export class ClientsService {
   }
 
   updatePassword(data: any) {
-    // console.log(data);
-
     const call = environment.apiCMS + `users/` + data.clientId;
     return this.http.patch(call, data);
   }

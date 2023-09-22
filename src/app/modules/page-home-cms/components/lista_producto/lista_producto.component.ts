@@ -2,9 +2,11 @@ import {
   Component,
   EventEmitter,
   HostListener,
+  Inject,
   Input,
   OnInit,
   Output,
+  PLATFORM_ID,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { OwlOptions } from 'ngx-owl-carousel-o';
@@ -17,6 +19,7 @@ import { GeoLocation } from '../../../../shared/interfaces/geo-location';
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-lista_producto',
@@ -83,10 +86,15 @@ export class Lista_productoComponent implements OnInit {
     private router: Router,
     private direction: DirectionService,
     private geoLocationService: GeoLocationService,
-    private localStorage: LocalStorageService
+    private localStorage: LocalStorageService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.screenWidth = window.innerWidth;
-    this.screenHeight = window.innerHeight;
+    this.screenWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+    this.screenHeight = isPlatformBrowser(this.platformId)
+      ? window.innerHeight
+      : 900;
   }
 
   ngOnInit(): void {
@@ -117,8 +125,12 @@ export class Lista_productoComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.screenWidth = window.innerWidth;
-    this.screenHeight = window.innerHeight;
+    this.screenWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+    this.screenHeight = isPlatformBrowser(this.platformId)
+      ? window.innerHeight
+      : 900;
     if (this.screenWidth <= 770) {
       this.layout = 'grid-sm';
     }

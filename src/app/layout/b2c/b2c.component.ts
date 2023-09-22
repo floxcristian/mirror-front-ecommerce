@@ -25,14 +25,17 @@ export class B2cComponent implements AfterViewInit {
 
   innerWidth: number;
   constructor(
-    @Inject(PLATFORM_ID) private platformId: any,
+    @Inject(PLATFORM_ID) private platformId: Object,
     public root: RootService,
     public router: Router,
     public route: ActivatedRoute,
     private titleService: Title,
     private canonicalService: CanonicalService
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+
     this.route.data.subscribe(
       (data) => (this.headerLayout = data['headerLayout'])
     );
@@ -71,6 +74,8 @@ export class B2cComponent implements AfterViewInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 }

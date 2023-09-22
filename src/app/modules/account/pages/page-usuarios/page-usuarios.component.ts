@@ -225,7 +225,6 @@ export class PageUsuariosComponent implements OnInit {
             this.loadData();
           },
           (error) => {
-            // console.log(error);
             this.toastr.error('Error de conexión, para crear usuarios');
             this.loadingData = false;
           }

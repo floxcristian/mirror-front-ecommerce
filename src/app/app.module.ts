@@ -61,6 +61,10 @@ import { RouterModule } from '@angular/router';
       deps: [LocalStorageService],
       multi: true,
     },
+    {
+      provide: 'Window',
+      useValue: window,
+    },
   ],
   bootstrap: [AppComponent],
 })

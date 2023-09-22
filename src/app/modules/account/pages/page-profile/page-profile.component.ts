@@ -4,6 +4,8 @@ import {
   OnInit,
   ViewChild,
   TemplateRef,
+  PLATFORM_ID,
+  Inject,
 } from '@angular/core';
 import { RootService } from '../../../../shared/services/root.service';
 import { Usuario, esEmpresa } from '../../../../shared/interfaces/login';
@@ -28,6 +30,7 @@ import {
 } from '../../../../shared/components/modal/modal.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-page-profile',
@@ -71,10 +74,13 @@ export class PageProfileComponent implements OnDestroy, OnInit {
     private clientsService: ClientsService,
     private toastr: ToastrService,
     private localS: LocalStorageService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.usuario = this.root.getDataSesionUsuario();
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
   ngOnInit(): void {
     this.dtOptions = this.root.simpleDtOptions;

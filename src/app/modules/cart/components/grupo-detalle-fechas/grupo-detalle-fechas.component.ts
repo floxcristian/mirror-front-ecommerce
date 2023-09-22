@@ -1,7 +1,16 @@
 // Angular
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  PLATFORM_ID,
+  Inject,
+} from '@angular/core';
 // Constants
 import { DIAS, MESES } from './date-config';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-grupo-detalle-fechas',
@@ -25,8 +34,10 @@ export class GrupoDetalleFechasComponent implements OnInit {
   //ver las fechas
   innerWidth: number;
 
-  constructor() {
-    this.innerWidth = window.innerWidth;
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   ngOnInit(): void {

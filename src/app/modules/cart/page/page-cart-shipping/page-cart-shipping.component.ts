@@ -5,9 +5,11 @@ import {
   OnDestroy,
   ViewChild,
   ChangeDetectorRef,
+  PLATFORM_ID,
+  Inject,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { DatePipe, isPlatformBrowser } from '@angular/common';
 // Libs
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
@@ -141,10 +143,13 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private geoService: GeoLocationService,
     private geoLocationService: GeoLocationService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.localS.set('recibe', {});
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
 
     this.tienda_actual = this.localS.get('geolocalizacion');
   }

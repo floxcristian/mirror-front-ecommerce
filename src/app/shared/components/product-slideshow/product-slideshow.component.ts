@@ -4,6 +4,7 @@ import {
   Inject,
   AfterViewInit,
   OnDestroy,
+  PLATFORM_ID,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductsService } from '../../services/products.service';
@@ -26,6 +27,7 @@ import { LogisticsService } from '../../services/logistics.service';
 import { isVacio } from '../../utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-product-slideshow',
@@ -117,9 +119,12 @@ export class ProductSlideshowComponent
     private router: Router,
     private clientsService: ClientsService,
     private modalService: BsModalService,
-    private logisticsService: LogisticsService
+    private logisticsService: LogisticsService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.innerWidth = this.window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   sidebarPosition: 'start' | 'end' = 'start';

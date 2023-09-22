@@ -1,10 +1,11 @@
 // Angular
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 // Services
 import { RootService } from '../shared/services/root.service';
 import { LocalStorageService } from '../core/modules/local-storage/local-storage.service';
 import { CategoryService } from '../shared/services/category.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-layout',
@@ -20,22 +21,25 @@ export class LayoutComponent implements OnInit {
     private readonly rootService: RootService,
     private readonly route: ActivatedRoute,
     private readonly localS: LocalStorageService,
-    private categoriesService:CategoryService
+    private categoriesService: CategoryService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
     this.scrollTop();
     this.isB2B = this.checkIsB2b();
     this.getQueryParams();
-    this.categoriesService.obtieneCategoriasHeader().subscribe((r)=>{})
+    this.categoriesService.obtieneCategoriasHeader().subscribe((r) => {});
   }
 
   /**
    * Hace scroll top.
    */
   scrollTop(): void {
-    document.body.scrollTop = 0; // Safari
-    document.documentElement.scrollTop = 0; // Other
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.scrollTop = 0; // Safari
+      document.documentElement.scrollTop = 0; // Other
+    }
   }
 
   /**

@@ -1,6 +1,13 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-footer-b2c',
@@ -12,9 +19,16 @@ export class FooterB2cComponent implements OnInit {
   screenHeight: any;
   logoSrc = environment.logoSrcFooter;
   load = false;
-  constructor(public router: Router) {
-    this.screenWidth = window.innerWidth;
-    this.screenHeight = window.innerHeight;
+  constructor(
+    public router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.screenWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+    this.screenHeight = isPlatformBrowser(this.platformId)
+      ? window.innerHeight
+      : 900;
   }
 
   async ngOnInit() {
@@ -38,8 +52,12 @@ export class FooterB2cComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.screenWidth = window.innerWidth;
-    this.screenHeight = window.innerHeight;
+    this.screenWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+    this.screenHeight = isPlatformBrowser(this.platformId)
+      ? window.innerHeight
+      : 900;
   }
 
   HideFooter2() {

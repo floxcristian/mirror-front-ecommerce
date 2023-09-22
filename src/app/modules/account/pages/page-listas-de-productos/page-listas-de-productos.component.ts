@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import {
@@ -19,6 +19,7 @@ import { EditarListaProductosComponent } from '../../../../shared/components/edi
 import { AgregarListaProductosMasivaModalComponent } from '../../../../shared/components/agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
 import { AgregarListaProductosUnitariaModalComponent } from '../../../../shared/components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
 import { CartService } from '../../../../shared/services/cart.service';
+import { isPlatformBrowser } from '@angular/common';
 // import { ItemsControl } from '@ngu/carousel/lib/ngu-carousel/ngu-carousel';
 
 @Component({
@@ -42,9 +43,12 @@ export class PageListasDeProductosComponent implements OnInit {
     private toastr: ToastrService,
     private modalService: BsModalService,
     private cart: CartService,
-    private geoLocal: GeoLocationService
+    private geoLocal: GeoLocationService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   ngOnInit() {
@@ -246,7 +250,6 @@ export class PageListasDeProductosComponent implements OnInit {
   }
 
   addToCart(lista: any) {
-    console.log(lista);
     if (this.addingToCart) {
       return;
     }
@@ -263,7 +266,6 @@ export class PageListasDeProductosComponent implements OnInit {
   }
 
   addCart(item: any) {
-    console.log(item);
     if (this.addingToCart) {
       return;
     }
@@ -283,7 +285,6 @@ export class PageListasDeProductosComponent implements OnInit {
 
   buscar_producto(event: any, index: any) {
     this.listas = JSON.parse(JSON.stringify(this.listas_temp));
-    console.log(this.listas_temp[index].detalleSkus);
     let listaTemp: any = [];
 
     listaTemp = JSON.parse(JSON.stringify(this.listas[index].detalleSkus));

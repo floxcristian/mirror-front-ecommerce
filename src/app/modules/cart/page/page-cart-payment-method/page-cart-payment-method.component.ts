@@ -5,6 +5,8 @@ import {
   ViewChild,
   ElementRef,
   EventEmitter,
+  PLATFORM_ID,
+  Inject,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CartService } from '../../../../shared/services/cart.service';
@@ -41,6 +43,7 @@ import { AgregarCentroCostoComponent } from '../../components/agregar-centro-cos
 import { Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { isPlatformBrowser } from '@angular/common';
 
 declare const $: any;
 declare let dataLayer: any;
@@ -129,9 +132,12 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private toast: ToastrService,
     private paymentService: PaymentService,
     private logistics: LogisticsService,
-    private clientsService: ClientsService
+    private clientsService: ClientsService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
     this.formDefault();
     this.invitado = this.localS.get('invitado');
     if (this.invitado) {

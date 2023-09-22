@@ -1,19 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { StoreService } from '../../../../shared/services/store.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
-    selector: 'app-footer-contacts',
-    templateUrl: './contacts.component.html',
-    styleUrls: ['./contacts.component.scss']
+  selector: 'app-footer-contacts',
+  templateUrl: './contacts.component.html',
+  styleUrls: ['./contacts.component.scss'],
 })
-
 export class ContactsComponent {
-innerWidth: number;
-    constructor(public store: StoreService) {
-        this.innerWidth=window.innerWidth;
-    }
+  innerWidth: number;
+  constructor(
+    public store: StoreService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+  }
 
-    onResize(event:any) {
+  onResize(event: any) {
     this.innerWidth = event.target.innerWidth;
-    }
+  }
 }

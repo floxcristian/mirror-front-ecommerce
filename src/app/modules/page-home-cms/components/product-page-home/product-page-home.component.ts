@@ -1,9 +1,11 @@
 import {
   Component,
   HostListener,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
+  PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
 import { RootService } from '../../../../shared/services/root.service';
@@ -16,6 +18,7 @@ import { DirectionService } from '../../../../shared/services/direction.service'
 import { VerMasProductoComponent } from '../ver-mas-producto/ver-mas-producto.component';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { isPlatformBrowser } from '@angular/common';
 
 interface ITempProduct {
   _id: any;
@@ -63,10 +66,15 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
     private root: RootService,
     private router: Router,
     private modalService: BsModalService,
-    private direction: DirectionService
+    private direction: DirectionService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.screenWidth = window.innerWidth;
-    this.screenHeight = window.innerHeight;
+    this.screenWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+    this.screenHeight = isPlatformBrowser(this.platformId)
+      ? window.innerHeight
+      : 900;
     this.tamanho_layout();
   }
   carouselOptions = {
@@ -148,8 +156,12 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
   }
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.screenWidth = window.innerWidth;
-    this.screenHeight = window.innerHeight;
+    this.screenWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+    this.screenHeight = isPlatformBrowser(this.platformId)
+      ? window.innerHeight
+      : 900;
     this.tamanho_layout();
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { CartService } from '../../../../shared/services/cart.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { ToastrService } from 'ngx-toastr';
@@ -13,6 +13,7 @@ import { CartData } from '../../../../shared/interfaces/cart-item';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-page-save-cart',
@@ -31,9 +32,12 @@ export class PageSaveCartComponent implements OnInit {
     public root: RootService,
     private localS: LocalStorageService,
     private toast: ToastrService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
   }
 
   async ngOnInit() {

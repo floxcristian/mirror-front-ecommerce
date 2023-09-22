@@ -5,8 +5,9 @@ import {
   EventEmitter,
   Inject,
   HostListener,
+  PLATFORM_ID,
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Link } from '../../../../shared/interfaces/link';
 import { RootService } from '../../../../shared/services/root.service';
 import { Usuario } from '../../../../shared/interfaces/login';
@@ -52,11 +53,17 @@ export class ProductsViewComponent {
   url: string;
   class = 'grid';
 
-  constructor(@Inject(DOCUMENT) document: any, private root: RootService) {
+  constructor(
+    @Inject(DOCUMENT) document: any,
+    private root: RootService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     this.location = document.location.search;
     this.url = window.location.href;
 
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
     if (this.innerWidth < 1025) {
       this.selectedItem = 12;
       this.listItemPage = [

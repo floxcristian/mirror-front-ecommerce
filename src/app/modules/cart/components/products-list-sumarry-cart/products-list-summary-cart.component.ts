@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, PLATFORM_ID, Inject } from '@angular/core';
 import { ProductCart } from '../../../../shared/interfaces/cart-item';
 import { RootService } from '../../../../shared/services/root.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-products-list-summary-cart',
@@ -8,15 +9,20 @@ import { RootService } from '../../../../shared/services/root.service';
   styleUrls: ['./products-list-summary-cart.component.scss'],
 })
 export class ProductsListSummaryCartComponent implements OnInit {
-  productoList: ProductCart[] | any[]= [];
+  productoList: ProductCart[] | any[] = [];
   innerWidth!: number;
 
   @Input() set products(value: any) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
     this.productoList = value;
   }
 
-  constructor(public root: RootService) {}
+  constructor(
+    public root: RootService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngOnInit() {}
 

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { PageHomeService } from '../../../modules/page-home-cms/services/pageHome.service';
 import { DirectionService } from '../../services/direction.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-buttons-slideshow',
@@ -33,10 +34,15 @@ export class ButtonsSlideshowComponent implements OnInit {
 
   constructor(
     private pagehomeService: PageHomeService,
-    private direction: DirectionService
+    private direction: DirectionService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.screenWidth = window.innerWidth;
-    this.screenHeight = window.innerHeight;
+    this.screenWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+    this.screenHeight = isPlatformBrowser(this.platformId)
+      ? window.innerHeight
+      : 900;
   }
 
   ngOnInit() {

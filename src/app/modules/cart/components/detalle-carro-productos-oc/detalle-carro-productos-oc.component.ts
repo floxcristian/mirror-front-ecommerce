@@ -39,9 +39,7 @@ export class DetalleCarroProductosOcComponent implements OnInit {
     await this.productCart;
 
     this.products = this.productCart;
-
     await this.verificarProducto();
-    console.log(this.products);
     this.shippingType = this.total.retiro;
   }
 

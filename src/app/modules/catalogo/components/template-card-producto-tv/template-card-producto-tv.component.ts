@@ -4,14 +4,14 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
 @Component({
   selector: 'app-template-card-producto-tv',
   templateUrl: './template-card-producto-tv.component.html',
-  styleUrls: ['./template-card-producto-tv.component.scss']
+  styleUrls: ['./template-card-producto-tv.component.scss'],
 })
 export class TemplateCardProductoTvComponent implements OnInit {
   @Input() layout: any;
 
   colsRe!: number;
   customOptions!: OwlOptions;
-  productos:any[] = [];
+  productos: any[] = [];
   contenido!: [];
 
   constructor() {}
@@ -38,7 +38,7 @@ export class TemplateCardProductoTvComponent implements OnInit {
       dots: false,
       smartSpeed: 3000,
       navSpeed: 1000,
-      autoWidth: true
+      autoWidth: true,
     };
 
     const total = this.contenido.length;
@@ -62,8 +62,6 @@ export class TemplateCardProductoTvComponent implements OnInit {
       this.productos.push({ arr: this.contenido.slice(0, corte) });
       this.productos.push({ arr: this.contenido.slice(corte, total) });
     }
-
-    console.log(this.productos);
   }
 
   numSequence(): Array<number> {

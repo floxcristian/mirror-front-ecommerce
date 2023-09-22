@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 // import { ProductsService } from '../../../../shared/services/products.service';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { ToastrService } from 'ngx-toastr';
@@ -13,6 +13,7 @@ import { Context } from 'chartjs-plugin-datalabels';
 // import { Label } from 'ng2-charts';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { GraficoVentasPorUen } from '../../../../shared/interfaces/graficoVentaPorUen';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-page-dashboard',
@@ -57,9 +58,12 @@ export class PageDashboardComponent {
     private clientService: ClientsService,
     private toastr: ToastrService,
     private root: RootService,
-    private currency: CurrencyFormatPipe
+    private currency: CurrencyFormatPipe,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
 
     this.usuario = this.root.getDataSesionUsuario();
 
@@ -136,7 +140,7 @@ export class PageDashboardComponent {
       .graficoVentasPorUen({ anio: this.anio, mes: this.mes, rutCliente: rut })
       .subscribe(
         (resp: any) => {
-          console.log(resp.data);
+       
           const data: GraficoVentasPorUen[] = resp.data;
 
           this.barChartLabels = data.map((r) => r._id);
