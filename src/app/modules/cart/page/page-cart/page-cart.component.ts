@@ -121,18 +121,15 @@ export class PageCartComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.cart.dropCartActive$.next(false);
     });
-    if (
-      this.user.user_role !== 'supervisor' &&
-      this.user.user_role !== 'comprador'
-    ) {
+    if (['supervisor', 'comprador'].includes(this.user.user_role || '')) {
       dataLayer.push({
         event: 'cart',
         pagePath: window.location.href,
       });
     }
-    this.isB2B =
-      this.user.user_role === 'supervisor' ||
-      this.user.user_role === 'comprador';
+    this.isB2B = ['supervisor', 'comprador'].includes(
+      this.user.user_role || ''
+    );
   }
 
   ngOnDestroy(): void {
@@ -146,7 +143,6 @@ export class PageCartComponent implements OnInit, OnDestroy {
 
   needUpdate(): boolean {
     let needUpdate = false;
-
     return needUpdate;
   }
 

@@ -50,7 +50,6 @@ export class PagePimTemplateS implements OnInit {
   constructor(public cart: CartService, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
-    console.log(this.folio);
     switch (this.tipo) {
       case 'Vendedor':
         this.carro = false;

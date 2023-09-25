@@ -54,7 +54,6 @@ export class PageVerNewsletterComponent implements OnInit {
           this.dispositivo = 'web';
         } else {
           if (breakpoints[Breakpoints.HandsetLandscape]) this.vertical = true;
-          console.log(this.vertical);
 
           this.dispositivo = 'tablet';
         }
@@ -79,7 +78,6 @@ export class PageVerNewsletterComponent implements OnInit {
       this.portada = this.portada.imagen;
       this.contraportada = this.contraportada.imagen;
       this.data = respuesta.data;
-      console.log(this.data);
     } catch (error) {
       console.log(error);
     }

@@ -400,7 +400,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   setActiveImage(image: ProductImage): void {
-    //console.log(image);
     this.images.forEach(
       (eachImage) => (eachImage.active = eachImage === image)
     );
