@@ -44,9 +44,8 @@ import { Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
-
+import { GoogleTagManagerService } from 'angular-google-tag-manager';
 declare const $: any;
-declare let dataLayer: any;
 export interface Archivo {
   archivo: File;
   nombre: string;
@@ -133,7 +132,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private paymentService: PaymentService,
     private logistics: LogisticsService,
     private clientsService: ClientsService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private readonly gtmService: GoogleTagManagerService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -276,7 +276,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       this.userSession.user_role !== 'supervisor' &&
       this.userSession.user_role !== 'comprador'
     ) {
-      dataLayer.push({
+      this.gtmService.pushTag({
         event: 'payment',
         pagePath: window.location.href,
       });

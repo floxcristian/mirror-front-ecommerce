@@ -29,7 +29,7 @@ import {
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-declare let dataLayer: any;
+import { GoogleTagManagerService } from 'angular-google-tag-manager';
 
 @Component({
   selector: 'app-header-search',
@@ -85,7 +85,8 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     public localS: LocalStorageService,
     private geoLocationService: GeoLocationService,
     private logisticsService: LogisticsService,
-    private cartService: CartService
+    private cartService: CartService,
+    private readonly gtmService: GoogleTagManagerService
   ) {}
 
   ngOnInit() {
@@ -133,8 +134,8 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     } else this.back_key = false;
   }
 
-  public buscar() {
-    dataLayer.push({
+  buscar() {
+    this.gtmService.pushTag({
       event: 'search',
       busqueda: this.textToSearch,
     });
@@ -242,7 +243,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   buscarGtag() {
-    dataLayer.push({
+    this.gtmService.pushTag({
       event: 'search',
       busqueda: this.textToSearch,
     });

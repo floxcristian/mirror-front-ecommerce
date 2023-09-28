@@ -59,7 +59,7 @@ import { PromesaService } from '../../../modules/shop/services/promesa.service';
 import { AvisoStockComponent } from '../aviso-stock/aviso-stock.component';
 import { CapitalizeFirstPipe } from '../../pipes/capitalize.pipe';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-declare let dataLayer: any;
+import { GoogleTagManagerService } from 'angular-google-tag-manager';
 interface ProductImage {
   id: string;
   url: string;
@@ -290,7 +290,8 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     private localS: LocalStorageService,
     public sanitizer: DomSanitizer,
     private clientsService: ClientsService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private readonly gtmService: GoogleTagManagerService
   ) {
     this.usuario = this.root.getDataSesionUsuario();
     this.isB2B =
@@ -329,7 +330,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       this.usuario.user_role !== 'supervisor' &&
       this.usuario.user_role !== 'comprador'
     ) {
-      dataLayer.push({
+      this.gtmService.pushTag({
         event: 'productView',
         pagePath: window.location.href,
       });

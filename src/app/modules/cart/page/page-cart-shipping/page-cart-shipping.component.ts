@@ -44,9 +44,8 @@ import { ModalConfirmDatesComponent } from './components/modal-confirm-dates/mod
 import { map, takeUntil } from 'rxjs/operators';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
-
+import { GoogleTagManagerService } from 'angular-google-tag-manager';
 export let browserRefresh = false;
-declare let dataLayer: any;
 @Component({
   selector: 'app-page-cart-shipping',
   templateUrl: './page-cart-shipping.component.html',
@@ -144,7 +143,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     private geoService: GeoLocationService,
     private geoLocationService: GeoLocationService,
     private cd: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private readonly gtmService: GoogleTagManagerService
   ) {
     this.localS.set('recibe', {});
     this.innerWidth = isPlatformBrowser(this.platformId)
@@ -203,7 +203,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       this.userSession.user_role !== 'supervisor' &&
       this.userSession.user_role !== 'comprador'
     ) {
-      dataLayer.push({
+      this.gtmService.pushTag({
         event: 'shipping',
         pagePath: window.location.href,
       });

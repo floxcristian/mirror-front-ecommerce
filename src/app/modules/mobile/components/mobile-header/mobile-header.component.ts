@@ -25,13 +25,12 @@ import { WishlistService } from '../../../../shared/services/wishlist.service';
 import { Subject } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
 import { LoginService } from '../../../../shared/services/login.service';
-// import { LocalStorageService } from 'angular-2-local-storage';
 import { MobileMenuService } from '../../../../shared/services/mobile-menu.service';
 import { environment } from '../../../../../environments/environment';
-declare let dataLayer: any;
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { GoogleTagManagerService } from 'angular-google-tag-manager';
 
 @Component({
   selector: 'app-mobile-header',
@@ -80,7 +79,8 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
     public cart: CartService,
     public wishlist: WishlistService,
     public loginService: LoginService,
-    public localS: LocalStorageService
+    public localS: LocalStorageService,
+    private readonly gtmService: GoogleTagManagerService
   ) {}
 
   ngOnInit() {
@@ -107,8 +107,8 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
     this.buscando = true;
   }
 
-  public buscar() {
-    dataLayer.push({
+  buscar() {
+    this.gtmService.pushTag({
       event: 'search',
       busqueda: this.textToSearch,
     });

@@ -48,8 +48,8 @@ import { RouterModule } from '@angular/router';
     NgbModule,
   ],
   providers: [
+    { provide: 'googleTagManagerId', useValue: 'GTM-M6TH726' },
     { provide: LOCALE_ID, useValue: 'CLP' },
-
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     Title,
     BsModalRef,
@@ -61,10 +61,10 @@ import { RouterModule } from '@angular/router';
       deps: [LocalStorageService],
       multi: true,
     },
-    {
+    /*{
       provide: 'Window',
       useValue: window,
-    },
+    },*/
   ],
   bootstrap: [AppComponent],
 })

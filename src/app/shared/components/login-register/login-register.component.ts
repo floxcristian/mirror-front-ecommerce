@@ -1,26 +1,27 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Usuario } from '../../interfaces/login';
-import { RootService } from '../../services/root.service';
-declare let dataLayer: any;
+import { GoogleTagManagerService } from 'angular-google-tag-manager';
+
 @Component({
   selector: 'app-login-register',
   templateUrl: './login-register.component.html',
-  styleUrls: ['./login-register.component.scss']
+  styleUrls: ['./login-register.component.scss'],
 })
 export class LoginRegisterComponent implements OnInit {
   @Output() outLogin: EventEmitter<any> = new EventEmitter();
   @Output() outInvitado: EventEmitter<any> = new EventEmitter();
   @Input() innerWidth!: number;
   @Input() invitado!: Usuario;
-  constructor() {}
+
+  constructor(private readonly gtmService: GoogleTagManagerService) {}
 
   ngOnInit() {
-    dataLayer.push({
+    this.gtmService.pushTag({
       event: 'profile',
-      pagePath: window.location.href
+      pagePath: window.location.href,
     });
   }
-  returnInvitado(invitado:any) {
+  returnInvitado(invitado: any) {
     this.outInvitado.emit(invitado);
   }
 }

@@ -252,7 +252,6 @@ export class UpdateAddressModalComponent implements OnInit {
       (r: any) => {
         this.coleccionComuna = r.data;
         this.comunas = r.data.map((record: any) => {
-          // console.log('r.data',r.data);
           const v =
             record.comuna + '@' + record.provincia + '@' + record.region;
           return { id: v, value: record.comuna };

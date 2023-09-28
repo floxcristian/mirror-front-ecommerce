@@ -27,7 +27,8 @@ import { environment } from '../../../../../environments/environment';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
-declare let dataLayer: any;
+import { GoogleTagManagerService } from 'angular-google-tag-manager';
+
 interface Item {
   ProductCart: ProductCart;
   quantity: number;
@@ -84,7 +85,8 @@ export class PageCartComponent implements OnInit, OnDestroy {
     private cmsService: CmsService,
     private productoService: ProductsService,
     private direction: DirectionService, // @Inject(WINDOW) private window: Window
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private readonly gtmService: GoogleTagManagerService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -122,7 +124,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
       this.cart.dropCartActive$.next(false);
     });
     if (['supervisor', 'comprador'].includes(this.user.user_role || '')) {
-      dataLayer.push({
+      this.gtmService.pushTag({
         event: 'cart',
         pagePath: window.location.href,
       });

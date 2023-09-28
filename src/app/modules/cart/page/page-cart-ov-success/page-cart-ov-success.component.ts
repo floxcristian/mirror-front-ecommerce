@@ -16,8 +16,7 @@ import { PaymentService } from './../../../../shared/services/payment.service';
 import { CartService } from '../../../../shared/services/cart.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-// External
-declare let dataLayer: any;
+import { GoogleTagManagerService } from 'angular-google-tag-manager';
 declare let fbq: any;
 
 @Component({
@@ -55,7 +54,8 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     private localS: LocalStorageService,
     private root: RootService,
     private paymentService: PaymentService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private readonly gtmService: GoogleTagManagerService
   ) {
     this.cart.load();
     this.screenWidth = isPlatformBrowser(this.platformId)
@@ -124,7 +124,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
         index = index + 1;
 
         if (!tempcarro.gtag) {
-          dataLayer.push({
+          this.gtmService.pushTag({
             event: 'transaction',
             ecommerce: item,
           });
