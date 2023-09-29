@@ -30,6 +30,7 @@
     "@nguniversal/express-engine": "^16.2.0",
     "@popperjs/core": "^2.11.6",
     "angular-datatables": "^16.0.0",
+    "angular-google-tag-manager": "^1.8.0",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.2.3",
     "chart.js": "^4.4.0",

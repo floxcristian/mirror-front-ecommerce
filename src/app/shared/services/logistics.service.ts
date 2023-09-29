@@ -32,11 +32,10 @@ export class LogisticsService {
   }
 
   obtienRetiro(data: any) {
-    let consulta: any = this.http.post(
+    return this.http.post(
       environment.apiImplementosLogistica + `retirocarro`,
       data
     );
-    return consulta;
   }
 
   obtieneDireccionesTienda() {

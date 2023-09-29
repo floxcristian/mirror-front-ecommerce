@@ -44,9 +44,8 @@ import { ModalConfirmDatesComponent } from './components/modal-confirm-dates/mod
 import { map, takeUntil } from 'rxjs/operators';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
-
+import { GoogleTagManagerService } from 'angular-google-tag-manager';
 export let browserRefresh = false;
-declare let dataLayer: any;
 @Component({
   selector: 'app-page-cart-shipping',
   templateUrl: './page-cart-shipping.component.html',
@@ -144,7 +143,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     private geoService: GeoLocationService,
     private geoLocationService: GeoLocationService,
     private cd: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private readonly gtmService: GoogleTagManagerService
   ) {
     this.localS.set('recibe', {});
     this.innerWidth = isPlatformBrowser(this.platformId)
@@ -203,7 +203,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       this.userSession.user_role !== 'supervisor' &&
       this.userSession.user_role !== 'comprador'
     ) {
-      dataLayer.push({
+      this.gtmService.pushTag({
         event: 'shipping',
         pagePath: window.location.href,
       });
@@ -476,9 +476,9 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     const consulta: any = await this.logistics.obtienRetiro(data).toPromise();
     if (consulta.error) {
       this.shippingDaysStore = [];
-      this.toast.error(
+      /*this.toast.error(
         'Ha ocurrido un error al traer las opciones de retiro en tienda.'
-      );
+      );*/
     } else {
       if (consulta.length) {
         this.shippingDaysStore = [];
@@ -1244,7 +1244,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
 
   setSeleccionarEnvioChilexpress(item: any, pos: any) {}
 
-  ver_fechas() {
+  ver_fechas(): void {
     if (this.shippingDaysStore) {
       let menor = this.shippingDaysStore[0].fechas?.[0].fecha;
       let menor_fecha: any = new Date(menor);
@@ -1255,7 +1255,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
           menor_fecha = new Date(menor);
         }
       });
-
+      // Start::obtener el día de retiro en tienda.
       if (moment(menor).startOf('day').toISOString() === this.fecha_actual) {
         this.retiro = 'Retira Hoy';
       } else {
@@ -1273,6 +1273,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
         else if (moment(menor).weekday() == 7)
           this.retiro = 'Retira el día  domingo';
       }
+      // End::obtener el día de retiro en tienda.
     }
   }
 

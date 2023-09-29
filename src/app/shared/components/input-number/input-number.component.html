@@ -1,10 +1,16 @@
 <div class="input-group">
-  <div data-name="gtm_minus" class="input-group-prepend" (mousedown)="sub()">
+  <div
+    data-name="gtm_minus"
+    class="input-group-prepend"
+    (mousedown)="sub()"
+    style="width: auto !important; display: flex !important"
+  >
     <span class="input-group-text" style="cursor: pointer">
       <i class="fas fa-minus m-auto" style="font-size: 10px"></i>
     </span>
   </div>
   <input
+    style="width: 100% !important; flex: 1 1 0% !important; z-index: 9999"
     class="form-control text-center"
     type="number"
     [min]="options.min"
@@ -17,7 +23,11 @@
     #inputElement
     (input)="input()"
   />
-  <div data-name="gtm_add" class="input-group">
+  <div
+    data-name="gtm_add"
+    class="input-group"
+    style="width: auto !important; display: flex !important"
+  >
     <span class="input-group-text" style="cursor: pointer" (mousedown)="add()">
       <i class="fas fa-plus" style="font-size: 10px"></i>
     </span>

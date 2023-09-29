@@ -106,8 +106,6 @@ export class AngularEmailAutocompleteComponent {
       //   this.toggleDropDown = false;
       // }
 
-      // console.log(this.dropDownValues.length);
-
       // if(this.dropDownValues.length == 0){
       //   $('.dropdown-menu').hide();
       // } else {

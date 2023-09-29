@@ -43,9 +43,13 @@
     id="account"
   >
     <ul>
-      <li class="ps-3" *ngFor="let link of links">
-        <span class="link" (click)="validarCuenta(link)">{{ link.label }}</span>
-      </li>
+      <ng-container *ngFor="let link of links">
+        <li class="ps-3" *ngIf="link.label !== 'Cerrar sesión' && usuario">
+          <span class="link" (click)="validarCuenta(link)">{{
+            link.label
+          }}</span>
+        </li>
+      </ng-container>
     </ul>
     <hr class="my-2" style="background-color: #646462" />
   </div>

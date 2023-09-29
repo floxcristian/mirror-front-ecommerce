@@ -1,4 +1,4 @@
-import { PaymentService } from './../../../../shared/services/payment.service';
+// Angular
 import {
   Component,
   OnInit,
@@ -8,12 +8,15 @@ import {
   Inject,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CartService } from '../../../../shared/services/cart.service';
+import { isPlatformBrowser } from '@angular/common';
+// Rxjs
 import { Subscription } from 'rxjs';
+// Services
+import { PaymentService } from './../../../../shared/services/payment.service';
+import { CartService } from '../../../../shared/services/cart.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { isPlatformBrowser } from '@angular/common';
-declare let dataLayer: any;
+import { GoogleTagManagerService } from 'angular-google-tag-manager';
 declare let fbq: any;
 
 @Component({
@@ -51,7 +54,8 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     private localS: LocalStorageService,
     private root: RootService,
     private paymentService: PaymentService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private readonly gtmService: GoogleTagManagerService
   ) {
     this.cart.load();
     this.screenWidth = isPlatformBrowser(this.platformId)
@@ -71,7 +75,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.gclid = this.localS.get('gclid');
     this.cart.load();
   }
@@ -93,7 +97,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.SubscriptionQueryParams
       ? this.SubscriptionQueryParams.unsubscribe()
       : null;
@@ -120,7 +124,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
         index = index + 1;
 
         if (!tempcarro.gtag) {
-          dataLayer.push({
+          this.gtmService.pushTag({
             event: 'transaction',
             ecommerce: item,
           });
@@ -134,7 +138,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     this.loadingCart = false;
   }
 
-  mostrar_detalle() {
+  mostrar_detalle(): void {
     this.usuario = this.root.getDataSesionUsuario();
     this.usuario.nombre_completo =
       this.usuario.first_name + ' ' + this.usuario.last_name;
@@ -143,7 +147,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
   /**
    * Agrega pixel de facebook con el valor de la compra.
    */
-  addFacebookPixel() {
+  addFacebookPixel(): void {
     this.fbclid = this.localS.get('fbclid');
     if (this.fbclid) {
       fbq('track', 'Purchase', {

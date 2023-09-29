@@ -17,7 +17,7 @@ import { Subject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-declare let dataLayer: any;
+import { GoogleTagManagerService } from 'angular-google-tag-manager';
 @Component({
   selector: 'app-product-card-b2c',
   templateUrl: './product-card-b2c.component.html',
@@ -69,7 +69,8 @@ export class ProductCardB2cComponent implements OnInit {
     public compare: CompareService,
     public quickview: QuickviewService,
     public currency: CurrencyService,
-    public sanitizer: DomSanitizer
+    public sanitizer: DomSanitizer,
+    private readonly gtmService: GoogleTagManagerService
   ) {
     if (this.route.url.includes('/especial/')) this.home = true;
     this.url = window.location.href;
@@ -123,7 +124,7 @@ export class ProductCardB2cComponent implements OnInit {
     if (this.addingToCart) {
       return;
     }
-    dataLayer.push({
+    this.gtmService.pushTag({
       event: 'addtoCart',
       pagePath: this.url,
     });

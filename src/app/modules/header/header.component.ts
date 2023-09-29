@@ -110,7 +110,7 @@ export class HeaderComponent implements AfterViewInit {
     if (this.route.url.split('?')[0] != undefined) {
       url = '' + this.route.url.split('?')[0];
     }
-    //console.log('url', url);
+
     return ![
       '/carro-compra/metodo-de-envio',
       '/carro-compra/forma-de-pago',

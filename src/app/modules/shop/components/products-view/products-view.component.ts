@@ -11,7 +11,7 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Link } from '../../../../shared/interfaces/link';
 import { RootService } from '../../../../shared/services/root.service';
 import { Usuario } from '../../../../shared/interfaces/login';
-declare let dataLayer: any;
+import { GoogleTagManagerService } from 'angular-google-tag-manager';
 export type Layout = 'grid' | 'grid-with-features' | 'list';
 
 @Component({
@@ -56,7 +56,8 @@ export class ProductsViewComponent {
   constructor(
     @Inject(DOCUMENT) document: any,
     private root: RootService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private readonly gtmService: GoogleTagManagerService
   ) {
     this.location = document.location.search;
     this.url = window.location.href;
@@ -94,7 +95,7 @@ export class ProductsViewComponent {
       this.usuario.user_role !== 'supervisor' &&
       this.usuario.user_role !== 'comprador'
     ) {
-      dataLayer.push({
+      this.gtmService.pushTag({
         event: 'categorie_view',
         pagePath: this.url,
       });
