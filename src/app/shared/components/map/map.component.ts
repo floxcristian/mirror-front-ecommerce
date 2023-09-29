@@ -12,10 +12,8 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { tap, map, switchMap } from 'rxjs/operators';
-//import { fromPromise } from 'rxjs/observable/fromPromise';
-import { Observable, of } from 'rxjs';
-/*import { MapsAPILoader, MouseEvent } from '@agm/core';
-declare var google: any;*/
+import { Observable, of, from } from 'rxjs';
+import {GoogleMap, MapGeocoder} from '@angular/google-maps';
 
 export interface DireccionMap {
   direccion: string;
@@ -36,155 +34,124 @@ export class MapComponent implements OnInit, OnChanges {
   @Input() infoWindowContent!: string;
   @ViewChild('search', { static: true }) public searchElementRef!: ElementRef;
 
-  lat: number = 0;
-  lng: number = 0;
-  zoom: number = 15;
   showSearchBar: boolean = true;
-  geocoder: any;
+  markerPositions:google.maps.LatLngLiteral[] = []
+  options: google.maps.MapOptions = {
+    disableDefaultUI:false
+  };
+  markerOptions: google.maps.MarkerOptions = {draggable: false};
+  center:google.maps.LatLngLiteral = {lat: 0, lng: 0}
+  zoom = 15
+
+  var_hybrid = google.maps.MapTypeId.HYBRID
+  var_roadmap = google.maps.MapTypeId.ROADMAP
   @Output() public geolocalizacion = new EventEmitter<any>();
   @Output() public clearAdress = new EventEmitter<any>();
   @Output() public setDireccion = new EventEmitter<any>();
+  @ViewChild(GoogleMap, { static: false }) map!: GoogleMap;
 
-  // Temporal
-  ngOnChanges(changes: SimpleChanges): void {}
-  ngOnInit(): void {}
-  // FIXME: START
-  /*constructor(
-    private mapLoader: MapsAPILoader,
+  constructor(
     private ref: ChangeDetectorRef,
-    private mapsAPILoader: MapsAPILoader,
-    private ngZone: NgZone
-  ) {}
+    private ngZone: NgZone,
+    private geocoder:MapGeocoder
+  ) {
+  }
 
   ngOnInit() {
     if (this.autocompletado === true) {
+      this.options.disableDefaultUI=true
+      this.markerOptions.draggable=true
       this.showSearchBar = false;
-
       this.zoom = 3;
-      this.lat = -36.79975467819392;
-      this.lng = -71.49897587245773;
-
-      this.mapsAPILoader.load().then(() => {
-        //this.setCurrentLocation();
-
-        this.geocoder = new google.maps.Geocoder();
-        let autocomplete = new google.maps.places.Autocomplete(
-          this.searchElementRef.nativeElement,
-          {
-            types: ['address'],
-            componentRestrictions: { country: 'cl' },
-          }
-        );
-
-        autocomplete.setFields(['address_component', 'geometry']);
-
-        autocomplete.addListener('place_changed', () => {
-          this.ngZone.run(() => {
-            //get the place result
-            let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-
-            //verify result
-            if (place.geometry === undefined || place.geometry === null) {
-              return;
-            }
-
-            this.setDireccion.emit([
-              place.address_components,
-              place.geometry.location,
-            ]);
-            //set latitude, longitude and zoom
-            this.lat = place.geometry.location.lat();
-            this.lng = place.geometry.location.lng();
-            this.zoom = 17;
-          });
+      this.center.lat = -36.79975467819392
+      this.center.lng = -71.49897587245773
+      this.map?.panTo(this.center)
+      this.markerPositions = []
+      this.markerPositions.push({lat : -36.79975467819392,lng : -71.49897587245773})
+      let autocomplete = new google.maps.places.Autocomplete(
+        this.searchElementRef.nativeElement,
+        {
+          types: ['address'],
+          componentRestrictions: { country: 'cl' },
+        }
+      );
+      autocomplete.setFields(['address_component', 'geometry']);
+      autocomplete.addListener('place_changed', () => {
+        this.ngZone.run(() => {
+          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+          if (place.geometry === undefined || place.geometry === null) return;
+          this.setDireccion.emit([
+            place.address_components,
+            place.geometry.location,
+          ]);
+          let center = {lat:place.geometry.location?.lat() || 0 ,lng :place.geometry.location?.lng() || 0}
+          this.zoom = 17
+          this.center = center
+          this.map.panTo(center)
+          this.markerPositions = []
+          this.markerPositions.push(center)
         });
       });
     }
   }
   async ngOnChanges() {
-    if (this.tienda && this.tienda.direccion != '') {
-      this.geocodeAddress(
-        `${this.tienda.direccion} ${this.tienda.zona}`
-      ).subscribe((location) => {
-        this.searchElementRef.nativeElement.value = this.tienda.direccion;
-        this.lat = Number(this.tienda.lat);
-        this.lng = Number(this.tienda.lon);
-        this.geolocalizacion.emit({ lat: this.lat, lng: this.lng });
+    if(this.tienda && this.tienda.direccion != ''){
+      this.geocoder.geocode({
+        address: `${this.tienda.direccion} ${this.tienda.zona}`
+      }).subscribe((location) => {
+        this.searchElementRef.nativeElement.value = this.tienda?.direccion;
+        if(location.status === 'OK'){
+          this.markerPositions = []
+          let center:google.maps.LatLngLiteral = {
+            lat:location.results[0].geometry.location.lat(),
+            lng:location.results[0].geometry.location.lng()
+          }
+          this.center = center
+          this.map.panTo(center);
+          this.markerPositions.push(center)
+          this.geolocalizacion.emit({ lat:location.results[0].geometry.location.lat(),lng:location.results[0].geometry.location.lng() });
+        }else{
+          this.markerPositions = []
+          this.geolocalizacion.emit({ lat: 0, lng: 0 });
+        }
       });
     }
   }
 
-  geocodeAddress(location: string): Observable<any> {
-    return this.waitForMapsToLoad().pipe(
-      switchMap(() => {
-        return new Observable((observer) => {
-          this.geocoder.geocode(
-            { address: location },
-            (results: any, status: any) => {
-              if (status == google.maps.GeocoderStatus.OK) {
-                observer.next({
-                  lat: results[0].geometry.location.lat(),
-                  lng: results[0].geometry.location.lng(),
-                });
-              } else {
-                observer.next({ lat: 0, lng: 0 });
-              }
-              observer.complete();
-            }
-          );
-        });
-      })
-    );
-  }
-
-  private initGeocoder() {
-    this.geocoder = new google.maps.Geocoder();
-  }
-
-  private waitForMapsToLoad(): Observable<boolean> {
-    if (!this.geocoder) {
-      return fromPromise(this.mapLoader.load()).pipe(
-        tap(() => this.initGeocoder()),
-        map(() => true)
-      );
-    }
-    return of(true);
-  }
-
-  markerDragEnd($event: MouseEvent) {
+  markerDragEnd($event:google.maps.MapMouseEvent) {
     if (this.autocompletado === true) {
-      this.lat = $event.coords.lat;
-      this.lng = $event.coords.lng;
-      this.getAddress(this.lat, this.lng);
+      this.zoom = 17
+      let center:google.maps.LatLngLiteral = {
+        lat:$event.latLng?.lat() || 0,
+        lng:$event.latLng?.lng() || 0
+      }
+      this.center = center
+      this.map.panTo(center);
+      this.getAddress();
     }
   }
 
-  getAddress(latitude: any, longitude: any) {
-    this.geocoder.geocode(
-      { location: { lat: latitude, lng: longitude } },
-      (results: any, status: any) => {
-        if (status === 'OK') {
-          if (results[0]) {
-            this.setDireccion.emit([
-              results[0].address_components,
-              { lat: latitude, lng: longitude },
-            ]);
-            this.zoom = 17;
-            this.searchElementRef.nativeElement.value =
-              results[0].formatted_address;
-          } else {
-            window.alert('No se han encontrado resultados.');
-          }
-        } else {
-          console.log('Geocoder error: ' + status);
+  getAddress() {
+    this.geocoder.geocode({location:this.center}).subscribe((location)=>{
+      if(location.status === 'OK'){
+        if(location.results[0]){
+          this.setDireccion.emit([
+            location.results[0].address_components,
+            { lat: this.center.lat, lng: this.center.lng },
+          ]);
+          this.zoom = 17;
+          this.searchElementRef.nativeElement.value = location.results[0].formatted_address;
+        }else {
+          window.alert('No se han encontrado resultados.');
         }
+      }else {
+        console.log('Geocoder error: ' + status);
       }
-    );
+    })
   }
 
   clearSearch() {
     this.searchElementRef.nativeElement.value = '';
     this.clearAdress.emit();
-  }*/
-  // FIXME: END
+  }
 }
