@@ -6,7 +6,6 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { Router } from '@angular/router';
-// import { LocalStorageService } from 'angular-2-local-storage';
 import { Usuario } from '../../../../shared/interfaces/login';
 import { LoginService } from '../../../../shared/services/login.service';
 import { RootService } from '../../../../shared/services/root.service';
@@ -44,33 +43,28 @@ export class MiCuentaComponent implements OnInit {
 
   async ngOnInit() {
     this.usuario = await this.root.getDataSesionUsuario();
+    console.log('usuario1: ', this.usuario);
 
     this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
       this.usuario = usuario;
+      console.log('usuario2: ', this.usuario);
     });
   }
 
-  validarCuenta(link: any) {
+  validarCuenta(link: any): void {
     this.localStorage.set('ruta', link.url);
     const usuario = this.usuario;
-
     if (usuario == null) {
       this.router.navigate(['sitio', 'iniciar-sesion']);
-    }
-
-    if (usuario.hasOwnProperty('login_temp') && usuario.login_temp === true) {
-      // return this.router.navigate(['sitio', 'iniciar-sesion']);
+    } else if (usuario?.login_temp === true) {
       this.router.navigate(['sitio', 'iniciar-sesion']);
-    }
-
-    this.usuario = usuario;
-
-    if (link.label != 'Cerrar sesión') {
+    } else if (link.label != 'Cerrar sesión') {
       this.router.navigate(['/mi-cuenta', link.url]);
     } else {
       this.router.navigate(['sitio', 'iniciar-sesion']);
     }
   }
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.screenWidth = isPlatformBrowser(this.platformId)
