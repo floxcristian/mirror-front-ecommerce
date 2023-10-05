@@ -1,5 +1,4 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-// import { theme } from '../../../data/theme'; // no se usa
 import { Link } from '../../shared/interfaces/link';
 import { LoginService } from '../../shared/services/login.service';
 import { Usuario } from '../../shared/interfaces/login';
@@ -13,7 +12,6 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./footer.component.scss'],
 })
 export class FooterComponent {
-  // theme = theme; // no se usa
   linksPaginas: Link[];
   linkMiCuenta: Link[];
   anio: number;

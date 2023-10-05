@@ -43,11 +43,9 @@ export class MiCuentaComponent implements OnInit {
 
   async ngOnInit() {
     this.usuario = await this.root.getDataSesionUsuario();
-    console.log('usuario1: ', this.usuario);
 
     this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
       this.usuario = usuario;
-      console.log('usuario2: ', this.usuario);
     });
   }
 

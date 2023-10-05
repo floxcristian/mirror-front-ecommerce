@@ -1,6 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
-// import { theme } from '../../../../../data/theme';
 
 @Component({
   selector: 'app-footer-newsletter',
@@ -8,7 +7,6 @@ import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
   styleUrls: ['./newsletter.component.scss'],
 })
 export class NewsletterComponent {
-  // theme = theme;  // no se usa
   innerWidth = 0;
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.innerWidth = isPlatformBrowser(this.platformId)
