@@ -3,7 +3,6 @@ export const environment = {
     TOKEN:
     'EAAMJCcU6xi4BAIcIytWwO0n9YvkHUPYXmkmQJDOMKiPmiHvzUZCGaiUsjUqDT5XQYhRZAxyBCn3a39306eSBRVBcRIuI59J8LOXEl34CgfbsDCiZBXyu9R0Mluw1ZAOPMiEeb8wU82v2S5jITxjRSaNeihawZAM78IsxDtUkJXba5fKyJvq015AZBmu7oEWaYZD',
     IVA: 0.19,
-    apiConversion: 'https://graph.facebook.com/v12.0/362035215114882/events?access_token=',
     apiImplementosCarro: 'https://b2b-api.implementos.cl/api/carro/',
     apiImplementosCMS: 'https://b2b-api.implementos.cl/api/1.0/',
     apiElastic: 'https://b2b-api.implementos.cl/api/articulo/',

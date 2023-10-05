@@ -98,6 +98,18 @@ Esta es una app web construída en Angular, que se conecta con distintas APIs ya
 
 
 ## 📦 Requerimientos e Instalación
+
+Instalar NodeJS:
+- Descargar versión que corresponda: [Link](https://nodejs.org/es/download)
+
+Instalar Angular de forma global:
+```
+npm install -g @angular/cli
+```
+
+
+
+
 Instalar dependencias:
 
 ```
@@ -163,17 +175,17 @@ I like programming to be light, fun and non-scary. Choo embraces that.
 
 ## 📚APIs
 
-A continuación se deja el listado de repositorio de APIs que se conectan con esta app.
+A continuación se presenta el listado de APIs con las que interactúa esta app web:
 
 - [Customer API](https://github.com/developer-implementos/api-ecommerce-customer) - RuviClass Client repository.
 - [Shopping Cart API](https://github.com/developer-implementos/api-ecommerce-shopping-cart) - Node.js, Express.js, REST API Backend by Postgres and much
   more.
-- [CharlieTheProgrammer](https://charlietheprogrammer.com/) - Updated Node.js tutorials.
-- [Spanish Express.js Guide](http://expressjs.com/es/guide) - Official Guide.
-- [Node University](https://node.university/courses) - Premium Beginner/Advanced Courses.
-- [Node Express Boilerplate](https://github.com/kunalkapadia/express-mongoose-es6-rest-api) - Express.js
+- [OMS API](https://github.com/developer-implementos/api-ecommerce-oms) - Updated Node.js tutorials.
+- [CMS API](https://github.com/developer-implementos/api-ecommerce-cms) - Official Guide.
+- [Logistic API](https://github.com/developer-implementos/api-ecommerce-logistic) - Premium Beginner/Advanced Courses.
+- [Inventory API](https://github.com/developer-implementos/api-ecommerce-inventory) - Express.js
   Boilerplate.
-- [Node Best Practices](https://github.com/i0natan/nodebestpractices)
+- [Article API](https://github.com/developer-implementos/api-ecommerce-article)
 
 ## 🤝 Contributing
 
