@@ -2,7 +2,7 @@
 import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core'
 import { registerLocaleData } from '@angular/common'
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { BrowserAnimationsModule } from                       '@angular/platform-browser/animations'
 import { BrowserModule, Title } from '@angular/platform-browser'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import localeCL from '@angular/common/locales/es-CL'
