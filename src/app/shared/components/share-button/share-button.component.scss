@@ -1,92 +1,106 @@
 .button {
-    cursor: pointer;
+  cursor: pointer;
 
-    i {
-        color: #094cac
-    }
+  i {
+    color: #094cac;
+  }
 }
 
 .button:hover {
-    i {
-        transform: scale(1.2);
-    }
+  i {
+    transform: scale(1.2);
+  }
 }
 
 .socialContainer {
-    top: 40px;
+  top: 40px;
+  left: 50%;
+  width: 42px;
+  margin-left: -20px;
+  padding-top: 7px;
+  padding-bottom: 8px;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+
+  position: absolute;
+  display: flex;
+  z-index: 9000;
+  background-color: #fff;
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 50%);
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+
+  .caret {
     left: 50%;
-    width: 42px;
-    margin-left: -20px;
-    padding-top: 7px;
-    padding-bottom: 8px;
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-
     position: absolute;
-    display: flex;
-    z-index: 9000;
+    height: 10px;
+    width: 20px;
+    bottom: 100%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+    overflow: hidden;
+  }
+
+  .caret:after {
+    content: '';
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    -webkit-transform: translateX(50%) translateY(50%) rotate(45deg);
+    -ms-transform: translateX(50%) translateY(50%) rotate(45deg);
+    transform: translateX(50%) translateY(50%) rotate(45deg);
     background-color: #fff;
-    box-shadow: 0 2px 4px 0 rgb(0 0 0 / 50%);
-    -webkit-align-items: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    -webkit-justify-content: center;
-    -ms-flex-pack: center;
+    box-shadow: -1px 0 4px 0 rgb(0 0 0 / 50%);
+  }
+
+  .socialIcon {
+    margin: 5px;
+    height: 24px;
+    width: 24px;
+    display: flex;
     justify-content: center;
-
-    .caret {
-        left: 50%;
-        position: absolute;
-        height: 10px;
-        width: 20px;
-        bottom: 100%;
-        -webkit-transform: translateX(-50%);
-        -ms-transform: translateX(-50%);
-        transform: translateX(-50%);
-        overflow: hidden;
-    }
-
-    .caret:after {
-        content: '';
-        position: absolute;
-        height: 10px;
-        width: 10px;
-        -webkit-transform: translateX(50%) translateY(50%) rotate(45deg);
-        -ms-transform: translateX(50%) translateY(50%) rotate(45deg);
-        transform: translateX(50%) translateY(50%) rotate(45deg);
-        background-color: #fff;
-        box-shadow: -1px 0 4px 0 rgb(0 0 0 / 50%);
-    }
-
-    .socialIcon {
-        margin: 5px;
-        height: 24px;
-        width: 24px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+    align-items: center;
+  }
 }
 
 .fa-facebook-f {
-    color: #5479bd
+  color: #5479bd;
 }
 
 .fa-twitter {
-    color: #55acee
+  color: #55acee;
 }
 
 .fa-instagram {
-    color: transparent;
-    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
-    background: -webkit-radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
-    background-clip: text;
-    -webkit-background-clip: text;
+  color: transparent;
+  background: radial-gradient(
+    circle at 30% 107%,
+    #fdf497 0%,
+    #fdf497 5%,
+    #fd5949 45%,
+    #d6249f 60%,
+    #285aeb 90%
+  );
+  background: -webkit-radial-gradient(
+    circle at 30% 107%,
+    #fdf497 0%,
+    #fdf497 5%,
+    #fd5949 45%,
+    #d6249f 60%,
+    #285aeb 90%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
 }
 
 .fa-whatsapp {
-    color: #4caf50
+  color: #4caf50;
 }

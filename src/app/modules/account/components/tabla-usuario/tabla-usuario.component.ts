@@ -1,15 +1,15 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { DataTableDirective } from 'angular-datatables';
-import { ToastrService } from 'ngx-toastr';
-import { environment } from '../../../../../environments/environment';
-import { UsersService } from '../../service/users.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Component, Input, OnInit, ViewChild } from '@angular/core'
+import { DataTableDirective } from 'angular-datatables'
+import { ToastrService } from 'ngx-toastr'
+import { environment } from '../../../../../environments/environment'
+import { UsersService } from '../../service/users.service'
 
 class DataTablesResponse {
-  data!: any[];
-  draw!: number;
-  recordsFiltered!: number;
-  recordsTotal!: number;
+  data!: any[]
+  draw!: number
+  recordsFiltered!: number
+  recordsTotal!: number
 }
 
 @Component({
@@ -19,31 +19,31 @@ class DataTablesResponse {
 })
 export class TablaUsuarioComponent implements OnInit {
   @ViewChild(DataTableDirective, { static: false })
-  datatableElement!: DataTableDirective;
-  dtOptions: DataTables.Settings = {};
-  loadingData = false;
-  users: any = [];
-  editUser = false;
-  @Input() userSession: any;
+  datatableElement!: DataTableDirective
+  dtOptions: DataTables.Settings = {}
+  loadingData = false
+  users: any = []
+  editUser = false
+  @Input() userSession: any
   constructor(
     private httpClient: HttpClient,
     private toastr: ToastrService,
-    private userService: UsersService
+    private userService: UsersService,
   ) {}
 
   ngOnInit() {
-    this.loadData();
+    this.loadData()
     this.userService.loadDataRead$.subscribe((resp) => {
       this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        dtInstance.draw();
-      });
-    });
+        dtInstance.draw()
+      })
+    })
   }
 
   loadData() {
     let user: any = {
       rut: this.userSession.rut,
-    };
+    }
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
@@ -59,40 +59,40 @@ export class TablaUsuarioComponent implements OnInit {
         user.data_sort =
           dataTablesParameters.columns[
             dataTablesParameters.order[0].column
-          ].data;
-        user.data_order = dataTablesParameters.order[0].dir;
-        this.users = [];
-        let params = Object.assign(dataTablesParameters, user);
-        let url = environment.apiImplementosClientes + `getusuario`;
-        let username: String = 'services';
-        let password: String = '0.=j3D2ss1.w29-';
-        let authdata = window.btoa(username + ':' + password);
+          ].data
+        user.data_order = dataTablesParameters.order[0].dir
+        this.users = []
+        let params = Object.assign(dataTablesParameters, user)
+        let url = environment.apiImplementosClientes + `getusuario`
+        let username: String = 'services'
+        let password: String = '0.=j3D2ss1.w29-'
+        let authdata = window.btoa(username + ':' + password)
         let head = {
           Authorization: `Basic ${authdata}`,
           'Access-Control-Allow-Headers':
             'Authorization, Access-Control-Allow-Headers',
-        };
-        let headers = new HttpHeaders(head);
+        }
+        let headers = new HttpHeaders(head)
         this.httpClient
           .post<DataTablesResponse>(url, params, { headers: headers })
           .subscribe(
             (resp: any) => {
-              this.users = resp.data;
+              this.users = resp.data
 
-              this.loadingData = false;
+              this.loadingData = false
 
               callback({
                 recordsTotal: resp.largo[0].count,
                 recordsFiltered: resp.largo[0].count,
                 data: [],
-              });
+              })
             },
             (error) => {
-              console.log(error);
-              this.toastr.error('Error de conexión, para obtener usuarios');
-              this.loadingData = false;
-            }
-          );
+              console.log(error)
+              this.toastr.error('Error de conexión, para obtener usuarios')
+              this.loadingData = false
+            },
+          )
       },
       columns: [
         { title: 'Usuario', data: 'username', width: '10%' },
@@ -104,7 +104,7 @@ export class TablaUsuarioComponent implements OnInit {
         { title: 'Activo', data: '_id', width: '10%' },
         { title: 'Acciones', data: '_id', width: '10%' },
       ],
-    };
+    }
   }
 
   Editar(item: any) {
@@ -113,9 +113,9 @@ export class TablaUsuarioComponent implements OnInit {
       delete: false,
       edit: true,
       raiz: this.userSession,
-    };
+    }
 
-    this.userService.activarModal(json);
+    this.userService.activarModal(json)
   }
 
   Eliminar(item: any) {
@@ -124,7 +124,7 @@ export class TablaUsuarioComponent implements OnInit {
       delete: true,
       edit: false,
       raiz: this.userSession,
-    };
-    this.userService.activarModal(json);
+    }
+    this.userService.activarModal(json)
   }
 }

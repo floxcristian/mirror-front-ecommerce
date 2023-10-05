@@ -4,8 +4,7 @@
 @import '../variables';
 @import '../mixins/card';
 
-
 .widget-tags {
-    @include card();
-    padding: $widget-blog-padding;
+  @include card();
+  padding: $widget-blog-padding;
 }

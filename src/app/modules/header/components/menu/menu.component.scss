@@ -1,14 +1,14 @@
-.menu i{
-    margin-right: 25px;
+.menu i {
+  margin-right: 25px;
 }
 
 .menu {
-    @media (max-width: 576px) {
-        max-height: 75vh;
-    }
+  @media (max-width: 576px) {
+    max-height: 75vh;
+  }
 
-    @media (min-width: 577px) {
-        max-height: 75vh;
-        overflow-y: auto;
-    }
+  @media (min-width: 577px) {
+    max-height: 75vh;
+    overflow-y: auto;
+  }
 }

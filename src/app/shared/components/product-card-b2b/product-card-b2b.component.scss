@@ -130,7 +130,8 @@
   border-bottom-right-radius: 5px;
 }
 
-.product-card:hover .product-card__quickview:not(.product-card__quickview--preload):hover {
+.product-card:hover
+  .product-card__quickview:not(.product-card__quickview--preload):hover {
   color: #3d464d;
 }
 

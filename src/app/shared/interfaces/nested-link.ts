@@ -1,5 +1,5 @@
-import { Link } from './link';
+import { Link } from './link'
 
 export interface NestedLink extends Link {
-    items?: NestedLink[];
+  items?: NestedLink[]
 }

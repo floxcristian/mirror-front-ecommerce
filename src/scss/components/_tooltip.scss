@@ -1,9 +1,9 @@
 /*
 // .tooltip
 */
-@use "sass:math";
+@use 'sass:math';
 
-@import "../variables";
+@import '../variables';
 
 $local-arrow-size: 8px;
 $local-offset: 3px;
@@ -36,13 +36,16 @@ $local-square-root-of-two: 1.414213;
     background: $tooltip-color;
     transform: rotateZ(45deg)
       scale(
-        math.div($local-arrow-size, floor($local-square-root-of-two * $local-arrow-size) - 0.5)
+        math.div(
+          $local-arrow-size,
+          floor($local-square-root-of-two * $local-arrow-size) - 0.5
+        )
       );
   }
 }
 
 // top
-.bs-tooltip-auto[x-placement^="top"],
+.bs-tooltip-auto[x-placement^='top'],
 .bs-tooltip-top {
   padding: #{calc($local-arrow-size / 2)} 0;
 
@@ -53,7 +56,7 @@ $local-square-root-of-two: 1.414213;
 }
 
 // bottom
-.bs-tooltip-auto[x-placement^="bottom"],
+.bs-tooltip-auto[x-placement^='bottom'],
 .bs-tooltip-bottom {
   padding: #{calc($local-arrow-size / 2)} 0;
 
@@ -64,7 +67,7 @@ $local-square-root-of-two: 1.414213;
 }
 
 // right
-.bs-tooltip-auto[x-placement^="right"],
+.bs-tooltip-auto[x-placement^='right'],
 .bs-tooltip-right {
   padding: 0 #{calc($local-arrow-size / 2)};
 
@@ -75,7 +78,7 @@ $local-square-root-of-two: 1.414213;
 }
 
 // left
-.bs-tooltip-auto[x-placement^="left"],
+.bs-tooltip-auto[x-placement^='left'],
 .bs-tooltip-left {
   padding: 0 #{calc($local-arrow-size / 2)};
 

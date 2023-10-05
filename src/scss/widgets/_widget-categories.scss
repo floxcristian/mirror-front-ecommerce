@@ -1,9 +1,9 @@
 /*
 // .widget-categories
 */
-@import "../variables";
-@import "../mixins/card";
-@import "../mixins/direction";
+@import '../variables';
+@import '../mixins/card';
+@import '../mixins/direction';
 
 $local-expand-transition-duration: 0.2s;
 
@@ -83,7 +83,7 @@ $local-expand-transition-duration: 0.2s;
   &::after {
     display: block;
     position: absolute;
-    content: "";
+    content: '';
     background: currentColor;
   }
 
@@ -115,7 +115,8 @@ $local-expand-transition-duration: 0.2s;
   visibility: hidden;
   font-size: 15px;
   line-height: 26px;
-  transition: height $local-expand-transition-duration,
+  transition:
+    height $local-expand-transition-duration,
     opacity $local-expand-transition-duration,
     visibility 0s $local-expand-transition-duration;
 

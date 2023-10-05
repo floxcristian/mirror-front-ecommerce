@@ -1,29 +1,24 @@
 // Angular
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { RouterModule } from '@angular/router'
+import { FormsModule } from '@angular/forms'
 // Modules
-import { SharedModule } from '../../shared/shared.module';
+import { SharedModule } from '../../shared/shared.module'
 // import { Ng5SliderModule } from 'ng5-slider';
 
 // Components
-import { WidgetFiltersComponent } from './widget-filters/widget-filters.component';
-
+import { WidgetFiltersComponent } from './widget-filters/widget-filters.component'
 
 @NgModule({
-  declarations: [
-    WidgetFiltersComponent,
-  ],
+  declarations: [WidgetFiltersComponent],
   imports: [
     CommonModule,
     RouterModule,
     SharedModule,
     FormsModule,
-     // Ng5SliderModule,
+    // Ng5SliderModule,
   ],
-  exports: [
-    WidgetFiltersComponent,
-  ],
+  exports: [WidgetFiltersComponent],
 })
 export class WidgetsModule {}

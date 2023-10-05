@@ -148,7 +148,7 @@ $breakpoints: (
   xxl-start: 1366px,
   xxl-end: 1549px,
   full-start: 1550px,
-  full-end: 1920px
+  full-end: 1920px,
 );
 
 // ----------------------------------------
@@ -231,8 +231,13 @@ $search-input-focus-icon-hover-color: $search-input-hover-icon-hover-color !defa
 // -- .nav-panel, .mobile-header
 // ----------------------------------------
 $nav-panel-bg: $accent-color !default;
-$nav-panel-shadow: 0 1px rgba(#000, 0.04), inset 0 -1px rgba(#000, 0.04) !default;
-$nav-panel-stuck-shadow: 0 1px rgba(#000, 0.02), inset 0 -1px rgba(#000, 0.03), 0 1px 20px rgba(#000, 0.15) !default;
+$nav-panel-shadow:
+  0 1px rgba(#000, 0.04),
+  inset 0 -1px rgba(#000, 0.04) !default;
+$nav-panel-stuck-shadow:
+  0 1px rgba(#000, 0.02),
+  inset 0 -1px rgba(#000, 0.03),
+  0 1px 20px rgba(#000, 0.15) !default;
 $nav-panel-font-color: $accent-opposite-color !default;
 $nav-panel-logo-color: $nav-panel-font-color !default;
 $nav-panel-height: 54px !default;
@@ -508,7 +513,10 @@ $block-header-arrow-default-bg: #f2f2f2 !default;
 $block-header-arrow-default-color: #999 !default;
 $block-header-arrow-hover-bg: $accent-color !default;
 $block-header-arrow-hover-color: $accent-opposite-color !default;
-$block-header-arrow-active-bg: lighten($block-header-arrow-hover-bg, 8%) !default;
+$block-header-arrow-active-bg: lighten(
+  $block-header-arrow-hover-bg,
+  8%
+) !default;
 $block-header-arrow-active-color: $block-header-arrow-hover-color !default;
 
 // ----------------------------------------
@@ -663,7 +671,9 @@ $layout-switcher-active-color: $accent-opposite-color !default;
 // -- .modal
 // ----------------------------------------
 $modal-border-radius: 2px !default;
-$modal-shadow: 0 1px 20px rgba(#000, 0.15), 0 1px 3px rgba(#000, 0.15) !default;
+$modal-shadow:
+  0 1px 20px rgba(#000, 0.15),
+  0 1px 3px rgba(#000, 0.15) !default;
 
 // ----------------------------------------
 // -- .nouislider
@@ -799,7 +809,8 @@ $product-gallery-item-active-shadow: 0 0 0 2px $accent-color inset !default;
 $product-tabs-border-width: $card-border-width !default;
 $product-tabs-border-color: $card-border-color !default;
 $product-tabs-border-radius: $card-border-radius !default;
-$product-tabs-border: $product-tabs-border-width solid $product-tabs-border-color !default;
+$product-tabs-border: $product-tabs-border-width solid
+  $product-tabs-border-color !default;
 $product-tabs-hover-bg: #f7f7f7 !default;
 $product-tabs-hover-border-color: #d9d9d9 !default;
 $product-tabs-active-border-color: $accent-color !default;
@@ -875,8 +886,16 @@ $block-features-boxed-bg: #f7f7f7 !default;
 // ----------------------------------------
 // -- .block-map
 // ----------------------------------------
-$block-map-top-bg: linear-gradient(to bottom, rgba(#000, 0.15), rgba(#000, 0)) !default;
-$block-map-bottom-bg: linear-gradient(to top, rgba(#000, 0.05), rgba(#000, 0)) !default;
+$block-map-top-bg: linear-gradient(
+  to bottom,
+  rgba(#000, 0.15),
+  rgba(#000, 0)
+) !default;
+$block-map-bottom-bg: linear-gradient(
+  to top,
+  rgba(#000, 0.05),
+  rgba(#000, 0)
+) !default;
 
 // ----------------------------------------
 // -- .block-products-carousel

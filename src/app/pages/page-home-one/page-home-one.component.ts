@@ -1,13 +1,13 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { posts } from '../../../data/blog-posts';
-import { brands } from '../../../data/shop-brands';
-import { products } from '../../../data/shop-products';
-import { categories } from '../../../data/shop-block-categories';
-import { Category } from '../../shared/interfaces/category';
-import { CmsService } from '../../shared/services/cms.service';
-import { isPlatformBrowser } from '@angular/common';
-import { RootService } from '../../shared/services/root.service';
-import { brandsB2c } from '../../../data/shop-brands-b2c';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core'
+import { posts } from '../../../data/blog-posts'
+import { brands } from '../../../data/shop-brands'
+import { products } from '../../../data/shop-products'
+import { categories } from '../../../data/shop-block-categories'
+import { Category } from '../../shared/interfaces/category'
+import { CmsService } from '../../shared/services/cms.service'
+import { isPlatformBrowser } from '@angular/common'
+import { RootService } from '../../shared/services/root.service'
+import { brandsB2c } from '../../../data/shop-brands-b2c'
 
 @Component({
   selector: 'app-home',
@@ -15,13 +15,13 @@ import { brandsB2c } from '../../../data/shop-brands-b2c';
   styleUrls: ['./page-home-one.component.scss'],
 })
 export class PageHomeOneComponent implements OnInit {
-  products = products;
-  categories: Category[] = categories;
-  banners: any = [];
+  products = products
+  categories: Category[] = categories
+  banners: any = []
 
-  posts = posts;
-  brands = brands;
-  brandsB2c = brandsB2c;
+  posts = posts
+  brands = brands
+  brandsB2c = brandsB2c
 
   videos = [
     {
@@ -32,26 +32,26 @@ export class PageHomeOneComponent implements OnInit {
       url: 'assets/videos/UsuarioRegistrado.mov',
       preview: 'assets/videos/p2.jpg',
     },
-  ];
+  ]
 
-  innerWidth: number;
+  innerWidth: number
 
-  categoriaPopulares = false;
-  cajaConceptos = false;
-  banner = false;
-  marcas = false;
-  galeria = false;
+  categoriaPopulares = false
+  cajaConceptos = false
+  banner = false
+  marcas = false
+  galeria = false
 
-  isB2B!: boolean;
+  isB2B!: boolean
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private cmsService: CmsService,
-    private rootService: RootService
+    private rootService: RootService,
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900;
+      : 900
   }
 
   ngOnInit() {
@@ -74,28 +74,28 @@ export class PageHomeOneComponent implements OnInit {
           '../../../assets/images/slides/tiendas/tiendas_mobile.webp',
         image_tablet: '../../../assets/images/slides/tiendas/TIENDAS.webp',
       },
-    ];
-    const role = this.rootService.getDataSesionUsuario().user_role;
-    this.isB2B = role === 'supervisor' || role === 'comprador';
+    ]
+    const role = this.rootService.getDataSesionUsuario().user_role
+    this.isB2B = role === 'supervisor' || role === 'comprador'
 
-    this.cargaParcializada();
+    this.cargaParcializada()
   }
 
   onResize(event: any) {
-    this.innerWidth = event.target.innerWidth;
+    this.innerWidth = event.target.innerWidth
   }
 
   cargaParcializada() {
-    this.galeria = true;
-    let tiempo = 0;
+    this.galeria = true
+    let tiempo = 0
 
     if (isPlatformBrowser(this.platformId)) {
-      tiempo = 3500;
+      tiempo = 3500
     }
 
-    this.categoriaPopulares = true;
-    this.cajaConceptos = true;
-    this.banner = true;
-    this.marcas = true;
+    this.categoriaPopulares = true
+    this.cajaConceptos = true
+    this.banner = true
+    this.marcas = true
   }
 }

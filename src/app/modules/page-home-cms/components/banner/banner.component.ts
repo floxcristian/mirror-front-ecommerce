@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common'
 import {
   Component,
   HostListener,
@@ -6,7 +6,7 @@ import {
   Input,
   OnInit,
   PLATFORM_ID,
-} from '@angular/core';
+} from '@angular/core'
 
 @Component({
   selector: 'app-banner',
@@ -14,21 +14,21 @@ import {
   styleUrls: ['./banner.component.scss'],
 })
 export class BannerComponent implements OnInit {
-  screenWidth: any;
-  screenHeight: any;
+  screenWidth: any
+  screenHeight: any
   @Input() set banner(value: any) {
-    this.elementoData = value;
-    this.bannerCms = this.elementoData.elemento;
+    this.elementoData = value
+    this.bannerCms = this.elementoData.elemento
   }
-  bannerCms: any;
-  elementoData: any;
+  bannerCms: any
+  elementoData: any
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900;
+      : 900
     this.screenHeight = isPlatformBrowser(this.platformId)
       ? window.innerHeight
-      : 900;
+      : 900
   }
 
   ngOnInit() {}
@@ -37,9 +37,9 @@ export class BannerComponent implements OnInit {
   onResize(event: any) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900;
+      : 900
     this.screenHeight = isPlatformBrowser(this.platformId)
       ? window.innerHeight
-      : 900;
+      : 900
   }
 }

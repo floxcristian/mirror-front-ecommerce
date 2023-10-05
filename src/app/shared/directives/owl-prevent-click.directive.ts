@@ -5,10 +5,10 @@ import {
   NgZone,
   OnInit,
   PLATFORM_ID,
-} from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { fromEvent } from 'rxjs';
-import { filter, map, take, takeUntil } from 'rxjs/operators';
+} from '@angular/core'
+import { isPlatformBrowser } from '@angular/common'
+import { fromEvent } from 'rxjs'
+import { filter, map, take, takeUntil } from 'rxjs/operators'
 
 /**
  * This directive adds the "owl-prevent-click" class to the .owl-carousel element when dragging.
@@ -20,32 +20,32 @@ import { filter, map, take, takeUntil } from 'rxjs/operators';
 })
 export class OwlPreventClickDirective implements OnInit {
   private get element(): HTMLElement {
-    return this.elementRef.nativeElement;
+    return this.elementRef.nativeElement
   }
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,
     private elementRef: ElementRef,
-    private zone: NgZone
+    private zone: NgZone,
   ) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.zone.runOutsideAngular(() => {
-        const children: Element[] = [].slice.call(this.element.children);
+        const children: Element[] = [].slice.call(this.element.children)
         const owlCarouseElement: any = children.find((element) =>
-          element.classList.contains('owl-carousel')
-        );
+          element.classList.contains('owl-carousel'),
+        )
 
         fromEvent<MouseEvent>(owlCarouseElement, 'mousedown').subscribe(
           (mouseDownEvent) => {
             const timeout = setTimeout(() => {
-              owlCarouseElement.classList.add('owl-prevent-click');
-            }, 250);
+              owlCarouseElement.classList.add('owl-prevent-click')
+            }, 250)
             const mouseUpEvent$ = fromEvent<MouseEvent>(
               document,
-              'mouseup'
-            ).pipe(take(1));
+              'mouseup',
+            ).pipe(take(1))
 
             fromEvent<MouseEvent>(document, 'mousemove')
               .pipe(
@@ -55,30 +55,30 @@ export class OwlPreventClickDirective implements OnInit {
                     Math.sqrt(
                       Math.pow(
                         mouseDownEvent.clientX - mouseMoveEvent.clientX,
-                        2
+                        2,
                       ) +
                         Math.pow(
                           mouseDownEvent.clientY - mouseMoveEvent.clientY,
-                          2
-                        )
-                    )
-                  )
+                          2,
+                        ),
+                    ),
+                  ),
                 ),
                 filter((distance) => distance > 15),
-                take(1)
+                take(1),
               )
               .subscribe(() => {
-                owlCarouseElement.classList.add('owl-prevent-click');
-              });
+                owlCarouseElement.classList.add('owl-prevent-click')
+              })
 
             mouseUpEvent$.subscribe(() => {
-              owlCarouseElement.classList.remove('owl-prevent-click');
+              owlCarouseElement.classList.remove('owl-prevent-click')
 
-              clearTimeout(timeout);
-            });
-          }
-        );
-      });
+              clearTimeout(timeout)
+            })
+          },
+        )
+      })
     }
   }
 }

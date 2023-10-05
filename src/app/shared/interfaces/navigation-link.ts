@@ -1,7 +1,7 @@
-import { Link } from './link';
-import { Menu } from './menu';
-import { Megamenu } from './megamenu';
+import { Link } from './link'
+import { Menu } from './menu'
+import { Megamenu } from './megamenu'
 
 export interface NavigationLink extends Link {
-    menu?: Megamenu | Menu;
+  menu?: Megamenu | Menu
 }

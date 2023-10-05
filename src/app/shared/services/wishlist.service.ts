@@ -1,13 +1,13 @@
-import { Inject, Injectable, OnDestroy, PLATFORM_ID } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, timer } from 'rxjs';
-import { Product } from '../interfaces/product';
-import { map, takeUntil } from 'rxjs/operators';
-import { isPlatformBrowser } from '@angular/common';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { Inject, Injectable, OnDestroy, PLATFORM_ID } from '@angular/core'
+import { BehaviorSubject, Observable, Subject, timer } from 'rxjs'
+import { Product } from '../interfaces/product'
+import { map, takeUntil } from 'rxjs/operators'
+import { isPlatformBrowser } from '@angular/common'
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service'
 //import { LocalStorageService } from 'angular-2-local-storage';
 
 interface WishlistData {
-  items: Product[];
+  items: Product[]
 }
 
 @Injectable({
@@ -16,30 +16,30 @@ interface WishlistData {
 export class WishlistService implements OnDestroy {
   private data: WishlistData = {
     items: [],
-  };
+  }
 
-  private destroy$: Subject<void> = new Subject();
+  private destroy$: Subject<void> = new Subject()
   private itemsSubject$: BehaviorSubject<Product[]> = new BehaviorSubject<
     Product[]
-  >([]);
-  private onAddingSubject$: Subject<Product> = new Subject();
+  >([])
+  private onAddingSubject$: Subject<Product> = new Subject()
 
   readonly items$: Observable<Product[]> = this.itemsSubject$.pipe(
-    takeUntil(this.destroy$)
-  );
+    takeUntil(this.destroy$),
+  )
   readonly count$: Observable<number> = this.itemsSubject$.pipe(
-    map((items) => items.length)
-  );
+    map((items) => items.length),
+  )
   readonly onAdding$: Observable<Product> =
-    this.onAddingSubject$.asObservable();
+    this.onAddingSubject$.asObservable()
 
   constructor(
     @Inject(PLATFORM_ID)
     private platformId: any,
-    private localS: LocalStorageService
+    private localS: LocalStorageService,
   ) {
     if (isPlatformBrowser(this.platformId)) {
-      this.load();
+      this.load()
     }
   }
 
@@ -47,18 +47,18 @@ export class WishlistService implements OnDestroy {
     // timer only for demo
     return timer(1000).pipe(
       map(() => {
-        this.onAddingSubject$.next(product);
+        this.onAddingSubject$.next(product)
 
         const index = this.data.items.findIndex(
-          (item) => item.sku === product.sku
-        );
+          (item) => item.sku === product.sku,
+        )
 
         if (index === -1) {
-          this.data.items.push(product);
-          this.save();
+          this.data.items.push(product)
+          this.save()
         }
-      })
-    );
+      }),
+    )
   }
 
   remove(product: Product): Observable<void> {
@@ -66,33 +66,33 @@ export class WishlistService implements OnDestroy {
     return timer(1000).pipe(
       map(() => {
         const index = this.data.items.findIndex(
-          (item) => item.sku === product.sku
-        );
+          (item) => item.sku === product.sku,
+        )
 
         if (index !== -1) {
-          this.data.items.splice(index, 1);
-          this.save();
+          this.data.items.splice(index, 1)
+          this.save()
         }
-      })
-    );
+      }),
+    )
   }
 
   private save(): void {
-    this.localS.set('wishlistItems', this.data.items as any);
+    this.localS.set('wishlistItems', this.data.items as any)
 
-    this.itemsSubject$.next(this.data.items);
+    this.itemsSubject$.next(this.data.items)
   }
 
   private load(): void {
-    const items: Product[] = this.localS.get('wishlistItems') as any;
+    const items: Product[] = this.localS.get('wishlistItems') as any
     if (items) {
-      this.data.items = items;
-      this.itemsSubject$.next(this.data.items);
+      this.data.items = items
+      this.itemsSubject$.next(this.data.items)
     }
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroy$.next()
+    this.destroy$.complete()
   }
 }

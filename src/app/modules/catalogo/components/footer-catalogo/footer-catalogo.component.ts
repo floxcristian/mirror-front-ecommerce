@@ -1,23 +1,20 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 
 @Component({
   selector: 'app-footer-catalogo',
   templateUrl: './footer-catalogo.component.html',
-  styleUrls: ['./footer-catalogo.component.scss']
+  styleUrls: ['./footer-catalogo.component.scss'],
 })
 export class FooterCatalogoComponent implements OnInit {
-  @Input() page! : number;
-  @Input() longitud! : number;
-  @Input()catalogo: any = [];
+  @Input() page!: number
+  @Input() longitud!: number
+  @Input() catalogo: any = []
   @Output() cambiar = new EventEmitter<boolean>()
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  cambiarPagina(valor:any) {
-
+  cambiarPagina(valor: any) {
     this.cambiar.emit(valor)
-
   }
 }

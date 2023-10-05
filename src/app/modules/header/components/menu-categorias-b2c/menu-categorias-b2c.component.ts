@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { CategoryApi } from '../../../../shared/interfaces/category-api';
-import { NavigationLink } from '../../../../shared/interfaces/navigation-link';
-import { CategoryService } from '../../../../shared/services/category.service';
-import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
-import { RootService } from '../../../../shared/services/root.service';
+import { Component, OnDestroy, OnInit } from '@angular/core'
+import { Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators'
+import { CategoryApi } from '../../../../shared/interfaces/category-api'
+import { NavigationLink } from '../../../../shared/interfaces/navigation-link'
+import { CategoryService } from '../../../../shared/services/category.service'
+import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service'
+import { RootService } from '../../../../shared/services/root.service'
 
 @Component({
   selector: 'app-menu-categorias-b2c',
@@ -13,40 +13,40 @@ import { RootService } from '../../../../shared/services/root.service';
   styleUrls: ['./menu-categorias-b2c.component.scss'],
 })
 export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<any> = new Subject();
-  items: NavigationLink[] = [];
-  isOpen = false;
+  private destroy$: Subject<any> = new Subject()
+  items: NavigationLink[] = []
+  isOpen = false
 
-  private categoriaDetalle: any;
-  private arrayCategorias: NavigationLink[] = [];
-  private segundoNivel: any;
+  private categoriaDetalle: any
+  private arrayCategorias: NavigationLink[] = []
+  private segundoNivel: any
 
   constructor(
     public menuCategorias: MenuCategoriasB2cService,
     private categoriesService: CategoryService,
-    private root: RootService
+    private root: RootService,
   ) {
-    this.obtieneCategorias();
+    this.obtieneCategorias()
   }
 
   ngOnInit() {
     this.menuCategorias.isOpen$
       .pipe(takeUntil(this.destroy$))
-      .subscribe((isOpen) => (this.isOpen = isOpen));
+      .subscribe((isOpen) => (this.isOpen = isOpen))
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next(null);
-    this.destroy$.complete();
+    this.destroy$.next(null)
+    this.destroy$.complete()
   }
 
   obtieneCategorias() {
     this.categoriesService.$categoriasHeader.subscribe((r) => {
       console.log('categorias', r)
-      const categorias: CategoryApi[] = r.data;
-      this.sortCategories(categorias);
-      this.formatCategories(categorias);
-    });
+      const categorias: CategoryApi[] = r.data
+      this.sortCategories(categorias)
+      this.formatCategories(categorias)
+    })
   }
 
   formatCategories(data: CategoryApi[]) {
@@ -62,7 +62,7 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
         ],
         label: `${primeraCategoria.title}`,
         menu: [],
-      };
+      }
 
       for (const segundaCategoria of primeraCategoria.children || []) {
         this.segundoNivel = {
@@ -81,9 +81,9 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
               items: '',
             },
           ],
-        };
+        }
 
-        const tercerNivel = [];
+        const tercerNivel = []
         for (const terceraCategoria of segundaCategoria.children || []) {
           const dataLineas = {
             label: `${terceraCategoria.title}`,
@@ -97,31 +97,31 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
               this.root.replaceSlash(segundaCategoria.url),
               this.root.replaceSlash(terceraCategoria.url),
             ],
-          };
-          tercerNivel.push(dataLineas);
+          }
+          tercerNivel.push(dataLineas)
         }
 
-        this.segundoNivel.items[0].items = tercerNivel;
-        this.categoriaDetalle.menu.push(this.segundoNivel.items[0]);
+        this.segundoNivel.items[0].items = tercerNivel
+        this.categoriaDetalle.menu.push(this.segundoNivel.items[0])
       }
-      this.arrayCategorias.push(this.categoriaDetalle);
+      this.arrayCategorias.push(this.categoriaDetalle)
     }
-    this.items = this.arrayCategorias;
+    this.items = this.arrayCategorias
   }
 
   private sortCategories(items: any[]) {
     for (const item of items) {
-      const segundaCategoria: any[] = item.children;
+      const segundaCategoria: any[] = item.children
 
       segundaCategoria.sort((a, b) => {
         if (a.children.length < b.children.length) {
-          return 1;
+          return 1
         }
         if (a.children.length > b.children.length) {
-          return -1;
+          return -1
         }
-        return 0;
-      });
+        return 0
+      })
     }
   }
 }

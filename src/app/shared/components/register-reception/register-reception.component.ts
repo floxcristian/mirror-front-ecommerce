@@ -1,7 +1,7 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
-import { Usuario } from '../../interfaces/login';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { rutValidator } from '../../utils/utilidades';
+import { Component, Output, EventEmitter, Input } from '@angular/core'
+import { Usuario } from '../../interfaces/login'
+import { Validators, FormBuilder, FormGroup } from '@angular/forms'
+import { rutValidator } from '../../utils/utilidades'
 
 @Component({
   selector: 'app-register-reception',
@@ -9,14 +9,14 @@ import { rutValidator } from '../../utils/utilidades';
   styleUrls: ['./register-reception.component.scss'],
 })
 export class RegisterReceptionComponent {
-  @Output() returnReceptionEvent: EventEmitter<any> = new EventEmitter();
-  @Input() entrega!: string;
+  @Output() returnReceptionEvent: EventEmitter<any> = new EventEmitter()
+  @Input() entrega!: string
 
-  public formRecibe!: FormGroup;
-  tipo_fono = '+569';
-  slices = 8;
+  public formRecibe!: FormGroup
+  tipo_fono = '+569'
+  slices = 8
   constructor(private fb: FormBuilder) {
-    this.formDefault();
+    this.formDefault()
   }
 
   formDefault() {
@@ -25,24 +25,24 @@ export class RegisterReceptionComponent {
       apellido: [, Validators.required],
       telefono: [, [Validators.required]],
       rut: [, [Validators.required, rutValidator]],
-    });
+    })
 
-    this.Select_fono(this.tipo_fono);
+    this.Select_fono(this.tipo_fono)
   }
 
   async enviarReceptor() {
-    const dataSave = { ...this.formRecibe.value };
-    let usuarioVisita: Usuario;
-    dataSave.telefono = this.tipo_fono + dataSave.telefono;
-    usuarioVisita = await this.setUsuario(dataSave);
+    const dataSave = { ...this.formRecibe.value }
+    let usuarioVisita: Usuario
+    dataSave.telefono = this.tipo_fono + dataSave.telefono
+    usuarioVisita = await this.setUsuario(dataSave)
 
-    this.returnReceptionEvent.emit(usuarioVisita);
+    this.returnReceptionEvent.emit(usuarioVisita)
   }
 
   async setUsuario(formulario: any) {
     if (formulario.telefono.slice(0, 4) !== '+569') {
-      this.slices = 9;
-      this.tipo_fono = '+56';
+      this.slices = 9
+      this.tipo_fono = '+56'
     }
 
     let usuario = {
@@ -51,26 +51,26 @@ export class RegisterReceptionComponent {
       last_name: formulario.apellido,
       phone: formulario.telefono.slice(-this.slices),
       rut: formulario.rut,
-    };
-    return await usuario;
+    }
+    return await usuario
   }
 
   Select_fono(tipo: any) {
-    this.tipo_fono = tipo;
+    this.tipo_fono = tipo
 
     if (this.tipo_fono === '+569')
       this.formRecibe.controls['telefono'].setValidators([
         Validators.required,
         Validators.minLength(8),
         Validators.maxLength(8),
-      ]);
+      ])
     else
       this.formRecibe.controls['telefono'].setValidators([
         Validators.required,
         Validators.minLength(9),
         Validators.maxLength(9),
-      ]);
+      ])
 
-    this.formRecibe.get('telefono')?.updateValueAndValidity();
+    this.formRecibe.get('telefono')?.updateValueAndValidity()
   }
 }

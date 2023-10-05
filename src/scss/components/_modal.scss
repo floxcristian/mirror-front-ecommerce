@@ -3,12 +3,11 @@
 */
 @import '../variables';
 
-
 .modal {
-    -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch;
 }
 .modal-content {
-    border: none;
-    border-radius: $modal-border-radius;
-    box-shadow: $modal-shadow;
+  border: none;
+  border-radius: $modal-border-radius;
+  box-shadow: $modal-shadow;
 }

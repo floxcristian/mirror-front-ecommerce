@@ -3,12 +3,11 @@
 */
 @import '../variables';
 
-
 .topbar-link {
-    color: $topbar-link-color;
-    transition: color .3s;
+  color: $topbar-link-color;
+  transition: color 0.3s;
 
-    &:hover {
-        color: $topbar-link-hover-color;
-    }
+  &:hover {
+    color: $topbar-link-hover-color;
+  }
 }

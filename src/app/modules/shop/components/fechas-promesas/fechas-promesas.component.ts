@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core'
 
 @Component({
   selector: 'app-fechas-promesas',
@@ -6,7 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./fechas-promesas.component.scss'],
 })
 export class FechasPromesasComponent implements OnInit {
-  @Input() promesas: any[] = [];
+  @Input() promesas: any[] = []
   constructor() {}
 
   ngOnInit() {}

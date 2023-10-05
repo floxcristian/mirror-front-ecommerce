@@ -34,7 +34,9 @@
   padding: 0;
   margin: 0;
   cursor: pointer;
-  transition: fill 0.2s, background 0.2s;
+  transition:
+    fill 0.2s,
+    background 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -229,7 +231,10 @@
     transform: translateY(-100%);
     visibility: hidden;
     opacity: 0;
-    transition: transform 0.3s, visibility 0s 0.3s, opacity 0.3s;
+    transition:
+      transform 0.3s,
+      visibility 0s 0.3s,
+      opacity 0.3s;
 
     @include direction {
       #{$inset-inline-start}: 0;

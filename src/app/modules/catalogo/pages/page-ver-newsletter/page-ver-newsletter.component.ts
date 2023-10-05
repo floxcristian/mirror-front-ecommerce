@@ -1,8 +1,8 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { CatalogoService } from '../../../../shared/services/catalogo.service';
-import { FlipSetting, PageFlip, SizeType } from 'page-flip';
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core'
+import { CatalogoService } from '../../../../shared/services/catalogo.service'
+import { FlipSetting, PageFlip, SizeType } from 'page-flip'
+import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout'
+import { isPlatformBrowser } from '@angular/common'
 
 @Component({
   selector: 'app-page-ver-newsletter',
@@ -10,23 +10,23 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./page-ver-newsletter.component.scss'],
 })
 export class PageVerNewsletterComponent implements OnInit {
-  cargandoCat!: boolean;
-  pageFlip: any;
-  array = ['02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
-  screenWidth!: number;
-  screenHeight!: number;
-  pageTotal: any;
-  pageCurrent: any = 1;
-  pageState: any;
-  data!: any;
-  portada!: any;
-  contraportada!: any;
-  vertical!: any;
+  cargandoCat!: boolean
+  pageFlip: any
+  array = ['02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+  screenWidth!: number
+  screenHeight!: number
+  pageTotal: any
+  pageCurrent: any = 1
+  pageState: any
+  data!: any
+  portada!: any
+  contraportada!: any
+  vertical!: any
 
   constructor(
     private responsive: BreakpointObserver,
     private catalogoService: CatalogoService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
 
   ngOnInit() {
@@ -40,96 +40,96 @@ export class PageVerNewsletterComponent implements OnInit {
         Breakpoints.HandsetLandscape,
       ])
       .subscribe((result) => {
-        this.pageFlip = null;
-        const breakpoints = result.breakpoints;
+        this.pageFlip = null
+        const breakpoints = result.breakpoints
         if (breakpoints[Breakpoints.TabletPortrait]) {
-          this.dispositivo = 'tablet';
+          this.dispositivo = 'tablet'
         } else if (breakpoints[Breakpoints.HandsetPortrait]) {
-          this.dispositivo = 'smartphone';
+          this.dispositivo = 'smartphone'
         } else if (
           breakpoints[Breakpoints.WebLandscape] ||
           breakpoints[Breakpoints.WebPortrait] ||
           breakpoints[Breakpoints.Web]
         ) {
-          this.dispositivo = 'web';
+          this.dispositivo = 'web'
         } else {
-          if (breakpoints[Breakpoints.HandsetLandscape]) this.vertical = true;
+          if (breakpoints[Breakpoints.HandsetLandscape]) this.vertical = true
 
-          this.dispositivo = 'tablet';
+          this.dispositivo = 'tablet'
         }
-      });
+      })
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900;
+      : 900
     this.screenHeight = isPlatformBrowser(this.platformId)
       ? window.innerHeight
-      : 900;
-    console.log(this.dispositivo);
-    this.ObtenerDatos();
+      : 900
+    console.log(this.dispositivo)
+    this.ObtenerDatos()
     setTimeout(() => {
-      this.loadFlip();
-    }, 1300);
+      this.loadFlip()
+    }, 1300)
   }
   async ObtenerDatos() {
     try {
-      let respuesta = await this.catalogoService.obtenerNewsletter(1);
-      this.portada = respuesta.data.paginas.shift();
-      this.contraportada = respuesta.data.paginas.pop();
-      this.portada = this.portada.imagen;
-      this.contraportada = this.contraportada.imagen;
-      this.data = respuesta.data;
+      let respuesta = await this.catalogoService.obtenerNewsletter(1)
+      this.portada = respuesta.data.paginas.shift()
+      this.contraportada = respuesta.data.paginas.pop()
+      this.portada = this.portada.imagen
+      this.contraportada = this.contraportada.imagen
+      this.data = respuesta.data
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
   abrirEnlace(link: any) {
-    console.log('click');
+    console.log('click')
 
-    if (link) window.open(link, '_blank');
+    if (link) window.open(link, '_blank')
   }
   flipNext() {
-    this.pageFlip.flipNext();
+    this.pageFlip.flipNext()
   }
   flipBack() {
-    this.pageFlip.flipPrev();
+    this.pageFlip.flipPrev()
   }
-  altoPantalla: number = 0;
-  anchoPantalla: number = 0;
+  altoPantalla: number = 0
+  anchoPantalla: number = 0
   ObtenerTamanoPantalla() {
     this.altoPantalla = isPlatformBrowser(this.platformId)
       ? window.innerHeight
-      : 900;
+      : 900
     this.anchoPantalla = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900;
+      : 900
   }
 
-  dispositivo: string = '';
+  dispositivo: string = ''
   nextPage() {
-    let por = this.pageFlip.getOrientation();
+    let por = this.pageFlip.getOrientation()
     if (this.dispositivo === 'smartphone' || por === 'portrait') {
       if (this.pageCurrent < this.pageTotal) {
-        this.pageFlip.turnToNextPage();
+        this.pageFlip.turnToNextPage()
       }
     } else {
-      this.pageFlip.flipNext();
+      this.pageFlip.flipNext()
     }
   }
 
   prevPage() {
-    let por = this.pageFlip.getOrientation();
+    let por = this.pageFlip.getOrientation()
     this.dispositivo === 'smartphone' || por === 'portrait'
       ? this.pageFlip.turnToPrevPage()
-      : this.pageFlip.flipPrev();
+      : this.pageFlip.flipPrev()
   }
 
   loadFlip() {
-    let duracion = 1000;
+    let duracion = 1000
 
     if (this.dispositivo === 'smartphone') {
       const htmlElement = document.getElementById(
-        'demoBookExample'
-      ) as HTMLElement;
+        'demoBookExample',
+      ) as HTMLElement
       const pageFlipSettings: Partial<FlipSetting> = {
         width: 500,
         height: 707,
@@ -148,23 +148,23 @@ export class PageVerNewsletterComponent implements OnInit {
         showPageCorners: false,
         swipeDistance: 20,
         startZIndex: 1,
-      };
+      }
 
-      this.pageFlip = new PageFlip(htmlElement, pageFlipSettings);
+      this.pageFlip = new PageFlip(htmlElement, pageFlipSettings)
     }
     if (this.dispositivo === 'web') {
-      this.ObtenerTamanoPantalla();
-      let width;
-      let height;
+      this.ObtenerTamanoPantalla()
+      let width
+      let height
       if (this.anchoPantalla > 1000 && this.anchoPantalla <= 1440) {
         // Notebook
-        width = this.anchoPantalla / 3;
-        height = this.altoPantalla / 1.1;
-        console.log(this.anchoPantalla);
+        width = this.anchoPantalla / 3
+        height = this.altoPantalla / 1.1
+        console.log(this.anchoPantalla)
       } else {
         // Escritorio
-        width = this.anchoPantalla / 3;
-        height = this.altoPantalla / 1.1;
+        width = this.anchoPantalla / 3
+        height = this.altoPantalla / 1.1
       }
 
       const pageFlipSettings: Partial<FlipSetting> = {
@@ -181,16 +181,16 @@ export class PageVerNewsletterComponent implements OnInit {
         mobileScrollSupport: false,
         flippingTime: duracion,
         showPageCorners: false,
-      };
+      }
       const htmlElement = document.getElementById(
-        'demoBookExample'
-      ) as HTMLElement;
-      this.pageFlip = new PageFlip(htmlElement, pageFlipSettings);
+        'demoBookExample',
+      ) as HTMLElement
+      this.pageFlip = new PageFlip(htmlElement, pageFlipSettings)
     }
     if (this.dispositivo === 'tablet') {
       const htmlElement = document.getElementById(
-        'demoBookExample'
-      ) as HTMLElement;
+        'demoBookExample',
+      ) as HTMLElement
       const pageFlipSettings: Partial<FlipSetting> = {
         width: 550,
         height: 733,
@@ -203,18 +203,18 @@ export class PageVerNewsletterComponent implements OnInit {
         showCover: true,
         mobileScrollSupport: false,
         clickEventForward: true,
-      };
-      this.pageFlip = new PageFlip(htmlElement, pageFlipSettings);
+      }
+      this.pageFlip = new PageFlip(htmlElement, pageFlipSettings)
     }
-    this.pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+    this.pageFlip.loadFromHTML(document.querySelectorAll('.page'))
     this.pageFlip.on('flip', (e: any) => {
-      this.pageCurrent = e.data + 1;
-    });
+      this.pageCurrent = e.data + 1
+    })
     this.pageFlip.on('changeState', (e: any) => {
-      this.pageState = e.data;
-    });
+      this.pageState = e.data
+    })
     this.pageFlip.on('changeOrientation', (e: any) => {
-      this.ngOnInit();
-    });
+      this.ngOnInit()
+    })
   }
 }

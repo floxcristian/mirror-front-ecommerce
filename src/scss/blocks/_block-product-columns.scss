@@ -5,23 +5,22 @@
 @import '../functions';
 @import '../mixins/product-card';
 
-
-.block-product-columns {}
+.block-product-columns {
+}
 .block-product-columns__item {
-    position: relative;
+  position: relative;
 
-    & + & {
-        margin-top: -1px;
-    }
+  & + & {
+    margin-top: -1px;
+  }
 
-    &:hover {
-        z-index: 2;
-    }
+  &:hover {
+    z-index: 2;
+  }
 }
 
-
 @media (min-width: breakpoint(lg-start)) and (max-width: breakpoint(lg-end)) {
-    .block-product-columns .product-card {
-        @include product-card-horizontal-sm();
-    }
+  .block-product-columns .product-card {
+    @include product-card-horizontal-sm();
+  }
 }

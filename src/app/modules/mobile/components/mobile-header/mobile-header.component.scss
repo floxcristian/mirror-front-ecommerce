@@ -134,9 +134,19 @@ span.desc {
   background: #ffffff;
   border: 1px solid #dbdbdb;
 
-  transition: opacity 0.2s, visibility 0s 0.2s, -webkit-transform 0.2s;
-  transition: transform 0.2s, opacity 0.2s, visibility 0s 0.2s;
-  transition: transform 0.2s, opacity 0.2s, visibility 0s 0.2s, -webkit-transform 0.2s;
+  transition:
+    opacity 0.2s,
+    visibility 0s 0.2s,
+    -webkit-transform 0.2s;
+  transition:
+    transform 0.2s,
+    opacity 0.2s,
+    visibility 0s 0.2s;
+  transition:
+    transform 0.2s,
+    opacity 0.2s,
+    visibility 0s 0.2s,
+    -webkit-transform 0.2s;
 }
 
 .alert-session:after,
@@ -393,9 +403,19 @@ span.desc {
 .alert-session {
   background: #ffffff;
   border: 1px solid #dbdbdb;
-  transition: opacity 0.2s, visibility 0s 0.2s, -webkit-transform 0.2s;
-  transition: transform 0.2s, opacity 0.2s, visibility 0s 0.2s;
-  transition: transform 0.2s, opacity 0.2s, visibility 0s 0.2s, -webkit-transform 0.2s;
+  transition:
+    opacity 0.2s,
+    visibility 0s 0.2s,
+    -webkit-transform 0.2s;
+  transition:
+    transform 0.2s,
+    opacity 0.2s,
+    visibility 0s 0.2s;
+  transition:
+    transform 0.2s,
+    opacity 0.2s,
+    visibility 0s 0.2s,
+    -webkit-transform 0.2s;
 }
 
 .alert-session:after,
@@ -532,13 +552,17 @@ a:hover {
   color: #0063b9;
   fill: #fff;
   border: none !important;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 }
 
 .btn-secondary,
 .btn-secondary.disabled,
 .btn-secondary:disabled {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 }
 
 .btn-border-primary:hover {
@@ -546,5 +570,7 @@ a:hover {
   color: #0063b9;
   fill: #fff;
   border: none !important;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 }

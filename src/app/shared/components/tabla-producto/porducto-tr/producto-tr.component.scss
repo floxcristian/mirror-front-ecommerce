@@ -1,158 +1,151 @@
 .modal-body {
-
-    max-height: 50vh;
-    min-height: 40vh;
-    overflow: auto;
+  max-height: 50vh;
+  min-height: 40vh;
+  overflow: auto;
 }
 
 .tabla-producto {
-    padding: 1px;
-    background-color: #fff;
-    font-size: 14px;
-    padding: 5px;
+  padding: 1px;
+  background-color: #fff;
+  font-size: 14px;
+  padding: 5px;
 }
 
 hr {
-    margin-top: 0rem !important;
-    margin-bottom: 0rem !important;
-    border: 0;
-    border-top: 1px solid rgba(0, 0, 0, .1);
+  margin-top: 0rem !important;
+  margin-bottom: 0rem !important;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .dia-container-habilitado {
-    background-color: #FFFFFF;
-    height: 95px !important;
-    padding: 8px;
+  background-color: #ffffff;
+  height: 95px !important;
+  padding: 8px;
 }
 
-.dia-container-habilitado>div {
-    width: 100% !important;
-    padding: 8px;
-    border: 1px solid #BFBFBF;
-    background-color: #FFFFFF;
-    border-radius: 4px;
-    font-size: 12px;
+.dia-container-habilitado > div {
+  width: 100% !important;
+  padding: 8px;
+  border: 1px solid #bfbfbf;
+  background-color: #ffffff;
+  border-radius: 4px;
+  font-size: 12px;
 }
 
 .columna-1 {
-    max-width: 14%;
-    width: 14%;
-    margin-right: 10px;
+  max-width: 14%;
+  width: 14%;
+  margin-right: 10px;
 }
 
 .columna-1-image {
-    max-width: 14%;
-    width: 14%;
-    margin-right: 10px;
-    text-align: center;
+  max-width: 14%;
+  width: 14%;
+  margin-right: 10px;
+  text-align: center;
 }
 
 .columna-2 {
-    max-width: 20%;
-    width: 20%;
-    margin-right: 10px;
+  max-width: 20%;
+  width: 20%;
+  margin-right: 10px;
 }
 
 .columna-2-5 {
-    max-width: 25%;
-    width: 25%;
-    margin-right: 10px;
+  max-width: 25%;
+  width: 25%;
+  margin-right: 10px;
 }
 
 .columna-1-5 {
-    max-width: 13%;
-    width: 13%;
-    margin-right: 10px;
+  max-width: 13%;
+  width: 13%;
+  margin-right: 10px;
 }
 
 .columna-1-8 {
-    max-width: 17%;
-    width: 17%;
-    margin-right: 10px;
+  max-width: 17%;
+  width: 17%;
+  margin-right: 10px;
 }
 
 .columna-1-8-final {
-    max-width: 20%;
-    width: 20%;
-    margin-right: 0px;
+  max-width: 20%;
+  width: 20%;
+  margin-right: 0px;
 }
 
 .columna-1-5-final {
-    max-width: 15%;
-    width: 15%;
-
+  max-width: 15%;
+  width: 15%;
 }
 
 .product__quantity {
-    width: 100%;
+  width: 100%;
 }
 
 .imagen {
-    width: 90px;
-    height: 90px;
+  width: 90px;
+  height: 90px;
 }
 
 .imagen_marca {
-    width: 90px;
-
+  width: 90px;
 }
 
 .alert a {
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
-    color: currentColor;
-    background: none;
-    border-radius: 1.5px;
-    padding: 0 3px;
-    font-size: 12px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  color: currentColor;
+  background: none;
+  border-radius: 1.5px;
+  padding: 0 3px;
+  font-size: 12px;
 }
 
 .product-card__new-price {
-    font-size: 20px;
-    font-weight: 700;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 0.95;
-    letter-spacing: normal;
-    text-align: right;
-    color: #000000;
-    width: 100%;
-
+  font-size: 20px;
+  font-weight: 700;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 0.95;
+  letter-spacing: normal;
+  text-align: right;
+  color: #000000;
+  width: 100%;
 }
 
 .product-card__old-price {
-    color: #b3b3b3;
-    font-weight: 400;
-    font-size: 15px;
-    text-decoration: line-through;
-
+  color: #b3b3b3;
+  font-weight: 400;
+  font-size: 15px;
+  text-decoration: line-through;
 }
 
 .img_escala {
-    width: 50% !important;
-    margin-left: 20%;
+  width: 50% !important;
+  margin-left: 20%;
 }
 
 .img_marca {
-
-    width: 40px !important;
-
-
+  width: 40px !important;
 }
 
 @media (min-width: 1048px) {
-    .cantidad_1 {
-        display: none;
-    }
+  .cantidad_1 {
+    display: none;
+  }
 }
 
 @media (max-width: 1048px) {
-    .cantidad_2 {
-        display: none;
-    }
+  .cantidad_2 {
+    display: none;
+  }
 }
 
-table tbody td, table thead th {
-    border-bottom: 0px !important;
-    padding-bottom: 0px !important;
+table tbody td,
+table thead th {
+  border-bottom: 0px !important;
+  padding-bottom: 0px !important;
 }

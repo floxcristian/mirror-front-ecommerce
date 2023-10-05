@@ -3,15 +3,15 @@
 */
 @import '../variables';
 
-
-.block-empty {}
+.block-empty {
+}
 .block-empty__body {
-    text-align: center;
-    padding: 18px 0 60px;
+  text-align: center;
+  padding: 18px 0 60px;
 }
 .block-empty__message {
-    font-size: 17px;
+  font-size: 17px;
 }
 .block-empty__actions {
-    margin-top: 24px;
+  margin-top: 24px;
 }

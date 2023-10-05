@@ -94,8 +94,8 @@ a:not([href]):hover {
 
 /* You can add global styles to this file, and also import other style files */
 
-@import "bootstrap/scss/bootstrap";
-@import "scss/style";
+@import 'bootstrap/scss/bootstrap';
+@import 'scss/style';
 
 a {
   text-decoration: none;
@@ -158,32 +158,32 @@ agm-map {
 
 @font-face {
   font-family: din-heavy;
-  src: url("assets/fonts/DINN/DINNextLTPro-Heavy.ttf");
+  src: url('assets/fonts/DINN/DINNextLTPro-Heavy.ttf');
 }
 
 @font-face {
   font-family: din-bold;
-  src: url("assets/fonts/DINN/DINNextLTPro-Bold.ttf");
+  src: url('assets/fonts/DINN/DINNextLTPro-Bold.ttf');
 }
 
 @font-face {
   font-family: din-medium;
-  src: url("assets/fonts/DINN/DINNextLTPro-Medium.ttf");
+  src: url('assets/fonts/DINN/DINNextLTPro-Medium.ttf');
 }
 
 @font-face {
   font-family: din-regular;
-  src: url("assets/fonts/DINN/DINNextLTPro-Regular.ttf");
+  src: url('assets/fonts/DINN/DINNextLTPro-Regular.ttf');
 }
 
 @font-face {
   font-family: AvenirLTStd;
   font-weight: bold;
-  src: url("./assets/fonts/AvenirLTStd-Black.otf");
+  src: url('./assets/fonts/AvenirLTStd-Black.otf');
 }
 
 @font-face {
   font-family: AvenirLTStd;
   font-weight: normal;
-  src: url("./assets/fonts/AvenirLTStd-Book.otf");
+  src: url('./assets/fonts/AvenirLTStd-Book.otf');
 }

@@ -1,57 +1,57 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-import { Login, Usuario } from '../interfaces/login';
-import { Subject, Observable } from 'rxjs';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { RootService } from './root.service';
+import { Injectable } from '@angular/core'
+import { HttpClient } from '@angular/common/http'
+import { environment } from '../../../environments/environment'
+import { Login, Usuario } from '../interfaces/login'
+import { Subject, Observable } from 'rxjs'
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service'
+import { RootService } from './root.service'
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
-  private loginSession$: Subject<any> = new Subject();
+  private loginSession$: Subject<any> = new Subject()
   readonly loginSessionObs$: Observable<any> =
-    this.loginSession$.asObservable();
-  linkMiCuenta: any = [];
+    this.loginSession$.asObservable()
+  linkMiCuenta: any = []
 
   constructor(
     private http: HttpClient,
     private localS: LocalStorageService,
-    private root: RootService
+    private root: RootService,
   ) {}
 
   isLogin() {
     if (this.localS.get('usuario') == null) {
-      return false;
+      return false
     } else {
-      const user: Usuario = this.localS.get('usuario') as any;
+      const user: Usuario = this.localS.get('usuario') as any
       if (user.login_temp) {
-        return false;
+        return false
       } else {
-        this.localS.remove('invitado');
-        return true;
+        this.localS.remove('invitado')
+        return true
       }
     }
   }
 
   iniciarSesion(data: Login) {
-    return this.http.post(environment.apiCMS + 'users/login', data);
+    return this.http.post(environment.apiCMS + 'users/login', data)
   }
 
   registroSesion(data: any, idSesion: string, accion: string) {
-    const apiUrl = `${environment.apiCMS}users/sesion/${idSesion}/${accion}`;
+    const apiUrl = `${environment.apiCMS}users/sesion/${idSesion}/${accion}`
     return this.http
       .post(`${environment.apiCMS}users/sesion/${idSesion}/${accion}`, data)
-      .toPromise();
+      .toPromise()
   }
 
   notify(data: any) {
     if (data === null) {
-      const usuario = this.root.getDataSesionUsuario();
-      this.loginSession$.next(usuario);
+      const usuario = this.root.getDataSesionUsuario()
+      this.loginSession$.next(usuario)
     } else {
-      this.loginSession$.next(data);
+      this.loginSession$.next(data)
     }
   }
 
@@ -106,7 +106,7 @@ export class LoginService {
           url: ['/', 'mi-cuenta', 'login'],
           icon: 'fas fa-power-off',
         },
-      ];
+      ]
     } else if (profile === 'supervisor') {
       this.linkMiCuenta = [
         {
@@ -212,7 +212,7 @@ export class LoginService {
           url: ['/', 'mi-cuenta', 'login'],
           icon: 'fas fa-power-off',
         },
-      ];
+      ]
     } else if (profile === 'comprador') {
       this.linkMiCuenta = [
         {
@@ -299,7 +299,7 @@ export class LoginService {
           url: ['/', 'mi-cuenta', 'login'],
           icon: 'fas fa-power-off',
         },
-      ];
+      ]
     } else if (profile === 'cms') {
       this.linkMiCuenta = [
         {
@@ -308,7 +308,7 @@ export class LoginService {
           url: ['/', 'mi-cuenta', 'login'],
           icon: 'fas fa-power-off',
         },
-      ];
+      ]
     } else if (profile === 'compradorb2c') {
       this.linkMiCuenta = [
         {
@@ -341,7 +341,7 @@ export class LoginService {
           url: ['/', 'mi-cuenta', 'login'],
           icon: 'fas fa-power-off',
         },
-      ];
+      ]
     } else {
       this.linkMiCuenta = [
         {
@@ -350,9 +350,9 @@ export class LoginService {
           url: ['/', 'mi-cuenta', 'seguimiento'],
           icon: 'fas fa-truck-moving',
         },
-      ];
+      ]
     }
 
-    return this.linkMiCuenta;
+    return this.linkMiCuenta
   }
 }

@@ -131,8 +131,6 @@ Table of Contents:
 
 ---------------------------------------- */
 
-
-
 /* ----------------------------------------
 // Common
 // ---------------------------------------- */
@@ -142,8 +140,6 @@ Table of Contents:
 @import 'common/fake-svg-icon';
 @import 'common/page-header';
 @import 'common/site';
-
-
 
 /* ----------------------------------------
 // Components
@@ -179,9 +175,6 @@ Table of Contents:
 @import 'components/typography';
 @import 'components/step';
 
-
-
-
 /* ----------------------------------------
 // Filters
 // ---------------------------------------- */
@@ -190,8 +183,6 @@ Table of Contents:
 @import 'filters/filter-color';
 @import 'filters/filter-list';
 @import 'filters/filter-price';
-
-
 
 /* ----------------------------------------
 // Header
@@ -213,8 +204,6 @@ Table of Contents:
 @import 'header/topbar-dropdown';
 @import 'header/topbar-link';
 
-
-
 /* ----------------------------------------
 // Footer
 // ---------------------------------------- */
@@ -222,8 +211,6 @@ Table of Contents:
 @import 'footer/footer-links';
 @import 'footer/footer-newsletter';
 @import 'footer/site-footer';
-
-
 
 /* ----------------------------------------
 // Pages
@@ -233,8 +220,6 @@ Table of Contents:
 @import 'pages/contact-us';
 @import 'pages/faq';
 @import 'pages/not-found';
-
-
 
 /* ----------------------------------------
 // Shop
@@ -261,8 +246,6 @@ Table of Contents:
 @import 'shop/view-options';
 @import 'shop/wishlist';
 
-
-
 /* ----------------------------------------
 // Blog
 // ---------------------------------------- */
@@ -274,8 +257,6 @@ Table of Contents:
 @import 'blog/posts-list';
 @import 'blog/posts-view';
 @import 'blog/related-posts';
-
-
 
 /* ----------------------------------------
 // Blocks
@@ -294,8 +275,6 @@ Table of Contents:
 @import 'blocks/block-sidebar';
 @import 'blocks/block-slideshow';
 
-
-
 /* ----------------------------------------
 // Widgets
 // ---------------------------------------- */
@@ -310,8 +289,6 @@ Table of Contents:
 @import 'widgets/widget-search';
 @import 'widgets/widget-tags';
 
-
-@import "~@ng-select/ng-select/themes/default.theme.css";
+@import '~@ng-select/ng-select/themes/default.theme.css';
 @import 'custom';
-@import 'responsive'
-
+@import 'responsive';

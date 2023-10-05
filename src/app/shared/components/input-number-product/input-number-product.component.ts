@@ -7,17 +7,17 @@ import {
   ViewChild,
   Output,
   EventEmitter,
-} from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+} from '@angular/core'
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms'
 
 function parseNumber<T>(value: any, def: T): number | T {
   if (typeof value === 'string') {
-    value = parseFloat(value);
+    value = parseFloat(value)
   } else if (typeof value !== 'number') {
-    value = def;
+    value = def
   }
 
-  return isNaN(value) ? def : value;
+  return isNaN(value) ? def : value
 }
 @Component({
   selector: 'app-input-number-product',
@@ -38,94 +38,94 @@ export class InputNumberProductComponent implements ControlValueAccessor {
     max: null,
     disabled: false,
     readonly: false,
-  };
-  saveTimer: any;
-  innerWidth!: number;
-  @Output() quantity: EventEmitter<any> = new EventEmitter();
+  }
+  saveTimer: any
+  innerWidth!: number
+  @Output() quantity: EventEmitter<any> = new EventEmitter()
 
-  @HostBinding('class.input-number') class = true;
+  @HostBinding('class.input-number') class = true
 
-  @Input() size: 'sm' | 'lg' | null = null;
+  @Input() size: 'sm' | 'lg' | null = null
 
   @Input() set step(value: number) {
-    this.options.step = parseNumber(value, 1);
+    this.options.step = parseNumber(value, 1)
   }
 
   @Input() set min(value: number) {
-    this.options.min = parseNumber(value, null);
+    this.options.min = parseNumber(value, null)
   }
 
   @Input() set max(value: number) {
-    this.options.max = parseNumber(value, null);
+    this.options.max = parseNumber(value, null)
   }
 
   @Input() set disabled(value: boolean) {
-    this.options.disabled = !!value;
+    this.options.disabled = !!value
   }
 
   @Input() set readonly(value: boolean) {
-    this.options.readonly = !!value;
+    this.options.readonly = !!value
   }
 
-  @ViewChild('inputElement', { static: true }) inputElementRef!: ElementRef;
+  @ViewChild('inputElement', { static: true }) inputElementRef!: ElementRef
 
   get inputElement(): HTMLInputElement {
-    return this.inputElementRef.nativeElement;
+    return this.inputElementRef.nativeElement
   }
 
   get value(): '' | number {
     return this.inputElement.value === ''
       ? ''
-      : parseFloat(this.inputElement.value);
+      : parseFloat(this.inputElement.value)
   }
   set value(value: '' | number) {
-    this.writeValue(value);
+    this.writeValue(value)
   }
 
-  onChange = (_: any) => {};
-  onTouched = () => {};
+  onChange = (_: any) => {}
+  onTouched = () => {}
 
   constructor() {}
 
   changeValue() {
-    clearTimeout(this.saveTimer);
+    clearTimeout(this.saveTimer)
     this.saveTimer = setTimeout(() => {
-      let value = this.value === '' || isNaN(this.value) ? 1 : this.value;
-      this.quantity.emit(value);
-    }, 200);
+      let value = this.value === '' || isNaN(this.value) ? 1 : this.value
+      this.quantity.emit(value)
+    }, 200)
   }
 
   add(): void {
-    this.change(1);
-    this.changeByTimer(1);
+    this.change(1)
+    this.changeByTimer(1)
   }
 
   sub(): void {
-    this.change(-1);
-    this.changeByTimer(-1);
+    this.change(-1)
+    this.changeByTimer(-1)
   }
 
   input(): void {
-    this.onChange(this.value);
+    this.onChange(this.value)
   }
 
   registerOnChange(fn: any): void {
-    this.onChange = fn;
+    this.onChange = fn
   }
 
   registerOnTouched(fn: any): void {
-    this.onTouched = fn;
+    this.onTouched = fn
   }
 
   setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
+    this.disabled = isDisabled
   }
 
   writeValue(obj: any): void {
     if (typeof obj === 'number') {
-      this.inputElement.value = obj.toString();
+      this.inputElement.value = obj.toString()
     } else {
-      this.inputElement.value = '';
+      this.inputElement.value = ''
     }
   }
 
@@ -135,39 +135,39 @@ export class InputNumberProductComponent implements ControlValueAccessor {
   private change(direction: number): void {
     let value =
       (this.value === '' || isNaN(this.value) ? 0 : this.value) +
-      this.options.step * direction;
+      this.options.step * direction
 
     if (this.options.max !== null) {
-      value = Math.min(this.options.max, value);
+      value = Math.min(this.options.max, value)
     }
     if (this.options.min !== null) {
-      value = Math.max(this.options.min, value);
+      value = Math.max(this.options.min, value)
     }
 
     if (value !== this.value) {
-      this.onChange(value);
-      this.value = value;
+      this.onChange(value)
+      this.value = value
     }
 
-    this.quantity.emit(this.value);
+    this.quantity.emit(this.value)
   }
 
   /**
    * @param direction - one of [-1, 1]
    */
   private changeByTimer(direction: number): void {
-    let interval: any;
+    let interval: any
     const timer = setTimeout(() => {
-      interval = setInterval(() => this.change(direction), 50);
-    }, 300);
+      interval = setInterval(() => this.change(direction), 50)
+    }, 300)
 
     const documentMouseUp = () => {
-      clearTimeout(timer);
-      clearInterval(interval);
+      clearTimeout(timer)
+      clearInterval(interval)
 
-      document.removeEventListener('mouseup', documentMouseUp, false);
-    };
+      document.removeEventListener('mouseup', documentMouseUp, false)
+    }
 
-    document.addEventListener('mouseup', documentMouseUp, false);
+    document.addEventListener('mouseup', documentMouseUp, false)
   }
 }

@@ -1,15 +1,15 @@
 @import '../variables';
 
 .step-active .number {
-    background-color: $cart-step-number-bg !important;
-    color: $cart-step-number-color !important;
-    border-color:$cart-step-number-border !important;
+  background-color: $cart-step-number-bg !important;
+  color: $cart-step-number-color !important;
+  border-color: $cart-step-number-border !important;
 }
 
 .step-active .subtitle {
-    color: $cart-step-active-subtitle !important;
+  color: $cart-step-active-subtitle !important;
 }
 
-.number-right-active::before {   
-    background-color: $cart-step-active-bg !important;
+.number-right-active::before {
+  background-color: $cart-step-active-bg !important;
 }

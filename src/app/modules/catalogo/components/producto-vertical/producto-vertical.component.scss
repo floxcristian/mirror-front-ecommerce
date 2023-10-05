@@ -1,229 +1,228 @@
 .body-producto {
-    flex-grow: 1;
-    font-weight: 700;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1.25;
-    letter-spacing: normal;
-    text-align: left;
-    color: #000;
+  flex-grow: 1;
+  font-weight: 700;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  text-align: left;
+  color: #000;
 }
 
 .div_img_escala {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    z-index: 1;
-    margin-top: 5px;
-    margin-left: 5px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 1;
+  margin-top: 5px;
+  margin-left: 5px;
 }
 
 .div_img_cyber {
-    z-index: 999;
+  z-index: 999;
 }
 
 .div_img_cyber img {
-    width: 50px;
-    float: right;
-    margin-bottom: -53px;
-    margin-right: 3px;
-    margin-top: 3px;
+  width: 50px;
+  float: right;
+  margin-bottom: -53px;
+  margin-right: 3px;
+  margin-top: 3px;
 }
 
 .marca {
-    color: #0063b9 !important;
-    font-size: 0.675rem !important;
+  color: #0063b9 !important;
+  font-size: 0.675rem !important;
 }
 
 .sku {
-    color: #5c6063 !important;
-    font-size: 0.675rem !important;
+  color: #5c6063 !important;
+  font-size: 0.675rem !important;
 }
 
 .nombre {
-    text-transform: capitalize !important;
-    font-size: 15px !important;
+  text-transform: capitalize !important;
+  font-size: 15px !important;
 }
 
 .descripcion {
-    text-transform: lowercase !important;
-    font-weight: 100 !important;
-    font-size: 0.8rem;
-    text-align: justify;
+  text-transform: lowercase !important;
+  font-weight: 100 !important;
+  font-size: 0.8rem;
+  text-align: justify;
 }
 
 .btn-transparent:hover {
-    background: #f3f3f3;
-    cursor: pointer;
+  background: #f3f3f3;
+  cursor: pointer;
 }
 
 .bg-primary {
-    background-color: #0063b9 !important;
+  background-color: #0063b9 !important;
 }
 
 .card {
-    padding: 0px !important;
-    box-shadow: 0 2px 10px -1px rgb(69 90 100 / 30%) !important;
-    margin-bottom: 30px;
-    transition: box-shadow 0.2s ease-in-out;
+  padding: 0px !important;
+  box-shadow: 0 2px 10px -1px rgb(69 90 100 / 30%) !important;
+  margin-bottom: 30px;
+  transition: box-shadow 0.2s ease-in-out;
 }
 
 .img-prod {
-    width: auto;
-    max-width: 95%;
-    height: 10rem;
-    margin-bottom: 5px;
-    margin-top: 7px;
+  width: auto;
+  max-width: 95%;
+  height: 10rem;
+  margin-bottom: 5px;
+  margin-top: 7px;
 }
 
 .card.h-product {
-    height: 18.8810625rem;
+  height: 18.8810625rem;
 }
 
 .shadow-lg {
-    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
 }
 
 @keyframes latidos {
-    from {
-        transform: none;
-    }
-    10% {
-        transform: scale(1.1);
-    }
-    to {
-        transform: none;
-    }
+  from {
+    transform: none;
+  }
+  10% {
+    transform: scale(1.1);
+  }
+  to {
+    transform: none;
+  }
 }
 
 app-icon {
-    fill: #ffffff !important;
+  fill: #ffffff !important;
 }
 
 .icon-chat {
-    width: 33px;
-    height: 33px;
-    border-radius: 50px;
-    animation: latidos 1.3s infinite;
-    background-color: #0063b9;
+  width: 33px;
+  height: 33px;
+  border-radius: 50px;
+  animation: latidos 1.3s infinite;
+  background-color: #0063b9;
 }
 
 .img-banner {
-    height: 18rem;
+  height: 18rem;
 }
 
 .img-background {
-    /*background-image: url(../../../../../assets/images/bg_camion.jpg);*/
-    background-size: cover;
-    background-attachment: unset;
-    background-position: center;
+  /*background-image: url(../../../../../assets/images/bg_camion.jpg);*/
+  background-size: cover;
+  background-attachment: unset;
+  background-position: center;
 }
 
 .product-card__new-price {
-    font-size: 1.2rem;
-    font-weight: 700;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 0.95;
-    letter-spacing: normal;
-    text-align: right;
-    color: #000000;
-    width: 59%;
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 0.95;
+  letter-spacing: normal;
+  text-align: right;
+  color: #000000;
+  width: 59%;
 }
 
 .product-card__new-price_mobile {
-    font-size: 0.9rem;
-    font-weight: 700;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 0.95;
-    letter-spacing: normal;
-    text-align: right;
-    color: #000000;
-    width: 54%;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 0.95;
+  letter-spacing: normal;
+  text-align: right;
+  color: #000000;
+  width: 54%;
 }
 
 .product-card__old-price,
 .product-card__save-price {
-    font-size: 0.9rem;
-    font-weight: normal;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1.36;
-    letter-spacing: normal;
-    text-align: left;
-    color: #b2b2b2;
+  font-size: 0.9rem;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.36;
+  letter-spacing: normal;
+  text-align: left;
+  color: #b2b2b2;
 }
 
 .product-card__old-price {
-    text-align: right;
-    color: #b3b3b3;
-    font-weight: 400;
-    font-size: 0.8125rem;
-    text-decoration: line-through;
+  text-align: right;
+  color: #b3b3b3;
+  font-weight: 400;
+  font-size: 0.8125rem;
+  text-decoration: line-through;
 }
 
 .pl-small {
-    padding-left: 0.4rem;
+  padding-left: 0.4rem;
 }
 
 .img-banner {
-    height: 18rem;
+  height: 18rem;
 }
 
 // Size normal
 .img-prod {
-    width: auto;
-    max-width: 95%;
-    height: 10rem;
-    margin-bottom: 5px;
-    margin-top: 7px;
+  width: auto;
+  max-width: 95%;
+  height: 10rem;
+  margin-bottom: 5px;
+  margin-top: 7px;
 }
 
 .card.h-product {
-    height: 20rem;
+  height: 20rem;
 }
 
 .product-scala-sub {
-    font-size: 1.3rem !important;
-    background-color: #e00031 !important;
-    color: #fff !important;
-    padding: 5px;
-    border-radius: 5px;
-    margin-top: 5px;
+  font-size: 1.3rem !important;
+  background-color: #e00031 !important;
+  color: #fff !important;
+  padding: 5px;
+  border-radius: 5px;
+  margin-top: 5px;
 }
 
 .unitScal {
-    float: right;
+  float: right;
 }
 
 .emScal {
-    font-size: 0.72rem;
-    font-weight: bold;
+  font-size: 0.72rem;
+  font-weight: bold;
 }
 
 .product-scala-sub td.product-card__new-price-scala {
-    font-size: 1.2rem;
+  font-size: 1.2rem;
 }
 
 .product-card__new-price-scala {
-    font-size: 1rem;
-    font-weight: 700;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 0.95;
-    letter-spacing: normal;
-    text-align: right;
-    padding-right: 15px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 0.95;
+  letter-spacing: normal;
+  text-align: right;
+  padding-right: 15px;
 }
 
 .positCar {
-    position: absolute;
-    margin-top: 15.2rem;
-    margin-left: 0.5rem;
+  position: absolute;
+  margin-top: 15.2rem;
+  margin-left: 0.5rem;
 }
-
 
 /* responsive template vertical */
 
@@ -231,86 +230,86 @@ app-icon {
 @import '../../../../../scss/functions';
 // MOVIL
 @media (min-width: breakpoint(xs-start)) and (max-width: breakpoint(xs-end)) {
-    .img-banner {
-        height: 16rem;
-    }
-    .card.h-product {
-        height: 19.881062rem;
-        // margin-bottom: 5px;
-    }
-    .product-card__new-price-scala {
-        font-size: 0.8rem !important;
-        font-weight: 700;
-        font-style: normal;
-        font-stretch: normal;
-        line-height: 0.95;
-        letter-spacing: normal;
-        text-align: right;
-        padding-right: 5px;
-    }
-    .unitScal {
-        float: right;
-    }
-    .emScal {
-        font-size: 0.6rem;
-        font-weight: bold;
-    }
-    .product-scala-sub {
-        font-size: 1rem !important;
-        background-color: #e00031 !important;
-        color: #fff !important;
-        padding: 5px;
-        border-radius: 5px;
-        margin-top: 5px;
-    }
-    .positCar {
-        position: absolute;
-        margin-top: 15.4rem;
-        margin-left: 0.5rem;
-    }
+  .img-banner {
+    height: 16rem;
+  }
+  .card.h-product {
+    height: 19.881062rem;
+    // margin-bottom: 5px;
+  }
+  .product-card__new-price-scala {
+    font-size: 0.8rem !important;
+    font-weight: 700;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 0.95;
+    letter-spacing: normal;
+    text-align: right;
+    padding-right: 5px;
+  }
+  .unitScal {
+    float: right;
+  }
+  .emScal {
+    font-size: 0.6rem;
+    font-weight: bold;
+  }
+  .product-scala-sub {
+    font-size: 1rem !important;
+    background-color: #e00031 !important;
+    color: #fff !important;
+    padding: 5px;
+    border-radius: 5px;
+    margin-top: 5px;
+  }
+  .positCar {
+    position: absolute;
+    margin-top: 15.4rem;
+    margin-left: 0.5rem;
+  }
 }
 
-@media (min-width: breakpoint(lg-start)) and (max-width: breakpoint(xl-end)) {}
+@media (min-width: breakpoint(lg-start)) and (max-width: breakpoint(xl-end)) {
+}
 
 @media (min-width: breakpoint(xxl-start)) and (max-width: breakpoint(xxl-end)) {
-    .img-banner {
-        height: 18rem;
-    }
-    .img-prod {
-        width: auto;
-        max-width: 95%;
-        height: 10rem;
-        margin-bottom: 5px;
-        margin-top: 7px;
-    }
-    .card.h-product {
-        height: 20rem;
-    }
-    .positCar {
-        position: absolute;
-        margin-top: 17.8rem;
-        margin-left: 0.5rem;
-    }
+  .img-banner {
+    height: 18rem;
+  }
+  .img-prod {
+    width: auto;
+    max-width: 95%;
+    height: 10rem;
+    margin-bottom: 5px;
+    margin-top: 7px;
+  }
+  .card.h-product {
+    height: 20rem;
+  }
+  .positCar {
+    position: absolute;
+    margin-top: 17.8rem;
+    margin-left: 0.5rem;
+  }
 }
 
 // FULL HD
 @media (min-width: breakpoint(full-end)) {
-    .img-prod {
-        width: auto;
-        max-width: 95%;
-        height: 10rem;
-        margin-bottom: 5px;
-        margin-top: 7px;
-    }
-    .card.h-product {
-        height: 23rem;
-    }
-    .positCar {
-        position: absolute;
-        margin-top: 17.8rem;
-        margin-left: 0.5rem;
-    }
+  .img-prod {
+    width: auto;
+    max-width: 95%;
+    height: 10rem;
+    margin-bottom: 5px;
+    margin-top: 7px;
+  }
+  .card.h-product {
+    height: 23rem;
+  }
+  .positCar {
+    position: absolute;
+    margin-top: 17.8rem;
+    margin-left: 0.5rem;
+  }
 }
-
 
 /* end responsive template vertical */

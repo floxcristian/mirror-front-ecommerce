@@ -1,17 +1,17 @@
-@media (max-width: 575.98px)and (orientation:portrait) {
-    .dropcart__product-image {
-        width: 45px;
-    }
-    .dropcart__product-name {
-        font-size: 12px;
-    }
+@media (max-width: 575.98px) and (orientation: portrait) {
+  .dropcart__product-image {
+    width: 45px;
+  }
+  .dropcart__product-name {
+    font-size: 12px;
+  }
 }
 
 .dropcart__product-image {
-    width: 50px;
-    margin-right: 10px;
-    flex-shrink: 0;
+  width: 50px;
+  margin-right: 10px;
+  flex-shrink: 0;
 }
 .dropcart__product-name {
-    font-size: 12px;
+  font-size: 12px;
 }

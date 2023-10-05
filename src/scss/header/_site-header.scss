@@ -5,68 +5,67 @@
 @import '../functions';
 @import '../mixins/direction';
 
-
 .site-header {
-    // position: fixed;
-    // position: relative;
-    z-index: 1001;
-    background: $header-bg;
-    color: $header-font-color;
-    width: 100%;
+  // position: fixed;
+  // position: relative;
+  z-index: 1001;
+  background: $header-bg;
+  color: $header-font-color;
+  width: 100%;
 }
 
 .site-header__middle {
-    display: flex;
-    align-items: center;
-    height: 6.5rem;
+  display: flex;
+  align-items: center;
+  height: 6.5rem;
 }
 
 .site-header__logo {
-    // width: 15.9375rem;
-    // margin-left: 1.5625rem;
-    margin-left: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: $header-logo-color;
+  // width: 15.9375rem;
+  // margin-left: 1.5625rem;
+  margin-left: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $header-logo-color;
 
-    @include direction {
-        #{$margin-inline-end}: 30px;
-    }
+  @include direction {
+    #{$margin-inline-end}: 30px;
+  }
 
-    a {
-        color: inherit;
-    }
+  a {
+    color: inherit;
+  }
 
-    svg {
-        fill: currentColor;
-    }
+  svg {
+    fill: currentColor;
+  }
 }
 
 .site-header__search {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .site-header__phone {
-    line-height: 1;
+  line-height: 1;
 
-    @include direction {
-        text-align: $inline-end;
-        #{$margin-inline-start}: 80px;
-    }
+  @include direction {
+    text-align: $inline-end;
+    #{$margin-inline-start}: 80px;
+  }
 }
 
 .site-header__phone-title {
-    font-size: 14px;
-    color: $header-font-muted-color;
-    margin-bottom: 6px;
+  font-size: 14px;
+  color: $header-font-muted-color;
+  margin-bottom: 6px;
 }
 
 .site-header__phone-number {
-    font-size: 20px;
-    font-weight: $font-weight-bold;
+  font-size: 20px;
+  font-weight: $font-weight-bold;
 }
 
 .site-header__nav-panel {
-    height: $nav-panel-height;
+  height: $nav-panel-height;
 }

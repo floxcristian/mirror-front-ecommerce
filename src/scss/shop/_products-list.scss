@@ -2,9 +2,9 @@
 // .products-list
 */
 
-@import "../variables";
-@import "../functions";
-@import "../mixins/product-card";
+@import '../variables';
+@import '../functions';
+@import '../mixins/product-card';
 
 @mixin local-layout($columns: 1, $margin-vertical: 0, $margin-horizontal: 3) {
   .products-list__body {
@@ -62,17 +62,17 @@
 }
 
 // Grid
-.products-list[data-layout^="grid-"] {
+.products-list[data-layout^='grid-'] {
   .product-card {
     @include product-card-grid();
   }
 
-  &[data-with-features="true"] .product-card {
+  &[data-with-features='true'] .product-card {
     @include product-card-grid-with-features();
   }
 }
 
-.products-list[data-layout="grid-3-sidebar"] {
+.products-list[data-layout='grid-3-sidebar'] {
   @include local-layout(3, 8px, 6px);
 
   .product-card {
@@ -98,7 +98,7 @@
   }
 }
 
-.products-list[data-layout="grid-4-full"] {
+.products-list[data-layout='grid-4-full'] {
   @include local-layout(4, 8px, 6px);
 
   .product-card {
@@ -124,7 +124,7 @@
   }
 }
 
-.products-list[data-layout="grid-5-full"] {
+.products-list[data-layout='grid-5-full'] {
   @include local-layout(5, 8px, 6px);
 
   @media (min-width: 480px) {
@@ -150,7 +150,7 @@
   }
 }
 
-.products-list[data-layout="grid-5-slider"] {
+.products-list[data-layout='grid-5-slider'] {
   @include local-layout(5, 8px, 6px);
 
   @media (min-width: 480px) {
@@ -176,7 +176,7 @@
   }
 }
 
-.products-list[data-layout="list"] {
+.products-list[data-layout='list'] {
   @include local-layout(1, 8px);
 
   .products-list__item {

@@ -1,9 +1,9 @@
 /*
 // .typography
 */
-@import "../variables";
-@import "../functions";
-@import "../mixins/direction";
+@import '../variables';
+@import '../functions';
+@import '../mixins/direction';
 
 .typography {
   line-height: 1.625;
@@ -78,7 +78,7 @@
     &::after,
     &::before {
       position: absolute;
-      content: "";
+      content: '';
       display: block;
       width: inherit;
       height: inherit;

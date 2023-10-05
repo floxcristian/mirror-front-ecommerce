@@ -47,7 +47,9 @@ $local-transition-duration: 0.3s;
 
   @include direction {
     #{$inset-inline-start}: 0;
-    transform: translateX(calc(-100% * #{$transform-direction} - 30px * #{$transform-direction}));
+    transform: translateX(
+      calc(-100% * #{$transform-direction} - 30px * #{$transform-direction})
+    );
   }
 }
 
@@ -103,9 +105,9 @@ $local-transition-duration: 0.3s;
   transition-delay: 0s;
   z-index: 900;
 
-    .mobilemenu__backdrop {
-        opacity: .5;
-    }
+  .mobilemenu__backdrop {
+    opacity: 0.5;
+  }
 
   .mobilemenu__body {
     transform: translateX(0);

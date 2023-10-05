@@ -1,108 +1,107 @@
 .accordion-header {
-    border-radius: 4px;
-    background-color: #eee;
+  border-radius: 4px;
+  background-color: #eee;
 }
 
 .producto {
-    flex: 0 0 275px;
-    margin: 5px;
-    border: 1px solid #ccc;
-    box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
-    line-height: 1.2rem;
+  flex: 0 0 275px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
+  line-height: 1.2rem;
 
-    div:first-child {
-        font-size: 15px;
-    }
+  div:first-child {
+    font-size: 15px;
+  }
 }
 
 .product-title {
-    font-size: 13px;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    // line-height: 1.25;
-    letter-spacing: normal;
-    text-align: left;
-    color: #000000;
-    margin-bottom: 0.2rem;
+  font-size: 13px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  // line-height: 1.25;
+  letter-spacing: normal;
+  text-align: left;
+  color: #000000;
+  margin-bottom: 0.2rem;
 }
 
 .product-sku {
-    font-size: 14px;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    // line-height: 1.29;
-    letter-spacing: normal;
-    text-align: left;
-    margin-bottom: 0.2rem;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  // line-height: 1.29;
+  letter-spacing: normal;
+  text-align: left;
+  margin-bottom: 0.2rem;
 }
 
 .item {
-    font-size: 14px;
-    margin-right: 4px;
+  font-size: 14px;
+  margin-right: 4px;
 }
 
 .text-success {
-    color: #28a745 !important
+  color: #28a745 !important;
 }
 
 /********* Tabs ************/
 
 .card-filtro {
-    padding: 10px;
-    border-radius: 10px;
+  padding: 10px;
+  border-radius: 10px;
 }
 
 ::ng-deep.cargaMasivaTabset {
-    background-color: #eaeaea;
-    border-radius: 10px;
+  background-color: #eaeaea;
+  border-radius: 10px;
 }
 
 ::ng-deep.cargaMasivaTabset ul {
+  height: 2.25rem !important;
+  font-size: 0.9rem !important;
+  background-color: #eee;
+  border-radius: 10px;
+
+  li:first-child {
+    margin-right: 10px;
+  }
+
+  li {
     height: 2.25rem !important;
-    font-size: 0.9rem !important;
-    background-color: #eee;
-    border-radius: 10px;
 
-    li:first-child {
-        margin-right: 10px;
+    a {
+      padding: 0.5rem 0.7rem !important;
+      height: 2.25rem !important;
+      color: #000 !important;
+      font-weight: bold;
+
+      background-color: #ccc;
+      border: 0px !important;
+      border-top-left-radius: 10px !important;
+      border-top-right-radius: 10px !important;
     }
 
-    li {
-        height: 2.25rem !important;
+    a.active {
+      border: 0px !important;
+      border-top-left-radius: 10px !important;
+      border-top-right-radius: 10px !important;
 
-        a {
-            padding: 0.5rem 0.7rem !important;
-            height: 2.25rem !important;
-            color: #000 !important;
-            font-weight: bold;
-
-            background-color: #ccc;
-            border: 0px !important;
-            border-top-left-radius: 10px !important;
-            border-top-right-radius: 10px !important;
-        }
-
-        a.active {
-            border: 0px !important;
-            border-top-left-radius: 10px !important;
-            border-top-right-radius: 10px !important;
-
-            span {
-                border-bottom: #000 1px solid !important;
-                padding-bottom: 7px;
-            }
-        }
-
+      span {
+        border-bottom: #000 1px solid !important;
+        padding-bottom: 7px;
+      }
     }
+  }
 }
 
 ::ng-deep.cargaMasivaTabset div.tab-content {
-    border: 0 !important;
-    padding: 1.5rem !important;
-    background-color: #fff;
-    border-top-right-radius: 0px !important;
-    border-bottom-right-radius: 10px !important;
-    border-bottom-left-radius: 10px !important;
+  border: 0 !important;
+  padding: 1.5rem !important;
+  background-color: #fff;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 10px !important;
+  border-bottom-left-radius: 10px !important;
 }

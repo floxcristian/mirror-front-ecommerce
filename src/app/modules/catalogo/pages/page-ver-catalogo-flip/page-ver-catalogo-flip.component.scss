@@ -91,12 +91,14 @@
     }
 
     &.page-cover-top {
-      box-shadow: inset 0px 0 30px 0px rgba(36, 10, 3, 0.5),
+      box-shadow:
+        inset 0px 0 30px 0px rgba(36, 10, 3, 0.5),
         -2px 0 5px 2px rgba(0, 0, 0, 0.4);
     }
 
     &.page-cover-bottom {
-      box-shadow: inset 0px 0 30px 0px rgba(36, 10, 3, 0.5),
+      box-shadow:
+        inset 0px 0 30px 0px rgba(36, 10, 3, 0.5),
         10px 0 8px 0px rgba(0, 0, 0, 0.4);
     }
   }
@@ -121,7 +123,7 @@
   padding: 0 !important;
 }
 
-@import "../../../../../scss/variables";
+@import '../../../../../scss/variables';
 
 .btn-transparent {
   overflow: visible !important;
@@ -241,7 +243,7 @@
 /* speech bubble 13 */
 
 .b2b:before {
-  content: "";
+  content: '';
   width: 0px;
   height: 0px;
   position: absolute;
@@ -256,7 +258,7 @@
 /* speech bubble 14 */
 
 .crm:before {
-  content: "";
+  content: '';
   width: 0px;
   height: 0px;
   position: absolute;

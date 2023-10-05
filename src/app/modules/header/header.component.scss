@@ -3,51 +3,51 @@
 // }
 
 .site-header__logo {
-    position: relative;
+  position: relative;
 }
 
 .site-header-item {
-    font-size: 0.875rem;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 2.86;
-    letter-spacing: normal;
-    text-align: left;
-    color: #ffffff;
-    margin-left: 1.875rem;
-    position: relative;
+  font-size: 0.875rem;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 2.86;
+  letter-spacing: normal;
+  text-align: left;
+  color: #ffffff;
+  margin-left: 1.875rem;
+  position: relative;
 }
 
 .list-header-stores .indicator__dropdown {
-    width: 18.75rem;
-    max-height: 25rem;
-    overflow-y: auto;
+  width: 18.75rem;
+  max-height: 25rem;
+  overflow-y: auto;
 }
 
 .search-group-bar {
-    padding-right: 1rem;
-    height: 100px;
-    background-color: #0063b9 !important;
+  padding-right: 1rem;
+  height: 100px;
+  background-color: #0063b9 !important;
 }
 
 .site-header-coutries img {
-    width: 1.6875rem;
+  width: 1.6875rem;
 }
 
 .site-header-coutries .dropdown-toggle::after {
-    margin-left: 0.855em;
+  margin-left: 0.855em;
 }
 
 .sticky {
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 200;
-    background-color: #0063b9;
-    padding-right: 3.75rem;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 200;
+  background-color: #0063b9;
+  padding-right: 3.75rem;
 }
 
-.sticky+.header_nav {
-    padding-top: calc(6.5rem + 1px) !important;
+.sticky + .header_nav {
+  padding-top: calc(6.5rem + 1px) !important;
 }

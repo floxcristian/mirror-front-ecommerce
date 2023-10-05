@@ -1,10 +1,10 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { Link } from '../../shared/interfaces/link';
-import { LoginService } from '../../shared/services/login.service';
-import { Usuario } from '../../shared/interfaces/login';
-import { Router } from '@angular/router';
-import { HostListener } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core'
+import { Link } from '../../shared/interfaces/link'
+import { LoginService } from '../../shared/services/login.service'
+import { Usuario } from '../../shared/interfaces/login'
+import { Router } from '@angular/router'
+import { HostListener } from '@angular/core'
+import { isPlatformBrowser } from '@angular/common'
 
 @Component({
   selector: 'app-footer',
@@ -12,26 +12,26 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./footer.component.scss'],
 })
 export class FooterComponent {
-  linksPaginas: Link[];
-  linkMiCuenta: Link[];
-  anio: number;
-  linkEpysa: Link[];
-  usuario!: Usuario;
-  innerWidth: any;
+  linksPaginas: Link[]
+  linkMiCuenta: Link[]
+  anio: number
+  linkEpysa: Link[]
+  usuario!: Usuario
+  innerWidth: any
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900;
+      : 900
   }
 
   constructor(
     public loginService: LoginService,
     public route: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {
-    this.anio = new Date().getFullYear();
+    this.anio = new Date().getFullYear()
     this.linksPaginas = [
       {
         label: 'Acerca de nosotros',
@@ -52,14 +52,14 @@ export class FooterComponent {
       { label: 'Bases Concurso', url: ['/', 'sitio', 'bases-concurso'] },
       { label: 'Asociados', url: '' },
       { label: 'Contacto', url: ['/', 'sitio', 'contacto'] },
-    ];
+    ]
 
     this.linkMiCuenta = [
       { label: 'Mi cuenta', url: 'resumen' },
       { label: 'Mis pedidos', url: 'pedidos-pendientes' },
       { label: 'Mis cotizaciones', url: 'cotizaciones' },
       { label: 'Seguimiento de compra', url: 'seguimiento' },
-    ];
+    ]
 
     this.linkEpysa = [
       {
@@ -78,7 +78,11 @@ export class FooterComponent {
         link: 'http://www.epysabuses.cl/red-servicio-tecnico-servibus/',
       },
       { rel: 'noopener', label: 'FITRANS', link: 'http://www.fitrans.cl' },
-      { rel: 'noopener', label: 'Mundo Buses', link: 'https://mundobuses.cl/' },
+      {
+        rel: 'noopener',
+        label: 'Mundo Buses',
+        link: 'https://mundobuses.cl/',
+      },
       {
         rel: 'noopener',
         label: 'BUS MARKET',
@@ -94,11 +98,11 @@ export class FooterComponent {
         label: 'Mercobus',
         link: 'http://www.mercobus.com.pe',
       },
-    ];
+    ]
 
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900;
+      : 900
   }
 
   // Funcion utilizada para ocultar footer para dispositivos mobiles en las pantallas de seleccion de despacho y pago.
@@ -109,18 +113,18 @@ export class FooterComponent {
       this.route.url.includes('sitio') ||
       this.route.url === '/not-found'
     ) {
-      return false;
+      return false
     } else {
-      return true;
+      return true
     }
   }
 
   // valida si nos encontramos en la ficha de un producto.
   onFichaProducto() {
     if (this.route.url.lastIndexOf('/inicio/productos/ficha/') == -1) {
-      return false;
+      return false
     } else {
-      return true;
+      return true
     }
   }
 }

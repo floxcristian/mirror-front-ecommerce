@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core'
 /*
  * Capitalize the first letter of the string
  * Takes a string as a value.
@@ -18,23 +18,23 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class CapitalizeFirstPipe implements PipeTransform {
   transform(value: string | undefined, allWords: boolean = false): string {
     if (value === null) {
-      return 'Not assigned';
+      return 'Not assigned'
     } else {
       return allWords
         ? this.capitalizeAllWords(value || '')
-        : this.capitalizeFirstWord(value || '');
+        : this.capitalizeFirstWord(value || '')
     }
   }
 
   capitalizeFirstWord(value: string): string {
-    value = value.toLowerCase();
-    return value.charAt(0).toUpperCase() + value.slice(1);
+    value = value.toLowerCase()
+    return value.charAt(0).toUpperCase() + value.slice(1)
   }
 
   capitalizeAllWords(value: string): string {
     return value
       .split(' ')
       .map((v) => this.capitalizeFirstWord(v))
-      .join(' ');
+      .join(' ')
   }
 }

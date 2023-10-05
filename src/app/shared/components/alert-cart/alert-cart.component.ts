@@ -1,6 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import { ProductCart } from '../../interfaces/cart-item';
+import { Component, OnInit, Input } from '@angular/core'
+import { BsModalRef } from 'ngx-bootstrap/modal'
+import { ProductCart } from '../../interfaces/cart-item'
 
 @Component({
   selector: 'app-alert-cart',
@@ -8,8 +8,8 @@ import { ProductCart } from '../../interfaces/cart-item';
   styleUrls: ['./alert-cart.component.scss'],
 })
 export class AlertCartComponent implements OnInit {
-  @Input() product!: ProductCart;
-  @Input() modalRef!: BsModalRef;
+  @Input() product!: ProductCart
+  @Input() modalRef!: BsModalRef
 
   constructor(public bsModalRef: BsModalRef) {}
 

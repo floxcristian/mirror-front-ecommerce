@@ -1,34 +1,31 @@
 .shop-layout__content {
-    padding: 0 1.2rem;
+  padding: 0 1.2rem;
 }
 
 .shop-layout__sidebar {
-    margin-right: 0px !important;
+  margin-right: 0px !important;
 }
 
 .shop-layout-mobile__sidebar {
-    position: fixed;
-    z-index: 12;
-    top: 0;
-    width: 100%;
-    right: -100%;
+  position: fixed;
+  z-index: 12;
+  top: 0;
+  width: 100%;
+  right: -100%;
 
-    height: calc(100vh) !important;
-    height: calc(100vh) !important;
-    height: calc(100vh) !important;
+  height: calc(100vh) !important;
+  height: calc(100vh) !important;
+  height: calc(100vh) !important;
 }
 
 .shop-layout-mobile__sidebar.active {
-    left: 0;
+  left: 0;
 }
 
 .position-fixed {
-    
-    top: 7rem;
-    width: 20%;
+  top: 7rem;
+  width: 20%;
 }
 .top {
-    
-    top: -50rem;
+  top: -50rem;
 }
-

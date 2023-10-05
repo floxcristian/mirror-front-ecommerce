@@ -1,25 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { ResumenRetiroComponent } from './resumen-retiro.component';
+import { ResumenRetiroComponent } from './resumen-retiro.component'
 
 describe('ResumenRetiroComponent', () => {
-  let component: ResumenRetiroComponent;
-  let fixture: ComponentFixture<ResumenRetiroComponent>;
+  let component: ResumenRetiroComponent
+  let fixture: ComponentFixture<ResumenRetiroComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ResumenRetiroComponent ]
-    })
-    .compileComponents();
-  }));
+      declarations: [ResumenRetiroComponent],
+    }).compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ResumenRetiroComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(ResumenRetiroComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

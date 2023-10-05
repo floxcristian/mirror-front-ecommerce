@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { OwlOptions } from 'ngx-owl-carousel-o';
+import { Component, OnInit, Input } from '@angular/core'
+import { OwlOptions } from 'ngx-owl-carousel-o'
 
 @Component({
   selector: 'app-template-card-producto-tv',
@@ -7,24 +7,24 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
   styleUrls: ['./template-card-producto-tv.component.scss'],
 })
 export class TemplateCardProductoTvComponent implements OnInit {
-  @Input() layout: any;
+  @Input() layout: any
 
-  colsRe!: number;
-  customOptions!: OwlOptions;
-  productos: any[] = [];
-  contenido!: [];
+  colsRe!: number
+  customOptions!: OwlOptions
+  productos: any[] = []
+  contenido!: []
 
   constructor() {}
 
   async ngOnInit() {
-    this.contenido = this.layout.contenido;
-    const cols = this.layout.col;
+    this.contenido = this.layout.contenido
+    const cols = this.layout.col
 
-    let itemSet = 1;
+    let itemSet = 1
     if (cols === 8 || cols === 6) {
-      itemSet = 2;
+      itemSet = 2
     } else if (cols === 12) {
-      itemSet = 3;
+      itemSet = 3
     }
 
     this.customOptions = {
@@ -39,32 +39,32 @@ export class TemplateCardProductoTvComponent implements OnInit {
       smartSpeed: 3000,
       navSpeed: 1000,
       autoWidth: true,
-    };
+    }
 
-    const total = this.contenido.length;
-    console.log('total', total, this.customOptions);
+    const total = this.contenido.length
+    console.log('total', total, this.customOptions)
 
     if (this.layout.height === 'height:290px') {
-      this.colsRe = 3;
+      this.colsRe = 3
 
-      const div = this.contenido.length / this.colsRe;
-      const corte = Math.round(div);
+      const div = this.contenido.length / this.colsRe
+      const corte = Math.round(div)
 
-      this.productos.push({ arr: this.contenido.slice(0, corte) });
-      this.productos.push({ arr: this.contenido.slice(corte, corte * 2) });
-      this.productos.push({ arr: this.contenido.slice(corte * 2, total) });
+      this.productos.push({ arr: this.contenido.slice(0, corte) })
+      this.productos.push({ arr: this.contenido.slice(corte, corte * 2) })
+      this.productos.push({ arr: this.contenido.slice(corte * 2, total) })
     } else {
-      this.colsRe = 2;
+      this.colsRe = 2
 
-      const div = this.contenido.length / this.colsRe;
-      const corte = Math.round(div);
+      const div = this.contenido.length / this.colsRe
+      const corte = Math.round(div)
 
-      this.productos.push({ arr: this.contenido.slice(0, corte) });
-      this.productos.push({ arr: this.contenido.slice(corte, total) });
+      this.productos.push({ arr: this.contenido.slice(0, corte) })
+      this.productos.push({ arr: this.contenido.slice(corte, total) })
     }
   }
 
   numSequence(): Array<number> {
-    return Array(this.colsRe);
+    return Array(this.colsRe)
   }
 }

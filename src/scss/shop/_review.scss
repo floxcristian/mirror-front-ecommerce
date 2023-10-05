@@ -5,54 +5,52 @@
 @import '../functions';
 @import '../mixins/direction';
 
-
 .review {
-    display: flex;
+  display: flex;
 }
 .review__avatar {
-    flex-shrink: 0;
+  flex-shrink: 0;
 
-    @include direction {
-        #{$margin-inline-start}: 16px;
-        #{$margin-inline-end}: 10px;
-    }
+  @include direction {
+    #{$margin-inline-start}: 16px;
+    #{$margin-inline-end}: 10px;
+  }
 
-    img {
-        width: 70px;
-        border-radius: 1000px;
-    }
+  img {
+    width: 70px;
+    border-radius: 1000px;
+  }
 }
 .review__author {
-
-    font-size: 0.875rem;
-    font-weight: $font-weight-medium;
+  font-size: 0.875rem;
+  font-weight: $font-weight-medium;
 }
 .review__rating {
-    margin-top: 2px;
+  margin-top: 2px;
 }
 .review__text {
-    font-size: 16px;
-    margin-top: 12px;
+  font-size: 16px;
+  margin-top: 12px;
 }
 .review__date {
-    margin-top: 10px;
-    color: $card-font-muted-color;
-    font-size: 14px;
+  margin-top: 10px;
+  color: $card-font-muted-color;
+  font-size: 14px;
 }
 
 @media (min-width: breakpoint(sm-start)) and (max-width: breakpoint(sm-end)) {
-    .review__avatar {
-        @include direction {
-            #{$margin-inline-end}: 18px;
-        }
-
-        img {
-            width: 60px;
-        }
+  .review__avatar {
+    @include direction {
+      #{$margin-inline-end}: 18px;
     }
+
+    img {
+      width: 60px;
+    }
+  }
 }
 @media (max-width: breakpoint(xs-end)) {
-    .review__avatar {
-        display: none;
-    }
+  .review__avatar {
+    display: none;
+  }
 }

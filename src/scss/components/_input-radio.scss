@@ -1,8 +1,8 @@
 /*
 // .input-radio
 */
-@use "sass:math";
-@import "../variables";
+@use 'sass:math';
+@import '../variables';
 
 $local-circle-size: 16px;
 $local-inner-circle-size: 6px;
@@ -34,12 +34,13 @@ $local-transition-duration: 0.2s;
   border-radius: math.div($local-circle-size, 2);
   background: $input-radio-circle-bg;
   box-shadow: $input-radio-circle-shadow;
-  transition: background $local-transition-duration,
+  transition:
+    background $local-transition-duration,
     box-shadow $local-transition-duration;
 
   &::after {
     display: block;
-    content: "";
+    content: '';
     position: absolute;
     //left: ($local-circle-size - $local-inner-circle-size) / 2;
     left: math.div($local-circle-size - $local-inner-circle-size, 2);
@@ -51,7 +52,8 @@ $local-transition-duration: 0.2s;
     border-radius: math.div($local-inner-circle-size, 2);
     background: $input-radio-inner-circle-color;
     transform: scale(0);
-    transition: background $local-transition-duration,
+    transition:
+      background $local-transition-duration,
       transform $local-transition-duration,
       visibility 0s $local-transition-duration;
     visibility: hidden;

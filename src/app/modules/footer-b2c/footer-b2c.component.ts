@@ -4,10 +4,10 @@ import {
   Inject,
   OnInit,
   PLATFORM_ID,
-} from '@angular/core';
-import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
-import { isPlatformBrowser } from '@angular/common';
+} from '@angular/core'
+import { Router } from '@angular/router'
+import { environment } from '../../../environments/environment'
+import { isPlatformBrowser } from '@angular/common'
 
 @Component({
   selector: 'app-footer-b2c',
@@ -15,25 +15,25 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./footer-b2c.component.scss'],
 })
 export class FooterB2cComponent implements OnInit {
-  screenWidth: any;
-  screenHeight: any;
-  logoSrc = environment.logoSrcFooter;
-  load = false;
+  screenWidth: any
+  screenHeight: any
+  logoSrc = environment.logoSrcFooter
+  load = false
   constructor(
     public router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900;
+      : 900
     this.screenHeight = isPlatformBrowser(this.platformId)
       ? window.innerHeight
-      : 900;
+      : 900
   }
 
   async ngOnInit() {
-    document.body.scrollTop = 0; // Safari
-    document.documentElement.scrollTop = 0; // Other
+    document.body.scrollTop = 0 // Safari
+    document.documentElement.scrollTop = 0 // Other
   }
 
   // Funcion utilizada para ocultar footer para dispositivos mobiles en las pantallas de seleccion de despacho y pago.
@@ -44,9 +44,9 @@ export class FooterB2cComponent implements OnInit {
       this.router.url.includes('/especial/') ||
       this.router.url.includes('/not-found')
     ) {
-      return false;
+      return false
     } else {
-      return true;
+      return true
     }
   }
 
@@ -54,10 +54,10 @@ export class FooterB2cComponent implements OnInit {
   onResize(event: any) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900;
+      : 900
     this.screenHeight = isPlatformBrowser(this.platformId)
       ? window.innerHeight
-      : 900;
+      : 900
   }
 
   HideFooter2() {
@@ -65,9 +65,9 @@ export class FooterB2cComponent implements OnInit {
       this.router.url.includes('/carro-compra') ||
       this.router.url.includes('/sitio')
     ) {
-      return false;
+      return false
     } else {
-      return true;
+      return true
     }
   }
 }

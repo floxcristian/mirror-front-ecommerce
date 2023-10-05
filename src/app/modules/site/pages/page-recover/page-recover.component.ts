@@ -1,9 +1,9 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
-import { ClientsService } from '../../../../shared/services/clients.service';
-import { ToastrService } from 'ngx-toastr';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, PLATFORM_ID } from '@angular/core'
+import { ClientsService } from '../../../../shared/services/clients.service'
+import { ToastrService } from 'ngx-toastr'
+import { FormGroup, FormBuilder, Validators } from '@angular/forms'
+import { Router } from '@angular/router'
+import { isPlatformBrowser } from '@angular/common'
 
 @Component({
   selector: 'app-recovering',
@@ -11,31 +11,31 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./page-recover.component.scss'],
 })
 export class PageRecoveringComponent {
-  isCollapsed = false;
-  rows: String[] = [];
-  innerWidth: number;
-  formRecoverpass!: FormGroup;
+  isCollapsed = false
+  rows: String[] = []
+  innerWidth: number
+  formRecoverpass!: FormGroup
 
   constructor(
     private clients: ClientsService,
     private toastr: ToastrService,
     private fb: FormBuilder,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900;
+      : 900
   }
 
   ngOnInit() {
-    this.formRecover();
+    this.formRecover()
   }
 
   formRecover() {
     this.formRecoverpass = this.fb.group({
       email: ['', Validators.required],
-    });
+    })
   }
 
   recoverPass(data: any) {
@@ -43,20 +43,20 @@ export class PageRecoveringComponent {
       this.clients.recuperarPassword(data).subscribe(
         (data: any) => {
           if (data['status'] === 'OK') {
-            this.toastr.success('Link enviado exitosamente');
-            this.formRecover();
-            this.router.navigate(['/inicio']);
+            this.toastr.success('Link enviado exitosamente')
+            this.formRecover()
+            this.router.navigate(['/inicio'])
           } else {
-            this.toastr.error(data['msg']);
+            this.toastr.error(data['msg'])
           }
         },
         (error) => {
-          console.log(error);
-          this.toastr.error('Error de conexión, para crear usuarios');
-        }
-      );
+          console.log(error)
+          this.toastr.error('Error de conexión, para crear usuarios')
+        },
+      )
     } else {
-      this.toastr.warning('Debe ingresar su e-mail');
+      this.toastr.warning('Debe ingresar su e-mail')
     }
   }
 }

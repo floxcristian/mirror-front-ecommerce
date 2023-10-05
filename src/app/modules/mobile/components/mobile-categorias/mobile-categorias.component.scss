@@ -1,28 +1,19 @@
-.mobile-links__item-title{
-    height: 45px !important;
+.mobile-links__item-title {
+  height: 45px !important;
 }
-.mobile-links--level--1 .mobile-links__item .mobile-links__item-link{
-    padding-left: 40px !important;
+.mobile-links--level--1 .mobile-links__item .mobile-links__item-link {
+  padding-left: 40px !important;
 }
 
 .mobile-links--level--1 {
-    .mobile-links__item-title{
-        height: 40px !important;
+  .mobile-links__item-title {
+    height: 40px !important;
+  }
+  .mobile-links {
+    & > li {
+      background: #ffff !important;
+      border-left: none !important;
+      border-bottom: 1px solid #e7e7e7;
     }
-    .mobile-links {
-       
-
-       
-
-        & > li {
-            background: #ffff!important;
-            border-left: none !important;
-            border-bottom: 1px solid #e7e7e7;
-         
-
-           
-        }
-    }
-
-    
+  }
 }

@@ -3,63 +3,63 @@
 */
 @import '../variables';
 
-
 $local-item-margin: 3px;
 
-
 .input-radio-label {
-    display: block;
-    font-size: 14px;
-    font-weight: $font-weight-medium;
+  display: block;
+  font-size: 14px;
+  font-weight: $font-weight-medium;
 }
 .input-radio-label__list {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -$local-item-margin;
+
+  input {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  label {
     display: flex;
-    flex-wrap: wrap;
-    margin: -$local-item-margin;
+    margin: $local-item-margin;
+    user-select: none;
+  }
 
-    input {
-        position: absolute;
-        pointer-events: none;
-        opacity: 0;
-    }
+  span {
+    cursor: pointer;
+    display: block;
+    height: 32px;
+    padding: 0.3125rem 1rem;
+    border-radius: 2px;
+    background: $input-radio-label-default-bg;
+    color: $input-radio-label-default-font-color;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+  }
 
-    label {
-        display: flex;
-        margin: $local-item-margin;
-        user-select: none;
+  input:not(:checked):not(:disabled) {
+    & ~ span:hover {
+      background: $input-radio-label-hover-bg;
+      color: $input-radio-label-hover-font-color;
     }
+  }
 
-    span {
-        cursor: pointer;
-        display: block;
-        height: 32px;
-        padding: .3125rem 1rem;
-        border-radius: 2px;
-        background: $input-radio-label-default-bg;
-        color: $input-radio-label-default-font-color;
-        transition: background-color .2s, color .2s;
+  input:checked {
+    ~ span {
+      cursor: default;
+      background: $input-radio-label-active-bg;
+      color: $input-radio-label-active-font-color;
+      transition-duration: 0.08s, 0.08s;
     }
+  }
 
-    input:not(:checked):not(:disabled) {
-        & ~ span:hover {
-            background: $input-radio-label-hover-bg;
-            color: $input-radio-label-hover-font-color;
-        }
+  input:disabled {
+    ~ span {
+      cursor: default;
+      opacity: 0.5;
     }
-
-    input:checked {
-        ~ span {
-            cursor: default;
-            background: $input-radio-label-active-bg;
-            color: $input-radio-label-active-font-color;
-            transition-duration: .08s, .08s;
-        }
-    }
-
-    input:disabled {
-        ~ span {
-            cursor: default;
-            opacity: .5;
-        }
-    }
+  }
 }

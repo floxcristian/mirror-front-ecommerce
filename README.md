@@ -94,63 +94,66 @@
 
 ## Resumen
 
-Esta es una app web construída en Angular, que se conecta con distintas APIs ya estandarizadas para su uso en **Implementos Chile** e **Implementos Perú**.
-
+Esta es una app web construída en Angular, que se conecta con distintas APIs ya
+estandarizadas para su uso en **Implementos Chile** e **Implementos Perú**.
 
 ## 📦 Requerimientos e Instalación
 
 Instalar NodeJS:
+
 - Descargar versión que corresponda: [Link](https://nodejs.org/es/download)
 
 Instalar Angular de forma global:
+
 ```
 npm install -g @angular/cli
 ```
-
-
-
 
 Instalar dependencias:
 
 ```
 npm install
 ```
+
 Levantar app web localmente para desarrollo:
+
 ```
 npm start
 ```
+
 Compilar app para producción incluyendo **Server Side Rendering**:
+
 ```
 npm run build:ssr
 ```
+
 Probar funcionamiento de compilación localmente:
+
 ```
 npm run serve:ssr
 ```
 
 ## 🎨 Dependencias
 
-| Package           | Feature                  | Sumary                                                                                                                                                                                                                                            |
-| ----------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [@ng-bootstrap/ng-bootstrap](https://github.com/ng-bootstrap/ng-bootstrap)     | --                       | Used to hash user's password before saving it into the DB.                                                                                                                                                                                        |
-| [@ng-select/ng-select](https://github.com/ng-select/ng-select)            | --                       | --                                                                                                                                                                                                                                                |
-| [@ngu/carousel](https://github.com/uiuniversal/ngu-carousel)              | --                       | --                                                                                                                                                                                                                                                |
-| angular-datatables | API parameter validation | Validate body, params, query, headers and cookies of a request (via middleware) and return a response with errors; if any of the configured validation rules fail. You won't anymore need to make your route handler dirty with such validations. |
-| angular-google-tag-manager      | Authentication           | Used to generate and verify authentication tokens.                                                                                                                                                                                                |
-| moment            | --                       | --                                                                                                                                                                                                                                                |
-| animate.css           | Auto server restart      | Restart the server in real-time anytime an edit is made.                                                                                                                                                                                          |
-| bootstrap                | --                       | --                                                                                                                                                                                                                                                |
-| @popperjs/core     | --                       | --                                                                                                                                                                                                                                                |
-| @nguniversal/express-engine                | Code linting             | --                                                                                                                                                                                                                                                |
-| uuid              | --                       | --                                                                                                                                                                                                                                                |
+| Package                                                                    | Feature                  | Sumary                                                                                                                                                                                                                                            |
+| -------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [@ng-bootstrap/ng-bootstrap](https://github.com/ng-bootstrap/ng-bootstrap) | --                       | Used to hash user's password before saving it into the DB.                                                                                                                                                                                        |
+| [@ng-select/ng-select](https://github.com/ng-select/ng-select)             | --                       | --                                                                                                                                                                                                                                                |
+| [@ngu/carousel](https://github.com/uiuniversal/ngu-carousel)               | --                       | --                                                                                                                                                                                                                                                |
+| angular-datatables                                                         | API parameter validation | Validate body, params, query, headers and cookies of a request (via middleware) and return a response with errors; if any of the configured validation rules fail. You won't anymore need to make your route handler dirty with such validations. |
+| angular-google-tag-manager                                                 | Authentication           | Used to generate and verify authentication tokens.                                                                                                                                                                                                |
+| moment                                                                     | --                       | --                                                                                                                                                                                                                                                |
+| animate.css                                                                | Auto server restart      | Restart the server in real-time anytime an edit is made.                                                                                                                                                                                          |
+| bootstrap                                                                  | --                       | --                                                                                                                                                                                                                                                |
+| @popperjs/core                                                             | --                       | --                                                                                                                                                                                                                                                |
+| @nguniversal/express-engine                                                | Code linting             | --                                                                                                                                                                                                                                                |
+| uuid                                                                       | --                       | --                                                                                                                                                                                                                                                |
 
-| VSCode Extension | Description                                                                                          |
-| ---------------- | ---------------------------------------------------------------------------------------------------- |
-| .editorconfig    | It helps developers define and maintain consistent coding styles between different editors and IDEs. |
-| prettier         | It helps developers define and maintain consistent coding styles between different editors and IDEs. |
+| VSCode Extension         | Description                                                                                          |
+| ------------------------ | ---------------------------------------------------------------------------------------------------- |
+| .editorconfig            | It helps developers define and maintain consistent coding styles between different editors and IDEs. |
+| prettier                 | It helps developers define and maintain consistent coding styles between different editors and IDEs. |
 | Angular Language Service | It helps developers define and maintain consistent coding styles between different editors and IDEs. |
-
-
 
 ## 🎨 Linters y Formatters
 
@@ -170,32 +173,36 @@ npm run serve:ssr
 
 ### Why is it called RuviClass?
 
-Because I thought it sounded cute. All these programs talk about being _"performant"_, _"rigid"_, _"robust"_ -
-I like programming to be light, fun and non-scary. Choo embraces that.
+Because I thought it sounded cute. All these programs talk about being
+_"performant"_, _"rigid"_, _"robust"_ - I like programming to be light, fun and
+non-scary. Choo embraces that.
 
 ## 📚APIs
 
-A continuación se presenta el listado de APIs con las que interactúa esta app web:
+A continuación se presenta el listado de APIs con las que interactúa esta app
+web:
 
-- [Customer API](https://github.com/developer-implementos/api-ecommerce-customer) - RuviClass Client repository.
-- [Shopping Cart API](https://github.com/developer-implementos/api-ecommerce-shopping-cart) - Node.js, Express.js, REST API Backend by Postgres and much
-  more.
-- [OMS API](https://github.com/developer-implementos/api-ecommerce-oms) - Updated Node.js tutorials.
-- [CMS API](https://github.com/developer-implementos/api-ecommerce-cms) - Official Guide.
-- [Logistic API](https://github.com/developer-implementos/api-ecommerce-logistic) - Premium Beginner/Advanced Courses.
-- [Inventory API](https://github.com/developer-implementos/api-ecommerce-inventory) - Express.js
-  Boilerplate.
+- [Customer API](https://github.com/developer-implementos/api-ecommerce-customer) -
+  RuviClass Client repository.
+- [Shopping Cart API](https://github.com/developer-implementos/api-ecommerce-shopping-cart) -
+  Node.js, Express.js, REST API Backend by Postgres and much more.
+- [OMS API](https://github.com/developer-implementos/api-ecommerce-oms) -
+  Updated Node.js tutorials.
+- [CMS API](https://github.com/developer-implementos/api-ecommerce-cms) -
+  Official Guide.
+- [Logistic API](https://github.com/developer-implementos/api-ecommerce-logistic) -
+  Premium Beginner/Advanced Courses.
+- [Inventory API](https://github.com/developer-implementos/api-ecommerce-inventory) -
+  Express.js Boilerplate.
 - [Article API](https://github.com/developer-implementos/api-ecommerce-article)
 
 ## 🤝 Contributing
 
 We love contributions! Check out the
-[Contribution Guide](https://github.com/sourcerer-io/sourcerer-app/blob/master/CONTRIBUTING.md) for more
-information.
-
-
-
+[Contribution Guide](https://github.com/sourcerer-io/sourcerer-app/blob/master/CONTRIBUTING.md)
+for more information.
 
 ## 🎓 License
 
-Usage is provided under the [MIT©](https://tldrlegal.com/license/mit-license) License.
+Usage is provided under the [MIT©](https://tldrlegal.com/license/mit-license)
+License.

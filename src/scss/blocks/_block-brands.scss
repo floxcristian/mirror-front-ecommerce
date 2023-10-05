@@ -5,26 +5,25 @@
 @import '../functions';
 @import '../mixins/card';
 
-
-.block-brands {}
+.block-brands {
+}
 .block-brands__slider {
-    @include card();
+  @include card();
 }
 .block-brands__item {
-    // padding: 32px 24px;
-    padding: 0.5rem 0.5rem;
-    
+  // padding: 32px 24px;
+  padding: 0.5rem 0.5rem;
 }
 
 @media (min-width: breakpoint(md-start)) and (max-width: breakpoint(md-end)) {
-    .block-brands__item {
-        // padding: 28px 24px;
-        padding: 0.5rem 0.5rem;
-    }
+  .block-brands__item {
+    // padding: 28px 24px;
+    padding: 0.5rem 0.5rem;
+  }
 }
 @media (max-width: breakpoint(sm-end)) {
-    .block-brands__item {
-        // padding: 20px 24px;
-        padding: 0.5rem 0.5rem;
-    }
+  .block-brands__item {
+    // padding: 20px 24px;
+    padding: 0.5rem 0.5rem;
+  }
 }

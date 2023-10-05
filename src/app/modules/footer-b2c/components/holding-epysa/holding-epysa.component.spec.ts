@@ -1,25 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { HoldingEpysaComponent } from './holding-epysa.component';
+import { HoldingEpysaComponent } from './holding-epysa.component'
 
 describe('HoldingEpysaComponent', () => {
-  let component: HoldingEpysaComponent;
-  let fixture: ComponentFixture<HoldingEpysaComponent>;
+  let component: HoldingEpysaComponent
+  let fixture: ComponentFixture<HoldingEpysaComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HoldingEpysaComponent ]
-    })
-    .compileComponents();
-  }));
+      declarations: [HoldingEpysaComponent],
+    }).compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HoldingEpysaComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(HoldingEpysaComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

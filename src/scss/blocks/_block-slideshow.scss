@@ -2,10 +2,10 @@
 // .block-slideshow
 */
 
-@import "../variables";
-@import "../functions";
-@import "../mixins/buttons";
-@import "../mixins/direction";
+@import '../variables';
+@import '../functions';
+@import '../mixins/buttons';
+@import '../mixins/direction';
 $local-dots-height: 18px;
 $local-dots-padding: 4px;
 $local-dot-size: $local-dots-height - $local-dots-padding * 2;

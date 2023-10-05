@@ -1,5 +1,5 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Component, EventEmitter, OnInit } from '@angular/core'
+import { BsModalRef } from 'ngx-bootstrap/modal'
 
 export enum TipoIcon {
   OK = 1,
@@ -15,12 +15,12 @@ export enum TipoModal {
 }
 
 export interface DataModal {
-  titulo: string;
-  mensaje: string;
-  tipoIcon: TipoIcon;
-  tipoModal: TipoModal;
-  textoBotonNO?: string;
-  textoBotonSI?: string;
+  titulo: string
+  mensaje: string
+  tipoIcon: TipoIcon
+  tipoModal: TipoModal
+  textoBotonNO?: string
+  textoBotonSI?: string
 }
 
 @Component({
@@ -29,14 +29,14 @@ export interface DataModal {
   styleUrls: ['./modal.component.scss'],
 })
 export class ModalComponent implements OnInit {
-  titulo!: string;
-  mensaje!: string;
-  tipoIcon!: TipoIcon;
-  tipoModal!: TipoModal;
-  textoBotonNO?: string;
-  textoBotonSI?: string;
+  titulo!: string
+  mensaje!: string
+  tipoIcon!: TipoIcon
+  tipoModal!: TipoModal
+  textoBotonNO?: string
+  textoBotonSI?: string
 
-  public event: EventEmitter<any> = new EventEmitter();
+  public event: EventEmitter<any> = new EventEmitter()
 
   constructor(public ModalRef: BsModalRef) {}
 
@@ -44,35 +44,35 @@ export class ModalComponent implements OnInit {
     switch (this.tipoModal) {
       case TipoModal.OK:
         this.textoBotonSI =
-          this.textoBotonSI === undefined ? 'Aceptar' : this.textoBotonSI;
-        break;
+          this.textoBotonSI === undefined ? 'Aceptar' : this.textoBotonSI
+        break
       case TipoModal.QUESTION:
         this.textoBotonNO =
-          this.textoBotonNO === undefined ? 'NO' : this.textoBotonNO;
+          this.textoBotonNO === undefined ? 'NO' : this.textoBotonNO
         this.textoBotonSI =
-          this.textoBotonSI === undefined ? 'SI' : this.textoBotonSI;
-        break;
+          this.textoBotonSI === undefined ? 'SI' : this.textoBotonSI
+        break
       default:
         this.textoBotonNO =
-          this.textoBotonNO === undefined ? 'NO' : this.textoBotonNO;
+          this.textoBotonNO === undefined ? 'NO' : this.textoBotonNO
         this.textoBotonSI =
-          this.textoBotonSI === undefined ? 'SI' : this.textoBotonSI;
-        break;
+          this.textoBotonSI === undefined ? 'SI' : this.textoBotonSI
+        break
     }
   }
 
   clickBoton(opcion: string) {
     switch (opcion) {
       case 'NO':
-        this.event.emit(false);
-        this.ModalRef.hide();
-        break;
+        this.event.emit(false)
+        this.ModalRef.hide()
+        break
       case 'SI':
-        this.event.emit(true);
-        this.ModalRef.hide();
-        break;
+        this.event.emit(true)
+        this.ModalRef.hide()
+        break
       default:
-        break;
+        break
     }
   }
 }

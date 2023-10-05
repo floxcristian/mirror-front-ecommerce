@@ -1,11 +1,11 @@
-import { FilterSubject } from './../../interfaces/filter-subject.interface';
-import { FilterValor } from './../../interfaces/filter-valor.interface';
+import { FilterSubject } from './../../interfaces/filter-subject.interface'
+import { FilterValor } from './../../interfaces/filter-valor.interface'
 import {
   FiltroMagicoFilterParam,
   FilterNewFilterParam,
-} from './../../interfaces/filtro-magico-filter-param.interface';
-import { Subject } from 'rxjs';
-import { Injectable } from '@angular/core';
+} from './../../interfaces/filtro-magico-filter-param.interface'
+import { Subject } from 'rxjs'
+import { Injectable } from '@angular/core'
 
 /**
  * @author José Espinoza
@@ -16,9 +16,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class FilterBridgeService {
-  filterValores$ = new Subject<FilterValor>();
-  filterSubject$ = new Subject<FilterSubject>();
-  newFilterSubject$ = new Subject<FilterNewFilterParam>();
+  filterValores$ = new Subject<FilterValor>()
+  filterSubject$ = new Subject<FilterSubject>()
+  newFilterSubject$ = new Subject<FilterNewFilterParam>()
 
   constructor() {}
 
@@ -33,7 +33,7 @@ export class FilterBridgeService {
     internalTag: any,
     filtrosModal: any,
     filtrosValores: any,
-    sender: any
+    sender: any,
   ) {
     this.filterValores$.next({
       tag,
@@ -41,23 +41,29 @@ export class FilterBridgeService {
       filtrosModal,
       filtrosValores,
       sender,
-    });
+    })
   }
 
   getFilterValores() {
-    return this.filterValores$;
+    return this.filterValores$
   }
 
   /**
    * @author José Espinoza
    * @description Envía los cambios ocurridos en un filtro mágico master o filtro mágico slave al resto de filtros mágicos suscritos.
    */
-  pushFilter(tag: any, internalTag: any, filtros: any, bind: any, sender: any) {
-    this.filterSubject$.next({ tag, internalTag, filtros, bind, sender });
+  pushFilter(
+    tag: any,
+    internalTag: any,
+    filtros: any,
+    bind: any,
+    sender: any,
+  ) {
+    this.filterSubject$.next({ tag, internalTag, filtros, bind, sender })
   }
 
   getFilterSubject() {
-    return this.filterSubject$;
+    return this.filterSubject$
   }
 
   /**
@@ -68,17 +74,17 @@ export class FilterBridgeService {
   pushNewFilterParams(
     tag: any,
     internalTag: any,
-    nuevosFiltros: FiltroMagicoFilterParam[]
+    nuevosFiltros: FiltroMagicoFilterParam[],
   ) {
     this.newFilterSubject$.next({
       tag,
       internalTag,
       nuevosFiltros,
       sender: null,
-    });
+    })
   }
 
   getNewFilterParam() {
-    return this.newFilterSubject$;
+    return this.newFilterSubject$
   }
 }

@@ -1,18 +1,18 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { Product } from '../interfaces/product';
-import { Observable, Subject, timer } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Injectable, OnDestroy } from '@angular/core'
+import { Product } from '../interfaces/product'
+import { Observable, Subject, timer } from 'rxjs'
+import { map, takeUntil } from 'rxjs/operators'
+import { BsModalRef } from 'ngx-bootstrap/modal'
 
 @Injectable({
   providedIn: 'root',
 })
 export class QuickviewService implements OnDestroy {
-  private destroy$: Subject<void> = new Subject();
-  private showSubject$: Subject<Product> = new Subject();
-  private modalRef!: BsModalRef;
+  private destroy$: Subject<void> = new Subject()
+  private showSubject$: Subject<Product> = new Subject()
+  private modalRef!: BsModalRef
 
-  show$: Observable<Product> = this.showSubject$.pipe(takeUntil(this.destroy$));
+  show$: Observable<Product> = this.showSubject$.pipe(takeUntil(this.destroy$))
 
   constructor() {}
 
@@ -20,21 +20,21 @@ export class QuickviewService implements OnDestroy {
     // timer only for demo
     return timer(200).pipe(
       map(() => {
-        this.showSubject$.next(product);
-      })
-    );
+        this.showSubject$.next(product)
+      }),
+    )
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroy$.next()
+    this.destroy$.complete()
   }
 
   setModal(modalRef: BsModalRef) {
-    this.modalRef = modalRef;
+    this.modalRef = modalRef
   }
 
   hide() {
-    this.modalRef.hide();
+    this.modalRef.hide()
   }
 }

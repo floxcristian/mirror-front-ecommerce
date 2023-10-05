@@ -5,18 +5,18 @@ import {
   OnInit,
   PLATFORM_ID,
   Renderer2,
-} from '@angular/core';
-import { fromEvent, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { DepartmentsService } from '../../../../shared/services/departments.service';
-import { NavigationLink } from '../../../../shared/interfaces/navigation-link';
-import { isPlatformBrowser } from '@angular/common';
-import { CategoryService } from '../../../../shared/services/category.service';
-import { CategoryApi } from '../../../../shared/interfaces/category-api';
-import { SlugifyPipe } from '../../../../shared/pipes/slugify.pipe';
-import { ToastrService } from 'ngx-toastr';
-import { RootService } from '../../../../shared/services/root.service';
-import { Megamenu } from 'src/app/shared/interfaces/megamenu';
+} from '@angular/core'
+import { fromEvent, Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators'
+import { DepartmentsService } from '../../../../shared/services/departments.service'
+import { NavigationLink } from '../../../../shared/interfaces/navigation-link'
+import { isPlatformBrowser } from '@angular/common'
+import { CategoryService } from '../../../../shared/services/category.service'
+import { CategoryApi } from '../../../../shared/interfaces/category-api'
+import { SlugifyPipe } from '../../../../shared/pipes/slugify.pipe'
+import { ToastrService } from 'ngx-toastr'
+import { RootService } from '../../../../shared/services/root.service'
+import { Megamenu } from 'src/app/shared/interfaces/megamenu'
 
 @Component({
   selector: 'app-header-departments',
@@ -24,19 +24,19 @@ import { Megamenu } from 'src/app/shared/interfaces/megamenu';
   styleUrls: ['./departments.component.scss'],
 })
 export class DepartmentsComponent implements OnInit {
-  private destroy$: Subject<any> = new Subject();
+  private destroy$: Subject<any> = new Subject()
 
-  items: NavigationLink[] = [];
-  private categoriaDetalle!: NavigationLink;
-  private arrayCategorias: NavigationLink[] = [];
-  private segundoNivel: any;
-  private sizeColumn!: number;
+  items: NavigationLink[] = []
+  private categoriaDetalle!: NavigationLink
+  private arrayCategorias: NavigationLink[] = []
+  private segundoNivel: any
+  private sizeColumn!: number
 
-  isOpen = true;
-  fixed = false;
+  isOpen = true
+  fixed = false
 
   private get element(): HTMLElement {
-    return this.el.nativeElement;
+    return this.el.nativeElement
   }
 
   constructor(
@@ -47,9 +47,9 @@ export class DepartmentsComponent implements OnInit {
     private categoriesService: CategoryService,
     private slugify: SlugifyPipe,
     private toastr: ToastrService,
-    private root: RootService
+    private root: RootService,
   ) {
-    this.obtieneCategorias();
+    this.obtieneCategorias()
   }
 
   ngOnInit(): void {}
@@ -57,15 +57,15 @@ export class DepartmentsComponent implements OnInit {
   obtieneCategorias() {
     this.categoriesService.obtieneCategoriasHeader().subscribe(
       (r: any) => {
-        const categorias: CategoryApi[] = r.data;
-        this.sortCategories(categorias);
+        const categorias: CategoryApi[] = r.data
+        this.sortCategories(categorias)
 
-        this.formatCategories(categorias);
+        this.formatCategories(categorias)
       },
       (e) => {
-        this.toastr.error('Error de conexión con el servidor');
-      }
-    );
+        this.toastr.error('Error de conexión con el servidor')
+      },
+    )
   }
 
   formatCategories(data: CategoryApi[]) {
@@ -86,19 +86,19 @@ export class DepartmentsComponent implements OnInit {
           image: 'assets/images/megamenu/megamenu-1.jpg',
           columns: [],
         },
-      };
+      }
 
       if (primeraCategoria.children) {
         // agregamos los item internet
         for (const segundaCategoria of primeraCategoria.children) {
           // tamaño de la columna de bootstrap por defecto
           const rColumns = this.getSizeColumns(
-            primeraCategoria.children.length
-          );
+            primeraCategoria.children.length,
+          )
 
-          this.sizeColumn = rColumns.columnas;
-          (this.categoriaDetalle.menu as Megamenu).size =
-            rColumns.estilo as any;
+          this.sizeColumn = rColumns.columnas
+          ;(this.categoriaDetalle.menu as Megamenu).size =
+            rColumns.estilo as any
 
           this.segundoNivel = {
             size: this.sizeColumn,
@@ -117,10 +117,10 @@ export class DepartmentsComponent implements OnInit {
                 items: '',
               },
             ],
-          };
+          }
 
           // Creamos tercer nivel -> Lineas
-          const tercerNivel = [];
+          const tercerNivel = []
           if (segundaCategoria.children) {
             for (const terceraCategoria of segundaCategoria.children) {
               const dataLineas = {
@@ -135,61 +135,61 @@ export class DepartmentsComponent implements OnInit {
                   this.root.replaceSlash(segundaCategoria.url),
                   this.root.replaceSlash(terceraCategoria.url),
                 ],
-              };
-              tercerNivel.push(dataLineas);
+              }
+              tercerNivel.push(dataLineas)
             }
           }
-          this.segundoNivel.items[0].items = tercerNivel;
-          (this.categoriaDetalle.menu as Megamenu).columns.push(
-            this.segundoNivel
-          );
+          this.segundoNivel.items[0].items = tercerNivel
+          ;(this.categoriaDetalle.menu as Megamenu).columns.push(
+            this.segundoNivel,
+          )
         }
       }
-      this.arrayCategorias.push(this.categoriaDetalle);
+      this.arrayCategorias.push(this.categoriaDetalle)
     }
 
-    this.items = this.arrayCategorias;
+    this.items = this.arrayCategorias
 
-    this.updateCategories();
+    this.updateCategories()
   }
 
   private sortCategories(items: any) {
     for (const item of items) {
-      const segundaCategoria = item.children;
+      const segundaCategoria = item.children
 
       segundaCategoria.sort((a: any, b: any) => {
         if (a.children.length < b.children.length) {
-          return 1;
+          return 1
         }
         if (a.children.length > b.children.length) {
-          return -1;
+          return -1
         }
-        return 0;
-      });
+        return 0
+      })
     }
   }
 
   getSizeColumns(columnas: any) {
-    let sizeColumn = 3;
-    let estilo = 'xxl';
+    let sizeColumn = 3
+    let estilo = 'xxl'
 
     // modificamos el tamaño de las columnas
     if (columnas === 2 || columnas === 4) {
-      estilo = 'lg';
-      sizeColumn = 6;
+      estilo = 'lg'
+      sizeColumn = 6
     }
 
     if (columnas === 3 || columnas === 6 || columnas === 9) {
-      estilo = 'xxl';
-      sizeColumn = 4;
+      estilo = 'xxl'
+      sizeColumn = 4
     }
 
-    return { columnas: sizeColumn, estilo: estilo };
+    return { columnas: sizeColumn, estilo: estilo }
   }
 
   addChild(items: CategoryApi[], arrCategoria: any) {
     if (items.length > 0) {
-      let cont = 0;
+      let cont = 0
       for (const item of items) {
         const obj: NavigationLink = {
           label: item.title,
@@ -201,62 +201,62 @@ export class DepartmentsComponent implements OnInit {
             'categoria',
             this.root.replaceSlash(item.url),
           ],
-        };
-        arrCategoria.push(obj);
+        }
+        arrCategoria.push(obj)
         if (item.children) {
           if (item.children.length > 0) {
-            arrCategoria[cont].items = [];
-            this.addChild(item.children, arrCategoria[cont].items);
+            arrCategoria[cont].items = []
+            this.addChild(item.children, arrCategoria[cont].items)
           }
         }
-        cont++;
+        cont++
       }
     }
   }
 
   updateCategories() {
-    const root = this.element.querySelector('.departments') as HTMLElement;
+    const root = this.element.querySelector('.departments') as HTMLElement
     const content = this.element.querySelector(
-      '.departments__links-wrapper'
-    ) as HTMLElement;
+      '.departments__links-wrapper',
+    ) as HTMLElement
 
     this.service.areaElement$
       .pipe(takeUntil(this.destroy$))
       .subscribe((areaElement) => {
         if (areaElement) {
-          this.fixed = true;
-          this.isOpen = true;
+          this.fixed = true
+          this.isOpen = true
 
           if (isPlatformBrowser(this.platformId)) {
-            const areaRect = areaElement.getBoundingClientRect();
-            const areaBottom = areaRect.top + areaRect.height + window.scrollY;
+            const areaRect = areaElement.getBoundingClientRect()
+            const areaBottom = areaRect.top + areaRect.height + window.scrollY
 
-            root.classList.remove('departments--transition');
-            root.classList.add('departments--fixed', 'departments--opened');
+            root.classList.remove('departments--transition')
+            root.classList.add('departments--fixed', 'departments--opened')
 
             const height =
               areaBottom -
-              (content.getBoundingClientRect().top + window.scrollY);
+              (content.getBoundingClientRect().top + window.scrollY)
 
-            content.style.height = `${height}px`;
-            content.getBoundingClientRect(); // force reflow
+            content.style.height = `${height}px`
+            content.getBoundingClientRect() // force reflow
           } else {
-            this.renderer.addClass(root, 'departments--fixed');
-            this.renderer.addClass(root, 'departments--opened');
+            this.renderer.addClass(root, 'departments--fixed')
+            this.renderer.addClass(root, 'departments--opened')
           }
         } else {
-          this.fixed = false;
-          this.isOpen = false;
+          this.fixed = false
+          this.isOpen = false
 
           if (isPlatformBrowser(this.platformId)) {
-            root.classList.remove('departments--opened', 'departments--fixed');
-            content.style.height = '';
+            root.classList.remove('departments--opened', 'departments--fixed')
+            content.style.height = ''
           } else {
-            this.renderer.removeClass(root, 'departments--fixed');
-            this.renderer.removeClass(root, 'departments--opened');
+            this.renderer.removeClass(root, 'departments--fixed')
+            this.renderer.removeClass(root, 'departments--opened')
           }
         }
-      });
+      })
 
     if (isPlatformBrowser(this.platformId)) {
       fromEvent<MouseEvent>(document, 'mousedown')
@@ -266,64 +266,64 @@ export class DepartmentsComponent implements OnInit {
             event.target instanceof HTMLElement &&
             !this.element.contains(event.target)
           ) {
-            this.close();
+            this.close()
           }
-        });
+        })
       fromEvent<TransitionEvent>(content, 'transitionend')
         .pipe(takeUntil(this.destroy$))
         .subscribe((event) => {
           if (event.propertyName === 'height') {
-            root.classList.remove('departments--transition');
+            root.classList.remove('departments--transition')
           }
-        });
+        })
     }
   }
 
   toggle(): void {
     if (this.isOpen) {
-      this.close();
+      this.close()
     } else {
-      this.open();
+      this.open()
     }
   }
 
   open(): void {
-    this.isOpen = true;
+    this.isOpen = true
 
-    const root = this.element.querySelector('.departments') as HTMLElement;
+    const root = this.element.querySelector('.departments') as HTMLElement
     const content = root.querySelector(
-      '.departments__links-wrapper'
-    ) as HTMLElement;
-    const startHeight = content.getBoundingClientRect().height;
+      '.departments__links-wrapper',
+    ) as HTMLElement
+    const startHeight = content.getBoundingClientRect().height
 
-    root.classList.add('departments--transition', 'departments--opened');
+    root.classList.add('departments--transition', 'departments--opened')
 
-    const endHeight = content.getBoundingClientRect().height;
+    const endHeight = content.getBoundingClientRect().height
 
-    content.style.height = startHeight + 'px';
-    content.getBoundingClientRect(); // force reflow
-    content.style.height = endHeight + 'px';
+    content.style.height = startHeight + 'px'
+    content.getBoundingClientRect() // force reflow
+    content.style.height = endHeight + 'px'
   }
 
   public close(): void {
     if (this.fixed || !this.isOpen) {
-      return;
+      return
     }
 
-    this.isOpen = false;
+    this.isOpen = false
 
-    const root = this.element.querySelector('.departments') as HTMLElement;
+    const root = this.element.querySelector('.departments') as HTMLElement
     const content = root.querySelector(
-      '.departments__links-wrapper'
-    ) as HTMLElement;
-    const startHeight = content.getBoundingClientRect().height;
+      '.departments__links-wrapper',
+    ) as HTMLElement
+    const startHeight = content.getBoundingClientRect().height
 
-    content.style.height = startHeight + 'px';
+    content.style.height = startHeight + 'px'
 
-    root.classList.add('departments--transition');
-    root.classList.remove('departments--opened');
+    root.classList.add('departments--transition')
+    root.classList.remove('departments--opened')
 
-    content.getBoundingClientRect(); // force reflow
-    content.style.height = '';
+    content.getBoundingClientRect() // force reflow
+    content.style.height = ''
   }
 }

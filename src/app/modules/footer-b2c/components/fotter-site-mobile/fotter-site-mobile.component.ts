@@ -1,15 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core'
 
 @Component({
   selector: 'app-fotter-site-mobile',
   templateUrl: './fotter-site-mobile.component.html',
-  styleUrls: ['./fotter-site-mobile.component.scss']
+  styleUrls: ['./fotter-site-mobile.component.scss'],
 })
 export class FotterSiteMobileComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

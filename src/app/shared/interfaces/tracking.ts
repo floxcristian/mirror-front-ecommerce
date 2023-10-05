@@ -1,4 +1,4 @@
 export interface TrackingStep {
-    estado: string;
-    fecha: string;
+  estado: string
+  fecha: string
 }

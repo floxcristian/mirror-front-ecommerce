@@ -1,91 +1,80 @@
 .dropcart {
-    width: 53.75rem;
-    box-shadow: 0 24px 44px 0 rgba(0, 0, 0, 0.16);
-    min-height: auto;
+  width: 53.75rem;
+  box-shadow: 0 24px 44px 0 rgba(0, 0, 0, 0.16);
+  min-height: auto;
 }
 
 .dropcart__product-name a {
-    transition: 0.15s;
-    font-size: 0.75rem;
-    font-weight: normal;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1.5;
-    letter-spacing: normal;
-    text-align: left;
-    color: #000000;
+  transition: 0.15s;
+  font-size: 0.75rem;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: left;
+  color: #000000;
 }
 
-
 .dropcart__product-image {
-    width: 4rem;
-    margin-right: 3.3125rem;
+  width: 4rem;
+  margin-right: 3.3125rem;
 }
 
 .product-sku {
-    font-size: 0.75rem;
-    font-weight: normal;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1.5;
-    letter-spacing: normal;
-    text-align: left;
-    color: #000000;
+  font-size: 0.75rem;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: left;
+  color: #000000;
 }
 
-
-.cart-quantity{
- max-width: 150px;
-} 
-
-
-
-
-
+.cart-quantity {
+  max-width: 150px;
+}
 
 .btn-add-cart {
-    width: 20.375rem;
-    text-align: center;
+  width: 20.375rem;
+  text-align: center;
 }
-
-
 
 .dropcart-title {
-    font-size: 1rem;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1.19;
-    letter-spacing: normal;
-    text-align: center;
-    color: #000000;
+  font-size: 1rem;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.19;
+  letter-spacing: normal;
+  text-align: center;
+  color: #000000;
 }
 
-
-.dropcart{
-   padding:2.5rem;
+.dropcart {
+  padding: 2.5rem;
 }
 
-.dropcart__product-quantity{
-    font-size: 1.125rem;
-    font-weight: 900;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1.06;
-    letter-spacing: normal;
-    text-align: left;
-    color: #000000;
+.dropcart__product-quantity {
+  font-size: 1.125rem;
+  font-weight: 900;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.06;
+  letter-spacing: normal;
+  text-align: left;
+  color: #000000;
 }
 
-
-.dropcart__product-info-1{
-    width: 22.25rem;
+.dropcart__product-info-1 {
+  width: 22.25rem;
 }
-.dropcart__product-info a:hover{
-    color: #005db9 !important;
-    text-decoration: underline;
+.dropcart__product-info a:hover {
+  color: #005db9 !important;
+  text-decoration: underline;
 }
 
-.cart-row{
-    margin-bottom: 1.2rem;
+.cart-row {
+  margin-bottom: 1.2rem;
 }

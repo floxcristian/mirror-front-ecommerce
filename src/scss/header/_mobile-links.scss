@@ -1,8 +1,8 @@
 /*
 // .mobile-links
 */
-@import "../variables";
-@import "../mixins/direction";
+@import '../variables';
+@import '../mixins/direction';
 
 $local-item-height: 48px;
 $local-expand-transition-duration: 0.3s;
@@ -63,7 +63,8 @@ $local-expand-transition-duration: 0.3s;
   overflow: hidden;
   height: 0;
   opacity: 0;
-  transition: height $local-expand-transition-duration,
+  transition:
+    height $local-expand-transition-duration,
     opacity $local-expand-transition-duration,
     visibility 0s $local-expand-transition-duration;
 }

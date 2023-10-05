@@ -1,25 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { WishListModalComponent } from './wish-list-modal.component';
+import { WishListModalComponent } from './wish-list-modal.component'
 
 describe('WishListModalComponent', () => {
-  let component: WishListModalComponent;
-  let fixture: ComponentFixture<WishListModalComponent>;
+  let component: WishListModalComponent
+  let fixture: ComponentFixture<WishListModalComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WishListModalComponent ]
-    })
-    .compileComponents();
-  }));
+      declarations: [WishListModalComponent],
+    }).compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(WishListModalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(WishListModalComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

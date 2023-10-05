@@ -1,4 +1,4 @@
-export const DIAS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab'];
+export const DIAS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab']
 export const MESES = [
   'Enero',
   'Febrero',
@@ -11,5 +11,5 @@ export const MESES = [
   'Septiembre',
   'Octubre',
   'Noviembre',
-  'Diciembre'
-];
+  'Diciembre',
+]

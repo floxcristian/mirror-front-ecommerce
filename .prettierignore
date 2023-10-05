@@ -1,0 +1,14 @@
+# Ignora los archivos y directorios de la carpeta "node_modules"
+/node_modules
+
+# Ignora los archivos generados por Angular CLI
+/dist
+/e2e
+
+# Ignora los archivos de configuración de Git
+/.git
+
+# Ignora los archivos de dependencias y logs generados por npm o yarn
+/package-lock.json
+/yarn.lock
+npm-debug.log*

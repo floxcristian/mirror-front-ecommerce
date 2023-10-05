@@ -1,9 +1,9 @@
 /*
 // .input-radio-color
 */
-@use "sass:math";
+@use 'sass:math';
 
-@import "../variables";
+@import '../variables';
 
 $local-field-height: 32px;
 $local-item-size: 30px;
@@ -50,7 +50,7 @@ $local-item-margin: 2px;
     &:after {
       display: block;
       position: absolute;
-      content: "";
+      content: '';
       border-radius: 1000px;
     }
     &:before {
@@ -77,7 +77,8 @@ $local-item-margin: 2px;
 
   &:hover input:enabled ~ span {
     transform: scale(
-      #{math.div(round(calc(($local-item-size * 0.875) / 2)), $local-item-size) * 2}
+      #{math.div(round(calc(($local-item-size * 0.875) / 2)), $local-item-size) *
+        2}
     );
   }
 }

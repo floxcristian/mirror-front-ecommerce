@@ -1,34 +1,31 @@
 .departments {
-    border-radius: 4px;
-  
-    height: 3.5rem !important;
-    margin-right: 1.875rem;
+  border-radius: 4px;
+
+  height: 3.5rem !important;
+  margin-right: 1.875rem;
 }
 
 .departments__button {
-    font-size: 0.9375rem;
-    text-transform: capitalize;
+  font-size: 0.9375rem;
+  text-transform: capitalize;
 }
 
 .departments__links {
-    background-color: #fff;
-    color: #000000;
+  background-color: #fff;
+  color: #000000;
 }
 
-
-
-.departments__links > li > a{
-    padding: 0.625rem  1rem;
-    font-size: 0.875rem;
+.departments__links > li > a {
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
 }
-
 
 .departments__links > li > a:hover,
- .menu > li:hover > a, .menu > li:hover > button{
-    background: #f2f2f2 !important;
-    color: #000 !important;
+.menu > li:hover > a,
+.menu > li:hover > button {
+  background: #f2f2f2 !important;
+  color: #000 !important;
 }
-
 
 // .departments__links-wrapper{
 //     max-height: 400px;

@@ -1,5 +1,5 @@
-import { Directive, Input } from '@angular/core';
-import { NgControl } from '@angular/forms';
+import { Directive, Input } from '@angular/core'
+import { NgControl } from '@angular/forms'
 
 /**
  * Directiva que permite habilitar o deshabilitar un cambo de ReactiveForm
@@ -13,9 +13,9 @@ export class DisableControlDirective {
    * Condición con la cual habilita o deshabilita el formulario
    */
   @Input() set appDisableControl(condition: boolean) {
-    const action = condition ? 'disable' : 'enable';
+    const action = condition ? 'disable' : 'enable'
     if (this.ngControl.control) {
-      this.ngControl.control[action]();
+      this.ngControl.control[action]()
     }
   }
 

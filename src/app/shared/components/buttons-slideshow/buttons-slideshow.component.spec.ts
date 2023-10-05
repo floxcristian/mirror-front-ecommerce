@@ -1,25 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { ButtonsSlideshowComponent } from './buttons-slideshow.component';
+import { ButtonsSlideshowComponent } from './buttons-slideshow.component'
 
 describe('ButtonsSlideshowComponent', () => {
-  let component: ButtonsSlideshowComponent;
-  let fixture: ComponentFixture<ButtonsSlideshowComponent>;
+  let component: ButtonsSlideshowComponent
+  let fixture: ComponentFixture<ButtonsSlideshowComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ButtonsSlideshowComponent ]
-    })
-    .compileComponents();
-  }));
+      declarations: [ButtonsSlideshowComponent],
+    }).compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ButtonsSlideshowComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(ButtonsSlideshowComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

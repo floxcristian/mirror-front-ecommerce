@@ -1,25 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { InputNumberProductComponent } from './input-number-product.component';
+import { InputNumberProductComponent } from './input-number-product.component'
 
 describe('InputNumberProductComponent', () => {
-  let component: InputNumberProductComponent;
-  let fixture: ComponentFixture<InputNumberProductComponent>;
+  let component: InputNumberProductComponent
+  let fixture: ComponentFixture<InputNumberProductComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InputNumberProductComponent ]
-    })
-    .compileComponents();
-  }));
+      declarations: [InputNumberProductComponent],
+    }).compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InputNumberProductComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(InputNumberProductComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

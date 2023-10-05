@@ -1,79 +1,79 @@
 .prod-card {
-    margin-bottom: 15px;
-    min-height: 277.5px;
-    border-radius: 0;
-    box-shadow: none;
-    border-left: 5px solid #0063be;
+  margin-bottom: 15px;
+  min-height: 277.5px;
+  border-radius: 0;
+  box-shadow: none;
+  border-left: 5px solid #0063be;
 }
 
 .prod-title {
-    text-transform: uppercase !important;
-    font-size: 20px !important;
-    font-family: sans-serif;
-    font-weight: 700;
-    line-height: initial;
+  text-transform: uppercase !important;
+  font-size: 20px !important;
+  font-family: sans-serif;
+  font-weight: 700;
+  line-height: initial;
 }
 
 .prod-descrip {
-    text-transform: lowercase !important;
-    font-size: 20px !important;
-    font-family: sans-serif;
-    line-height: initial;
-    margin-top: 10px;
-    height: 100px;
+  text-transform: lowercase !important;
+  font-size: 20px !important;
+  font-family: sans-serif;
+  line-height: initial;
+  margin-top: 10px;
+  height: 100px;
 }
 
 .prod-descrip:first-letter {
-    text-transform: uppercase;
+  text-transform: uppercase;
 }
 
 .prod-precio {
-    font-size: 2.5rem;
-    text-align: end;
-    font-weight: 700;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 0.95;
-    letter-spacing: normal;
-    width: 100%;
-    margin-top: 18px;
+  font-size: 2.5rem;
+  text-align: end;
+  font-weight: 700;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 0.95;
+  letter-spacing: normal;
+  width: 100%;
+  margin-top: 18px;
 }
 
 .prod-img {
-    max-height: 163.3px;
+  max-height: 163.3px;
 }
 
 .foot-sku {
-    width: 100px;
-    color: #045db7;
-    bottom: 20px;
-    left: 55px;
-    position: fixed;
+  width: 100px;
+  color: #045db7;
+  bottom: 20px;
+  left: 55px;
+  position: fixed;
 }
 
 .bord-izq {
-    height: 290px;
-    float: left;
-    left: -287px;
-    top: 0px;
-    z-index: 999;
+  height: 290px;
+  float: left;
+  left: -287px;
+  top: 0px;
+  z-index: 999;
 }
 
 .bord-der {
-    height: 290px;
-    position: absolute;
-    right: -287px;
-    top: 0px;
-    z-index: 999;
+  height: 290px;
+  position: absolute;
+  right: -287px;
+  top: 0px;
+  z-index: 999;
 }
 
 .relleno {
-    height: 83px;
-    margin: 14px 0 0;
-    padding: 14px;
-    background-color: #0063b9;
-    background-image: url("/assets/images/icon-svg/icon_blanco_tv.svg");
-    background-repeat: no-repeat;
-    background-position-x: 15px;
-    background-position-y: 15px;
+  height: 83px;
+  margin: 14px 0 0;
+  padding: 14px;
+  background-color: #0063b9;
+  background-image: url('/assets/images/icon-svg/icon_blanco_tv.svg');
+  background-repeat: no-repeat;
+  background-position-x: 15px;
+  background-position-y: 15px;
 }

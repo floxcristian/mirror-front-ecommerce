@@ -1,25 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { AddContactModalComponent } from './add-contact-modal.component';
+import { AddContactModalComponent } from './add-contact-modal.component'
 
 describe('AddContactModalComponent', () => {
-  let component: AddContactModalComponent;
-  let fixture: ComponentFixture<AddContactModalComponent>;
+  let component: AddContactModalComponent
+  let fixture: ComponentFixture<AddContactModalComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddContactModalComponent ]
-    })
-    .compileComponents();
-  }));
+      declarations: [AddContactModalComponent],
+    }).compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddContactModalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(AddContactModalComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

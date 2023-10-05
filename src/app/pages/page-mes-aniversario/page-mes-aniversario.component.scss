@@ -1,107 +1,117 @@
 .invalid-feedback {
-    display: block !important;
-    margin: 0px !important;
-    font-weight: bold !important;
-    position: absolute !important;
+  display: block !important;
+  margin: 0px !important;
+  font-weight: bold !important;
+  position: absolute !important;
 }
 
 .small,
 small {
-    font-size: 70%;
+  font-size: 70%;
 }
 
 .form-control-sm {
-    border-radius: 10px !important;
+  border-radius: 10px !important;
 }
 
 .btn-custom {
-    color: #003E9C;
-    font-weight: bold;
-    border-radius: 5px;
-    background: rgb(194, 255, 0);
-    background: linear-gradient(180deg, rgba(194, 255, 0, 1) 0%, rgba(232, 255, 0, 1) 35%, rgba(255, 248, 0, 1) 100%);
-    width: 150px;
+  color: #003e9c;
+  font-weight: bold;
+  border-radius: 5px;
+  background: rgb(194, 255, 0);
+  background: linear-gradient(
+    180deg,
+    rgba(194, 255, 0, 1) 0%,
+    rgba(232, 255, 0, 1) 35%,
+    rgba(255, 248, 0, 1) 100%
+  );
+  width: 150px;
 }
 
 .btn-custom:hover:not(.disabled) {
-    color: #003E9C;
-    font-weight: bold;
-    background: rgb(194, 255, 0);
-    background: linear-gradient(180deg, rgba(194, 255, 0, 1) 0%, rgba(255, 222, 0, 1) 35%, rgba(255, 248, 0, 1) 100%);
+  color: #003e9c;
+  font-weight: bold;
+  background: rgb(194, 255, 0);
+  background: linear-gradient(
+    180deg,
+    rgba(194, 255, 0, 1) 0%,
+    rgba(255, 222, 0, 1) 35%,
+    rgba(255, 248, 0, 1) 100%
+  );
 }
 
 .btn-custom.disabled {
-    cursor: no-drop;
+  cursor: no-drop;
 }
 
 .container-lg {
-    background-image: url("../../../assets/images/concursos/mes-aniversario/web_1024/backg3.png");
-    width: 1024px;
-    height: 768px;
+  background-image: url('../../../assets/images/concursos/mes-aniversario/web_1024/backg3.png');
+  width: 1024px;
+  height: 768px;
 }
 
 .container-small {
-    background-image: url("../../../assets/images/concursos/mes-aniversario/web_768/backg2.png");
-    width: 768px;
-    height: 1639px;
+  background-image: url('../../../assets/images/concursos/mes-aniversario/web_768/backg2.png');
+  width: 768px;
+  height: 1639px;
 }
 
 .container-xsmall {
-    background-image: url("../../../assets/images/concursos/mes-aniversario/web_320/backg.png");
-    width: 320px;
-    height: 950px;
+  background-image: url('../../../assets/images/concursos/mes-aniversario/web_320/backg.png');
+  width: 320px;
+  height: 950px;
 }
 
 .img-bicicleta-lg {
-    background-image: url("../../../assets/images/concursos/mes-aniversario/web_1024/BICICLETA-3.png");
-    width: 492px;
-    height: 335px;
-    // position: absolute;
-    bottom: 70px;
-    left: 55px;
+  background-image: url('../../../assets/images/concursos/mes-aniversario/web_1024/BICICLETA-3.png');
+  width: 492px;
+  height: 335px;
+  // position: absolute;
+  bottom: 70px;
+  left: 55px;
 }
 
 .img-bicicleta-small {
-    background-image: url("../../../assets/images/concursos/mes-aniversario/web_768/BICICLETA-2.png");
-    width: 768px;
-    height: 371px;
-    // position: absolute;
-    bottom: 90px;
-    left: 15px;
+  background-image: url('../../../assets/images/concursos/mes-aniversario/web_768/BICICLETA-2.png');
+  width: 768px;
+  height: 371px;
+  // position: absolute;
+  bottom: 90px;
+  left: 15px;
 }
 
 .img-bicicleta-xs {
-    background-image: url("../../../assets/images/concursos/mes-aniversario/web_320/BICLICLETA.png");
-    width: 320px;
-    height: 233px;
-    // position: absolute;
-    bottom: 45px;
-    left: 15px;
+  background-image: url('../../../assets/images/concursos/mes-aniversario/web_320/BICLICLETA.png');
+  width: 320px;
+  height: 233px;
+  // position: absolute;
+  bottom: 45px;
+  left: 15px;
 }
 
 .img-sku-lg {
-    background-image: url("../../../assets/images/concursos/mes-aniversario/web_1024/TXT-4.png");
-    width: 360px;
-    height: 45px;
-    // position: absolute;
-    bottom: 70px;
-    left: 116px;
+  background-image: url('../../../assets/images/concursos/mes-aniversario/web_1024/TXT-4.png');
+  width: 360px;
+  height: 45px;
+  // position: absolute;
+  bottom: 70px;
+  left: 116px;
 }
 
 .img-sku-sm {
-    // background-image: url("../../../assets/images/concursos/mes-aniversario/web_768/TXT2.png");
-    width: 768px;
-    height: 75px;
-    // position: absolute;
-    bottom: 15px;
-    left: 25px;
+  // background-image: url("../../../assets/images/concursos/mes-aniversario/web_768/TXT2.png");
+  width: 768px;
+  height: 75px;
+  // position: absolute;
+  bottom: 15px;
+  left: 25px;
 }
 
 .img-sku-xs {
-    background-image: url("../../../assets/images/concursos/mes-aniversario/web_320/TXT-2.png");
-    width: 320px;
-    height: 43px;
-    // position: absolute;
-    bottom: 40px;
-    left: 20px;
+  background-image: url('../../../assets/images/concursos/mes-aniversario/web_320/TXT-2.png');
+  width: 320px;
+  height: 43px;
+  // position: absolute;
+  bottom: 40px;
+  left: 20px;
 }

@@ -1,25 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { UpdateFlotaModalComponent } from './update-flota-modal.component';
+import { UpdateFlotaModalComponent } from './update-flota-modal.component'
 
 describe('UpdateFlotaModalComponent', () => {
-  let component: UpdateFlotaModalComponent;
-  let fixture: ComponentFixture<UpdateFlotaModalComponent>;
+  let component: UpdateFlotaModalComponent
+  let fixture: ComponentFixture<UpdateFlotaModalComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UpdateFlotaModalComponent ]
-    })
-    .compileComponents();
-  }));
+      declarations: [UpdateFlotaModalComponent],
+    }).compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UpdateFlotaModalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(UpdateFlotaModalComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

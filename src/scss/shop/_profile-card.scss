@@ -3,30 +3,30 @@
 */
 @import '../variables';
 
-
-.profile-card {}
+.profile-card {
+}
 .profile-card__body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .profile-card__avatar {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    margin-bottom: 16px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  margin-bottom: 16px;
 
-    img {
-        border-radius: 50%;
-        max-width: 100%;
-    }
+  img {
+    border-radius: 50%;
+    max-width: 100%;
+  }
 }
 .profile-card__name {
-    font-weight: $font-weight-medium;
-    line-height: 20px;
+  font-weight: $font-weight-medium;
+  line-height: 20px;
 }
 .profile-card__email {
-    font-size: 15px;
-    margin-bottom: 24px;
+  font-size: 15px;
+  margin-bottom: 24px;
 }

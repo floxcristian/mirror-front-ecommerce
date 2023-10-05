@@ -4,30 +4,30 @@ import {
   ViewChild,
   OnInit,
   ElementRef,
-} from '@angular/core';
-import { Router } from '@angular/router';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { ProductsService } from '../../../../shared/services/products.service';
-import { RootService } from '../../../../shared/services/root.service';
-import { ToastrService } from 'ngx-toastr';
+} from '@angular/core'
+import { Router } from '@angular/router'
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal'
+import { ProductsService } from '../../../../shared/services/products.service'
+import { RootService } from '../../../../shared/services/root.service'
+import { ToastrService } from 'ngx-toastr'
 
-import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { CartService } from '../../../../shared/services/cart.service';
-import { WishlistService } from '../../../../shared/services/wishlist.service';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
+import { FormControl } from '@angular/forms'
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators'
+import { CartService } from '../../../../shared/services/cart.service'
+import { WishlistService } from '../../../../shared/services/wishlist.service'
+import { takeUntil } from 'rxjs/operators'
+import { Subject } from 'rxjs'
+import { DropdownDirective } from '../../../../shared/directives/dropdown.directive'
 //import { LocalStorageService } from 'angular-2-local-storage';
-import { GeoLocationService } from '../../../../shared/services/geo-location.service';
+import { GeoLocationService } from '../../../../shared/services/geo-location.service'
 import {
   GeoLocation,
   TiendaLocation,
-} from '../../../../shared/interfaces/geo-location';
-import { LogisticsService } from '../../../../shared/services/logistics.service';
-import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { GoogleTagManagerService } from 'angular-google-tag-manager';
+} from '../../../../shared/interfaces/geo-location'
+import { LogisticsService } from '../../../../shared/services/logistics.service'
+import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service'
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service'
+import { GoogleTagManagerService } from 'angular-google-tag-manager'
 
 @Component({
   selector: 'app-mobile-search',
@@ -36,41 +36,41 @@ import { GoogleTagManagerService } from 'angular-google-tag-manager';
 })
 export class MobileSearchComponent implements OnInit {
   @ViewChild('modalSearch', { read: TemplateRef, static: false })
-  template!: TemplateRef<any>;
-  @ViewChild('menuSearch', { static: false }) listSearch!: ElementRef;
-  @ViewChild('searchChasis', { static: false }) searchChasis!: ElementRef;
-  @ViewChild('menuTienda', { static: false }) menuTienda!: DropdownDirective;
-  @ViewChild('modalChasis', { static: false }) modalChasis!: DropdownDirective;
-  @ViewChild(DropdownDirective, { static: false }) dropdown!: DropdownDirective;
+  template!: TemplateRef<any>
+  @ViewChild('menuSearch', { static: false }) listSearch!: ElementRef
+  @ViewChild('searchChasis', { static: false }) searchChasis!: ElementRef
+  @ViewChild('menuTienda', { static: false }) menuTienda!: DropdownDirective
+  @ViewChild('modalChasis', { static: false }) modalChasis!: DropdownDirective
+  @ViewChild(DropdownDirective, { static: false }) dropdown!: DropdownDirective
 
-  destroy$: Subject<boolean> = new Subject<boolean>();
+  destroy$: Subject<boolean> = new Subject<boolean>()
 
-  modalRef!: BsModalRef;
+  modalRef!: BsModalRef
 
   // Modal Tienda
-  templateTiendaModal!: TemplateRef<any>;
-  modalRefTienda!: BsModalRef;
+  templateTiendaModal!: TemplateRef<any>
+  modalRefTienda!: BsModalRef
 
-  public texto = '';
-  public textToSearch = '';
-  public categorias: any[] = [];
-  public marcas: any[] = [];
-  public sugerencias: any[] = [];
-  public productosEncontrados: any[] = [];
-  public mostrarContenido = false;
-  public mostrarCargando = false;
-  public linkBusquedaProductos = '#';
-  public searchControl!: FormControl;
-  private debounce = 100;
-  public buscando = true;
-  back_key = false;
-  public mostrarResultados = false;
+  public texto = ''
+  public textToSearch = ''
+  public categorias: any[] = []
+  public marcas: any[] = []
+  public sugerencias: any[] = []
+  public productosEncontrados: any[] = []
+  public mostrarContenido = false
+  public mostrarCargando = false
+  public linkBusquedaProductos = '#'
+  public searchControl!: FormControl
+  private debounce = 100
+  public buscando = true
+  back_key = false
+  public mostrarResultados = false
 
-  public sessionNotStarted = false;
-  public loadCart = false;
-  public tiendaSeleccionada!: TiendaLocation | undefined;
-  seleccionado = false;
-  public isFocusedInput = false;
+  public sessionNotStarted = false
+  public loadCart = false
+  public tiendaSeleccionada!: TiendaLocation | undefined
+  seleccionado = false
+  public isFocusedInput = false
   constructor(
     private router: Router,
     private modalService: BsModalService,
@@ -84,109 +84,109 @@ export class MobileSearchComponent implements OnInit {
     private geoLocationService: GeoLocationService,
     private logisticsService: LogisticsService,
     private cartService: CartService,
-    private readonly gtmService: GoogleTagManagerService
+    private readonly gtmService: GoogleTagManagerService,
   ) {}
 
   ngOnInit() {
-    this.searchControl = new FormControl('');
+    this.searchControl = new FormControl('')
     this.searchControl.valueChanges
       .pipe(debounceTime(this.debounce), distinctUntilChanged())
       .subscribe((query) => {
         if (query.trim() !== '') {
-          this.textToSearch = query;
-          this.buscarSelect();
+          this.textToSearch = query
+          this.buscarSelect()
         } else {
-          this.categorias = [];
-          this.productosEncontrados = [];
+          this.categorias = []
+          this.productosEncontrados = []
         }
-      });
+      })
 
     // Tienda seleccionada
-    this.tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+    this.tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada()
 
     this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
-      this.tiendaSeleccionada = r.tiendaSelecciona;
-      this.cartService.calc();
+      this.tiendaSeleccionada = r.tiendaSelecciona
+      this.cartService.calc()
       if (r.esNuevaUbicacion) {
         setTimeout(() => {
-          if (this.menuTienda) this.menuTienda.open();
-        }, 700);
+          if (this.menuTienda) this.menuTienda.open()
+        }, 700)
       }
-    });
+    })
   }
 
   ngAfterViewInit() {}
 
   ngOnDestroy() {
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
+    this.destroy$.next(true)
+    this.destroy$.unsubscribe()
   }
 
   public reset() {
-    this.buscando = true;
+    this.buscando = true
   }
 
   onKeyPress(params: any) {
     if (params.key === 'Backspace') {
-      this.back_key = false;
-    } else this.back_key = false;
+      this.back_key = false
+    } else this.back_key = false
   }
 
   buscar() {
     this.gtmService.pushTag({
       event: 'search',
       busqueda: this.textToSearch,
-    });
+    })
 
     if (this.textToSearch.trim() === '') {
-      this.toastr.info('Debe ingresar un texto para buscar', 'Información');
-      return;
+      this.toastr.info('Debe ingresar un texto para buscar', 'Información')
+      return
     }
-    let search = this.textToSearch.replace('/', '%2F');
-    this.router.navigateByUrl('inicio/productos/' + search);
-    this.mostrarContenido = true;
-    this.mostrarCargando = true;
-    this.mostrarResultados = false;
+    let search = this.textToSearch.replace('/', '%2F')
+    this.router.navigateByUrl('inicio/productos/' + search)
+    this.mostrarContenido = true
+    this.mostrarCargando = true
+    this.mostrarResultados = false
 
     setTimeout(() => {
-      this.dropdown.close();
-    }, 500);
+      this.dropdown.close()
+    }, 500)
   }
 
   public buscarChasis() {
     if (this.searchChasis.nativeElement.value.trim().length > 0) {
-      const textToSearch = this.searchChasis.nativeElement.value.trim();
+      const textToSearch = this.searchChasis.nativeElement.value.trim()
       this.router.navigate([`inicio/productos/todos`], {
         queryParams: { chassis: textToSearch },
-      });
+      })
     } else {
-      this.toastr.info('Debe ingresar un texto para buscar', 'Información');
+      this.toastr.info('Debe ingresar un texto para buscar', 'Información')
     }
   }
 
   public buscarSelect() {
-    this.mostrarContenido = true;
-    this.mostrarCargando = true;
-    this.linkBusquedaProductos = this.textToSearch;
+    this.mostrarContenido = true
+    this.mostrarCargando = true
+    this.linkBusquedaProductos = this.textToSearch
     if (!this.back_key && this.textToSearch.length > 3) {
-      this.back_key = false;
+      this.back_key = false
       this.productsService
         .buscarProductosElactic(this.textToSearch)
         .pipe(takeUntil(this.destroy$))
         .subscribe(
           (r: any) => {
             if (!this.seleccionado) {
-              this.dropdown.open();
+              this.dropdown.open()
             }
 
-            this.mostrarCargando = false;
-            this.categorias = r.categorias;
-            this.marcas = r.marcas;
-            this.productosEncontrados = r.articulos;
-            this.sugerencias = r.sugerencias;
+            this.mostrarCargando = false
+            this.categorias = r.categorias
+            this.marcas = r.marcas
+            this.productosEncontrados = r.articulos
+            this.sugerencias = r.sugerencias
 
             if (this.productosEncontrados.length === 0) {
-              this.buscando = false;
+              this.buscando = false
             }
 
             this.categorias.map((item) => {
@@ -197,70 +197,70 @@ export class MobileSearchComponent implements OnInit {
                 this.textToSearch,
                 'categoria',
                 item.slug,
-              ];
+              ]
               if (typeof item.name === 'undefined') {
-                item.name = 'Sin categorias';
+                item.name = 'Sin categorias'
               }
-            });
+            })
 
             this.productosEncontrados.map((item) => {
-              item.url = ['/', 'inicio', 'productos', item.sku];
-            });
+              item.url = ['/', 'inicio', 'productos', item.sku]
+            })
           },
           (error) => {
-            this.toastr.error('Error de conexión con el servidor de Elastic');
-            console.error('Error de conexión con el servidor de Elastic');
-          }
-        );
+            this.toastr.error('Error de conexión con el servidor de Elastic')
+            console.error('Error de conexión con el servidor de Elastic')
+          },
+        )
     }
   }
 
   public mostraModalBuscador() {
     this.modalRef = this.modalService.show(this.template, {
       class: 'modal-xl modal-buscador',
-    });
-    this.root.setModalRefBuscador(this.modalRef);
+    })
+    this.root.setModalRefBuscador(this.modalRef)
   }
 
   // Mostrar client
   abrirModalTiendas() {
-    this.modalRefTienda = this.modalService.show(this.templateTiendaModal);
-    this.logisticsService.obtenerTiendas().subscribe();
+    this.modalRefTienda = this.modalService.show(this.templateTiendaModal)
+    this.logisticsService.obtenerTiendas().subscribe()
   }
 
   estableceModalTienda(template: any) {
-    this.templateTiendaModal = template;
+    this.templateTiendaModal = template
   }
 
   clearbusquedaChasis() {
-    this.searchChasis.nativeElement.value = '';
+    this.searchChasis.nativeElement.value = ''
   }
 
   focusSearchChasis() {
-    this.searchChasis.nativeElement.focus();
+    this.searchChasis.nativeElement.focus()
   }
 
   buscarGtag() {
     this.gtmService.pushTag({
       event: 'search',
       busqueda: this.textToSearch,
-    });
+    })
   }
 
   async validarCuenta() {
-    this.localS.set('ruta', ['/', 'mi-cuenta', 'seguimiento']);
-    this.router.navigate(['/mi-cuenta', 'seguimiento']);
+    this.localS.set('ruta', ['/', 'mi-cuenta', 'seguimiento'])
+    this.router.navigate(['/mi-cuenta', 'seguimiento'])
   }
 
   verificarCarro(template: any) {
-    template.toggle();
+    template.toggle()
   }
 
   focusInput() {
-    this.isFocusedInput = true;
+    this.isFocusedInput = true
   }
 
   blurInput() {
-    this.isFocusedInput = false;
+    this.isFocusedInput = false
   }
 }

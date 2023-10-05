@@ -1,13 +1,13 @@
 /*
 // .about-us
 */
-@import "../variables";
-@import "../functions";
+@import '../variables';
+@import '../functions';
 
 /*.about-us {
 }*/
 .about-us__image {
-  background-image: url("../../assets/images/aboutus.jpg");
+  background-image: url('../../assets/images/aboutus.jpg');
   background-size: cover;
   background-position: bottom center;
   height: 500px;
@@ -56,7 +56,7 @@
 
     &::before {
       display: block;
-      content: "";
+      content: '';
       width: $local-dot-size;
       height: $local-dot-size;
       border-radius: calc($local-dot-size / 2);

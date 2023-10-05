@@ -1,8 +1,8 @@
-import { Component, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Usuario } from '../../interfaces/login';
-import { Product } from '../../interfaces/product';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Component, EventEmitter } from '@angular/core'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { Usuario } from '../../interfaces/login'
+import { Product } from '../../interfaces/product'
+import { BsModalRef } from 'ngx-bootstrap/modal'
 
 @Component({
   selector: 'app-aviso-stock',
@@ -11,18 +11,21 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class AvisoStockComponent {
   //variables del aviso
-  aviso_change: EventEmitter<any> = new EventEmitter();
-  sku!: string;
-  sucursal!: string;
-  usuario!: Usuario;
-  producto!: Product;
+  aviso_change: EventEmitter<any> = new EventEmitter()
+  sku!: string
+  sucursal!: string
+  usuario!: Usuario
+  producto!: Product
 
   //formuluario
-  formulario!: FormGroup;
-  constructor(public bsModalRef: BsModalRef, private fb: FormBuilder) {}
+  formulario!: FormGroup
+  constructor(
+    public bsModalRef: BsModalRef,
+    private fb: FormBuilder,
+  ) {}
 
   ngOnInit() {
-    this.ingresarForm();
+    this.ingresarForm()
   }
 
   ingresarForm() {
@@ -35,21 +38,21 @@ export class AvisoStockComponent {
           Validators.required,
           Validators.maxLength(100),
           Validators.pattern(
-            /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/
+            /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/,
           ),
         ],
       ],
       estado: [false],
-    });
+    })
     if (this.usuario.user_role != 'temp') {
       this.formulario.controls['nombre'].setValue(
-        this.usuario.first_name + ' ' + this.usuario.last_name
-      );
-      this.formulario.controls['email'].setValue(this.usuario.email);
+        this.usuario.first_name + ' ' + this.usuario.last_name,
+      )
+      this.formulario.controls['email'].setValue(this.usuario.email)
     }
   }
 
   submit(event: boolean): void {
-    this.bsModalRef.hide();
+    this.bsModalRef.hide()
   }
 }
