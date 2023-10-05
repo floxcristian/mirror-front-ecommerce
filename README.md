@@ -50,7 +50,7 @@
 
 <div align="center">
   <h3>
-  <a href="impcomisiones.implementos.cl">
+  <a href="https://www.implementos.cl/inicio">
       Website
     </a>
     <span> | </span>
@@ -107,7 +107,7 @@ Levantar app web localmente para desarrollo:
 ```
 npm start
 ```
-Compilar app para producción incluyendo Server Side Rendering:
+Compilar app para producción incluyendo **Server Side Rendering**:
 ```
 npm run build:ssr
 ```
@@ -120,21 +120,25 @@ npm run serve:ssr
 
 | Package           | Feature                  | Sumary                                                                                                                                                                                                                                            |
 | ----------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| bcrypt-nodejs     | --                       | Used to hash user's password before saving it into the DB.                                                                                                                                                                                        |
-| colors            | --                       | --                                                                                                                                                                                                                                                |
-| cors              | --                       | --                                                                                                                                                                                                                                                |
-| express-validator | API parameter validation | Validate body, params, query, headers and cookies of a request (via middleware) and return a response with errors; if any of the configured validation rules fail. You won't anymore need to make your route handler dirty with such validations. |
-| jsonwebtoken      | Authentication           | Used to generate and verify authentication tokens.                                                                                                                                                                                                |
+| [@ng-bootstrap/ng-bootstrap](https://github.com/ng-bootstrap/ng-bootstrap)     | --                       | Used to hash user's password before saving it into the DB.                                                                                                                                                                                        |
+| [@ng-select/ng-select](https://github.com/ng-select/ng-select)            | --                       | --                                                                                                                                                                                                                                                |
+| [@ngu/carousel](https://github.com/uiuniversal/ngu-carousel)              | --                       | --                                                                                                                                                                                                                                                |
+| angular-datatables | API parameter validation | Validate body, params, query, headers and cookies of a request (via middleware) and return a response with errors; if any of the configured validation rules fail. You won't anymore need to make your route handler dirty with such validations. |
+| angular-google-tag-manager      | Authentication           | Used to generate and verify authentication tokens.                                                                                                                                                                                                |
 | moment            | --                       | --                                                                                                                                                                                                                                                |
-| nodemon           | Auto server restart      | Restart the server in real-time anytime an edit is made.                                                                                                                                                                                          |
-| pg                | --                       | --                                                                                                                                                                                                                                                |
-| socket&#46;io     | --                       | --                                                                                                                                                                                                                                                |
-| --                | Code linting             | --                                                                                                                                                                                                                                                |
+| animate.css           | Auto server restart      | Restart the server in real-time anytime an edit is made.                                                                                                                                                                                          |
+| bootstrap                | --                       | --                                                                                                                                                                                                                                                |
+| @popperjs/core     | --                       | --                                                                                                                                                                                                                                                |
+| @nguniversal/express-engine                | Code linting             | --                                                                                                                                                                                                                                                |
 | uuid              | --                       | --                                                                                                                                                                                                                                                |
 
 | VSCode Extension | Description                                                                                          |
 | ---------------- | ---------------------------------------------------------------------------------------------------- |
 | .editorconfig    | It helps developers define and maintain consistent coding styles between different editors and IDEs. |
+| prettier         | It helps developers define and maintain consistent coding styles between different editors and IDEs. |
+| Angular Language Service | It helps developers define and maintain consistent coding styles between different editors and IDEs. |
+
+
 
 ## 🎨 Linters y Formatters
 
