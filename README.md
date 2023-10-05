@@ -161,10 +161,12 @@ npm run serve:ssr
 Because I thought it sounded cute. All these programs talk about being _"performant"_, _"rigid"_, _"robust"_ -
 I like programming to be light, fun and non-scary. Choo embraces that.
 
-## 📚 See Also
+## 📚APIs
 
-- [RuviClass Client](https://github.com/choojs/bankai) - RuviClass Client repository.
-- [FlavioCopes Blog](https://flaviocopes.com/) - Node.js, Express.js, REST API Backend by Postgres and much
+A continuación se deja el listado de repositorio de APIs que se conectan con esta app.
+
+- [Customer API](https://github.com/developer-implementos/api-ecommerce-customer) - RuviClass Client repository.
+- [Shopping Cart API](https://github.com/developer-implementos/api-ecommerce-shopping-cart) - Node.js, Express.js, REST API Backend by Postgres and much
   more.
 - [CharlieTheProgrammer](https://charlietheprogrammer.com/) - Updated Node.js tutorials.
 - [Spanish Express.js Guide](http://expressjs.com/es/guide) - Official Guide.
