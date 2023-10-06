@@ -30,7 +30,6 @@ import { RouterModule } from '@angular/router'
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    // BrowserModule.withServerTransition({ appId: 'serverApp' }),
     BrowserAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
