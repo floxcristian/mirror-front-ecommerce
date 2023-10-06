@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core'
-import { BsModalRef } from 'ngx-bootstrap/modal'
+import { Component, OnInit } from '@angular/core';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-ver-mas-producto',
@@ -7,7 +7,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal'
   styleUrls: ['./ver-mas-producto.component.scss'],
 })
 export class VerMasProductoComponent implements OnInit {
-  data?: any
+  data?: any;
   constructor(public bsModalRef: BsModalRef) {}
 
   ngOnInit() {}

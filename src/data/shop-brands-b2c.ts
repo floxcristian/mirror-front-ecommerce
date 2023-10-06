@@ -31,4 +31,4 @@ export const brandsB2c: any = [
     brand: 'suntech',
     image: 'https://images.implementos.cl/marcas/suntech.jpg',
   },
-]
+];

@@ -1,4 +1,4 @@
-import { PostCommentsList } from '../app/shared/interfaces/post-comments-list'
+import { PostCommentsList } from '../app/shared/interfaces/post-comments-list';
 
 export const postComments: PostCommentsList = {
   count: 4,
@@ -36,4 +36,4 @@ export const postComments: PostCommentsList = {
       text: 'Nullam at varius sapien. Sed sit amet condimentum elit.',
     },
   ],
-}
+};

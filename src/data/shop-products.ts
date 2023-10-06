@@ -1,4 +1,4 @@
-import { Product } from '../app/shared/interfaces/product'
+import { Product } from '../app/shared/interfaces/product';
 // export const products: Product[] = []
 export const products = [
   {
@@ -382,4 +382,4 @@ export const products = [
     ],
     options: [],
   },
-]
+];

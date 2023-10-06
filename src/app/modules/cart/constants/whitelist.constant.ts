@@ -1,4 +1,4 @@
-import { Router } from '@angular/router'
+import { Router } from '@angular/router';
 
 /**
  * @author José Espinoza
@@ -12,9 +12,9 @@ import { Router } from '@angular/router'
  *   this.router.navigate(['/', 'carro-compra']);
  * }
  */
-export const WHITELIST = ['/carro-compra/comprobante-de-cotizacion']
+export const WHITELIST = ['/carro-compra/comprobante-de-cotizacion'];
 
 // Ejemplo de router.url: "/carro-compra/comprobante-de-cotizacion/CO-123456"
 export function isInWhiteList(router: Router): boolean {
-  return WHITELIST.some((route) => router.url.includes(route))
+  return WHITELIST.some((route) => router.url.includes(route));
 }

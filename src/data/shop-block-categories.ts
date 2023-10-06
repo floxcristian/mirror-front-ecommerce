@@ -1,4 +1,4 @@
-import { Category } from '../app/shared/interfaces/category'
+import { Category } from '../app/shared/interfaces/category';
 
 export const categories: Category[] = [
   {
@@ -181,4 +181,4 @@ export const categories: Category[] = [
       },
     ],
   },
-]
+];

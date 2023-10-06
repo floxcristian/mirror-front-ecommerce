@@ -1,6 +1,6 @@
-import { Component, Input, Inject, PLATFORM_ID } from '@angular/core'
-import { DirectionService } from '../../../shared/services/direction.service'
-import { isPlatformBrowser } from '@angular/common'
+import { Component, Input, Inject, PLATFORM_ID } from '@angular/core';
+import { DirectionService } from '../../../shared/services/direction.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-block-brands',
@@ -8,8 +8,8 @@ import { isPlatformBrowser } from '@angular/common'
   styleUrls: ['./block-brands.component.scss'],
 })
 export class BlockBrandsComponent {
-  @Input() brands: any[] = []
-  innerWidth: number
+  @Input() brands: any[] = [];
+  innerWidth: number;
 
   carouselOptions = {
     lazyLoad: true,
@@ -28,17 +28,17 @@ export class BlockBrandsComponent {
     },
     rtl: this.direction.isRTL(),
     autoplaySpeed: 5000,
-  }
+  };
 
   constructor(
     private direction: DirectionService,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900
+      : 900;
   }
   onResize(event: any) {
-    this.innerWidth = event.target.innerWidth
+    this.innerWidth = event.target.innerWidth;
   }
 }

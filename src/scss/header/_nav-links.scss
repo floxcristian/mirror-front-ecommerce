@@ -101,9 +101,7 @@ $item-padding: 14px;
   transform-origin: top;
   transform: rotateX(45deg);
   opacity: 0;
-  transition:
-    transform 0.2s,
-    opacity 0.2s;
+  transition: transform 0.2s, opacity 0.2s;
 }
 .nav-links__megamenu {
   @include direction {

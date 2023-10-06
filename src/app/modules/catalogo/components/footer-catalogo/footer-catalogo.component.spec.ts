@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FooterCatalogoComponent } from './footer-catalogo.component'
+import { FooterCatalogoComponent } from './footer-catalogo.component';
 
 describe('FooterCatalogoComponent', () => {
-  let component: FooterCatalogoComponent
-  let fixture: ComponentFixture<FooterCatalogoComponent>
+  let component: FooterCatalogoComponent;
+  let fixture: ComponentFixture<FooterCatalogoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [FooterCatalogoComponent],
-    }).compileComponents()
-  }))
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FooterCatalogoComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    fixture = TestBed.createComponent(FooterCatalogoComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+    expect(component).toBeTruthy();
+  });
+});

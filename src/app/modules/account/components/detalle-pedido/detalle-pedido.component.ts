@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
-import { ToastrService } from 'ngx-toastr'
-import { CartService } from '../../../../shared/services/cart.service'
-import { RootService } from '../../../../shared/services/root.service'
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { CartService } from '../../../../shared/services/cart.service';
+import { RootService } from '../../../../shared/services/root.service';
 
 @Component({
   selector: 'app-detalle-pedido',
@@ -10,39 +10,39 @@ import { RootService } from '../../../../shared/services/root.service'
 })
 export class DetallePedidoComponent {
   @Input() set ordenVenta(value: any) {
-    this.n_ov = value
+    this.n_ov = value;
   }
-  @Output() listaProducto: EventEmitter<any> = new EventEmitter()
+  @Output() listaProducto: EventEmitter<any> = new EventEmitter();
 
-  n_ov = ''
-  addingToCart = false
-  @Input() productos: any = []
-  @Input() index: Number = 0
+  n_ov = '';
+  addingToCart = false;
+  @Input() productos: any = [];
+  @Input() index: Number = 0;
   constructor(
     public root: RootService,
     private cart: CartService,
-    private toastr: ToastrService,
+    private toastr: ToastrService
   ) {}
 
   addCart(item: any) {
     if (this.addingToCart) {
-      return
+      return;
     }
 
-    this.addingToCart = true
+    this.addingToCart = true;
     this.cart.add(item, 1).subscribe((resp) => {
       {
-        this.addingToCart = false
+        this.addingToCart = false;
         if (!resp.error) {
           this.toastr.success(
-            `Productos "${item.sku}" agregado al carro correctamente.`,
-          )
+            `Productos "${item.sku}" agregado al carro correctamente.`
+          );
         }
       }
-    })
+    });
   }
 
   addToCart() {
-    this.listaProducto.emit(this.index)
+    this.listaProducto.emit(this.index);
   }
 }

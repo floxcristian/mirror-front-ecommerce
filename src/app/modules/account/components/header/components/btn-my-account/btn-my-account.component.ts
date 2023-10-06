@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-btn-my-account',
@@ -10,7 +10,7 @@ export class BtnMyAccountComponent implements OnInit {
     { label: 'MI PERFIL ' },
     { label: 'LIBRETA DIRECCIONES ' },
     { label: 'EJECUTIVO CUENTA ' },
-  ]
+  ];
   constructor() {}
 
   ngOnInit() {}

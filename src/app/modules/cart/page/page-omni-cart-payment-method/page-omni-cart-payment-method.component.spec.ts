@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PageOmniCartPaymentMethodComponent } from './page-omni-cart-payment-method.component'
+import { PageOmniCartPaymentMethodComponent } from './page-omni-cart-payment-method.component';
 
 describe('PageOmniCartPaymentMethodComponent', () => {
-  let component: PageOmniCartPaymentMethodComponent
-  let fixture: ComponentFixture<PageOmniCartPaymentMethodComponent>
+  let component: PageOmniCartPaymentMethodComponent;
+  let fixture: ComponentFixture<PageOmniCartPaymentMethodComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [PageOmniCartPaymentMethodComponent],
-    }).compileComponents()
-  }))
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PageOmniCartPaymentMethodComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    fixture = TestBed.createComponent(PageOmniCartPaymentMethodComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+    expect(component).toBeTruthy();
+  });
+});

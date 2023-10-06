@@ -1,4 +1,4 @@
-import { Order } from '../app/shared/interfaces/order'
+import { Order } from '../app/shared/interfaces/order';
 
 export const orders: Order[] = [
   {
@@ -111,4 +111,4 @@ export const orders: Order[] = [
     sucursal: 'MELIPILLA',
     vendedor: 'MARIA CASTAÑEDA',
   },
-]
+];

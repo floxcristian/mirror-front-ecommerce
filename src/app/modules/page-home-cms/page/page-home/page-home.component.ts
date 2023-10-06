@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core'
-import { Title } from '@angular/platform-browser'
+import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-page-home',
@@ -9,12 +9,12 @@ import { Title } from '@angular/platform-browser'
 export class PageHomeComponent implements OnInit {
   constructor(private titleService: Title) {
     titleService.setTitle(
-      'Implementos - Respuestos para Camiones, Buses y Remolque',
-    )
+      'Implementos - Respuestos para Camiones, Buses y Remolque'
+    );
   }
 
   ngOnInit() {
-    document.body.scrollTop = 0 // Safari
-    document.documentElement.scrollTop = 0 // Othe
+    document.body.scrollTop = 0; // Safari
+    document.documentElement.scrollTop = 0; // Othe
   }
 }

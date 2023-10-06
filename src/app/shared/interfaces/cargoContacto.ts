@@ -1,11 +1,11 @@
-import { ResponseApi } from './response-api'
+import { ResponseApi } from './response-api';
 
 export interface CargoContacto {
-  title: string
-  titleid: string
-  recid: number
+  title: string;
+  titleid: string;
+  recid: number;
 }
 
 export interface CargosContactoResponse extends ResponseApi {
-  data: CargoContacto[]
+  data: CargoContacto[];
 }

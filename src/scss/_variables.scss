@@ -231,12 +231,8 @@ $search-input-focus-icon-hover-color: $search-input-hover-icon-hover-color !defa
 // -- .nav-panel, .mobile-header
 // ----------------------------------------
 $nav-panel-bg: $accent-color !default;
-$nav-panel-shadow:
-  0 1px rgba(#000, 0.04),
-  inset 0 -1px rgba(#000, 0.04) !default;
-$nav-panel-stuck-shadow:
-  0 1px rgba(#000, 0.02),
-  inset 0 -1px rgba(#000, 0.03),
+$nav-panel-shadow: 0 1px rgba(#000, 0.04), inset 0 -1px rgba(#000, 0.04) !default;
+$nav-panel-stuck-shadow: 0 1px rgba(#000, 0.02), inset 0 -1px rgba(#000, 0.03),
   0 1px 20px rgba(#000, 0.15) !default;
 $nav-panel-font-color: $accent-opposite-color !default;
 $nav-panel-logo-color: $nav-panel-font-color !default;
@@ -671,9 +667,7 @@ $layout-switcher-active-color: $accent-opposite-color !default;
 // -- .modal
 // ----------------------------------------
 $modal-border-radius: 2px !default;
-$modal-shadow:
-  0 1px 20px rgba(#000, 0.15),
-  0 1px 3px rgba(#000, 0.15) !default;
+$modal-shadow: 0 1px 20px rgba(#000, 0.15), 0 1px 3px rgba(#000, 0.15) !default;
 
 // ----------------------------------------
 // -- .nouislider

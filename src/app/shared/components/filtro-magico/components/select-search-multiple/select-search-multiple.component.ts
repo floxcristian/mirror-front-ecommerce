@@ -1,7 +1,7 @@
-import { distinctUntilChanged, tap, switchMap, map } from 'rxjs/operators'
-import { Output, EventEmitter, SimpleChanges } from '@angular/core'
-import { Subject, Observable, concat, of } from 'rxjs'
-import { Component, OnInit, OnChanges, Input } from '@angular/core'
+import { distinctUntilChanged, tap, switchMap, map } from 'rxjs/operators';
+import { Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Subject, Observable, concat, of } from 'rxjs';
+import { Component, OnInit, OnChanges, Input } from '@angular/core';
 
 /**
  * Select especial como el de producto, pero universal.
@@ -17,31 +17,31 @@ import { Component, OnInit, OnChanges, Input } from '@angular/core'
   styleUrls: ['./select-search-multiple.component.scss'],
 })
 export class SelectSearchMultipleComponent implements OnInit, OnChanges {
-  @Input() multiple = true
+  @Input() multiple = true;
 
-  loading = false
-  input$ = new Subject<string>()
-  valoresSelect$!: Observable<any[]>
+  loading = false;
+  input$ = new Subject<string>();
+  valoresSelect$!: Observable<any[]>;
 
   @Input() valoresSelectSearch!:
     | ((search: string) => Observable<any>)
-    | undefined
-  @Input() opcionSelect!: ((valor: any) => string) | undefined
-  @Input() opcionKey: string | undefined = ''
+    | undefined;
+  @Input() opcionSelect!: ((valor: any) => string) | undefined;
+  @Input() opcionKey: string | undefined = '';
 
-  @Input() nuevosValores!: any[]
-  valores!: any[]
-  @Output() valoresSeleccionados = new EventEmitter<any[]>()
+  @Input() nuevosValores!: any[];
+  valores!: any[];
+  @Output() valoresSeleccionados = new EventEmitter<any[]>();
 
   @Output() respuestaBusqueda = new EventEmitter<{
-    search: string
-    response: any
-  }>()
+    search: string;
+    response: any;
+  }>();
 
   constructor() {}
 
   ngOnInit(): void {
-    this.buscarValor()
+    this.buscarValor();
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
@@ -52,35 +52,37 @@ export class SelectSearchMultipleComponent implements OnInit, OnChanges {
     ) {
       if (this.hayCambios()) {
         if (this.nuevosValores.length === 0) {
-          this.valores = []
+          this.valores = [];
         } else if (Object.keys(this.nuevosValores).length > 1) {
-          let search = ''
+          let search = '';
           if (this.nuevosValores[0][this.opcionKey || '']) {
             search = this.nuevosValores
               .map((x) => x[this.opcionKey || ''])
-              .join(',')
+              .join(',');
           } else {
-            search = this.nuevosValores.map((x) => x).join(',')
+            search = this.nuevosValores.map((x) => x).join(',');
           }
-          this.input$.next(search)
-          this.valores = [...this.nuevosValores]
+          this.input$.next(search);
+          this.valores = [...this.nuevosValores];
         } else {
-          let search = ''
+          let search = '';
           if (this.nuevosValores[0][this.opcionKey || '']) {
             search = this.nuevosValores
               .map((x) => x[this.opcionKey || ''])
-              .join(',')
+              .join(',');
           } else {
-            search = this.nuevosValores.map((x) => x).join(',')
+            search = this.nuevosValores.map((x) => x).join(',');
           }
-          this.input$.next(search)
-          const response = await this.valoresSelectSearch?.(search).toPromise()
+          this.input$.next(search);
+          const response = await this.valoresSelectSearch?.(
+            search
+          ).toPromise();
           if (response.data) {
-            this.valoresSelect$ = of(response.data)
-            this.valores = [...response.data]
+            this.valoresSelect$ = of(response.data);
+            this.valores = [...response.data];
           } else {
-            this.valoresSelect$ = of(response)
-            this.valores = [...response]
+            this.valoresSelect$ = of(response);
+            this.valores = [...response];
           }
         }
       }
@@ -89,18 +91,18 @@ export class SelectSearchMultipleComponent implements OnInit, OnChanges {
 
   hayCambios(): boolean {
     if (!this.valores && this.nuevosValores && this.nuevosValores.length > 0) {
-      return true
+      return true;
     }
     if (this.valores.length !== this.nuevosValores.length) {
-      return true
+      return true;
     }
-    const keys = this.nuevosValores.map((a) => a[this.opcionKey || ''])
+    const keys = this.nuevosValores.map((a) => a[this.opcionKey || '']);
     for (let i = 0; i < this.valores.length; i++) {
       if (!keys.includes(this.valores[i][this.opcionKey || ''])) {
-        return true
+        return true;
       }
     }
-    return false
+    return false;
   }
 
   buscarValor() {
@@ -116,25 +118,25 @@ export class SelectSearchMultipleComponent implements OnInit, OnChanges {
               this.respuestaBusqueda.emit({
                 search: search,
                 response: response,
-              })
-              return response
-            }),
-          ),
-        ),
-      ),
-    )
+              });
+              return response;
+            })
+          )
+        )
+      )
+    );
   }
 
   compararValor(a: any, b: any) {
-    const keys = Object.keys(a)
+    const keys = Object.keys(a);
     if (keys.length > 0) {
-      const key = keys[0]
-      return a[key] === b[key]
+      const key = keys[0];
+      return a[key] === b[key];
     }
-    return false
+    return false;
   }
 
   valoresCambiados() {
-    this.valoresSeleccionados.emit(this.valores)
+    this.valoresSeleccionados.emit(this.valores);
   }
 }

@@ -1,11 +1,11 @@
-import { isPlatformBrowser } from '@angular/common'
+import { isPlatformBrowser } from '@angular/common';
 import {
   Component,
   HostListener,
   Inject,
   OnInit,
   PLATFORM_ID,
-} from '@angular/core'
+} from '@angular/core';
 
 @Component({
   selector: 'app-sobre-nosotros',
@@ -24,13 +24,13 @@ export class SobreNosotrosComponent implements OnInit {
       url: ['/', 'sitio', 'politicas-de-privacidad'],
     },
     // { label: 'Bases Concurso', url: ['/', 'sitio', 'bases-concurso'] }
-  ]
-  screenWidth: any
-  terminos = false
+  ];
+  screenWidth: any;
+  terminos = false;
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900
+      : 900;
   }
 
   ngOnInit() {}
@@ -38,6 +38,6 @@ export class SobreNosotrosComponent implements OnInit {
   onResize(event: any) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900
+      : 900;
   }
 }

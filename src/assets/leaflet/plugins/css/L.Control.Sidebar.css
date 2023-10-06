@@ -9,9 +9,7 @@
 }
 .leaflet-sidebar.left {
   left: -500px;
-  transition:
-    left 0.5s,
-    width 0.5s;
+  transition: left 0.5s, width 0.5s;
   padding-right: 0;
 }
 .leaflet-sidebar.left.visible {
@@ -19,9 +17,7 @@
 }
 .leaflet-sidebar.right {
   right: -500px;
-  transition:
-    right 0.5s,
-    width 0.5s;
+  transition: right 0.5s, width 0.5s;
   padding-left: 0;
 }
 .leaflet-sidebar.right.visible {

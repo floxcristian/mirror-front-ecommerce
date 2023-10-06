@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GrupoDetalleFechasComponent } from './grupo-detalle-fechas.component'
+import { GrupoDetalleFechasComponent } from './grupo-detalle-fechas.component';
 
 describe('GrupoDetalleFechasComponent', () => {
-  let component: GrupoDetalleFechasComponent
-  let fixture: ComponentFixture<GrupoDetalleFechasComponent>
+  let component: GrupoDetalleFechasComponent;
+  let fixture: ComponentFixture<GrupoDetalleFechasComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [GrupoDetalleFechasComponent],
-    }).compileComponents()
-  }))
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GrupoDetalleFechasComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    fixture = TestBed.createComponent(GrupoDetalleFechasComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+    expect(component).toBeTruthy();
+  });
+});

@@ -1,10 +1,10 @@
 export interface GraficoVentasPorUen {
-  _id: string
+  _id: string;
   total: {
-    $numberDecimal: number
-  }
+    $numberDecimal: number;
+  };
   totalMargen: {
-    $numberDecimal: number
-  }
-  skus: number
+    $numberDecimal: number;
+  };
+  skus: number;
 }

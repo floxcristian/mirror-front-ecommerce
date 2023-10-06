@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core'
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-card-dashboard',
@@ -6,11 +6,11 @@ import { Component, OnInit, Input } from '@angular/core'
   styleUrls: ['./card-dashboard.component.scss'],
 })
 export class CardDashboardComponent implements OnInit {
-  @Input() title: any
-  @Input() subtitle: any
-  @Input() value: any
-  @Input() iconClass: any
-  @Input() iconContainerClass: any
+  @Input() title: any;
+  @Input() subtitle: any;
+  @Input() value: any;
+  @Input() iconClass: any;
+  @Input() iconContainerClass: any;
 
   constructor() {}
 

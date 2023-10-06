@@ -5,19 +5,19 @@ import {
   HostListener,
   PLATFORM_ID,
   Inject,
-} from '@angular/core'
-import { ToastrService } from 'ngx-toastr'
-import { Router } from '@angular/router'
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service'
-import { RootService } from 'src/app/shared/services/root.service'
-import { Usuario } from 'src/app/shared/interfaces/login'
-import { DirectionService } from 'src/app/shared/services/direction.service'
-import { GeoLocation } from 'src/app/shared/interfaces/geo-location'
-import { GeoLocationService } from 'src/app/shared/services/geo-location.service'
-import { ProductsService } from 'src/app/shared/services/products.service'
-import { isPlatformBrowser } from '@angular/common'
+} from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { RootService } from 'src/app/shared/services/root.service';
+import { Usuario } from 'src/app/shared/interfaces/login';
+import { DirectionService } from 'src/app/shared/services/direction.service';
+import { GeoLocation } from 'src/app/shared/interfaces/geo-location';
+import { GeoLocationService } from 'src/app/shared/services/geo-location.service';
+import { ProductsService } from 'src/app/shared/services/products.service';
+import { isPlatformBrowser } from '@angular/common';
 
-export type Layout = 'grid' | 'grid-with-features' | 'list'
+export type Layout = 'grid' | 'grid-with-features' | 'list';
 
 @Component({
   selector: 'app-product-slideshow-specials',
@@ -25,19 +25,19 @@ export type Layout = 'grid' | 'grid-with-features' | 'list'
   styleUrls: ['./product-slideshow-specials.component.scss'],
 })
 export class ProductSlideshowSpecialsComponent implements OnInit {
-  @Input() layout: Layout = 'grid'
+  @Input() layout: Layout = 'grid';
   @Input() grid: 'grid-3-sidebar' | 'grid-4-full' | 'grid-4-full' =
-    'grid-3-sidebar'
-  lstProductos: any
-  especial: any
-  banners: any
-  producto_espacial: any = []
-  @Input() nombre: string | undefined = undefined
-  user!: Usuario
-  isB2B!: boolean
-  cantItem: number = 4
-  innerWidth: number
-  ruta!: any[]
+    'grid-3-sidebar';
+  lstProductos: any;
+  especial: any;
+  banners: any;
+  producto_espacial: any = [];
+  @Input() nombre: string | undefined = undefined;
+  user!: Usuario;
+  isB2B!: boolean;
+  cantItem: number = 4;
+  innerWidth: number;
+  ruta!: any[];
   carouselOptions = {
     items: 5,
     nav: false,
@@ -53,10 +53,10 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
       0: { items: 2 },
     },
     rtl: this.direction.isRTL(),
-  }
-  config: any
-  collection = { count: 60, data: [] }
-  p: number = 1
+  };
+  config: any;
+  collection = { count: 60, data: [] };
+  p: number = 1;
   constructor(
     private root: RootService,
     private productsService: ProductsService,
@@ -66,118 +66,118 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     private geoLocationService: GeoLocationService,
     private localStorage: LocalStorageService,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900
-    this.onResize(event)
+      : 900;
+    this.onResize(event);
   }
 
-  sidebarPosition: 'start' | 'end' = 'start'
+  sidebarPosition: 'start' | 'end' = 'start';
 
   async ngOnInit() {
-    this.user = this.root.getDataSesionUsuario()
-    const role = this.user.user_role
-    this.isB2B = role === 'supervisor' || role === 'comprador'
+    this.user = this.root.getDataSesionUsuario();
+    const role = this.user.user_role;
+    this.isB2B = role === 'supervisor' || role === 'comprador';
 
-    let url: string = this.router.url
-    this.ruta = url.split('/')
+    let url: string = this.router.url;
+    this.ruta = url.split('/');
 
-    const geo: GeoLocation = await this.localStorage.get('geolocalizacion')
+    const geo: GeoLocation = await this.localStorage.get('geolocalizacion');
     if (geo != null) {
-      this.cargaEspeciales()
+      this.cargaEspeciales();
     }
     this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
-      this.cargaEspeciales()
-    })
+      this.cargaEspeciales();
+    });
   }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900
+      : 900;
 
     if (this.innerWidth < 427) {
-      this.cantItem = 4
+      this.cantItem = 4;
     } else if (this.innerWidth > 426) {
-      this.cantItem = 10
+      this.cantItem = 10;
     }
   }
 
   getUrl(id: any) {
-    this.producto_espacial = this.lstProductos[id].productos
-    this.nombre = this.lstProductos[id].nombre
+    this.producto_espacial = this.lstProductos[id].productos;
+    this.nombre = this.lstProductos[id].nombre;
   }
 
   async cargaEspeciales() {
-    let rut = this.user.rut
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada()
-    const sucursal = tiendaSeleccionada?.codigo || ''
-    var especials = this.router.url.split('/').pop()
+    let rut = this.user.rut;
+    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+    const sucursal = tiendaSeleccionada?.codigo || '';
+    var especials = this.router.url.split('/').pop();
 
     //clean tracking vars
-    var look = especials?.indexOf('?')
-    if ((look || 0) > -1) especials = especials?.substr(0, look)
+    var look = especials?.indexOf('?');
+    if ((look || 0) > -1) especials = especials?.substr(0, look);
 
-    const params = { sucursal: sucursal, rut: rut, especial: especials }
+    const params = { sucursal: sucursal, rut: rut, especial: especials };
 
     let respuesta: any = await this.productsService
       .getEspeciales(params)
-      .toPromise()
+      .toPromise();
 
-    const { data, especial, banners } = respuesta
+    const { data, especial, banners } = respuesta;
 
-    this.especial = especial
-    this.banners = banners[0]
-    let out = []
-    let i = 0
+    this.especial = especial;
+    this.banners = banners[0];
+    let out = [];
+    let i = 0;
     for (const key in data) {
       let seccion = {
         nombre: key,
         productos: data[key],
         p: i,
-      }
-      out.push(seccion)
-      i++
+      };
+      out.push(seccion);
+      i++;
     }
-    this.lstProductos = out
+    this.lstProductos = out;
 
     if (!this.nombre) {
-      this.producto_espacial = this.lstProductos[0].productos
-      this.nombre = this.lstProductos[0].nombre
+      this.producto_espacial = this.lstProductos[0].productos;
+      this.nombre = this.lstProductos[0].nombre;
     } else {
       let index = this.lstProductos.findIndex((item: any) =>
-        item.nombre.toUpperCase().match(this.nombre || ''.toUpperCase()),
-      )
+        item.nombre.toUpperCase().match(this.nombre || ''.toUpperCase())
+      );
 
       if (index != -1) {
-        this.producto_espacial = this.lstProductos[index].productos
-        this.nombre = this.lstProductos[index].nombre
-        let division = Math.trunc(index / 3)
+        this.producto_espacial = this.lstProductos[index].productos;
+        this.nombre = this.lstProductos[index].nombre;
+        let division = Math.trunc(index / 3);
 
         if (division >= this.p) {
-          this.p = division + 1
+          this.p = division + 1;
         }
       }
     }
   }
 
   pageChanged(event: any) {
-    this.p = event
-    let index = (this.p - 1) * 3
+    this.p = event;
+    let index = (this.p - 1) * 3;
 
-    this.producto_espacial = this.lstProductos[index].productos
-    this.nombre = this.lstProductos[index].nombre
+    this.producto_espacial = this.lstProductos[index].productos;
+    this.nombre = this.lstProductos[index].nombre;
   }
 
   setLayout(value: Layout): void {
-    this.layout = value
+    this.layout = value;
     if (value === 'grid-with-features') {
-      this.grid = 'grid-4-full'
+      this.grid = 'grid-4-full';
     } else {
-      this.grid = 'grid-4-full'
+      this.grid = 'grid-4-full';
     }
   }
 }

@@ -1,11 +1,11 @@
-import { isPlatformBrowser } from '@angular/common'
+import { isPlatformBrowser } from '@angular/common';
 import {
   Component,
   HostListener,
   Inject,
   OnInit,
   PLATFORM_ID,
-} from '@angular/core'
+} from '@angular/core';
 
 @Component({
   selector: 'app-holding-epysa',
@@ -13,8 +13,8 @@ import {
   styleUrls: ['./holding-epysa.component.scss'],
 })
 export class HoldingEpysaComponent implements OnInit {
-  screenWidth: any
-  terminos = false
+  screenWidth: any;
+  terminos = false;
   links = [
     {
       rel: 'noopener',
@@ -45,12 +45,12 @@ export class HoldingEpysaComponent implements OnInit {
       link: 'https://www.implementos.eu/',
     },
     { rel: 'noopener', label: 'Mercobus', link: 'http://www.mercobus.com.pe' },
-  ]
+  ];
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900
+      : 900;
   }
 
   ngOnInit() {}
@@ -59,6 +59,6 @@ export class HoldingEpysaComponent implements OnInit {
   onResize(event: any) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900
+      : 900;
   }
 }

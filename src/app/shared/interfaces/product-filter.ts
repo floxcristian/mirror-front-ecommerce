@@ -1,90 +1,90 @@
 export interface ProductFilterBase {
-  name: string
+  name: string;
 }
 
 export interface ProductFilterCategory extends ProductFilterBase {
-  type: 'categories'
-  collapsed?: boolean
+  type: 'categories';
+  collapsed?: boolean;
   options: {
     items?: {
-      type: 'parent' | 'current' | 'child'
-      count: number
-      name: string
-      url?: any
-      queryParams: any
-      children: any
-      checked?: boolean
-    }[]
-  }
+      type: 'parent' | 'current' | 'child';
+      count: number;
+      name: string;
+      url?: any;
+      queryParams: any;
+      children: any;
+      checked?: boolean;
+    }[];
+  };
 }
 
 export interface ProductFilterPrice extends ProductFilterBase {
-  type: 'price'
-  collapsed?: boolean
+  type: 'price';
+  collapsed?: boolean;
   options: {
-    min: number
-    max: number
-    from: number
-    to: number
-  }
+    min: number;
+    max: number;
+    from: number;
+    to: number;
+  };
 }
 
 export interface ProductFilterCheckbox extends ProductFilterBase {
-  type: 'checkbox'
-  collapsed?: boolean
+  type: 'checkbox';
+  collapsed?: boolean;
   options: {
     items: {
-      label: string
-      count: number
-      checked: boolean
-      disabled: boolean
-    }[]
-  }
+      label: string;
+      count: number;
+      checked: boolean;
+      disabled: boolean;
+    }[];
+  };
 }
 
 export interface ProductFilterCheckboxFlota extends ProductFilterBase {
-  type: 'checkboxFlota'
-  collapsed?: boolean
+  type: 'checkboxFlota';
+  collapsed?: boolean;
   options: {
     items: {
-      label: string
-      chassis: string
-      tipo: string
-      count: number
-      checked: boolean
-      disabled: boolean
-    }[]
-  }
+      label: string;
+      chassis: string;
+      tipo: string;
+      count: number;
+      checked: boolean;
+      disabled: boolean;
+    }[];
+  };
 }
 
 export interface ProductFilterRadio extends ProductFilterBase {
-  type: 'radio'
-  collapsed?: boolean
+  type: 'radio';
+  collapsed?: boolean;
   options: {
-    name: string
+    name: string;
     items: {
-      label: string
-      count: number
-      checked: boolean
-      disabled: boolean
-    }[]
-  }
+      label: string;
+      count: number;
+      checked: boolean;
+      disabled: boolean;
+    }[];
+  };
 }
 
 export interface ProductFilterColor extends ProductFilterBase {
-  type: 'color'
-  collapsed?: boolean
+  type: 'color';
+  collapsed?: boolean;
   options: {
     items: {
-      label: string
-      count: number
-      color: string
-      checked: boolean
-      disabled: boolean
-      white: boolean
-      light: boolean
-    }[]
-  }
+      label: string;
+      count: number;
+      color: string;
+      checked: boolean;
+      disabled: boolean;
+      white: boolean;
+      light: boolean;
+    }[];
+  };
 }
 
 export type ProductFilter =
@@ -93,4 +93,4 @@ export type ProductFilter =
   | ProductFilterCheckbox
   | ProductFilterCheckboxFlota
   | ProductFilterRadio
-  | ProductFilterColor
+  | ProductFilterColor;

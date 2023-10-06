@@ -1,21 +1,21 @@
-import { Injectable } from '@angular/core'
-import { HttpClient } from '@angular/common/http'
-import { environment } from '../../../environments/environment'
-import { ToastrService } from 'ngx-toastr'
-import { TransBankToken, PaymentMethod } from '../interfaces/payment-method'
-import { Observable, Subject } from 'rxjs'
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { ToastrService } from 'ngx-toastr';
+import { TransBankToken, PaymentMethod } from '../interfaces/payment-method';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PaymentService {
-  private close$: Subject<any> = new Subject()
-  readonly closemodal$: Observable<any> = this.close$.asObservable()
-  private bancokhipu$: Subject<any> = new Subject()
-  readonly banco$: Observable<any> = this.bancokhipu$.asObservable()
+  private close$: Subject<any> = new Subject();
+  readonly closemodal$: Observable<any> = this.close$.asObservable();
+  private bancokhipu$: Subject<any> = new Subject();
+  readonly banco$: Observable<any> = this.bancokhipu$.asObservable();
   constructor(
     private http: HttpClient,
-    private _ToastrService: ToastrService,
+    private _ToastrService: ToastrService
   ) {}
   /**
    * @author Sebastian Aracena Aguirre
@@ -23,16 +23,16 @@ export class PaymentService {
    * @param no hay parametros
    */
   async listaBancoKhipu() {
-    let response: any
+    let response: any;
 
-    let url = `${environment.apiImplementosPagos}Bancokhipu`
-    response = await this.http.get(url).toPromise()
+    let url = `${environment.apiImplementosPagos}Bancokhipu`;
+    response = await this.http.get(url).toPromise();
     if (response.error)
       this._ToastrService.warning(
-        'No ha sido posible entregar las listas de bancos!!',
-      )
+        'No ha sido posible entregar las listas de bancos!!'
+      );
 
-    return response
+    return response;
   }
 
   /**
@@ -42,25 +42,25 @@ export class PaymentService {
    *
    */
   async createTransKhipu(params: any) {
-    let response: any
+    let response: any;
 
     try {
-      let url = `${environment.apiImplementosPagos}khipu`
-      let consulta: any = await this.http.post(url, { params }).toPromise()
+      let url = `${environment.apiImplementosPagos}khipu`;
+      let consulta: any = await this.http.post(url, { params }).toPromise();
 
       consulta && !consulta.error && consulta.data && consulta.data.payment_url
         ? (response = consulta.data)
         : this._ToastrService.warning(
-            'No ha sido posible iniciar la transaccion con Khipu!!',
-          )
+            'No ha sido posible iniciar la transaccion con Khipu!!'
+          );
     } catch (e) {
       this._ToastrService.warning(
-        'No ha sido posible iniciar la transaccion con Khipu!!',
-      )
-      console.log('No fue posible iniciar transaccion', e)
-      this.sendEmailError(e)
+        'No ha sido posible iniciar la transaccion con Khipu!!'
+      );
+      console.log('No fue posible iniciar transaccion', e);
+      this.sendEmailError(e);
     }
-    return response
+    return response;
   }
 
   /**
@@ -74,8 +74,8 @@ export class PaymentService {
         'verificar_pago_khipu?buy_order=' +
         params.buy_order +
         '&id_carro=' +
-        params.id_carro,
-    )
+        params.id_carro
+    );
   }
 
   Confirmar_pagoKhipu(params: any) {
@@ -84,48 +84,48 @@ export class PaymentService {
         'confirmacion_khipu?buy_order=' +
         params.buy_order +
         '&id_carro=' +
-        params.id_carro,
-    )
+        params.id_carro
+    );
   }
 
   ReiniciarCarro(id_carro: any): any {
     return this.http.get(
       environment.apiImplementosPagos +
         'reiniciar_carro_khipu?id_carro=' +
-        id_carro,
-    )
+        id_carro
+    );
   }
 
   async createTransBankTransaccion(params: any) {
-    let response!: TransBankToken
+    let response!: TransBankToken;
     try {
-      let url = `${environment.apiImplementosPagos}transbank/crearTransaccion`
-      let consulta: any = await this.http.post(url, { params }).toPromise()
+      let url = `${environment.apiImplementosPagos}transbank/crearTransaccion`;
+      let consulta: any = await this.http.post(url, { params }).toPromise();
       consulta && !consulta.error && consulta.data && consulta.data.token
         ? (response = consulta.data)
         : this._ToastrService.warning(
-            'No ha sido posible iniciar la transaccion con Transbank!!',
-          )
+            'No ha sido posible iniciar la transaccion con Transbank!!'
+          );
     } catch (e) {
       this._ToastrService.warning(
-        'No ha sido posible iniciar la transaccion con Transbank!!',
-      )
-      console.log('No fue posible iniciar transaccion', e)
-      this.sendEmailError(e)
+        'No ha sido posible iniciar la transaccion con Transbank!!'
+      );
+      console.log('No fue posible iniciar transaccion', e);
+      this.sendEmailError(e);
     }
-    return response
+    return response;
   }
 
   getVoucherData(params: any) {
     return this.http.get(
       environment.apiImplementosPagos + 'webpay/getDataComprobante',
-      { params },
-    )
+      { params }
+    );
   }
 
   async sendEmailError(
     msg: any,
-    asunto: string = `[B2B ${window.location.hostname}] Error - ha ocurrido un error intentando conectar a api pagos desde el b2b`,
+    asunto: string = `[B2B ${window.location.hostname}] Error - ha ocurrido un error intentando conectar a api pagos desde el b2b`
   ) {
     //console.log('tipo dato', typeof msg);
     try {
@@ -133,13 +133,16 @@ export class PaymentService {
         para: 'claudio.montoya@implementos.cl,ricardo.rojas@implementos.cl,clemente.silva@implementos.cl',
         asunto: asunto,
         html: typeof msg === 'string' ? msg : JSON.stringify(msg),
-      }
+      };
 
       this.http
         .post(`${environment.apiImplementosCarro}enviarmail`, parametros)
-        .toPromise()
+        .toPromise();
     } catch (e) {
-      console.log('Ha ocurrido un error intentando informar sobre problema', e)
+      console.log(
+        'Ha ocurrido un error intentando informar sobre problema',
+        e
+      );
     }
   }
 
@@ -152,7 +155,7 @@ export class PaymentService {
   anularInicioNoPagoMercadoPago(buy_order: any) {
     return this.http.post(`${environment.apiImplementosPagos}mpago/anular`, {
       buy_order: buy_order,
-    })
+    });
   }
 
   /**
@@ -161,100 +164,100 @@ export class PaymentService {
    * @param buy_order
    */
   obtenerDocumentoDeBuyOrderMPago(buy_order: any): string {
-    let str = buy_order || ''
-    const tokens = str.split('|')
-    return tokens.length > 1 ? tokens[1] : tokens[0]
+    let str = buy_order || '';
+    const tokens = str.split('|');
+    return tokens.length > 1 ? tokens[1] : tokens[0];
   }
 
   async getPaymentErrorDetail(errorCode: number) {
     let detalle: string =
-      'Se ha producido un fallo al procesar la transacción.'
-    let url = `${environment.apiImplementosPagos}transbank/getTransbankErrorCode/?errorCode=${errorCode}`
+      'Se ha producido un fallo al procesar la transacción.';
+    let url = `${environment.apiImplementosPagos}transbank/getTransbankErrorCode/?errorCode=${errorCode}`;
     try {
-      let consulta: any = await this.http.get(url).toPromise()
+      let consulta: any = await this.http.get(url).toPromise();
       if (consulta && !consulta.error) {
-        detalle = consulta.data
+        detalle = consulta.data;
       }
     } catch (e: any) {
       console.log(
         'ha ocurrido un error obteniendo el codigo de error asociado al pago' +
           errorCode,
-        e,
-      )
+        e
+      );
       this.sendEmailError(
         'Ha ocurrido un error intentando obtener el detalle asociado al error de pago' +
           errorCode +
           ' <br> ' +
-          e.toString(),
-      )
+          e.toString()
+      );
     }
-    return detalle
+    return detalle;
   }
 
   async getMetodosPago() {
-    let resp: PaymentMethod[] = []
+    let resp: PaymentMethod[] = [];
     try {
       let consulta: any = await this.http
         .get(`${environment.apiImplementosPagos}transbank/getMetodosPago`)
-        .toPromise()
+        .toPromise();
       if (consulta && !consulta.error && consulta.data) {
-        resp = consulta.data
+        resp = consulta.data;
       } else {
         this._ToastrService.warning(
-          'No ha sido posible obtener los metodos de pagos.',
-        )
+          'No ha sido posible obtener los metodos de pagos.'
+        );
         this.sendEmailError(
           'Ha ocurrido un error intentando obtener los metodos de pago desde mongo <br> ' +
-            consulta.toString(),
-        )
+            consulta.toString()
+        );
       }
     } catch (e) {
       this._ToastrService.warning(
-        'No ha sido posible obtener los metodos de pagos.',
-      )
+        'No ha sido posible obtener los metodos de pagos.'
+      );
       this.sendEmailError(
         'Ha ocurrido un error intentando obtener los metodos de pago desde mongo <br> ' +
-          JSON.stringify(e),
-      )
+          JSON.stringify(e)
+      );
     }
 
-    return resp
+    return resp;
   }
 
   async getMetodosPagoOmni() {
-    let resp: PaymentMethod[] = []
+    let resp: PaymentMethod[] = [];
     try {
       let consulta: any = await this.http
         .get(`${environment.apiImplementosPagos}transbank/omni/getMetodosPago`)
-        .toPromise()
+        .toPromise();
       if (consulta && !consulta.error && consulta.data) {
-        resp = consulta.data
+        resp = consulta.data;
       } else {
         this._ToastrService.warning(
-          'No ha sido posible obtener los metodos de pagos.',
-        )
+          'No ha sido posible obtener los metodos de pagos.'
+        );
         this.sendEmailError(
           'Ha ocurrido un error intentando obtener los metodos de pago desde mongo <br> ' +
-            consulta.toString(),
-        )
+            consulta.toString()
+        );
       }
     } catch (e) {
       this._ToastrService.warning(
-        'No ha sido posible obtener los metodos de pagos.',
-      )
+        'No ha sido posible obtener los metodos de pagos.'
+      );
       this.sendEmailError(
         'Ha ocurrido un error intentando obtener los metodos de pago desde mongo <br> ' +
-          JSON.stringify(e),
-      )
+          JSON.stringify(e)
+      );
     }
 
-    return resp
+    return resp;
   }
 
   close(sentencia: any) {
-    this.close$.next(sentencia)
+    this.close$.next(sentencia);
   }
   selectBancoKhipu(banco: any) {
-    this.bancokhipu$.next(banco)
+    this.bancokhipu$.next(banco);
   }
 }

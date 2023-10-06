@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PageCartRequestSuccessComponent } from './page-cart-request-success.component'
+import { PageCartRequestSuccessComponent } from './page-cart-request-success.component';
 
 describe('PageCartRequestSuccessComponent', () => {
-  let component: PageCartRequestSuccessComponent
-  let fixture: ComponentFixture<PageCartRequestSuccessComponent>
+  let component: PageCartRequestSuccessComponent;
+  let fixture: ComponentFixture<PageCartRequestSuccessComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [PageCartRequestSuccessComponent],
-    }).compileComponents()
-  }))
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PageCartRequestSuccessComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    fixture = TestBed.createComponent(PageCartRequestSuccessComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+    expect(component).toBeTruthy();
+  });
+});

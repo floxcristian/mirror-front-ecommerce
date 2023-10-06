@@ -4,6 +4,7 @@
 # Ignora los archivos generados por Angular CLI
 /dist
 /e2e
+/.angular
 
 # Ignora los archivos de configuración de Git
 /.git

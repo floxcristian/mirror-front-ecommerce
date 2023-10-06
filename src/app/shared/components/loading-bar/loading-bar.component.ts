@@ -6,16 +6,16 @@ import {
   NgZone,
   OnDestroy,
   ViewChild,
-} from '@angular/core'
+} from '@angular/core';
 import {
   NavigationCancel,
   NavigationEnd,
   NavigationError,
   NavigationStart,
   Router,
-} from '@angular/router'
-import { Subject } from 'rxjs'
-import { takeUntil } from 'rxjs/operators'
+} from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-loading-bar',
@@ -24,18 +24,15 @@ import { takeUntil } from 'rxjs/operators'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadingBarComponent implements AfterViewInit, OnDestroy {
-  private destroy$: Subject<void> = new Subject()
+  private destroy$: Subject<void> = new Subject();
 
-  @ViewChild('bar', { static: false }) bar!: ElementRef
+  @ViewChild('bar', { static: false }) bar!: ElementRef;
 
   get element(): HTMLElement {
-    return this.bar.nativeElement
+    return this.bar.nativeElement;
   }
 
-  constructor(
-    private router: Router,
-    private zone: NgZone,
-  ) {}
+  constructor(private router: Router, private zone: NgZone) {}
 
   ngAfterViewInit(): void {
     this.zone.runOutsideAngular(() => {
@@ -44,10 +41,10 @@ export class LoadingBarComponent implements AfterViewInit, OnDestroy {
           this.element.classList.remove(
             'loading-bar--start',
             'loading-bar--complete',
-            'loading-bar--reset',
-          )
-          this.element.getBoundingClientRect() // force reflow
-          this.element.classList.add('loading-bar--start')
+            'loading-bar--reset'
+          );
+          this.element.getBoundingClientRect(); // force reflow
+          this.element.classList.add('loading-bar--start');
         }
 
         if (
@@ -56,16 +53,16 @@ export class LoadingBarComponent implements AfterViewInit, OnDestroy {
           event instanceof NavigationCancel
         ) {
           if (this.element.classList.contains('loading-bar--start')) {
-            this.element.classList.remove('loading-bar--start')
-            this.element.classList.add('loading-bar--complete')
+            this.element.classList.remove('loading-bar--start');
+            this.element.classList.add('loading-bar--complete');
           }
         }
-      })
-    })
+      });
+    });
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next()
-    this.destroy$.complete()
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -7,10 +7,10 @@ import {
   EventEmitter,
   PLATFORM_ID,
   Inject,
-} from '@angular/core'
+} from '@angular/core';
 // Constants
-import { DIAS, MESES } from './date-config'
-import { isPlatformBrowser } from '@angular/common'
+import { DIAS, MESES } from './date-config';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-grupo-detalle-fechas',
@@ -18,36 +18,36 @@ import { isPlatformBrowser } from '@angular/common'
   styleUrls: ['./grupo-detalle-fechas.component.scss'],
 })
 export class GrupoDetalleFechasComponent implements OnInit {
-  @Input() fletes: any = []
-  @Input() index: number = 0
-  @Input() DIAS_SEMANA = 10
-  @Output() itemSeleccionado = new EventEmitter()
+  @Input() fletes: any = [];
+  @Input() index: number = 0;
+  @Input() DIAS_SEMANA = 10;
+  @Output() itemSeleccionado = new EventEmitter();
 
-  DIAS_SEMANA_STR = DIAS
-  MESES_STR = MESES
+  DIAS_SEMANA_STR = DIAS;
+  MESES_STR = MESES;
 
-  semanas: any = []
-  totalSemanas: number = 0
-  semanaActual: number = 0
-  itemSelectedindex: number = 0
-  paginasIndex = 0
+  semanas: any = [];
+  totalSemanas: number = 0;
+  semanaActual: number = 0;
+  itemSelectedindex: number = 0;
+  paginasIndex = 0;
   //ver las fechas
-  innerWidth: number
+  innerWidth: number;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900
+      : 900;
   }
 
   ngOnInit(): void {
-    this.armarSemanas()
-    this.setSemanaActual()
-    if (this.innerWidth > 450) this.primeraFechaSeleccionda()
+    this.armarSemanas();
+    this.setSemanaActual();
+    if (this.innerWidth > 450) this.primeraFechaSeleccionda();
   }
 
   ngOnDestroy(): void {
-    this.itemSeleccionado.unsubscribe()
+    this.itemSeleccionado.unsubscribe();
   }
 
   /**
@@ -56,22 +56,22 @@ export class GrupoDetalleFechasComponent implements OnInit {
    * @returns el número de semanas de diferencia entre el día de mañana y la fecha del último flete.
    */
   armarSemanas() {
-    this.semanas = []
+    this.semanas = [];
     // Fecha actual y currentDate son distintas
 
-    this.totalSemanas = this.fletes.length / this.DIAS_SEMANA
+    this.totalSemanas = this.fletes.length / this.DIAS_SEMANA;
 
     for (let weekIndex = 0; weekIndex < this.totalSemanas; weekIndex++) {
-      const fechasSemana: any = []
+      const fechasSemana: any = [];
       // Por cada semana
-      let dayIndex = 0
+      let dayIndex = 0;
 
       while (dayIndex < this.DIAS_SEMANA) {
-        const date = new Date(this.fletes[dayIndex].fecha)
+        const date = new Date(this.fletes[dayIndex].fecha);
 
         // Se modifica el mes de la fecha del flete (0-11)
         // Pasa al siguiente mes (en la fecha actual) si ve que el día (1-31) del primer flete queda mayor a la fecha actual.
-        const flete = this.buscarFechaFlete(date)
+        const flete = this.buscarFechaFlete(date);
 
         if (flete) {
           fechasSemana.push({
@@ -82,8 +82,8 @@ export class GrupoDetalleFechasComponent implements OnInit {
             diaSemana: this.DIAS_SEMANA_STR[date.getDay()], // Ej: Mié
             numeroDia: date.getDate(), // Ej: 07
             mes: this.MESES_STR[date.getMonth()].substring(0, 3),
-          })
-          dayIndex = dayIndex + 1
+          });
+          dayIndex = dayIndex + 1;
         }
         // Pasa al día siguiente (1-31).
       }
@@ -93,7 +93,7 @@ export class GrupoDetalleFechasComponent implements OnInit {
           mes: this.MESES_STR[fechasSemana[0].fecha.getMonth()],
           year: fechasSemana[0].fecha.getFullYear(),
           fechas: fechasSemana,
-        })
+        });
       }
     }
   }
@@ -101,38 +101,38 @@ export class GrupoDetalleFechasComponent implements OnInit {
   setSemanaActual() {
     for (let i = 0; i < this.semanas.length; i++) {
       if (this.semanas[i].fechas.some((f: any) => f.habilitado)) {
-        this.semanaActual = i
-        break
+        this.semanaActual = i;
+        break;
       }
     }
   }
 
   goToSemana(nuevaSemana: number) {
-    this.itemSelectedindex = 0
+    this.itemSelectedindex = 0;
     if (nuevaSemana < 0 || nuevaSemana >= this.totalSemanas) {
-      return
+      return;
     }
-    this.semanaActual = nuevaSemana
+    this.semanaActual = nuevaSemana;
   }
 
   primeraFechaSeleccionda() {
     for (let i = 0; i < this.semanas[0].fechas.length; i++) {
       if (this.semanas[0].fechas[i].habilitado) {
-        this.SeleccionarEnvio(this.semanas[0].fechas[i])
-        break
+        this.SeleccionarEnvio(this.semanas[0].fechas[i]);
+        break;
       }
     }
   }
 
   SeleccionarEnvio(item: any) {
-    let resultado: any = this.buscarFechaFlete(item.fecha)
-    this.itemSelectedindex = item.index
-    this.paginasIndex = this.semanaActual
-    this.itemSeleccionado.emit(resultado)
+    let resultado: any = this.buscarFechaFlete(item.fecha);
+    this.itemSelectedindex = item.index;
+    this.paginasIndex = this.semanaActual;
+    this.itemSeleccionado.emit(resultado);
   }
 
   onResize(event: any) {
-    this.innerWidth = event.target.innerWidth
+    this.innerWidth = event.target.innerWidth;
     // ver cambios de pantalla //
   }
 
@@ -141,9 +141,9 @@ export class GrupoDetalleFechasComponent implements OnInit {
    * @returns
    */
   private getTomorrowDate(): Date {
-    const tomorrowDate = new Date()
-    tomorrowDate.setDate(tomorrowDate.getDate() + 1)
-    return tomorrowDate
+    const tomorrowDate = new Date();
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+    return tomorrowDate;
   }
 
   /**
@@ -153,12 +153,12 @@ export class GrupoDetalleFechasComponent implements OnInit {
    */
   buscarFechaFlete(fecha: Date) {
     return this.fletes.find((flete: any) => {
-      const fleteFecha = new Date(flete.fecha)
+      const fleteFecha = new Date(flete.fecha);
       return (
         fecha.getFullYear() === fleteFecha.getFullYear() &&
         fecha.getMonth() === fleteFecha.getMonth() &&
         fecha.getDate() === fleteFecha.getDate()
-      )
-    })
+      );
+    });
   }
 }

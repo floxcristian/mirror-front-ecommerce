@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core'
-import { Observable, Subject } from 'rxjs'
-import { CurrencyFormatOptions } from '../interfaces/currency-format-options'
+import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { CurrencyFormatOptions } from '../interfaces/currency-format-options';
 
 interface CurrencyServiceData {
-  options: CurrencyFormatOptions
+  options: CurrencyFormatOptions;
 }
 
 @Injectable({
@@ -12,19 +12,19 @@ interface CurrencyServiceData {
 export class CurrencyService {
   private data: CurrencyServiceData = {
     options: {},
-  }
+  };
 
-  private changesSubject$: Subject<CurrencyFormatOptions> = new Subject()
+  private changesSubject$: Subject<CurrencyFormatOptions> = new Subject();
 
   changes$: Observable<CurrencyFormatOptions> =
-    this.changesSubject$.asObservable()
+    this.changesSubject$.asObservable();
 
   get options(): CurrencyFormatOptions {
-    return this.data.options
+    return this.data.options;
   }
   set options(value: CurrencyFormatOptions) {
-    this.data.options = value
-    this.changesSubject$.next(value)
+    this.data.options = value;
+    this.changesSubject$.next(value);
   }
 
   constructor() {}

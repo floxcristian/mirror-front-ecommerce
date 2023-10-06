@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ColapseComponent } from './colapse.component'
+import { ColapseComponent } from './colapse.component';
 
 describe('ColapseComponent', () => {
-  let component: ColapseComponent
-  let fixture: ComponentFixture<ColapseComponent>
+  let component: ColapseComponent;
+  let fixture: ComponentFixture<ColapseComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ColapseComponent],
-    }).compileComponents()
-  }))
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ColapseComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    fixture = TestBed.createComponent(ColapseComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+    expect(component).toBeTruthy();
+  });
+});

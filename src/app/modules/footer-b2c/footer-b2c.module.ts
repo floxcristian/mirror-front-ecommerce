@@ -1,15 +1,15 @@
 // Angular
-import { NgModule } from '@angular/core'
-import { CommonModule } from '@angular/common'
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 // Routing
-import { RouterModule } from '@angular/router'
+import { RouterModule } from '@angular/router';
 // Components
-import { FooterB2cComponent } from './footer-b2c.component'
-import { SobreNosotrosComponent } from './components/sobre-nosotros/sobre-nosotros.component'
-import { HoldingEpysaComponent } from './components/holding-epysa/holding-epysa.component'
-import { MiCuentaComponent } from './components/mi-cuenta/mi-cuenta.component'
-import { ContactanosComponent } from './components/contactenos/contactanos.component'
-import { FotterSiteMobileComponent } from './components/fotter-site-mobile/fotter-site-mobile.component'
+import { FooterB2cComponent } from './footer-b2c.component';
+import { SobreNosotrosComponent } from './components/sobre-nosotros/sobre-nosotros.component';
+import { HoldingEpysaComponent } from './components/holding-epysa/holding-epysa.component';
+import { MiCuentaComponent } from './components/mi-cuenta/mi-cuenta.component';
+import { ContactanosComponent } from './components/contactenos/contactanos.component';
+import { FotterSiteMobileComponent } from './components/fotter-site-mobile/fotter-site-mobile.component';
 
 @NgModule({
   declarations: [

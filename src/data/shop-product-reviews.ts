@@ -1,4 +1,4 @@
-import { ProductReview } from '../app/shared/interfaces/product'
+import { ProductReview } from '../app/shared/interfaces/product';
 
 export const reviews: ProductReview[] = [
   {
@@ -29,4 +29,4 @@ export const reviews: ProductReview[] = [
     date: '12/07/2019',
     text: 'Precios excelentes. Y si te registras en su B2B, muuuuucho mejor aún.. A quienes no lo hayan hecho, los invito a hacerlo.',
   },
-]
+];

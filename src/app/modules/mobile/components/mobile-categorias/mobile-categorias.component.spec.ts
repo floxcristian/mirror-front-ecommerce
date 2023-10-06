@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MobileCategoriasComponent } from './mobile-categorias.component'
+import { MobileCategoriasComponent } from './mobile-categorias.component';
 
 describe('MobileCategoriasComponent', () => {
-  let component: MobileCategoriasComponent
-  let fixture: ComponentFixture<MobileCategoriasComponent>
+  let component: MobileCategoriasComponent;
+  let fixture: ComponentFixture<MobileCategoriasComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [MobileCategoriasComponent],
-    }).compileComponents()
-  }))
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MobileCategoriasComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    fixture = TestBed.createComponent(MobileCategoriasComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+    expect(component).toBeTruthy();
+  });
+});

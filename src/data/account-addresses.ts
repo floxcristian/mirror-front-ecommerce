@@ -1,4 +1,4 @@
-import { Address } from '../app/shared/interfaces/address'
+import { Address } from '../app/shared/interfaces/address';
 
 export const addresses: Address[] = [
   {
@@ -23,4 +23,4 @@ export const addresses: Address[] = [
     postcode: '090808',
     address: 'las cascadas',
   },
-]
+];

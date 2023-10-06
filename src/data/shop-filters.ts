@@ -1,4 +1,4 @@
-import { ProductFilter } from '../app/shared/interfaces/product-filter'
+import { ProductFilter } from '../app/shared/interfaces/product-filter';
 
 export const filters: ProductFilter[] = [
   {
@@ -90,4 +90,4 @@ export const filters: ProductFilter[] = [
   //         ]
   //     }
   // }
-]
+];

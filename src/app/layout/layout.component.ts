@@ -1,35 +1,35 @@
 // Angular
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core'
-import { ActivatedRoute, Params } from '@angular/router'
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
 // Services
-import { RootService } from '../shared/services/root.service'
-import { LocalStorageService } from '../core/modules/local-storage/local-storage.service'
-import { CategoryService } from '../shared/services/category.service'
-import { isPlatformBrowser } from '@angular/common'
+import { RootService } from '../shared/services/root.service';
+import { LocalStorageService } from '../core/modules/local-storage/local-storage.service';
+import { CategoryService } from '../shared/services/category.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
 })
 export class LayoutComponent implements OnInit {
-  isB2B: boolean = false
-  fbclid: string | undefined = ''
-  gclid: string = ''
-  utm_campaign: string | undefined = ''
+  isB2B: boolean = false;
+  fbclid: string | undefined = '';
+  gclid: string = '';
+  utm_campaign: string | undefined = '';
 
   constructor(
     private readonly rootService: RootService,
     private readonly route: ActivatedRoute,
     private readonly localS: LocalStorageService,
     private categoriesService: CategoryService,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
-    this.scrollTop()
-    this.isB2B = this.checkIsB2b()
-    this.getQueryParams()
-    this.categoriesService.obtieneCategoriasHeader().subscribe((r) => {})
+    this.scrollTop();
+    this.isB2B = this.checkIsB2b();
+    this.getQueryParams();
+    this.categoriesService.obtieneCategoriasHeader().subscribe((r) => {});
   }
 
   /**
@@ -37,8 +37,8 @@ export class LayoutComponent implements OnInit {
    */
   scrollTop(): void {
     if (isPlatformBrowser(this.platformId)) {
-      document.body.scrollTop = 0 // Safari
-      document.documentElement.scrollTop = 0 // Other
+      document.body.scrollTop = 0; // Safari
+      document.documentElement.scrollTop = 0; // Other
     }
   }
 
@@ -47,8 +47,8 @@ export class LayoutComponent implements OnInit {
    * @returns
    */
   checkIsB2b(): boolean {
-    const { user_role: userRole } = this.rootService.getDataSesionUsuario()
-    return ['supervisor', 'comprador'].includes(userRole || '')
+    const { user_role: userRole } = this.rootService.getDataSesionUsuario();
+    return ['supervisor', 'comprador'].includes(userRole || '');
   }
 
   /**
@@ -58,19 +58,19 @@ export class LayoutComponent implements OnInit {
   getQueryParams(): void {
     this.route.queryParams.subscribe((params: Params) => {
       if (params['utm_campaign']) {
-        this.utm_campaign = params['utm_campaign']
-        this.localS.set('utm_campaign', this.utm_campaign)
-      } else this.utm_campaign = undefined
+        this.utm_campaign = params['utm_campaign'];
+        this.localS.set('utm_campaign', this.utm_campaign);
+      } else this.utm_campaign = undefined;
 
       if (params['gclid']) {
-        this.gclid = params['gclid']
-        this.localS.set('gclid', this.gclid)
+        this.gclid = params['gclid'];
+        this.localS.set('gclid', this.gclid);
       }
 
       if (params['fbclid']) {
-        this.fbclid = params['fbclid']
-        this.localS.set('fbclid', this.fbclid)
-      } else this.fbclid = undefined
-    })
+        this.fbclid = params['fbclid'];
+        this.localS.set('fbclid', this.fbclid);
+      } else this.fbclid = undefined;
+    });
   }
 }

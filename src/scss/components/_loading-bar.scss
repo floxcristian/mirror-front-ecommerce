@@ -18,24 +18,19 @@ $local-hide-duration: 0.2s;
 .loading-bar__inner {
   height: inherit;
   width: 0;
-  transition:
-    width 0s 0s,
-    opacity 0s 0s;
+  transition: width 0s 0s, opacity 0s 0s;
   background-color: $link-color;
 }
 .loading-bar--start {
   .loading-bar__inner {
-    transition:
-      width $local-duration 0s,
-      opacity 0s 0s;
+    transition: width $local-duration 0s, opacity 0s 0s;
     width: 20%;
   }
 }
 .loading-bar--complete {
   .loading-bar__inner {
     width: 100%;
-    transition:
-      width $local-duration 0s,
+    transition: width $local-duration 0s,
       opacity $local-hide-duration ($local-duration + 0.1s);
     opacity: 0;
   }

@@ -1,10 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core'
-import { isVacio } from '../../utils/utilidades'
+import { Component, OnInit, Input } from '@angular/core';
+import { isVacio } from '../../utils/utilidades';
 
 export interface Data {
-  label: string
-  valor: number
-  porcentaje?: number
+  label: string;
+  valor: number;
+  porcentaje?: number;
 }
 
 @Component({
@@ -13,12 +13,12 @@ export interface Data {
   styleUrls: ['./card-dashboard-no-chart.component.scss'],
 })
 export class CardDashboardNoChartComponent implements OnInit {
-  @Input() titulo!: string
-  @Input() data!: Data[]
-  @Input() iconClass!: string
-  @Input() iconContainerClass!: string
+  @Input() titulo!: string;
+  @Input() data!: Data[];
+  @Input() iconClass!: string;
+  @Input() iconContainerClass!: string;
 
-  isVacio = isVacio
+  isVacio = isVacio;
 
   constructor() {}
 

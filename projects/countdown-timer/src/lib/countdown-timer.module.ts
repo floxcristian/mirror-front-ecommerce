@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core'
-import { CountdownTimerComponent } from './countdown-timer.component'
+import { NgModule } from '@angular/core';
+import { CountdownTimerComponent } from './countdown-timer.component';
 
 @NgModule({
   declarations: [CountdownTimerComponent],

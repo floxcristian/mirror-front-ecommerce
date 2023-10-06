@@ -1,9 +1,9 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core'
-import { BsModalRef } from 'ngx-bootstrap/modal'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { ToastrService } from 'ngx-toastr'
-import { ClientsService } from '../../services/clients.service'
-import { PasswordValidator } from '../../validations/password'
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { ClientsService } from '../../services/clients.service';
+import { PasswordValidator } from '../../validations/password';
 
 @Component({
   selector: 'app-password-modal',
@@ -11,21 +11,21 @@ import { PasswordValidator } from '../../validations/password'
   styleUrls: ['./password-modal.component.scss'],
 })
 export class PasswordModalComponent implements OnInit {
-  @Input() modalPasswordRef!: BsModalRef
-  @Output() public respuesta = new EventEmitter<any>()
-  formPassword: FormGroup
+  @Input() modalPasswordRef!: BsModalRef;
+  @Output() public respuesta = new EventEmitter<any>();
+  formPassword: FormGroup;
   estadoInput = [
     { tipo: 'password', icono: 'fas fa-eye-slash' },
     { tipo: 'password', icono: 'fas fa-eye-slash' },
     { tipo: 'password', icono: 'fas fa-eye-slash' },
-  ]
-  verActual = 'password'
-  verNuevo = 'password'
-  verRepetido = 'password'
+  ];
+  verActual = 'password';
+  verNuevo = 'password';
+  verRepetido = 'password';
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private clientsService: ClientsService,
+    private clientsService: ClientsService
   ) {
     this.formPassword = this.fb.group(
       {
@@ -35,29 +35,29 @@ export class PasswordModalComponent implements OnInit {
       },
       {
         validator: PasswordValidator.validate.bind(this),
-      },
-    )
+      }
+    );
   }
 
   ngOnInit() {}
   async cambiarPassword() {
-    let data = this.formPassword.value
+    let data = this.formPassword.value;
 
-    let resp: any = await this.clientsService.changePassword(data)
+    let resp: any = await this.clientsService.changePassword(data);
     if (!resp.error) {
-      this.modalPasswordRef.hide()
-      this.toastr.success(resp.msg)
+      this.modalPasswordRef.hide();
+      this.toastr.success(resp.msg);
     } else {
-      this.toastr.error(resp.msg)
+      this.toastr.error(resp.msg);
     }
   }
 
   cambiarEstado(input: any) {
     input.tipo == 'password'
       ? (input.tipo = 'text')
-      : (input.tipo = 'password')
+      : (input.tipo = 'password');
     input.icono == 'fas fa-eye-slash'
       ? (input.icono = 'fas fa-eye')
-      : (input.icono = 'fas fa-eye-slash')
+      : (input.icono = 'fas fa-eye-slash');
   }
 }

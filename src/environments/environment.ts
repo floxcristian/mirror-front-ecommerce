@@ -44,4 +44,4 @@ export const environment = {
     'https://www.implementos.cl/carro-compra/omni-gracias-por-tu-compra/',
   urlPaymentOmniCanceled:
     'https://www.implementos.cl/carro-compra/omni-forma-de-pago',
-}
+};

@@ -51,9 +51,7 @@ $local-transition-duration: 0.25s;
   position: absolute;
   top: calc(50% - 3px);
   fill: $departments-icon-color;
-  transition:
-    fill 0.2s,
-    transform 0.2s;
+  transition: fill 0.2s, transform 0.2s;
   @include direction {
     #{$inset-inline-end}: 13px;
   }
@@ -165,8 +163,7 @@ $local-transition-duration: 0.25s;
   opacity: 0;
   display: flex;
   flex-direction: column;
-  transition:
-    height $local-transition-duration ease-in-out,
+  transition: height $local-transition-duration ease-in-out,
     opacity $local-transition-duration ease-in-out;
 }
 

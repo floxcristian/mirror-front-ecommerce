@@ -1,4 +1,4 @@
-import { Brand } from '../app/shared/interfaces/brand'
+import { Brand } from '../app/shared/interfaces/brand';
 
 export const brands: any = [
   [
@@ -76,4 +76,4 @@ export const brands: any = [
     },
     { brand: 'jost', image: 'https://images.implementos.cl/marcas/jost.jpg' }, // repetida
   ],
-]
+];

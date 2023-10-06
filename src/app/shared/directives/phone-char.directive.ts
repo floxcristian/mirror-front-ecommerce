@@ -1,5 +1,5 @@
-import { Directive, HostListener } from '@angular/core'
-import { NgControl } from '@angular/forms'
+import { Directive, HostListener } from '@angular/core';
+import { NgControl } from '@angular/forms';
 
 /**
  * Directiva
@@ -19,7 +19,7 @@ export class PhoneCharDirective {
    * @param $event Evento gatillado por el Usuario.
    */
   @HostListener('keydown', ['$event']) onKeyDown($event: any) {
-    const key = $event.which || $event.keyCode
+    const key = $event.which || $event.keyCode;
 
     if (
       (key >= 48 && key <= 57) || // numbers
@@ -32,9 +32,9 @@ export class PhoneCharDirective {
       key === 9 || // TAB
       key === 8 // DELETE
     ) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
   }
 }

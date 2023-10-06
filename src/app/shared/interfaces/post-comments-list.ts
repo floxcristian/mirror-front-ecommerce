@@ -1,6 +1,6 @@
-import { PostComment } from './post-comment'
+import { PostComment } from './post-comment';
 
 export interface PostCommentsList {
-  count: number
-  items: PostComment[]
+  count: number;
+  items: PostComment[];
 }

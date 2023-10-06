@@ -20,9 +20,7 @@
   width: 100%;
   height: 100%;
   border-radius: $search-border-radius;
-  transition:
-    box-shadow 0.15s,
-    background 0.15s;
+  transition: box-shadow 0.15s, background 0.15s;
 }
 .search__input {
   border: none;

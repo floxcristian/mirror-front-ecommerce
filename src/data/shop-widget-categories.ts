@@ -1,4 +1,4 @@
-import { Category } from '../app/shared/interfaces/category'
+import { Category } from '../app/shared/interfaces/category';
 
 export const categories: any[] = [
   {
@@ -62,4 +62,4 @@ export const categories: any[] = [
   { name: 'Presses', url: '../' },
   { name: 'Spray Guns', url: '../' },
   { name: 'Riveters', url: '../' },
-]
+];

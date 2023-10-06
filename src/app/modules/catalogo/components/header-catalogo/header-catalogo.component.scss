@@ -120,18 +120,9 @@ span.desc {
   background: #ffffff;
   border: 1px solid #dbdbdb;
 
-  transition:
-    opacity 0.2s,
-    visibility 0s 0.2s,
-    -webkit-transform 0.2s;
-  transition:
-    transform 0.2s,
-    opacity 0.2s,
-    visibility 0s 0.2s;
-  transition:
-    transform 0.2s,
-    opacity 0.2s,
-    visibility 0s 0.2s,
+  transition: opacity 0.2s, visibility 0s 0.2s, -webkit-transform 0.2s;
+  transition: transform 0.2s, opacity 0.2s, visibility 0s 0.2s;
+  transition: transform 0.2s, opacity 0.2s, visibility 0s 0.2s,
     -webkit-transform 0.2s;
 }
 

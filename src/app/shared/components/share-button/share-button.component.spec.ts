@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ShareButtonComponent } from './share-button.component'
+import { ShareButtonComponent } from './share-button.component';
 
 describe('ShareButtonComponent', () => {
-  let component: ShareButtonComponent
-  let fixture: ComponentFixture<ShareButtonComponent>
+  let component: ShareButtonComponent;
+  let fixture: ComponentFixture<ShareButtonComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ShareButtonComponent],
-    }).compileComponents()
-  }))
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ShareButtonComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    fixture = TestBed.createComponent(ShareButtonComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+    expect(component).toBeTruthy();
+  });
+});

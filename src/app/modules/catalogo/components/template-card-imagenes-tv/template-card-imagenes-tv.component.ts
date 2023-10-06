@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core'
-import { OwlOptions } from 'ngx-owl-carousel-o'
+import { Component, OnInit, Input } from '@angular/core';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 
 @Component({
   selector: 'app-template-card-imagenes-tv',
@@ -7,9 +7,9 @@ import { OwlOptions } from 'ngx-owl-carousel-o'
   styleUrls: ['./template-card-imagenes-tv.component.scss'],
 })
 export class TemplateCardImagenesTvComponent implements OnInit {
-  @Input() layout: any
+  @Input() layout: any;
 
-  customOptions!: OwlOptions
+  customOptions!: OwlOptions;
 
   constructor() {}
 
@@ -28,6 +28,6 @@ export class TemplateCardImagenesTvComponent implements OnInit {
       smartSpeed: 1000,
       navSpeed: 1000,
       autoWidth: true,
-    }
+    };
   }
 }

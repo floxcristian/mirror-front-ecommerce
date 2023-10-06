@@ -27,9 +27,7 @@
   background: $block-products-carousel-preloader-bg;
   opacity: 0;
   visibility: hidden;
-  transition:
-    opacity 0.3s,
-    visibility 0s 0.3s;
+  transition: opacity 0.3s, visibility 0s 0.3s;
 
   &:after {
     @include preloader(100px);

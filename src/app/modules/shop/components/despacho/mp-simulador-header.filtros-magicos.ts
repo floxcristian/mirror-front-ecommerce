@@ -1,10 +1,10 @@
-import { map } from 'rxjs/operators'
-import { PromesaService } from '../../services/promesa.service'
+import { map } from 'rxjs/operators';
+import { PromesaService } from '../../services/promesa.service';
 
 export const MpSimuladorHeaderFiltrosMagicos = (
   modo: string,
   promesaService: PromesaService,
-  tiendaActual: any,
+  tiendaActual: any
 ): any => {
   if (modo === 'retiroTienda') {
     return {
@@ -18,12 +18,12 @@ export const MpSimuladorHeaderFiltrosMagicos = (
           valoresSelect: promesaService.tiendas().pipe(map((r) => r.data)),
           opcionSelect: (item: any) => item.nombre,
           valorDefecto: async () => {
-            return { key: 'codigo', params: [tiendaActual.codigo] }
+            return { key: 'codigo', params: [tiendaActual.codigo] };
           },
         },
       ],
       mostrarBotonFiltrar: false,
-    }
+    };
   } else {
     return {
       filtros: [
@@ -43,6 +43,6 @@ export const MpSimuladorHeaderFiltrosMagicos = (
         },
       ],
       mostrarBotonFiltrar: false,
-    }
+    };
   }
-}
+};

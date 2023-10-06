@@ -1,29 +1,29 @@
-import { Injectable } from '@angular/core'
+import { Injectable } from '@angular/core';
 
-type Task = () => Promise<void>
+type Task = () => Promise<void>;
 
 interface LibrariesDef {
-  [name: string]: Task
+  [name: string]: Task;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class ResourcesService {
-  private loaded: { [url: string]: Promise<void> } = {}
+  private loaded: { [url: string]: Promise<void> } = {};
 
   private libraries: LibrariesDef = {
     photoSwipe: ResourcesService.parallel(
       this.styleTask('assets/vendor/photoswipe/photoswipe.css'),
       this.styleTask('assets/vendor/photoswipe/default-skin/default-skin.css'),
       this.scriptTask('assets/vendor/photoswipe/photoswipe.min.js'),
-      this.scriptTask('assets/vendor/photoswipe/photoswipe-ui-default.min.js'),
+      this.scriptTask('assets/vendor/photoswipe/photoswipe-ui-default.min.js')
     ),
-  }
+  };
 
   static series(...tasks: Task[]): Task {
     if (!tasks.length) {
-      return () => Promise.resolve()
+      return () => Promise.resolve();
     }
 
     // Se reemplaza el siguiente código que daba error.
@@ -34,69 +34,69 @@ export class ResourcesService {
      *    .then(ResourcesService.series(...tasks));
      */
     return () => {
-      const first = tasks.shift()
-      if (first) return first().then(ResourcesService.series(...tasks))
-      return Promise.resolve()
-    }
+      const first = tasks.shift();
+      if (first) return first().then(ResourcesService.series(...tasks));
+      return Promise.resolve();
+    };
   }
 
   static parallel(...tasks: Task[]): Task {
     if (!tasks.length) {
-      return () => Promise.resolve()
+      return () => Promise.resolve();
     }
 
-    return () => Promise.all(tasks.map((task) => task())).then(() => {})
+    return () => Promise.all(tasks.map((task) => task())).then(() => {});
   }
 
   constructor() {}
 
   loadScript(url: string): Promise<void> {
-    return this.scriptTask(url)()
+    return this.scriptTask(url)();
   }
 
   loadStyle(url: string): Promise<void> {
-    return this.styleTask(url)()
+    return this.styleTask(url)();
   }
 
   loadLibrary(library: string): Promise<void> {
-    return this.libraries[library]()
+    return this.libraries[library]();
   }
 
   private scriptTask(url: string): Task {
     return () => {
       if (!this.loaded.hasOwnProperty(url)) {
         this.loaded[url] = new Promise<void>((resolve, reject) => {
-          const script = document.createElement('script')
+          const script = document.createElement('script');
 
-          script.onload = () => resolve()
-          script.onerror = () => reject(new Error('Loading error: ' + url))
-          script.src = url
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error('Loading error: ' + url));
+          script.src = url;
 
-          document.head.appendChild(script)
-        })
+          document.head.appendChild(script);
+        });
       }
 
-      return this.loaded[url]
-    }
+      return this.loaded[url];
+    };
   }
 
   private styleTask(url: string): Task {
     return () => {
       if (!this.loaded.hasOwnProperty(url)) {
         this.loaded[url] = new Promise<void>((resolve, reject) => {
-          const link = document.createElement('link')
+          const link = document.createElement('link');
 
-          link.onload = () => resolve()
-          link.onerror = () => reject(new Error('Loading error: ' + url))
-          link.type = 'text/css'
-          link.rel = 'stylesheet'
-          link.href = url
+          link.onload = () => resolve();
+          link.onerror = () => reject(new Error('Loading error: ' + url));
+          link.type = 'text/css';
+          link.rel = 'stylesheet';
+          link.href = url;
 
-          document.head.appendChild(link)
-        })
+          document.head.appendChild(link);
+        });
       }
 
-      return this.loaded[url]
-    }
+      return this.loaded[url];
+    };
   }
 }

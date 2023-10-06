@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AngularEmailAutocompleteComponent } from './angular-email-autocomplete.component'
+import { AngularEmailAutocompleteComponent } from './angular-email-autocomplete.component';
 
 describe('AngularEmailAutocompleteComponent', () => {
-  let component: AngularEmailAutocompleteComponent
-  let fixture: ComponentFixture<AngularEmailAutocompleteComponent>
+  let component: AngularEmailAutocompleteComponent;
+  let fixture: ComponentFixture<AngularEmailAutocompleteComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AngularEmailAutocompleteComponent],
-    }).compileComponents()
-  }))
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AngularEmailAutocompleteComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    fixture = TestBed.createComponent(AngularEmailAutocompleteComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+    expect(component).toBeTruthy();
+  });
+});

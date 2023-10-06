@@ -1,4 +1,4 @@
-import { Post } from '../app/shared/interfaces/post'
+import { Post } from '../app/shared/interfaces/post';
 
 export const posts: Post[] = [
   {
@@ -64,4 +64,4 @@ export const posts: Post[] = [
     categories: ['Special Offers'],
     date: 'January 1, 2019',
   },
-]
+];

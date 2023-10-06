@@ -1,4 +1,4 @@
-import { NavigationLink } from '../app/shared/interfaces/navigation-link'
+import { NavigationLink } from '../app/shared/interfaces/navigation-link';
 
 export const departments: NavigationLink[] = [
   {
@@ -340,4 +340,4 @@ export const departments: NavigationLink[] = [
     label: 'División de Equipamiento Especial',
     url: './productos?buscar=cinta',
   },
-]
+];

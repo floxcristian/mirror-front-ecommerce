@@ -4,10 +4,10 @@ import {
   Inject,
   Input,
   PLATFORM_ID,
-} from '@angular/core'
-import { Link } from '../../interfaces/link'
-import { Router } from '@angular/router'
-import { isPlatformBrowser } from '@angular/common'
+} from '@angular/core';
+import { Link } from '../../interfaces/link';
+import { Router } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-page-header',
@@ -15,29 +15,29 @@ import { isPlatformBrowser } from '@angular/common'
   styleUrls: ['./page-header.component.scss'],
 })
 export class PageHeaderComponent {
-  @Input() header!: string
-  @Input() headerSubtitle!: string
-  @Input() textLast!: string
-  @Input() class!: string
-  @Input() totalRegistros!: number
-  @Input() breadcrumbs: Link[] = []
-  @Input() returnUrl = ''
-  @Input() textToSearch = ''
-  url: string
-  innerWidth: number
+  @Input() header!: string;
+  @Input() headerSubtitle!: string;
+  @Input() textLast!: string;
+  @Input() class!: string;
+  @Input() totalRegistros!: number;
+  @Input() breadcrumbs: Link[] = [];
+  @Input() returnUrl = '';
+  @Input() textToSearch = '';
+  url: string;
+  innerWidth: number;
   constructor(
     private route: Router,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.url = isPlatformBrowser(this.platformId) ? window.location.href : ''
+    this.url = isPlatformBrowser(this.platformId) ? window.location.href : '';
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900
+      : 900;
   }
 
   ngOnInit() {}
   ngonChanges() {
-    this.url = window.location.href
+    this.url = window.location.href;
   }
   // Funcion que esconde el label "mostrando resultado...." dentro de la ficha de un item y la pagina de contactos.
   HideOnFicha() {
@@ -45,20 +45,20 @@ export class PageHeaderComponent {
       this.route.url.lastIndexOf('/inicio/productos/ficha/') == -1 &&
       this.route.url.lastIndexOf('/sitio/contacto') == -1
     ) {
-      return false
+      return false;
     } else {
-      return true
+      return true;
     }
   }
 
   decodedUrl(cadena: string) {
-    return decodeURIComponent(cadena)
+    return decodeURIComponent(cadena);
   }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900
+      : 900;
   }
 }

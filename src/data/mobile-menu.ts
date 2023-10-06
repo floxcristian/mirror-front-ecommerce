@@ -1,4 +1,4 @@
-import { MobileMenuItem } from '../app/shared/interfaces/mobile-menu-item'
+import { MobileMenuItem } from '../app/shared/interfaces/mobile-menu-item';
 
 export const mobileMenu: MobileMenuItem[] = [
   { type: 'link', label: 'Página Principal', url: ['/'] },
@@ -17,4 +17,4 @@ export const mobileMenu: MobileMenuItem[] = [
   { type: 'link', label: 'Acerca de nosotros', url: './site/about-us' },
   { type: 'link', label: 'Politica de envíos', url: './site/terms' },
   { type: 'link', label: 'Contacto', url: './site/contact-us' },
-]
+];

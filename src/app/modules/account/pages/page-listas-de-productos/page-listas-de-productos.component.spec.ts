@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PageListasDeProductosComponent } from './page-listas-de-productos.component'
+import { PageListasDeProductosComponent } from './page-listas-de-productos.component';
 
 describe('PageListasDeProductosComponent', () => {
-  let component: PageListasDeProductosComponent
-  let fixture: ComponentFixture<PageListasDeProductosComponent>
+  let component: PageListasDeProductosComponent;
+  let fixture: ComponentFixture<PageListasDeProductosComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [PageListasDeProductosComponent],
-    }).compileComponents()
-  }))
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PageListasDeProductosComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    fixture = TestBed.createComponent(PageListasDeProductosComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+    expect(component).toBeTruthy();
+  });
+});

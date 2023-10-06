@@ -4,13 +4,13 @@ export interface Order {
   // status: string;
   // total: string;
 
-  anio: string
-  mes: string
-  documento: string
-  fecha: string
-  neto: string
-  iva: string
-  total: string
-  sucursal: string
-  vendedor: string
+  anio: string;
+  mes: string;
+  documento: string;
+  fecha: string;
+  neto: string;
+  iva: string;
+  total: string;
+  sucursal: string;
+  vendedor: string;
 }

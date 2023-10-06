@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PorductoTrComponent } from './producto-tr.component'
+import { PorductoTrComponent } from './producto-tr.component';
 
 describe('PorductoTrComponent', () => {
-  let component: PorductoTrComponent
-  let fixture: ComponentFixture<PorductoTrComponent>
+  let component: PorductoTrComponent;
+  let fixture: ComponentFixture<PorductoTrComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [PorductoTrComponent],
-    }).compileComponents()
-  }))
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PorductoTrComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    fixture = TestBed.createComponent(PorductoTrComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+    expect(component).toBeTruthy();
+  });
+});

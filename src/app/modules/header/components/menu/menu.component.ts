@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core'
-import { NestedLink } from '../../../../shared/interfaces/nested-link'
+import { Component, Input, OnInit } from '@angular/core';
+import { NestedLink } from '../../../../shared/interfaces/nested-link';
 
 @Component({
   selector: 'app-header-menu',
@@ -7,8 +7,8 @@ import { NestedLink } from '../../../../shared/interfaces/nested-link'
   styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent implements OnInit {
-  @Input() layout: 'classic' | 'topbar' = 'classic'
-  @Input() items: NestedLink[] = []
+  @Input() layout: 'classic' | 'topbar' = 'classic';
+  @Input() items: NestedLink[] = [];
 
   constructor() {}
 

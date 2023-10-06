@@ -35,9 +35,7 @@ $local-item-margin: 3px;
     border-radius: 2px;
     background: $input-radio-label-default-bg;
     color: $input-radio-label-default-font-color;
-    transition:
-      background-color 0.2s,
-      color 0.2s;
+    transition: background-color 0.2s, color 0.2s;
   }
 
   input:not(:checked):not(:disabled) {

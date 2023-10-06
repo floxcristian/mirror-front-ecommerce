@@ -1,4 +1,4 @@
-import { FiltroMagico } from './../interfaces/filtro-magico.interface'
+import { FiltroMagico } from './../interfaces/filtro-magico.interface';
 /**
  * @author José Espinoza
  * @description Por el momento, la librería ng-select no permite buscar por grupo,
@@ -12,6 +12,6 @@ export const searchGroupItemFiltroMagico = (filtroMagico: FiltroMagico) => {
       (filtroMagico.opcionSelect?.(item) || '')
         .toLowerCase()
         .indexOf(searchTerm) > -1
-    )
-  }
-}
+    );
+  };
+};

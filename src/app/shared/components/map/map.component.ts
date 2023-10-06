@@ -10,18 +10,18 @@ import {
   ElementRef,
   NgZone,
   SimpleChanges,
-} from '@angular/core'
-import { tap, map, switchMap } from 'rxjs/operators'
+} from '@angular/core';
+import { tap, map, switchMap } from 'rxjs/operators';
 //import { fromPromise } from 'rxjs/observable/fromPromise';
-import { Observable, of } from 'rxjs'
+import { Observable, of } from 'rxjs';
 /*import { MapsAPILoader, MouseEvent } from '@agm/core';
 declare var google: any;*/
 
 export interface DireccionMap {
-  direccion: string
-  zona: string
-  lat?: string
-  lon?: string
+  direccion: string;
+  zona: string;
+  lat?: string;
+  lon?: string;
 }
 
 @Component({
@@ -30,20 +30,20 @@ export interface DireccionMap {
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit, OnChanges {
-  @Input() titulo!: string
-  @Input() tienda!: DireccionMap | null
-  @Input() autocompletado!: boolean
-  @Input() infoWindowContent!: string
-  @ViewChild('search', { static: true }) public searchElementRef!: ElementRef
+  @Input() titulo!: string;
+  @Input() tienda!: DireccionMap | null;
+  @Input() autocompletado!: boolean;
+  @Input() infoWindowContent!: string;
+  @ViewChild('search', { static: true }) public searchElementRef!: ElementRef;
 
-  lat: number = 0
-  lng: number = 0
-  zoom: number = 15
-  showSearchBar: boolean = true
-  geocoder: any
-  @Output() public geolocalizacion = new EventEmitter<any>()
-  @Output() public clearAdress = new EventEmitter<any>()
-  @Output() public setDireccion = new EventEmitter<any>()
+  lat: number = 0;
+  lng: number = 0;
+  zoom: number = 15;
+  showSearchBar: boolean = true;
+  geocoder: any;
+  @Output() public geolocalizacion = new EventEmitter<any>();
+  @Output() public clearAdress = new EventEmitter<any>();
+  @Output() public setDireccion = new EventEmitter<any>();
 
   // Temporal
   ngOnChanges(changes: SimpleChanges): void {}

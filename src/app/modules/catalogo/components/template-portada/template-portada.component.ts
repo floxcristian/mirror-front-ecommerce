@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core'
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-template-portada',
@@ -6,8 +6,8 @@ import { Component, OnInit, Input } from '@angular/core'
   styleUrls: ['./template-portada.component.scss'],
 })
 export class TemplatePortadaComponent implements OnInit {
-  @Input() objeto: any
-  @Input() innerWidth!: number
+  @Input() objeto: any;
+  @Input() innerWidth!: number;
   constructor() {}
 
   ngOnInit(): void {}

@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core'
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'slugify' })
 export class SlugifyPipe implements PipeTransform {
@@ -9,9 +9,9 @@ export class SlugifyPipe implements PipeTransform {
           .trim()
           .replace(/[^\w\-]+/g, ' ')
           .replace(/\s+/g, '-')
-      : str
+      : str;
   }
   isString(value: any) {
-    return typeof value === 'string'
+    return typeof value === 'string';
   }
 }

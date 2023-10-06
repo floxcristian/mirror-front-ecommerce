@@ -1,4 +1,4 @@
-import { NavigationLink } from '../app/shared/interfaces/navigation-link'
+import { NavigationLink } from '../app/shared/interfaces/navigation-link';
 
 export const navigation: NavigationLink[] = [
   {
@@ -156,4 +156,4 @@ export const navigation: NavigationLink[] = [
       ],
     },
   },
-]
+];

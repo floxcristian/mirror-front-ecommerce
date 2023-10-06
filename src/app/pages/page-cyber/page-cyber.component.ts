@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { BsModalService } from 'ngx-bootstrap/modal'
-import { ToastrService } from 'ngx-toastr'
-import { ResponseApi } from '../../shared/interfaces/response-api'
-import { ClientsService } from '../../shared/services/clients.service'
-import { rutValidator } from '../../shared/utils/utilidades'
-import { RegistroOkModalComponent } from '../components/registro-ok-modal/registro-ok-modal.component'
-declare var webkitSpeechRecognition: any
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { ToastrService } from 'ngx-toastr';
+import { ResponseApi } from '../../shared/interfaces/response-api';
+import { ClientsService } from '../../shared/services/clients.service';
+import { rutValidator } from '../../shared/utils/utilidades';
+import { RegistroOkModalComponent } from '../components/registro-ok-modal/registro-ok-modal.component';
+declare var webkitSpeechRecognition: any;
 
 @Component({
   selector: 'app-page-cyber',
@@ -14,12 +14,12 @@ declare var webkitSpeechRecognition: any
   styleUrls: ['./page-cyber.component.scss'],
 })
 export class PageCyberComponent implements OnInit {
-  formulario!: FormGroup
-  cargando = false
-  recognition: any
-  recognizing = false
-  public texto = ''
-  public textToSearch = ''
+  formulario!: FormGroup;
+  cargando = false;
+  recognition: any;
+  recognizing = false;
+  public texto = '';
+  public textToSearch = '';
   datos = {
     rut: '',
     nombre: '',
@@ -28,13 +28,13 @@ export class PageCyberComponent implements OnInit {
     camion: false,
     liviano: false,
     bus: false,
-  }
+  };
 
   constructor(
     private fb: FormBuilder,
     private toast: ToastrService,
     private clientsService: ClientsService,
-    private modalService: BsModalService,
+    private modalService: BsModalService
   ) {}
 
   ngOnInit() {
@@ -53,7 +53,7 @@ export class PageCyberComponent implements OnInit {
           Validators.required,
           Validators.maxLength(100),
           Validators.pattern(
-            /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/,
+            /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/
           ),
         ],
       ],
@@ -68,33 +68,33 @@ export class PageCyberComponent implements OnInit {
       camion: [this.datos.camion, []],
       liviano: [this.datos.liviano, []],
       bus: [this.datos.bus, []],
-    })
+    });
   }
 
   enviar() {
     if (this.cargando) {
-      return
+      return;
     }
 
-    this.cargando = true
+    this.cargando = true;
     this.clientsService
       .setFormularioCyber(this.formulario.value)
       .subscribe((resp: ResponseApi) => {
         if (resp.error) {
-          this.toast.error(resp.msg)
-          this.cargando = false
-          return
+          this.toast.error(resp.msg);
+          this.cargando = false;
+          return;
         }
 
-        this.cargando = false
+        this.cargando = false;
         const initialState = {
           nombre: this.datos.nombre.split(' ')[0],
-        }
-        this.formulario.reset()
+        };
+        this.formulario.reset();
         this.modalService.show(RegistroOkModalComponent, {
           initialState,
           class: 'mx-auto',
-        })
-      })
+        });
+      });
   }
 }

@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core'
-import { OwlOptions } from 'ngx-owl-carousel-o'
+import { Component, OnInit, Input } from '@angular/core';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 
 @Component({
   selector: 'app-template-menu-catalogo',
@@ -7,13 +7,13 @@ import { OwlOptions } from 'ngx-owl-carousel-o'
   styleUrls: ['./template-menu-catalogo.component.scss'],
 })
 export class TemplateMenuCatalogoComponent implements OnInit {
-  @Input() tags: any
-  @Input() origen: any
-  @Input() nameOrigen: any
-  @Input() tipoCatalogo: any
-  @Input() tipoDispositivo: any
+  @Input() tags: any;
+  @Input() origen: any;
+  @Input() nameOrigen: any;
+  @Input() tipoCatalogo: any;
+  @Input() tipoDispositivo: any;
 
-  customOptions!: OwlOptions
+  customOptions!: OwlOptions;
   constructor() {}
 
   async ngOnInit() {
@@ -40,15 +40,15 @@ export class TemplateMenuCatalogoComponent implements OnInit {
         },
       },
       nav: false,
-    }
+    };
   }
 
   irTag(index: any) {
     if (this.nameOrigen === 'ver-catalogo-flip') {
       if (this.tipoDispositivo !== 'smartphone') {
-        this.origen.cambiarPaginaPreview(index * 2 - 2)
+        this.origen.cambiarPaginaPreview(index * 2 - 2);
       } else {
-        this.origen.cambiarPaginaPreview(index)
+        this.origen.cambiarPaginaPreview(index);
       }
     }
   }

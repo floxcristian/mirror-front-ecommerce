@@ -34,8 +34,7 @@ $local-transition-duration: 0.15s;
   border-radius: 2px;
   background: $input-check-box-bg;
   box-shadow: $input-check-box-shadow;
-  transition:
-    background $local-transition-duration,
+  transition: background $local-transition-duration,
     box-shadow $local-transition-duration;
 }
 .input-check__icon {
@@ -45,8 +44,7 @@ $local-transition-duration: 0.15s;
   top: 2px;
   fill: $input-check-icon-color;
   transform: scale(0);
-  transition:
-    fill $local-transition-duration,
+  transition: fill $local-transition-duration,
     transform $local-transition-duration,
     visibility 0s $local-transition-duration;
 }

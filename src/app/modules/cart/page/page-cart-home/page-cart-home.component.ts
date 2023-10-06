@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core'
-import { environment } from '../../../../../environments/environment'
+import { Component, OnInit } from '@angular/core';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-page-cart-home',
@@ -7,7 +7,7 @@ import { environment } from '../../../../../environments/environment'
   styleUrls: ['./page-cart-home.component.scss'],
 })
 export class PageCartHomeComponent implements OnInit {
-  logoSrc = environment.logoSrc
+  logoSrc = environment.logoSrc;
   constructor() {}
 
   ngOnInit() {}

@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HeaderCatalogoComponent } from './header-catalogo.component'
+import { HeaderCatalogoComponent } from './header-catalogo.component';
 
 describe('HeaderCatalogoComponent', () => {
-  let component: HeaderCatalogoComponent
-  let fixture: ComponentFixture<HeaderCatalogoComponent>
+  let component: HeaderCatalogoComponent;
+  let fixture: ComponentFixture<HeaderCatalogoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [HeaderCatalogoComponent],
-    }).compileComponents()
-  }))
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HeaderCatalogoComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    fixture = TestBed.createComponent(HeaderCatalogoComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+    expect(component).toBeTruthy();
+  });
+});

@@ -1,4 +1,4 @@
-import { ProductFeaturesSection } from '../app/shared/interfaces/product'
+import { ProductFeaturesSection } from '../app/shared/interfaces/product';
 
 export const specification = [
   {
@@ -18,4 +18,4 @@ export const specification = [
       { name: 'Alto', value: '23.5 CM' },
     ],
   },
-]
+];

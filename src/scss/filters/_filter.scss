@@ -24,9 +24,7 @@ $local-transition-duration: 0.2s;
   line-height: 14px;
   border-radius: 2px;
   margin: 0 #{-$local-title-horizontal-padding};
-  transition:
-    background-color 0.2s,
-    fill 0.2s;
+  transition: background-color 0.2s, fill 0.2s;
   background: $filter-title-default-bg;
   // fill: $filter-title-default-arrow-color;
 
@@ -60,8 +58,7 @@ $local-transition-duration: 0.2s;
   visibility: hidden;
   height: 0;
   opacity: 0;
-  transition:
-    height $local-transition-duration,
+  transition: height $local-transition-duration,
     opacity $local-transition-duration,
     visibility 0s $local-transition-duration;
 }

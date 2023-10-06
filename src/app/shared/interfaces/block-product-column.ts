@@ -1,4 +1,4 @@
 export interface BlockProductColumn {
-  header: string
-  products: any[]
+  header: string;
+  products: any[];
 }

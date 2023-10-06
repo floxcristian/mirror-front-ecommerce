@@ -5,9 +5,9 @@ import {
   Output,
   EventEmitter,
   OnChanges,
-} from '@angular/core'
+} from '@angular/core';
 
-import { MobileMenuItem } from '../../../../shared/interfaces/mobile-menu-item'
+import { MobileMenuItem } from '../../../../shared/interfaces/mobile-menu-item';
 
 @Component({
   selector: 'app-mobile-categorias',
@@ -15,15 +15,15 @@ import { MobileMenuItem } from '../../../../shared/interfaces/mobile-menu-item'
   styleUrls: ['./mobile-categorias.component.scss'],
 })
 export class MobileCategoriasComponent {
-  @Input() links: any[] = []
-  @Input() level = 0
-  @Input() titulo = ''
+  @Input() links: any[] = [];
+  @Input() level = 0;
+  @Input() titulo = '';
 
-  @Output() itemClick: EventEmitter<MobileMenuItem> = new EventEmitter()
+  @Output() itemClick: EventEmitter<MobileMenuItem> = new EventEmitter();
 
   constructor() {}
 
   onItemClick(item: MobileMenuItem): void {
-    this.itemClick.emit(item)
+    this.itemClick.emit(item);
   }
 }

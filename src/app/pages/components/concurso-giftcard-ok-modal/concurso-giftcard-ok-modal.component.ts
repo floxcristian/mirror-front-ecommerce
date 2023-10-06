@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core'
-import { BsModalRef } from 'ngx-bootstrap/modal'
+import { Component, OnInit } from '@angular/core';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-concurso-giftcard-ok-modal',

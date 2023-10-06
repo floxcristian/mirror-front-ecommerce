@@ -1,6 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core'
-import { OwlOptions } from 'ngx-owl-carousel-o'
-import { DirectionService } from '../../../../shared/services/direction.service'
+import { Component, OnInit, Input } from '@angular/core';
+import { OwlOptions } from 'ngx-owl-carousel-o';
+import { DirectionService } from '../../../../shared/services/direction.service';
 
 @Component({
   selector: 'app-productos-catalog-tv',
@@ -8,7 +8,7 @@ import { DirectionService } from '../../../../shared/services/direction.service'
   styleUrls: ['./productos-catalog-tv.component.scss'],
 })
 export class ProductosCatalogTvComponent implements OnInit {
-  @Input() images: any
+  @Input() images: any;
 
   carouselOptions = {
     lazyLoad: true,
@@ -26,7 +26,7 @@ export class ProductosCatalogTvComponent implements OnInit {
       0: { items: 1 },
     },
     autoplaySpeed: 5000,
-  }
+  };
 
   constructor(private direction: DirectionService) {}
 

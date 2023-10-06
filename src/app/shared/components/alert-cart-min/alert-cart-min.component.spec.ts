@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AlertCartMinComponent } from './alert-cart-min.component'
+import { AlertCartMinComponent } from './alert-cart-min.component';
 
 describe('AlertCartMinComponent', () => {
-  let component: AlertCartMinComponent
-  let fixture: ComponentFixture<AlertCartMinComponent>
+  let component: AlertCartMinComponent;
+  let fixture: ComponentFixture<AlertCartMinComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AlertCartMinComponent],
-    }).compileComponents()
-  }))
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AlertCartMinComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    fixture = TestBed.createComponent(AlertCartMinComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+    expect(component).toBeTruthy();
+  });
+});

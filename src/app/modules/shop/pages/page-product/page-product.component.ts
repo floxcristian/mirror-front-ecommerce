@@ -4,29 +4,29 @@ import {
   Inject,
   OnInit,
   OnDestroy,
-} from '@angular/core'
-import { isPlatformBrowser, isPlatformServer } from '@angular/common'
-import { Product, ProductPrecio } from '../../../../shared/interfaces/product'
-import { ActivatedRoute, Router } from '@angular/router'
-import { categories } from '../../../../../data/shop-widget-categories'
-import { ProductsService } from '../../../../shared/services/products.service'
-import { ToastrService } from 'ngx-toastr'
-import { RootService } from '../../../../shared/services/root.service'
-import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe'
-import { Usuario } from '../../../../shared/interfaces/login'
-import { ResponseApi } from '../../../../shared/interfaces/response-api'
-import { SeoService } from '../../../../shared/services/seo.service'
-import { CartService } from '../../../../shared/services/cart.service'
-import { GeoLocationService } from '../../../../shared/services/geo-location.service'
-import { GeoLocation } from '../../../../shared/interfaces/geo-location'
-import { CanonicalService } from '../../../../shared/services/canonical.service'
-import { environment } from '../../../../../environments/environment'
-import { BuscadorService } from '../../../../shared/services/buscador.service'
-import { DirectionService } from '../../../../shared/services/direction.service'
-import { forkJoin } from 'rxjs'
-import { randomElements } from '../../../../shared/utils/utilidades'
-declare const $: any
-declare let fbq: any
+} from '@angular/core';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { Product, ProductPrecio } from '../../../../shared/interfaces/product';
+import { ActivatedRoute, Router } from '@angular/router';
+import { categories } from '../../../../../data/shop-widget-categories';
+import { ProductsService } from '../../../../shared/services/products.service';
+import { ToastrService } from 'ngx-toastr';
+import { RootService } from '../../../../shared/services/root.service';
+import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
+import { Usuario } from '../../../../shared/interfaces/login';
+import { ResponseApi } from '../../../../shared/interfaces/response-api';
+import { SeoService } from '../../../../shared/services/seo.service';
+import { CartService } from '../../../../shared/services/cart.service';
+import { GeoLocationService } from '../../../../shared/services/geo-location.service';
+import { GeoLocation } from '../../../../shared/interfaces/geo-location';
+import { CanonicalService } from '../../../../shared/services/canonical.service';
+import { environment } from '../../../../../environments/environment';
+import { BuscadorService } from '../../../../shared/services/buscador.service';
+import { DirectionService } from '../../../../shared/services/direction.service';
+import { forkJoin } from 'rxjs';
+import { randomElements } from '../../../../shared/utils/utilidades';
+declare const $: any;
+declare let fbq: any;
 
 @Component({
   selector: 'app-page-product',
@@ -34,31 +34,31 @@ declare let fbq: any
   styleUrls: ['./page-product.component.scss'],
 })
 export class PageProductComponent implements OnInit, OnDestroy {
-  categories = categories
-  product!: Product | undefined
-  recommendedProducts: Product[] = []
-  matrixProducts: Product[] = []
-  relatedProducts: Product[] = []
-  popularProducts: Product[] = []
-  mixProducts: Product[] = []
-  minItems = 5
-  stock: boolean = true
-  layout: 'standard' | 'columnar' | 'sidebar' = 'standard'
-  sidebarPosition: 'start' | 'end' = 'start' // For LTR scripts "start" is "left" and "end" is "right"
-  user: Usuario
-  isB2B: boolean
-  origen: string[] = []
-  innerWidth: number
-  window = window
+  categories = categories;
+  product!: Product | undefined;
+  recommendedProducts: Product[] = [];
+  matrixProducts: Product[] = [];
+  relatedProducts: Product[] = [];
+  popularProducts: Product[] = [];
+  mixProducts: Product[] = [];
+  minItems = 5;
+  stock: boolean = true;
+  layout: 'standard' | 'columnar' | 'sidebar' = 'standard';
+  sidebarPosition: 'start' | 'end' = 'start'; // For LTR scripts "start" is "left" and "end" is "right"
+  user: Usuario;
+  isB2B: boolean;
+  origen: string[] = [];
+  innerWidth: number;
+  window = window;
 
   paramsCategory = {
     firstCategory: '',
     secondCategory: '',
     thirdCategory: '',
-  }
-  breadcrumbs: any[] = []
+  };
+  breadcrumbs: any[] = [];
 
-  relleno: any[] = [1, 2, 3, 4]
+  relleno: any[] = [1, 2, 3, 4];
   carouselOptions = {
     items: 4,
     nav: true,
@@ -76,7 +76,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
       1100: { items: 4 },
       1366: { items: 4 },
     },
-  }
+  };
 
   acordion = [
     {
@@ -88,7 +88,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     {
       abierto: false,
     },
-  ]
+  ];
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -102,83 +102,88 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private cart: CartService,
     private geoLocationService: GeoLocationService,
     private canonicalService: CanonicalService,
-    private buscadorService: BuscadorService,
+    private buscadorService: BuscadorService
   ) {
     // cambio de sucursal
     this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
       if (this.product) {
-        this.cart.cargarPrecioEnProducto(this.product)
-        this.getMixProducts(this.product.sku)
-        this.getMatrixProducts(this.product.sku)
+        this.cart.cargarPrecioEnProducto(this.product);
+        this.getMixProducts(this.product.sku);
+        this.getMatrixProducts(this.product.sku);
       }
-    })
+    });
 
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900
+      : 900;
 
-    this.user = this.root.getDataSesionUsuario()
+    this.user = this.root.getDataSesionUsuario();
     this.isB2B =
       this.user.user_role === 'supervisor' ||
-      this.user.user_role === 'comprador'
+      this.user.user_role === 'comprador';
 
     this.route.data.subscribe((data: any) => {
-      this.layout = 'layout' in data ? data.layout : this.layout
+      this.layout = 'layout' in data ? data.layout : this.layout;
       this.sidebarPosition =
-        'sidebarPosition' in data ? data.sidebarPosition : this.sidebarPosition
-    })
+        'sidebarPosition' in data
+          ? data.sidebarPosition
+          : this.sidebarPosition;
+    });
 
     this.route.params.subscribe((params: any) => {
       // Seteamos el origen del ingreso a la ficha del producto.
-      let origenHistory: string[] = this.cart.getOrigenHistory()
-      this.origen = origenHistory.length > 0 ? origenHistory : ['link', '']
+      let origenHistory: string[] = this.cart.getOrigenHistory();
+      this.origen = origenHistory.length > 0 ? origenHistory : ['link', ''];
 
-      this.root.hideModalRefBuscador()
+      this.root.hideModalRefBuscador();
       if (params.id && params.id !== 'undefined') {
         if (params.firstCategory) {
-          this.paramsCategory.firstCategory = params.firstCategory
+          this.paramsCategory.firstCategory = params.firstCategory;
         }
 
         if (params.secondCategory) {
-          this.paramsCategory.secondCategory = params.secondCategory
+          this.paramsCategory.secondCategory = params.secondCategory;
         }
 
         if (params.thirdCategory) {
-          this.paramsCategory.thirdCategory = params.thirdCategory
+          this.paramsCategory.thirdCategory = params.thirdCategory;
         }
 
-        const sku = params.id.split('-').reverse()[0]
-        this.getDetailProduct(sku)
-        this.getMixProducts(sku)
-        this.getMatrixProducts(sku)
+        const sku = params.id.split('-').reverse()[0];
+        this.getDetailProduct(sku);
+        this.getMixProducts(sku);
+        this.getMatrixProducts(sku);
         this.productoService.getStockProduct(sku).subscribe((r: any) => {
-          let stockTienda = 0
+          let stockTienda = 0;
           r.map(async (stock: any) => {
-            stockTienda += stock.cantidad
-          })
-          stockTienda > 0 ? (this.stock = true) : (this.stock = false)
-        })
+            stockTienda += stock.cantidad;
+          });
+          stockTienda > 0 ? (this.stock = true) : (this.stock = false);
+        });
       } else {
-        this.router.navigate(['/inicio/**'])
+        this.router.navigate(['/inicio/**']);
       }
-    })
+    });
   }
 
   ngOnDestroy(): void {
     if (!this.buscadorService.isFiltroSeleccionado()) {
-      this.buscadorService.filtrosVisibles(true)
+      this.buscadorService.filtrosVisibles(true);
     }
   }
 
   ngOnInit(): void {
-    this.buscadorService.filtrosVisibles(false)
+    this.buscadorService.filtrosVisibles(false);
   }
 
   setBreadcrumbs(product: any) {
-    this.breadcrumbs = []
-    this.breadcrumbs.push({ label: 'Inicio', url: ['/', 'inicio'] })
+    this.breadcrumbs = [];
+    this.breadcrumbs.push({ label: 'Inicio', url: ['/', 'inicio'] });
     if (this.paramsCategory.firstCategory !== '') {
-      const cat = this.root.replaceAll(this.paramsCategory.firstCategory, /-/g)
+      const cat = this.root.replaceAll(
+        this.paramsCategory.firstCategory,
+        /-/g
+      );
       // tslint:disable-next-line: max-line-length
       this.breadcrumbs.push({
         label: this.capitalize.transform(cat),
@@ -190,14 +195,14 @@ export class PageProductComponent implements OnInit, OnDestroy {
           'categoria',
           this.paramsCategory.firstCategory,
         ],
-      })
+      });
     }
 
     if (this.paramsCategory.secondCategory !== '') {
       const cat = this.root.replaceAll(
         this.paramsCategory.secondCategory,
-        /-/g,
-      )
+        /-/g
+      );
       // tslint:disable-next-line: max-line-length
       this.breadcrumbs.push({
         label: this.capitalize.transform(cat),
@@ -210,11 +215,14 @@ export class PageProductComponent implements OnInit, OnDestroy {
           this.paramsCategory.firstCategory,
           this.paramsCategory.secondCategory,
         ],
-      })
+      });
     }
 
     if (this.paramsCategory.thirdCategory !== '') {
-      const cat = this.root.replaceAll(this.paramsCategory.thirdCategory, /-/g)
+      const cat = this.root.replaceAll(
+        this.paramsCategory.thirdCategory,
+        /-/g
+      );
       // tslint:disable-next-line: max-line-length
       this.breadcrumbs.push({
         label: this.capitalize.transform(cat),
@@ -228,58 +236,58 @@ export class PageProductComponent implements OnInit, OnDestroy {
           this.paramsCategory.secondCategory,
           this.paramsCategory.thirdCategory,
         ],
-      })
+      });
     }
 
     this.breadcrumbs.push({
       label: this.capitalize.transform(product.nombre),
       url: '',
-    })
+    });
   }
 
   getDetailProduct(sku: any) {
-    let params = null
-    const usuario = this.root.getDataSesionUsuario()
+    let params = null;
+    const usuario = this.root.getDataSesionUsuario();
 
     if (usuario != null) {
       params = {
         rut: usuario.rut,
-      }
+      };
     }
 
     this.productoService.obtieneDetalleProducto(sku, params).subscribe(
       (r: any) => {
         r.data.chassis == null || r.data.chassis == undefined
           ? (r.data.chassis = '')
-          : r.data.chassis
-        const producto: any = r.data
-        delete producto?.precio
+          : r.data.chassis;
+        const producto: any = r.data;
+        delete producto?.precio;
 
-        this.product = { ...producto }
+        this.product = { ...producto };
 
         if (this.product) {
-          this.cart.cargarPrecioEnProducto(this.product)
-          this.setMeta(this.product)
-          this.productFacebook(this.product)
-          this.setBreadcrumbs(this.product)
+          this.cart.cargarPrecioEnProducto(this.product);
+          this.setMeta(this.product);
+          this.productFacebook(this.product);
+          this.setBreadcrumbs(this.product);
         }
       },
       (error) => {
-        this.toastr.error('Error de conexión, para obtener los articulos')
-      },
-    )
+        this.toastr.error('Error de conexión, para obtener los articulos');
+      }
+    );
   }
 
   setMeta(product: Product) {
-    const slug = this.root.product(product.sku, product.nombre)
+    const slug = this.root.product(product.sku, product.nombre);
     const imagen =
       typeof product.images === 'undefined' || product.images.length == 0
         ? this.root.returnUrlNoImagen()
-        : product.images[0]['250'][0]
+        : product.images[0]['250'][0];
 
-    const nombre = this.root.limpiarNombres(product.nombre)
-    const descripcion = this.root.limpiarNombres(product.descripcion)
-    const descripcionFull = `${nombre} - ${descripcion}`
+    const nombre = this.root.limpiarNombres(product.nombre);
+    const descripcion = this.root.limpiarNombres(product.descripcion);
+    const descripcionFull = `${nombre} - ${descripcion}`;
 
     const meta = {
       title: this.capitalize.transform(nombre),
@@ -290,17 +298,17 @@ export class PageProductComponent implements OnInit, OnDestroy {
       type: 'product',
       keywords: descripcionFull,
       slug,
-    }
-    this.seoService.generarMetaTag(meta)
+    };
+    this.seoService.generarMetaTag(meta);
 
     if (isPlatformBrowser(this.platformId)) {
-      this.canonicalService.setCanonicalURL(location.href)
+      this.canonicalService.setCanonicalURL(location.href);
     }
 
     if (isPlatformServer(this.platformId)) {
       this.canonicalService.setCanonicalURL(
-        environment.canonical + this.router.url,
-      )
+        environment.canonical + this.router.url
+      );
     }
   }
 
@@ -314,7 +322,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
       content_type: 'product',
       value: product.precioCliente,
       currency: 'CLP',
-    })
+    });
   }
 
   getSuggestedProductos(sku: any) {
@@ -322,90 +330,90 @@ export class PageProductComponent implements OnInit, OnDestroy {
       listaSku: [sku],
       rut: '',
       cantidad: 10,
-    }
+    };
     if (this.user != null) {
-      obj.rut = this.user.rut
+      obj.rut = this.user.rut;
     }
   }
 
   getMatrixProducts(sku: any) {
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada()
+    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     let obj: any = {
       sku,
       rut: '',
       sucursal: tiendaSeleccionada?.codigo,
-    }
+    };
 
     if (this.user != null) {
-      obj.rut = this.user.rut
+      obj.rut = this.user.rut;
     }
 
     this.productoService.getMatrixProducts(obj).subscribe(
       (r: ResponseApi) => {
-        this.matrixProducts = r.data
+        this.matrixProducts = r.data;
       },
       (error) => {
         this.toastr.error(
-          'Error de conexión, para obtener los productos recomendados ',
-        )
-      },
-    )
+          'Error de conexión, para obtener los productos recomendados '
+        );
+      }
+    );
   }
 
   getRelatedProducts(sku: any) {
     let obj: any = {
       sku,
       rut: '',
-    }
+    };
 
     if (this.user != null) {
-      obj.rut = this.user.rut
+      obj.rut = this.user.rut;
     }
 
     this.productoService.getRelatedProducts(obj).subscribe(
       (r: ResponseApi) => {
-        this.relatedProducts = r.data
+        this.relatedProducts = r.data;
       },
       (error) => {
         this.toastr.error(
-          'Error de conexión, para obtener los productos recomendados ',
-        )
-      },
-    )
+          'Error de conexión, para obtener los productos recomendados '
+        );
+      }
+    );
   }
 
   getPopularProducts(sku: any) {
     this.productoService.getPropularProducts({ sku }).subscribe(
       (r: ResponseApi) => {
-        this.popularProducts = r.data
+        this.popularProducts = r.data;
       },
       (e) => {
         this.toastr.error(
-          'Error en la conexion para obtener productos populares: ' + e,
-        )
-      },
-    )
+          'Error en la conexion para obtener productos populares: ' + e
+        );
+      }
+    );
   }
 
   getMixProducts(sku: any) {
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada()
+    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
 
     const obj: any = {
       sku,
       rut: '',
       sucursal: tiendaSeleccionada?.codigo,
-    }
+    };
 
     const obj1: any = {
       listaSku: [sku],
       rut: '',
       sucursal: tiendaSeleccionada?.codigo,
       cantidad: 10,
-    }
+    };
 
     if (this.user != null) {
-      obj.rut = this.user.rut
-      obj1.rut = this.user.rut
+      obj.rut = this.user.rut;
+      obj1.rut = this.user.rut;
     }
 
     forkJoin([
@@ -413,63 +421,63 @@ export class PageProductComponent implements OnInit, OnDestroy {
       this.productoService.getRelatedProducts(obj),
       this.productoService.getRecommendedProductsList(obj1),
     ]).subscribe((resp: any[]) => {
-      this.mixProducts = []
+      this.mixProducts = [];
       if (!this.isB2B) {
-        resp[0].data.forEach((e: Product) => this.mixProducts.push(e))
+        resp[0].data.forEach((e: Product) => this.mixProducts.push(e));
       }
       randomElements(resp[1].data, 5).forEach((e: Product) =>
-        this.mixProducts.push(e),
-      )
+        this.mixProducts.push(e)
+      );
       randomElements(resp[2].data, 5).forEach((e: Product) =>
-        this.mixProducts.push(e),
-      )
-    })
+        this.mixProducts.push(e)
+      );
+    });
   }
 
   abrirTabEvaluacion() {
-    $('#descripcion-tab').removeClass('active')
-    $('#detallesTecnicos-tab').removeClass('active')
-    $('#evaluacion-tab').addClass('active')
+    $('#descripcion-tab').removeClass('active');
+    $('#detallesTecnicos-tab').removeClass('active');
+    $('#evaluacion-tab').addClass('active');
 
-    $('#descripcion').removeClass('active show')
-    $('#detallesTecnicos').removeClass('active show')
-    $('#evaluacion').addClass('active show')
+    $('#descripcion').removeClass('active show');
+    $('#detallesTecnicos').removeClass('active show');
+    $('#evaluacion').addClass('active show');
 
-    $('#evaluacion').tab('show')
-    document.querySelector('#ancla')?.scrollIntoView()
+    $('#evaluacion').tab('show');
+    document.querySelector('#ancla')?.scrollIntoView();
   }
   over(event: any) {
-    let el: any = event.target.parentNode
-    let clase: any = el.classList
+    let el: any = event.target.parentNode;
+    let clase: any = el.classList;
     while (!clase.contains('owl-item')) {
-      el = el.parentNode
-      clase = el.classList
+      el = el.parentNode;
+      clase = el.classList;
     }
 
-    el.style['box-shadow'] = '0 4px 4px 0 rgb(0 0 0 / 50%)'
+    el.style['box-shadow'] = '0 4px 4px 0 rgb(0 0 0 / 50%)';
   }
 
   leave(event: any) {
-    let el: any = event.target.parentNode
-    let clase: any = el.classList
+    let el: any = event.target.parentNode;
+    let clase: any = el.classList;
     while (!clase.contains('owl-item')) {
-      el = el.parentNode
-      clase = el.classList
+      el = el.parentNode;
+      clase = el.classList;
     }
 
-    el.style['box-shadow'] = 'none'
+    el.style['box-shadow'] = 'none';
   }
   onResize(event: any) {
-    this.innerWidth = event.target.innerWidth
+    this.innerWidth = event.target.innerWidth;
   }
 
   controlaChevron(indice: number) {
-    const control = this.acordion[indice].abierto
-    this.acordion.forEach((a) => (a.abierto = false))
+    const control = this.acordion[indice].abierto;
+    this.acordion.forEach((a) => (a.abierto = false));
     if (control) {
-      this.acordion[indice].abierto = false
+      this.acordion[indice].abierto = false;
     } else {
-      this.acordion[indice].abierto = true
+      this.acordion[indice].abierto = true;
     }
   }
 }

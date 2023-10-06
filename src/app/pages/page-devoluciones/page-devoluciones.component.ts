@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { ActivatedRoute, Router } from '@angular/router'
-import { isVacio, rutValidator } from '../../shared/utils/utilidades'
-import { ClientsService } from '../../shared/services/clients.service'
-import { ResponseApi } from '../../shared/interfaces/response-api'
-import { ToastrService } from 'ngx-toastr'
-import { DevolucionOkModalComponent } from '../components/devolucion-ok-modal/devolucion-ok-modal.component'
-import { BsModalService } from 'ngx-bootstrap/modal'
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { isVacio, rutValidator } from '../../shared/utils/utilidades';
+import { ClientsService } from '../../shared/services/clients.service';
+import { ResponseApi } from '../../shared/interfaces/response-api';
+import { ToastrService } from 'ngx-toastr';
+import { DevolucionOkModalComponent } from '../components/devolucion-ok-modal/devolucion-ok-modal.component';
+import { BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-page-devoluciones',
@@ -14,15 +14,15 @@ import { BsModalService } from 'ngx-bootstrap/modal'
   styleUrls: ['./page-devoluciones.component.scss'],
 })
 export class PageDevolucionesComponent implements OnInit {
-  formulario!: FormGroup
-  data!: string
-  cargando = false
-  rut = ''
-  nombre = ''
-  ov = ''
-  monto = ''
-  tipoDevolucion = ''
-  formaPago = ''
+  formulario!: FormGroup;
+  data!: string;
+  cargando = false;
+  rut = '';
+  nombre = '';
+  ov = '';
+  monto = '';
+  tipoDevolucion = '';
+  formaPago = '';
   bancos = [
     'Banco BICE',
     'Banco Consorcio',
@@ -43,14 +43,14 @@ export class PageDevolucionesComponent implements OnInit {
     'Rebobank',
     'Scotiabank',
     'Scotiabank Azul',
-  ]
+  ];
   tiposCuenta = [
     'Cuenta corriente',
     'Cuenta Rut',
     'Cuenta vista',
     'Cuenta de ahorro',
     'Chequera electrónica',
-  ]
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -58,36 +58,36 @@ export class PageDevolucionesComponent implements OnInit {
     private route: ActivatedRoute,
     private clientsService: ClientsService,
     private modalService: BsModalService,
-    private toast: ToastrService,
+    private toast: ToastrService
   ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      this.data = params['data']
+      this.data = params['data'];
 
       if (isVacio(this.data)) {
-        this.router.navigate(['/', 'inicio'])
+        this.router.navigate(['/', 'inicio']);
       }
 
       try {
-        const dataDecoded = atob(this.data)
-        const partes = dataDecoded.split(';')
+        const dataDecoded = atob(this.data);
+        const partes = dataDecoded.split(';');
 
         if (partes.length < 6) {
-          this.router.navigate(['/', 'inicio'])
+          this.router.navigate(['/', 'inicio']);
         }
 
-        this.rut = partes[0]
-        this.nombre = partes[1]
-        this.ov = partes[2]
-        this.monto = partes[3]
-        this.tipoDevolucion = partes[4]
-        this.formaPago = partes[5]
+        this.rut = partes[0];
+        this.nombre = partes[1];
+        this.ov = partes[2];
+        this.monto = partes[3];
+        this.tipoDevolucion = partes[4];
+        this.formaPago = partes[5];
       } catch (e) {
-        console.log(e)
-        this.router.navigate(['/', 'inicio'])
+        console.log(e);
+        this.router.navigate(['/', 'inicio']);
       }
-    })
+    });
 
     this.formulario = this.fb.group({
       nombre: [this.nombre, [Validators.required, Validators.maxLength(100)]],
@@ -113,7 +113,7 @@ export class PageDevolucionesComponent implements OnInit {
           Validators.required,
           Validators.maxLength(100),
           Validators.pattern(
-            /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/,
+            /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/
           ),
         ],
       ],
@@ -121,30 +121,30 @@ export class PageDevolucionesComponent implements OnInit {
       monto: [this.monto, [Validators.required]],
       tipoDevolucion: [this.tipoDevolucion, [Validators.required]],
       formaPago: [this.formaPago, [Validators.required]],
-    })
+    });
   }
 
   enviar() {
     if (this.cargando) {
-      return
+      return;
     }
 
-    this.cargando = true
+    this.cargando = true;
     this.clientsService
       .setDevolucion(this.formulario.value)
       .subscribe((resp: ResponseApi) => {
         if (resp.error) {
-          this.toast.error(resp.msg)
-          this.cargando = false
-          return
+          this.toast.error(resp.msg);
+          this.cargando = false;
+          return;
         }
 
-        this.cargando = false
-        this.formulario.reset()
+        this.cargando = false;
+        this.formulario.reset();
         this.modalService.show(DevolucionOkModalComponent, {
           class: 'mx-auto modal-devoluciones',
           ignoreBackdropClick: true,
-        })
-      })
+        });
+      });
   }
 }

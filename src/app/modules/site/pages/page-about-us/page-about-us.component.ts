@@ -1,5 +1,5 @@
-import { Component } from '@angular/core'
-import { DirectionService } from '../../../../shared/services/direction.service'
+import { Component } from '@angular/core';
+import { DirectionService } from '../../../../shared/services/direction.service';
 
 @Component({
   selector: 'app-about-us',
@@ -16,7 +16,7 @@ export class PageAboutUsComponent {
       0: { items: 1 },
     },
     rtl: this.direction.isRTL(),
-  }
+  };
 
   constructor(private direction: DirectionService) {}
 }

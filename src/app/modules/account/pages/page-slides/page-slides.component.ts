@@ -1,17 +1,17 @@
-import { Component, OnInit, TemplateRef } from '@angular/core'
-import { Usuario } from '../../../../shared/interfaces/login'
-import { Slide } from '../../../../shared/interfaces/slide'
-import { RootService } from '../../../../shared/services/root.service'
-import { SlidesService } from '../../../../shared/services/slides.service'
-import { ImagesService } from '../../../../shared/services/images.service'
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Usuario } from '../../../../shared/interfaces/login';
+import { Slide } from '../../../../shared/interfaces/slide';
+import { RootService } from '../../../../shared/services/root.service';
+import { SlidesService } from '../../../../shared/services/slides.service';
+import { ImagesService } from '../../../../shared/services/images.service';
 
-import { ToastrService } from 'ngx-toastr'
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal'
-import { FormGroup, FormBuilder, Validators } from '@angular/forms'
-import { Subject } from 'rxjs'
+import { ToastrService } from 'ngx-toastr';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Subject } from 'rxjs';
 
-import { HttpEvent, HttpEventType } from '@angular/common/http'
-import { Router } from '@angular/router'
+import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-page-slides',
@@ -19,28 +19,28 @@ import { Router } from '@angular/router'
   styleUrls: ['./page-slides.component.sass'],
 })
 export class PageSlidesComponent implements OnInit {
-  usuario: Usuario
-  slide!: Slide
-  selectedSlide!: Slide | null | any
-  editing = false
-  loadingData = true
-  slides: Slide[] = []
-  modalRef!: BsModalRef
-  form!: FormGroup
-  formUploads!: FormGroup
-  imgType: string = 'image_classic'
-  filename!: string
-  extension!: string
-  dtOptions: DataTables.Settings = {}
-  dtTrigger: Subject<any> = new Subject()
+  usuario: Usuario;
+  slide!: Slide;
+  selectedSlide!: Slide | null | any;
+  editing = false;
+  loadingData = true;
+  slides: Slide[] = [];
+  modalRef!: BsModalRef;
+  form!: FormGroup;
+  formUploads!: FormGroup;
+  imgType: string = 'image_classic';
+  filename!: string;
+  extension!: string;
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: Subject<any> = new Subject();
 
-  preview!: string
-  percentDone: any = 0
+  preview!: string;
+  percentDone: any = 0;
 
-  image1: any
-  image2: any
-  image3: any
-  image4: any
+  image1: any;
+  image2: any;
+  image3: any;
+  image4: any;
 
   constructor(
     private root: RootService,
@@ -49,28 +49,28 @@ export class PageSlidesComponent implements OnInit {
     private imagesService: ImagesService,
     private modalService: BsModalService,
     private fb: FormBuilder,
-    public router: Router,
+    public router: Router
   ) {
-    this.usuario = this.root.getDataSesionUsuario()
+    this.usuario = this.root.getDataSesionUsuario();
   }
 
   ngOnInit() {
-    this.dtOptions = this.root.simpleDtOptions
-    this.clearForm()
-    this.clearFormUploads()
+    this.dtOptions = this.root.simpleDtOptions;
+    this.clearForm();
+    this.clearFormUploads();
 
     this.slidesService.obtieneSlides().subscribe(
       (r: any) => {
-        this.slides = r.data
-        this.loadingData = false
-        this.dtTrigger.next(null)
+        this.slides = r.data;
+        this.loadingData = false;
+        this.dtTrigger.next(null);
       },
       (error) => {
-        console.log(error)
-        this.toastr.error('Error de conexión, para obtener diapositivas')
-        this.loadingData = false
-      },
-    )
+        console.log(error);
+        this.toastr.error('Error de conexión, para obtener diapositivas');
+        this.loadingData = false;
+      }
+    );
   }
 
   clearForm() {
@@ -81,10 +81,10 @@ export class PageSlidesComponent implements OnInit {
       text: [''],
       alt: [''],
       btn_url: [''],
-    })
+    });
 
-    this.selectedSlide = null
-    this.editing = false
+    this.selectedSlide = null;
+    this.editing = false;
   }
 
   clearFormUploads() {
@@ -94,190 +94,190 @@ export class PageSlidesComponent implements OnInit {
       name: [''],
       avatar: [''],
       btn_url: [''],
-    })
+    });
 
-    this.selectedSlide = null
-    this.editing = false
+    this.selectedSlide = null;
+    this.editing = false;
   }
 
   openForm(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template, {
       backdrop: 'static',
       keyboard: false,
-    })
+    });
   }
 
   openModalUploadImage(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template)
+    this.modalRef = this.modalService.show(template);
   }
 
   select(slide: any) {
-    this.editing = true
-    this.selectedSlide = slide
-    this.form.patchValue(slide)
+    this.editing = true;
+    this.selectedSlide = slide;
+    this.form.patchValue(slide);
   }
 
   selectUploads(slide: any) {
-    this.preview = ''
-    this.editing = true
-    this.selectedSlide = slide
-    this.formUploads.patchValue(slide)
+    this.preview = '';
+    this.editing = true;
+    this.selectedSlide = slide;
+    this.formUploads.patchValue(slide);
   }
 
   delete(slide: any) {
     if (confirm('Esta seguro de eliminar la diapositiva seleccionada ?')) {
-      slide['id'] = slide['_id']
+      slide['id'] = slide['_id'];
       this.slidesService.deleteSlide(slide).subscribe((r: any) => {
-        this.toastr.success(r.msg)
-        this.clearForm()
+        this.toastr.success(r.msg);
+        this.clearForm();
         this.slidesService.obtieneSlides().subscribe(
           (r: any) => {
-            this.slides = r.data
-            this.loadingData = false
+            this.slides = r.data;
+            this.loadingData = false;
           },
           (error) => {
-            console.log(error)
-            this.toastr.error('Error de conexión, para obtener diapositivas')
-            this.loadingData = false
-          },
-        )
-      })
+            console.log(error);
+            this.toastr.error('Error de conexión, para obtener diapositivas');
+            this.loadingData = false;
+          }
+        );
+      });
     }
   }
 
   onSubmit(data: any) {
     if (this.formUploads.valid) {
       if (this.selectedSlide) {
-        data['id'] = data['_id']
+        data['id'] = data['_id'];
 
         this.slidesService.updateSlide(data).subscribe(
           () => {
-            this.toastr.success('Diapositiva actualizada exitosamente')
-            this.modalRef.hide()
-            this.clearForm()
+            this.toastr.success('Diapositiva actualizada exitosamente');
+            this.modalRef.hide();
+            this.clearForm();
 
             this.slidesService.obtieneSlides().subscribe(
               (r: any) => {
-                this.slides = r.data
-                this.loadingData = false
-                this.dtTrigger.next(null)
+                this.slides = r.data;
+                this.loadingData = false;
+                this.dtTrigger.next(null);
               },
               (error) => {
-                console.log(error)
+                console.log(error);
                 this.toastr.error(
-                  'Error de conexión, para obtener diapositivas',
-                )
-                this.loadingData = false
-              },
-            )
+                  'Error de conexión, para obtener diapositivas'
+                );
+                this.loadingData = false;
+              }
+            );
           },
           (error) => {
-            this.toastr.error('Error de conexión, para crear diapositivas')
-            this.loadingData = false
-          },
-        )
+            this.toastr.error('Error de conexión, para crear diapositivas');
+            this.loadingData = false;
+          }
+        );
       } else {
         this.slidesService.crearSlide(data).subscribe(
           () => {
-            this.toastr.success('Diapositiva creada exitosamente')
-            this.modalRef.hide()
-            this.clearForm()
+            this.toastr.success('Diapositiva creada exitosamente');
+            this.modalRef.hide();
+            this.clearForm();
 
             this.slidesService.obtieneSlides().subscribe(
               (r: any) => {
-                this.slides = r.data
-                this.loadingData = false
-                this.dtTrigger.next(null)
+                this.slides = r.data;
+                this.loadingData = false;
+                this.dtTrigger.next(null);
               },
               (error) => {
-                console.log(error)
+                console.log(error);
                 this.toastr.error(
-                  'Error de conexión, para obtener diapositivas',
-                )
-                this.loadingData = false
-              },
-            )
+                  'Error de conexión, para obtener diapositivas'
+                );
+                this.loadingData = false;
+              }
+            );
           },
           (error) => {
-            this.toastr.error('Error de conexión, para crear diapositivas')
-            this.loadingData = false
-          },
-        )
+            this.toastr.error('Error de conexión, para crear diapositivas');
+            this.loadingData = false;
+          }
+        );
       }
     } else {
-      this.toastr.warning('Debe completar todos los campos')
+      this.toastr.warning('Debe completar todos los campos');
     }
   }
 
   // file uploading
 
   uploadFile(event: any) {
-    const file = (event.target as HTMLInputElement).files?.[0] as File
-    this.extension = file.name.split('.')[file.name.split('.').length - 1]
+    const file = (event.target as HTMLInputElement).files?.[0] as File;
+    this.extension = file.name.split('.')[file.name.split('.').length - 1];
 
     this.formUploads.patchValue({
       avatar: file,
-    })
-    this.formUploads.get('avatar')?.updateValueAndValidity()
+    });
+    this.formUploads.get('avatar')?.updateValueAndValidity();
 
     // File Preview
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onload = () => {
-      this.preview = reader.result as string
-    }
-    reader.readAsDataURL(file)
+      this.preview = reader.result as string;
+    };
+    reader.readAsDataURL(file);
   }
 
   submitForm() {
     this.filename =
-      this.selectedSlide['_id'] + '_' + this.imgType + '.' + this.extension
+      this.selectedSlide['_id'] + '_' + this.imgType + '.' + this.extension;
 
     this.imagesService
       .uploadImage(
         this.selectedSlide['_id'],
         this.filename,
         this.imgType,
-        this.formUploads.value.avatar,
+        this.formUploads.value.avatar
       )
       .subscribe((event: HttpEvent<any>) => {
         switch (event.type) {
           case HttpEventType.Sent:
-            break
+            break;
 
           case HttpEventType.ResponseHeader:
-            break
+            break;
 
           case HttpEventType.UploadProgress:
             this.percentDone = Math.round(
-              (event.loaded / (event.total || 1)) * 100,
-            )
+              (event.loaded / (event.total || 1)) * 100
+            );
 
-            break
+            break;
 
           case HttpEventType.Response:
-            this.percentDone = false
-            this.toastr.success('Datos actualizados!')
+            this.percentDone = false;
+            this.toastr.success('Datos actualizados!');
 
-            this.loadingData = true
+            this.loadingData = true;
             this.slidesService.obtieneSlides().subscribe(
               (r: any) => {
-                this.slides = r.data
-                this.loadingData = false
-                this.modalRef.hide()
-                this.dtTrigger.next(null)
-                this.router.navigate(['/mi-cuenta', 'diapositivas'])
+                this.slides = r.data;
+                this.loadingData = false;
+                this.modalRef.hide();
+                this.dtTrigger.next(null);
+                this.router.navigate(['/mi-cuenta', 'diapositivas']);
               },
               (error) => {
-                console.log(error)
+                console.log(error);
                 this.toastr.error(
-                  'Error de conexión, para obtener diapositivas',
-                )
-                this.loadingData = false
-              },
-            )
-            break
+                  'Error de conexión, para obtener diapositivas'
+                );
+                this.loadingData = false;
+              }
+            );
+            break;
         }
-      })
+      });
   }
 
   onSubmitUploads(value: any) {}

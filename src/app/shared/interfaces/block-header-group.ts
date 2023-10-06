@@ -1,4 +1,4 @@
 export interface BlockHeaderGroup {
-  name: string
-  current: boolean
+  name: string;
+  current: boolean;
 }

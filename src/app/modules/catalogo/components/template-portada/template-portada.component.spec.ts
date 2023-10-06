@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TemplatePortadaComponent } from './template-portada.component'
+import { TemplatePortadaComponent } from './template-portada.component';
 
 describe('TemplatePortadaComponent', () => {
-  let component: TemplatePortadaComponent
-  let fixture: ComponentFixture<TemplatePortadaComponent>
+  let component: TemplatePortadaComponent;
+  let fixture: ComponentFixture<TemplatePortadaComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [TemplatePortadaComponent],
-    }).compileComponents()
-  }))
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TemplatePortadaComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    fixture = TestBed.createComponent(TemplatePortadaComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+    expect(component).toBeTruthy();
+  });
+});

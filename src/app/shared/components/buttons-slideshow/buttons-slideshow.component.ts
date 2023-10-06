@@ -1,7 +1,7 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core'
-import { PageHomeService } from '../../../modules/page-home-cms/services/pageHome.service'
-import { DirectionService } from '../../services/direction.service'
-import { isPlatformBrowser } from '@angular/common'
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { PageHomeService } from '../../../modules/page-home-cms/services/pageHome.service';
+import { DirectionService } from '../../services/direction.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-buttons-slideshow',
@@ -9,10 +9,10 @@ import { isPlatformBrowser } from '@angular/common'
   styleUrls: ['./buttons-slideshow.component.scss'],
 })
 export class ButtonsSlideshowComponent implements OnInit {
-  botones1: any[] = []
-  screenWidth: any
-  screenHeight: any
-  style: any = {}
+  botones1: any[] = [];
+  screenWidth: any;
+  screenHeight: any;
+  style: any = {};
 
   options = {
     lazyLoad: true,
@@ -30,28 +30,28 @@ export class ButtonsSlideshowComponent implements OnInit {
     },
     rtl: this.direction.isRTL(),
     autoplaySpeed: 3000,
-  }
+  };
 
   constructor(
     private pagehomeService: PageHomeService,
     private direction: DirectionService,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
-      : 900
+      : 900;
     this.screenHeight = isPlatformBrowser(this.platformId)
       ? window.innerHeight
-      : 900
+      : 900;
   }
 
   ngOnInit() {
-    this.getCajaValor()
+    this.getCajaValor();
   }
 
   async getCajaValor() {
     await this.pagehomeService.getCajaValor().subscribe((data: any) => {
-      this.botones1 = data.data
-    })
+      this.botones1 = data.data;
+    });
   }
 }

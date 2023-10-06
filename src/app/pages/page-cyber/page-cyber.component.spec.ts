@@ -1,24 +1,24 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PageCyberComponent } from './page-cyber.component'
+import { PageCyberComponent } from './page-cyber.component';
 
 describe('PageCyberComponent', () => {
-  let component: PageCyberComponent
-  let fixture: ComponentFixture<PageCyberComponent>
+  let component: PageCyberComponent;
+  let fixture: ComponentFixture<PageCyberComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PageCyberComponent],
-    }).compileComponents()
-  })
+    }).compileComponents();
+  });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PageCyberComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    fixture = TestBed.createComponent(PageCyberComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy()
-  })
-})
+    expect(component).toBeTruthy();
+  });
+});

@@ -1,13 +1,13 @@
-import { searchGroupItemFiltroMagico } from './functions/search-group-item.filtro-magico'
-import { FilterNewFilterParam } from './interfaces/filtro-magico-filter-param.interface'
-import { FilterBridgeService } from './services/filter-bridge/filter-bridge.service'
-import { Observable, of, Subscription } from 'rxjs'
+import { searchGroupItemFiltroMagico } from './functions/search-group-item.filtro-magico';
+import { FilterNewFilterParam } from './interfaces/filtro-magico-filter-param.interface';
+import { FilterBridgeService } from './services/filter-bridge/filter-bridge.service';
+import { Observable, of, Subscription } from 'rxjs';
 import {
   FiltrosMagicos,
   FiltroMagico,
-} from './interfaces/filtro-magico.interface'
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core'
-import { v4 as uuidv4 } from 'uuid'
+} from './interfaces/filtro-magico.interface';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-filtro-magico',
@@ -15,131 +15,131 @@ import { v4 as uuidv4 } from 'uuid'
   styleUrls: ['./filtro-magico.component.scss'],
 })
 export class FiltroMagicoComponent implements OnInit {
-  @Input('filtros') filtrosMagicos!: FiltrosMagicos
+  @Input('filtros') filtrosMagicos!: FiltrosMagicos;
 
   /**
    * ESTOS PARÁMETROS INPUT A CONTINUACIÓN SON DE USO INTERNO PARA EL DATATABLE
    */
   // Solo para identificarlo en filter-bridge (uso interno)
-  @Input('id') id: string = ''
-  @Input() emitirFiltrosDefecto: boolean = true
+  @Input('id') id: string = '';
+  @Input() emitirFiltrosDefecto: boolean = true;
   // en una relación master-slave, el master busca los valores de los select y alimenta a los slaves
-  @Input() isMaster: boolean = true
-  @Input() closeOnSelect: boolean = false
+  @Input() isMaster: boolean = true;
+  @Input() closeOnSelect: boolean = false;
 
-  @Output() onFiltrosCambiados = new EventEmitter<any>()
-  @Output() onFiltrosDefectoEjecutados = new EventEmitter<any>()
-  @Output() onBotonFiltrar = new EventEmitter<any>()
-  @Output() onFiltrosModelCambiados = new EventEmitter<any>()
+  @Output() onFiltrosCambiados = new EventEmitter<any>();
+  @Output() onFiltrosDefectoEjecutados = new EventEmitter<any>();
+  @Output() onBotonFiltrar = new EventEmitter<any>();
+  @Output() onFiltrosModelCambiados = new EventEmitter<any>();
 
-  internalId: string
+  internalId: string;
   // Resultado de los filtros a enviarse al exterior
-  filtrosModel: any = {}
+  filtrosModel: any = {};
   // Cada arreglo de los select se almacena aquí
-  filtrosValores: any = {}
+  filtrosValores: any = {};
   // Bind que se hace de lo seleccionado al component html ng-select
-  filtrosBind: any = {}
+  filtrosBind: any = {};
 
   // Define desde dónde puede comenzar la fecha 'hasta' de cada rango-fecha
-  rangosFechaMinimos: any = {}
-  minYear = 1910 // Solo filtra si el año es al menos 'minYear'
+  rangosFechaMinimos: any = {};
+  minYear = 1910; // Solo filtra si el año es al menos 'minYear'
 
-  filterValores$!: Subscription
-  filterSubcription$!: Subscription
-  filterNewParams$!: Subscription
+  filterValores$!: Subscription;
+  filterSubcription$!: Subscription;
+  filterNewParams$!: Subscription;
 
-  searchGroupItemFiltroMagicoFn = searchGroupItemFiltroMagico
+  searchGroupItemFiltroMagicoFn = searchGroupItemFiltroMagico;
 
   constructor(private filterBridgeService: FilterBridgeService) {
-    this.internalId = uuidv4()
+    this.internalId = uuidv4();
   }
 
   async ngOnInit(): Promise<void> {
-    this.subscribeToBindChanges()
+    this.subscribeToBindChanges();
     if (this.isMaster) {
-      this.subscribeToNewFilterParams()
+      this.subscribeToNewFilterParams();
     }
-    this.prepararDatosVacios()
+    this.prepararDatosVacios();
     if (this.isMaster) {
-      await this.prepararValoresFiltrosAsMaster()
+      await this.prepararValoresFiltrosAsMaster();
     } else {
-      await this.prepararValoresFiltrosAsSlave()
+      await this.prepararValoresFiltrosAsSlave();
     }
-    await this.aplicarFiltrosDefecto()
+    await this.aplicarFiltrosDefecto();
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeToChanges()
+    this.unsubscribeToChanges();
   }
 
   prepararDatosVacios() {
     for (let i = 0; i < this.filtrosMagicos.filtros.length; i++) {
-      const f = this.filtrosMagicos.filtros[i]
+      const f = this.filtrosMagicos.filtros[i];
       if (
         f.tipo === 'dropdown-input' ||
         f.tipo === 'dropdown-select-multiple'
       ) {
-        this.filtrosModel[f.key] = { dropdown: null, valor: null }
+        this.filtrosModel[f.key] = { dropdown: null, valor: null };
         if (f.tipo === 'dropdown-select-multiple') {
-          this.filtrosValores[f.key] = []
+          this.filtrosValores[f.key] = [];
         }
       } else if (f.tipo === 'rango-fechas') {
-        this.filtrosModel[f.key] = { desde: null, hasta: null }
+        this.filtrosModel[f.key] = { desde: null, hasta: null };
         this.filtrosBind[f.key] = {
           desde: null,
           hasta: null,
           llamarFiltro: true,
-        }
+        };
       } else {
-        this.filtrosModel[f.key] = null
+        this.filtrosModel[f.key] = null;
       }
     }
   }
 
   async prepararValoresFiltrosAsMaster() {
-    let promises = []
+    let promises = [];
     for (let i = 0; i < this.filtrosMagicos.filtros.length; i++) {
-      const f = this.filtrosMagicos.filtros[i]
+      const f = this.filtrosMagicos.filtros[i];
       if (f.tipo === 'select' || f.tipo === 'select-multiple') {
-        promises.push(this.valores(f.valoresSelect).toPromise())
+        promises.push(this.valores(f.valoresSelect).toPromise());
       } else if (
         f.tipo === 'dropdown-input' ||
         f.tipo === 'dropdown-select-multiple'
       ) {
         if (f.tipo === 'dropdown-select-multiple') {
-          promises.push(this.valores(f.valoresSelect).toPromise())
+          promises.push(this.valores(f.valoresSelect).toPromise());
         }
         if (
           f.defectoDropdown !== null ||
           typeof f.defectoDropdown !== 'undefined'
         ) {
-          promises.push(this.valores(f.valoresDropdown).toPromise())
+          promises.push(this.valores(f.valoresDropdown).toPromise());
         }
       }
     }
-    let index = 0
-    const result = await Promise.all(promises)
+    let index = 0;
+    const result = await Promise.all(promises);
     for (let i = 0; i < this.filtrosMagicos.filtros.length; i++) {
-      const f = this.filtrosMagicos.filtros[i]
+      const f = this.filtrosMagicos.filtros[i];
       if (f.tipo === 'select' || f.tipo === 'select-multiple') {
-        this.filtrosBind[f.key] = []
-        this.filtrosValores[f.key] = result[index++]
+        this.filtrosBind[f.key] = [];
+        this.filtrosValores[f.key] = result[index++];
       } else if (
         f.tipo === 'dropdown-input' ||
         f.tipo === 'dropdown-select-multiple'
       ) {
-        this.filtrosModel[f.key] = { dropdown: null, valor: null }
+        this.filtrosModel[f.key] = { dropdown: null, valor: null };
         if (f.tipo === 'dropdown-select-multiple') {
-          this.filtrosBind[f.key] = []
-          this.filtrosValores[f.key] = result[index++]
+          this.filtrosBind[f.key] = [];
+          this.filtrosValores[f.key] = result[index++];
         }
         if (
           f.defectoDropdown !== null ||
           typeof f.defectoDropdown !== 'undefined'
         ) {
-          const valoresDropdown = result[index++]
+          const valoresDropdown = result[index++];
           this.filtrosModel[f.key].dropdown =
-            valoresDropdown[f.defectoDropdown || 0]
+            valoresDropdown[f.defectoDropdown || 0];
         }
       }
     }
@@ -148,61 +148,61 @@ export class FiltroMagicoComponent implements OnInit {
       this.internalId,
       this.filtrosModel,
       this.filtrosValores,
-      this,
-    )
+      this
+    );
   }
 
   async prepararValoresFiltrosAsSlave() {
     if (this.id) {
-      const filtroMagicoKeys = this.filtrosMagicos.filtros.map((f) => f.key)
+      const filtroMagicoKeys = this.filtrosMagicos.filtros.map((f) => f.key);
       this.filterValores$ = this.filterBridgeService
         .getFilterValores()
         .subscribe((data) => {
           if (this.id === data.tag && this.internalId !== data.internalTag) {
             Object.keys(data.filtrosValores).forEach((key) => {
               if (filtroMagicoKeys.includes(key)) {
-                this.filtrosValores[key] = data.filtrosValores[key]
+                this.filtrosValores[key] = data.filtrosValores[key];
               }
-            })
+            });
             Object.keys(data.filtrosModal).forEach((key) => {
               if (filtroMagicoKeys.includes(key)) {
                 if (
                   data.filtrosModal[key] &&
                   data.filtrosModal[key].hasOwnProperty('dropdown')
                 ) {
-                  this.filtrosModel[key] = data.filtrosModal[key]
+                  this.filtrosModel[key] = data.filtrosModal[key];
                 }
               }
-            })
+            });
           }
-        })
+        });
     }
   }
 
   async aplicarFiltrosDefecto() {
     for (let i = 0; i < this.filtrosMagicos.filtros.length; i++) {
-      const f = this.filtrosMagicos.filtros[i]
+      const f = this.filtrosMagicos.filtros[i];
       if (!f.valorDefecto) {
-        continue
+        continue;
       }
-      const data = await f.valorDefecto()
+      const data = await f.valorDefecto();
       if (!data) {
-        continue
+        continue;
       }
       if (f.tipo === 'select' || f.tipo === 'select-multiple') {
-        const params = (data.params || []).map((x: any) => x.toString())
+        const params = (data.params || []).map((x: any) => x.toString());
         const filtered = data.key
           ? (this.filtrosValores[f.key] || []).filter((resp: any) =>
-              params.includes(resp[data.key].toString()),
+              params.includes(resp[data.key].toString())
             )
           : (this.filtrosValores[f.key] || []).filter((resp: any) =>
-              params.includes(resp.toString()),
-            )
+              params.includes(resp.toString())
+            );
         if (filtered.length > 0) {
           this.filtrosModel[f.key] =
-            f.tipo === 'select' ? filtered[0] : filtered
+            f.tipo === 'select' ? filtered[0] : filtered;
           this.filtrosBind[f.key] =
-            f.tipo === 'select' ? filtered[0] : filtered
+            f.tipo === 'select' ? filtered[0] : filtered;
         }
       } else if (f.tipo === 'rango-fechas') {
         this.filtrosBind[f.key] = {
@@ -211,23 +211,23 @@ export class FiltroMagicoComponent implements OnInit {
             ? data.params[1].toISOString().slice(0, 10)
             : undefined,
           llamarFiltro: false,
-        }
+        };
         this.filtrosModel[f.key] = {
           desde: this.filtrosBind[f.key]['desde'],
           hasta: this.filtrosBind[f.key]['hasta'],
-        }
+        };
       } else if (f.tipo === 'producto-multiple') {
-        this.filtrosBind[f.key] = [...data.params]
+        this.filtrosBind[f.key] = [...data.params];
       } else if (f.tipo === 'select-search-multiple') {
-        this.filtrosBind[f.key] = [...data.params]
-        this.filtrosModel[f.key] = [...data.params]
+        this.filtrosBind[f.key] = [...data.params];
+        this.filtrosModel[f.key] = [...data.params];
       }
     }
     if (this.emitirFiltrosDefecto) {
-      this.filtrosCambiados(true)
-      this.onFiltrosDefectoEjecutados.emit(this.filtrosModel)
+      this.filtrosCambiados(true);
+      this.onFiltrosDefectoEjecutados.emit(this.filtrosModel);
     } else {
-      this.onFiltrosModelCambiados.emit(this.filtrosModel)
+      this.onFiltrosModelCambiados.emit(this.filtrosModel);
     }
   }
 
@@ -241,84 +241,84 @@ export class FiltroMagicoComponent implements OnInit {
             this.internalId !== response.internalTag
           ) {
             for (let i = 0; i < this.filtrosMagicos.filtros.length; i++) {
-              const f = this.filtrosMagicos.filtros[i]
+              const f = this.filtrosMagicos.filtros[i];
               let dataArr = response.nuevosFiltros.filter(
-                (x) => x.filterKey === f.key,
-              )
+                (x) => x.filterKey === f.key
+              );
               if (!dataArr || dataArr.length === 0) {
-                continue
+                continue;
               }
-              let data = dataArr[0]
+              let data = dataArr[0];
               if (f.tipo === 'select' || f.tipo === 'select-multiple') {
-                const params = data.params.map((x) => x.toString())
+                const params = data.params.map((x) => x.toString());
                 const filteredValores = data.key
                   ? (this.filtrosValores[f.key] || []).filter((resp: any) =>
-                      params.includes(resp[data.key || ''].toString()),
+                      params.includes(resp[data.key || ''].toString())
                     )
                   : (this.filtrosValores[f.key] || []).filter((resp: any) =>
-                      params.includes(resp.toString()),
-                    )
+                      params.includes(resp.toString())
+                    );
                 if (filteredValores.length > 0) {
                   this.filtrosModel[f.key] =
-                    f.tipo === 'select' ? filteredValores[0] : filteredValores
+                    f.tipo === 'select' ? filteredValores[0] : filteredValores;
                   this.filtrosBind[f.key] =
-                    f.tipo === 'select' ? filteredValores[0] : filteredValores
+                    f.tipo === 'select' ? filteredValores[0] : filteredValores;
                 }
               } else if (f.tipo === 'rango-fechas') {
                 this.filtrosBind[f.key] = {
                   desde: data.params[0].toISOString().slice(0, 10),
                   hasta: data.params[1].toISOString().slice(0, 10),
                   llamarFiltro: false,
-                }
+                };
                 this.filtrosModel[f.key] = {
                   desde: this.filtrosBind[f.key]['desde'],
                   hasta: this.filtrosBind[f.key]['hasta'],
-                }
+                };
               }
             }
-            this.filtrosCambiados()
+            this.filtrosCambiados();
           }
-        })
+        });
     }
   }
 
   valores(valores: any): Observable<any> {
     if (valores instanceof Array) {
-      return of(valores)
+      return of(valores);
     }
-    return valores
+    return valores;
   }
 
   selectChanged(key: string, $event: any) {
-    this.filtrosModel[key] = $event
-    this.filtrosCambiados()
+    this.filtrosModel[key] = $event;
+    this.filtrosCambiados();
   }
 
   selectSearchChanged(key: string, $event: any) {
-    this.filtrosModel[key] = $event
-    this.filtrosBind[key] = $event
-    this.filtrosCambiados()
+    this.filtrosModel[key] = $event;
+    this.filtrosBind[key] = $event;
+    this.filtrosCambiados();
   }
 
   dropdownChanged(key: string, item: any, $event: any) {
-    this.filtrosModel[key].dropdown = item
+    this.filtrosModel[key].dropdown = item;
     if (this.filtrosModel[key].valor || this.filtrosModel[key].valor == '0') {
-      this.filtrosCambiados()
+      this.filtrosCambiados();
     }
-    $event.stopPropagation()
+    $event.stopPropagation();
   }
 
   dropdownInputChanged(key: string, $event: any) {
-    this.filtrosModel[key].valor = $event
-    this.filtrosCambiados()
+    this.filtrosModel[key].valor = $event;
+    this.filtrosCambiados();
   }
 
   rangoFechaInputChanged(key: string, fechaKey: string, $event: any) {
     if ($event != null) {
-      const date = new Date($event)
+      const date = new Date($event);
       // Solo considera aquellos años que son superiores a minYear
       if (date.getFullYear() < this.minYear) {
-        return
+        return;
       }
     }
     // Evita llamado cuando se elimina fecha de la lista
@@ -326,35 +326,35 @@ export class FiltroMagicoComponent implements OnInit {
       this.filtrosBind[key].desde === null &&
       this.filtrosBind[key].hasta === null
     ) {
-      return
+      return;
     }
     // Evita llamado extra al iniciar datatable
     if (!this.filtrosBind[key].llamarFiltro && fechaKey === 'hasta') {
-      this.filtrosBind[key].llamarFiltro = true
-      return
+      this.filtrosBind[key].llamarFiltro = true;
+      return;
     }
     if (this.filtrosBind[key].llamarFiltro) {
-      this.filtrosModel[key][fechaKey] = $event
+      this.filtrosModel[key][fechaKey] = $event;
       if (fechaKey === 'desde') {
-        this.rangosFechaMinimos[key] = $event || '1980-01-01'
+        this.rangosFechaMinimos[key] = $event || '1980-01-01';
       }
-      this.filtrosCambiados()
+      this.filtrosCambiados();
     }
   }
 
   filtrosCambiados(pushBindChanges: boolean = true) {
-    this.onFiltrosCambiados.emit(this.filtrosModel)
-    this.onFiltrosModelCambiados.emit(this.filtrosModel)
+    this.onFiltrosCambiados.emit(this.filtrosModel);
+    this.onFiltrosModelCambiados.emit(this.filtrosModel);
     if (pushBindChanges) {
-      this.pushBindChanges()
+      this.pushBindChanges();
     }
   }
 
   filtrar(pushBindChanges: boolean = true) {
-    this.onBotonFiltrar.emit(this.filtrosModel)
-    this.onFiltrosModelCambiados.emit(this.filtrosModel)
+    this.onBotonFiltrar.emit(this.filtrosModel);
+    this.onFiltrosModelCambiados.emit(this.filtrosModel);
     if (pushBindChanges) {
-      this.pushBindChanges()
+      this.pushBindChanges();
     }
   }
 
@@ -364,9 +364,9 @@ export class FiltroMagicoComponent implements OnInit {
         .getFilterSubject()
         .subscribe((data) => {
           if (this.id === data.tag && this.internalId !== data.internalTag) {
-            this.applyNewFilters(data.filtros, data.bind)
+            this.applyNewFilters(data.filtros, data.bind);
           }
-        })
+        });
     }
   }
 
@@ -377,72 +377,72 @@ export class FiltroMagicoComponent implements OnInit {
         this.internalId,
         this.filtrosModel,
         this.filtrosBind,
-        this,
-      )
+        this
+      );
     }
   }
 
   applyNewFilters(filtros: any, bind: any) {
-    const filtrosArr = Array.isArray(filtros) ? filtros : [filtros]
-    const bindArr = Array.isArray(bind) ? bind : [bind]
+    const filtrosArr = Array.isArray(filtros) ? filtros : [filtros];
+    const bindArr = Array.isArray(bind) ? bind : [bind];
 
     for (const f of this.filtrosMagicos.filtros) {
       for (let j = 0; j < filtrosArr.length; j++) {
-        filtros = filtrosArr[j]
-        bind = bindArr[j]
+        filtros = filtrosArr[j];
+        bind = bindArr[j];
 
         if (filtros.hasOwnProperty(f.key)) {
-          this.filtrosModel[f.key] = filtros[f.key]
+          this.filtrosModel[f.key] = filtros[f.key];
         }
         if (bind.hasOwnProperty(f.key)) {
           if (f.tipo === 'select' || f.tipo === 'producto') {
             this.filtrosBind[f.key] =
-              bind[f.key] instanceof Array ? [...bind[f.key]] : bind[f.key]
+              bind[f.key] instanceof Array ? [...bind[f.key]] : bind[f.key];
           } else if (
             f.tipo === 'select-multiple' ||
             f.tipo === 'producto-multiple' ||
             f.tipo === 'select-search-multiple'
           ) {
-            this.filtrosBind[f.key] = [...bind[f.key]]
+            this.filtrosBind[f.key] = [...bind[f.key]];
           } else if (f.tipo === 'dropdown-input') {
-            this.filtrosModel[f.key].dropdown = filtros[f.key].dropdown
-            this.filtrosBind[f.key] = bind[f.key]
+            this.filtrosModel[f.key].dropdown = filtros[f.key].dropdown;
+            this.filtrosBind[f.key] = bind[f.key];
           } else if (f.tipo === 'dropdown-select-multiple') {
-            this.filtrosModel[f.key].dropdown = filtros[f.key].dropdown
-            this.filtrosBind[f.key] = [...bind[f.key]]
+            this.filtrosModel[f.key].dropdown = filtros[f.key].dropdown;
+            this.filtrosBind[f.key] = [...bind[f.key]];
           } else if (f.tipo === 'rango-fechas') {
-            this.filtrosModel[f.key]['desde'] = bind[f.key]['desde']
-            this.filtrosBind[f.key]['desde'] = bind[f.key]['desde']
-            this.filtrosModel[f.key]['hasta'] = bind[f.key]['hasta']
-            this.filtrosBind[f.key]['hasta'] = bind[f.key]['hasta']
+            this.filtrosModel[f.key]['desde'] = bind[f.key]['desde'];
+            this.filtrosBind[f.key]['desde'] = bind[f.key]['desde'];
+            this.filtrosModel[f.key]['hasta'] = bind[f.key]['hasta'];
+            this.filtrosBind[f.key]['hasta'] = bind[f.key]['hasta'];
           }
         }
       }
     }
 
     if (this.isMaster) {
-      this.filtrosCambiados(false)
+      this.filtrosCambiados(false);
     }
   }
 
   unsubscribeToChanges() {
     if (this.filterSubcription$) {
-      this.filterSubcription$.unsubscribe()
+      this.filterSubcription$.unsubscribe();
     }
     if (this.filterValores$) {
-      this.filterValores$.unsubscribe()
+      this.filterValores$.unsubscribe();
     }
     if (this.filterNewParams$) {
-      this.filterNewParams$.unsubscribe()
+      this.filterNewParams$.unsubscribe();
     }
   }
 
   onRespuestaBusqueda(
     filtro: FiltroMagico,
-    $event: { search: string; response: any },
+    $event: { search: string; response: any }
   ) {
     if (filtro.hooks && filtro.hooks.onRespuestaBusqueda) {
-      filtro.hooks.onRespuestaBusqueda($event.search, $event.response)
+      filtro.hooks.onRespuestaBusqueda($event.search, $event.response);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core'
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-star-select',
@@ -6,7 +6,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core'
   styleUrls: ['./star-select.component.scss'],
 })
 export class StarSelectComponent implements OnInit {
-  @Output() valoracion: EventEmitter<number> = new EventEmitter()
+  @Output() valoracion: EventEmitter<number> = new EventEmitter();
 
   stars = [
     {
@@ -29,7 +29,7 @@ export class StarSelectComponent implements OnInit {
       id: 5,
       class: 'star-gray star-hover star',
     },
-  ]
+  ];
 
   constructor() {}
 
@@ -38,13 +38,13 @@ export class StarSelectComponent implements OnInit {
   selectStar(value: any): void {
     this.stars.filter((star) => {
       if (star.id <= value) {
-        star.class = 'star-gold star'
+        star.class = 'star-gold star';
       } else {
-        star.class = 'star-gray star'
+        star.class = 'star-gray star';
       }
-      return star
-    })
+      return star;
+    });
 
-    this.valoracion.emit(value)
+    this.valoracion.emit(value);
   }
 }

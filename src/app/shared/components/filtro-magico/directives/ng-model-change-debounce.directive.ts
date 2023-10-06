@@ -1,20 +1,20 @@
-import { Subscription } from 'rxjs'
-import { Directive, Output, EventEmitter, Input } from '@angular/core'
-import { skip, distinctUntilChanged, debounceTime } from 'rxjs/operators'
-import { NgModel } from '@angular/forms'
+import { Subscription } from 'rxjs';
+import { Directive, Output, EventEmitter, Input } from '@angular/core';
+import { skip, distinctUntilChanged, debounceTime } from 'rxjs/operators';
+import { NgModel } from '@angular/forms';
 
 @Directive({
   selector: '[ngModelChangeDebounced]',
 })
 export class NgModelChangeDebounceDirective {
   @Output()
-  ngModelChangeDebounced = new EventEmitter<any>()
+  ngModelChangeDebounced = new EventEmitter<any>();
   @Input()
-  ngModelChangeDebounceTime = 200
+  ngModelChangeDebounceTime = 200;
 
-  subscription: Subscription
+  subscription: Subscription;
   ngOnDestroy() {
-    this.subscription.unsubscribe()
+    this.subscription.unsubscribe();
   }
 
   constructor(private ngModel: NgModel) {
@@ -22,8 +22,8 @@ export class NgModelChangeDebounceDirective {
       .pipe(
         skip(1), // skip initial value
         distinctUntilChanged(),
-        debounceTime(this.ngModelChangeDebounceTime),
+        debounceTime(this.ngModelChangeDebounceTime)
       )
-      .subscribe((value) => this.ngModelChangeDebounced.emit(value))
+      .subscribe((value) => this.ngModelChangeDebounced.emit(value));
   }
 }

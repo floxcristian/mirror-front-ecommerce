@@ -1,5 +1,5 @@
-import { Directive, HostListener } from '@angular/core'
-import { NgControl } from '@angular/forms'
+import { Directive, HostListener } from '@angular/core';
+import { NgControl } from '@angular/forms';
 
 @Directive({
   selector: '[appLettersChar]',
@@ -16,7 +16,7 @@ export class LettersCharDirective {
    * @param $event Evento gatillado por el Usuario.
    */
   @HostListener('keydown', ['$event']) onKeyDown($event: any) {
-    const key = $event.which || $event.keyCode
+    const key = $event.which || $event.keyCode;
     if (
       (key >= 65 && key <= 90) || // letters
       key == 192 ||
@@ -27,9 +27,9 @@ export class LettersCharDirective {
       key === 8 || // DELETE
       key === 32
     ) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
   }
 }

@@ -1,4 +1,4 @@
-import { PostComment } from '../app/shared/interfaces/post-comment'
+import { PostComment } from '../app/shared/interfaces/post-comment';
 
 export const latestComments: PostComment[] = [
   {
@@ -28,4 +28,4 @@ export const latestComments: PostComment[] = [
     text: 'In one general sense, philosophy is associated with wisdom, intellectual culture and a search for knowledge...',
     date: '3 days ago',
   },
-]
+];
