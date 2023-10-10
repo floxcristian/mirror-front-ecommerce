@@ -1,5 +1,3 @@
-<!-- FIXME: START -->
-<!--
 <div class="form-group" [hidden]="showSearchBar" style="color: #0063b9">
     <label>{{ titulo || 'Ingrese Dirección' }}</label>
     <div class="input-group">
@@ -11,18 +9,9 @@
     </div>
 </div>
 <div class="me-1 ms-1">
-    <agm-map [latitude]="lat" [mapTypeId]="autocompletado === true ? 'hybrid' : 'roadmap'" [longitude]="lng"
-        [zoom]="zoom" [disableDefaultUI]="autocompletado === true ? true : false">
-        <agm-marker [latitude]="lat" [longitude]="lng" [markerDraggable]="autocompletado === true ? true : false"
-            (dragEnd)="markerDragEnd($event)">
-            <agm-info-window *ngIf="infoWindowContent" [disableAutoPan]="false" isOpen="true">
-                {{ infoWindowContent }}
-            </agm-info-window>
-        </agm-marker>
-    </agm-map>
+    <google-map [center]="center" [zoom]="zoom" [mapTypeId]="autocompletado === true ? var_hybrid : var_roadmap" [options]="options"> 
+        <map-marker *ngFor="let markerPosition of markerPositions" (mapDragend)="markerDragEnd($event)" [options]="markerOptions"
+            [position]="markerPosition"
+        ></map-marker>
+    </google-map>
 </div>
--->
-
-<!-- FIXME: END -->
-
-<div>En contrucción</div>
