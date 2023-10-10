@@ -60,7 +60,6 @@ export class BlockSlideshowComponent implements OnInit {
   cargarGaleria() {
     this.slidesService.obtieneSlides().subscribe((r: any) => {
       this.slides = r.data;
-      //   this.slidesService.finishLoadHome();
     });
   }
 

@@ -20,7 +20,6 @@ import { Subject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { GeoLocationService } from '../../services/geo-location.service';
 import { isVacio } from '../../utils/utilidades';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
@@ -85,7 +84,6 @@ export class ProductCardB2cCmsComponent implements OnInit {
     public wishlist: WishlistService,
     public compare: CompareService,
     public quickview: QuickviewService,
-    private geoLocationService: GeoLocationService,
     public currency: CurrencyService,
     public sanitizer: DomSanitizer
   ) {

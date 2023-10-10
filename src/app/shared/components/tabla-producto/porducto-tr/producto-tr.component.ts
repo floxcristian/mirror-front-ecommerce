@@ -13,13 +13,10 @@ import { CurrencyService } from '../../../services/currency.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { ToastrService } from 'ngx-toastr';
-// import { LocalStorageService } from 'angular-2-local-storage';
 
 import { Usuario } from '../../../interfaces/login';
 import { GeoLocationService } from '../../../services/geo-location.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { LogisticsService } from '../../../services/logistics.service';
 import { FormControl } from '@angular/forms';
 import { ProductsService } from '../../../services/products.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -100,13 +97,11 @@ export class PorductoTrComponent implements OnInit {
     public compare: CompareService,
     public quickview: QuickviewService,
     public currency: CurrencyService,
-    private toast: ToastrService,
     private modalService: BsModalService,
     private localS: LocalStorageService,
     private geoLocationService: GeoLocationService,
     private productService: ProductsService,
-    public sanitizer: DomSanitizer,
-    private logistics: LogisticsService
+    public sanitizer: DomSanitizer
   ) {
     this.preferenciaCliente = this.localS.get('preferenciasCliente');
     this.usuario = this.root.getDataSesionUsuario();

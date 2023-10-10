@@ -2,21 +2,14 @@ import {
   Component,
   TemplateRef,
   ViewChild,
-  AfterViewInit,
   OnInit,
   OnDestroy,
-  ElementRef,
-  Input,
 } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import {
-  BsModalService,
-  BsModalRef,
-  ModalDirective,
-} from 'ngx-bootstrap/modal';
+import { Router } from '@angular/router';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ProductsService } from '../../../../shared/services/products.service';
 import { RootService } from '../../../../shared/services/root.service';
-import { ToastrService, ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -25,7 +18,6 @@ import { WishlistService } from '../../../../shared/services/wishlist.service';
 import { Subject } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
 import { LoginService } from '../../../../shared/services/login.service';
-//import { LocalStorageService } from 'angular-2-local-storage';
 import { MobileMenuService } from '../../../../shared/services/mobile-menu.service';
 import { environment } from '../../../../../environments/environment';
 import { MobileFiltrosComponent } from './components/mobile-filtros/mobile-filtros.component';
@@ -66,7 +58,6 @@ export class MobileHeaderB2bComponent implements OnInit, OnDestroy {
   constructor(
     public menu: MobileMenuService,
     private router: Router,
-    private route: ActivatedRoute,
     private modalService: BsModalService,
     private productsService: ProductsService,
     public root: RootService,

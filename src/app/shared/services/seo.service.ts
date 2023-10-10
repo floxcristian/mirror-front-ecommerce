@@ -1,25 +1,12 @@
+// Angular
 import { Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SeoService {
-  constructor(
-    private http: HttpClient,
-    private meta: Meta,
-    private title: Title
-  ) {}
-
-  getGetMetadata(location: string) {
-    let params = new HttpParams().set(
-      'locations',
-      encodeURIComponent(JSON.stringify(location))
-    );
-    return this.http.get(environment.apiCMS + 'metadata/', { params: params });
-  }
+  constructor(private meta: Meta, private title: Title) {}
 
   generarMetaTag(config: any) {
     // tslint:disable-next-line: max-line-length

@@ -23,4 +23,8 @@ export class TrackingService {
   getClienteOv(params: any) {
     return this.http.post(`${environment.apiOms}oms/clienteOv`, params);
   }
+
+  recibo(ov: string) {
+    return this.http.get(`${environment.apiLogistic}respaldos/${ov}`);
+  }
 }

@@ -21,12 +21,9 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
-//import { LocalStorageService } from 'angular-2-local-storage';
 
 import { Usuario } from '../../interfaces/login';
-import { GeoLocationService } from '../../services/geo-location.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { LogisticsService } from '../../services/logistics.service';
 import { isVacio } from '../../utils/utilidades';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import {
@@ -103,9 +100,7 @@ export class ProductCardB2bComponent implements OnInit, OnDestroy {
     public quickview: QuickviewService,
     public currency: CurrencyService,
     private localS: LocalStorageService,
-    private geoLocationService: GeoLocationService,
     public sanitizer: DomSanitizer,
-    private logistics: LogisticsService,
     private clientsService: ClientsService,
     private toast: ToastrService,
     private modalService: BsModalService

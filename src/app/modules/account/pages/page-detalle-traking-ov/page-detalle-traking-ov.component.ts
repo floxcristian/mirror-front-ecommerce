@@ -44,7 +44,9 @@ export class DetalleTrakingOvComponent implements OnInit {
   }
 
   async buscar_detalle_estado() {
-    let consulta = await this._TrackingService.DetalleOV(this.Ov).toPromise();
+    let consulta: any = await this._TrackingService
+      .DetalleOV(this.Ov)
+      .toPromise();
     this.subestados = [];
     this.productos = consulta.data;
     this.suma = 0;

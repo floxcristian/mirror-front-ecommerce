@@ -1,7 +1,10 @@
+// Angular
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+// Rxjs
 import { Subject, Observable } from 'rxjs';
+// Environment
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -30,9 +33,5 @@ export class SlidesService {
   deleteSlide(data: any) {
     var call = environment.apiCMS + `slides/` + data['_id'];
     return this.http.delete(call, data);
-  }
-
-  finishLoadHome() {
-    this.finishServiceSlideSubjet.next(true);
   }
 }

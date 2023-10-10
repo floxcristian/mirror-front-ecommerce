@@ -1,14 +1,17 @@
+// Angular
 import { Injectable } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+// Libs
+import { v4 as uuidv4 } from 'uuid';
+// Environment
 import { environment } from '../../../environments/environment';
+// Others
 import { Product } from '../interfaces/product';
 import { SlugifyPipe } from '../pipes/slugify.pipe';
-import { HttpClient } from '@angular/common/http';
-import { DecimalPipe } from '@angular/common';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { Usuario } from '../interfaces/login';
-import { Router } from '@angular/router';
-// import * as uuid from 'uuid/v4';
-import { v4 as uuidv4 } from 'uuid';
 import { PreferenciasCliente } from '../interfaces/preferenciasCliente';
 import { LogisticsService } from './logistics.service';
 import { isVacio } from '../utils/utilidades';

@@ -1,3 +1,4 @@
+// Angular
 import { Injectable } from '@angular/core';
 
 type Task = () => Promise<void>;
@@ -26,13 +27,6 @@ export class ResourcesService {
       return () => Promise.resolve();
     }
 
-    // Se reemplaza el siguiente código que daba error.
-    /*
-     *  return () =>
-     *    tasks
-     *    .shift()()
-     *    .then(ResourcesService.series(...tasks));
-     */
     return () => {
       const first = tasks.shift();
       if (first) return first().then(ResourcesService.series(...tasks));

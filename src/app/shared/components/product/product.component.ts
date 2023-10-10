@@ -25,7 +25,6 @@ import {
 import { CarouselComponent, SlidesOutputData } from 'ngx-owl-carousel-o';
 import { FormControl } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
-import { WishlistService } from '../../services/wishlist.service';
 import { CompareService } from '../../services/compare.service';
 import { isPlatformBrowser } from '@angular/common';
 import { OwlCarouselOConfig } from 'ngx-owl-carousel-o/lib/carousel/owl-carousel-o-config';
@@ -35,7 +34,6 @@ import { Subscription } from 'rxjs';
 
 import { RootService } from '../../services/root.service';
 import { ToastrService } from 'ngx-toastr';
-import { QuickviewService } from '../../services/quickview.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ProductsService } from '../../services/products.service';
 import { ResponseApi } from '../../../shared/interfaces/response-api';
@@ -55,9 +53,7 @@ import {
 import { isVacio } from '../../utils/utilidades';
 import { environment } from '../../../../environments/environment';
 import { NguCarousel, NguCarouselConfig } from '@ngu/carousel';
-import { PromesaService } from '../../../modules/shop/services/promesa.service';
 import { AvisoStockComponent } from '../aviso-stock/aviso-stock.component';
-import { CapitalizeFirstPipe } from '../../pipes/capitalize.pipe';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 interface ProductImage {
@@ -273,20 +269,16 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private cart: CartService,
-    private wishlist: WishlistService,
     private compare: CompareService,
     private photoSwipe: PhotoSwipeService,
     private direction: DirectionService,
     public root: RootService,
     public toast: ToastrService,
-    private quickService: QuickviewService,
     private modalService: BsModalService,
     private productsService: ProductsService,
     public router: Router,
     public route: ActivatedRoute,
     public geoLocationService: GeoLocationService,
-    private promesaService: PromesaService,
-    private capitalize: CapitalizeFirstPipe,
     private localS: LocalStorageService,
     public sanitizer: DomSanitizer,
     private clientsService: ClientsService,
