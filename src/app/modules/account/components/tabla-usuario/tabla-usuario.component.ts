@@ -63,7 +63,7 @@ export class TablaUsuarioComponent implements OnInit {
         user.data_order = dataTablesParameters.order[0].dir;
         this.users = [];
         let params = Object.assign(dataTablesParameters, user);
-        let url = environment.apiImplementosClientes + `getusuario`;
+        let url = environment.apiCustomer + `getusuario`;
         let username: String = 'services';
         let password: String = '0.=j3D2ss1.w29-';
         let authdata = window.btoa(username + ':' + password);

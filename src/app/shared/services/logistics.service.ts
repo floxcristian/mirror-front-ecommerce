@@ -10,7 +10,7 @@ import { ResponseApi } from '../interfaces/response-api';
   providedIn: 'root',
 })
 export class LogisticsService {
-  private urlApi = environment.apiImplementosLogistica;
+  private urlApi = environment.apiLogistic;
   private direccion$: Subject<any> = new Subject();
   readonly direccionCliente$: Observable<any> = this.direccion$.asObservable();
   private storesSubject: Subject<any> = new Subject();
@@ -32,10 +32,7 @@ export class LogisticsService {
   }
 
   obtienRetiro(data: any) {
-    return this.http.post(
-      environment.apiImplementosLogistica + `retirocarro`,
-      data
-    );
+    return this.http.post(environment.apiLogistic + `retirocarro`, data);
   }
 
   obtieneDireccionesTienda() {
@@ -43,22 +40,21 @@ export class LogisticsService {
   }
 
   obtieneDespachoCompleto(params: any) {
-    return this.http.get(
-      environment.apiImplementosLogistica + `productosRetiro`,
-      { params }
-    );
+    return this.http.get(environment.apiLogistic + `productosRetiro`, {
+      params,
+    });
   }
 
   obtieneDireccionesTiendaRetiro(params: any): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
-      environment.apiImplementosLogistica + `tiendasretiroomni`,
+      environment.apiLogistic + `tiendasretiroomni`,
       { params }
     );
   }
 
   obtieneEstadoOV(OV: string) {
     let consulta: any = this.http.get(
-      environment.apiImplementosLogistica + 'prestador-seguimiento/' + OV
+      environment.apiLogistic + 'prestador-seguimiento/' + OV
     );
     return consulta;
   }
@@ -85,7 +81,7 @@ export class LogisticsService {
 
   ReciboEnvio(guia_despacho: string) {
     let consulta: any = this.http.get(
-      environment.apiImplementosLogistica + 'receptorGD/SAMEX/' + guia_despacho
+      environment.apiLogistic + 'receptorGD/SAMEX/' + guia_despacho
     );
     return consulta;
   }
@@ -98,13 +94,6 @@ export class LogisticsService {
     return consulta;
   }
 
-  async saveStatusTv(objSave: any) {
-    const respuesta: any = await this.http
-      .post(`${environment.urlScreen}SetScreenactiva`, objSave)
-      .toPromise();
-    return respuesta;
-  }
-
   obtenerGrupoDespacho(id_carro: any, comuna: any) {
     let consulta: any = this.http.get(
       environment.apiPromesa + 'domicilio/' + id_carro + '/' + comuna
@@ -114,7 +103,7 @@ export class LogisticsService {
 
   obtenerMultiDespachos(data: any) {
     let consulta: any = this.http.post(
-      environment.apiImplementosLogistica + 'despachocarro3/',
+      environment.apiLogistic + 'despachocarro3/',
       data
     );
     return consulta;
@@ -123,7 +112,7 @@ export class LogisticsService {
   articulos(search: string = ''): Observable<ArticuloResponse> {
     return this.http
       .get<ArticuloResponse>(
-        `${environment.apiImplementosLogistica}articulos?search=${search}`
+        `${environment.apiLogistic}articulos?search=${search}`
       )
       .pipe(
         map((response) => {

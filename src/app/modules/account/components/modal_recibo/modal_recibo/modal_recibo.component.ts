@@ -17,7 +17,7 @@ export class Modal_reciboComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {}
   data?: any;
-  PODImageUrl: string = environment.apiImplementosLogistica + '/PODImage';
+  PODImageUrl: string = environment.apiLogistic + '/PODImage';
   urlGuiaMostrar!: SafeUrl;
   urlGuiaMostrarNotSanitized!: string;
   pdfBase64: any = null;

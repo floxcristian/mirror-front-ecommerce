@@ -2,26 +2,18 @@ import {
   Component,
   TemplateRef,
   ViewChild,
-  AfterViewInit,
   OnInit,
   OnDestroy,
-  ElementRef,
-  Input,
 } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import {
-  BsModalService,
-  BsModalRef,
-  ModalDirective,
-} from 'ngx-bootstrap/modal';
+import { Router } from '@angular/router';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ProductsService } from '../../../../shared/services/products.service';
 import { RootService } from '../../../../shared/services/root.service';
-import { ToastrService, ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CartService } from '../../../../shared/services/cart.service';
-import { WishlistService } from '../../../../shared/services/wishlist.service';
 import { Subject } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
 import { LoginService } from '../../../../shared/services/login.service';
@@ -77,7 +69,6 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
     private logisticsService: LogisticsService,
     private toastr: ToastrService,
     public cart: CartService,
-    public wishlist: WishlistService,
     public loginService: LoginService,
     public localS: LocalStorageService,
     private readonly gtmService: GoogleTagManagerService

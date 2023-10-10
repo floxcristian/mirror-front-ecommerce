@@ -1,10 +1,12 @@
+// Angular
 import { Inject, Injectable, OnDestroy, PLATFORM_ID } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, timer } from 'rxjs';
-import { Product } from '../interfaces/product';
-import { map, takeUntil } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
+// Rxjs
+import { BehaviorSubject, Observable, Subject, timer } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+// Services
+import { Product } from '../interfaces/product';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-//import { LocalStorageService } from 'angular-2-local-storage';
 
 interface WishlistData {
   items: Product[];

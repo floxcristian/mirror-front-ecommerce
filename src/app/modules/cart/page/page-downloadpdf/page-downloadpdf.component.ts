@@ -29,14 +29,14 @@ export class PageDownloadpdfComponent implements OnInit {
   }
 
   headers() {
-    return environment.apiImplementosCarro.startsWith('http://192')
+    return environment.apiShoppingCart.startsWith('http://192')
       ? new HttpHeaders()
       : new HttpHeaders().append('Authorization', this.authBasic);
   }
   downloadOvPdf() {
     const headers = this.headers();
     const url =
-      environment.apiImplementosCarro +
+      environment.apiShoppingCart +
       'documentos/documentoOVPDF/' +
       btoa(`@${this.numero}@`);
     this.http
@@ -51,7 +51,7 @@ export class PageDownloadpdfComponent implements OnInit {
   downloadOcPdf() {
     const headers = this.headers();
 
-    const url = environment.apiImplementosCarro + 'getOc?id=' + this.numero;
+    const url = environment.apiShoppingCart + 'getOc?id=' + this.numero;
     this.http
       .get(url, { headers, responseType: 'blob' })
       .subscribe((response: any) => {
@@ -72,9 +72,7 @@ export class PageDownloadpdfComponent implements OnInit {
     else if (numero[0] === 'NCE') codigo = btoa(`@${numero[1]}@61@`);
 
     const url =
-      environment.apiImplementosCarro +
-      'documentos/documentoClientePDF/' +
-      codigo;
+      environment.apiShoppingCart + 'documentos/documentoClientePDF/' + codigo;
     this.http
       .get(url, { headers, responseType: 'text' })
       .subscribe((response) => {

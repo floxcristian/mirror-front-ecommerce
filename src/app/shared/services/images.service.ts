@@ -120,9 +120,6 @@ export class ImagesService {
     let fd = new FormData();
     fd.append('file', files.file);
     fd.append('tipo', files.tipo);
-
-    var call = `${environment.apib2b}/api/catalogo/subirImagenCms`;
-    console.log(`${environment.apib2b}/api/catalogo/subirImagenCms`);
-    return this.http.post(call, fd);
+    return this.http.post(`${environment.apiCatalogo}subirImagenCms`, fd);
   }
 }

@@ -10,7 +10,7 @@ import { ResponseApi } from '../interfaces/response-api';
   providedIn: 'root',
 })
 export class ProductsService {
-  private urlApi = environment.apiImplementosCatalogo;
+  private urlApi = environment.apiCatalogo;
 
   constructor(
     private http: HttpClient,
@@ -44,65 +44,63 @@ export class ProductsService {
   getStockProduct(sku: any) {
     /* se agrega tipo 2 para que muestre el stock de seguridad */
     return this.http.get(
-      environment.apiImplementosCarro + `stockb2b?sku=${sku}&tipo=2`
+      environment.apiShoppingCart + `stockb2b?sku=${sku}&tipo=2`
     );
   }
 
   getdisponibilidadSku(sku: any) {
     return this.http.get(
-      environment.apiImplementosCarro + `stockficha?sku=${sku}`
+      environment.apiShoppingCart + `stockficha?sku=${sku}`
     );
   }
 
   obtieneDetalleProducto(sku: any, params: any = null) {
-    return this.http.get(this.urlApi + `catalogo/ficha/${sku}`, { params });
+    return this.http.get(this.urlApi + `ficha/${sku}`, { params });
   }
 
   obtieneProducto(sku: any, params: any = null) {
     let consulta = null;
-    consulta = this.http.get(this.urlApi + `catalogo/ficha/${sku}`, {
+    consulta = this.http.get(this.urlApi + `ficha/${sku}`, {
       params,
     });
     return consulta;
   }
   getRecommendedProducts(params: any) {
-    return this.http.get(
-      environment.apiImplementosCatalogo + 'catalogo/recomendadoproducto',
-      { params }
-    );
+    return this.http.get(environment.apiCatalogo + 'recomendadoproducto', {
+      params,
+    });
   }
 
   getRecommendedProductsList(params: any): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
-      environment.apiImplementosCatalogo + 'catalogo/productosasugerir',
+      environment.apiCatalogo + 'productosasugerir',
       { params }
     );
   }
 
   getMatrixProducts(params: any): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
-      environment.apiImplementosCatalogo + 'catalogo/matrizproducto',
+      environment.apiCatalogo + 'matrizproducto',
       { params }
     );
   }
 
   getRelatedProducts(params: any): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
-      environment.apiImplementosCatalogo + 'catalogo/relacionadoproducto',
+      environment.apiCatalogo + 'relacionadoproducto',
       { params }
     );
   }
 
   getRelatedProductsFromList(params: any) {
-    return this.http.get(
-      environment.apiImplementosCatalogo + 'catalogo/relacionadoproducto',
-      { params }
-    );
+    return this.http.get(environment.apiCatalogo + 'relacionadoproducto', {
+      params,
+    });
   }
 
   getPropularProducts(params: any): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
-      environment.apiImplementosCatalogo + 'catalogo/popularesproducto',
+      environment.apiCatalogo + 'popularesproducto',
       { params }
     );
   }
@@ -134,7 +132,7 @@ export class ProductsService {
     fd.append('file', files.file);
     fd.append('tipo', files.tipo);
 
-    var call = `${environment.apiImplementosCatalogo}catalogo/subirImagen`;
+    var call = `${environment.apiCatalogo}subirImagen`;
 
     return this.http.post(call, fd);
   }

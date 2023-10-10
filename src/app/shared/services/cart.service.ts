@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { RootService } from './root.service';
 import { ToastrService } from 'ngx-toastr';
-// import { LocalStorageService } from 'angular-2-local-storage';
+
 import { Usuario } from '../interfaces/login';
 import { DatePipe } from '@angular/common';
 import { GeoLocationService } from './geo-location.service';
@@ -144,40 +144,38 @@ export class CartService {
       ],
     };
 
-    const url = environment.apiImplementosCarro;
-    return this.http
-      .post(`${environment.apiImplementosCarro}articulo`, data)
-      .pipe(
-        map((r: any) => {
-          this.CartData = r.data;
+    const url = environment.apiShoppingCart;
+    return this.http.post(`${environment.apiShoppingCart}articulo`, data).pipe(
+      map((r: any) => {
+        this.CartData = r.data;
 
-          const productoCart: ProductCart = {
-            nombre: producto.nombre,
-            sku: producto.sku,
-            cantidad: quantity,
-            image: this.root.getUrlImagenMiniatura150(producto),
-          };
+        const productoCart: ProductCart = {
+          nombre: producto.nombre,
+          sku: producto.sku,
+          cantidad: quantity,
+          image: this.root.getUrlImagenMiniatura150(producto),
+        };
 
-          if (r.error !== true) {
-            this.onAddingSubject$.next(productoCart);
-            this.data.productos = this.CartData.productos;
-            /* se limpia OV cargada */
-            this.localS.remove('ordenCompraCargada');
-            this.save();
-            this.calc();
+        if (r.error !== true) {
+          this.onAddingSubject$.next(productoCart);
+          this.data.productos = this.CartData.productos;
+          /* se limpia OV cargada */
+          this.localS.remove('ordenCompraCargada');
+          this.save();
+          this.calc();
+        } else {
+          if (r.errorDetalle === 'Error: limite') {
+            this.toast.warning(
+              'Ha llegado al límite de 17 artículos en el carro.'
+            );
           } else {
-            if (r.errorDetalle === 'Error: limite') {
-              this.toast.warning(
-                'Ha llegado al límite de 17 artículos en el carro.'
-              );
-            } else {
-              this.toast.error(r.msg);
-            }
+            this.toast.error(r.msg);
           }
+        }
 
-          return r;
-        })
-      );
+        return r;
+      })
+    );
   }
 
   addLista(products: Product[] | any[] | undefined): Observable<any> {
@@ -217,31 +215,29 @@ export class CartService {
       productos,
     };
 
-    return this.http
-      .post(`${environment.apiImplementosCarro}articulo`, data)
-      .pipe(
-        map((r: any) => {
-          this.CartData = r.data;
+    return this.http.post(`${environment.apiShoppingCart}articulo`, data).pipe(
+      map((r: any) => {
+        this.CartData = r.data;
 
-          if (r.error !== true) {
-            this.data.productos = this.CartData.productos;
-            /* se limpia OV cargada */
-            this.localS.remove('ordenCompraCargada');
-            this.save();
-            this.calc();
+        if (r.error !== true) {
+          this.data.productos = this.CartData.productos;
+          /* se limpia OV cargada */
+          this.localS.remove('ordenCompraCargada');
+          this.save();
+          this.calc();
+        } else {
+          if (r.errorDetalle === 'Error: limite') {
+            this.toast.warning(
+              'Ha llegado al límite de 17 artículos en el carro.'
+            );
           } else {
-            if (r.errorDetalle === 'Error: limite') {
-              this.toast.warning(
-                'Ha llegado al límite de 17 artículos en el carro.'
-              );
-            } else {
-              this.toast.error(r.msg);
-            }
+            this.toast.error(r.msg);
           }
+        }
 
-          return r;
-        })
-      );
+        return r;
+      })
+    );
   }
 
   // seleccion de la pestaña de despachos
@@ -349,7 +345,7 @@ export class CartService {
 
     this.http
       .get(
-        environment.apiImplementosCarro +
+        environment.apiShoppingCart +
           `?usuario=${usuario.username}&sucursal=${sucursal}&rut=${usuario.rut}`
       )
       .pipe(
@@ -503,7 +499,7 @@ export class CartService {
     this.loadingCart = true;
 
     let r: any = await this.http
-      .get(environment.apiImplementosCarro + `omni?id=${id}`)
+      .get(environment.apiShoppingCart + `omni?id=${id}`)
       .toPromise();
     this.loadingCart = false;
 
@@ -644,7 +640,7 @@ export class CartService {
     const sucursalPrecio = codigo_tienda;
     this.http
       .get(
-        environment.apiImplementosCarro +
+        environment.apiShoppingCart +
           `?usuario=${usuario.username}&sucursal=${sucursal}&sucursalPrecio=${sucursalPrecio}&rut=${usuario.rut}`
       )
       .pipe(
@@ -802,7 +798,7 @@ export class CartService {
     };
 
     return this.http
-      .delete(environment.apiImplementosCarro + 'articulo', options)
+      .delete(environment.apiShoppingCart + 'articulo', options)
       .pipe(
         map((r: any) => {
           if (!r.error) {
@@ -836,7 +832,7 @@ export class CartService {
       },
     };
     return this.http
-      .delete(environment.apiImplementosCarro + 'grupo', options)
+      .delete(environment.apiShoppingCart + 'grupo', options)
       .pipe(
         map((r: any) => {
           if (!r.error) {
@@ -878,39 +874,37 @@ export class CartService {
       productos,
     };
 
-    return this.http
-      .post(environment.apiImplementosCarro + 'articulo', data)
-      .pipe(
-        map((r: any) => {
-          this.CartData.despacho = r.data.despacho;
+    return this.http.post(environment.apiShoppingCart + 'articulo', data).pipe(
+      map((r: any) => {
+        this.CartData.despacho = r.data.despacho;
 
-          let nombre = '';
-          if (this.CartData.despacho?.tipo == 'TIENDA') {
-            nombre =
-              `Retiro en tienda ` +
-              this.datePipe.transform(
-                this.CartData.despacho?.fechaDespacho,
-                'EEEE dd MMM'
-              );
-            this.updateShippingType('retiro');
-          } else {
-            nombre =
-              `Despacho ` +
-              this.datePipe.transform(
-                this.CartData.despacho?.fechaDespacho,
-                'EEEE dd MMM'
-              );
-            this.updateShippingType('despacho');
-          }
+        let nombre = '';
+        if (this.CartData.despacho?.tipo == 'TIENDA') {
+          nombre =
+            `Retiro en tienda ` +
+            this.datePipe.transform(
+              this.CartData.despacho?.fechaDespacho,
+              'EEEE dd MMM'
+            );
+          this.updateShippingType('retiro');
+        } else {
+          nombre =
+            `Despacho ` +
+            this.datePipe.transform(
+              this.CartData.despacho?.fechaDespacho,
+              'EEEE dd MMM'
+            );
+          this.updateShippingType('despacho');
+        }
 
-          this.shipping = {
-            price: this.CartData.despacho?.precio,
-            title: nombre,
-            type: 'shipping',
-          };
-          return r;
-        })
-      );
+        this.shipping = {
+          price: this.CartData.despacho?.precio,
+          title: nombre,
+          type: 'shipping',
+        };
+        return r;
+      })
+    );
   }
 
   updateShipping(despacho: any) {
@@ -938,14 +932,12 @@ export class CartService {
       recibe,
     };
 
-    return this.http
-      .post(environment.apiImplementosCarro + 'articulo', data)
-      .pipe(
-        map((r: any) => {
-          this.load();
-          return r;
-        })
-      );
+    return this.http.post(environment.apiShoppingCart + 'articulo', data).pipe(
+      map((r: any) => {
+        this.load();
+        return r;
+      })
+    );
   }
   //* funcion para el cambio de sucursalPrecio//
 
@@ -972,14 +964,12 @@ export class CartService {
       invitado,
       recibe,
     };
-    return this.http
-      .post(environment.apiImplementosCarro + 'articulo', data)
-      .pipe(
-        map((r: any) => {
-          this.loadPrecio(sucursal);
-          return r;
-        })
-      );
+    return this.http.post(environment.apiShoppingCart + 'articulo', data).pipe(
+      map((r: any) => {
+        this.loadPrecio(sucursal);
+        return r;
+      })
+    );
   }
 
   updateShippingPrecioDespacho(despacho: any) {
@@ -1008,14 +998,12 @@ export class CartService {
     };
     // const data = data
 
-    return this.http
-      .post(environment.apiImplementosCarro + 'articulo', data)
-      .pipe(
-        map((r: any) => {
-          this.loadPrecio(sucursal);
-          return r;
-        })
-      );
+    return this.http.post(environment.apiShoppingCart + 'articulo', data).pipe(
+      map((r: any) => {
+        this.loadPrecio(sucursal);
+        return r;
+      })
+    );
   }
 
   emitValidateProducts(products: any) {
@@ -1024,21 +1012,21 @@ export class CartService {
 
   generaOrdenDeCompra(data: any): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(
-      environment.apiImplementosCarro + `generar`,
+      environment.apiShoppingCart + `generar`,
       data
     );
   }
 
   purchaseRequest(data: any): Observable<ResponseApi> {
     return this.http.put<ResponseApi>(
-      environment.apiImplementosCarro + `solicitaraprobacion`,
+      environment.apiShoppingCart + `solicitaraprobacion`,
       data
     );
   }
 
   refuseOrder(data: any): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(
-      environment.apiImplementosCarro + `rechazarcarro`,
+      environment.apiShoppingCart + `rechazarcarro`,
       data
     );
   }
@@ -1055,10 +1043,7 @@ export class CartService {
       formData.append(key, data[key]);
     }
 
-    return this.http.post(
-      environment.apiImplementosCarro + 'cargaoc',
-      formData
-    );
+    return this.http.post(environment.apiShoppingCart + 'cargaoc', formData);
   }
 
   addTotalShipping(envio: any) {
@@ -1124,7 +1109,7 @@ export class CartService {
     }
 
     return this.http.post<ResponseApi>(
-      environment.apiImplementosCarro + 'cargarlistado',
+      environment.apiShoppingCart + 'cargarlistado',
       formData
     );
   }
@@ -1137,75 +1122,66 @@ export class CartService {
     }
 
     return this.http.post<ResponseApi>(
-      environment.apiImplementosCarro + 'cargarListadoPdf',
+      environment.apiShoppingCart + 'cargarListadoPdf',
       formData
     );
   }
 
   pendingOrders(data: any) {
     return this.http.post(
-      environment.apiImplementosCarro + 'listadoPedidos',
+      environment.apiShoppingCart + 'listadoPedidos',
       data
     );
   }
 
   getOrderDetail(id: any) {
-    return this.http.get(
-      environment.apiImplementosCarro + `detallePedido/${id}`
-    );
+    return this.http.get(environment.apiShoppingCart + `detallePedido/${id}`);
   }
 
   cartTransfer(data: any): Observable<ResponseApi> {
     return this.http.put<ResponseApi>(
-      environment.apiImplementosCarro + `traspaso`,
+      environment.apiShoppingCart + `traspaso`,
       data
     );
   }
 
   getPriceProduct(params: any) {
-    return this.http.get(environment.apiImplementosCarro + `buscaprecio`, {
+    return this.http.get(environment.apiShoppingCart + `buscaprecio`, {
       params,
     });
   }
 
   public getPriceScale(params: any) {
-    return this.http.get(
-      `${environment.apiImplementosCarro}buscaprecioescala`,
-      { params }
-    );
+    return this.http.get(`${environment.apiShoppingCart}buscaprecioescala`, {
+      params,
+    });
   }
 
   saveInvitado(params: any) {
-    return this.http.post(
-      `${environment.apiImplementosClientes}nuevotemporal`,
-      params
-    );
+    return this.http.post(`${environment.apiCustomer}nuevotemporal`, params);
   }
   savePaso(params: any) {
-    return this.http.put(`${environment.apiImplementosCarro}paso`, params);
+    return this.http.put(`${environment.apiShoppingCart}paso`, params);
   }
   saveCarroTemp(params: any) {
-    return this.http.post(
-      `${environment.apiImplementosCarro}carrotemp`,
-      params
-    );
+    return this.http.post(`${environment.apiShoppingCart}carrotemp`, params);
   }
   agregaInvitado(params: any) {
     return this.http.post(
-      `${environment.apiImplementosCarro}agregarinvitado`,
+      `${environment.apiShoppingCart}agregarinvitado`,
       params
     );
   }
   agregaBusqueda(params: any) {
     return this.http.post(
-      `${environment.apiImplementosCarro}agregarbusquedas`,
+      `${environment.apiShoppingCart}agregarbusquedas`,
       params
     );
   }
 
   getInfoOV(ov: string) {
     let params = new HttpParams().append('ov', ov);
-    return this.http.get(`${environment.apiImplementosCarro}detallepago`, {
+    return this.http.get(`${environment.apiShoppingCart}detallepago`, {
       params: params,
     });
   }
@@ -1219,7 +1195,7 @@ export class CartService {
       pagina: pagina.toString(),
       carroPorPagina: carrosPorPagina.toString(),
     };
-    return this.http.get(`${environment.apiImplementosCarro}busquedas`, {
+    return this.http.get(`${environment.apiShoppingCart}busquedas`, {
       params,
     });
   }
@@ -1233,7 +1209,7 @@ export class CartService {
     }
     let params = objeto;
 
-    return this.http.put(environment.apiImplementosCarro + `estado`, params);
+    return this.http.put(environment.apiShoppingCart + `estado`, params);
   }
 
   /**
@@ -1288,7 +1264,7 @@ export class CartService {
    */
   primeraVisitaGraciasPorTuCompra(idCarro: string): Observable<any> {
     return this.http.post(
-      environment.apiImplementosCarro + 'primeraVisitaGraciasPorTuCompra',
+      environment.apiShoppingCart + 'primeraVisitaGraciasPorTuCompra',
       {
         id: idCarro,
       }
@@ -1302,7 +1278,7 @@ export class CartService {
    */
   async validarStockActual(carro: any) {
     try {
-      let url = `${environment.apiImplementosCarro}validarStockActual/?idCarro=${carro._id}`;
+      let url = `${environment.apiShoppingCart}validarStockActual/?idCarro=${carro._id}`;
       let consulta: any = await this.http.get(url).toPromise();
       if (consulta.error) {
         this.toast.error('Ha ocurrido un error validando el stock');
@@ -1332,12 +1308,12 @@ export class CartService {
     if (usuario.user_role != 'temp') {
       usuario.username = usuario.username ? usuario.username : usuario.email;
       consulta = this.http.get(
-        environment.apiImplementosCarro +
+        environment.apiShoppingCart +
           `?usuario=${usuario.username}&sucursal=${sucursal}&rut=${usuario.rut}`
       );
     } else {
       consulta = this.http.get(
-        environment.apiImplementosCarro +
+        environment.apiShoppingCart +
           `?usuario=${usuario.email}&sucursal=${sucursal}&rut=${usuario.rut}`
       );
     }
@@ -1346,59 +1322,57 @@ export class CartService {
 
   cargar_folio(folio: any) {
     return this.http.get(
-      environment.apiImplementosCarro + 'carro_folio?folio=' + folio
+      environment.apiShoppingCart + 'carro_folio?folio=' + folio
     );
   }
 
   cargar_carro_oc(id: any) {
     return this.http.get(
-      environment.apiImplementosCarro + 'carromsg/cargar_carro?id=' + id
+      environment.apiShoppingCart + 'carromsg/cargar_carro?id=' + id
     );
   }
 
   verificar_supervisor(rut: any) {
     return this.http.get(
-      environment.apiImplementosCarro +
-        'carromsg/verificar_supervisor?rut=' +
-        rut
+      environment.apiShoppingCart + 'carromsg/verificar_supervisor?rut=' + rut
     );
   }
 
   ingresarContacto(data: any) {
     return this.http.post(
-      environment.apiImplementosCarro + `agregarContactos`,
+      environment.apiShoppingCart + `agregarContactos`,
       data
     );
   }
 
   confirmarGtag(id: any) {
     return this.http.get(
-      environment.apiImplementosCarro + 'googleTag/verificar?id=' + id
+      environment.apiShoppingCart + 'googleTag/verificar?id=' + id
     );
   }
 
   getCarroOmniChannel(id: any) {
     return this.http.get(
-      environment.apiImplementosCarro + 'getCarroOmnichanel?id=' + id
+      environment.apiShoppingCart + 'getCarroOmnichanel?id=' + id
     );
   }
 
   registrar_contacto(data: any) {
     return this.http.post(
-      environment.apiImplementosCarro + 'agregarContactos',
+      environment.apiShoppingCart + 'agregarContactos',
       data
     );
   }
 
   confirmarOc(param: any) {
     return this.http.post(
-      environment.apiImplementosCarro + 'carromsg/confimar_clave',
+      environment.apiShoppingCart + 'carromsg/confimar_clave',
       param
     );
   }
 
   confirmarOV(idCarro: any) {
-    return this.http.post(environment.apiImplementosCarro + `confirmar`, {
+    return this.http.post(environment.apiShoppingCart + `confirmar`, {
       id: idCarro,
     });
   }

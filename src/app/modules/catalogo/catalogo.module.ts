@@ -34,7 +34,6 @@ import { ProductosCatalogTvComponent } from './components/productos-catalog-tv/p
 import { TemplateCardProductoTvComponent } from './components/template-card-producto-tv/template-card-producto-tv.component';
 import { TemplateCardVideoTvComponent } from './components/template-card-video-tv/template-card-video-tv.component';
 import { TemplateCardImagenesTvComponent } from './components/template-card-imagenes-tv/template-card-imagenes-tv.component';
-import { TemplateCardFooterTvComponent } from './components/template-card-footer-tv/template-card-footer-tv.component';
 import { TemplateMenuCatalogoComponent } from './components/template-menu-catalogo/template-menu-catalogo.component';
 
 @NgModule({
@@ -61,7 +60,6 @@ import { TemplateMenuCatalogoComponent } from './components/template-menu-catalo
     TemplateCardProductoTvComponent,
     TemplateCardVideoTvComponent,
     TemplateCardImagenesTvComponent,
-    TemplateCardFooterTvComponent,
     TemplateMenuCatalogoComponent,
     PageVerNewsletterComponent,
   ],

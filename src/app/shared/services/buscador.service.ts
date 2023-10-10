@@ -29,15 +29,15 @@ export class BuscadorService {
 
   constructor() {}
 
-  buscar(data: BusquedaData) {
+  buscar(data: BusquedaData): void {
     this.buscador.next(data);
   }
 
-  buscarExterno(data: BusquedaData) {
+  buscarExterno(data: BusquedaData): void {
     this.buscadorExterno.next(data);
   }
 
-  filtrosVisibles(visibles: boolean) {
+  filtrosVisibles(visibles: boolean): void {
     this.buscadorFiltrosVisibles.next(visibles);
   }
 
@@ -45,11 +45,11 @@ export class BuscadorService {
     this.buscadorFiltrosExternosVisibles.next(visibles);
   }
 
-  setFiltro(filtro: boolean) {
+  setFiltro(filtro: boolean): void {
     this.filtroSeleccionado.next(filtro);
   }
 
-  isFiltroSeleccionado() {
+  isFiltroSeleccionado(): boolean {
     return this.filtroSeleccionado.getValue();
   }
 }

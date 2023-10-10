@@ -14,7 +14,7 @@ export class UsersService {
   constructor(private httpClient: HttpClient) {}
 
   insertar(user: any) {
-    let url = environment.apiImplementosClientes + 'crearusuario';
+    let url = environment.apiCustomer + 'crearusuario';
     return this.httpClient.post(url, user);
   }
 
@@ -23,7 +23,7 @@ export class UsersService {
       id: id,
       data: data,
     };
-    let url = environment.apiImplementosClientes + 'updateusuario';
+    let url = environment.apiCustomer + 'updateusuario';
     return this.httpClient.post(url, json);
   }
 
@@ -34,13 +34,13 @@ export class UsersService {
     }
 
     return this.httpClient.post(
-      environment.apiImplementosClientes + 'cargarlistadousuario',
+      environment.apiCustomer + 'cargarlistadousuario',
       formData
     );
   }
 
   Eliminar(id: any) {
-    let url = environment.apiImplementosClientes + 'eliminarusuario';
+    let url = environment.apiCustomer + 'eliminarusuario';
     return this.httpClient.get(url, { params: { id: id } });
   }
 

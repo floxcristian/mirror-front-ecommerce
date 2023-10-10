@@ -153,7 +153,7 @@ export class CmsService {
     fd.append('file', files.file);
     fd.append('tipo', files.tipo);
 
-    var call = `${environment.apiImplementosCatalogo}catalogo/subirImagen`;
+    var call = `${environment.apiCatalogo}subirImagen`;
 
     return this.http.post(call, fd);
   }

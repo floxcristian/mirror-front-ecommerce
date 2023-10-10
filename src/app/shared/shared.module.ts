@@ -41,13 +41,7 @@ import { OnlyNumbersDirective } from './directives/only-numbers.directive';
 import { RutCharsDirective } from './directives/rut-chars.directive';
 import { LazyImgDirective } from './directives/lazy-img.directive';
 // Pipes
-import { CurrencyFormatPipe } from './pipes/currency-format.pipe';
-import { SlugifyPipe } from './pipes/slugify.pipe';
-import { CapitalizeFirstPipe } from './pipes/capitalize.pipe';
 import { TitleCasePipe } from './pipes/title-case.pipe';
-import { MonedaPipe } from './pipes/moneda.pipe';
-import { SafeHtmlPipe } from './pipes/safe-html.pipe';
-import { ReplacePipe } from './pipes/replace.pipe';
 // Components
 import { AlertComponent } from './components/alert/alert.component';
 import { IconComponent } from './components/icon/icon.component';
@@ -107,6 +101,7 @@ import { ProductCardB2cCmsComponent } from './components/product-card-b2c-cms/pr
 import { ButtonsSlideshowComponent } from './components/buttons-slideshow/buttons-slideshow.component';
 import { ButtonComponent } from './components/buttons-slideshow/components/button/button.component';
 import { ProductSlideshowSpecialsComponent } from '../pages/product-slideshow-specials/product-slideshow-specials.component';
+import { PipesModule } from './pipes/pipes.module';
 
 const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
 const NGU_CAROUSEL_MODULES = [
@@ -135,10 +130,7 @@ const NGU_CAROUSEL_MODULES = [
     RutCharsDirective,
     LazyImgDirective,
     AvisoStockComponent,
-    CurrencyFormatPipe,
-    SlugifyPipe,
     TitleCasePipe,
-    CapitalizeFirstPipe,
     AlertComponent,
     IconComponent,
     InputNumberComponent,
@@ -163,8 +155,6 @@ const NGU_CAROUSEL_MODULES = [
     // LoadingComponent,
     AddcartButtonComponent,
     ConfirmModalComponent,
-    SafeHtmlPipe,
-    ReplacePipe,
     ScrollTopComponent,
     // VideoComponent,
     ModalComponent,
@@ -180,7 +170,6 @@ const NGU_CAROUSEL_MODULES = [
     AgregarListaProductosMasivaModalComponent,
     ProductListModalComponent,
     AngularEmailAutocompleteComponent,
-    MonedaPipe,
     ProductoSelectBusquedaComponent,
     AgregarListaProductosUnitariaModalComponent,
     MenuCategoriaComponent,
@@ -200,6 +189,7 @@ const NGU_CAROUSEL_MODULES = [
   imports: [
     CommonModule,
     NgSelectModule,
+    PipesModule,
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
@@ -213,17 +203,13 @@ const NGU_CAROUSEL_MODULES = [
     CollapseModule.forRoot(),
     NgxPaginationModule,
     CountdownTimerModule,
-    // AgmCoreModule.forRoot({
-    //   apiKey: 'AIzaSyD_HuwF5F8X8fOSR_1Ai_hFT115caUq4vI',
-    //   libraries: ['places']
-    // }),
-    // Ng2Rut,
     ...NGU_CAROUSEL_MODULES,
     NgChartsModule,
     FiltroMagicoModule,
     InfiniteScrollModule,
   ],
   exports: [
+    PipesModule,
     CollapseModule,
     ModalModule,
     TabsModule,
@@ -237,13 +223,8 @@ const NGU_CAROUSEL_MODULES = [
     DropdownDirective,
     OwlPreventClickDirective,
     LazyImgDirective,
-    CurrencyFormatPipe,
-    SlugifyPipe,
     DecimalPipe,
     TitleCasePipe,
-    CapitalizeFirstPipe,
-    SafeHtmlPipe,
-    ReplacePipe,
     AlertComponent,
     IconComponent,
     InputNumberComponent,
@@ -288,12 +269,6 @@ const NGU_CAROUSEL_MODULES = [
     MenuCategoriaComponent,
     ...NGU_CAROUSEL_MODULES,
   ],
-  providers: [
-    SlugifyPipe,
-    DecimalPipe,
-    CapitalizeFirstPipe,
-    DatePipe,
-    CurrencyFormatPipe,
-  ],
+  providers: [DecimalPipe, DatePipe],
 })
 export class SharedModule {}

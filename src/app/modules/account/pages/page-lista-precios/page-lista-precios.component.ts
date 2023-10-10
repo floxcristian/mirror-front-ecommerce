@@ -130,7 +130,7 @@ export class PageListaPreciosComponent implements OnInit {
           parametros.categoria = this.categoria;
         } else parametros.categoria = null;
         let params = Object.assign(dataTablesParameters, parametros);
-        let url = environment.apiImplementosClientes + 'listaPreciosPorRut';
+        let url = environment.apiCustomer + 'listaPreciosPorRut';
         let username: String = 'services';
         let password: String = '0.=j3D2ss1.w29-';
         let authdata = window.btoa(username + ':' + password);

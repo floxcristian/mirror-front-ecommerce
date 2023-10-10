@@ -16,7 +16,6 @@ import { ToastrService } from 'ngx-toastr';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CartService } from '../../../../shared/services/cart.service';
-import { WishlistService } from '../../../../shared/services/wishlist.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
@@ -82,7 +81,6 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     private toastr: ToastrService,
     public cart: CartService,
     public menuCategorias: MenuCategoriasB2cService,
-    public wishlist: WishlistService,
     public localS: LocalStorageService,
     private geoLocationService: GeoLocationService,
     private logisticsService: LogisticsService,

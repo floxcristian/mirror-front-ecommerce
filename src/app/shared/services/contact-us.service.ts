@@ -16,7 +16,7 @@ export class ContactUsService {
 
   async enviarCorreoContacto(parametros: any) {
     let consulta = null;
-    let url = `${environment.apiImplementosCarro}enviarmail`;
+    let url = `${environment.apiShoppingCart}enviarmail`;
     consulta = await this.httpClient
       .post(url, parametros, { headers: this.header, responseType: 'text' })
       .toPromise();

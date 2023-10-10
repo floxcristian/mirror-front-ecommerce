@@ -14,7 +14,7 @@ export class PagePendingOrdersComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   usuario!: Usuario;
   orders!: any[];
-  urlDonwloadOC = environment.apiImplementosCarro + 'getoc?id=';
+  urlDonwloadOC = environment.apiShoppingCart + 'getoc?id=';
   viewActive = 'list';
   orderId = null;
   title: string = '';
@@ -68,7 +68,7 @@ export class PagePendingOrdersComponent implements OnInit {
 
         that.http
           .post<DataTablesResponse>(
-            environment.apiImplementosCarro + 'listadoPedidos',
+            environment.apiShoppingCart + 'listadoPedidos',
             dataTablesParameters,
             { headers: headers }
           )

@@ -1,5 +1,7 @@
+// Angular
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+// Environments
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -8,44 +10,17 @@ import { environment } from '../../../environments/environment';
 export class TrackingService {
   constructor(private http: HttpClient) {}
 
-  searchOVstatus(OV: string) {
+  buscarEstadosOV(ov: string) {
     return this.http.get(
-      environment.apiImplementosLogistica + `seguimiento?ov=${OV}`
+      `${environment.apiOms}ordenes-venta/listadoFiltrado/${ov}`
     );
   }
 
-  buscarEstadosOV(OV: string) {
-    let consulta: any = this.http.get(
-      environment.apiOms + 'ordenes-venta/listadoFiltrado/' + OV
-    );
-    return consulta;
-  }
-
-  DetalleOV(OV: string) {
-    let consulta: any = this.http.get(
-      environment.apiMobile + 'detallePedido?folio=' + OV
-    );
-    return consulta;
-  }
-
-  DetalleOVCliente(OV: string) {
-    let url = environment.apiOms + 'ordenes-venta/listadoDetalleOV/' + OV;
-    let consulta = this.http.get(url);
-    return consulta;
-  }
-
-  recibo(ov: any) {
-    let url = 'https://b2b-api.implementos.cl/api/logistica/respaldos/';
-    return this.http.get(url + ov);
-  }
-
-  cargaProductos(ov: any) {
-    let url = environment.apiImplementosCarro + 'productos?numero=';
-    return this.http.get(url + ov);
+  DetalleOV(ov: string) {
+    return this.http.get(`${environment.apiMobile}detallePedido?folio=${ov}`);
   }
 
   getClienteOv(params: any) {
-    let url = environment.apiOms + 'oms/clienteOv';
-    return this.http.post(url, params);
+    return this.http.post(`${environment.apiOms}oms/clienteOv`, params);
   }
 }

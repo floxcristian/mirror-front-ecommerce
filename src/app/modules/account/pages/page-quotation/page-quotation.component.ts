@@ -35,7 +35,7 @@ export class PageQuotationComponent implements OnInit {
 
   usuario!: Usuario;
   orders!: any[];
-  urlDonwloadOC = environment.apiImplementosCarro + 'getoc?id=';
+  urlDonwloadOC = environment.apiShoppingCart + 'getoc?id=';
   innerWidth: any;
   columns = ['modificacion', 'folio', 'totalOv', 'usuario'];
 
@@ -96,7 +96,7 @@ export class PageQuotationComponent implements OnInit {
 
         that.http
           .post<DataTablesResponse>(
-            environment.apiImplementosCarro + 'listadoPedidos',
+            environment.apiShoppingCart + 'listadoPedidos',
             dataTablesParameters,
             { headers: headers }
           )

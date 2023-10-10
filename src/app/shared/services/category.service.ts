@@ -8,8 +8,6 @@ import { map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class CategoryService {
-  private urlApi = environment.apiImplementosCatalogo;
-
   private categoriasHeaderSubject: Subject<any> = new Subject();
   readonly $categoriasHeader: Observable<any> =
     this.categoriasHeaderSubject.asObservable();
@@ -17,7 +15,7 @@ export class CategoryService {
   constructor(private http: HttpClient) {}
 
   obtieneCategorias() {
-    return this.http.get(this.urlApi + 'categorias/listado');
+    return this.http.get(`${environment.apib2b}/api/categorias/listado`);
   }
 
   obtieneCategoriasHeader() {

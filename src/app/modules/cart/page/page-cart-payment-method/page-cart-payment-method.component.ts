@@ -85,7 +85,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   urlApiWebPay = environment.apiImplementosPagos + 'webpay/pagar';
   urlPaymentVoucher = environment.urlPaymentVoucher + '?estado=confirmado';
   urlPaymentCanceled = environment.urlPaymentCanceled + '?estado=anulado';
-  urlNotificationPayment = environment.apiImplementosCarro + 'generar-ov-b2b';
+  urlNotificationPayment = environment.apiShoppingCart + 'generar-ov-b2b';
   paymentWebpayForm = false;
   @ViewChild('bankmodal', { static: false }) content: any;
   @ViewChild('formWp', { static: false }) tref!: ElementRef;

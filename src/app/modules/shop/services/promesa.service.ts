@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class PromesaService {
   API_URL = environment.apiPromesa;
-  API_URL_LOGISTICA = environment.apiImplementosLogistica;
+  API_URL_LOGISTICA = environment.apiLogistic;
   authBasic = 'Basic c2VydmljZXM6MC49ajNEMnNzMS53Mjkt';
 
   constructor(private http: HttpClient) {}

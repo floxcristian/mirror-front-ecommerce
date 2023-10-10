@@ -59,8 +59,7 @@ export class GeoLocationService {
   }
 
   getDistanceMatrix(params: any): Observable<ResponseApi> {
-    const url =
-      environment.apiImplementosLogistica + 'maps/tienda-mas-cercana';
+    const url = environment.apiLogistic + 'maps/tienda-mas-cercana';
     return this.http.get<ResponseApi>(url, { params });
   }
 

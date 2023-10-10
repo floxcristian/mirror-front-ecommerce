@@ -12,7 +12,7 @@ export class CatalogoService {
   constructor(private http: HttpClient) {}
 
   async obtenerCatalogos(estado: string) {
-    let url = `${environment.apiImplementosCatalogo}catalogo/obtenerCatalogos?tipo=Web&datos=true&estado=${estado}`;
+    let url = `${environment.apiCatalogo}obtenerCatalogos?tipo=Web&datos=true&estado=${estado}`;
     let consulta: any = await this.http.get(url).toPromise();
 
     if (!consulta.error) {
@@ -21,7 +21,7 @@ export class CatalogoService {
   }
 
   async obtenerCatalogoId(id: any) {
-    let url = `${environment.apiImplementosCatalogo}catalogo/obtenerCatalogo?id=${id}`;
+    let url = `${environment.apiCatalogo}obtenerCatalogo?id=${id}`;
     let consulta: any = await this.http.get(url).toPromise();
 
     if (!consulta.error) {
@@ -29,7 +29,7 @@ export class CatalogoService {
     }
   }
   async obtenerPropuesta(id: any) {
-    let url = `${environment.apiImplementosCatalogo}catalogo/propuesta`;
+    let url = `${environment.apiCatalogo}propuesta`;
     let consulta: any = await this.http.post(url, { folio: id }).toPromise();
 
     if (!consulta.error) {
@@ -42,53 +42,47 @@ export class CatalogoService {
     rut: string;
     skus: any[];
   }) {
-    const call = `${environment.apiImplementosCatalogo}catalogo/establecerPrecioCatalogo-v2`;
+    const call = `${environment.apiCatalogo}establecerPrecioCatalogo-v2`;
     let consulta: any = await this.http.post(call, params).toPromise();
     return consulta;
   }
 
   getFiltroAnios() {
-    const call = environment.apiImplementosCatalogo + `catalogo/filtros/anios`;
+    const call = environment.apiCatalogo + `filtros/anios`;
     return this.http.get<ResponseApi>(call);
   }
 
   getFiltroMarcas(anio: string) {
-    const call =
-      environment.apiImplementosCatalogo +
-      `catalogo/filtros/marcas?anio=${anio}`;
+    const call = environment.apiCatalogo + `filtros/marcas?anio=${anio}`;
     return this.http.get<ResponseApi>(call);
   }
 
   getFiltroModelos(anio: string, marca: string): Observable<ResponseApi> {
     const call =
-      environment.apiImplementosCatalogo +
-      `catalogo/filtros/modelos?anio=${anio}&marca=${marca}`;
+      environment.apiCatalogo + `filtros/modelos?anio=${anio}&marca=${marca}`;
     return this.http.get<ResponseApi>(call);
   }
 
   guardarComentarioArticulo(
     request: ComentarioArticulo
   ): Observable<ResponseApi> {
-    const call =
-      environment.apiImplementosCatalogo + `catalogo/comentarioArticulo`;
+    const call = environment.apiCatalogo + `comentarioArticulo`;
     return this.http.post<ResponseApi>(call, request);
   }
 
   getResumenComentarios(sku: string): Observable<ResponseApi> {
-    const call =
-      environment.apiImplementosCatalogo +
-      `catalogo/obtenerComentarios/${sku}/resumen`;
+    const call = environment.apiCatalogo + `obtenerComentarios/${sku}/resumen`;
     return this.http.get<ResponseApi>(call);
   }
 
   getDetalleComentarios(sku: string, orden: string): Observable<ResponseApi> {
     const call =
-      environment.apiImplementosCatalogo +
-      `catalogo/obtenerComentarios/${sku}/detalle?orden=${orden}`;
+      environment.apiCatalogo +
+      `obtenerComentarios/${sku}/detalle?orden=${orden}`;
     return this.http.get<ResponseApi>(call);
   }
   async obtenerNewsletter(id: any) {
-    const call = `${environment.apiImplementosCatalogo}catalogo/obtenerNewsletter`;
+    const call = `${environment.apiCatalogo}obtenerNewsletter`;
     let consulta: any = await this.http.post(call, { id: id }).toPromise();
     return consulta;
   }

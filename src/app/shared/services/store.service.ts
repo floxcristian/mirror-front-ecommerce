@@ -12,6 +12,4 @@ export class StoreService {
   get primaryPhone(): string | null {
     return this.phone.length > 0 ? this.phone[0] : null;
   }
-
-  constructor() {}
 }

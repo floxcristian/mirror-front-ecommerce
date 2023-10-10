@@ -14,11 +14,9 @@ import { ToastrService } from 'ngx-toastr';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CartService } from '../../../../shared/services/cart.service';
-import { WishlistService } from '../../../../shared/services/wishlist.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
-//import { LocalStorageService } from 'angular-2-local-storage';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import {
   GeoLocation,
@@ -80,7 +78,6 @@ export class MobileSearchComponent implements OnInit {
     private toastr: ToastrService,
     public cart: CartService,
     public menuCategorias: MenuCategoriasB2cService,
-    public wishlist: WishlistService,
     public localS: LocalStorageService,
     private geoLocationService: GeoLocationService,
     private logisticsService: LogisticsService,

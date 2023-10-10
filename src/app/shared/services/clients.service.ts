@@ -25,21 +25,20 @@ export class ClientsService {
 
   buscarVentas(rut: any) {
     const call =
-      environment.apiImplementosClientes +
-      `ventas?rut=${rut}&ventasporPagina=10000`;
+      environment.apiCustomer + `ventas?rut=${rut}&ventasporPagina=10000`;
     return this.http.get(call);
   }
 
   buscarOvsGeneradas() {
     const estado = 'generado';
     const call =
-      environment.apiImplementosCarro +
+      environment.apiShoppingCart +
       `busquedaAll?estado=${estado}&carroPorPagina=100000&pagina=1`;
     return this.http.get(call);
   }
 
   confirmarOV(idCarro: any) {
-    return this.http.post(environment.apiImplementosCarro + `confirmar`, {
+    return this.http.post(environment.apiShoppingCart + `confirmar`, {
       id: idCarro,
     });
   }
@@ -50,10 +49,7 @@ export class ClientsService {
       usuario,
     };
 
-    return this.http.put(
-      environment.apiImplementosCarro + `cotizacionov`,
-      data
-    );
+    return this.http.put(environment.apiShoppingCart + `cotizacionov`, data);
   }
 
   /* Recuperar contraseña */
@@ -68,7 +64,7 @@ export class ClientsService {
   }
 
   updateIVA(data: any): Observable<ResponseApi> {
-    const call = environment.apiImplementosClientes + `actualizarIva`;
+    const call = environment.apiCustomer + `actualizarIva`;
     return this.http.put<ResponseApi>(call, data);
   }
 
@@ -106,14 +102,14 @@ export class ClientsService {
 
   addAdreess(request: any): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(
-      `${environment.apiImplementosClientes}direccionCRM`,
+      `${environment.apiCustomer}direccionCRM`,
       request
     );
   }
 
   async updateProfile(data: any) {
     let consulta = null;
-    const endpoint = `${environment.apiImplementosClientes}actualizarPerfil`;
+    const endpoint = `${environment.apiCustomer}actualizarPerfil`;
     const params = `?rut=${data.rut}&nombre=${data.nombre}&apellido=${data.apellido}&correo=${data.correo}&telefono=${data.telefono}`;
     const url = `${endpoint}${params}`;
     consulta = await this.http.get(url).toPromise();
@@ -130,14 +126,14 @@ export class ClientsService {
       passNueva: data.pwd,
     };
 
-    const url = `${environment.apiImplementosClientes}actualizarContrasenna`;
+    const url = `${environment.apiCustomer}actualizarContrasenna`;
     consulta = await this.http.get(url, { params }).toPromise();
 
     return consulta;
   }
   async ValidarCorreo(data: any) {
     let consulta = null;
-    const endpoint = `${environment.apiImplementosClientes}buscarCorreo`;
+    const endpoint = `${environment.apiCustomer}buscarCorreo`;
     const params = `?correo=${data}`;
     const url = `${endpoint}${params}`;
     consulta = await this.http.get(url).toPromise();
@@ -148,27 +144,26 @@ export class ClientsService {
   /* Aux */
 
   buscarComunas() {
-    const call = environment.apiImplementosLogistica + `comunas`;
+    const call = environment.apiLogistic + `comunas`;
     return this.http.get(call);
   }
 
   buscarGiros() {
-    const call = environment.apiImplementosClientes + `giros`;
+    const call = environment.apiCustomer + `giros`;
     return this.http.get(call);
   }
 
   /* home user's data */
 
   buscarVentasPeriodo(rut: any) {
-    const call =
-      environment.apiImplementosClientes + `ventasPeriodo?rut=${rut}`;
+    const call = environment.apiCustomer + `ventasPeriodo?rut=${rut}`;
     return this.http.get(call);
   }
 
   graficoVentaValorada(request: any) {
     let consulta = null;
 
-    const url = `${environment.apiImplementosClientes}graficos/ventaValorada?rutCliente=${request.rutCliente}&anio=${request.anio}`;
+    const url = `${environment.apiCustomer}graficos/ventaValorada?rutCliente=${request.rutCliente}&anio=${request.anio}`;
     consulta = this.http.get(url);
 
     return consulta;
@@ -177,7 +172,7 @@ export class ClientsService {
   graficoVentasPorUen(request: any) {
     let consulta = null;
 
-    const url = `${environment.apiImplementosClientes}tablas/ventasPorUen?rutCliente=${request.rutCliente}`;
+    const url = `${environment.apiCustomer}tablas/ventasPorUen?rutCliente=${request.rutCliente}`;
     let params = '';
     if (!isVacio(request.anio)) {
       params = params + `&anio=${request.anio}`;
@@ -191,62 +186,61 @@ export class ClientsService {
   }
 
   buscarPendientesEntrega(rut: any) {
-    const call =
-      environment.apiImplementosClientes + `pendienteentrega?rut=${rut}`;
+    const call = environment.apiCustomer + `pendienteentrega?rut=${rut}`;
     return this.http.get(call);
   }
 
   buscarSaldo(rut: any) {
-    const call = environment.apiImplementosClientes + `saldo?rut=${rut}`;
+    const call = environment.apiCustomer + `saldo?rut=${rut}`;
     return this.http.get(call);
   }
 
   buscarFacturas(rut: any) {
-    const call = environment.apiImplementosClientes + `facturas?rut=${rut}`;
+    const call = environment.apiCustomer + `facturas?rut=${rut}`;
     return this.http.get(call);
   }
 
   register(data: any) {
     return this.http.post<ResponseApi>(
-      environment.apiImplementosClientes + `nuevo`,
+      environment.apiCustomer + `nuevo`,
       data
     );
   }
 
   registerb2b(data: any) {
     return this.http.post<ResponseApi>(
-      environment.apiImplementosClientes + `nuevob2b`,
+      environment.apiCustomer + `nuevob2b`,
       data
     );
   }
   validateCustomer(rut: any) {
     return this.http.get<ResponseApi>(
-      environment.apiImplementosClientes + `rut?rut=${rut}`
+      environment.apiCustomer + `rut?rut=${rut}`
     );
   }
 
   validateCustomerb2b(rut: any) {
     return this.http.get<ResponseApi>(
-      environment.apiImplementosClientes + `rutb2b?rut=${rut}`
+      environment.apiCustomer + `rutb2b?rut=${rut}`
     );
   }
   getDataClient(data: any): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(
-      environment.apiImplementosClientes + `GetDatosCliente`,
+      environment.apiCustomer + `GetDatosCliente`,
       data
     );
   }
 
   getCustomerDebt(data: any) {
     return this.http.post<ResponseApi>(
-      environment.apiImplementosClientes + `deuda/listado`,
+      environment.apiCustomer + `deuda/listado`,
       data
     );
   }
 
   generatePayment(data: any) {
     return this.http.post<ResponseApi>(
-      environment.apiImplementosClientes + `deuda/generaPago`,
+      environment.apiCustomer + `deuda/generaPago`,
       data
     );
   }
@@ -254,7 +248,7 @@ export class ClientsService {
   // carro de compra
   async get_carroComprarb2c(rut: string) {
     let consulta = null;
-    const url = `${environment.apiImplementosCarro}carrob2c?rut=${rut}`;
+    const url = `${environment.apiShoppingCart}carrob2c?rut=${rut}`;
     consulta = await this.http.get(url).toPromise();
     return consulta;
   }
@@ -275,77 +269,66 @@ export class ClientsService {
       params['preciosPorPagina'] = preciosPorPagina.toString();
     }
 
-    return this.http.get(
-      `${environment.apiImplementosClientes}listaPreciosPorRut`,
-      {
-        params,
-      }
-    );
+    return this.http.get(`${environment.apiCustomer}listaPreciosPorRut`, {
+      params,
+    });
   }
 
   getIndicadoresEconomicos() {
-    return this.http.get(
-      environment.apiImplementosClientes + `indicadoresEconomicos`
-    );
+    return this.http.get(environment.apiCustomer + `indicadoresEconomicos`);
   }
 
   getBusquedasVin(rut: string): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
-      environment.apiImplementosClientes + `busquedasVin?rutCliente=${rut}`
+      environment.apiCustomer + `busquedasVin?rutCliente=${rut}`
     );
   }
 
   getFlota(rut: string): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
-      environment.apiImplementosClientes + `flota?rutCliente=${rut}`
+      environment.apiCustomer + `flota?rutCliente=${rut}`
     );
   }
 
   setBusquedaVin(request: any): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(
-      environment.apiImplementosClientes + `busquedaVin`,
+      environment.apiCustomer + `busquedaVin`,
       request
     );
   }
 
   setFlota(request: any) {
-    return this.http.post(
-      environment.apiImplementosClientes + `flota`,
-      request
-    );
+    return this.http.post(environment.apiCustomer + `flota`, request);
   }
 
   setConcurso(data: any) {
     return this.http.post<ResponseApi>(
-      environment.apiImplementosClientes + `concurso`,
+      environment.apiCustomer + `concurso`,
       data
     );
   }
 
   setCyberday(data: any) {
-    return this.http.post(
-      environment.apiImplementosClientes + `ciberday`,
-      data
-    );
+    return this.http.post(environment.apiCustomer + `ciberday`, data);
   }
 
   setFormularioCyber(data: any) {
     return this.http.post<ResponseApi>(
-      environment.apiImplementosClientes + `formularioCyber`,
+      environment.apiCustomer + `formularioCyber`,
       data
     );
   }
 
   setDevolucion(data: any) {
     return this.http.post<ResponseApi>(
-      environment.apiImplementosClientes + `devolucion`,
+      environment.apiCustomer + `devolucion`,
       data
     );
   }
 
   setConcursoGiftCard(data: any): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(
-      environment.apiImplementosClientes + `concursoGiftcard`,
+      environment.apiCustomer + `concursoGiftcard`,
       data
     );
   }
@@ -359,10 +342,7 @@ export class ClientsService {
         idFlota: busqueda._id,
       },
     };
-    return this.http.delete(
-      environment.apiImplementosClientes + `busquedaVin`,
-      options
-    );
+    return this.http.delete(environment.apiCustomer + `busquedaVin`, options);
   }
 
   deleteFlota(flota: Flota) {
@@ -374,33 +354,24 @@ export class ClientsService {
         idFlota: flota._id,
       },
     };
-    return this.http.delete(
-      environment.apiImplementosClientes + `flota`,
-      options
-    );
+    return this.http.delete(environment.apiCustomer + `flota`, options);
   }
 
   updateFlota(request: any) {
-    return this.http.put(
-      environment.apiImplementosClientes + `flota`,
-      request
-    );
+    return this.http.put(environment.apiCustomer + `flota`, request);
   }
 
   getVehiculo(chassisPatente: string) {
     const httpParams = new HttpParams().set('chasis_patente', chassisPatente);
 
-    return this.http.get<ResponseApi>(
-      environment.apiImplementosClientes + `vehiculo`,
-      {
-        params: httpParams,
-      }
-    );
+    return this.http.get<ResponseApi>(environment.apiCustomer + `vehiculo`, {
+      params: httpParams,
+    });
   }
 
   getListaArticulosFavoritos(rut: string): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
-      environment.apiImplementosClientes + `favoritos/lista?rut=${rut}`
+      environment.apiCustomer + `favoritos/lista?rut=${rut}`
     );
   }
 
@@ -409,7 +380,7 @@ export class ClientsService {
     rut: string
   ): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(
-      environment.apiImplementosClientes + `favoritos/lista`,
+      environment.apiCustomer + `favoritos/lista`,
       { nombre, rut }
     );
   }
@@ -420,7 +391,7 @@ export class ClientsService {
     idLista: string
   ): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(
-      environment.apiImplementosClientes + `favoritos/sku/${idLista}`,
+      environment.apiCustomer + `favoritos/sku/${idLista}`,
       { sku, rut }
     );
   }
@@ -440,7 +411,7 @@ export class ClientsService {
       },
     };
     return this.http.delete<ResponseApi>(
-      environment.apiImplementosClientes + `favoritos/sku/${idLista}`,
+      environment.apiCustomer + `favoritos/sku/${idLista}`,
       options
     );
   }
@@ -459,7 +430,7 @@ export class ClientsService {
       },
     };
     return this.http.delete<ResponseApi>(
-      environment.apiImplementosClientes + `favoritos/sku`,
+      environment.apiCustomer + `favoritos/sku`,
       options
     );
   }
@@ -470,7 +441,7 @@ export class ClientsService {
     idLista: string
   ): Observable<ResponseApi> {
     return this.http.put<ResponseApi>(
-      environment.apiImplementosClientes + `favoritos/lista/${idLista}`,
+      environment.apiCustomer + `favoritos/lista/${idLista}`,
       { nombre, rut }
     );
   }
@@ -480,8 +451,7 @@ export class ClientsService {
     idLista: string
   ): Observable<ResponseApi> {
     return this.http.put<ResponseApi>(
-      environment.apiImplementosClientes +
-        `favoritos/lista/${idLista}/predeterminada`,
+      environment.apiCustomer + `favoritos/lista/${idLista}/predeterminada`,
       { rut }
     );
   }
@@ -499,7 +469,7 @@ export class ClientsService {
       },
     };
     return this.http.delete<ResponseApi>(
-      environment.apiImplementosClientes + `favoritos/lista/${idLista}`,
+      environment.apiCustomer + `favoritos/lista/${idLista}`,
       options
     );
   }
@@ -515,7 +485,7 @@ export class ClientsService {
       url = `favoritos/excel/${idLista}`;
     }
     return this.http.post<ResponseApi>(
-      environment.apiImplementosClientes + url,
+      environment.apiCustomer + url,
       formData
     );
   }
@@ -530,10 +500,7 @@ export class ClientsService {
     } else {
       url = `favoritos/skus/${idLista}`;
     }
-    return this.http.post<ResponseApi>(
-      environment.apiImplementosClientes + url,
-      request
-    );
+    return this.http.post<ResponseApi>(environment.apiCustomer + url, request);
   }
 
   async cargaFavoritosLocalStorage(rut: string) {
@@ -555,15 +522,12 @@ export class ClientsService {
 
   getCentrosCosto(rut: string): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
-      environment.apiImplementosClientes + `centroCosto?rut=${rut}`
+      environment.apiCustomer + `centroCosto?rut=${rut}`
     );
   }
 
   setCentroCosto(request: any) {
-    return this.http.post(
-      environment.apiImplementosClientes + `centroCosto`,
-      request
-    );
+    return this.http.post(environment.apiCustomer + `centroCosto`, request);
   }
 
   updateCentroCosto(
@@ -572,7 +536,7 @@ export class ClientsService {
     idCentro: string
   ): Observable<ResponseApi> {
     return this.http.put<ResponseApi>(
-      environment.apiImplementosClientes + `centroCosto/${idCentro}`,
+      environment.apiCustomer + `centroCosto/${idCentro}`,
       { nombre, rut }
     );
   }
@@ -587,32 +551,30 @@ export class ClientsService {
       },
     };
     return this.http.delete(
-      environment.apiImplementosClientes + `centroCosto/${idCentro}`,
+      environment.apiCustomer + `centroCosto/${idCentro}`,
       options
     );
   }
 
   getDominiosFrecuentes(): Observable<Dominios> {
-    return this.http.get<Dominios>(
-      `${environment.apiImplementosClientes}dominios`
-    );
+    return this.http.get<Dominios>(`${environment.apiCustomer}dominios`);
   }
 
   getCargosContacto(): Observable<CargosContactoResponse> {
     return this.http.get<CargosContactoResponse>(
-      `${environment.apiImplementosClientes}filtros/cargosContacto`
+      `${environment.apiCustomer}filtros/cargosContacto`
     );
   }
 
   getTiposContacto(): Observable<TiposContactoResponse> {
     return this.http.get<TiposContactoResponse>(
-      `${environment.apiImplementosClientes}filtros/tiposContacto`
+      `${environment.apiCustomer}filtros/tiposContacto`
     );
   }
 
   actualizaDireccion(request: any): Observable<ResponseApi> {
     return this.http.put<ResponseApi>(
-      `${environment.apiImplementosClientes}direccionCRM`,
+      `${environment.apiCustomer}direccionCRM`,
       request
     );
   }
@@ -629,21 +591,21 @@ export class ClientsService {
       body: request,
     };
     return this.http.delete<ResponseApi>(
-      `${environment.apiImplementosClientes}direccionCRM/${rutCliente}/${recid}`,
+      `${environment.apiCustomer}direccionCRM/${rutCliente}/${recid}`,
       options
     );
   }
 
   nuevoContacto(request: any): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(
-      `${environment.apiImplementosClientes}contactoCRM`,
+      `${environment.apiCustomer}contactoCRM`,
       request
     );
   }
 
   actualizaContacto(request: any): Observable<ResponseApi> {
     return this.http.put<ResponseApi>(
-      `${environment.apiImplementosClientes}contactoCRM`,
+      `${environment.apiCustomer}contactoCRM`,
       request
     );
   }
@@ -660,21 +622,21 @@ export class ClientsService {
       body: request,
     };
     return this.http.delete<ResponseApi>(
-      `${environment.apiImplementosClientes}contactoCRM/${rutCliente}/${contactoId}`,
+      `${environment.apiCustomer}contactoCRM/${rutCliente}/${contactoId}`,
       options
     );
   }
 
   getContactos(params: any) {
     return this.http.post(
-      environment.apiImplementosClientes + 'filtros/ContactosCompradorb2b',
+      environment.apiCustomer + 'filtros/ContactosCompradorb2b',
       params
     );
   }
 
   getBloqueo(rutCliente: string) {
     return this.http.get(
-      `${environment.apiImplementosClientes}bloqueo?rut=${rutCliente}`
+      `${environment.apiCustomer}bloqueo?rut=${rutCliente}`
     );
   }
 }

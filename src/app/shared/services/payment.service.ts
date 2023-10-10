@@ -136,7 +136,7 @@ export class PaymentService {
       };
 
       this.http
-        .post(`${environment.apiImplementosCarro}enviarmail`, parametros)
+        .post(`${environment.apiShoppingCart}enviarmail`, parametros)
         .toPromise();
     } catch (e) {
       console.log(
