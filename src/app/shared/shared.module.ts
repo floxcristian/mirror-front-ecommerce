@@ -16,6 +16,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { NgChartsModule, ThemeService } from 'ng2-charts';
+import { GoogleMapsModule } from '@angular/google-maps';
 import {
   NguCarousel,
   NguCarouselDefDirective,
@@ -207,6 +208,7 @@ const NGU_CAROUSEL_MODULES = [
     NgChartsModule,
     FiltroMagicoModule,
     InfiniteScrollModule,
+    GoogleMapsModule,
   ],
   exports: [
     PipesModule,
