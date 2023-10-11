@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '@env/environment';
 @Component({
   selector: 'app-page-downloadpdf',
   templateUrl: './page-downloadpdf.component.html',

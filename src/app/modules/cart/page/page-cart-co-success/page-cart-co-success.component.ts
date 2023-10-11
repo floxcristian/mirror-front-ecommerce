@@ -1,15 +1,12 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-page-cart-co-success',
   templateUrl: './page-cart-co-success.component.html',
   styleUrls: ['./page-cart-co-success.component.scss'],
 })
-export class PageCartCoSuccessComponent implements OnInit {
+export class PageCartCoSuccessComponent {
   numero = 0;
 
   constructor(private route: ActivatedRoute) {
@@ -17,6 +14,4 @@ export class PageCartCoSuccessComponent implements OnInit {
       this.numero = params['numero'];
     });
   }
-
-  ngOnInit() {}
 }

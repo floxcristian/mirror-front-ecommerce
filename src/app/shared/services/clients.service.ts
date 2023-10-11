@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 // Rxjs
 import { Observable } from 'rxjs';
 // Environment
-import { environment } from '../../../environments/environment';
+import { environment } from '@env/environment';
 // Services
 import { RootService } from './root.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';

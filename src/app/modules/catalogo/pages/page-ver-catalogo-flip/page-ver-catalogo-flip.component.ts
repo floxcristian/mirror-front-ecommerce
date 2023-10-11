@@ -8,7 +8,7 @@ import { RootService } from '../../../../shared/services/root.service';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { isVacio } from '../../../../shared/utils/utilidades';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '@env/environment';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
 

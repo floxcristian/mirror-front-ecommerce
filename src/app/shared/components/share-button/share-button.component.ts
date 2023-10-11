@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@env/environment';
 import { Product } from '../../interfaces/product';
 
 @Component({

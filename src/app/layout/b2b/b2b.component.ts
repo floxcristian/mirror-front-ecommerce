@@ -4,7 +4,7 @@ import { RootService } from '../../shared/services/root.service';
 import { Title } from '@angular/platform-browser';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { CanonicalService } from '../../shared/services/canonical.service';
-import { environment } from '../../../environments/environment';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-b2b',

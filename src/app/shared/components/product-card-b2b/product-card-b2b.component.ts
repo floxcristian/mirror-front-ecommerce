@@ -19,7 +19,7 @@ import { RootService } from '../../services/root.service';
 import { CurrencyService } from '../../services/currency.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@env/environment';
 import { ToastrService } from 'ngx-toastr';
 
 import { Usuario } from '../../interfaces/login';

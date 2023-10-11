@@ -26,7 +26,7 @@ import {
   TransBankToken,
 } from '../../../../shared/interfaces/payment-method';
 import { PaymentService } from '../../../../shared/services/payment.service';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '@env/environment';
 import { filter } from 'rxjs/internal/operators/filter';
 import {
   ShippingAddress,

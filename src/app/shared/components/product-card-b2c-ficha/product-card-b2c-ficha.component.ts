@@ -17,7 +17,7 @@ import { RootService } from '../../services/root.service';
 import { CurrencyService } from '../../services/currency.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@env/environment';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { isVacio } from '../../utils/utilidades';

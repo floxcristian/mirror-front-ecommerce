@@ -7,7 +7,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { takeUntil, map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { Usuario } from '../../../../shared/interfaces/login';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '@env/environment';
 import { isVacio } from '../../../../shared/utils/utilidades';
 
 interface Item {

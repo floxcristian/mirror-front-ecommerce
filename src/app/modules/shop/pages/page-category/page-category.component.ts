@@ -26,7 +26,7 @@ import { Title } from '@angular/platform-browser';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { CanonicalService } from '../../../../shared/services/canonical.service';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '@env/environment';
 import { isVacio } from '../../../../shared/utils/utilidades';
 
 import { LogisticsService } from '../../../../shared/services/logistics.service';

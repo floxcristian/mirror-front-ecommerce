@@ -2,7 +2,7 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 // Environment
-import { environment } from '../../../../../environments/environment';
+import { environment } from '@env/environment';
 // Models
 import { Usuario } from '../../../../shared/interfaces/login';
 // Services

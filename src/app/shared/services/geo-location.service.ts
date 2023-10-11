@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 // Rxjs
 import { Observable, Subject } from 'rxjs';
-// Environments
-import { environment } from '../../../environments/environment';
+// Environment
+import { environment } from '@env/environment';
 // Services
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 // Interfaces

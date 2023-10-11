@@ -51,7 +51,7 @@ import {
   WishListModalComponent,
 } from '../wish-list-modal/wish-list-modal.component';
 import { isVacio } from '../../utils/utilidades';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@env/environment';
 import { NguCarousel, NguCarouselConfig } from '@ngu/carousel';
 import { AvisoStockComponent } from '../aviso-stock/aviso-stock.component';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';

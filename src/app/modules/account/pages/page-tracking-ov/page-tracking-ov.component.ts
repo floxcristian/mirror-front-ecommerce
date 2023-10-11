@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { RootService } from '../../../../shared/services/root.service';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '@env/environment';
 import { DataTableDirective } from 'angular-datatables';
 
 class DataTablesResponse {

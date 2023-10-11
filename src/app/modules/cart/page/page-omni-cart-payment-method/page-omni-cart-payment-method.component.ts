@@ -4,7 +4,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PaymentParams } from '../../../../shared/interfaces/payment-method';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { PaymentService } from '../../../../shared/services/payment.service';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '@env/environment';
 import { CartService } from '../../../../shared/services/cart.service';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { isVacio } from '../../../../shared/utils/utilidades';

@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DataTableDirective } from 'angular-datatables';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '@env/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { rutValidator } from '../../../../shared/utils/utilidades';
 

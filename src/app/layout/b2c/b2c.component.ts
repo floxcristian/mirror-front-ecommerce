@@ -10,8 +10,7 @@ import { RootService } from '../../shared/services/root.service';
 import { Title } from '@angular/platform-browser';
 import { CanonicalService } from '../../shared/services/canonical.service';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-import { environment } from '../../../environments/environment';
-
+import { environment } from '@env/environment';
 @Component({
   selector: 'app-b2c',
   templateUrl: './b2c.component.html',

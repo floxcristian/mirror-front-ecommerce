@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 // Libs
 import { v4 as uuidv4 } from 'uuid';
 // Environment
-import { environment } from '../../../environments/environment';
+import { environment } from '@env/environment';
 // Pipes
 import { SlugifyPipe } from '../pipes/slugify.pipe';
 // Services

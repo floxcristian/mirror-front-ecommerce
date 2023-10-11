@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { PhotoSwipeService } from '../../../../../shared/services/photo-swipe.service';
-import { environment } from '../../../../../../environments/environment';
+import { environment } from '@env/environment';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({

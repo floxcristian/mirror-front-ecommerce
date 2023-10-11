@@ -2,8 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from '../../../../../environments/environment';
 import { UsersService } from '../../service/users.service';
+import { environment } from '@env/environment';
 
 class DataTablesResponse {
   data!: any[];

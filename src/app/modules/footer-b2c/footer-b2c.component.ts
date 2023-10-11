@@ -6,7 +6,7 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
+import { environment } from '@env/environment';
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({

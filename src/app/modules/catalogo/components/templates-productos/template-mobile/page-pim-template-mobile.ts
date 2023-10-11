@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
-import { environment } from '../../../../../../environments/environment';
+import { environment } from '@env/environment';
 import { CartService } from '../../../../../shared/services/cart.service';
 import { isVacio } from '../../../../../shared/utils/utilidades';
 

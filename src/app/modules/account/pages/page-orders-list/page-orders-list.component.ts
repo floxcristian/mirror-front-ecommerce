@@ -2,9 +2,8 @@ import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 
 import { Usuario } from '../../../../shared/interfaces/login';
 import { RootService } from '../../../../shared/services/root.service';
-import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '@env/environment';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';

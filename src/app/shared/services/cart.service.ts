@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 // Environment
-import { environment } from '../../../environments/environment';
+import { environment } from '@env/environment';
 // Services
 import { RootService } from './root.service';
 import { GeoLocationService } from './geo-location.service';

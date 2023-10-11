@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 // Rxjs
 import { Observable } from 'rxjs';
 // Environment
-import { environment } from '../../../environments/environment';
+import { environment } from '@env/environment';
 // Services
 import { GeoLocationService } from './geo-location.service';
 import { RootService } from './root.service';

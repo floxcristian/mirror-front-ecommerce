@@ -9,7 +9,7 @@ import {
 import { DataTableDirective } from 'angular-datatables';
 import { Observable, Subject } from 'rxjs';
 import { Usuario } from '../../../../shared/interfaces/login';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '@env/environment';
 import { GeoLocation } from '../../../../shared/interfaces/geo-location';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { RootService } from '../../../../shared/services/root.service';

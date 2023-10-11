@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 // Rxjs
 import { Observable } from 'rxjs';
 // Environment
-import { environment } from '../../../environments/environment';
+import { environment } from '@env/environment';
 // Interfaces
 import { ResponseApi } from '../interfaces/response-api';
 import { ComentarioArticulo } from '../interfaces/comentariosArticulo';

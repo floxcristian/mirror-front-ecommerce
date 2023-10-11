@@ -6,7 +6,7 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { StoresService } from '../../shared/services/stores.service';
-import { environment } from '../../../environments/environment';
+import { environment } from '@env/environment';
 import { Router } from '@angular/router';
 import { HostListener } from '@angular/core';
 import { BuscadorB2B } from '../../shared/interfaces/buscadorB2B';
