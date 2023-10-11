@@ -1,12 +1,17 @@
+// Angular
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+// Rxjs
+import { Observable } from 'rxjs';
+// Environment
 import { environment } from '../../../environments/environment';
-import { Usuario } from '../interfaces/login';
+// Services
 import { RootService } from './root.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { Flota } from '../interfaces/flota';
 import { isVacio } from '../utils/utilidades';
-import { Observable } from 'rxjs';
+// Interfaces
+import { Usuario } from '../interfaces/login';
+import { Flota } from '../interfaces/flota';
 import { ResponseApi } from '../interfaces/response-api';
 import { ArticuloFavorito } from '../interfaces/articuloFavorito';
 import { Dominios } from '../interfaces/dominios';
@@ -22,12 +27,6 @@ export class ClientsService {
     private root: RootService,
     private localS: LocalStorageService
   ) {}
-
-  buscarVentas(rut: any) {
-    const call =
-      environment.apiCustomer + `ventas?rut=${rut}&ventasporPagina=10000`;
-    return this.http.get(call);
-  }
 
   buscarOvsGeneradas() {
     const estado = 'generado';
@@ -69,11 +68,6 @@ export class ClientsService {
   }
 
   /* Admin Usuarios */
-
-  buscarUsuarios(rut = '') {
-    const call = environment.apiCMS + `users?rut=${rut}`;
-    return this.http.get(call);
-  }
 
   buscarUsuario(id: string) {
     const call = environment.apiCMS + `users/${id}`;
@@ -131,6 +125,7 @@ export class ClientsService {
 
     return consulta;
   }
+
   async ValidarCorreo(data: any) {
     let consulta = null;
     const endpoint = `${environment.apiCustomer}buscarCorreo`;
@@ -154,12 +149,6 @@ export class ClientsService {
   }
 
   /* home user's data */
-
-  buscarVentasPeriodo(rut: any) {
-    const call = environment.apiCustomer + `ventasPeriodo?rut=${rut}`;
-    return this.http.get(call);
-  }
-
   graficoVentaValorada(request: any) {
     let consulta = null;
 
@@ -183,11 +172,6 @@ export class ClientsService {
     consulta = this.http.get(url + params);
 
     return consulta;
-  }
-
-  buscarPendientesEntrega(rut: any) {
-    const call = environment.apiCustomer + `pendienteentrega?rut=${rut}`;
-    return this.http.get(call);
   }
 
   buscarSaldo(rut: any) {
@@ -246,38 +230,6 @@ export class ClientsService {
   }
 
   // carro de compra
-  async get_carroComprarb2c(rut: string) {
-    let consulta = null;
-    const url = `${environment.apiShoppingCart}carrob2c?rut=${rut}`;
-    consulta = await this.http.get(url).toPromise();
-    return consulta;
-  }
-
-  getPreciosPorRut(
-    pagina: number,
-    preciosPorPagina: number,
-    sucursal: string
-  ) {
-    const usuario: Usuario = this.localS.get('usuario') as any;
-    const params: any = {
-      rut: usuario.rut,
-      sucursal,
-    };
-
-    if (pagina != null && preciosPorPagina != null) {
-      params['pagina'] = pagina.toString();
-      params['preciosPorPagina'] = preciosPorPagina.toString();
-    }
-
-    return this.http.get(`${environment.apiCustomer}listaPreciosPorRut`, {
-      params,
-    });
-  }
-
-  getIndicadoresEconomicos() {
-    return this.http.get(environment.apiCustomer + `indicadoresEconomicos`);
-  }
-
   getBusquedasVin(rut: string): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
       environment.apiCustomer + `busquedasVin?rutCliente=${rut}`
@@ -563,12 +515,6 @@ export class ClientsService {
   getCargosContacto(): Observable<CargosContactoResponse> {
     return this.http.get<CargosContactoResponse>(
       `${environment.apiCustomer}filtros/cargosContacto`
-    );
-  }
-
-  getTiposContacto(): Observable<TiposContactoResponse> {
-    return this.http.get<TiposContactoResponse>(
-      `${environment.apiCustomer}filtros/tiposContacto`
     );
   }
 

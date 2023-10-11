@@ -6,15 +6,15 @@ import { EventEmitter } from '@angular/core';
   styleUrls: ['./angular-email-autocomplete.component.scss'],
 })
 export class AngularEmailAutocompleteComponent {
-  public toggleDropDown: boolean;
-  public dropDownValues: Array<{
+  toggleDropDown: boolean;
+  dropDownValues: Array<{
     imgUrl?: undefined | string;
     value: string;
   }> = [];
-  public inputValue: string;
-  public placeholder: string;
-  public correoValido: boolean = false;
-  public regularExpression =
+  inputValue: string;
+  placeholder: string;
+  correoValido: boolean = false;
+  regularExpression =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   // @Output() selectedValue: EventEmitter<string> = new EventEmitter<string>();
   @Input() givenPlaceHolder: string;

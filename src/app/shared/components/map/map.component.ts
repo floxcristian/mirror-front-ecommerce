@@ -34,16 +34,16 @@ export class MapComponent implements OnInit, OnChanges {
   @Input() tienda!: DireccionMap | null;
   @Input() autocompletado!: boolean;
   @Input() infoWindowContent!: string;
-  @ViewChild('search', { static: true }) public searchElementRef!: ElementRef;
+  @ViewChild('search', { static: true }) searchElementRef!: ElementRef;
 
   lat: number = 0;
   lng: number = 0;
   zoom: number = 15;
   showSearchBar: boolean = true;
   geocoder: any;
-  @Output() public geolocalizacion = new EventEmitter<any>();
-  @Output() public clearAdress = new EventEmitter<any>();
-  @Output() public setDireccion = new EventEmitter<any>();
+  @Output() geolocalizacion = new EventEmitter<any>();
+  @Output() clearAdress = new EventEmitter<any>();
+  @Output() setDireccion = new EventEmitter<any>();
 
   // Temporal
   ngOnChanges(changes: SimpleChanges): void {}

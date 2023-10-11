@@ -38,7 +38,7 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
   usuario!: Usuario;
   form!: FormGroup;
 
-  public event: EventEmitter<any> = new EventEmitter();
+  event: EventEmitter<any> = new EventEmitter();
 
   constructor(
     public ModalRef: BsModalRef,

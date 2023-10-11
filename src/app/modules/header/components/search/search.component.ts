@@ -19,7 +19,6 @@ import { CartService } from '../../../../shared/services/cart.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
-//import { LocalStorageService } from 'angular-2-local-storage';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import {
   GeoLocation,
@@ -53,26 +52,26 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   templateTiendaModal!: TemplateRef<any>;
   modalRefTienda!: BsModalRef;
 
-  public texto = '';
-  public textToSearch = '';
-  public categorias: any[] = [];
-  public marcas: any[] = [];
-  public sugerencias: any[] = [];
-  public productosEncontrados: any[] = [];
-  public mostrarContenido = false;
-  public mostrarCargando = false;
-  public linkBusquedaProductos = '#';
-  public searchControl!: FormControl;
+  texto = '';
+  textToSearch = '';
+  categorias: any[] = [];
+  marcas: any[] = [];
+  sugerencias: any[] = [];
+  productosEncontrados: any[] = [];
+  mostrarContenido = false;
+  mostrarCargando = false;
+  linkBusquedaProductos = '#';
+  searchControl!: FormControl;
   private debounce = 1000;
-  public buscando = true;
+  buscando = true;
   back_key = false;
-  public mostrarResultados = false;
+  mostrarResultados = false;
 
-  public sessionNotStarted = false;
-  public loadCart = false;
-  public tiendaSeleccionada!: TiendaLocation | undefined;
+  sessionNotStarted = false;
+  loadCart = false;
+  tiendaSeleccionada!: TiendaLocation | undefined;
   seleccionado = false;
-  public isFocusedInput = false;
+  isFocusedInput = false;
   constructor(
     private router: Router,
     private modalService: BsModalService,
@@ -123,7 +122,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroy$.unsubscribe();
   }
 
-  public reset() {
+  reset() {
     this.buscando = true;
   }
 
@@ -154,7 +153,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     }, 500);
   }
 
-  public buscarChasis() {
+  buscarChasis() {
     if (this.searchChasis.nativeElement.value.trim().length > 0) {
       const textToSearch = this.searchChasis.nativeElement.value.trim();
       this.router.navigate([`inicio/productos/todos`], {
@@ -165,7 +164,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  public buscarSelect() {
+  buscarSelect() {
     this.mostrarContenido = true;
     this.mostrarCargando = true;
     this.linkBusquedaProductos = this.textToSearch;
@@ -216,7 +215,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  public mostraModalBuscador() {
+  mostraModalBuscador() {
     this.modalRef = this.modalService.show(this.template, {
       class: 'modal-xl modal-buscador',
     });

@@ -1,9 +1,14 @@
+// Angular
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+// Rxjs
+import { Observable } from 'rxjs';
+// Environment
 import { environment } from '../../../environments/environment';
+// Services
 import { GeoLocationService } from './geo-location.service';
 import { RootService } from './root.service';
-import { Observable } from 'rxjs';
+// Interfaces
 import { ResponseApi } from '../interfaces/response-api';
 
 @Injectable({
@@ -58,19 +63,6 @@ export class ProductsService {
     return this.http.get(this.urlApi + `ficha/${sku}`, { params });
   }
 
-  obtieneProducto(sku: any, params: any = null) {
-    let consulta = null;
-    consulta = this.http.get(this.urlApi + `ficha/${sku}`, {
-      params,
-    });
-    return consulta;
-  }
-  getRecommendedProducts(params: any) {
-    return this.http.get(environment.apiCatalogo + 'recomendadoproducto', {
-      params,
-    });
-  }
-
   getRecommendedProductsList(params: any): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
       environment.apiCatalogo + 'productosasugerir',
@@ -91,13 +83,6 @@ export class ProductsService {
       { params }
     );
   }
-
-  getRelatedProductsFromList(params: any) {
-    return this.http.get(environment.apiCatalogo + 'relacionadoproducto', {
-      params,
-    });
-  }
-
   getPropularProducts(params: any): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
       environment.apiCatalogo + 'popularesproducto',
@@ -121,19 +106,5 @@ export class ProductsService {
     return this.http.get(
       environment.apiCMS + 'products/descripcion-ficha?sku=' + sku
     );
-  }
-
-  buscarporPrecio(params: any) {
-    return this.http.get(environment.apiElastic, { params });
-  }
-
-  subir_imagen(files: any) {
-    let fd = new FormData();
-    fd.append('file', files.file);
-    fd.append('tipo', files.tipo);
-
-    var call = `${environment.apiCatalogo}subirImagen`;
-
-    return this.http.post(call, fd);
   }
 }

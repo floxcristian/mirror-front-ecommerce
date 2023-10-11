@@ -34,7 +34,7 @@ export class WishListModalComponent implements OnInit {
 
   usuario!: Usuario;
 
-  public event: EventEmitter<any> = new EventEmitter();
+  event: EventEmitter<any> = new EventEmitter();
 
   constructor(
     public ModalRef: BsModalRef,

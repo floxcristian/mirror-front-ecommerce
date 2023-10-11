@@ -1,11 +1,16 @@
+// Angular
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+// Libs
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
+// Modals
 import { RegistroOkModalComponent } from '../../../pages/components/registro-ok-modal/registro-ok-modal.component';
-import { ResponseApi } from '../../../shared/interfaces/response-api';
+// Services
 import { ClientsService } from '../../../shared/services/clients.service';
 import { rutValidator } from '../../../shared/utils/utilidades';
+// Interfaces
+import { ResponseApi } from '../../../shared/interfaces/response-api';
 
 @Component({
   selector: 'app-page-ciberday-form',

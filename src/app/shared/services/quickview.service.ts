@@ -3,7 +3,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 // Rxjs
 import { Observable, Subject, timer } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-// Others
+// Interfaces
 import { Product } from '../interfaces/product';
 
 @Injectable({

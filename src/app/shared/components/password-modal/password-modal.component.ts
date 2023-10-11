@@ -12,7 +12,7 @@ import { PasswordValidator } from '../../validations/password';
 })
 export class PasswordModalComponent implements OnInit {
   @Input() modalPasswordRef!: BsModalRef;
-  @Output() public respuesta = new EventEmitter<any>();
+  @Output() respuesta = new EventEmitter<any>();
   formPassword: FormGroup;
   estadoInput = [
     { tipo: 'password', icono: 'fas fa-eye-slash' },

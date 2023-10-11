@@ -24,7 +24,7 @@ export class AlertCartMinComponent implements OnInit {
 
   ngOnInit() {}
 
-  public show(value: any) {
+  show(value: any) {
     if (this.router.url === '/carro-compra/resumen') this.showAlert = false;
     else this.showAlert = value;
     // setTimeout(() => {
@@ -36,7 +36,7 @@ export class AlertCartMinComponent implements OnInit {
     // }, 100);
   }
 
-  public hide() {
+  hide() {
     this.showAlert = false;
   }
 

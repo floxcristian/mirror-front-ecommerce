@@ -16,7 +16,7 @@ export class DireccionDespachoComponent implements OnInit {
   direcciones!: ShippingAddress[];
   direccionSeleccionada!: ShippingAddress | null;
 
-  public event: EventEmitter<any> = new EventEmitter();
+  event: EventEmitter<any> = new EventEmitter();
 
   constructor(
     public ModalRef: BsModalRef,

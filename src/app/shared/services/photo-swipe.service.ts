@@ -1,7 +1,10 @@
+// Angular
 import { Injectable, NgZone, OnDestroy } from '@angular/core';
-import { ResourcesService } from './resources.service';
+// Rxjs
 import { Observable, Subscriber } from 'rxjs';
 import { from } from 'rxjs/internal/observable/from';
+// Services
+import { ResourcesService } from './resources.service';
 
 declare const PhotoSwipe: any;
 declare const PhotoSwipeUI_Default: any;

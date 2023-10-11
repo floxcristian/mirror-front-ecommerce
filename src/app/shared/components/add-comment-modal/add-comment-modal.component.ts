@@ -27,7 +27,7 @@ export class AddCommentModalComponent implements OnInit {
   correo!: string;
 
   camposDisabled = false;
-  public event: EventEmitter<any> = new EventEmitter();
+  event: EventEmitter<any> = new EventEmitter();
 
   constructor(
     public ModalRef: BsModalRef,

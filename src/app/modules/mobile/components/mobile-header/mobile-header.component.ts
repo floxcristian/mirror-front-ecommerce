@@ -43,21 +43,21 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
   modalRefVin!: BsModalRef;
   isFocusedInput: boolean = false;
   templateTiendaModal!: TemplateRef<any>;
-  public texto: any = '';
-  public numeroVIN: any = '';
-  public textToSearch: any = '';
-  public categorias: any[] = [];
-  public marcas: any[] = [];
-  public sugerencias: any[] = [];
-  public productosEncontrados: any[] = [];
-  public mostrarContenido = false;
-  public mostrarCargando = false;
-  public linkBusquedaProductos = '#';
-  public searchControl!: FormControl;
+  texto: any = '';
+  numeroVIN: any = '';
+  textToSearch: any = '';
+  categorias: any[] = [];
+  marcas: any[] = [];
+  sugerencias: any[] = [];
+  productosEncontrados: any[] = [];
+  mostrarContenido = false;
+  mostrarCargando = false;
+  linkBusquedaProductos = '#';
+  searchControl!: FormControl;
   private debounce = 1000;
-  public buscando = true;
+  buscando = true;
 
-  public mostrarResultados = false;
+  mostrarResultados = false;
 
   constructor(
     public menu: MobileMenuService,
@@ -94,7 +94,7 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  public reset() {
+  reset() {
     this.buscando = true;
   }
 
@@ -113,7 +113,7 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
     }, 500);
   }
 
-  public buscarEnModal() {
+  buscarEnModal() {
     this.mostrarContenido = true;
     this.mostrarCargando = true;
     this.linkBusquedaProductos = this.texto;
@@ -156,7 +156,7 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  public buscarEnModalVin(event: any) {
+  buscarEnModalVin(event: any) {
     if (this.numeroVIN.trim().length > 0) {
       var textToSearch = this.numeroVIN.trim();
       var data = `VIM__${textToSearch}`;
@@ -167,7 +167,7 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  public mostraModalBuscador() {
+  mostraModalBuscador() {
     this.modalRef = this.modalService.show(this.template, {
       class: 'modal-100 modal-buscador modal-new',
     });
@@ -175,7 +175,7 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
     document.getElementById('searchMobileModal')?.focus();
   }
 
-  public mostraModalBuscadorVin() {
+  mostraModalBuscadorVin() {
     this.modalRefVin = this.modalService.show(this.templateVin, {
       class: 'modal-buscadorVin-container modal-buscadorVin',
     });

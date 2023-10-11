@@ -16,7 +16,7 @@ export class MegamenuComponent {
 
   constructor() {}
 
-  public toggle() {
+  toggle() {
     // no funciona
     //this.departamentComp.close();
   }

@@ -1,3 +1,4 @@
+// Angular
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
@@ -25,10 +26,6 @@ export class DirectionService {
     if (isPlatformBrowser(this.platformId)) {
       this.direction = getComputedStyle(document.body).direction as Direction;
     }
-  }
-
-  isLTR(): boolean {
-    return this.value === 'ltr';
   }
 
   isRTL(): boolean {

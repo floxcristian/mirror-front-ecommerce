@@ -1,8 +1,12 @@
+// Angular
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+// Rxjs
 import { map } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
+// Environment
+import { environment } from '../../../environments/environment';
+// Interfaces
 import { ArticuloResponse } from '../interfaces/articulos.response';
 import { ResponseApi } from '../interfaces/response-api';
 
@@ -27,22 +31,12 @@ export class LogisticsService {
     return this.http.post(this.urlApi + `despachoProducto`, data);
   }
 
-  obtieneDespachos(data: any) {
-    return this.http.post(this.urlApi + `despachocarro2`, data);
-  }
-
   obtienRetiro(data: any) {
     return this.http.post(environment.apiLogistic + `retirocarro`, data);
   }
 
   obtieneDireccionesTienda() {
     return this.http.get(this.urlApi + `direccionestiendas`);
-  }
-
-  obtieneDespachoCompleto(params: any) {
-    return this.http.get(environment.apiLogistic + `productosRetiro`, {
-      params,
-    });
   }
 
   obtieneDireccionesTiendaRetiro(params: any): Observable<ResponseApi> {
@@ -77,28 +71,6 @@ export class LogisticsService {
   }
   obtenerTiendasOmni() {
     return this.http.get(this.urlApi + `tiendas`);
-  }
-
-  ReciboEnvio(guia_despacho: string) {
-    let consulta: any = this.http.get(
-      environment.apiLogistic + 'receptorGD/SAMEX/' + guia_despacho
-    );
-    return consulta;
-  }
-
-  obtieneOvEspera(sucursal: string) {
-    let consulta: any = this.http.get(
-      environment.apiOms +
-        `propagandaTV/esperaClienteEnTienda?tvLocation=${sucursal}&fakeData=0`
-    );
-    return consulta;
-  }
-
-  obtenerGrupoDespacho(id_carro: any, comuna: any) {
-    let consulta: any = this.http.get(
-      environment.apiPromesa + 'domicilio/' + id_carro + '/' + comuna
-    );
-    return consulta;
   }
 
   obtenerMultiDespachos(data: any) {

@@ -1,10 +1,15 @@
+// Angular
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-import { Login, Usuario } from '../interfaces/login';
+// Rxjs
 import { Subject, Observable } from 'rxjs';
+// Environment
+import { environment } from '../../../environments/environment';
+// Services
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { RootService } from './root.service';
+// Interfaces
+import { Login, Usuario } from '../interfaces/login';
 
 @Injectable({
   providedIn: 'root',
@@ -55,7 +60,7 @@ export class LoginService {
     }
   }
 
-  public setRoles(profile: any) {
+  setRoles(profile: any) {
     if (profile === 'superadmin') {
       this.linkMiCuenta = [
         {

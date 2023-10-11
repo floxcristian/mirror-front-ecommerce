@@ -30,13 +30,13 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
   giros!: any[];
   comunas!: any[];
   slices = 8;
-  public formVisita!: FormGroup;
-  public passwordFormGroup!: FormGroup;
-  public isInvoice = false;
+  formVisita!: FormGroup;
+  passwordFormGroup!: FormGroup;
+  isInvoice = false;
   tipo_fono = '+569';
   loadingForm = false;
-  public blockedForm = true;
-  public isValidRut = false;
+  blockedForm = true;
+  isValidRut = false;
 
   constructor(
     private clientService: ClientsService,

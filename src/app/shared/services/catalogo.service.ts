@@ -1,7 +1,11 @@
+// Angular
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+// Rxjs
 import { Observable } from 'rxjs';
+// Environment
+import { environment } from '../../../environments/environment';
+// Interfaces
 import { ResponseApi } from '../interfaces/response-api';
 import { ComentarioArticulo } from '../interfaces/comentariosArticulo';
 

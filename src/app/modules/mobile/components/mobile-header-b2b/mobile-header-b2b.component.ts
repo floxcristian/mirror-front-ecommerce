@@ -40,20 +40,20 @@ export class MobileHeaderB2bComponent implements OnInit, OnDestroy {
   modalRef!: BsModalRef;
   modalRefVin!: BsModalRef;
 
-  public texto = '';
-  public numeroVIN = '';
-  public textToSearch = '';
-  public categorias = [];
-  public marcas = [];
-  public productosEncontrados = [];
-  public mostrarContenido = false;
-  public mostrarCargando = false;
-  public linkBusquedaProductos = '#';
-  public searchControl!: FormControl;
+  texto = '';
+  numeroVIN = '';
+  textToSearch = '';
+  categorias = [];
+  marcas = [];
+  productosEncontrados = [];
+  mostrarContenido = false;
+  mostrarCargando = false;
+  linkBusquedaProductos = '#';
+  searchControl!: FormControl;
   private debounce = 300;
-  public buscando = true;
+  buscando = true;
 
-  public mostrarResultados = false;
+  mostrarResultados = false;
 
   constructor(
     public menu: MobileMenuService,
@@ -88,11 +88,11 @@ export class MobileHeaderB2bComponent implements OnInit, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  public reset() {
+  reset() {
     this.buscando = true;
   }
 
-  public buscar() {
+  buscar() {
     this.router.navigate([`inicio/productos/${this.textToSearch}`]);
     this.mostrarContenido = true;
     this.mostrarCargando = true;
@@ -103,7 +103,7 @@ export class MobileHeaderB2bComponent implements OnInit, OnDestroy {
     }, 500);
   }
 
-  public buscarEnModal() {
+  buscarEnModal() {
     this.mostrarContenido = true;
     this.mostrarCargando = true;
     this.linkBusquedaProductos = this.texto;
@@ -139,7 +139,7 @@ export class MobileHeaderB2bComponent implements OnInit, OnDestroy {
     );
   }
 
-  public buscarEnModalVin(event: any) {
+  buscarEnModalVin(event: any) {
     if (this.numeroVIN.trim().length > 0) {
       var textToSearch = this.numeroVIN.trim();
       var data = `VIM__${textToSearch}`;
@@ -150,7 +150,7 @@ export class MobileHeaderB2bComponent implements OnInit, OnDestroy {
     }
   }
 
-  public mostraModalBuscador() {
+  mostraModalBuscador() {
     this.modalRef = this.modalService.show(MobileBarraBusquedaComponent, {
       class: 'modal-100 modal-buscador',
     });
@@ -158,7 +158,7 @@ export class MobileHeaderB2bComponent implements OnInit, OnDestroy {
     // document.getElementById('searchMobileModal').focus();
   }
 
-  public mostraModalBuscadorVin() {
+  mostraModalBuscadorVin() {
     this.modalRefVin = this.modalService.show(MobileFiltrosComponent, {
       class: 'mx-md-auto mt-2',
     });

@@ -1,5 +1,7 @@
+// Angular
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+// Rxjs
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({

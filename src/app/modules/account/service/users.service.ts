@@ -27,7 +27,7 @@ export class UsersService {
     return this.httpClient.post(url, json);
   }
 
-  public uploadExcel(data: any) {
+  uploadExcel(data: any) {
     const formData: FormData = new FormData();
     for (const key in data) {
       formData.append(key, data[key]);

@@ -3,7 +3,6 @@ import {
   PLATFORM_ID,
   Inject,
   AfterViewInit,
-  Input,
   HostListener,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,7 +19,6 @@ import { environment } from '../../../environments/environment';
 })
 export class B2cComponent implements AfterViewInit {
   headerLayout!: 'classic' | 'compact';
-  // isBrowser = false;  // No se utiliza
   loadingPage = true;
 
   innerWidth: number;
@@ -48,7 +46,6 @@ export class B2cComponent implements AfterViewInit {
 
     if (isPlatformBrowser(this.platformId)) {
       this.canonicalService.setCanonicalURL(location.href);
-      // this.isBrowser = true;  // No se utiliza
     }
 
     if (isPlatformServer(this.platformId)) {

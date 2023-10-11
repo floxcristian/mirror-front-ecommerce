@@ -13,7 +13,6 @@ import { NavigationLink } from '../../../../shared/interfaces/navigation-link';
 import { isPlatformBrowser } from '@angular/common';
 import { CategoryService } from '../../../../shared/services/category.service';
 import { CategoryApi } from '../../../../shared/interfaces/category-api';
-import { SlugifyPipe } from '../../../../shared/pipes/slugify.pipe';
 import { ToastrService } from 'ngx-toastr';
 import { RootService } from '../../../../shared/services/root.service';
 import { Megamenu } from 'src/app/shared/interfaces/megamenu';
@@ -45,7 +44,6 @@ export class DepartmentsComponent implements OnInit {
     private el: ElementRef,
     private service: DepartmentsService,
     private categoriesService: CategoryService,
-    private slugify: SlugifyPipe,
     private toastr: ToastrService,
     private root: RootService
   ) {
@@ -305,7 +303,7 @@ export class DepartmentsComponent implements OnInit {
     content.style.height = endHeight + 'px';
   }
 
-  public close(): void {
+  close(): void {
     if (this.fixed || !this.isOpen) {
       return;
     }

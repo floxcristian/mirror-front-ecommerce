@@ -1,9 +1,13 @@
+// Angular
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { ToastrService } from 'ngx-toastr';
-import { TransBankToken, PaymentMethod } from '../interfaces/payment-method';
+// Rxjs
 import { Observable, Subject } from 'rxjs';
+// Environment
+import { ToastrService } from 'ngx-toastr';
+// Interfaces
+import { TransBankToken, PaymentMethod } from '../interfaces/payment-method';
 
 @Injectable({
   providedIn: 'root',
@@ -88,14 +92,6 @@ export class PaymentService {
     );
   }
 
-  ReiniciarCarro(id_carro: any): any {
-    return this.http.get(
-      environment.apiImplementosPagos +
-        'reiniciar_carro_khipu?id_carro=' +
-        id_carro
-    );
-  }
-
   async createTransBankTransaccion(params: any) {
     let response!: TransBankToken;
     try {
@@ -114,13 +110,6 @@ export class PaymentService {
       this.sendEmailError(e);
     }
     return response;
-  }
-
-  getVoucherData(params: any) {
-    return this.http.get(
-      environment.apiImplementosPagos + 'webpay/getDataComprobante',
-      { params }
-    );
   }
 
   async sendEmailError(
@@ -254,10 +243,11 @@ export class PaymentService {
     return resp;
   }
 
-  close(sentencia: any) {
+  close(sentencia: any): void {
     this.close$.next(sentencia);
   }
-  selectBancoKhipu(banco: any) {
+
+  selectBancoKhipu(banco: any): void {
     this.bancokhipu$.next(banco);
   }
 }

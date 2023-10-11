@@ -7,13 +7,15 @@ import { Router } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
 // Environment
 import { environment } from '../../../environments/environment';
-// Others
-import { Product } from '../interfaces/product';
+// Pipes
 import { SlugifyPipe } from '../pipes/slugify.pipe';
+// Services
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { LogisticsService } from './logistics.service';
+// Interfaces
+import { Product } from '../interfaces/product';
 import { Usuario } from '../interfaces/login';
 import { PreferenciasCliente } from '../interfaces/preferenciasCliente';
-import { LogisticsService } from './logistics.service';
 import { isVacio } from '../utils/utilidades';
 
 @Injectable({
@@ -23,7 +25,7 @@ export class RootService {
   path = './inicio';
   modalBuscador: any = null;
   urlProduct: any[] = [];
-  public simpleDtOptions: any;
+  simpleDtOptions: any;
 
   constructor(
     public slugify: SlugifyPipe,
@@ -136,7 +138,7 @@ export class RootService {
     return this.path + url;
   }
 
-  public limpiaTextos(producto: Product) {
+  limpiaTextos(producto: Product) {
     producto.nombre = producto.nombre.replace(/(^"|"$)/g, '');
 
     return producto;
@@ -160,11 +162,11 @@ export class RootService {
     product.atributos = att;
   }
 
-  public getUrlImagenMiniaturaWidget(sku: any) {
+  getUrlImagenMiniaturaWidget(sku: any) {
     return environment.urlFotowidgetProductos + `${sku}.jpg?alt=media`;
   }
 
-  public getUrlImagenMiniatura(product: any) {
+  getUrlImagenMiniatura(product: any) {
     if (Object.keys(product.images).length > 0) {
       if (product.images[0] == undefined) {
         if (product.images['250'].length > 0) return product.images['250'][0];
@@ -177,7 +179,7 @@ export class RootService {
     } else return 'assets/images/products/no-image-listado-2.jpg';
   }
 
-  public getUrlImagenMiniatura150(product: any) {
+  getUrlImagenMiniatura150(product: any) {
     if (Object.keys(product.images).length > 0) {
       if (product.images[0] == undefined) {
         if (product.images['150'].length > 0) return product.images['150'][0];
@@ -190,36 +192,36 @@ export class RootService {
     } else return 'assets/images/products/no-image-listado-2.jpg';
   }
 
-  public requestUrlImagenMiniatura(sku: any) {
+  requestUrlImagenMiniatura(sku: any) {
     const urlVerificaImagen =
       environment.urlFotoListadoProductos + `${sku}.jpg`;
     return this.http.get(urlVerificaImagen);
   }
 
-  public getUrlImagenFicha(sku: any) {
+  getUrlImagenFicha(sku: any) {
     return environment.urlFotoFichaProducto + `${sku}.jpg?alt=media`;
   }
 
-  public requestUrlImagenFicha(sku: any) {
+  requestUrlImagenFicha(sku: any) {
     const urlVerificaImagen = environment.urlFotoFichaProducto + `${sku}.jpg`;
     return this.http.get(urlVerificaImagen);
   }
 
-  public returnUrlNoImagen() {
+  returnUrlNoImagen() {
     return 'assets/images/products/no-image-ficha.jpg';
   }
 
-  public setModalRefBuscador(modalRef: any) {
+  setModalRefBuscador(modalRef: any) {
     this.modalBuscador = modalRef;
   }
 
-  public hideModalRefBuscador() {
+  hideModalRefBuscador() {
     if (this.modalBuscador != null) {
       this.modalBuscador.hide();
     }
   }
 
-  public getModalRefBuscador() {
+  getModalRefBuscador() {
     return this.modalBuscador;
   }
 
@@ -227,15 +229,15 @@ export class RootService {
     $event.target.src = 'assets/images/products/no-imagen.jpg';
   }
 
-  public replaceSlash(str: any) {
+  replaceSlash(str: any) {
     return str.replace(/\//g, '');
   }
 
-  public replaceAll(str: any, char: any, char2 = ' ') {
+  replaceAll(str: any, char: any, char2 = ' ') {
     return str.replace(char, char2);
   }
 
-  public setQuality(product: Product) {
+  setQuality(product: Product) {
     if (
       typeof product !== 'undefined' &&
       typeof product.atributos !== 'undefined' &&
@@ -251,7 +253,7 @@ export class RootService {
     }
   }
 
-  public limpiarNombres(str: any) {
+  limpiarNombres(str: any) {
     if (str !== undefined) {
       return str.replace(/['"]+/g, '');
     } else return null;

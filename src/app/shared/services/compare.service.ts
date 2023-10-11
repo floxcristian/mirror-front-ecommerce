@@ -1,8 +1,11 @@
+// Angular
 import { Inject, Injectable, OnDestroy, PLATFORM_ID } from '@angular/core';
-import { Product } from '../interfaces/product';
+import { isPlatformBrowser } from '@angular/common';
+// Rxjs
 import { BehaviorSubject, Observable, Subject, timer } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-import { isPlatformBrowser } from '@angular/common';
+// Interfaces
+import { Product } from '../interfaces/product';
 
 interface CompareData {
   items: Product[];

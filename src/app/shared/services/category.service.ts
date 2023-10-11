@@ -1,8 +1,11 @@
+// Angular
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+// Rxjs
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+// Environment
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

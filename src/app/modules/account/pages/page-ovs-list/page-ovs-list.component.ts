@@ -81,7 +81,7 @@ export class PageOvsListComponent implements OnInit {
     );
   }
 
-  public confirmarOV(idCarro: any) {
+  confirmarOV(idCarro: any) {
     this.carroService.confirmarOV(idCarro).subscribe((r: any) => {
       this.toastr.success('Error de conexión, para obtener ovs');
       window.location.reload();

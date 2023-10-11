@@ -29,7 +29,7 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
   isOpen = false;
   templateTiendaModal!: TemplateRef<any>;
   modalRefTienda!: BsModalRef;
-  public tiendaSeleccionada!: TiendaLocation | undefined;
+  tiendaSeleccionada!: TiendaLocation | undefined;
   private categoriaDetalle: any;
   private arrayCategorias: NavigationLink[] = [];
   private segundoNivel: any;

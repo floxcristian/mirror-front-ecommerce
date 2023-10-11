@@ -18,12 +18,12 @@ export class Registerb2bComponent implements OnInit {
   giros!: any[];
   comunas!: any[];
   tipo_fono = '+569';
-  public formUsuario!: FormGroup;
-  public isInvoice = true;
-  public mensajeExito = false;
+  formUsuario!: FormGroup;
+  isInvoice = true;
+  mensajeExito = false;
   loadingForm = false;
-  public blockedForm = true;
-  public isValidRut = false;
+  blockedForm = true;
+  isValidRut = false;
 
   constructor(
     private clientService: ClientsService,

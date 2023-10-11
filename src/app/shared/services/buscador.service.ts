@@ -1,5 +1,8 @@
+// Angular
 import { Injectable } from '@angular/core';
+// Rxjs
 import { BehaviorSubject, Subject } from 'rxjs';
+// Interfaces
 import { Flota, MarcaModeloAnio } from '../interfaces/flota';
 
 export interface BusquedaData {
@@ -20,11 +23,10 @@ export class BuscadorService {
   private buscadorFiltrosVisibles = new Subject<boolean>();
   private buscadorFiltrosExternosVisibles = new Subject<boolean>();
 
-  public buscador$ = this.buscador.asObservable();
-  public buscadorExterno$ = this.buscadorExterno.asObservable();
-  public buscadorFiltrosVisibles$ =
-    this.buscadorFiltrosVisibles.asObservable();
-  public buscadorFiltrosExternosVisibles$ =
+  buscador$ = this.buscador.asObservable();
+  buscadorExterno$ = this.buscadorExterno.asObservable();
+  buscadorFiltrosVisibles$ = this.buscadorFiltrosVisibles.asObservable();
+  buscadorFiltrosExternosVisibles$ =
     this.buscadorFiltrosExternosVisibles.asObservable();
 
   constructor() {}

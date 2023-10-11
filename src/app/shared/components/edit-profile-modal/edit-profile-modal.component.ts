@@ -20,7 +20,7 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 })
 export class EditProfileModalComponent implements OnInit {
   @Input() modalEditRef!: BsModalRef;
-  @Output() public respuesta = new EventEmitter<any>();
+  @Output() respuesta = new EventEmitter<any>();
   formPerfil: FormGroup;
   user: Usuario;
 

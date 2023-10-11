@@ -6,11 +6,9 @@ import {
   Inject,
   OnInit,
 } from '@angular/core';
-// import { LOCAL_STORAGE, WINDOW } from '@ng-toolkit/universal';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DirectionService } from '../../../shared/services/direction.service';
 import { SlidesService } from '../../../shared/services/slides.service';
-// import { environment } from '../../../../environments/environment';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { isPlatformBrowser } from '@angular/common';
 
@@ -23,7 +21,7 @@ export class BlockSlideshowComponent implements OnInit {
   @Input() withDepartments = false;
   modalRef!: BsModalRef;
 
-  public innerWidth: number;
+  innerWidth: number;
   options = {
     lazyLoad: true,
     dots: true,
@@ -45,7 +43,6 @@ export class BlockSlideshowComponent implements OnInit {
   isBrowser;
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,
-    // @Inject(WINDOW) private window: Window,
     public sanitizer: DomSanitizer,
     private direction: DirectionService,
     private slidesService: SlidesService,

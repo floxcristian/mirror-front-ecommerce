@@ -1,19 +1,24 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+// Angular
+import { DatePipe } from '@angular/common';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+// Rxjs
+import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+// Environment
+import { environment } from '../../../environments/environment';
+// Services
+import { RootService } from './root.service';
+import { GeoLocationService } from './geo-location.service';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { isVacio } from '../utils/utilidades';
+// Libs
+import { ToastrService } from 'ngx-toastr';
+// Interfaces
 import { Product, ProductPrecio, ProductOrigen } from '../interfaces/product';
 import { CartData, ProductCart, CartTotal } from '../interfaces/cart-item';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { RootService } from './root.service';
-import { ToastrService } from 'ngx-toastr';
-
 import { Usuario } from '../interfaces/login';
-import { DatePipe } from '@angular/common';
-import { GeoLocationService } from './geo-location.service';
-import { isVacio } from '../utils/utilidades';
 import { ResponseApi } from '../interfaces/response-api';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -52,8 +57,8 @@ export class CartService {
   cartSession!: CartData;
 
   // muestra el dropdown carro de compras flotante
-  public dropCartActive$: BehaviorSubject<boolean> = new BehaviorSubject(true);
-  public CartDataSubject$: BehaviorSubject<CartData> = new BehaviorSubject(
+  dropCartActive$: BehaviorSubject<boolean> = new BehaviorSubject(true);
+  CartDataSubject$: BehaviorSubject<CartData> = new BehaviorSubject(
     this.CartData
   );
 
@@ -96,8 +101,6 @@ export class CartService {
   IVA = environment.IVA || 0.19;
 
   constructor(
-    @Inject(PLATFORM_ID)
-    private platformId: any,
     private http: HttpClient,
     private root: RootService,
     private localS: LocalStorageService,
@@ -247,7 +250,7 @@ export class CartService {
     this.calc();
   }
 
-  public calc(totalesFull = false): void {
+  calc(totalesFull = false): void {
     let quantity = 0;
     let subtotal = 0;
     let totalNeto = 0;
@@ -1151,7 +1154,7 @@ export class CartService {
     });
   }
 
-  public getPriceScale(params: any) {
+  getPriceScale(params: any) {
     return this.http.get(`${environment.apiShoppingCart}buscaprecioescala`, {
       params,
     });

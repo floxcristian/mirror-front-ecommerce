@@ -1,5 +1,8 @@
+// Angular
 import { Injectable } from '@angular/core';
+// Rxjs
 import { Observable, Subject } from 'rxjs';
+// Interfaces
 import { CurrencyFormatOptions } from '../interfaces/currency-format-options';
 
 interface CurrencyServiceData {
@@ -26,6 +29,4 @@ export class CurrencyService {
     this.data.options = value;
     this.changesSubject$.next(value);
   }
-
-  constructor() {}
 }

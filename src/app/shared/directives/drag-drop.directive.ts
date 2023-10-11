@@ -24,14 +24,14 @@ export class DragDropDirective {
     this.opacity = '0.8';
   }
   //Dragleave listener
-  @HostListener('dragleave', ['$event']) public onDragLeave(evt: any) {
+  @HostListener('dragleave', ['$event']) onDragLeave(evt: any) {
     evt.preventDefault();
     evt.stopPropagation();
     this.background = '#f5fcff';
     this.opacity = '1';
   }
   //Drop listener
-  @HostListener('drop', ['$event']) public ondrop(evt: any) {
+  @HostListener('drop', ['$event']) ondrop(evt: any) {
     evt.preventDefault();
     evt.stopPropagation();
     this.background = '#f5fcff';

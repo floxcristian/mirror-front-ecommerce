@@ -30,7 +30,7 @@ export class ProductsViewComponent {
   @Input() showProductOptions = true;
   @Input() origen!: string[];
   @Input() breadcrumbs: Link[] = [];
-  public param: any = {};
+  param: any = {};
   @Input() textToSearch: any = null;
   @Input() totalPaginas = 0;
   @Input() desde = 0;

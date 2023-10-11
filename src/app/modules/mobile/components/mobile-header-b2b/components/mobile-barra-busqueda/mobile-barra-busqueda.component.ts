@@ -59,11 +59,9 @@ export class MobileBarraBusquedaComponent implements OnInit {
   private buscadorExternoRef!: Subscription;
 
   categorias: any[] = [];
-  // public marcas = [];
   productosEncontrados = [];
   searchControl!: FormControl;
   searchControl1!: FormControl;
-  // public linkBusquedaProductos = '#';
   buscando = true;
   cargando = true;
   debounce = 1000;

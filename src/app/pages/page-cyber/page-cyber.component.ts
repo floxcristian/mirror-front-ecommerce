@@ -18,8 +18,8 @@ export class PageCyberComponent implements OnInit {
   cargando = false;
   recognition: any;
   recognizing = false;
-  public texto = '';
-  public textToSearch = '';
+  texto = '';
+  textToSearch = '';
   datos = {
     rut: '',
     nombre: '',

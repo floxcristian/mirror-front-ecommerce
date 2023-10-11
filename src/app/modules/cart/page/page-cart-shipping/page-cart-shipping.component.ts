@@ -117,8 +117,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   tituloRecibe: string = 'Persona que recibe';
   loadingShippingAll = false;
   showAllAddress: boolean = false;
-  public isLogin = false;
-  public loadingResumen = false;
+  isLogin = false;
+  loadingResumen = false;
   subscription!: Subscription;
 
   // productos validados
@@ -472,13 +472,9 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       this.cart.removeTotalDiscount();
     }
 
-    //this.logistics.obtieneDespachoCompleto(sucursal).subscribe(async (resp: any) => {
     const consulta: any = await this.logistics.obtienRetiro(data).toPromise();
     if (consulta.error) {
       this.shippingDaysStore = [];
-      /*this.toast.error(
-        'Ha ocurrido un error al traer las opciones de retiro en tienda.'
-      );*/
     } else {
       if (consulta.length) {
         this.shippingDaysStore = [];

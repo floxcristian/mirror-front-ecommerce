@@ -1,10 +1,14 @@
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { GeoLocation, TiendaLocation } from '../interfaces/geo-location';
+// Angular
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+// Rxjs
 import { Observable, Subject } from 'rxjs';
+// Environments
+import { environment } from '../../../environments/environment';
+// Services
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+// Interfaces
+import { GeoLocation, TiendaLocation } from '../interfaces/geo-location';
 import { ResponseApi } from '../interfaces/response-api';
 
 @Injectable({
@@ -20,10 +24,8 @@ export class GeoLocationService {
     this.localizacionCarro$.asObservable();
 
   constructor(
-    private toastr: ToastrService,
     private localStorage: LocalStorageService,
-    private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: any
+    private http: HttpClient
   ) {}
 
   geoLocation!: GeoLocation;
@@ -58,12 +60,12 @@ export class GeoLocationService {
     }
   }
 
-  getDistanceMatrix(params: any): Observable<ResponseApi> {
+  private getDistanceMatrix(params: any): Observable<ResponseApi> {
     const url = environment.apiLogistic + 'maps/tienda-mas-cercana';
     return this.http.get<ResponseApi>(url, { params });
   }
 
-  estableceTiendaAutomaticamente() {
+  private estableceTiendaAutomaticamente() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const latitude = position.coords.latitude;
@@ -121,7 +123,7 @@ export class GeoLocationService {
     return this.geoLocation;
   }
 
-  cambiarTiendaCliente(coordenadas: any, tienda: any) {
+  cambiarTiendaCliente(coordenadas: any, tienda: any): void {
     this.geoLocation = {
       esNuevaUbicacion: false,
       obtenida: false,
@@ -132,17 +134,5 @@ export class GeoLocationService {
 
     this.localStorage.set('geolocalizacion', this.geoLocation);
     this.localizacion$.next(this.geoLocation);
-  }
-
-  cambiarTiendaCarro(coordenadas: any, tienda: any) {
-    this.geoLocation = {
-      esNuevaUbicacion: false,
-      obtenida: false,
-      esSeleccionaPorCliente: true,
-      actual: coordenadas,
-      tiendaSelecciona: tienda,
-    };
-
-    this.localizacionCarro$.next(this.geoLocation);
   }
 }

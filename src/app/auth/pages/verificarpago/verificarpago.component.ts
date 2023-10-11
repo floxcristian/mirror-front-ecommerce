@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+// Angular
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+// Rxjs
 import { Subscription } from 'rxjs';
+// Services
 import { PaymentService } from '../../../shared/services/payment.service';
 
 @Component({

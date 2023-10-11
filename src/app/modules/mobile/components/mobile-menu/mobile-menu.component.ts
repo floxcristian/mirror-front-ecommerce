@@ -69,7 +69,7 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
   private categoriaDetalle: any;
   private arrayCategorias: NavigationLink[] = [];
   private segundoNivel: any;
-  public tiendaSeleccionada!: TiendaLocation | undefined;
+  tiendaSeleccionada!: TiendaLocation | undefined;
   constructor(
     public mobilemenu: MobileMenuService,
     private localS: LocalStorageService,
