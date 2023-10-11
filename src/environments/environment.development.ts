@@ -6,7 +6,7 @@ export const environment = {
   IVA: 0.19,
   apiShoppingCart: 'https://b2b-api.implementos.cl/api/carro/',
   apiElastic: 'https://b2b-api.implementos.cl/api/articulo/',
-  apiElastic2: 'https://b2b-api.implementos.cl/api/articulo',
+  apiElastic2: 'https://b2b-api.implementos.cl/api/articulo-web/',
   apiCMS: 'https://b2b-api.implementos.cl/cms/',
   apiOms: 'https://b2b-api.implementos.cl/api/oms/',
   apiPromesa: 'https://b2b-api.implementos.cl/api/promesa-entrega/',

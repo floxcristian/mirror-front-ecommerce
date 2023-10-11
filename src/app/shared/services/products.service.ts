@@ -33,17 +33,17 @@ export class ProductsService {
       sucursal,
       rut: usuario.rut,
     };
-    return this.http.get(environment.apiElastic2 + `-web`, { params });
+    return this.http.get(environment.apiElastic2, { params });
   }
 
   buscaListadoProducto(params: any) {
-    return this.http.get(environment.apiElastic2 + '-web', {
+    return this.http.get(environment.apiElastic2, {
       params,
     });
   }
 
   buscaPorVimNum(params: any) {
-    return this.http.get(environment.apiElastic2 + '/chassis', { params });
+    return this.http.get(`${environment.apiElastic}chassis`, { params });
   }
 
   getStockProduct(sku: any) {
