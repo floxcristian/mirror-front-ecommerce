@@ -9,12 +9,10 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { OwlOptions } from 'ngx-owl-carousel-o';
 import { Usuario } from '../../../../shared/interfaces/login';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { DirectionService } from '../../../../shared/services/direction.service';
-import { PageHomeService } from '../../services/pageHome.service';
 import { GeoLocation } from '../../../../shared/interfaces/geo-location';
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { isVacio } from '../../../../shared/utils/utilidades';
@@ -81,7 +79,6 @@ export class Lista_productoComponent implements OnInit {
   screenHeight: any;
   isVacio = isVacio;
   constructor(
-    private pageHomeService: PageHomeService,
     private root: RootService,
     private router: Router,
     private direction: DirectionService,

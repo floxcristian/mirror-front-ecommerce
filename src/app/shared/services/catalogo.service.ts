@@ -52,8 +52,9 @@ export class CatalogoService {
   }
 
   getFiltroAnios() {
-    const call = environment.apiCatalogo + `filtros/anios`;
-    return this.http.get<ResponseApi>(call);
+    return this.http.get<ResponseApi>(
+      `${environment.apiCatalogo}filtros/anios`
+    );
   }
 
   getFiltroMarcas(anio: string) {

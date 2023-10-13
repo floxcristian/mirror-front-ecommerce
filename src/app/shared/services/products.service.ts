@@ -15,8 +15,6 @@ import { ResponseApi } from '../interfaces/response-api';
   providedIn: 'root',
 })
 export class ProductsService {
-  private urlApi = environment.apiCatalogo;
-
   constructor(
     private http: HttpClient,
     private root: RootService,
@@ -33,16 +31,19 @@ export class ProductsService {
       sucursal,
       rut: usuario.rut,
     };
+    console.log('buscarProductosElactic [barra búsqueda]: ', params);
     return this.http.get(environment.apiElastic2, { params });
   }
 
   buscaListadoProducto(params: any) {
+    console.log('buscaListadoProducto [página productos/:sku]: ', params);
     return this.http.get(environment.apiElastic2, {
       params,
     });
   }
 
   buscaPorVimNum(params: any) {
+    console.log('buscaPorVimNum: ', params);
     return this.http.get(`${environment.apiElastic}chassis`, { params });
   }
 
@@ -60,7 +61,7 @@ export class ProductsService {
   }
 
   obtieneDetalleProducto(sku: any, params: any = null) {
-    return this.http.get(this.urlApi + `ficha/${sku}`, { params });
+    return this.http.get(environment.apiCatalogo + `ficha/${sku}`, { params });
   }
 
   getRecommendedProductsList(params: any): Observable<ResponseApi> {
@@ -95,10 +96,12 @@ export class ProductsService {
   }
 
   getHomePageB2b(params: any) {
+    console.log('getHomePageB2b: ', params);
     return this.http.get(environment.apiElastic + 'homepage-b2b', { params });
   }
 
   getEspeciales(params: any) {
+    console.log('getEspeciales: ', params);
     return this.http.get(environment.apiElastic + 'especiales', { params });
   }
 

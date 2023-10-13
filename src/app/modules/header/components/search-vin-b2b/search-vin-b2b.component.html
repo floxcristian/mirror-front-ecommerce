@@ -32,6 +32,8 @@
       class="nav-panel__indicators d-flex align-items-center"
       style="justify-content: space-evenly"
     >
+      <!-- Start::icono filtro por vin -->
+      <!--
       <div
         class="indicator indicator--trigger--click"
         appDropdown="indicator--opened"
@@ -51,7 +53,10 @@
         >
           <app-filtros class="w-100" #filtros [inHeader]="true"></app-filtros>
         </div>
-      </div>
+      </div>-->
+      <!-- Start::icono filtro por vin -->
+
+      <!-- Start::icono carro de compras -->
       <div
         class="indicator indicator--trigger--click"
         appDropdown="indicator--opened"
@@ -79,6 +84,7 @@
           <app-header-dropcart></app-header-dropcart>
         </div>
       </div>
+      <!-- End::icono carro de compras -->
 
       <!-- Opción para ingresar al sistema -->
       <app-account tipo="b2b"></app-account>
@@ -126,13 +132,13 @@
               >Sin dirección...</span
             >
             <span class="icon-title" *ngIf="!isVacio(direccion)">{{
-              (((direccion?.calle || "") + " " + direccion?.numero).length > 20
+              (((direccion?.calle || '') + ' ' + direccion?.numero).length > 20
                 ? (
-                    (direccion?.calle || "") +
-                    " " +
+                    (direccion?.calle || '') +
+                    ' ' +
                     direccion?.numero
-                  ).substring(0, 20) + "..."
-                : (direccion?.calle || "") + " " + direccion?.numero
+                  ).substring(0, 20) + '...'
+                : (direccion?.calle || '') + ' ' + direccion?.numero
               ) | titlecase
             }}</span>
           </div>

@@ -49,7 +49,7 @@ export class ButtonsSlideshowComponent implements OnInit {
     this.getCajaValor();
   }
 
-  async getCajaValor() {
+  async getCajaValor(): Promise<void> {
     await this.pagehomeService.getCajaValor().subscribe((data: any) => {
       this.botones1 = data.data;
     });

@@ -9,7 +9,7 @@ import { environment } from '@env/environment';
 export class PageHomeService {
   constructor(private http: HttpClient) {}
   //cargar pagina home
-  get_pagehome_cms() {
+  getPagehomeCms() {
     return this.http.get(environment.apiElastic + 'newhomepageCms');
   }
   //update pagina home
@@ -23,13 +23,7 @@ export class PageHomeService {
     return this.http.get(environment.apiElastic + `especialCms`, { params });
   }
 
-  get_pagehome_cms_sku(texto: any, sucursal: any, rut: any) {
-    return this.http.get(
-      environment.apiElastic + `?word=${texto}&rut=${rut}&sucursal=${sucursal}`
-    );
-  }
-
-  get_mundo_cms() {
+  getMundoCms() {
     return this.http.get(environment.apiCMS + 'mundo-slide/');
   }
 

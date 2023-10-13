@@ -519,7 +519,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     }
   }
 
-  SetProductos(r: any, texto: any, scroll = false) {
+  SetProductos(r: any, texto: any, scroll = false): void {
     this.cargandoCatalogo = false;
     this.cargandoProductos = false;
 

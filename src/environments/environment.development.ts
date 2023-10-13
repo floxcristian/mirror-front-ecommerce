@@ -1,21 +1,21 @@
 export const environment = {
   production: false,
-  // tslint:disable-next-line: max-line-length
   TOKEN:
     'EAAMJCcU6xi4BAIcIytWwO0n9YvkHUPYXmkmQJDOMKiPmiHvzUZCGaiUsjUqDT5XQYhRZAxyBCn3a39306eSBRVBcRIuI59J8LOXEl34CgfbsDCiZBXyu9R0Mluw1ZAOPMiEeb8wU82v2S5jITxjRSaNeihawZAM78IsxDtUkJXba5fKyJvq015AZBmu7oEWaYZD',
   IVA: 0.19,
+  // APIs
   apiShoppingCart: 'https://b2b-api.implementos.cl/api/carro/',
   apiElastic: 'https://b2b-api.implementos.cl/api/articulo/',
-  apiElastic2: 'https://b2b-api.implementos.cl/api/articulo-web/',
+  apiElastic2: 'https://b2b-api.implementos.cl/api/articulo-web',
   apiCMS: 'https://b2b-api.implementos.cl/cms/',
   apiOms: 'https://b2b-api.implementos.cl/api/oms/',
   apiPromesa: 'https://b2b-api.implementos.cl/api/promesa-entrega/',
   apiMobile: 'https://b2b-api.implementos.cl/api/mobile/',
-  canonical: 'https://www.implementos.cl',
-  apib2b: 'https://b2b-api.implementos.cl',
-  apiCatalogo: 'https://b2b-api.implementos.cl/api/',
+  apiCatalogo: 'https://b2b-api.implementos.cl/api/catalogo/',
   apiCustomer: 'https://b2b-api.implementos.cl/api/cliente/',
   apiLogistic: 'https://b2b-api.implementos.cl/api/logistica/',
+  apiImplementosPagos: 'https://b2b-api.implementos.cl/api/pagos/',
+  // Images Urls
   urlFotoOmnichannel:
     'http://replicacion.implementos.cl/siteomnichannel/fotos/',
   urlFotoFichaProducto:
@@ -24,15 +24,20 @@ export const environment = {
     'https://firebasestorage.googleapis.com/v0/b/imagenimplementos.appspot.com/o/450%2F',
   urlFotowidgetProductos:
     'https://firebasestorage.googleapis.com/v0/b/imagenimplementos.appspot.com/o/150%2F',
+  // Images
+  logoSrcWhite: 'assets/images/logos/logo_white.PNG',
   logoSrc: 'assets/images/logos/logo_header.svg',
   logoSrcFooter: 'assets/images/logos/logo_header2.PNG',
+  // Base
+  canonical: 'https://www.implementos.cl',
+  apib2b: 'https://b2b-api.implementos.cl',
+
   urlPagosImplementos: 'https://pagos.implementos.cl/',
   urlMercadoPago: 'https://b2b-api.implementos.cl/api/pagos/mpago/link_pago',
-  apiImplementosPagos: 'https://b2b-api.implementos.cl/api/pagos/',
+  // Carro de compras
   urlPaymentVoucher:
     'https://www.implementos.cl/carro-compra/gracias-por-tu-compra/',
   urlPaymentCanceled: 'https://www.implementos.cl/carro-compra/forma-de-pago/',
-  logoSrcWhite: 'assets/images/logos/logo_white.PNG',
   urlPaymentOmniVoucher:
     'https://www.implementos.cl/carro-compra/omni-gracias-por-tu-compra/',
   urlPaymentOmniCanceled:

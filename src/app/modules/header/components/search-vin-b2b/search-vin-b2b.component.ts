@@ -6,7 +6,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-//import { LocalStorageService } from 'angular-2-local-storage';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { RootService } from '../../../../shared/services/root.service';
 import { ClientsService } from '../../../../shared/services/clients.service';

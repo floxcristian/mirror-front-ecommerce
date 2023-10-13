@@ -76,7 +76,6 @@ export class PageUsuariosComponent implements OnInit {
         user.data_order = dataTablesParameters.order[0].dir;
         this.users = [];
         let params = Object.assign(dataTablesParameters, user);
-        let url = environment.apiCMS + `users`;
         let username: String = 'services';
         let password: String = '0.=j3D2ss1.w29-';
         let authdata = window.btoa(username + ':' + password);
@@ -86,8 +85,11 @@ export class PageUsuariosComponent implements OnInit {
             'Authorization, Access-Control-Allow-Headers',
         };
         let headers = new HttpHeaders(head);
+        console.log('params: ');
         this.httpClient
-          .post<DataTablesResponse>(url, params, { headers: headers })
+          .post<DataTablesResponse>(`${environment.apiCMS}users`, params, {
+            headers,
+          })
           .subscribe(
             (resp: any) => {
               this.users = resp.data;

@@ -65,7 +65,7 @@ export class SlideMundoComponent implements OnInit {
   }
 
   async Carga_mundo() {
-    let consulta: any = await this.pageHomeService.get_mundo_cms().toPromise();
+    let consulta: any = await this.pageHomeService.getMundoCms().toPromise();
     this.slides = consulta.data;
     this.slides.forEach((item: any) => {
       this.style.push({

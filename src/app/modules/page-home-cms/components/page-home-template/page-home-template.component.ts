@@ -1,5 +1,4 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { GeoLocation } from '../../../../shared/interfaces/geo-location';
 import { Usuario } from '../../../../shared/interfaces/login';
@@ -10,7 +9,6 @@ import { LogisticsService } from '../../../../shared/services/logistics.service'
 import { ProductsService } from '../../../../shared/services/products.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { PageHomeService } from '../../services/pageHome.service';
-import { BsModalService } from 'ngx-bootstrap/modal';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 @Component({
   selector: 'app-page-home-template',
@@ -29,8 +27,6 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     private pageHomeService: PageHomeService,
     private root: RootService,
     private productsService: ProductsService,
-    private router: Router,
-    private modalService: BsModalService,
     private direction: DirectionService,
     private logisticsService: LogisticsService,
     private geoLocationService: GeoLocationService,
@@ -97,11 +93,11 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
 
   async cargarPage() {
     let consulta: any = await this.pageHomeService
-      .get_pagehome_cms()
+      .getPagehomeCms()
       .toPromise();
     this.pageHome = consulta.data[0].page;
     this.carga = false;
     document.body.scrollTop = 0; // Safari
-    document.documentElement.scrollTop = 0; // Othe
+    document.documentElement.scrollTop = 0; // Other
   }
 }
