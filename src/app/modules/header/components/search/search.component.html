@@ -109,7 +109,8 @@
                       ]"
                     >
                       <b class="text-uppercase" style="color: #094cac"
-                        >Quizás esta buscando {{ sugerencias[0].sugerencia }}</b
+                        >Quizás esta buscando
+                        {{ sugerencias[0].sugerencia }}</b
                       >...
                     </a>
                   </div>
@@ -185,7 +186,11 @@
           >
             <div
               class="fw-bold text-uppercase"
-              style="padding: 0.5rem 0.75rem; font-size: 0.9rem; color: #094cac"
+              style="
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
+                color: #094cac;
+              "
             >
               Marcas
             </div>
@@ -213,7 +218,11 @@
           <div class="col">
             <div
               class="fw-bold text-uppercase"
-              style="padding: 0.5rem 0.75rem; font-size: 0.9rem; color: #094cac"
+              style="
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
+                color: #094cac;
+              "
             >
               Resultados de Productos
             </div>
@@ -253,7 +262,8 @@
                     class="col-12 fw-bold"
                     style="color: #094cac; font-size: 1.4rem"
                   >
-                    {{ item?.precio?.precio | currencyFormat }} <em> c/iva </em>
+                    {{ item?.precio?.precio | currencyFormat }}
+                    <em> c/iva </em>
                   </div>
 
                   <div
@@ -261,7 +271,8 @@
                     class="text-danger fw-bold col-12"
                     style="font-size: 1.4rem"
                   >
-                    {{ item?.precio?.precio | currencyFormat }} <em> c/iva </em>
+                    {{ item?.precio?.precio | currencyFormat }}
+                    <em> c/iva </em>
                   </div>
 
                   <div
@@ -287,7 +298,9 @@
           <div class="col-12 products-list-search ps-5 p-2">
             <div class="item justify-content-end d-flex">
               <a
-                (click)="menuSearch.toggle(); blurInput(); seleccionado = false"
+                (click)="
+                  menuSearch.toggle(); blurInput(); seleccionado = false
+                "
                 [routerLink]="['/', 'inicio', 'productos', textToSearch]"
               >
                 <i
@@ -308,6 +321,40 @@
 
   <div class="col-header-2">
     <div class="nav-panel__indicators d-flex align-items-center">
+      <div
+        *ngIf="usuario.rut != '0'"
+        class="indicator position-relative indicator--trigger--click"
+        (click)="modificarDireccionDespacho()"
+      >
+        <span
+          class="indicator__button flex-column mt-2 mr-3"
+          style="cursor: pointer"
+        >
+          <img
+            src="../../../../../assets/svg/06.svg"
+            style="width: 40px; height: 40px"
+            alt="seguimiento"
+          />
+          <span class="icon-title mt-2">Envío:</span>
+          <span class="icon-title" *ngIf="isVacio(direccion)"
+            >Sin dirección...</span
+          >
+          <span
+            class="icon-title"
+            *ngIf="!isVacio(direccion)"
+            style="margin-top: -4px"
+          >
+            {{
+              ((direccion.calle + ' ' + direccion.numero).length > 10
+                ? (direccion.calle + ' ' + direccion.numero).substring(0, 8) +
+                  '...'
+                : direccion.calle + ' ' + direccion.numero
+              ) | titlecase
+            }}
+          </span>
+        </span>
+      </div>
+
       <div
         class="indicator position-relative indicator--trigger--click"
         appDropdown="indicator--opened"

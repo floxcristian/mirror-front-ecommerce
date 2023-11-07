@@ -17,7 +17,7 @@ import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CartService } from '../../../../shared/services/cart.service';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import {
@@ -28,6 +28,12 @@ import { LogisticsService } from '../../../../shared/services/logistics.service'
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
+import { ShippingAddress } from '../../../../shared/interfaces/address';
+import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
+import { Usuario } from '../../../../shared/interfaces/login';
+import { isVacio } from '../../../../shared/utils/utilidades';
+import { LoginService } from '../../../../shared/services/login.service';
+import { DireccionDespachoComponent } from '../search-vin-b2b/components/direccion-despacho/direccion-despacho.component';
 
 @Component({
   selector: 'app-header-search',
@@ -72,6 +78,13 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   tiendaSeleccionada!: TiendaLocation | undefined;
   seleccionado = false;
   isFocusedInput = false;
+
+  direccion!: ShippingAddress | any;
+  despachoClienteRef!: Subscription;
+  isVacio = isVacio;
+  usuario!: Usuario;
+  usuarioRef!: Subscription;
+
   constructor(
     private router: Router,
     private modalService: BsModalService,
@@ -84,6 +97,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     private geoLocationService: GeoLocationService,
     private logisticsService: LogisticsService,
     private cartService: CartService,
+    private loginService: LoginService,
     private readonly gtmService: GoogleTagManagerService
   ) {}
 
@@ -113,6 +127,28 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
         }, 700);
       }
     });
+    this.usuario = this.root.getDataSesionUsuario();
+    if (this.usuario.rut !== '0')
+      this.root.getPreferenciasCliente().then((preferencias) => {
+        this.direccion = preferencias.direccionDespacho;
+      });
+
+    this.usuarioRef = this.loginService.loginSessionObs$
+      .pipe()
+      .subscribe((usuario) => {
+        if (!usuario.hasOwnProperty('user_role')) {
+          usuario.user_role = '';
+        }
+        this.usuario = usuario;
+        if (this.usuario.rut !== '0')
+          this.root.getPreferenciasCliente().then((preferencias) => {
+            this.direccion = preferencias.direccionDespacho;
+          });
+      });
+    this.despachoClienteRef =
+      this.logisticsService.direccionCliente$.subscribe((r) => {
+        this.direccion = r;
+      });
   }
 
   ngAfterViewInit() {}
@@ -120,6 +156,8 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy() {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
+    this.despachoClienteRef.unsubscribe();
+    this.usuarioRef.unsubscribe();
   }
 
   reset() {
@@ -262,5 +300,20 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
 
   blurInput() {
     this.isFocusedInput = false;
+  }
+
+  modificarDireccionDespacho() {
+    const bsModalRef: BsModalRef = this.modalService.show(
+      DireccionDespachoComponent
+    );
+    bsModalRef.content.event.subscribe(async (res: any) => {
+      const direccionDespacho = res;
+      this.direccion = direccionDespacho;
+      const preferencias: PreferenciasCliente = this.localS.get(
+        'preferenciasCliente'
+      );
+      preferencias.direccionDespacho = direccionDespacho;
+      this.localS.set('preferenciasCliente', preferencias);
+    });
   }
 }
