@@ -39,7 +39,6 @@ import { SearchVinB2bComponent } from './components/search-vin-b2b/search-vin-b2
 import { BusquedasRecientesModalComponent } from './components/search-vin-b2b/components/barra-busqueda/components/busquedas-recientes-modal/busquedas-recientes-modal.component';
 import { BarraBusquedaComponent } from './components/search-vin-b2b/components/barra-busqueda/barra-busqueda.component';
 import { DireccionDespachoComponent } from './components/search-vin-b2b/components/direccion-despacho/direccion-despacho.component';
-import { FiltrosComponent } from './components/search-vin-b2b/components/filtros/filtros.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +54,6 @@ import { FiltrosComponent } from './components/search-vin-b2b/components/filtros
     ModalStoresComponent,
     AccountComponent,
     SearchVinB2bComponent,
-    FiltrosComponent,
     MobileSearchComponent,
     DireccionDespachoComponent,
     BarraBusquedaComponent,
@@ -91,7 +89,6 @@ import { FiltrosComponent } from './components/search-vin-b2b/components/filtros
     TopbarComponent,
     SearchComponent,
     DropcartComponent,
-    FiltrosComponent,
     MenuCategoriasB2cComponent,
     MenuCategoriaB2cMobileComponent,
   ],

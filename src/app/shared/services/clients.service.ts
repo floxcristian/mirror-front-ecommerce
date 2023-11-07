@@ -313,14 +313,6 @@ export class ClientsService {
     return this.http.put(environment.apiCustomer + `flota`, request);
   }
 
-  getVehiculo(chassisPatente: string) {
-    const httpParams = new HttpParams().set('chasis_patente', chassisPatente);
-
-    return this.http.get<ResponseApi>(environment.apiCustomer + `vehiculo`, {
-      params: httpParams,
-    });
-  }
-
   getListaArticulosFavoritos(rut: string): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
       environment.apiCustomer + `favoritos/lista?rut=${rut}`

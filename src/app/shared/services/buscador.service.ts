@@ -35,10 +35,6 @@ export class BuscadorService {
     this.buscador.next(data);
   }
 
-  buscarExterno(data: BusquedaData): void {
-    this.buscadorExterno.next(data);
-  }
-
   filtrosVisibles(visibles: boolean): void {
     this.buscadorFiltrosVisibles.next(visibles);
   }

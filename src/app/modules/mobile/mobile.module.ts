@@ -18,7 +18,6 @@ import { MobileLinksComponent } from './components/mobile-links/mobile-links.com
 import { TopbarMobileComponent } from '../header/components/topbar-mobile/topbar-mobile.component';
 //B2B
 import { MobileHeaderB2bComponent } from './components/mobile-header-b2b/mobile-header-b2b.component';
-import { MobileFiltrosComponent } from './components/mobile-header-b2b/components/mobile-filtros/mobile-filtros.component';
 import { MobileBarraBusquedaComponent } from './components/mobile-header-b2b/components/mobile-barra-busqueda/mobile-barra-busqueda.component';
 
 @NgModule({
@@ -30,7 +29,6 @@ import { MobileBarraBusquedaComponent } from './components/mobile-header-b2b/com
     MobileHeaderAccountComponent,
     TopbarMobileComponent,
     MobileHeaderB2bComponent,
-    MobileFiltrosComponent,
     MobileBarraBusquedaComponent,
   ],
   imports: [

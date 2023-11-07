@@ -20,7 +20,6 @@ import { DropdownDirective } from '../../../../shared/directives/dropdown.direct
 import { LoginService } from '../../../../shared/services/login.service';
 import { MobileMenuService } from '../../../../shared/services/mobile-menu.service';
 import { environment } from '@env/environment';
-import { MobileFiltrosComponent } from './components/mobile-filtros/mobile-filtros.component';
 import { MobileBarraBusquedaComponent } from './components/mobile-barra-busqueda/mobile-barra-busqueda.component';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
@@ -153,19 +152,6 @@ export class MobileHeaderB2bComponent implements OnInit, OnDestroy {
   mostraModalBuscador() {
     this.modalRef = this.modalService.show(MobileBarraBusquedaComponent, {
       class: 'modal-100 modal-buscador',
-    });
-    // this.root.setModalRefBuscador(this.modalRef);
-    // document.getElementById('searchMobileModal').focus();
-  }
-
-  mostraModalBuscadorVin() {
-    this.modalRefVin = this.modalService.show(MobileFiltrosComponent, {
-      class: 'mx-md-auto mt-2',
-    });
-    this.modalRefVin.content.event.subscribe((res: any) => {
-      if (res) {
-        this.mostraModalBuscador();
-      }
     });
   }
 
