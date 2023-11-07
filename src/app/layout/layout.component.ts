@@ -16,6 +16,7 @@ export class LayoutComponent implements OnInit {
   fbclid: string | undefined = '';
   gclid: string = '';
   utm_campaign: string | undefined = '';
+  tipo: string = 'b2c';
 
   constructor(
     private readonly rootService: RootService,
@@ -27,7 +28,7 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.scrollTop();
-    this.isB2B = this.checkIsB2b();
+    this.checkIsB2b();
     this.getQueryParams();
     this.categoriesService.obtieneCategoriasHeader().subscribe((r) => {});
   }
@@ -46,9 +47,10 @@ export class LayoutComponent implements OnInit {
    * Verifica si el usuario es B2B.
    * @returns
    */
-  checkIsB2b(): boolean {
-    const { user_role: userRole } = this.rootService.getDataSesionUsuario();
-    return ['supervisor', 'comprador'].includes(userRole || '');
+  checkIsB2b() {
+    let { user_role: userRole } = this.rootService.getDataSesionUsuario();
+    if (!userRole) userRole = '';
+    if (['supervisor', 'comprador'].includes(userRole)) this.tipo = 'b2b';
   }
 
   /**
