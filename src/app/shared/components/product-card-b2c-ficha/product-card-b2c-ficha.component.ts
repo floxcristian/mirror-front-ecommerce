@@ -57,6 +57,7 @@ export class ProductCardB2cFichaComponent implements OnInit {
     | 'grid-lg'
     | 'list'
     | 'horizontal'
+    | any
     | null = null;
   @Input() grid!: any;
   @Input() paramsCategory!: any;
