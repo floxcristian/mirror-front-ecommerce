@@ -41,9 +41,6 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
   @Input() lstProductos: any[] = [];
   @Input() url: any[] = [];
   @ViewChild('popoverContent', { static: false }) myPopover!: NgbPopover;
-  // Variables no existentes.
-  isB2B!: boolean;
-  popoverContent!: any;
 
   tipo_producto!: ITempProduct[];
   user!: Usuario;

@@ -38,7 +38,10 @@
                 [options]="carouselOptions"
                 appOwlPreventClick
               >
-                <div *ngFor="let prod of obj.skus" class="products-list__item">
+                <ng-container
+                  *ngFor="let prod of obj.skus"
+                  class="products-list__item"
+                >
                   <ng-template carouselSlide>
                     <app-product-card-b2c-ficha
                       (mouseover)="over($event)"
@@ -50,7 +53,7 @@
                       [cartClass]="true"
                     ></app-product-card-b2c-ficha>
                   </ng-template>
-                </div>
+                </ng-container>
               </owl-carousel-o>
             </div>
           </div>

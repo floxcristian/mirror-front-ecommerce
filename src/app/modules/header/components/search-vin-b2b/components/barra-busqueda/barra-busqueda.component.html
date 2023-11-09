@@ -290,7 +290,8 @@
                       ]"
                     >
                       <b class="text-uppercase"
-                        >Quizás esta buscando {{ sugerencias[0].sugerencia }}</b
+                        >Quizás esta buscando
+                        {{ sugerencias[0].sugerencia }}</b
                       >...
                     </a>
                   </div>
@@ -360,13 +361,17 @@
           <div
             class="col-2 mb-2 ps-4"
             style="
-              border-left: solid 1px #094cac;
-              border-right: solid 1px #094cac;
+              border-start: solid 1px #094cac;
+              border-end: solid 1px #094cac;
             "
           >
             <div
               class="fw-bold text-uppercase"
-              style="padding: 0.5rem 0.75rem; font-size: 0.9rem; color: #094cac"
+              style="
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
+                color: #094cac;
+              "
             >
               Marcas
             </div>
@@ -394,7 +399,11 @@
           <div class="col">
             <div
               class="fw-bold text-uppercase"
-              style="padding: 0.5rem 0.75rem; font-size: 0.9rem; color: #094cac"
+              style="
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
+                color: #094cac;
+              "
             >
               Resultados de Productos
             </div>
@@ -434,7 +443,8 @@
                     class="col-12 fw-bold"
                     style="color: #094cac; font-size: 1.4rem"
                   >
-                    {{ item?.precio?.precio | currencyFormat }} <em> c/iva </em>
+                    {{ item?.precio?.precio | currencyFormat }}
+                    <em> c/iva </em>
                   </div>
 
                   <div
@@ -442,7 +452,8 @@
                     class="text-danger fw-bold col-12"
                     style="font-size: 1.4rem"
                   >
-                    {{ item?.precio?.precio | currencyFormat }} <em> c/iva </em>
+                    {{ item?.precio?.precio | currencyFormat }}
+                    <em> c/iva </em>
                   </div>
 
                   <div
@@ -468,7 +479,9 @@
           <div class="col-12 products-list-search ps-5 p-2">
             <div class="item justify-content-end d-flex">
               <a
-                (click)="menuSearch.toggle(); blurInput(); seleccionado = false"
+                (click)="
+                  menuSearch.toggle(); blurInput(); seleccionado = false
+                "
                 [routerLink]="['/', 'inicio', 'productos', textToSearch]"
               >
                 <i
