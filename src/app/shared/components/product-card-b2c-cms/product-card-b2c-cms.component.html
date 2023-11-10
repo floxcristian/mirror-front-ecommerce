@@ -218,7 +218,7 @@
         *ngIf="productData.stockTienda > 0 || productData.stockEmpresa > 0"
         [ngStyle]="{
           display:
-            productData.precioComun == productData?.precio?.precio
+            productData.precioComun == productData.precio.precio
               ? 'flex'
               : 'block',
           'align-items':
@@ -585,9 +585,7 @@
             <td>
               <strong
                 >{{ precio.desde }} -
-                {{
-                  precio.hasta === 999 ? 'y más' : precio.hasta - 1
-                }}
+                {{ precio.hasta === 999 ? 'y más' : precio.hasta - 1 }}
                 und.</strong
               >
             </td>

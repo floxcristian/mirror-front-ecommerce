@@ -243,8 +243,12 @@ div #saveCartModal.show {
 }
 
 ::ng-deep.carouselCart .owl-carousel .owl-item {
-  padding: 10px;
+  padding: 5px;
   display: flex;
+
+  img {
+    max-height: 105px;
+  }
 
   app-product-card-b2b {
     display: flex;
@@ -257,7 +261,15 @@ div #saveCartModal.show {
 
   app-product-card-b2c-cms {
     display: flex;
-    width: 100%;
+    width: 115%;
+
+    .product-card {
+      flex: 1 1 auto !important;
+    }
+  }
+  app-product-card-b2c-ficha {
+    display: flex;
+    width: 115%;
 
     .product-card {
       flex: 1 1 auto !important;

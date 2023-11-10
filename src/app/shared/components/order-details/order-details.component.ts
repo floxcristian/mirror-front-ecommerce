@@ -30,10 +30,7 @@ export class OrderDetailsComponent implements OnInit {
 
     if (!r.error) {
       this.data = r.data;
-
-      if (this.data.despacho.tipo === 'REP') {
-        this.deliveryText = 'Despacho';
-      } else {
+      if (this.data.despacho.codTipo === 'VEN- RPTDA') {
         let tiendas: any = await this.logisticaService
           .obtenerTiendas()
           .toPromise();
@@ -43,6 +40,8 @@ export class OrderDetailsComponent implements OnInit {
         );
 
         this.deliveryText = 'Retiro en tienda ' + tienda[0].zona;
+      } else {
+        this.deliveryText = 'Despacho';
       }
     }
   }

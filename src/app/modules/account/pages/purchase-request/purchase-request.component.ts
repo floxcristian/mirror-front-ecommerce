@@ -133,6 +133,8 @@ export class PurchaseRequestComponent implements OnInit {
       usuario: this.order?.usuario,
       tipo: 2,
       formaPago: 'OC',
+      web: 1,
+      proveedorPago: 'Orden de compra',
     };
 
     this.loadingPage = true;
@@ -146,12 +148,19 @@ export class PurchaseRequestComponent implements OnInit {
 
           return;
         }
-        this.router.navigate([
-          '/',
-          'carro-compra',
-          'comprobante-de-pago',
-          r.data.numero,
-        ]);
+        if (!r.error) {
+          let params = {
+            site_id: 'OC',
+            external_reference: this.order._id,
+            status: 'approved',
+          };
+
+          this.cart.load();
+          this.router.navigate(
+            ['/', 'carro-compra', 'gracias-por-tu-compra'],
+            { queryParams: { ...params } }
+          );
+        }
       },
       (e) => {
         this.toast.error('Ha ocurrido  al generar la orden de venta');

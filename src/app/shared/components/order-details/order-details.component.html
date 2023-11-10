@@ -1,103 +1,148 @@
 <div class="container-order-detail w-100 p-3 pt-4">
   <h1 class="text-center mb-3">{{ title }}</h1>
-  <div class="row m-0">
-    <div class="col-6">
-      <div class="row">
-        <div class="col-4 title">RUT Cliente</div>
-        <div class="col-6 subtitle">{{ data?.cliente?.rutCliente }}</div>
-      </div>
 
+  <div class="row">
+    <div class="col-md-6 col-sm-12">
       <div class="row">
-        <div class="col-4 title">Usuario solicitante</div>
-        <div class="col-6 subtitle">{{ data?.usuario }}</div>
+        <div class="col-5 title">RUT Cliente</div>
+        <div class="col-7 subtitle">{{ data?.cliente?.rutCliente }}</div>
       </div>
       <div class="row">
-        <div class="col-4 title">Estado</div>
-        <div class="col-6 subtitle">
+        <div class="col-5 title">Usuario</div>
+        <div class="col-7 subtitle">{{ data?.usuario }}</div>
+      </div>
+      <div class="row">
+        <div class="col-5 title">Estado</div>
+        <div class="col-7 subtitle">
           <span
             class="badge"
             [ngClass]="{
-              'bg-danger': data?.estado == 'rechazado',
-              'bg-warning': data?.estado == 'pendiente',
-              'bg-info': data?.estado == 'generado',
-              'bg-success': data?.estado == 'finalizado'
+              'badge-danger': data?.estado == 'rechazado',
+              'badge-warning': data?.estado == 'pendiente',
+              'badge-info': data?.estado == 'generado',
+              'badge-success': data?.estado == 'finalizado'
             }"
           >
             {{ data?.estado | capitalizeFirst }}
           </span>
         </div>
       </div>
-
       <div class="row" *ngIf="data?.ordenCompra?.folio != null">
-        <div class="col-4 title">Folio OC</div>
-        <div class="col-6 subtitle">{{ data?.ordenCompra.folio }}</div>
+        <div class="col-5 title">Folio OC</div>
+        <div class="col-7 subtitle">{{ data?.ordenCompra.folio }}</div>
       </div>
     </div>
-
-    <div class="col-6">
+    <div class="col-md-6 col-sm-12">
       <div class="row">
-        <div class="col-4 title">Fecha pedido</div>
-        <div class="col-6 subtitle">
-          {{ data?.modificacion | date : "dd-MM-yyyy HH:mm" }}
+        <div class="col-5 title">Fecha Pedido</div>
+        <div class="col-7 subtitle">
+          {{ data?.modificacion | date : 'dd-MM-yyyy HH:mm' }}
         </div>
       </div>
       <div class="row">
-        <div class="col-4 title">Forma de entrega</div>
-        <div class="col-6 subtitle">{{ deliveryText }}</div>
+        <div class="col-5 title">Tipo Entrega</div>
+        <div class="col-7 subtitle">{{ deliveryText }}</div>
       </div>
       <div class="row">
-        <div class="col-4 title">Fecha de entrega</div>
-        <div class="col-6 subtitle">
-          {{ data?.modificacion | date : "dd-MM-yyyy HH:mm" }}
+        <div class="col-5 title">Fecha Entrega</div>
+        <div class="col-7 subtitle">
+          {{ data?.despacho?.fechaEntrega | date : 'dd-MM-yyyy' }}
         </div>
       </div>
-
       <div class="row" *ngIf="data?.ordenCompra?.folio != null">
-        <div class="col-4 title">Monto OC</div>
-        <div class="col-6 subtitle">{{ data?.ordenCompra.monto }}</div>
+        <div class="col-5 title">Monto OC</div>
+        <div class="col-7 subtitle">
+          {{ data?.ordenCompra.monto | currencyFormat }}
+        </div>
       </div>
     </div>
-
-    <div class="col-12" *ngIf="data?.observacion != null">
+  </div>
+  <div class="row" *ngIf="data?.observacion != null">
+    <div class="col-md-6 col-sm-12">
       <div class="row">
-        <div class="col-2 title">Observacion:</div>
-        <div class="col-6 subtitle">{{ data?.observacion }}</div>
+        <div class="col-5 title">Observación:</div>
+        <div class="col-7 subtitle">{{ data?.observacion }}</div>
       </div>
     </div>
   </div>
 
   <div class="clearfix mt-5"></div>
-  <table class="table">
-    <thead>
-      <tr>
-        <th></th>
-        <th>Producto</th>
-        <th>Precio</th>
-        <th>Unidad</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of data?.productos">
-        <th>
-          <a [routerLink]="root.product(item.sku, item.nombre)">
-            <img
-              class="img-fluid img-product lazyload"
-              [src]="root.getUrlImagenMiniatura(item)"
-              [alt]="item.nombre"
-            />
-          </a>
-        </th>
-        <th>
-          <span class="d-blok">{{ item.nombre }}</span>
-          <span class="d-block">{{ item.sku }}</span>
-        </th>
-        <th class="text-end">{{ item.precio | currencyFormat }}</th>
-        <th class="text-end">{{ item.cantidad }}</th>
-        <th class="text-end">
-          {{ item.cantidad * item.precio | currencyFormat }}
-        </th>
-      </tr>
-    </tbody>
-  </table>
+
+  <div class="table-responsive d-none d-sm-block">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="text-left">Imagen</th>
+          <th class="text-left">Producto</th>
+          <th class="text-left">Precio</th>
+          <th class="text-left">Unidad</th>
+          <th class="text-right">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of data?.productos">
+          <th class="text-left">
+            <a [routerLink]="root.product(item.sku, item.nombre)">
+              <img
+                class="img-fluid img-product lazyload"
+                [src]="root.getUrlImagenMiniatura(item)"
+                [alt]="item.nombre"
+              />
+            </a>
+          </th>
+          <th class="text-left">
+            <span class="d-blok">{{ item.nombre }}</span>
+            <span class="d-block">{{ item.sku }}</span>
+          </th>
+          <th class="text-left">{{ item.precio | currencyFormat }}</th>
+          <th class="text-left">{{ item.cantidad }}</th>
+          <th class="text-right">
+            {{ item.cantidad * item.precio | currencyFormat }}
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- Vista card de productos en mobile -->
+  <div class="d-sm-none d-block">
+    <ng-container *ngFor="let item of data?.productos; let i = index">
+      <div class="card mb-2 bg-transparent">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-4">
+              <img
+                class="img-fluid img-product lazyload"
+                [src]="root.getUrlImagenMiniatura(item)"
+                [alt]="item.nombre"
+              />
+            </div>
+            <div class="col-8">
+              <div>
+                <span style="font-weight: bold">Sku: </span>{{ item.sku }}
+              </div>
+              <div>
+                <span style="font-weight: bold">Producto: </span
+                >{{ item.nombre | titlecase }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-4">
+              <span style="font-weight: bold">Precio: </span>{{ item.precio }}
+            </div>
+            <div class="col-4">
+              <span style="font-weight: bold">Unidad: </span
+              >{{ item.cantidad }}
+            </div>
+            <div class="col-4">
+              <span style="font-weight: bold">Total: </span>
+              {{ item.cantidad * item.precio | currencyFormat }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
 </div>

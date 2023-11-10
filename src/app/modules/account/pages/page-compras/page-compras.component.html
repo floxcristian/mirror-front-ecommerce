@@ -10,6 +10,8 @@
         [itemsPerPage]="maxlength"
         [maxSize]="maxlength"
         (pageChanged)="pageChanged($event)"
+        firstText="Primero"
+        lastText="Último"
       >
       </pagination>
     </div>
@@ -54,95 +56,63 @@
   <ng-container *ngFor="let item of data; let i = index">
     <div class="card mb-2">
       <div class="card-header bg-transparent border-success">
-        <div class="row w-100">
-          <div
-            class="col-2 text-fechas d-flex justify-content-start align-items-end"
-          >
-            <div class="row">
-              <div
-                class="col-12"
-                style="
-                  font-size: 12px;
-                  color: #0063b9;
-                  cursor: pointer;
-                  font-weight: normal;
-                "
-                (click)="expand(i)"
-              >
-                <ng-container *ngIf="item.expand">
-                  <i
-                    class="fa-solid fa-eye"
-                    style="cursor: pointer"
-                    style="margin-right: 10px"
-                  ></i>
-                  Ocultar detalle
-                </ng-container>
-                <ng-container *ngIf="!item.expand">
-                  <i
-                    class="fa-solid fa-eye-slash"
-                    style="cursor: pointer; color: #0063b986"
-                    style="margin-right: 10px"
-                  ></i>
-                  Ver detalle
-                </ng-container>
-              </div>
-              <div class="col-12 text-fechas">
-                {{ item.fechaCreacionOrden | date : "dd-MM-yyyy" }}
-              </div>
-            </div>
-          </div>
-          <div
-            class="col-4 text-fechas d-flex justify-content-center align-items-end"
-            style="margin-left: 10px"
-          >
-            <div class="row">
-              <div class="col-12 text-fechas">
-                {{ item.Vendedor | titlecase }}
-              </div>
-              <div
-                class="col-12 d-flex justify-content-start text-fechas"
-                style="font-weight: normal"
-              >
-                <ng-container *ngIf="item.ModoEntrega == 'VEN- RPTDA'">
-                  Retiro en tienda
-                </ng-container>
-                <ng-container *ngIf="item.ModoEntrega == 'VEN DPCLI'">
-                  Despacho
-                </ng-container>
-                <ng-container *ngIf="item.ModoEntrega == 'VEN- RTCLI'">
-                  Retiro inmediato en tienda
-                </ng-container>
-                - {{ item.TiendaDestino }}
-              </div>
-            </div>
-          </div>
-          <div
-            class="col-5 d-flex justify-content-center"
-            style="margin-left: 55px"
-          >
-            <div class="row w-100">
-              <div class="col-12 text-compras">{{ item.OrdenSeguimiento }}</div>
-              <div
-                class="col-12 text-fechas"
-                style="font-weight: normal; font-size: 12px"
-              >
-                {{ item.OrdenCompra | uppercase }}
-              </div>
-              <div class="col-12 text-fechas">
-                {{ item.EstadoActual | titlecase }}
-              </div>
-            </div>
-          </div>
+        <div class="text-fechas">
+          {{ item.fechaCreacionOrden | date : 'dd-MM-yyyy' }}
         </div>
+        <div class="text-fechas">{{ item.OrdenSeguimiento }}</div>
+        <span>
+          <button class="btn btn-secondary btn-sm" (click)="addToCart(i)">
+            Rehacer Pedido
+          </button>
+        </span>
       </div>
       <div class="card-body">
-        <app-detalle-pedido
-          *ngIf="item.expand"
-          [ordenVenta]="item.OrdenSeguimiento"
-          [productos]="item.productos"
-          [index]="i"
-          (listaProducto)="addToCart($event)"
-        ></app-detalle-pedido>
+        <div class="mt-2" *ngFor="let info of item.productos; let in = index">
+          <div class="row">
+            <div class="col-3 col-sm-2 d-flex justify-content-center">
+              <a [routerLink]="root.product(info.sku, info.nombre)">
+                <img
+                  class="cart-img"
+                  [src]="root.getUrlImagenMiniatura(info)"
+                  [alt]="info.nombre"
+                />
+              </a>
+            </div>
+            <div class="row col-9 col-sm-10">
+              <div class="col-md-10">
+                <div class="product-title" *ngIf="info.nombre.length > 114">
+                  {{ info.nombre | slice : 0 : 114 }} ...
+                </div>
+                <div class="product-title" *ngIf="info.nombre.length <= 114">
+                  {{ info.nombre }}
+                </div>
+                <div class="product-sku">{{ info.sku }}</div>
+                <div class="product-sku">
+                  {{ searchCantProduct(info.sku, i) }} x
+                  {{ searchPriceProduct(info.sku, i) | currencyFormat }}
+                </div>
+              </div>
+              <div class="col-md-2">
+                <span>
+                  <i
+                    class="fa-solid fa-cart-plus"
+                    style="
+                      color: #0063b9;
+                      font-size: 14px;
+                      cursor: pointer;
+                      margin-right: 10px;
+                    "
+                    (mousedown)="addCart(info)"
+                  ></i>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            *ngIf="in != item.productos.length - 1"
+            style="border-bottom: 1px solid #0063b957"
+          ></div>
+        </div>
       </div>
     </div>
   </ng-container>
