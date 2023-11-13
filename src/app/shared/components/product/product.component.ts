@@ -23,7 +23,12 @@ import {
   ProductOrigen,
 } from '../../interfaces/product';
 import { CarouselComponent, SlidesOutputData } from 'ngx-owl-carousel-o';
-import { FormControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { CartService } from '../../services/cart.service';
 import { CompareService } from '../../services/compare.service';
 import { isPlatformBrowser } from '@angular/common';
@@ -266,6 +271,12 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   tiendaActual: any;
   stockTiendaActual: any = 0;
   MODOS = { RETIRO_TIENDA: 'retiroTienda', DESPACHO: 'domicilio' };
+
+  puntoQuiebre: number = 576;
+  showMobile: boolean = false;
+
+  formAvisoStock!: FormGroup;
+
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private cart: CartService,
@@ -283,6 +294,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     public sanitizer: DomSanitizer,
     private clientsService: ClientsService,
     private cd: ChangeDetectorRef,
+    private fb: FormBuilder,
     private readonly gtmService: GoogleTagManagerService
   ) {
     this.usuario = this.root.getDataSesionUsuario();
@@ -314,6 +326,10 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   async ngOnInit() {
+    this.isMobile();
+    window.onresize = () => {
+      this.isMobile();
+    };
     this.tiendaActual = this.geoLocationService.getTiendaSeleccionada();
     if (this.layout !== 'quickview' && isPlatformBrowser(this.platformId)) {
       this.photoSwipePromise = this.photoSwipe.load().subscribe();
@@ -333,6 +349,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
         this.addToCart();
       }
     );
+    this.iniciarFormulario();
   }
 
   async ngOnChanges(changes: SimpleChanges) {
@@ -353,6 +370,37 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.addcartPromise ? this.addcartPromise.unsubscribe() : '';
     this.comparePromise ? this.comparePromise.unsubscribe() : '';
     this.wishlistPromise ? this.wishlistPromise.unsubscribe() : '';
+  }
+
+  iniciarFormulario() {
+    this.formAvisoStock = this.fb.group({
+      sku: [this.product?.sku],
+      nombre: [, [Validators.required, Validators.maxLength(35)]],
+      email: [
+        ,
+        [
+          Validators.required,
+          Validators.maxLength(50),
+          Validators.pattern(
+            /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/
+          ),
+        ],
+      ],
+      numero_telefono: ['', [Validators.required, Validators.maxLength(14)]],
+    });
+    if (this.usuario.user_role != 'temp') {
+      this.formAvisoStock.controls['nombre'].setValue(
+        this.usuario.first_name + ' ' + this.usuario.last_name
+      );
+      this.formAvisoStock.controls['email'].setValue(this.usuario.email);
+      this.formAvisoStock.controls['numero_telefono'].setValue(
+        this.usuario.phone
+      );
+    }
+  }
+
+  isMobile() {
+    this.showMobile = window.innerWidth < this.puntoQuiebre;
   }
 
   async Actualizar() {
@@ -829,5 +877,36 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
+  }
+
+  enviarCorreo() {
+    if (this.formAvisoStock.valid) {
+      let valor_formulario = this.formAvisoStock.value;
+      this.productsService
+        .enviarCorreoSolicitudProductoSinStock(valor_formulario)
+        .subscribe(
+          (res: any) => {
+            if (res.error) {
+              this.toast.warning('No ha sido posible enviar el mensaje');
+            } else {
+              this.toast.success(
+                'Mensaje enviado con éxito. Te contactaremos a la brevedad'
+              );
+            }
+          },
+          (error) => {
+            this.toast.warning('No ha sido posible enviar el mensaje');
+          }
+        );
+    }
+  }
+
+  enviarWhatsapp() {
+    // let telefono = '56957897902'
+    let telefono = '56932633571';
+    let url = `https://api.whatsapp.com/send?phone=${telefono}&text=`;
+    let mensaje = `Hola, necesito el siguiente producto ${this.product.nombre} de SKU: ${this.product.sku}. Para que me atienda un ejecutivo.`;
+    let url_final = url + mensaje;
+    window.open(url_final);
   }
 }
