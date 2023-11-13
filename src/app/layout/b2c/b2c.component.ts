@@ -4,6 +4,7 @@ import {
   Inject,
   AfterViewInit,
   HostListener,
+  Input,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RootService } from '../../shared/services/root.service';
@@ -19,6 +20,7 @@ import { environment } from '@env/environment';
 export class B2cComponent implements AfterViewInit {
   headerLayout!: 'classic' | 'compact';
   loadingPage = true;
+  @Input() tipo!: string;
 
   innerWidth: number;
   constructor(

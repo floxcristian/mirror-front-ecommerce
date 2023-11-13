@@ -9,6 +9,61 @@
 </div>
 
 <div
+  class="container"
+  style="margin-top: 50px"
+  *ngIf="lstProductos.length > 0"
+>
+  <div class="col-sm-12 p-0">
+    <div class="mb-5 mt-2">
+      <ng-container *ngFor="let obj of lstProductos; let i = index">
+        <div *ngIf="obj.skus.length > 0" class="mb-5">
+          <div class="row mt-2">
+            <div
+              class="col-sm-12 d-flex justify-content-center"
+              [ngStyle]="{ 'margin-bottom': '1.8rem' }"
+            >
+              <h1 class="text-h1">
+                {{ obj.nombre }}
+              </h1>
+            </div>
+          </div>
+          <div style="margin-top: 15px">
+            <div
+              class="products-view__list products-list"
+              data-layout="grid-5-full"
+              data-with-features="false"
+            >
+              <owl-carousel-o
+                class="carouselLista"
+                [options]="carouselOptions"
+                appOwlPreventClick
+              >
+                <ng-container
+                  *ngFor="let prod of obj.skus"
+                  class="products-list__item"
+                >
+                  <ng-template carouselSlide>
+                    <app-product-card-b2c-ficha
+                      (mouseover)="over($event)"
+                      (mouseleave)="leave($event)"
+                      [product]="prod"
+                      [origen]="[ruta, '', prod.nombre.trim(), '']"
+                      [home]="true"
+                      [layout]="layout"
+                      [cartClass]="true"
+                    ></app-product-card-b2c-ficha>
+                  </ng-template>
+                </ng-container>
+              </owl-carousel-o>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<!-- <div
   class="mb-5 mt-2"
   *ngIf="lstProductos.length > 0"
   (window:resize)="onResize($event)"
@@ -269,4 +324,4 @@
       </div>
     </div>
   </ng-container>
-</div>
+</div> -->

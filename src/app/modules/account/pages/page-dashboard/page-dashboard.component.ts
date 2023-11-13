@@ -47,6 +47,7 @@ export class PageDashboardComponent {
   barChartData!: ChartConfiguration['data'];
   barChartLabels!: any[];
   barChartOptions: ChartOptions = {};
+  isB2B: boolean = false;
 
   constructor(
     private clientService: ClientsService,
@@ -60,13 +61,13 @@ export class PageDashboardComponent {
       : 900;
 
     this.usuario = this.root.getDataSesionUsuario();
-
+    if (['supervisor', 'comprador'].includes(this.usuario.user_role))
+      this.isB2B = true;
     this.loadChart();
   }
 
   loadChart() {
     const rut = this.usuario.rut;
-
     this.clientService
       .graficoVentaValorada({
         rutCliente: rut,

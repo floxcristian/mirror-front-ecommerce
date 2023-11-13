@@ -43,8 +43,8 @@
                     font-size: small;
                     font-weight: bold;
                     padding-left: 10px;
-                    border-left: 1px solid #005db9;
-                    border-right: 1px solid #005db9;
+                    border-start: 1px solid #005db9;
+                    border-end: 1px solid #005db9;
                     border-radius: 0px;
                     border-top: 1px solid #005db9;
                   "
@@ -87,7 +87,7 @@
                     <div class="row">
                       <div class="col-12">
                         <span style="font-weight: bold; color: #0063b9">{{
-                          "Tipo de Documento" | uppercase
+                          'Tipo de Documento' | uppercase
                         }}</span>
                       </div>
                       <div class="col-12">
@@ -187,8 +187,8 @@
                         ></i>
                         {{
                           item
-                            ? (item | date : "EEEE dd MMMM, y ")
-                            : ("" | titlecase)
+                            ? (item | date : 'EEEE dd MMMM, y ')
+                            : ('' | titlecase)
                         }}
                       </div>
                     </div>
@@ -217,8 +217,8 @@
                     font-size: small;
                     font-weight: bold;
                     padding-left: 10px;
-                    border-left: 1px solid #005db9;
-                    border-right: 1px solid #005db9;
+                    border-start: 1px solid #005db9;
+                    border-end: 1px solid #005db9;
                     border-radius: 0px;
                     border-top: 1px solid #005db9;
                   "
@@ -277,7 +277,10 @@
                             class="fa-solid fa-circle-check"
                             style="color: #118565"
                           ></i>
-                          <i class="fas fa-file-alt" style="color: #0063b9"></i>
+                          <i
+                            class="fas fa-file-alt"
+                            style="color: #0063b9"
+                          ></i>
                           Boleta
                           <a
                             *ngIf="esBoleta"
@@ -314,11 +317,11 @@
                           ></i
                           >{{
                             cartSession.observacion ==
-                            "Persona que recibe: Titular de la Venta"
-                              ? "Titular de la compra"
-                              : (cartSession.observacion || "")
-                                  .split("Celular")[0]
-                                  .split("Recibe:")[1]
+                            'Persona que recibe: Titular de la Venta'
+                              ? 'Titular de la compra'
+                              : (cartSession.observacion || '')
+                                  .split('Celular')[0]
+                                  .split('Recibe:')[1]
                           }}</span
                         >
                         <span
@@ -332,9 +335,9 @@
                           ></i
                           >{{
                             cartSession.observacion ==
-                            "Persona que recibe: Titular de la Venta"
-                              ? "Titular de la compra"
-                              : ""
+                            'Persona que recibe: Titular de la Venta'
+                              ? 'Titular de la compra'
+                              : ''
                           }}</span
                         >
                       </div>
@@ -364,8 +367,8 @@
                         ></i>
                         {{
                           item
-                            ? (item | date : "EEEE dd MMMM, y ")
-                            : ("" | titlecase)
+                            ? (item | date : 'EEEE dd MMMM, y ')
+                            : ('' | titlecase)
                         }}
                       </div>
                     </div>
@@ -521,7 +524,7 @@
                 <h4 class="text-danger text-center">
                   {{
                     rejectedCode != -11
-                      ? "Pago Rechazado"
+                      ? 'Pago Rechazado'
                       : alertCart?.detalleMensaje
                   }}
                 </h4>
@@ -772,7 +775,9 @@
                         class="form-control form-control-lg"
                         formControlName="centroCosto"
                       >
-                        <option [value]="''">Seleccione centro de costo</option>
+                        <option [value]="''">
+                          Seleccione centro de costo
+                        </option>
                         <option
                           *ngFor="let item of centrosCosto"
                           [value]="item.codigo"
@@ -913,12 +918,12 @@
               </p>
               <ng-container *ngIf="items.length > 1">
                 <font style="font-weight: normal"
-                  >({{ " " + items.length + " PRODUCTOS" + " " }})</font
+                  >({{ ' ' + items.length + ' PRODUCTOS' + ' ' }})</font
                 >
               </ng-container>
               <ng-container *ngIf="items.length == 1">
                 <font style="font-weight: normal"
-                  >({{ " " + items.length + " PRODUCTO" + " " }})</font
+                  >({{ ' ' + items.length + ' PRODUCTO' + ' ' }})</font
                 >
               </ng-container>
             </div>
@@ -1068,7 +1073,7 @@
                 <h4 class="text-danger text-center">
                   {{
                     rejectedCode != -11
-                      ? "Pago Rechazado"
+                      ? 'Pago Rechazado'
                       : alertCart?.detalleMensaje
                   }}
                 </h4>
@@ -1296,7 +1301,9 @@
                         class="form-control form-control-lg"
                         formControlName="centroCosto"
                       >
-                        <option [value]="''">Seleccione centro de costo</option>
+                        <option [value]="''">
+                          Seleccione centro de costo
+                        </option>
                         <option
                           *ngFor="let item of centrosCosto"
                           [value]="item.codigo"
@@ -1428,7 +1435,10 @@
                   [routerLink]="['/', 'carro-compra', 'metodo-de-envio']"
                   class="btn btn-border-primary w-100 btn-lg text-center"
                 >
-                  <i class="fas fa-chevron-left" style="margin-right: 10px"></i>
+                  <i
+                    class="fas fa-chevron-left"
+                    style="margin-right: 10px"
+                  ></i>
                   Anterior
                 </a>
               </div>
@@ -1454,7 +1464,10 @@
                   class="btn btn-lg btn-secondary w-100 text-center"
                 >
                   Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  <i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
                 <button
                   name="paymentOvSms "
@@ -1490,7 +1503,10 @@
                   class="btn btn-lg btn-secondary w-100 text-center"
                 >
                   Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  <i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
 
                 <button
@@ -1505,7 +1521,10 @@
                   class="btn btn-lg btn-secondary w-100 text-center"
                 >
                   Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  <i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
                 <button
                   name="paymentMercadopago2 "
@@ -1520,7 +1539,10 @@
                   class="btn btn-lg btn-secondary w-100 tex-tcenter"
                 >
                   Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  <i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
                 <button
                   name="paymentKhipu"
@@ -1534,7 +1556,10 @@
                   class="btn btn-lg btn-secondary w-100 text-center"
                 >
                   Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  <i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
                 <button
                   name="paymentKhipu"
@@ -1549,7 +1574,10 @@
                   class="btn btn-lg btn-secondary w-100 tex-tcenter"
                 >
                   Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  <i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
 
                 <button
@@ -1564,7 +1592,10 @@
                   class="btn btn-lg btn-secondary w-100 text-center"
                 >
                   Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  <i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
                 <button
                   name="paymentwebpay2"
@@ -1579,7 +1610,10 @@
                   class="btn btn-lg btn-secondary w-100 text-center"
                 >
                   Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  <i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
 
                 <button
@@ -1610,8 +1644,8 @@
 
               <div class="mt-3 col-12 ps-0 ps-1">
                 <em *ngIf="userSession.user_role == 'comprador'"
-                  >* Se generará una solicitud de compra y debe ser aprobada por
-                  tu supervisor antes de generar el pedido.
+                  >* Se generará una solicitud de compra y debe ser aprobada
+                  por tu supervisor antes de generar el pedido.
                 </em>
               </div>
             </div>
@@ -1658,8 +1692,8 @@
                     font-size: small;
                     font-weight: bold;
                     padding-left: 10px;
-                    border-left: 1px solid #005db9;
-                    border-right: 1px solid #005db9;
+                    border-start: 1px solid #005db9;
+                    border-end: 1px solid #005db9;
                     border-radius: 0px;
                     border-top: 1px solid #005db9;
                   "
@@ -1778,7 +1812,10 @@
                               >RECIBE</span
                             >
                           </div>
-                          <div class="col-12" style="color: #005db9 !important">
+                          <div
+                            class="col-12"
+                            style="color: #005db9 !important"
+                          >
                             <span *ngIf="recibe.company"
                               ><i
                                 class="fas fa-people-carry"
@@ -1828,8 +1865,8 @@
                             ></i>
                             {{
                               item
-                                ? (item | date : "EEEE dd MMMM, y ")
-                                : ("" | titlecase)
+                                ? (item | date : 'EEEE dd MMMM, y ')
+                                : ('' | titlecase)
                             }}
                           </div>
                         </div>
@@ -1860,8 +1897,8 @@
                     font-size: small;
                     font-weight: bold;
                     padding-left: 10px;
-                    border-left: 1px solid #005db9;
-                    border-right: 1px solid #005db9;
+                    border-start: 1px solid #005db9;
+                    border-end: 1px solid #005db9;
                     border-radius: 0px;
                     border-top: 1px solid #005db9;
                   "
@@ -1889,7 +1926,10 @@
                       </div>
                       <div class="col-10 d-flex justify-content-start">
                         <div class="row">
-                          <div class="col-12" style="color: #005db9 !important">
+                          <div
+                            class="col-12"
+                            style="color: #005db9 !important"
+                          >
                             <i
                               class="fas fa-store-alt"
                               style="color: #005db9 !important"
@@ -1974,12 +2014,18 @@
                       </div>
                       <div class="col-10 d-flex justify-content-start">
                         <div class="row">
-                          <div class="col-12" style="color: #005db9 !important">
+                          <div
+                            class="col-12"
+                            style="color: #005db9 !important"
+                          >
                             <span style="font-weight: bold"
                               >RETIRA EN TIENDA</span
                             >
                           </div>
-                          <div class="col-12" style="color: #005db9 !important">
+                          <div
+                            class="col-12"
+                            style="color: #005db9 !important"
+                          >
                             <i
                               class="fas fa-people-carry"
                               style="color: #005db9 !important"
@@ -1988,17 +2034,17 @@
 
                             <span>{{
                               cartSession.observacion ==
-                              "Persona que recibe: Titular de la Venta"
-                                ? "Titular de la compra"
-                                : (cartSession.observacion || "")
-                                    .split("Celular")[0]
-                                    .split("Recibe:")[1]
+                              'Persona que recibe: Titular de la Venta'
+                                ? 'Titular de la compra'
+                                : (cartSession.observacion || '')
+                                    .split('Celular')[0]
+                                    .split('Recibe:')[1]
                             }}</span>
                             <span>{{
                               cartSession.observacion ==
-                              "Persona que recibe: Titular de la Venta"
-                                ? "Titular de la compra"
-                                : ""
+                              'Persona que recibe: Titular de la Venta'
+                                ? 'Titular de la compra'
+                                : ''
                             }}</span>
                           </div>
                         </div>
@@ -2035,8 +2081,8 @@
                             ></i>
                             {{
                               item
-                                ? (item | date : "EEEE dd MMMM, y ")
-                                : ("" | titlecase)
+                                ? (item | date : 'EEEE dd MMMM, y ')
+                                : ('' | titlecase)
                             }}
                           </div>
                         </div>
@@ -2182,7 +2228,10 @@
             <button
               name="paymentwebpay2 "
               [disabled]="
-                !formVisita.valid || !validado || alertCartShow || btnWebpayPost
+                !formVisita.valid ||
+                !validado ||
+                alertCartShow ||
+                btnWebpayPost
               "
               *ngIf="invitado && paymentMethodActive == 'webPay'"
               (click)="creteateTransactionTransBank()"
@@ -2207,7 +2256,10 @@
             <button
               name="paymentMercadopago2 "
               [disabled]="
-                !formVisita.valid || !validado || alertCartShow || btnWebpayPost
+                !formVisita.valid ||
+                !validado ||
+                alertCartShow ||
+                btnWebpayPost
               "
               *ngIf="invitado && paymentMethodActive == 'mercadopago'"
               (click)="paymentMercadopago()"

@@ -84,6 +84,9 @@ export interface Product {
   escala?: any[];
   numero_parte?: string;
   uen?: string;
+  stockTienda: number;
+  stockEmpresa: number;
+  fechaEntregaRetiro: string;
 }
 
 export interface ProductCategory {

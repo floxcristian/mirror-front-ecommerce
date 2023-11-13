@@ -28,6 +28,7 @@ import { isVacio } from '../../utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { isPlatformBrowser } from '@angular/common';
+import { LoginService } from '@shared/services/login.service';
 
 @Component({
   selector: 'app-product-slideshow',
@@ -48,11 +49,18 @@ export class ProductSlideshowComponent
   ruta: string = '';
   preferenciasCliente!: PreferenciasCliente;
   despachoCliente!: Subscription;
+  layout = 'grid-lg';
   window = window;
   innerWidth: number;
   carouselOptions = {
     items: 5,
     nav: true,
+    navText: [
+      `<div class="m-arrow__container" ><i class="fa-regular fa-chevron-left"></i></div>`,
+      `<div class="m-arrow__container"><i class="fa-regular fa-chevron-right"></i></div>`,
+    ],
+    slideBy: 'page',
+    dots: true,
     loop: true,
     autoplay: true,
     autoplayTimeout: 4000,
@@ -70,18 +78,18 @@ export class ProductSlideshowComponent
     items: 5,
     nav: true,
     navText: [
-      `<i class="fas fa-angle-left fa-1x" style="color: #000;"></i>`,
-      `<i class="fas fa-angle-right fa-1x" style="color: #000;"></i>`,
+      `<div class="m-arrow__container" ><i class="fa-regular fa-chevron-left"></i></div>`,
+      `<div class="m-arrow__container"><i class="fa-regular fa-chevron-right"></i></div>`,
     ],
     dots: true,
     slideBy: 'page',
-    // loop: true,
+    responsiveClass: true,
     responsive: {
-      1366: { items: 5 },
       1100: { items: 5 },
-      920: { items: 4 },
+      920: { items: 5 },
+      768: { items: 3 },
       680: { items: 3 },
-      500: { items: 2 },
+      500: { items: 3 },
       0: { items: 2 },
     },
     rtl: this.direction.isRTL(),
@@ -120,6 +128,7 @@ export class ProductSlideshowComponent
     private clientsService: ClientsService,
     private modalService: BsModalService,
     private logisticsService: LogisticsService,
+    private loginService: LoginService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
@@ -162,6 +171,16 @@ export class ProductSlideshowComponent
         });
       }
     );
+
+    // cuando se inicia sesion
+    this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
+      console.log('hola inicieß');
+      this.user = usuario;
+      this.root.getPreferenciasCliente().then((preferencias) => {
+        this.preferenciasCliente = preferencias;
+        this.cargarHome();
+      });
+    });
   }
 
   ngOnDestroy(): void {
@@ -198,32 +217,41 @@ export class ProductSlideshowComponent
     const rut = this.user.rut;
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
-    let params: any = { sucursal, rut };
-    if (!this.isB2B) {
+    const localidad = !isVacio(this.preferenciasCliente.direccionDespacho)
+      ? this.preferenciasCliente.direccionDespacho?.comuna
+      : '';
+    let localidad_limpia = localidad
+      ?.normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+    let params: any = { sucursal, rut, localidad: localidad_limpia };
+    if (this.user.rut !== '0' && !this.isB2B) {
       this.url = [];
       this.lstProductos = [];
-      this.productsService.getHomePage(params).subscribe((r: any) => {
+      this.productsService.getHomePageB2c(params).subscribe((r: any) => {
         this.url = r.urls;
         this.lstProductos = r.data;
+        this.cargando = false;
+      });
+    } else if (this.user.rut !== '0' && this.isB2B) {
+      this.url = [];
+      this.lstProductos = [];
+      this.productsService.getHomePageB2b(params).subscribe((r: any) => {
+        this.lstProductos = this.quitarElementos(r.data);
+        this.url = r.urls;
         this.cargando = false;
       });
     } else {
-      this.url = [];
-      this.lstProductos = [];
-      const localidad = !isVacio(this.preferenciasCliente.direccionDespacho)
-        ? this.preferenciasCliente.direccionDespacho?.comuna
-        : '';
-      let localidad_limpia = localidad
-        ?.normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
-      params = { ...params, ...{ localidad: localidad_limpia } };
-      this.productsService.getHomePageB2b(params).subscribe((r: any) => {
-        this.lstProductos = r.data;
-        this.url = r.urls;
-        this.cargando = false;
-      });
-      this.cargarListas();
+      this.cargando = false;
     }
+  }
+
+  quitarElementos(data: any) {
+    let lst_limpios: any[] = [];
+    let valores = ['mis productos recurrentes', 'últimos productos vistos'];
+    data.forEach((element: any) => {
+      if (!valores.includes(element.nombre)) lst_limpios.push(element);
+    });
+    return lst_limpios;
   }
 
   cargarListas() {
@@ -249,26 +277,32 @@ export class ProductSlideshowComponent
       });
   }
 
-  cargaMasiva() {
-    const modal: BsModalRef = this.modalService.show(
-      AgregarListaProductosMasivaModalComponent,
-      {
-        class: 'modal-lg modal-dialog-centered',
-        ignoreBackdropClick: true,
-      }
-    );
-    modal.content.event.subscribe((res: any) => {
-      if (res) {
-        this.cargarListas();
-      }
-    });
-  }
-
   delay(ms: any) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   getLink(texto: any) {
     return texto.trim().replace(/ /g, '-');
+  }
+  over(event: any) {
+    let el: any = event.target.parentNode;
+    let clase: any = el.classList;
+    while (!clase.contains('owl-item')) {
+      el = el.parentNode;
+      clase = el.classList;
+    }
+
+    el.style['box-shadow'] = '0 4px 4px 0 rgb(0 0 0 / 50%)';
+  }
+
+  leave(event: any) {
+    let el: any = event.target.parentNode;
+    let clase: any = el.classList;
+    while (!clase.contains('owl-item')) {
+      el = el.parentNode;
+      clase = el.classList;
+    }
+
+    el.style['box-shadow'] = 'none';
   }
 }

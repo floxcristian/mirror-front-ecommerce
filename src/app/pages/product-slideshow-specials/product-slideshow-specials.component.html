@@ -93,21 +93,14 @@
         <h1 class="pt-0 mb-3" style="text-transform: uppercase">
           {{ nombre }}
         </h1>
+        <!-- <app-block-header [header]="nombre" colorText="text-primary"></app-block-header> -->
       </div>
 
       <div
         *ngFor="let product of producto_espacial"
         class="products-list__item mb-2 px-2 px-md-0"
       >
-        <app-product-card-b2b
-          *ngIf="isB2B"
-          [origen]="['catalogo-especial', ruta[2], nombre?.trim(), '']"
-          [product]="product"
-          [grid]="layout"
-        >
-        </app-product-card-b2b>
         <app-product-card-b2c-cms
-          *ngIf="!isB2B"
           [origen]="['catalogo-especial', ruta[2], nombre?.trim(), '']"
           [product]="product"
           [grid]="layout"

@@ -1,6 +1,6 @@
 <div class="cargandoCent text-center" *ngIf="cargando">
   <i
-    class="fak fa-implementos fa-bounce"
+    class="fas fa-implementos fa-bounce"
     style="font-size: 48px; color: #0063b9"
   ></i>
   <div
@@ -72,7 +72,10 @@
               <div
                 class="col-6-producto d-flex"
                 style="padding-left: 5px; padding-right: 5px"
-                *ngFor="let product of item.skus | slice : 0 : 4; let i = index"
+                *ngFor="
+                  let product of item.skus | slice : 0 : 4;
+                  let i = index
+                "
               >
                 <div
                   class="card-body-producto"
@@ -81,13 +84,11 @@
                   data-with-features="false"
                 >
                   <app-product-card-b2c-cms
-                    *ngIf="!isB2B"
                     [product]="product"
                     [origen]="[ruta, '', product.nombre.trim(), '']"
                     [home]="true"
                     [layout]="layout"
                     [cartClass]="true"
-                    [popoverContent]="popoverContent"
                     (precioEscalaEvent)="get_precioEscala($event)"
                   ></app-product-card-b2c-cms>
                 </div>
@@ -144,7 +145,7 @@
       style="min-height: 320px"
     >
       <i
-        class="fak fa-implementos fa-bounce"
+        class="fas fa-implementos fa-bounce"
         style="font-size: 78px; color: #0063b9"
       ></i>
     </div>

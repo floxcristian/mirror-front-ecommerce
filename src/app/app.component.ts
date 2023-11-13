@@ -55,6 +55,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   productCard!: ProductCart;
   s: any;
   node: any;
+  isOmni: boolean = false;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -163,6 +164,9 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('categoria');
           $('.webchatStartButtonContainer').show();
         }
+        if (event.url.includes('/omni-forma-de-pago')) {
+          this.isOmni = true;
+        }
 
         this.scroller.scrollToPosition([0, 0]);
       }
@@ -204,7 +208,7 @@ export class AppComponent implements AfterViewInit, OnInit {
       });
 
       this.geoService.localizacionObs$.subscribe((r: GeoLocation) => {
-        this.cart.load();
+        if (!this.isOmni) this.cart.load();
       });
 
       this.geoService.localizacionObsCarro$.subscribe((r: GeoLocation) => {

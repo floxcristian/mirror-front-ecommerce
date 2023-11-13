@@ -217,7 +217,6 @@ a {
     position: relative;
     overflow: hidden;
     top: 7px;
-    height: 380px;
     -webkit-transform: translate3d(0, 0, 0);
   }
 
@@ -225,7 +224,6 @@ a {
     position: relative;
     overflow: hidden;
     top: 7px;
-    height: 330px;
     -webkit-transform: translate3d(0, 0, 0);
   }
 }
@@ -274,13 +272,11 @@ a {
 }
 
 ::ng-deep.carouselProducto .owl-carousel .owl-item {
-  //   padding: 0px 10px;
   @media (min-width: 576px) {
     display: flex;
-    //   border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 20px;
     margin-left: 10px;
-    // align-items: center;
+    margin-bottom: 10px;
 
     app-product-card-b2b {
       display: flex;
@@ -303,11 +299,8 @@ a {
 
   @media (max-width: 576px) {
     display: flex;
-    //   border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 20px;
     margin-left: 10px;
-
-    // align-items: center;
 
     app-product-card-b2b {
       display: flex;
@@ -427,12 +420,8 @@ a {
 }
 
 ::ng-deep.carouselTitulo .owl-carousel .owl-item {
-  //   padding: 0px 10px;
   @media (min-width: 400px) {
     display: flex;
-    //   border: 1px solid rgba(0, 0, 0, 0.2);
-    // border-radius: 20px;
-    // margin-left: 10px;
     font-size: 1.35rem;
     font-weight: bold;
     white-space: nowrap;
@@ -440,14 +429,10 @@ a {
     border-right: 2px solid #005db9;
     padding-right: 5px;
     padding-left: 10px;
-    // align-items: center;
   }
 
   @media (max-width: 400px) {
     display: flex;
-    //   border: 1px solid rgba(0, 0, 0, 0.2);
-    // border-radius: 20px;
-    // margin-left: 10px;
     font-size: 1.2rem;
     text-overflow: ellipsis !important;
     font-weight: bold;
@@ -456,7 +441,6 @@ a {
     border-right: 1px solid #005db9;
     padding-right: 5px;
     padding-left: 10px;
-    // align-items: center;
   }
 }
 
@@ -564,30 +548,21 @@ a {
 }
 
 ::ng-deep.carouselImagen .owl-carousel .owl-item {
-  //   padding: 0px 10px;
   @media (min-width: 400px) {
     display: flex;
-    //   border: 1px solid rgba(0, 0, 0, 0.2);
-    // border-radius: 20px;
-    // margin-left: 10px;
     font-size: 1.35rem;
     font-weight: bold;
     white-space: nowrap;
     padding-left: 10px;
-    // align-items: center;
   }
 
   @media (max-width: 400px) {
     display: flex;
-    //   border: 1px solid rgba(0, 0, 0, 0.2);
-    // border-radius: 20px;
-    // margin-left: 10px;
     font-size: 1.2rem;
     text-overflow: ellipsis !important;
     font-weight: bold;
     white-space: nowrap;
     padding-left: 10px;
-    // align-items: center;
   }
 }
 

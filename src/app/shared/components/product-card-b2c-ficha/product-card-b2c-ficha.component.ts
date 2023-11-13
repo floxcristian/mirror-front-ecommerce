@@ -31,6 +31,7 @@ import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ProductCardB2cFichaComponent implements OnInit {
   private destroy$: Subject<void> = new Subject();
+  @Input() isOnProductPage!: boolean;
   @Input() home: boolean = false;
   @Input() cartClass!: boolean;
   @Input() cartpopver: boolean = false;
@@ -57,6 +58,7 @@ export class ProductCardB2cFichaComponent implements OnInit {
     | 'grid-lg'
     | 'list'
     | 'horizontal'
+    | any
     | null = null;
   @Input() grid!: any;
   @Input() paramsCategory!: any;
@@ -224,16 +226,9 @@ export class ProductCardB2cFichaComponent implements OnInit {
     this.porcentaje = Math.round(
       (descuento / (this.productData.precioComun || 0)) * 100
     );
-    //this.porcentaje = 0;
   }
 
   verPreciosEscala(popover: NgbPopover) {
-    // this.modalEscalaRef = this.modalService.show(this.modalEscala, { class: 'modal-dialog-centered' });
-    //let json = {
-    //popover: popover,
-    //preciosEscalas: this.preciosEscalas
-    //};
     popover.open();
-    //this.precioEscalaEvent.emit(json);
   }
 }

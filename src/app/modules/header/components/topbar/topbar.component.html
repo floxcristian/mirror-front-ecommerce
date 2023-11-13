@@ -1,55 +1,4 @@
 <!-- Cambios en Bootstrap 5 -->
-<div class="site-header__topbar topbar" *ngIf="tipo === 'b2b'">
-  <div class="topbar__container container d-flex align-items-center">
-    <div class="topbar__row">
-      <div class="topbar__item topbar__item--link me-3" *ngIf="logo == '1'">
-        <a [routerLink]="['/', 'inicio']">
-          <img
-            height="40px"
-            [src]="logoSrc"
-            alt="logo-implementos"
-            class="lazyload"
-          />
-        </a>
-      </div>
-      <div class="topbar__item topbar__item--link me-3">
-        <i class="fas fa-phone" aria-hidden="true"></i>
-        <span class="subtitle ps-0 pe-3"> Venta Telefonica </span>
-        <a href="tel:800330088" style="color: white; font-weight: 700">
-          800 330 088
-        </a>
-      </div>
-
-      <div class="topbar__item topbar__item--link me-3">
-        <a class="topbar-link" [routerLink]="['/', 'sitio', 'contacto']">
-          <i class="far fa-envelope" aria-hidden="true"></i>
-          <span class="subtitle ps-0"> Contacto </span>
-        </a>
-      </div>
-
-      <div class="topbar__item topbar__item--link me-3 tiendas-btn">
-        <a class="topbar-link" [routerLink]="['/', 'sitio', 'tiendas']">
-          <i class="fas fa-home"></i>
-          <span class="subtitle"> TIENDAS Y HORARIOS </span>
-        </a>
-      </div>
-
-      <div class="topbar__item topbar__item--link me-3 tiendas-btn">
-        <a
-          class="topbar-link"
-          target="_blank"
-          [routerLink]="['/', 'catalogos', 'listado-catalogos']"
-        >
-          <i class="far fa-file-image"></i>
-          <span class="subtitle"> VER CATÁLOGOS </span>
-        </a>
-      </div>
-    </div>
-
-    <div class="topbar__row" *ngIf="tipo === 'b2c'"></div>
-  </div>
-</div>
-
 <div class="menu_b2c" [hidden]="Hide_menub2c() ? true : false">
   <div class="row">
     <div class="col-sm-3" style="margin-top: 10px">
@@ -96,15 +45,19 @@
 
 <div
   class="site-header__topbar topbar"
-  *ngIf="tipo === 'b2c' && desde !== 'omni'"
+  *ngIf="desde !== 'omni'"
   style="background-color: #009579; height: 38px"
 >
   <div
     class="topbar__container container d-flex align-items-center justify-content-center"
   >
-    <div class="topbar__row">
+    <div *ngIf="tipo === 'b2c'" class="topbar__row">
       <i class="fas fa-truck fa-lg me-2"></i>Por compras mayores a $60.000
       despacho GRATIS
+    </div>
+    <div *ngIf="tipo === 'b2b'" class="topbar__row">
+      <i class="fas fa-truck fa-lg me-2"></i>
+      Despacho GRATIS
     </div>
   </div>
 </div>

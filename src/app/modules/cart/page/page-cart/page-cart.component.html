@@ -36,12 +36,12 @@
               Carro de compra
               <ng-container *ngIf="items.length > 1">
                 <font style="font-weight: normal"
-                  >({{ " " + items.length + " Productos" + " " }})</font
+                  >({{ ' ' + items.length + ' Productos' + ' ' }})</font
                 >
               </ng-container>
               <ng-container *ngIf="items.length == 1">
                 <font style="font-weight: normal"
-                  >({{ " " + items.length + " Producto" + " " }})</font
+                  >({{ ' ' + items.length + ' Producto' + ' ' }})</font
                 >
               </ng-container>
             </div>
@@ -228,9 +228,9 @@
                           {{
                             !isVacio(user.iva)
                               ? user.iva
-                                ? "c/iva"
-                                : "s/iva"
-                              : "c/iva"
+                                ? 'c/iva'
+                                : 's/iva'
+                              : 'c/iva'
                           }}</em
                         ></span
                       >
@@ -251,7 +251,10 @@
                       >
                         <!-- <i class="fas fa-times"></i> -->
                         <span style="cursor: pointer">
-                          <i class="fas fa-trash-alt" style="color: #0d61bb"></i
+                          <i
+                            class="fas fa-trash-alt"
+                            style="color: #0d61bb"
+                          ></i
                         ></span>
                       </div>
                     </div>
@@ -342,69 +345,125 @@
       </ng-container>
     </div>
     <div class="row m-0">
-      <div
-        class="col-12"
-        [ngStyle]="{ 'margin-bottom': showresumen == true ? '300px' : '200px' }"
-      >
-        <div class="mb-5" (window:resize)="onResize($event)">
-          <div class="shop-layout shop-layout--sidebar-- mb-3">
-            <div class="shop-layout__content" style="width: 100%">
-              <!-- <div *ngIf="recommendedProducts?.length>0" class="bg-primary text-center mt-3"></div>
-                                <h1 class="block-header__title text-white pt-0" style="text-transform: uppercase">
-                                    Te podría interesar
-                                </h1>
-                            </div>-->
-              <div class="margin-less">
-                <app-block-header
-                  *ngIf="recommendedProducts.length > 0"
-                  [header]="'Te podría interesar'"
-                ></app-block-header>
-              </div>
-              <div class="products-view">
-                <div
-                  class="products-view__list products-list"
-                  data-with-features="false"
-                ></div>
-
-                <div
-                  class="products-view__list products-list"
-                  data-layout="grid-5-full"
-                  data-with-features="false"
-                >
-                  <div>
-                    <owl-carousel-o
-                      class="carouselCart"
-                      [options]="carouselOptions"
-                      appOwlPreventClick
-                    >
-                      <ng-container *ngFor="let item of recommendedProducts">
-                        <ng-template carouselSlide>
-                          <app-product-card-b2c-cms
-                            *ngIf="isB2B"
-                            [product]="item"
-                            [origen]="['carro', '', '', 'te podria interesar']"
-                            [cartClass]="true"
-                          ></app-product-card-b2c-cms>
-                          <app-product-card-b2c-cms
-                            *ngIf="!isB2B"
-                            [product]="item"
-                            [origen]="['carro', '', '', 'te podria interesar']"
-                            [cartClass]="true"
-                          ></app-product-card-b2c-cms>
-                        </ng-template>
-                      </ng-container>
-                    </owl-carousel-o>
+      <ng-container *ngIf="innerWidth >= 450">
+        <div
+          class="col-12"
+          [ngStyle]="{
+            'margin-bottom': showresumen == true ? '300px' : '200px'
+          }"
+        >
+          <div class="mb-5" (window:resize)="onResize($event)">
+            <div class="shop-layout shop-layout--sidebar-- mb-3">
+              <div class="shop-layout__content" style="width: 100%">
+                <div class="margin-less" style="margin-bottom: 35px">
+                  <app-block-header
+                    *ngIf="recommendedProducts.length > 0"
+                    [header]="'Te podría interesar'"
+                  ></app-block-header>
+                </div>
+                <div class="products-view">
+                  <div
+                    class="products-view__list products-list"
+                    data-with-features="false"
+                  ></div>
+                  <div
+                    class="products-view__list products-list"
+                    data-layout="grid-5-full"
+                    data-with-features="false"
+                  >
+                    <div>
+                      <owl-carousel-o
+                        class="carouselCart"
+                        [options]="carouselOptions"
+                        appOwlPreventClick
+                      >
+                        <ng-container *ngFor="let item of recommendedProducts">
+                          <ng-template carouselSlide>
+                            <app-product-card-b2c-ficha
+                              [product]="item"
+                              [origen]="[
+                                'carro',
+                                '',
+                                '',
+                                'te podria interesar'
+                              ]"
+                              [isOnProductPage]="true"
+                            >
+                            </app-product-card-b2c-ficha>
+                          </ng-template>
+                        </ng-container>
+                      </owl-carousel-o>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </ng-container>
+      <ng-container *ngIf="innerWidth < 450">
+        <div
+          class="col-12"
+          [ngStyle]="{
+            'margin-bottom': showresumen == true ? '300px' : '200px'
+          }"
+        >
+          <div class="mb-5" (window:resize)="onResize($event)">
+            <div class="shop-layout shop-layout--sidebar-- mb-3">
+              <div class="shop-layout__content" style="width: 100%">
+                <div class="margin-less" style="margin-bottom: 15px">
+                  <app-block-header
+                    *ngIf="recommendedProducts.length > 0"
+                    [header]="'Te podría interesar'"
+                  ></app-block-header>
+                </div>
+                <div class="products-view">
+                  <div
+                    class="products-view__list products-list"
+                    data-with-features="false"
+                  ></div>
+                  <div
+                    class="products-view__list products-list"
+                    data-layout="grid-5-full"
+                    data-with-features="false"
+                  >
+                    <div>
+                      <owl-carousel-o
+                        class="carouselCart"
+                        [options]="carrouselOptionsMobile"
+                        appOwlPreventClick
+                      >
+                        <ng-container *ngFor="let item of recommendedProducts">
+                          <ng-template carouselSlide [dataMerge]="2">
+                            <app-product-card-b2c-ficha
+                              [product]="item"
+                              [origen]="[
+                                'carro',
+                                '',
+                                '',
+                                'te podria interesar'
+                              ]"
+                              [isOnProductPage]="true"
+                            >
+                            </app-product-card-b2c-ficha>
+                          </ng-template>
+                        </ng-container>
+                      </owl-carousel-o>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
 
       <ng-container *ngIf="innerWidth < 450">
         <div *ngIf="items.length" class="footer-page">
-          <div class="card h-100" style="margin-top: 5px; margin-bottom: -13px">
+          <div
+            class="card h-100"
+            style="margin-top: 5px; margin-bottom: -13px"
+          >
             <div
               class="card-header"
               style="display: inline-block"
@@ -506,8 +565,8 @@
       </div>
       <div class="modal-body" style="min-height: auto">
         Desea guardar los productos del carro? <br class="mb-2" />
-        El carro quedará en estado guardado y podrá ser reactivado desde el menu
-        "Carros guardados", ubicado en su perfil de usuario.
+        El carro quedará en estado guardado y podrá ser reactivado desde el
+        menu "Carros guardados", ubicado en su perfil de usuario.
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">

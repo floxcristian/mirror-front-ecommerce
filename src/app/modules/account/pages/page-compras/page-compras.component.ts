@@ -11,7 +11,7 @@ import { TrackingService } from '../../../../shared/services/tracking.service';
 })
 export class PageComprasComponent implements OnInit {
   constructor(
-    private root: RootService,
+    public root: RootService,
     private _TrackingService: TrackingService,
     private cart: CartService,
     private toastr: ToastrService
@@ -98,5 +98,33 @@ export class PageComprasComponent implements OnInit {
         this.toastr.success(`El pedido fue agregado al carro correctamente.`);
       }
     });
+  }
+
+  addCart(item: any) {
+    if (this.addingToCart) {
+      return;
+    }
+
+    this.addingToCart = true;
+    this.cart.add(item, 1).subscribe((resp) => {
+      {
+        this.addingToCart = false;
+        if (!resp.error) {
+          this.toastr.success(
+            `Productos "${item.sku}" agregado al carro correctamente.`
+          );
+        }
+      }
+    });
+  }
+
+  searchCantProduct(sku: string, index: number) {
+    let producto = this.data[index].InfoVenta.find((x: any) => x.Sku === sku);
+    return producto.CantidadSolicitada;
+  }
+
+  searchPriceProduct(sku: string, index: number) {
+    let producto = this.data[index].InfoVenta.find((x: any) => x.Sku === sku);
+    return producto.Precio;
   }
 }

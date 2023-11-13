@@ -120,7 +120,6 @@
         [class.imgH]="home"
         [class.imgC]="cartClass"
         [alt]="productData.nombre"
-        style="margin-left: 10px !important"
       />
     </a>
   </div>
@@ -187,8 +186,8 @@
           "
           >{{
             productData.marca
-              | replace : "^SIN MARCA$" : "IMPLEMENTOS"
-              | replace : "^0$" : "IMPLEMENTOS"
+              | replace : '^SIN MARCA$' : 'IMPLEMENTOS'
+              | replace : '^0$' : 'IMPLEMENTOS'
           }}</a
         >
       </div>
@@ -205,59 +204,105 @@
           </span>
         </a>
       </div>
-      <div class="mt-1">
-        <a
-          appClick
-          class="skuP"
-          (click)="setOrigenBeforeFicha()"
-          [routerLink]="
-            root.product(productData.sku, productData.nombre, paramsCategory)
-          "
-          >SKU: {{ productData.sku }}</a
-        >
-      </div>
     </div>
 
-    <div
-      class="product-card__prices text-end ps-0"
-      style="padding-top: 8px !important"
+    <ng-container
+      *ngIf="
+        productData.stockTienda !== undefined &&
+        productData.stockEmpresa !== undefined
+      "
     >
-      <ng-container *ngIf="!productData.compareAtPrice">
-        <div
-          *ngIf="productData?.precioComun == productData?.precio?.precio"
-          class="product-card__new-price col-12"
-          style="padding-left: 0 !important; padding-right: 5px !important"
-        >
-          {{ productData.precio.precio | currencyFormat }} <em> c/iva </em>
-        </div>
-
-        <div
-          *ngIf="productData?.precioComun != productData?.precio?.precio"
-          class="product-card__new-price text-danger col-12"
-          style="
-            padding-left: 0 !important;
-            padding-right: 5px !important;
-            margin-left: 5px;
-          "
-        >
-          {{ productData.precio.precio | currencyFormat }} <em> c/iva </em>
-        </div>
-
-        <div
-          *ngIf="productData?.precioComun != productData?.precio?.precio"
-          tooltip="Precio normal"
-          class="product-card__old-price col-12"
-          style="
-            text-align: left;
-            padding-left: 0 !important;
-            padding-right: 5px !important;
-          "
-        >
-          {{ productData.precioComun | currencyFormat }} <em> c/iva </em>
-          <br />
-        </div>
-      </ng-container>
-    </div>
+      <div
+        class="product-card__prices text-end ps-0"
+        style="padding-top: 4px !important; height: 40px"
+        *ngIf="productData.stockTienda > 0 || productData.stockEmpresa > 0"
+        [ngStyle]="{
+          display:
+            productData.precioComun == productData.precio.precio
+              ? 'flex'
+              : 'block',
+          'align-items':
+            productData.precioComun == productData.precio.precio
+              ? 'center'
+              : 'unset'
+        }"
+      >
+        <ng-container *ngIf="!productData.compareAtPrice">
+          <div
+            *ngIf="productData?.precioComun == productData.precio.precio"
+            class="product-card__new-price col-12"
+            style="padding-left: 0 !important; padding-right: 5px !important"
+          >
+            {{ productData.precio.precio | currencyFormat }} <em> c/iva </em>
+          </div>
+          <div
+            *ngIf="productData.precioComun != productData?.precio?.precio"
+            class="product-card__new-price text-danger col-12"
+            style="padding-left: 0 !important; padding-right: 5px !important"
+          >
+            {{ productData.precio.precio | currencyFormat }} <em> c/iva </em>
+          </div>
+          <div
+            *ngIf="productData?.precioComun != productData?.precio?.precio"
+            tooltip="Precio normal"
+            class="product-card__old-price col-12"
+            style="
+              text-align: left;
+              padding-left: 0 !important;
+              padding-right: 5px !important;
+            "
+          >
+            {{ productData.precioComun | currencyFormat }} <em> c/iva </em>
+            <br />
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+    <ng-container
+      *ngIf="
+        productData.stockTienda === undefined &&
+        productData.stockEmpresa === undefined
+      "
+    >
+      <div
+        class="product-card__prices text-end ps-0"
+        style="padding-top: 4px !important; height: 40px"
+      >
+        <ng-container *ngIf="!productData.compareAtPrice">
+          <div
+            *ngIf="productData.precioComun == productData.precio.precio"
+            class="product-card__new-price col-12"
+            style="padding-left: 0 !important; padding-right: 5px !important"
+          >
+            {{ productData.precio.precio | currencyFormat }} <em> c/iva </em>
+          </div>
+          <div
+            *ngIf="productData.precioComun != productData?.precio?.precio"
+            class="product-card__new-price text-danger col-12"
+            style="
+              padding-left: 0 !important;
+              padding-right: 5px !important;
+              margin-left: 5px;
+            "
+          >
+            {{ productData.precio.precio | currencyFormat }} <em> c/iva </em>
+          </div>
+          <div
+            *ngIf="productData.precioComun != productData?.precio?.precio"
+            tooltip="Precio normal"
+            class="product-card__old-price col-12"
+            style="
+              text-align: left;
+              padding-left: 0 !important;
+              padding-right: 5px !important;
+            "
+          >
+            {{ productData.precioComun | currencyFormat }} <em> c/iva </em>
+            <br />
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
 
     <ul
       *ngIf="productData.atributos?.length"
@@ -284,45 +329,228 @@
     </ul>
   </div>
 
-  <div class="product-card__actions">
-    <div class="product-card__buttons">
-      <button
-        name="addToCart"
-        [disabled]="!productData.precio"
-        class="btn btn-secondary product-card__addtocart w-100"
-        type="button"
-        appClick
-        (click)="addToCart()"
-        [ngClass]="{ 'btn-loading': addingToCart }"
-      >
-        <div class="text-center" style="font-size: 14px">AGREGAR</div>
-      </button>
-
-      <button
-        name="add"
-        [disabled]="!productData.precio"
-        class="btn btn-secondary product-card__addtocart product-card__addtocart--list"
-        type="button"
-        appClick
-        (click)="addToCart()"
-        [ngClass]="{ 'btn-loading': addingToCart }"
-      >
-        <div class="text-center" style="font-size: 14px">AGREGAR</div>
-      </button>
-
-      <button
-        name="addingToWishlist"
-        *ngIf="grid == 'list'"
-        ngbTooltip="Tooltip on top"
-        class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist"
-        type="button"
-        appClick
-        (click)="addToWishlist()"
-        [ngClass]="{ 'btn-loading': addingToWishlist }"
-      >
-        <i class="far fa-heart"></i>
-      </button>
+  <!-- Momentaneo para ver "llega y retiro" -->
+  <ng-container
+    *ngIf="productData.stockTienda > 0 || productData.stockEmpresa > 0"
+  >
+    <div
+      class="product-card__info flex-column mt-1"
+      style="padding-bottom: 4px"
+    >
+      <ng-container>
+        <div>
+          <ng-container
+            *ngIf="
+              productData.fechaEntrega !== undefined &&
+              productData.fechaEntrega != null
+            "
+          >
+            <ng-container>
+              <i class="fas fa-shipping-fast me-2"></i>
+              <i
+                style="
+                  color: black;
+                  font-weight: bold;
+                  font-style: normal;
+                  font-size: 12px;
+                "
+                >Llega
+                {{ productData.fechaEntrega | date : 'dd/MM' | uppercase }}</i
+              >
+            </ng-container>
+          </ng-container>
+          <ng-container
+            *ngIf="
+              productData.fechaEntrega !== undefined &&
+              productData.fechaEntrega == null
+            "
+          >
+            <i class="fas fa-shipping-fast me-2" style="color: grey"></i>
+            <i style="color: grey; font-style: normal; font-size: 12px"
+              >No disponible</i
+            >
+          </ng-container>
+        </div>
+        <ng-container
+          *ngIf="productData.retiro !== undefined && productData.retiro"
+        >
+          <div class="d-flex align-items-center">
+            <i class="fas fa-store me-2"></i>
+            <div
+              style="
+                margin-top: 2px;
+                padding: 0px 5px;
+                background-color: #00800033;
+                border-radius: 4px;
+              "
+            >
+              <i
+                style="
+                  color: green;
+                  font-weight: bold;
+                  font-style: normal;
+                  font-size: 12px;
+                "
+                >Retira hoy</i
+              >
+            </div>
+          </div>
+        </ng-container>
+        <ng-container
+          *ngIf="productData.retiro !== undefined && !productData.retiro"
+        >
+          <div
+            style="margin-top: 2px"
+            *ngIf="
+              productData.fechaEntregaRetiro &&
+                productData.fechaEntregaRetiro == null;
+              else fechaEntrega
+            "
+          >
+            <i class="fas fa-store me-2" style="color: grey"></i>
+            <i style="color: grey; font-style: normal; font-size: 12px"
+              >No disponible</i
+            >
+          </div>
+          <ng-template #fechaEntrega>
+            <div style="margin-top: 2px">
+              <i class="fas fa-store me-2"></i>
+              <i
+                style="
+                  color: black;
+                  font-weight: bold;
+                  font-style: normal;
+                  font-size: 12px;
+                "
+                >Retira
+                {{
+                  productData.fechaEntregaRetiro | date : 'dd/MM' | uppercase
+                }}</i
+              >
+            </div>
+          </ng-template>
+        </ng-container>
+      </ng-container>
     </div>
+  </ng-container>
+  <!-- Fin momentaneo -->
+
+  <!-- Texto cuando no haya stock del producto -->
+  <div
+    class="product-card__info"
+    *ngIf="productData?.stockTienda === 0 && productData?.stockEmpresa === 0"
+  >
+    <ng-container>
+      <div class="no_stock">
+        <div class="text-center" style="margin: 0px; padding: 0">
+          <span>Sujeto a disponibilidad </span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <!-- FIN texto cuando no haya stock -->
+
+  <div class="product-card__actions">
+    <ng-container>
+      <div
+        class="product-card__buttons"
+        *ngIf="
+          productData.stockTienda === undefined &&
+          productData.stockEmpresa === undefined
+        "
+      >
+        <button
+          name="addToCart"
+          [disabled]="!productData.precio"
+          class="btn btn-secondary product-card__addtocart w-100"
+          type="button"
+          appClick
+          (click)="addToCart()"
+          [ngClass]="{ 'btn-loading': addingToCart }"
+        >
+          <div class="text-center" style="font-size: 14px">AGREGAR</div>
+        </button>
+        <button
+          name="add"
+          [disabled]="!productData.precio"
+          class="btn btn-secondary product-card__addtocart product-card__addtocart--list"
+          type="button"
+          appClick
+          (click)="addToCart()"
+          [ngClass]="{ 'btn-loading': addingToCart }"
+        >
+          <div class="text-center" style="font-size: 14px">AGREGAR</div>
+        </button>
+        <button
+          name="addingToWishlist"
+          *ngIf="grid == 'list'"
+          ngbTooltip="Tooltip on top"
+          class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist"
+          type="button"
+          appClick
+          (click)="addToWishlist()"
+          [ngClass]="{ 'btn-loading': addingToWishlist }"
+        >
+          <i class="far fa-heart"></i>
+        </button>
+      </div>
+      <div
+        class="product-card__buttons"
+        *ngIf="productData.stockTienda > 0 || productData.stockEmpresa > 0"
+      >
+        <button
+          name="addToCart"
+          [disabled]="!productData.precio"
+          class="btn btn-secondary product-card__addtocart w-100"
+          type="button"
+          appClick
+          (click)="addToCart()"
+          [ngClass]="{ 'btn-loading': addingToCart }"
+        >
+          <div class="text-center" style="font-size: 14px">AGREGAR</div>
+        </button>
+        <button
+          name="add"
+          [disabled]="!productData.precio"
+          class="btn btn-secondary product-card__addtocart product-card__addtocart--list"
+          type="button"
+          appClick
+          (click)="addToCart()"
+          [ngClass]="{ 'btn-loading': addingToCart }"
+        >
+          <div class="text-center" style="font-size: 14px">AGREGAR</div>
+        </button>
+        <button
+          name="addingToWishlist"
+          *ngIf="grid == 'list'"
+          ngbTooltip="Tooltip on top"
+          class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist"
+          type="button"
+          appClick
+          (click)="addToWishlist()"
+          [ngClass]="{ 'btn-loading': addingToWishlist }"
+        >
+          <i class="far fa-heart"></i>
+        </button>
+      </div>
+      <div
+        class="product-card__buttons"
+        *ngIf="
+          productData?.stockTienda === 0 && productData?.stockEmpresa === 0
+        "
+      >
+        <button
+          [routerLink]="
+            root.product(productData.sku, productData.nombre, paramsCategory)
+          "
+          class="btn btn-secondary product-card__addtocart w-100"
+          type="button"
+          appClick
+        >
+          <div class="text-center" style="font-size: 14px">SOLICITAR</div>
+        </button>
+      </div>
+    </ng-container>
   </div>
 </div>
 
@@ -337,7 +565,7 @@
       "
     >
       <span class="nombreP">
-        {{ productData.nombre | slice : 0 : 30 | uppercase }} {{ " ..." }}
+        {{ productData.nombre | slice : 0 : 30 | uppercase }} {{ ' ...' }}
       </span>
     </a>
     <table>
@@ -357,7 +585,7 @@
             <td>
               <strong
                 >{{ precio.desde }} -
-                {{ precio.hasta === 999 ? "y más" : precio.hasta - 1 }}
+                {{ precio.hasta === 999 ? 'y más' : precio.hasta - 1 }}
                 und.</strong
               >
             </td>
@@ -380,14 +608,14 @@
 
 <ng-template #modalEscala>
   <div class="modal-header">
-    <button type="button" class="btn-close" (click)="modalEscalaRef.hide()">
+    <button type="button" class="close" (click)="modalEscalaRef.hide()">
       <i class="fas fa-times-circle" style="color: #00549d"></i>
     </button>
   </div>
   <div class="modal-body" style="min-height: 140px">
     <div
       class="w-100 d-flex justify-content-center"
-      style="margin-bottom: -20px"
+      style="margin-bottom: 4px"
     >
       <img
         src="../../../../assets/images/llevaMasPagaMenos/200x50_rectangular.jpg"
@@ -419,20 +647,20 @@
                 }"
               >
                 <td
-                  style="width: 50%; border-right: solid 2px; color: #00549d"
+                  style="width: 50%; border-end: solid 2px; color: #00549d"
                   *ngIf="precio.hasta !== 999"
                 >
                   {{ precio.desde }} a {{ precio.hasta }} und.
                 </td>
                 <td
-                  style="width: 50%; border-right: solid 2px; color: #00549d"
+                  style="width: 50%; border-end: solid 2px; color: #00549d"
                   *ngIf="precio.hasta === 999"
                 >
                   {{ precio.desde }} y más und.
                 </td>
                 <td
                   class="text-center"
-                  style="width: 50%; border-left: solid 2px; color: #00549d"
+                  style="width: 50%; border-start: solid 2px; color: #00549d"
                 >
                   {{
                     (!isVacio(usuario.iva)

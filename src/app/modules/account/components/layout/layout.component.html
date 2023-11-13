@@ -33,9 +33,9 @@
                 [routerLink]="link.url"
                 [ngClass]="{ 'btn-dark': link.dark }"
               >
-                <i class="{{ link.icon }} me-3"></i>
+                <i class="{{ link.icon }} me-3 dimension"></i>
                 <span class="text">
-                  {{ link.label }}
+                  {{ link.label | titlecase }}
                 </span>
               </a>
             </li>

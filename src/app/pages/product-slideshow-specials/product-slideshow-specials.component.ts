@@ -16,6 +16,10 @@ import { GeoLocation } from 'src/app/shared/interfaces/geo-location';
 import { GeoLocationService } from 'src/app/shared/services/geo-location.service';
 import { ProductsService } from 'src/app/shared/services/products.service';
 import { isPlatformBrowser } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { PreferenciasCliente } from '@shared/interfaces/preferenciasCliente';
+import { LoginService } from '@shared/services/login.service';
+import { LogisticsService } from '@shared/services/logistics.service';
 
 export type Layout = 'grid' | 'grid-with-features' | 'list';
 
@@ -57,6 +61,9 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
   config: any;
   collection = { count: 60, data: [] };
   p: number = 1;
+  preferenciaCliente!: PreferenciasCliente;
+  despachoCliente!: Subscription;
+
   constructor(
     private root: RootService,
     private productsService: ProductsService,
@@ -66,6 +73,8 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     private geoLocationService: GeoLocationService,
     private localStorage: LocalStorageService,
     private router: Router,
+    private loginService: LoginService,
+    private logistic: LogisticsService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
@@ -83,12 +92,24 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
 
     let url: string = this.router.url;
     this.ruta = url.split('/');
-
+    this.preferenciaCliente = this.localStorage.get('preferenciasCliente');
     const geo: GeoLocation = await this.localStorage.get('geolocalizacion');
     if (geo != null) {
       this.cargaEspeciales();
     }
     this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
+      this.cargaEspeciales();
+    });
+    // cuando se inicia sesion
+    this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
+      this.root.getPreferenciasCliente().then((preferencias) => {
+        this.preferenciaCliente = preferencias;
+        this.cargaEspeciales();
+      });
+    });
+    //Cuando se cambia de dirección despacho
+    this.despachoCliente = this.logistic.direccionCliente$.subscribe((r) => {
+      this.preferenciaCliente.direccionDespacho = r;
       this.cargaEspeciales();
     });
   }
@@ -116,12 +137,23 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo || '';
     var especials = this.router.url.split('/').pop();
+    let localidad = '';
 
     //clean tracking vars
     var look = especials?.indexOf('?');
     if ((look || 0) > -1) especials = especials?.substr(0, look);
 
-    const params = { sucursal: sucursal, rut: rut, especial: especials };
+    if (this.preferenciaCliente && this.preferenciaCliente.direccionDespacho)
+      localidad = this.preferenciaCliente.direccionDespacho.comuna
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+
+    const params = {
+      sucursal: sucursal,
+      rut: rut,
+      especial: especials,
+      localidad: localidad,
+    };
 
     let respuesta: any = await this.productsService
       .getEspeciales(params)

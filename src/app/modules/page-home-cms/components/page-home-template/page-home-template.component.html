@@ -1,39 +1,60 @@
 <div class="col-sm-12 p-0" style="margin-top: 60px">
-    <div class="cargandoCent text-center" *ngIf="carga || carga_producto_home || carga_listo_especial">
-        <i class="fak fa-implementos fa-bounce" style="font-size: 64px; color: #0063b9"></i>
-        <div class="fa-beat-fade" style="color: #0063b9; --fa-beat-fade-opacity: 0.67; --fa-beat-fade-scale: 1.075">
-            Iniciando ...
-        </div>
+  <div
+    class="cargandoCent text-center"
+    *ngIf="carga || carga_producto_home || carga_listo_especial"
+  >
+    <i
+      class="fas fa-implementos fa-bounce"
+      style="font-size: 64px; color: #0063b9"
+    ></i>
+    <div
+      class="fa-beat-fade"
+      style="
+        color: #0063b9;
+        --fa-beat-fade-opacity: 0.67;
+        --fa-beat-fade-scale: 1.075;
+      "
+    >
+      Iniciando ...
     </div>
-    <ng-container *ngIf="!carga_producto_home && !carga_listo_especial">
-        <ng-container *ngFor="let item of pageHome">
-            <ng-container *ngIf="item.tipo === 'banner'">
-                <app-banner [banner]="item.data"></app-banner>
-                <br />
-            </ng-container>
-            <ng-container *ngIf="item.tipo === 'productHome'">
-                <app-product-page-home *ngIf="!carga_producto_home" [producto]="item.data" [lstProductos]="lstProductos"
-                    [url]="url"></app-product-page-home>
-                <br />
-                <br />
-            </ng-container>
-            <ng-container *ngIf="item.tipo === 'caja-concepto'">
-                <app-caja-concepto [caja_concepto]="item.data"></app-caja-concepto>
-                <br />
-                <br />
-            </ng-container>
-            <ng-container *ngIf="item.tipo === 'blog'">
-                <app-blog-home [config]="item.data"> </app-blog-home>
-                <br />
-                <br />
-            </ng-container>
-            <ng-container *ngIf="item.tipo === 'lista'">
-                <app-lista_producto *ngIf="!carga_listo_especial" [elemento]="item.data" [lstProductos]="lstProductos1"
-                    [url]="url1">
-                </app-lista_producto>
-                <br />
-                <br />
-            </ng-container>
-        </ng-container>
+  </div>
+  <ng-container *ngIf="!carga_producto_home && !carga_listo_especial">
+    <ng-container *ngFor="let item of pageHome">
+      <ng-container *ngIf="item.tipo === 'banner'">
+        <app-banner [banner]="item.data"></app-banner>
+        <br />
+      </ng-container>
+      <ng-container *ngIf="item.tipo === 'productHome'">
+        <app-product-page-home
+          *ngIf="!carga_producto_home"
+          [producto]="item.data"
+          [lstProductos]="lstProductos"
+          [url]="url"
+        ></app-product-page-home>
+        <br />
+        <br />
+      </ng-container>
+      <ng-container *ngIf="item.tipo === 'caja-concepto'">
+        <app-caja-concepto [caja_concepto]="item.data"></app-caja-concepto>
+        <br />
+        <br />
+      </ng-container>
+      <ng-container *ngIf="item.tipo === 'blog'">
+        <app-blog-home [config]="item.data"> </app-blog-home>
+        <br />
+        <br />
+      </ng-container>
+      <ng-container *ngIf="item.tipo === 'lista'">
+        <app-lista_producto
+          *ngIf="!carga_listo_especial"
+          [elemento]="item.data"
+          [lstProductos]="lstProductos1"
+          [url]="url1"
+        >
+        </app-lista_producto>
+        <br />
+        <br />
+      </ng-container>
     </ng-container>
+  </ng-container>
 </div>

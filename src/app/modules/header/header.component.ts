@@ -10,17 +10,9 @@ import { environment } from '@env/environment';
 import { Router } from '@angular/router';
 import { HostListener } from '@angular/core';
 import { BuscadorB2B } from '../../shared/interfaces/buscadorB2B';
-import { RootService } from '../../shared/services/root.service';
 import { isVacio } from '../../shared/utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
-
-interface Store {
-  cod_almacen: string;
-  nombre_sucursal: string;
-  recid: number;
-  _id: number;
-}
 
 @Component({
   selector: 'app-header',
@@ -29,9 +21,8 @@ interface Store {
 })
 export class HeaderComponent implements AfterViewInit {
   @Input() layout: 'classic' | 'compact' | any = 'classic';
-  @Input() tipo: 'b2b' | 'b2c' = 'b2c';
+  @Input() tipo: 'b2b' | 'b2c' | any = 'b2c';
 
-  storesArr: any[] = [];
   countries: any[] = [];
   logoSrc = environment.logoSrc;
   innerWidth: any;
@@ -45,12 +36,9 @@ export class HeaderComponent implements AfterViewInit {
   constructor(
     public readonly stores: StoresService,
     private route: Router,
-    private rootService: RootService,
     private localS: LocalStorageService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    // this.obtieneTienda();
-
     this.countries.push({
       label: 'Chile ',
       img: 'assets/images/countries/cl.png',
@@ -83,23 +71,6 @@ export class HeaderComponent implements AfterViewInit {
       };
     }
     /*para el header de nav*/
-  }
-
-  obtieneTienda() {
-    this.stores.obtieneTiendas().subscribe((r: any) => {
-      const data: Store[] = r.data;
-      if (r.status === 'OK') {
-        data.map((item) => {
-          this.storesArr.push({
-            label: item.nombre_sucursal,
-            url: '#',
-            cod: item.cod_almacen,
-          });
-        });
-      } else {
-        alert('error');
-      }
-    });
   }
 
   Hidebar() {

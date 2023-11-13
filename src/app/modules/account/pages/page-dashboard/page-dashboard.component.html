@@ -26,7 +26,7 @@
     </app-card-dashboard>
   </div>
 
-  <div class="col-xl-4 col-lg-4 col-md-6 ps-lg-0 mt-2">
+  <div *ngIf="isB2B" class="col-xl-4 col-lg-4 col-md-6 ps-lg-0 mt-2">
     <app-card-dashboard-no-chart
       titulo="Mi crédito"
       iconClass="fas fa-credit-card"
@@ -36,7 +36,7 @@
     </app-card-dashboard-no-chart>
   </div>
 
-  <div class="col-xl-4 col-lg-4 col-md-6 mt-2">
+  <div *ngIf="isB2B" class="col-xl-4 col-lg-4 col-md-6 mt-2">
     <app-card-dashboard-no-chart
       titulo="Mis facturas por pagar"
       iconClass="fas fa-file-invoice-dollar"

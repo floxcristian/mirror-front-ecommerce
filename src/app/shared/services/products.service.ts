@@ -99,6 +99,9 @@ export class ProductsService {
     console.log('getHomePageB2b: ', params);
     return this.http.get(environment.apiElastic + 'homepage-b2b', { params });
   }
+  getHomePageB2c(params: any) {
+    return this.http.get(environment.apiElastic + 'homepage-b2c', { params });
+  }
 
   getEspeciales(params: any) {
     console.log('getEspeciales: ', params);
@@ -108,6 +111,13 @@ export class ProductsService {
   getFicha(sku: any) {
     return this.http.get(
       environment.apiCMS + 'products/descripcion-ficha?sku=' + sku
+    );
+  }
+
+  enviarCorreoSolicitudProductoSinStock(params: any) {
+    return this.http.post(
+      environment.urlNotificaciones + '/solicitudProductoSinStockNotificacion',
+      params
     );
   }
 }

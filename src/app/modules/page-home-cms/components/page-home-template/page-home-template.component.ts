@@ -10,6 +10,7 @@ import { ProductsService } from '../../../../shared/services/products.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { PageHomeService } from '../../services/pageHome.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { LoginService } from '../../../../shared/services/login.service';
 @Component({
   selector: 'app-page-home-template',
   templateUrl: './page-home-template.component.html',
@@ -30,7 +31,8 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     private direction: DirectionService,
     private logisticsService: LogisticsService,
     private geoLocationService: GeoLocationService,
-    private localStorage: LocalStorageService
+    private localStorage: LocalStorageService,
+    private loginService: LoginService
   ) {}
   //declarando la variable para ver los tipos
   carga = true;
@@ -42,9 +44,12 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     this.cargarPage();
     const geo: GeoLocation = this.localStorage.get('geolocalizacion');
 
-    if (geo != null && this.preferenciasCliente === undefined) {
-      await this.cargarHome();
-      await this.get_productos();
+    if (geo != null) {
+      this.root.getPreferenciasCliente().then((preferencias) => {
+        this.preferenciasCliente = preferencias;
+        this.cargarHome();
+        this.get_productos();
+      });
     }
   }
 
@@ -55,15 +60,34 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
         this.get_productos();
       }
     );
+    this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
+      this.root.getPreferenciasCliente().then((preferencias) => {
+        this.preferenciasCliente = preferencias;
+        this.cargarHome();
+        this.get_productos();
+      });
+    });
+
+    this.logisticsService.direccionCliente$.subscribe((r) => {
+      this.preferenciasCliente.direccionDespacho = r;
+      this.cargarHome();
+      this.get_productos();
+    });
   }
 
   async cargarHome() {
     this.carga_producto_home = true;
     const rut = this.user.rut;
-
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
-    let params: any = { sucursal, rut };
+    let params: any;
+    if (this.preferenciasCliente && this.preferenciasCliente.direccionDespacho)
+      params = {
+        sucursal,
+        rut,
+        localidad: this.preferenciasCliente.direccionDespacho.comuna,
+      };
+    else params = { sucursal, rut };
 
     this.url = [];
     this.lstProductos = [];
@@ -80,7 +104,14 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     const rut = this.user.rut;
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
-    let params: any = { sucursal, rut };
+    let params: any;
+    if (this.preferenciasCliente && this.preferenciasCliente.direccionDespacho)
+      params = {
+        sucursal,
+        rut,
+        localidad: this.preferenciasCliente.direccionDespacho.comuna,
+      };
+    else params = { sucursal, rut };
     this.url1 = [];
     this.lstProductos1 = [];
     let r: any = await this.pageHomeService
