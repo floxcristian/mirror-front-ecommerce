@@ -1,3 +1,19 @@
+<!-- <ng-container *ngIf="innerWidth > 426">
+    <ng-container *ngIf="banners">
+        <div class="container" style="text-align: center;">
+            <a [href]="banners.url">
+                <img [src]="banners.image_full" width="100%" style="max-height: 250px; margin-top: 15px" [alt]="banners.alt" />
+            </a>
+        </div>
+    </ng-container>
+</ng-container>
+<ng-container *ngIf="innerWidth < 427">
+    <ng-container *ngIf="banners">
+        <a [href]="banners.url">
+            <img [src]="banners.image_mobile" width="100%" [alt]="banners.alt" style="margin-top: 28px; max-height: 180px;" />
+        </a>
+    </ng-container>
+</ng-container> -->
 <ng-container *ngIf="innerWidth <= 1025">
   <app-page-header
     [breadcrumbs]="breadcrumbs"

@@ -24,10 +24,10 @@
           (<strong>{{ totalRegistros }}</strong
           >) Resultados en: <span> {{ decodedUrl(textToSearch) }}</span>
           <ng-container *ngIf="breadcrumbs.length > 0">
-            <strong> {{ breadcrumbs[0].label || "" | titlecase }} </strong>
+            <strong> {{ breadcrumbs[0].label || '' | titlecase }} </strong>
           </ng-container>
           <ng-container *ngIf="url.includes('_MARCA')">
-            <strong> {{ url.split("=")[1].split("&")[0] | titlecase }}</strong>
+            <strong> {{ url.split('=')[1].split('&')[0] | titlecase }}</strong>
           </ng-container>
         </div>
       </div>
@@ -38,11 +38,11 @@
         *ngIf="totalRegistros > 0"
       >
         <div
-          *ngIf="isB2B && !cargandoCatalogo"
+          *ngIf="!cargandoCatalogo"
           class="col-4 col-lg-auto d-flex justify-content-start"
           style="margin-right: 5px"
         >
-          <div class="layout-switcher__list" *ngIf="totalRegistros > 0">
+          <!-- <div class="layout-switcher__list" *ngIf="totalRegistros > 0">
             <button
               name="setLayout"
               title="Mosaico"
@@ -68,7 +68,7 @@
             >
               <app-icon name="layout-list-16x16" size="16"></app-icon>
             </button>
-          </div>
+          </div> -->
           <div class="d-block d-lg-none">
             <button
               title="Filtros"
@@ -81,7 +81,7 @@
             </button>
           </div>
         </div>
-        <div
+        <!-- <div
           *ngIf="!isB2B && !cargandoCatalogo"
           class="col-4 col-lg-auto d-flex justify-content-start"
           style="margin-right: 5px"
@@ -97,13 +97,12 @@
               Filtros
             </button>
           </div>
-        </div>
+        </div> -->
 
         <div
           *ngIf="!cargandoCatalogo"
-          [class.col-11]="!isB2B && innerWidth > 768"
-          [class.col-8]="!isB2B && innerWidth <= 768"
-          [class.col-10]="isB2B"
+          [class.col-11]="!isB2B && innerWidth > 991"
+          [class.col-8]="!isB2B && innerWidth <= 991"
           class="me-2 w-100 d-flex justify-content-end"
         >
           <label for="view-options-sort">
@@ -150,16 +149,7 @@
             *ngFor="let product of products"
             class="products-list__item mb-1 me-1"
           >
-            <app-product-card-b2b
-              *ngIf="isB2B"
-              [paramsCategory]="paramsCategory"
-              [origen]="origen"
-              [product]="product"
-              [grid]="layout"
-            >
-            </app-product-card-b2b>
             <app-product-card-b2c-cms
-              *ngIf="!isB2B"
               [paramsCategory]="paramsCategory"
               [origen]="origen"
               [product]="product"
@@ -168,9 +158,8 @@
             </app-product-card-b2c-cms>
           </div>
         </ng-container>
-        <div class="col-12 col-lg-12">
+        <div class="col-12 col-lg-12" *ngIf="class == 'list'">
           <app-tabla-producto
-            *ngIf="class == 'list'"
             [origen]="origen"
             [paramsCategory]="paramsCategory"
             [products]="products"

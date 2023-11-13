@@ -10,6 +10,8 @@ import { SharedModule } from '../../shared/shared.module';
 // Components
 import { WidgetFiltersComponent } from './widget-filters/widget-filters.component';
 
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
 @NgModule({
   declarations: [WidgetFiltersComponent],
   imports: [
@@ -18,6 +20,7 @@ import { WidgetFiltersComponent } from './widget-filters/widget-filters.componen
     SharedModule,
     FormsModule,
     // Ng5SliderModule,
+    TooltipModule.forRoot(),
   ],
   exports: [WidgetFiltersComponent],
 })

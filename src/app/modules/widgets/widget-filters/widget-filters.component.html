@@ -86,40 +86,78 @@
 
         <div class="filter__body" appCollapseContent>
           <div class="filter__container">
-            <div *ngIf="filter.type === 'categories'" class="filter-categories">
-              <ul class="filter-categories__list">
-                <li
-                  *ngFor="
-                    let item of filter.options.items | slice : 0 : 5;
-                    let i = index
-                  "
-                  class="filter-categories__item filter-categories__item--{{
-                    item.type
-                  }}"
-                >
-                  <a
-                    routerLinkActive="active"
-                    [routerLink]="item.url"
-                    [queryParams]="item.queryParams"
-                    (click)="marcarCategorias(item)"
-                    [ngClass]="{ active: item.checked }"
-                  >
-                    {{ item.name | capitalizeFirst }} ({{ item.count }})
-                  </a>
+            <div
+              *ngIf="filter.type === 'categories'"
+              class="filter-categories"
+            >
+              <ul class="tree pt-2 pl-2 pr-4 pt-lg-0 pl-lg-0 pr-lg-0">
+                <li *ngFor="let lvl1 of filter.options.items | slice : 0 : 5">
+                  <details class="ml-2" [open]="lvl1.open">
+                    <summary>
+                      <a
+                        routerLinkActive="active"
+                        [routerLink]="lvl1.url"
+                        class="mb-2 d-flex justify-content-between"
+                        [ngClass]="{ active: lvl1.checked }"
+                        [queryParams]="lvl1.queryParams"
+                        (click)="marcarCategorias(lvl1)"
+                      >
+                        <div
+                          class="text-truncate mr-2"
+                          [tooltip]="lvl1.name | capitalizeFirst"
+                        >
+                          {{ lvl1.name | capitalizeFirst }}
+                        </div>
+                        <div>({{ lvl1.count }})</div>
+                      </a>
+                    </summary>
+                    <ul *ngIf="lvl1.children.length > 0">
+                      <li *ngFor="let lvl2 of lvl1.children">
+                        <details class="ml-2" [open]="lvl2.open">
+                          <summary>
+                            <a
+                              routerLinkActive="active"
+                              [routerLink]="lvl2.url"
+                              class="mb-2 d-flex justify-content-between"
+                              [ngClass]="{ active: lvl2.checked }"
+                              [queryParams]="lvl2.queryParams"
+                              (click)="marcarCategorias(lvl2)"
+                            >
+                              <div
+                                class="text-truncate mr-2"
+                                [tooltip]="lvl2.name | capitalizeFirst"
+                              >
+                                {{ lvl2.name | capitalizeFirst }}
+                              </div>
+                              <div>({{ lvl2.count }})</div>
+                            </a>
+                          </summary>
+                          <ul *ngIf="lvl2.children.length > 0">
+                            <li *ngFor="let lvl3 of lvl2.children">
+                              <a
+                                routerLinkActive="active"
+                                [routerLink]="lvl3.url"
+                                class="mb-2 d-flex justify-content-between"
+                                [ngClass]="{ active: lvl3.checked }"
+                                [queryParams]="lvl3.queryParams"
+                                (click)="marcarCategorias(lvl3)"
+                              >
+                                <div
+                                  class="text-truncate mx-2"
+                                  [tooltip]="lvl3.name | capitalizeFirst"
+                                >
+                                  {{ lvl3.name | capitalizeFirst }}
+                                </div>
+                                <div>({{ lvl3.count }})</div>
+                              </a>
+                            </li>
+                          </ul>
+                        </details>
+                      </li>
+                    </ul>
+                  </details>
                 </li>
               </ul>
-              <div *ngIf="filter.options.items">
-                <div
-                  *ngIf="filter.options.items.length > 5"
-                  style="display: flex; justify-content: center"
-                >
-                  <a
-                    (click)="openUserForm(template_buscador)"
-                    style="color: #0063b9"
-                    >Ver todas las categorías</a
-                  >
-                </div>
-              </div>
 
               <hr />
 
@@ -134,7 +172,6 @@
               </button>
             </div>
 
-            <!-- <div *ngIf="['checkbox', 'radio'].includes(filter.type) && !filtrosOculto" class="filter-list"> -->
             <div
               *ngIf="
                 (filter.type === 'radio' || filter.type === 'checkbox') &&
@@ -171,6 +208,7 @@
                       </app-icon>
                     </span>
                   </span>
+
                   <span
                     *ngIf="filter.type === 'radio'"
                     class="filter-list__input input-radio"
@@ -186,9 +224,11 @@
                       <span class="input-radio__circle"></span>
                     </span>
                   </span>
+
                   <span class="filter-list__title">{{
                     item.label | capitalizeFirst
                   }}</span>
+                  <!-- <span *ngIf="item.count" class="filter-list__counter">{{ item.count }}</span> -->
                 </label>
               </div>
               <hr />
@@ -234,20 +274,20 @@
               class="filter-price"
             >
               <!-- <div class="filter-price__slider">
-                                <div class="ng5-slider-custom">
-                                    <ng5-slider [value]="filter.options.from" [highValue]="filter.options.to"
-                                        [options]="{animate: false, mouseEventsInterval: 10, rightToLeft: rightToLeft, floor: filter.options.min, ceil: filter.options.max, step: 1}"
-                                        #slider></ng5-slider>
-                                </div>
-                            </div>
-                            <div class="filter-price__title">
-                                Precio:
-                                <span
-                                    class="filter-price__min-value">{{ (rightToLeft ? slider.highValue : slider.value)|currencyFormat }}</span>
-                                –
-                                <span
-                                    class="filter-price__max-value">{{ (rightToLeft ? slider.value : slider.highValue)|currencyFormat }}</span>
-                            </div> -->
+                  <div class="ng5-slider-custom">
+                      <ng5-slider [value]="filter.options.from" [highValue]="filter.options.to"
+                          [options]="{animate: false, mouseEventsInterval: 10, rightToLeft: rightToLeft, floor: filter.options.min, ceil: filter.options.max, step: 1}"
+                          #slider></ng5-slider>
+                  </div>
+              </div>
+              <div class="filter-price__title">
+                  Precio:
+                  <span
+                      class="filter-price__min-value">{{ (rightToLeft ? slider.highValue : slider.value)|currencyFormat }}</span>
+                  –
+                  <span
+                      class="filter-price__max-value">{{ (rightToLeft ? slider.value : slider.highValue)|currencyFormat }}</span>
+              </div> -->
             </div>
           </div>
         </div>
@@ -256,6 +296,7 @@
   </div>
 </div>
 
+<!-- ver todos los resultados (categorias) -->
 <ng-template #template_buscador>
   <div class="modal-header" style="background-color: #baddfc">
     <h3 class="modal-title pull-left" style="font-size: 16px; color: #0060b4">
@@ -264,7 +305,7 @@
     <button
       name="modalRef"
       type="button"
-      class="btn-close pull-right"
+      class="close pull-right"
       aria-label="Close"
       (click)="modalRef.hide()"
     >
@@ -276,7 +317,10 @@
       <div class="row">
         <div class="col">
           <div *ngFor="let filter of filters">
-            <div *ngIf="filter.type === 'categories'" class="filter-categories">
+            <div
+              *ngIf="filter.type === 'categories'"
+              class="filter-categories"
+            >
               <ul class="filter-categories__list">
                 <li
                   *ngFor="
@@ -303,7 +347,10 @@
         </div>
         <div class="col">
           <div *ngFor="let filter of filters | slice : 0 : 5">
-            <div *ngIf="filter.type === 'categories'" class="filter-categories">
+            <div
+              *ngIf="filter.type === 'categories'"
+              class="filter-categories"
+            >
               <ul class="filter-categories__list">
                 <li
                   *ngFor="
@@ -333,5 +380,3 @@
     </div>
   </div>
 </ng-template>
-
-<!-- FIXME: END -->

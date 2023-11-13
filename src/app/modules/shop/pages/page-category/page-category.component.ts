@@ -112,6 +112,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   origen!: any[];
   usuario: Usuario;
   preferenciaCliente!: PreferenciasCliente;
+  banners: any;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -143,9 +144,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.isB2B =
       this.usuario.user_role === 'supervisor' ||
       this.usuario.user_role === 'comprador';
-    if (this.isB2B) {
-      this.preferenciaCliente = this.localS.get('preferenciasCliente');
-    }
+    this.preferenciaCliente = this.localS.get('preferenciasCliente');
   }
 
   ngOnDestroy(): void {
@@ -294,13 +293,10 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         const tiendaSeleccionada =
           this.geoLocationService.getTiendaSeleccionada();
         const sucursal = tiendaSeleccionada?.codigo;
-        if (this.isB2B) {
+        if (this.usuario.rut === '0') {
           parametros = {
             categoria: category,
             word: this.textToSearch,
-            localidad: this.preferenciaCliente.direccionDespacho?.comuna
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, ''),
             sucursal: sucursal,
             pageSize: this.productosPorPagina,
             rut: this.usuario.rut,
@@ -309,6 +305,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           parametros = {
             categoria: category,
             word: this.textToSearch,
+            localidad: this.preferenciaCliente.direccionDespacho?.comuna
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, ''),
             sucursal: sucursal,
             pageSize: this.productosPorPagina,
             rut: this.usuario.rut,
@@ -342,13 +341,10 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           let parametros = {};
           const tiendaSeleccionada =
             this.geoLocationService.getTiendaSeleccionada();
-          if (this.isB2B) {
+          if (this.usuario.rut === '0') {
             parametros = {
               categoria: '',
               word: this.textToSearch,
-              localidad: this.preferenciaCliente.direccionDespacho?.comuna
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, ''),
               sucursal: tiendaSeleccionada?.codigo,
               pageSize: this.productosPorPagina,
               rut: this.usuario.rut,
@@ -357,6 +353,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
             parametros = {
               categoria: '',
               word: this.textToSearch,
+              localidad: this.preferenciaCliente.direccionDespacho?.comuna
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, ''),
               pageSize: this.productosPorPagina,
               sucursal: tiendaSeleccionada?.codigo,
               rut: this.usuario.rut,
@@ -416,7 +415,10 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
       this.reinicaFiltros();
       this.parametrosBusqueda.rut = usuario.rut || '0';
-      this.cargarCatalogoProductos(this.parametrosBusqueda, '');
+      this.root.getPreferenciasCliente().then((preferencias) => {
+        this.preferenciaCliente = preferencias;
+        this.cargarCatalogoProductos(this.parametrosBusqueda, '');
+      });
     });
 
     // cuando cambiamos sucursal
@@ -429,7 +431,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       this.parametrosBusqueda.localidad = r.comuna
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '');
-
+      this.preferenciaCliente.direccionDespacho = r;
       this.reinicaFiltros();
       this.cargarCatalogoProductos(this.parametrosBusqueda, '');
     });
@@ -489,6 +491,15 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
 
     if (usuario != null) {
       this.parametrosBusqueda.rut = usuario.rut || '0';
+      if (
+        this.preferenciaCliente &&
+        this.preferenciaCliente.direccionDespacho
+      ) {
+        this.parametrosBusqueda.localidad =
+          this.preferenciaCliente.direccionDespacho.comuna
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+      }
     }
 
     // this.isLoadingSlider = true;
@@ -547,9 +558,13 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.formatoPaginacion(r, texto);
     this.filters = [];
     this.formatFiltersFlota();
-    this.formatCategories(r.categorias);
+    this.formatCategories(r.categoriasTree, r.levelFilter);
     this.formatFilters(r.filtros);
     this.agregarMatrizProducto(r.articulos);
+    // if (r.banners && r.banners.length > 0) {
+    //   this.banners = r.banners[0];
+    //   this.localS.set('bannersMarca', r.banners[0]);
+    // } else this.banners = null;
   }
 
   private agregarMatrizProducto(productos: any) {
@@ -653,7 +668,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     return items;
   }
 
-  private formatCategories(categorias: any) {
+  private formatCategories(categorias: any, levelFilter: any) {
     const productoBuscado =
       this.parametrosBusqueda.word === ''
         ? 'todos'
@@ -664,8 +679,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       collapsed = false;
     }
 
-    // console.log(collapsed)
-
     const filtros: ProductFilterCategory = {
       type: 'categories',
       name: 'CATEGORÍAS',
@@ -674,8 +687,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         items: [],
       },
     };
-    this.levelCategories = [];
-    this.proccesingLevel(categorias);
+    this.levelCategories = categorias;
+    // this.proccesingLevel(categorias);
     let queryParams = {};
     queryParams = this.armaQueryParams(queryParams);
     if (!isVacio(this.chassis)) {
@@ -684,24 +697,56 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       });
     }
 
-    this.levelCategories.map((r, index) => {
-      filtros.options?.items?.push({
+    this.levelCategories.map((lvl1) => {
+      filtros.options.items?.push({
         type: 'parent',
-        count: r.count,
-        name: r.name,
+        count: lvl1.count,
+        name: lvl1.name,
         url: [
           '/',
           'inicio',
           'productos',
           productoBuscado,
           'categoria',
-          r.slug,
+          lvl1.slug,
         ],
+        open: levelFilter == 1 || levelFilter == 2 || levelFilter == 3,
+        children: lvl1.children?.map((lvl2) => {
+          return {
+            type: 'parent',
+            count: lvl2.count,
+            name: lvl2.name,
+            url: [
+              '/',
+              'inicio',
+              'productos',
+              productoBuscado,
+              'categoria',
+              lvl2.slug,
+            ],
+            open: levelFilter == 2 || levelFilter == 3,
+            children: lvl2.children?.map((lvl3: any) => {
+              return {
+                type: 'parent',
+                count: lvl3.count,
+                name: lvl3.name,
+                url: [
+                  '/',
+                  'inicio',
+                  'productos',
+                  productoBuscado,
+                  'categoria',
+                  lvl3.slug,
+                ],
+                open: levelFilter == 3,
+                queryParams,
+              };
+            }),
+            queryParams,
+          };
+        }),
         queryParams,
-        children: this.addChildren(r.categories, productoBuscado, r.slug),
       });
-
-      // this.filterCategories.push(categoriasFiltro);
     });
     this.filters.push(filtros);
   }
@@ -975,7 +1020,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     if (this.anio !== '') {
       queryParams = { ...queryParams, ...{ anio: this.anio } };
     }
-
+    // if (this.marca_tienda !== '') queryParams = { ...queryParams, ...{ filter_MARCA: this.marca_tienda } };
     return queryParams;
   }
 

@@ -11,9 +11,10 @@ export interface ProductFilterCategory extends ProductFilterBase {
       count: number;
       name: string;
       url?: any;
+      open?: boolean;
       queryParams: any;
-      children: any;
-      checked?: boolean;
+      checked?: any;
+      children?: any;
     }[];
   };
 }

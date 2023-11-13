@@ -6,6 +6,14 @@
   }
 }
 
+::ng-deep.products-view .products-view__list .products-list__body {
+  app-product-card-b2c-cms {
+    .product-card .alturaimg a img {
+      max-height: 199px;
+    }
+  }
+}
+
 @media screen and (max-width: 375px) {
   .listado {
     left: 285px;

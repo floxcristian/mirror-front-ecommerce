@@ -113,9 +113,74 @@
 .mensaje-filtros-ocultos {
   color: #5b5b5b;
 }
+
 .mensaje-filtros-ocultos i {
   display: block;
   font-size: 3rem;
   margin: 1rem 0;
   opacity: 0.2;
+}
+
+.tree {
+  --spacing: 1.5rem;
+  --radius: 10px;
+  padding: 0px;
+}
+
+.tree li {
+  display: block;
+  position: relative;
+  padding-left: calc(2 * var(--spacing) - var(--radius) - 2px);
+}
+
+.tree ul {
+  margin-left: calc(var(--radius) - var(--spacing));
+  padding-left: 0;
+}
+
+.tree summary {
+  display: block;
+  cursor: pointer;
+}
+
+.tree summary::marker,
+.tree summary::-webkit-details-marker {
+  display: none;
+}
+
+.tree summary:focus {
+  outline: none;
+}
+
+.tree summary:focus-visible {
+  outline: 1px dotted #000;
+}
+
+.tree li::after,
+.tree summary::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: calc(var(--spacing) / 2 - var(--radius));
+  left: calc(var(--spacing) - var(--radius) - 1px);
+  width: calc(2 * var(--radius));
+  height: calc(2 * var(--radius));
+  // border-radius: 50%;
+  background: #fff;
+}
+
+.tree summary::before {
+  z-index: 1;
+  color: #0063b9;
+  background: #fff url('../../../../assets/svg/expand-collapse.svg') 0 0;
+}
+
+.tree details[open] > summary::before {
+  background-position: calc(-2 * var(--radius)) 0;
+}
+
+@media (max-width: 900px) {
+  .widget-filters {
+    margin-top: 95px !important;
+  }
 }
