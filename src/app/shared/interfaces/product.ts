@@ -87,6 +87,7 @@ export interface Product {
   stockTienda: number;
   stockEmpresa: number;
   fechaEntregaRetiro: string;
+  visible: number;
 }
 
 export interface ProductCategory {

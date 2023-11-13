@@ -104,6 +104,10 @@ ul.product-card__features-list {
   padding: 10px;
   display: flex;
 
+  img {
+    max-height: 105px;
+  }
+
   app-product-card-b2b {
     display: flex;
     width: 115%;
@@ -125,6 +129,8 @@ ul.product-card__features-list {
 
 ::ng-deep.carouselFicha .owl-carousel .owl-stage {
   display: flex !important;
+  flex-direction: row;
+  justify-content: center;
 }
 
 ::ng-deep.carouselFicha .owl-dots {
@@ -149,4 +155,116 @@ ul.product-card__features-list {
   @media (min-width: 992px) {
     background: #094cac;
   }
+}
+
+// Estilos tabla matriz
+.nombreP {
+  margin-bottom: 0 !important;
+  font-size: 0.6rem !important;
+  height: 32px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.marcaP {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #0c9279;
+}
+
+.skuP {
+  font-size: 10px;
+  color: #838383;
+}
+
+.precioP {
+  font-size: 18px;
+  font-weight: 700;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 0.95;
+  letter-spacing: normal;
+  text-align: left;
+  color: #0063b9;
+  width: 100%;
+}
+table {
+  font-size: 14px;
+  td {
+    border-bottom: 1px solid #ccc;
+    min-width: 151px;
+    padding: 7px 14px 6px;
+  }
+}
+
+table > .color-gris:nth-child(odd) {
+  background-color: white;
+}
+table > .color-gris:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+table > .mobile:nth-child(odd) {
+  background-color: white;
+}
+table > .mobile:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.color-gris {
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+hr {
+  margin: 2rem 0;
+}
+
+.no_stock {
+  font-weight: bold;
+  font-size: 13px;
+  color: white;
+  background-color: #db0632;
+  padding: 1px 2px;
+  margin: 1rem;
+}
+
+.triangulo_abajo {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-top: 12px solid #db0632;
+  border-right: 8px solid transparent;
+}
+
+.sticky {
+  position: sticky;
+  left: -1px;
+  z-index: 1;
+}
+
+table > .color-gris:nth-child(odd) .sticky {
+  background-color: white;
+}
+table > .color-gris:nth-child(even) .sticky {
+  background-color: gray;
+}
+table > .mobile:nth-child(odd) .sticky {
+  background-color: white;
+}
+table > .mobile:nth-child(even) .sticky {
+  background-color: gray;
+}
+
+tr > td.sticky {
+  background-color: white;
 }

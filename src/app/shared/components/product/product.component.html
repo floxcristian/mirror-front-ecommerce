@@ -201,10 +201,9 @@
               ><strong>EN STOCK</strong></span
             >
             <span class="ms-2 text-danger" *ngIf="!stock"
-              ><strong>AGOTADO TEMPORALMENTE</strong></span
+              ><strong>SUJETO A DISPONIBILIDAD</strong></span
             >
           </div>
-          <div></div>
         </div>
 
         <hr class="mb-0" />
@@ -223,12 +222,130 @@
             />
           </div>
         </div>
+
+        <!-- INICIO TEXTO DE SIN STOCK Y FORMULARIO PARA COMUNICARSE -->
+        <div
+          *ngIf="!stock"
+          class="row px-3 mt-3"
+          style="display: flex; gap: 1.8rem"
+        >
+          <div style="display: flex; flex-direction: column; width: 46%">
+            <div style="height: 198px">
+              <div
+                style="
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  padding: 15px;
+                  background-color: #db0632;
+                  color: white;
+                  text-align: justify;
+                  border-radius: 6px;
+                  height: 180px;
+                  margin-top: 5px;
+                "
+              >
+                <p>
+                  Puedes enviar un mensaje al Whatsapp o completar el
+                  formulario para solicitar el producto. Uno de nuestros
+                  ejecutivos te responderá a la brevedad.
+                </p>
+              </div>
+            </div>
+            <div class="my-2">
+              <button
+                type="button"
+                (click)="enviarWhatsapp()"
+                class="btn btn-md w-100 text-center"
+                style="background-color: #27a844; color: white"
+              >
+                <i class="fa-brands fa-whatsapp" style="margin-right: 4px"></i>
+                Enviar Whatsapp
+              </button>
+            </div>
+          </div>
+          <div style="width: 46%">
+            <form [formGroup]="formAvisoStock">
+              <div style="height: 198px">
+                <div class="form-row" style="gap: 1rem">
+                  <div class="col-md-12">
+                    <label
+                      for="nombre"
+                      style="color: #0063b9; font-weight: 100"
+                      >Nombre*:</label
+                    >
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        formControlName="nombre"
+                        class="form-control form-control-sm"
+                        id="nombre"
+                        autocomplete="off"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <label
+                      for="nombre"
+                      style="color: #0063b9; font-weight: 100"
+                      >Teléfono*:</label
+                    >
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        formControlName="numero_telefono"
+                        class="form-control form-control-sm"
+                        id="telefono"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <label for="email" style="color: #0063b9; font-weight: 100"
+                      >Correo Electrónico*:</label
+                    >
+                    <div class="input-group">
+                      <input
+                        type="email"
+                        formControlName="email"
+                        class="form-control form-control-sm"
+                        id="email"
+                        autocomplete="off"
+                      />
+                      <div
+                        class="invalid-feedback"
+                        style="margin-bottom: 10px"
+                        *ngIf="
+                          (formAvisoStock.get('email')?.touched ||
+                            formAvisoStock.get('email')?.dirty) &&
+                          formAvisoStock.get('email')?.invalid
+                        "
+                      >
+                        Correo no es válido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div class="my-2">
+              <button
+                type="button"
+                (click)="enviarCorreo()"
+                class="btn btn-md btn-secondary w-100 text-center"
+                [disabled]="formAvisoStock.invalid"
+              >
+                Enviar
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- FIN TEXTO DE SIN STOCK Y FORMULARIO PARA COMUNICARSE -->
       </div>
 
-      <div class="clearfix"></div>
+      <div *ngIf="stock" class="clearfix"></div>
 
       <div>
-        <div class="product__sidebar col-12 p-0">
+        <div *ngIf="stock" class="product__sidebar col-12 p-0">
           <div
             class="product__prices"
             [class.my-4]="preciosEscalas.length <= 1"
@@ -422,7 +539,7 @@
                 }}
               </button>
             </div>
-            <div
+            <!-- <div
               *ngIf="!stock"
               class="listaBotones d-flex"
               style="margin-left: 10px"
@@ -437,7 +554,7 @@
               >
                 {{ ' Avisar Disponibilidad ' }}
               </button>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -445,7 +562,10 @@
 
     <!-- MOBILE -->
     <!-- Información Ficha -->
-    <div class="col-12 col-lg-6 ps-lg-4 mt-0 mt-lg-0 d-block d-sm-none">
+    <div
+      *ngIf="showMobile"
+      class="col-12 col-lg-6 ps-lg-4 mt-0 mt-lg-0 d-block d-sm-none"
+    >
       <div>
         <div class="d-flex justify-content-between align-items-center">
           <div class="product__prices my-3">
@@ -508,10 +628,9 @@
               ><strong>EN STOCK</strong></span
             >
             <span class="ms-2 text-danger" *ngIf="!stock"
-              ><strong>AGOTADO TEMPORALMENTE</strong></span
+              ><strong>SUJETO A DISPONIBILIDAD</strong></span
             >
           </div>
-          <div></div>
         </div>
         <div class="d-flex justify-content-start mb-1">
           <div>
@@ -529,7 +648,7 @@
             </p>
           </div>
         </div>
-        <form class="product__options">
+        <form *ngIf="stock" class="product__options">
           <div class="row" *ngIf="cantidadFaltantePrecioEscala >= 1 && !isB2B">
             <div class="col-12 text-danger">
               <small
@@ -547,6 +666,128 @@
             </div>
           </div>
         </form>
+        <!-- Start::texto sin stock y formulario de contacto -->
+        <ng-container *ngIf="!stock">
+          <hr style="background-color: red" />
+          <div class="row px-3 mt-2">
+            <div style="display: flex; flex-direction: column">
+              <div style="height: 145px">
+                <div
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 15px;
+                    background-color: #db0632;
+                    color: white;
+                    text-align: justify;
+                    border-radius: 6px;
+                    height: 128px;
+                    margin-top: 5px;
+                  "
+                >
+                  <p>
+                    Puedes enviar un mensaje al Whatsapp o completar el
+                    formulario para solicitar el producto. Uno de nuestros
+                    ejecutivos te responderá a la brevedad.
+                  </p>
+                </div>
+              </div>
+              <div class="my-2">
+                <button
+                  type="button"
+                  (click)="enviarWhatsapp()"
+                  class="btn btn-md w-100 text-center"
+                  style="background-color: #27a844; color: white"
+                >
+                  <i
+                    class="fa-brands fa-whatsapp"
+                    style="margin-right: 4px"
+                  ></i>
+                  Enviar Whatsapp
+                </button>
+              </div>
+            </div>
+
+            <div class="mt-3">
+              <form [formGroup]="formAvisoStock">
+                <div style="height: 198px">
+                  <div class="form-row" style="gap: 1rem">
+                    <div class="col-md-12">
+                      <label
+                        for="nombre"
+                        style="color: #0063b9; font-weight: 100"
+                        >Nombre:</label
+                      >
+                      <div class="input-group">
+                        <input
+                          type="text"
+                          formControlName="nombre"
+                          class="form-control form-control-sm"
+                          id="nombre"
+                          autocomplete="off"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <label
+                        for="nombre"
+                        style="color: #0063b9; font-weight: 100"
+                        >Teléfono*:</label
+                      >
+                      <div class="input-group">
+                        <input
+                          type="text"
+                          formControlName="numero_telefono"
+                          class="form-control form-control-sm"
+                          id="telefono"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <label
+                        for="email"
+                        style="color: #0063b9; font-weight: 100"
+                        >Correo Electrónico:</label
+                      >
+                      <div class="input-group">
+                        <input
+                          type="email"
+                          formControlName="email"
+                          class="form-control form-control-sm"
+                          id="email"
+                          autocomplete="off"
+                        />
+                        <div
+                          class="invalid-feedback"
+                          style="margin-bottom: 10px"
+                          *ngIf="
+                            (formAvisoStock.get('email')?.touched ||
+                              formAvisoStock.get('email')?.dirty) &&
+                            formAvisoStock.get('email')?.invalid
+                          "
+                        >
+                          Correo no es válido
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <div class="my-2">
+                <button
+                  type="button"
+                  (click)="enviarCorreo()"
+                  class="btn btn-md btn-secondary w-100 text-center"
+                  [disabled]="formAvisoStock.invalid"
+                >
+                  Enviar
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <!-- End::texto sin stock y formulario de contacto -->
 
         <hr class="mb-0" />
         <div
@@ -564,7 +805,7 @@
 
       <div class="clearfix"></div>
 
-      <div>
+      <div *ngIf="stock">
         <div class="product__sidebar col-12 p-0">
           <hr />
           <div class="row px-3">

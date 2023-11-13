@@ -1,6 +1,6 @@
 // Angular
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 // Rxjs
 import { Observable } from 'rxjs';
 // Environment
@@ -13,6 +13,10 @@ import { ComentarioArticulo } from '../interfaces/comentariosArticulo';
   providedIn: 'root',
 })
 export class CatalogoService {
+  headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    Authorization: `Basic c2VydmljZXM6MC49ajNEMnNzMS53Mjkt`,
+  });
   constructor(private http: HttpClient) {}
 
   async obtenerCatalogos(estado: string) {
@@ -73,5 +77,19 @@ export class CatalogoService {
     const call = `${environment.apiCatalogo}obtenerNewsletter`;
     let consulta: any = await this.http.post(call, { id: id }).toPromise();
     return consulta;
+  }
+  getComparacionMatriz(
+    sku: string,
+    rut: string,
+    sucursal: string,
+    cantidad: any = 1
+  ) {
+    return this.http.get(
+      `${environment.apiCatalogo}compararmatrizproductoecommerce`,
+      {
+        headers: this.headers,
+        params: { sku, rut, sucursal, cantidad },
+      }
+    );
   }
 }

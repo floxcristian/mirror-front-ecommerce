@@ -4,9 +4,14 @@ import {
   Inject,
   OnInit,
   OnDestroy,
+  HostListener,
 } from '@angular/core';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-import { Product, ProductPrecio } from '../../../../shared/interfaces/product';
+import {
+  Product,
+  ProductOrigen,
+  ProductPrecio,
+} from '../../../../shared/interfaces/product';
 import { ActivatedRoute, Router } from '@angular/router';
 import { categories } from '../../../../../data/shop-widget-categories';
 import { ProductsService } from '../../../../shared/services/products.service';
@@ -22,8 +27,13 @@ import { GeoLocation } from '../../../../shared/interfaces/geo-location';
 import { CanonicalService } from '../../../../shared/services/canonical.service';
 import { environment } from '@env/environment';
 import { BuscadorService } from '../../../../shared/services/buscador.service';
-import { forkJoin } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { randomElements } from '../../../../shared/utils/utilidades';
+import { CatalogoService } from '../../../../shared/services/catalogo.service';
+import { isVacio } from '../../../../shared/utils/utilidades';
+import { LogisticsService } from '../../../../shared/services/logistics.service';
+import { LoginService } from '../../../../shared/services/login.service';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 declare const $: any;
 declare let fbq: any;
 
@@ -38,7 +48,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
   recommendedProducts: Product[] = [];
   matrixProducts: Product[] = [];
   relatedProducts: Product[] = [];
-  popularProducts: Product[] = [];
+  // popularProducts: Product[] = [];
   mixProducts: Product[] = [];
   minItems = 5;
   stock: boolean = true;
@@ -57,9 +67,9 @@ export class PageProductComponent implements OnInit, OnDestroy {
   };
   breadcrumbs: any[] = [];
 
-  relleno: any[] = [1, 2, 3, 4];
+  relleno: any[] = [1, 2, 3, 4, 5, 6];
   carouselOptions = {
-    items: 4,
+    items: 6,
     nav: true,
     navText: [
       `<i class="fas fa-chevron-left"></i>`,
@@ -68,12 +78,29 @@ export class PageProductComponent implements OnInit, OnDestroy {
     dots: true,
     slideBy: 'page',
     responsive: {
-      0: { items: 2 },
-      500: { items: 3 },
+      1366: { items: 6 },
+      1100: { items: 6 },
+      920: { items: 6 },
       680: { items: 3 },
-      920: { items: 4 },
-      1100: { items: 4 },
-      1366: { items: 4 },
+      500: { items: 3 },
+      0: { items: 2 },
+    },
+  };
+
+  carrouselOptionsMobile = {
+    items: 6,
+    nav: false,
+    dots: true,
+    slideBy: 'page',
+    //loop: true,
+    merge: true,
+    responsive: {
+      1366: { items: 6 },
+      1100: { items: 6 },
+      920: { items: 6 },
+      680: { items: 3 },
+      500: { items: 3 },
+      0: { items: 5, nav: false, mergeFit: true },
     },
   };
 
@@ -89,6 +116,18 @@ export class PageProductComponent implements OnInit, OnDestroy {
     },
   ];
 
+  puntoQuiebre: number = 576;
+  showMobile: boolean = false;
+  matriz: any[] = [];
+  comparacion: any[] = [];
+  tiendaSeleccionada: any;
+  IVA = environment.IVA || 0.19;
+  addingToCart: boolean = false;
+  addcartPromise!: Subscription;
+  despachoCliente!: Subscription;
+  preferenciaCliente: any;
+  preciosNeto: boolean = false;
+
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
@@ -101,15 +140,42 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private cart: CartService,
     private geoLocationService: GeoLocationService,
     private canonicalService: CanonicalService,
-    private buscadorService: BuscadorService
+    private buscadorService: BuscadorService,
+    private catalogoService: CatalogoService,
+    private logistic: LogisticsService,
+    private loginService: LoginService,
+    private localS: LocalStorageService
   ) {
+    this.tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+    this.preferenciaCliente = this.localS.get('preferenciasCliente');
     // cambio de sucursal
     this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
       if (this.product) {
+        this.tiendaSeleccionada = r.tiendaSelecciona;
         this.cart.cargarPrecioEnProducto(this.product);
         this.getMixProducts(this.product.sku);
-        this.getMatrixProducts(this.product.sku);
+        // this.getMatrixProducts(this.product.sku);
       }
+    });
+    //cambio de dirección
+    this.despachoCliente = this.logistic.direccionCliente$.subscribe((r) => {
+      if (this.product) {
+        this.preferenciaCliente.direccionDespacho = r;
+        this.cart.cargarPrecioEnProducto(this.product);
+        this.getMixProducts(this.product.sku);
+      }
+    });
+
+    //Cuando se inicia sesión
+    this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
+      this.user = this.root.getDataSesionUsuario();
+      this.root.getPreferenciasCliente().then((preferencias) => {
+        if (this.product) {
+          this.preferenciaCliente = preferencias;
+          this.cart.cargarPrecioEnProducto(this.product);
+          this.getMixProducts(this.product.sku);
+        }
+      });
     });
 
     this.innerWidth = isPlatformBrowser(this.platformId)
@@ -151,7 +217,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
         const sku = params.id.split('-').reverse()[0];
         this.getDetailProduct(sku);
         this.getMixProducts(sku);
-        this.getMatrixProducts(sku);
+        // this.getMatrixProducts(sku);
         this.productoService.getStockProduct(sku).subscribe((r: any) => {
           let stockTienda = 0;
           r.map(async (stock: any) => {
@@ -169,10 +235,21 @@ export class PageProductComponent implements OnInit, OnDestroy {
     if (!this.buscadorService.isFiltroSeleccionado()) {
       this.buscadorService.filtrosVisibles(true);
     }
+    this.despachoCliente.unsubscribe();
   }
 
   ngOnInit(): void {
+    this.isMobile();
     this.buscadorService.filtrosVisibles(false);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  cambiaDimension(event: any) {
+    this.isMobile();
+  }
+
+  isMobile() {
+    this.showMobile = window.innerWidth < this.puntoQuiebre;
   }
 
   setBreadcrumbs(product: any) {
@@ -324,113 +401,64 @@ export class PageProductComponent implements OnInit, OnDestroy {
     });
   }
 
-  getSuggestedProductos(sku: any) {
-    let obj: any = {
-      listaSku: [sku],
-      rut: '',
-      cantidad: 10,
-    };
-    if (this.user != null) {
-      obj.rut = this.user.rut;
-    }
-  }
-
-  getMatrixProducts(sku: any) {
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    let obj: any = {
-      sku,
-      rut: '',
-      sucursal: tiendaSeleccionada?.codigo,
-    };
-
-    if (this.user != null) {
-      obj.rut = this.user.rut;
-    }
-
-    this.productoService.getMatrixProducts(obj).subscribe(
-      (r: ResponseApi) => {
-        this.matrixProducts = r.data;
-      },
-      (error) => {
-        this.toastr.error(
-          'Error de conexión, para obtener los productos recomendados '
-        );
-      }
-    );
-  }
-
-  getRelatedProducts(sku: any) {
-    let obj: any = {
-      sku,
-      rut: '',
-    };
-
-    if (this.user != null) {
-      obj.rut = this.user.rut;
-    }
-
-    this.productoService.getRelatedProducts(obj).subscribe(
-      (r: ResponseApi) => {
-        this.relatedProducts = r.data;
-      },
-      (error) => {
-        this.toastr.error(
-          'Error de conexión, para obtener los productos recomendados '
-        );
-      }
-    );
-  }
-
-  getPopularProducts(sku: any) {
-    this.productoService.getPropularProducts({ sku }).subscribe(
-      (r: ResponseApi) => {
-        this.popularProducts = r.data;
-      },
-      (e) => {
-        this.toastr.error(
-          'Error en la conexion para obtener productos populares: ' + e
-        );
-      }
-    );
-  }
-
   getMixProducts(sku: any) {
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-
-    const obj: any = {
+    const obj = {
       sku,
       rut: '',
       sucursal: tiendaSeleccionada?.codigo,
+      localidad: '',
     };
-
-    const obj1: any = {
+    const obj1 = {
       listaSku: [sku],
       rut: '',
       sucursal: tiendaSeleccionada?.codigo,
       cantidad: 10,
+      localidad: '',
     };
-
+    let rut: string = '0';
     if (this.user != null) {
-      obj.rut = this.user.rut;
-      obj1.rut = this.user.rut;
+      obj.rut = this.user.rut || '0';
+      obj1.rut = this.user.rut || '0';
+      rut = this.user.rut || '0';
     }
-
+    if (this.preferenciaCliente && this.preferenciaCliente.direccionDespacho) {
+      obj.localidad = this.preferenciaCliente.direccionDespacho.comuna
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+      obj1.localidad = this.preferenciaCliente.direccionDespacho.comuna
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+    }
     forkJoin([
       this.productoService.getMatrixProducts(obj),
       this.productoService.getRelatedProducts(obj),
       this.productoService.getRecommendedProductsList(obj1),
+      this.catalogoService.getComparacionMatriz(
+        sku,
+        rut,
+        this.tiendaSeleccionada.codigo
+      ),
     ]).subscribe((resp: any[]) => {
-      this.mixProducts = [];
-      if (!this.isB2B) {
-        resp[0].data.forEach((e: Product) => this.mixProducts.push(e));
-      }
-      randomElements(resp[1].data, 5).forEach((e: Product) =>
-        this.mixProducts.push(e)
-      );
-      randomElements(resp[2].data, 5).forEach((e: Product) =>
-        this.mixProducts.push(e)
-      );
+      this.matriz = [];
+      this.comparacion = [];
+      this.relatedProducts = resp[1].data;
+      this.recommendedProducts = resp[2].data;
+      this.matrixProducts = resp[0].data;
+      this.matriz = resp[3].data;
+      this.matriz.map((p) => (p.cantidad = 1));
+      this.formateaComparacion(resp[3].comparacion);
     });
+  }
+  formateaComparacion(comparacion: any[]) {
+    for (const element of comparacion) {
+      const key = Object.keys(element);
+      const obj = {
+        nombre: key[0],
+        valores: element[key[0]].map((x: any) => x.valor),
+      };
+      this.comparacion.push(obj);
+    }
   }
 
   abrirTabEvaluacion() {
@@ -466,9 +494,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
     el.style['box-shadow'] = 'none';
   }
-  onResize(event: any) {
-    this.innerWidth = event.target.innerWidth;
-  }
 
   controlaChevron(indice: number) {
     const control = this.acordion[indice].abierto;
@@ -477,6 +502,91 @@ export class PageProductComponent implements OnInit, OnDestroy {
       this.acordion[indice].abierto = false;
     } else {
       this.acordion[indice].abierto = true;
+    }
+  }
+  //Funciones para matriz comparativa
+  async obtienePrecioxCantidad(producto: any, tipo: any = null) {
+    if (tipo == '+') {
+      producto.cantidad = producto.cantidad + 1;
+    } else if (tipo == '-') {
+      producto.cantidad = producto.cantidad - 1;
+    }
+    if (producto.cantidad == 0) {
+      producto.cantidad = 1;
+      return;
+    }
+    let rut = '0';
+
+    if (this.user != null) {
+      rut = this.user.rut || '0';
+    }
+    const parametrosPrecios = {
+      sku: producto.sku,
+      sucursal: this.tiendaSeleccionada.codigo,
+      rut,
+      cantidad: producto.cantidad,
+    };
+    const datos: any = await this.cart
+      .getPriceProduct(parametrosPrecios)
+      .toPromise();
+    if (datos['precio_escala']) {
+      producto.precioComun = !isVacio(this.user.iva)
+        ? this.user.iva
+          ? datos['precioComun']
+          : datos['precioComun'] / (1 + this.IVA)
+        : datos['precioComun'];
+      producto.precio.precio = !isVacio(this.user.iva)
+        ? this.user.iva
+          ? datos['precio'].precio
+          : datos['precio'].precio / (1 + this.IVA)
+        : datos['precio'].precio;
+    }
+  }
+
+  agregarProductoMatriz(producto: any) {
+    if (this.user == null) {
+      this.toastr.warning(
+        'Debe iniciar sesion para poder comprar',
+        'Información'
+      );
+      return;
+    }
+    console.log('producto a agregar: ', producto);
+    if (!this.addingToCart && producto && producto.cantidad > 0) {
+      if (this.product) {
+        this.product.origen = {} as ProductOrigen;
+
+        if (this.origen) {
+          this.product.origen.origen = this.origen[0] ? this.origen[0] : '';
+          this.product.origen.subOrigen = this.origen[1] ? this.origen[1] : '';
+          this.product.origen.seccion = this.origen[2] ? this.origen[2] : '';
+          this.product.origen.recomendado = this.origen[3]
+            ? this.origen[3]
+            : '';
+          this.product.origen.ficha = true;
+          this.product.origen.cyber = this.product?.cyber
+            ? this.product.cyber
+            : 0;
+        }
+
+        this.addingToCart = true;
+
+        this.addcartPromise = this.cart
+          .add(producto, producto.cantidad)
+          .subscribe(
+            (r) => {},
+            (e) => {
+              this.toastr.warning(
+                'Ha ocurrido un error en el proceso',
+                'Información'
+              );
+              this.addingToCart = false;
+            },
+            () => {
+              this.addingToCart = false;
+            }
+          );
+      }
     }
   }
 }
