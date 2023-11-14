@@ -100,4 +100,5 @@ export interface ProductCategory {
   url: any;
   count: number;
   categories?: ProductCategory[];
+  children?: ProductCategory[];
 }
