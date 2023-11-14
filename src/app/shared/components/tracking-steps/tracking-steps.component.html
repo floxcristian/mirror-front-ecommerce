@@ -1,188 +1,682 @@
 <!-- Formato pantallas grandes -->
 <div class="d-none d-sm-block">
-    <div class="container-step d-flex mt-3 mb-3">
-    <ng-container *ngIf="tipoEntrega!='VEN- RPTDA'">
-        <div class="step  col text-center" [ngClass]="Informe_estado[0] ? 'step-active' : '' ">
-            <span class="number mx-auto number-right" [ngClass]="Informe_estado[0] ? 'step-active' : '' "> <i class="far fa-file-alt"></i> </span>
-            <span class="subtitle"> Creado </span><br>
-            <span *ngIf="Informe_estado[0] && Informe_estado[0].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[0].FechaSeguimiento | date:'dd/MM/yyyy HH:mm:ss' }} </span>
-        </div>
-        
-        <div class="step col text-center" [ngClass]="Informe_estado[1] || Informe_estado[2] || Informe_estado[3] ? 'step-active' : '' ">
-            <span class="number mx-auto number-right" [ngClass]="Informe_estado[1] ? 'step-active' : '' "><i class="fas fa-cubes"></i></span>
-            <span class="subtitle"> En Preparación </span><br>
-            <span *ngIf="Informe_estado[1] && Informe_estado[1].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[1].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-            <span *ngIf="!Informe_estado[1] && Informe_estado[2] && Informe_estado[2].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[2].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-            <span *ngIf="!Informe_estado[1] && !Informe_estado[2] && Informe_estado[3] && Informe_estado[3].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[3].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-        </div>
-  
-        <div class="step col text-center" [ngClass]="Informe_estado[2]  || Informe_estado[3] ? 'step-active' : '' ">
-            <span class="number mx-auto  number-right" [ngClass]="Informe_estado[2] ? 'step-active' : '' "><i class="fas fa-dolly"></i></span>
-            <span class="subtitle"> En reparto a domicilio</span><br>
-            <span *ngIf="Informe_estado[2] && Informe_estado[2].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[2].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss' }} </span>
-            <span *ngIf="!Informe_estado[2] && Informe_estado[3] && Informe_estado[3].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[3].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-        </div>
-        
-        <div class="step col text-center" [ngClass]="Informe_estado[3] ? 'step-active' : '' ">
-            <span class="number mx-auto">
-                <ng-container *ngIf="Informe_estado[3]===undefined"><i class="fas fa-check"></i></ng-container> 
-                <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel=='N/A'"><i class="fas fa-ban"></i></ng-container>    
-                <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel!='N/A'"> <i class="fas fa-check"></i></ng-container> 
-            </span>
-            <span class="subtitle"> 
-             <ng-container *ngIf="Informe_estado[3]===undefined">RECIBIDO</ng-container> 
-            <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel=='N/A'">Cancelada</ng-container>    
-            <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel!='N/A'">{{Informe_estado[3].EstadoSegPanel}}</ng-container> 
-            </span> <br>
-            <span *ngIf="Informe_estado[3] && Informe_estado[3].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[3].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss' }} </span>
-           
+  <div class="container-step d-flex mt-3 mb-3">
+    <ng-container *ngIf="tipoEntrega != 'RETDA'">
+      <div
+        class="step col text-center"
+        [ngClass]="Informe_estado[0] ? 'step-active' : ''"
+      >
+        <span
+          class="number mx-auto number-right"
+          [ngClass]="Informe_estado[0] ? 'step-active' : ''"
+        >
+          <i class="far fa-file-alt"></i>
+        </span>
+        <span class="subtitle"> Creado </span><br />
+        <span
+          *ngIf="Informe_estado[0] && Informe_estado[0].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[0].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+      </div>
 
-        </div>
-   
+      <div
+        class="step col text-center"
+        [ngClass]="
+          Informe_estado[1] || Informe_estado[2] || Informe_estado[3]
+            ? 'step-active'
+            : ''
+        "
+      >
+        <span
+          class="number mx-auto number-right"
+          [ngClass]="Informe_estado[1] ? 'step-active' : ''"
+          ><i class="fas fa-cubes"></i
+        ></span>
+        <span class="subtitle"> En Preparación </span><br />
+        <span
+          *ngIf="Informe_estado[1] && Informe_estado[1].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[1].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <span
+          *ngIf="
+            !Informe_estado[1] &&
+            Informe_estado[2] &&
+            Informe_estado[2].FechaSeguimiento
+          "
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <span
+          *ngIf="
+            !Informe_estado[1] &&
+            !Informe_estado[2] &&
+            Informe_estado[3] &&
+            Informe_estado[3].FechaSeguimiento
+          "
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+      </div>
+
+      <div
+        class="step col text-center"
+        [ngClass]="Informe_estado[2] || Informe_estado[3] ? 'step-active' : ''"
+      >
+        <span
+          class="number mx-auto number-right"
+          [ngClass]="Informe_estado[2] ? 'step-active' : ''"
+          ><i class="fas fa-dolly"></i
+        ></span>
+        <span class="subtitle"> En reparto a domicilio</span><br />
+        <span
+          *ngIf="Informe_estado[2] && Informe_estado[2].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <span
+          *ngIf="
+            !Informe_estado[2] &&
+            Informe_estado[3] &&
+            Informe_estado[3].FechaSeguimiento
+          "
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+      </div>
+
+      <div
+        class="step col text-center"
+        [ngClass]="Informe_estado[3] ? 'step-active' : ''"
+      >
+        <span class="number mx-auto">
+          <ng-container *ngIf="Informe_estado[3] === undefined"
+            ><i class="fas fa-check"></i
+          ></ng-container>
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel == 'N/A'
+            "
+            ><i class="fas fa-ban"></i
+          ></ng-container>
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel != 'N/A'
+            "
+          >
+            <i class="fas fa-check"></i
+          ></ng-container>
+        </span>
+        <span class="subtitle">
+          <ng-container *ngIf="Informe_estado[3] === undefined"
+            >RECIBIDO</ng-container
+          >
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel == 'N/A'
+            "
+            >Cancelada</ng-container
+          >
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel != 'N/A'
+            "
+            >{{ Informe_estado[3].EstadoSegPanel }}</ng-container
+          >
+        </span>
+        <br />
+        <span
+          *ngIf="Informe_estado[3] && Informe_estado[3].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+      </div>
     </ng-container>
-    <ng-container *ngIf="tipoEntrega=='VEN- RPTDA'">
-        <div class="step  col text-center" [ngClass]="Informe_estado[0] ? 'step-active' : '' ">
-            <span class="number mx-auto number-right" [ngClass]="Informe_estado[0] ? 'step-active' : '' "> <i class="far fa-file-alt"></i> </span>
-            <span class="subtitle"> Creado </span><br>
-            <span *ngIf="Informe_estado[0] && Informe_estado[0].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[0].FechaSeguimiento | date:'dd/MM/yyyy HH:mm:ss' }} </span>
-        </div>
-       
-         <div class="step col text-center" [ngClass]="Informe_estado[1] || Informe_estado[2] || Informe_estado[3] ? 'step-active' : '' ">
-            <span class="number mx-auto number-right" [ngClass]="Informe_estado[1] ? 'step-active' : '' "><i class="fas fa-cubes"></i></span>
-            <span class="subtitle"> En Preparación </span><br>
-            <span *ngIf="Informe_estado[1] && Informe_estado[1].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[1].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-            <span *ngIf="!Informe_estado[1] && Informe_estado[2] && Informe_estado[2].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[2].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-            <span *ngIf="!Informe_estado[1] && !Informe_estado[2] && Informe_estado[3] && Informe_estado[3].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[3].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-        </div>
- 
+    <ng-container *ngIf="tipoEntrega == 'RETDA'">
+      <div
+        class="step col text-center"
+        [ngClass]="Informe_estado[0] ? 'step-active' : ''"
+      >
+        <span
+          class="number mx-auto number-right"
+          [ngClass]="Informe_estado[0] ? 'step-active' : ''"
+        >
+          <i class="far fa-file-alt"></i>
+        </span>
+        <span class="subtitle"> Creado </span><br />
+        <span
+          *ngIf="Informe_estado[0] && Informe_estado[0].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[0].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+      </div>
 
+      <div
+        class="step col text-center"
+        [ngClass]="
+          Informe_estado[1] || Informe_estado[2] || Informe_estado[3]
+            ? 'step-active'
+            : ''
+        "
+      >
+        <span
+          class="number mx-auto number-right"
+          [ngClass]="Informe_estado[1] ? 'step-active' : ''"
+          ><i class="fas fa-cubes"></i
+        ></span>
+        <span class="subtitle"> En Preparación </span><br />
+        <span
+          *ngIf="Informe_estado[1] && Informe_estado[1].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[1].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <span
+          *ngIf="
+            !Informe_estado[1] &&
+            Informe_estado[2] &&
+            Informe_estado[2].FechaSeguimiento
+          "
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <span
+          *ngIf="
+            !Informe_estado[1] &&
+            !Informe_estado[2] &&
+            Informe_estado[3] &&
+            Informe_estado[3].FechaSeguimiento
+          "
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+      </div>
 
-      <div class="step col text-center" [ngClass]="Informe_estado[2] || Informe_estado[3] ? 'step-active' : '' ">
-            <span class="number mx-auto  number-right" [ngClass]="estado_envio.nombre!==undefined ? 'step-active' : '' "><i class="fas fa-store"></i></span>
-            <span class="subtitle"> Retirar en tienda</span><br>
-            <span  *ngIf="Informe_estado[2] && Informe_estado[2].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[2].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'  }} </span>
-             <span  *ngIf="Informe_estado[3] && Informe_estado[1] && !Informe_estado[2] && Informe_estado[3].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[1].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'  }} </span>
-             <span *ngIf="!Informe_estado[1] && !Informe_estado[2] && Informe_estado[3] && Informe_estado[3].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[3].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-      
-            </div>
-   
-  
+      <div
+        class="step col text-center"
+        [ngClass]="Informe_estado[2] || Informe_estado[3] ? 'step-active' : ''"
+      >
+        <span
+          class="number mx-auto number-right"
+          [ngClass]="estado_envio.nombre !== undefined ? 'step-active' : ''"
+          ><i class="fas fa-store"></i
+        ></span>
+        <span class="subtitle"> Retirar en tienda</span><br />
+        <span
+          *ngIf="Informe_estado[2] && Informe_estado[2].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <span
+          *ngIf="
+            Informe_estado[3] &&
+            Informe_estado[1] &&
+            !Informe_estado[2] &&
+            Informe_estado[3].FechaSeguimiento
+          "
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[1].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <span
+          *ngIf="
+            !Informe_estado[1] &&
+            !Informe_estado[2] &&
+            Informe_estado[3] &&
+            Informe_estado[3].FechaSeguimiento
+          "
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+      </div>
 
-        <div class="step col text-center" [ngClass]="Informe_estado[3] ? 'step-active' : '' ">
-            <span class="number mx-auto">
-                <ng-container *ngIf="Informe_estado[3]===undefined"><i class="fas fa-check"></i></ng-container> 
-                <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel=='N/A'"><i class="fas fa-ban"></i></ng-container>    
-                <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel!='N/A'"> <i class="fas fa-check"></i></ng-container> 
-            </span>
-            <span class="subtitle"> 
-             <ng-container *ngIf="Informe_estado[3]===undefined">RECIBIDO</ng-container> 
-            <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel=='N/A'">Cancelada</ng-container>    
-            <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel!='N/A'">{{Informe_estado[3].EstadoSegPanel}}</ng-container> 
-            </span> <br>
-            <span *ngIf="Informe_estado[3] && Informe_estado[3].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[3].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss' }} </span>
-           
-
-        </div>
-   
-
-
-</ng-container>
-
-
-    </div>
+      <div
+        class="step col text-center"
+        [ngClass]="Informe_estado[3] ? 'step-active' : ''"
+      >
+        <span class="number mx-auto">
+          <ng-container *ngIf="Informe_estado[3] === undefined"
+            ><i class="fas fa-check"></i
+          ></ng-container>
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel == 'N/A'
+            "
+            ><i class="fas fa-ban"></i
+          ></ng-container>
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel != 'N/A'
+            "
+          >
+            <i class="fas fa-check"></i
+          ></ng-container>
+        </span>
+        <span class="subtitle">
+          <ng-container *ngIf="Informe_estado[3] === undefined"
+            >RECIBIDO</ng-container
+          >
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel == 'N/A'
+            "
+            >Cancelada</ng-container
+          >
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel != 'N/A'
+            "
+            >{{ Informe_estado[3].EstadoSegPanel }}</ng-container
+          >
+        </span>
+        <br />
+        <span
+          *ngIf="Informe_estado[3] && Informe_estado[3].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+      </div>
+    </ng-container>
+  </div>
 </div>
 <!-- End Formato pantallas grandes -->
 
 <!-- Formato mobiles -->
 <div class="d-block d-sm-none">
-    <div class="container-step d-flex mt-3 row">
-    <ng-container *ngIf="tipoEntrega!='VEN- RPTDA'">
-        <div class="step  col-12 text-center" [ngClass]="Informe_estado[0] ? 'step-active' : '' ">
-            <span class="number mx-auto" [ngClass]="Informe_estado[0] ? 'step-active' : '' "> <i class="far fa-file-alt"></i> </span>
-            <span class="subtitle"> Creado </span>  <br>
-            <span *ngIf="Informe_estado[0] && Informe_estado[0].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[0].FechaSeguimiento | date:'dd/MM/yyyy HH:mm:ss' }} </span>
-            <br> <span> <i class="fas fa-long-arrow-alt-down icon-down"></i> </span>
-        </div>
-        
-        <div class="step col-12 text-center" [ngClass]="Informe_estado[1] || Informe_estado[2] || Informe_estado[3] ? 'step-active' : '' ">
-            <span class="number mx-auto " [ngClass]="Informe_estado[1] ? 'step-active' : '' "><i class="fas fa-cubes"></i></span>
-            <span class="subtitle"> En Preparación </span>  <br>
-            <span *ngIf="Informe_estado[1] && Informe_estado[1].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[1].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-            <span *ngIf="!Informe_estado[1] && Informe_estado[2] && Informe_estado[2].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[2].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-            <span *ngIf="!Informe_estado[1] && !Informe_estado[2] && Informe_estado[3] && Informe_estado[3].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[3].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-            <br><span> <i class="fas fa-long-arrow-alt-down icon-down"></i> </span>
-        </div>
-  
-        <div class="step col-12 text-center" [ngClass]="Informe_estado[2]  || Informe_estado[3] ? 'step-active' : '' ">
-            <span class="number mx-auto" [ngClass]="Informe_estado[2] ? 'step-active' : '' "><i class="fas fa-dolly"></i></span>
-            <span class="subtitle"> En reparto a domicilio</span>  <br>
-            <span *ngIf="Informe_estado[2] && Informe_estado[2].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[2].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss' }} </span>
-            <span *ngIf="!Informe_estado[2] && Informe_estado[3] && Informe_estado[3].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[3].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-            <br><span> <i class="fas fa-long-arrow-alt-down icon-down"></i> </span>
-        </div>
-        
-        <div class="step col-12 text-center" [ngClass]="Informe_estado[3] ? 'step-active' : '' ">
-            <span class="number mx-auto">
-                <ng-container *ngIf="Informe_estado[3]===undefined"><i class="fas fa-check"></i></ng-container> 
-                <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel=='N/A'"><i class="fas fa-ban"></i></ng-container>    
-                <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel!='N/A'"> <i class="fas fa-check"></i></ng-container> 
-            </span>
-            <span class="subtitle"> 
-             <ng-container *ngIf="Informe_estado[3]===undefined">RECIBIDO</ng-container> 
-            <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel=='N/A'">Cancelada</ng-container>    
-            <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel!='N/A'">{{Informe_estado[3].EstadoSegPanel}}</ng-container> 
-            </span>   <br>
-            <span *ngIf="Informe_estado[3] && Informe_estado[3].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[3].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss' }} </span>
-           
+  <div class="container-step d-flex mt-3 row">
+    <ng-container *ngIf="tipoEntrega != 'RETDA'">
+      <div
+        class="step col-12 text-center"
+        [ngClass]="Informe_estado[0] ? 'step-active' : ''"
+      >
+        <span
+          class="number mx-auto"
+          [ngClass]="Informe_estado[0] ? 'step-active' : ''"
+        >
+          <i class="far fa-file-alt"></i>
+        </span>
+        <span class="subtitle"> Creado </span> <br />
+        <span
+          *ngIf="Informe_estado[0] && Informe_estado[0].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[0].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <br />
+        <span> <i class="fas fa-long-arrow-alt-down icon-down"></i> </span>
+      </div>
 
-        </div>
-   
+      <div
+        class="step col-12 text-center"
+        [ngClass]="
+          Informe_estado[1] || Informe_estado[2] || Informe_estado[3]
+            ? 'step-active'
+            : ''
+        "
+      >
+        <span
+          class="number mx-auto"
+          [ngClass]="Informe_estado[1] ? 'step-active' : ''"
+          ><i class="fas fa-cubes"></i
+        ></span>
+        <span class="subtitle"> En Preparación </span> <br />
+        <span
+          *ngIf="Informe_estado[1] && Informe_estado[1].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[1].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <span
+          *ngIf="
+            !Informe_estado[1] &&
+            Informe_estado[2] &&
+            Informe_estado[2].FechaSeguimiento
+          "
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <span
+          *ngIf="
+            !Informe_estado[1] &&
+            !Informe_estado[2] &&
+            Informe_estado[3] &&
+            Informe_estado[3].FechaSeguimiento
+          "
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <br /><span>
+          <i class="fas fa-long-arrow-alt-down icon-down"></i>
+        </span>
+      </div>
+
+      <div
+        class="step col-12 text-center"
+        [ngClass]="Informe_estado[2] || Informe_estado[3] ? 'step-active' : ''"
+      >
+        <span
+          class="number mx-auto"
+          [ngClass]="Informe_estado[2] ? 'step-active' : ''"
+          ><i class="fas fa-dolly"></i
+        ></span>
+        <span class="subtitle"> En reparto a domicilio</span> <br />
+        <span
+          *ngIf="Informe_estado[2] && Informe_estado[2].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <span
+          *ngIf="
+            !Informe_estado[2] &&
+            Informe_estado[3] &&
+            Informe_estado[3].FechaSeguimiento
+          "
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <br /><span>
+          <i class="fas fa-long-arrow-alt-down icon-down"></i>
+        </span>
+      </div>
+
+      <div
+        class="step col-12 text-center"
+        [ngClass]="Informe_estado[3] ? 'step-active' : ''"
+      >
+        <span class="number mx-auto">
+          <ng-container *ngIf="Informe_estado[3] === undefined"
+            ><i class="fas fa-check"></i
+          ></ng-container>
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel == 'N/A'
+            "
+            ><i class="fas fa-ban"></i
+          ></ng-container>
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel != 'N/A'
+            "
+          >
+            <i class="fas fa-check"></i
+          ></ng-container>
+        </span>
+        <span class="subtitle">
+          <ng-container *ngIf="Informe_estado[3] === undefined"
+            >RECIBIDO</ng-container
+          >
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel == 'N/A'
+            "
+            >Cancelada</ng-container
+          >
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel != 'N/A'
+            "
+            >{{ Informe_estado[3].EstadoSegPanel }}</ng-container
+          >
+        </span>
+        <br />
+        <span
+          *ngIf="Informe_estado[3] && Informe_estado[3].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+      </div>
     </ng-container>
-    <ng-container *ngIf="tipoEntrega=='VEN- RPTDA'">
-        <div class="step  col-12 text-center" [ngClass]="Informe_estado[0] ? 'step-active' : '' ">
-            <span class="number mx-auto" [ngClass]="Informe_estado[0] ? 'step-active' : '' "> <i class="far fa-file-alt"></i> </span>
-            <span class="subtitle"> Creado </span>  <br>
-            <span *ngIf="Informe_estado[0] && Informe_estado[0].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[0].FechaSeguimiento | date:'dd/MM/yyyy HH:mm:ss' }} </span>
-            <br>  <span> <i class="fas fa-long-arrow-alt-down icon-down"></i> </span>
-        </div>
-       
-         <div class="step col-12 text-center" [ngClass]="Informe_estado[1] || Informe_estado[2] || Informe_estado[3] ? 'step-active' : '' ">
-            <span class="number mx-auto" [ngClass]="Informe_estado[1] ? 'step-active' : '' "><i class="fas fa-cubes"></i></span>
-            <span class="subtitle"> En Preparación </span>  <br>
-            <span *ngIf="Informe_estado[1] && Informe_estado[1].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[1].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-            <span *ngIf="!Informe_estado[1] && Informe_estado[2] && Informe_estado[2].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[2].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-            <span *ngIf="!Informe_estado[1] && !Informe_estado[2] && Informe_estado[3] && Informe_estado[3].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[3].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-            <br>  <span> <i class="fas fa-long-arrow-alt-down icon-down"></i> </span>
-        </div>
- 
+    <ng-container *ngIf="tipoEntrega == 'RETDA'">
+      <div
+        class="step col-12 text-center"
+        [ngClass]="Informe_estado[0] ? 'step-active' : ''"
+      >
+        <span
+          class="number mx-auto"
+          [ngClass]="Informe_estado[0] ? 'step-active' : ''"
+        >
+          <i class="far fa-file-alt"></i>
+        </span>
+        <span class="subtitle"> Creado </span> <br />
+        <span
+          *ngIf="Informe_estado[0] && Informe_estado[0].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[0].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <br />
+        <span> <i class="fas fa-long-arrow-alt-down icon-down"></i> </span>
+      </div>
 
+      <div
+        class="step col-12 text-center"
+        [ngClass]="
+          Informe_estado[1] || Informe_estado[2] || Informe_estado[3]
+            ? 'step-active'
+            : ''
+        "
+      >
+        <span
+          class="number mx-auto"
+          [ngClass]="Informe_estado[1] ? 'step-active' : ''"
+          ><i class="fas fa-cubes"></i
+        ></span>
+        <span class="subtitle"> En Preparación </span> <br />
+        <span
+          *ngIf="Informe_estado[1] && Informe_estado[1].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[1].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <span
+          *ngIf="
+            !Informe_estado[1] &&
+            Informe_estado[2] &&
+            Informe_estado[2].FechaSeguimiento
+          "
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <span
+          *ngIf="
+            !Informe_estado[1] &&
+            !Informe_estado[2] &&
+            Informe_estado[3] &&
+            Informe_estado[3].FechaSeguimiento
+          "
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <br />
+        <span> <i class="fas fa-long-arrow-alt-down icon-down"></i> </span>
+      </div>
 
-      <div class="step col-12 text-center" [ngClass]="Informe_estado[2] || Informe_estado[3] ? 'step-active' : '' ">
-            <span class="number mx-auto" [ngClass]="estado_envio.nombre!==undefined ? 'step-active' : '' "><i class="fas fa-store"></i></span>
-            <span class="subtitle"> Retirar en tienda</span>  <br>
-            <span  *ngIf="Informe_estado[2] && Informe_estado[2].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[2].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'  }} </span>
-             <span  *ngIf="Informe_estado[3] && Informe_estado[1] && !Informe_estado[2] && Informe_estado[3].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[1].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'  }} </span>
-             <span *ngIf="!Informe_estado[1] && !Informe_estado[2] && Informe_estado[3] && Informe_estado[3].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[3].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss'}} </span>
-             <br> <span> <i class="fas fa-long-arrow-alt-down icon-down"></i> </span>  
-            </div>
-   
-  
+      <div
+        class="step col-12 text-center"
+        [ngClass]="Informe_estado[2] || Informe_estado[3] ? 'step-active' : ''"
+      >
+        <span
+          class="number mx-auto"
+          [ngClass]="estado_envio.nombre !== undefined ? 'step-active' : ''"
+          ><i class="fas fa-store"></i
+        ></span>
+        <span class="subtitle"> Retirar en tienda</span> <br />
+        <span
+          *ngIf="Informe_estado[2] && Informe_estado[2].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <span
+          *ngIf="
+            Informe_estado[3] &&
+            Informe_estado[1] &&
+            !Informe_estado[2] &&
+            Informe_estado[3].FechaSeguimiento
+          "
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[1].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <span
+          *ngIf="
+            !Informe_estado[1] &&
+            !Informe_estado[2] &&
+            Informe_estado[3] &&
+            Informe_estado[3].FechaSeguimiento
+          "
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+        <br />
+        <span> <i class="fas fa-long-arrow-alt-down icon-down"></i> </span>
+      </div>
 
-        <div class="step col-12 text-center" [ngClass]="Informe_estado[3] ? 'step-active' : '' ">
-            <span class="number mx-auto">
-                <ng-container *ngIf="Informe_estado[3]===undefined"><i class="fas fa-check"></i></ng-container> 
-                <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel=='N/A'"><i class="fas fa-ban"></i></ng-container>    
-                <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel!='N/A'"> <i class="fas fa-check"></i></ng-container> 
-            </span>
-            <span class="subtitle"> 
-             <ng-container *ngIf="Informe_estado[3]===undefined">RECIBIDO</ng-container> 
-            <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel=='N/A'">Cancelada</ng-container>    
-            <ng-container *ngIf="Informe_estado[3]!==undefined && Informe_estado[3].EstadoSegPanel!='N/A'">{{Informe_estado[3].EstadoSegPanel}}</ng-container> 
-            </span>  <br>
-            <span *ngIf="Informe_estado[3] && Informe_estado[3].FechaSeguimiento" style="font-size: 14px;"> {{ Informe_estado[3].FechaSeguimiento  | date:'dd/MM/yyyy HH:mm:ss' }} </span>
-        </div>
-</ng-container>
-
-
-    </div>
+      <div
+        class="step col-12 text-center"
+        [ngClass]="Informe_estado[3] ? 'step-active' : ''"
+      >
+        <span class="number mx-auto">
+          <ng-container *ngIf="Informe_estado[3] === undefined"
+            ><i class="fas fa-check"></i
+          ></ng-container>
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel == 'N/A'
+            "
+            ><i class="fas fa-ban"></i
+          ></ng-container>
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel != 'N/A'
+            "
+          >
+            <i class="fas fa-check"></i
+          ></ng-container>
+        </span>
+        <span class="subtitle">
+          <ng-container *ngIf="Informe_estado[3] === undefined"
+            >RECIBIDO</ng-container
+          >
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel == 'N/A'
+            "
+            >Cancelada</ng-container
+          >
+          <ng-container
+            *ngIf="
+              Informe_estado[3] !== undefined &&
+              Informe_estado[3].EstadoSegPanel != 'N/A'
+            "
+            >{{ Informe_estado[3].EstadoSegPanel }}</ng-container
+          >
+        </span>
+        <br />
+        <span
+          *ngIf="Informe_estado[3] && Informe_estado[3].FechaSeguimiento"
+          style="font-size: 14px"
+        >
+          {{
+            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+          }}
+        </span>
+      </div>
+    </ng-container>
+  </div>
 </div>

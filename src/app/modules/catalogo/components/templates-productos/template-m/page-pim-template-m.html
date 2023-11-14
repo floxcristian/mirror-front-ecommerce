@@ -26,7 +26,10 @@
       border-style: solid;
     "
   >
-    <div class="row p-2" style="padding: 0rem; height: 370px; text-align: left">
+    <div
+      class="row p-2"
+      style="padding: 0rem; height: 370px; text-align: left"
+    >
       <div class="col-md-12 col-sm-12 p-0">
         <div class="col-md-12 col-sm-12 p-0">
           <img
@@ -164,13 +167,18 @@
           >
             <!-- <img style="width: 50px" src="assets/images/cyberCircle.png" loading="lazy" /> -->
             <picture>
-              <source
+              <!-- <source
                 srcset="assets/images/cyberCircle.webp"
                 type="image/webp"
               />
               <source srcset="assets/images/cyberCircle.png" type="image/png" />
               <img
                 src="assets/images/cyberCircle.png"
+                style="width: 50px"
+                loading="lazy"
+              /> -->
+              <img
+                src="https://images.implementos.cl/uploads/cyber/cyber.webp"
                 style="width: 50px"
                 loading="lazy"
               />
@@ -207,10 +215,15 @@
       >
         <!-- <img style="width: 50px" src="assets/images/cyberCircle.png" loading="lazy" /> -->
         <picture>
-          <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
+          <!-- <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
           <source srcset="assets/images/cyberCircle.png" type="image/png" />
           <img
             src="assets/images/cyberCircle.png"
+            style="width: 50px"
+            loading="lazy"
+          /> -->
+          <img
+            src="https://images.implementos.cl/uploads/cyber/cyber.webp"
             style="width: 50px"
             loading="lazy"
           />
@@ -253,7 +266,8 @@
                   </tr>
                   <tr>
                     <td class="p-0 txtNormal fw-bold text-start">
-                      {{ preciosLista[2].desde }} {{ preciosLista[2].hasta }} UN
+                      {{ preciosLista[2].desde }} {{ preciosLista[2].hasta }}
+                      UN
                     </td>
                     <td class="p-0 pull-right txtDestacado">
                       {{ preciosLista[2].precio | currencyFormat }} c/iva
@@ -291,7 +305,8 @@
                   </tr>
                   <tr>
                     <td class="p-0 txtNormal fw-bold text-start">
-                      {{ preciosLista[1].desde }} {{ preciosLista[1].hasta }} UN
+                      {{ preciosLista[1].desde }} {{ preciosLista[1].hasta }}
+                      UN
                     </td>
                     <td class="p-0 pull-right txtDestacado">
                       {{ preciosLista[1].precio | currencyFormat }} c/iva

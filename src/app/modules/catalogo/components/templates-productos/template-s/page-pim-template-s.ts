@@ -1,4 +1,10 @@
-import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  ChangeDetectorRef,
+  SimpleChanges,
+} from '@angular/core';
 import { environment } from '@env/environment';
 import { CartService } from '../../../../../shared/services/cart.service';
 import { isVacio } from '../../../../../shared/utils/utilidades';
@@ -35,6 +41,7 @@ export class PagePimTemplateS implements OnInit {
   @Input() tipo: any = '';
   @Input() iva: any = true;
   @Input() folio: any;
+  @Input() minimo: any;
 
   precioAnterior!: any;
   preciosEscala: any[] = [];
@@ -162,4 +169,5 @@ export class PagePimTemplateS implements OnInit {
     }
     return producto;
   }
+  ngOnChanges(changes: SimpleChanges): void {}
 }

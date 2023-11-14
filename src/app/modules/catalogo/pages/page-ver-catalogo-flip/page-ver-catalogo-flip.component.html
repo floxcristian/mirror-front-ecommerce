@@ -275,7 +275,11 @@
               style="padding-top: 1rem !important"
               (click)="prevPage()"
             >
-              <i class="fas fa-chevron-left" style="font-size: 20px"></i>
+              <i
+                class="fas fa-chevron-left"
+                style="font-size: 20px"
+                (click)="prevPage()"
+              ></i>
             </button>
           </div>
           <div
@@ -350,7 +354,7 @@
         style="margin-top: 24rem"
       >
         <button
-          class="btn btn-transparent float-start"
+          class="btn btn-transparent float-center"
           style="padding: 0px !important"
           (click)="prevPage()"
         >
@@ -362,9 +366,9 @@
         class="float-start align-middle"
         style="margin-top: 24rem"
       >
-        <button class="btn btn-transparent float-start" (click)="prevPage()">
+        <button class="btn btn-transparent float-center" (click)="prevPage()">
           <i
-            class="fa-sharp fa-light fa-circle-chevron-left fa-2xl"
+            class="fa-sharp fa-light fa-circle-chevron-left fa-xl"
             style="font-size: 40px"
           ></i>
         </button>
@@ -438,7 +442,9 @@
                     margin-top: 0.2rem;
                   "
                 >
-                  <span style="padding-left: 0.5rem">{{ pagina.tituloA }}</span>
+                  <span style="padding-left: 0.5rem">{{
+                    pagina.tituloA
+                  }}</span>
                 </div>
                 <div class="tituloAutomatico" style="height: 27px !important">
                   <span
@@ -547,7 +553,10 @@
                       pagina.tituloB
                     }}</span>
                   </div>
-                  <div class="tituloAutomatico" style="height: 27px !important">
+                  <div
+                    class="tituloAutomatico"
+                    style="height: 27px !important"
+                  >
                     <span
                       style="padding-left: 0.5rem"
                       *ngIf="pagina.tituloB && tipoCatalogo === 'Automatico'"
@@ -861,13 +870,17 @@
                     margin-top: 0.2rem;
                   "
                 >
-                  <span style="padding-left: 0.5rem">{{ pagina.tituloA }}</span>
+                  <span style="padding-left: 0.5rem">{{
+                    pagina.tituloA
+                  }}</span>
                 </div>
                 <div
                   *ngIf="pagina.tituloA && tipoCatalogo === 'Automatico'"
                   class="tituloAutomatico"
                 >
-                  <span style="padding-left: 0.5rem">{{ pagina.tituloA }}</span>
+                  <span style="padding-left: 0.5rem">{{
+                    pagina.tituloA
+                  }}</span>
                 </div>
 
                 <!-- LISTA DE MARCAS A -->

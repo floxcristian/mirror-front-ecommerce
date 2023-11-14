@@ -10,7 +10,7 @@ export class TrackingStepsComponent implements OnInit {
   @Input() OVEstados: any[] = [];
   @Input() OV = '';
 
-  @Input() tipoEntrega = 'VEN- RPTDA';
+  @Input() tipoEntrega = 'RPTDA';
   estado_envio: any = {};
   Informe_estado: any = [];
   seguimiento_estado = [
@@ -80,8 +80,8 @@ export class TrackingStepsComponent implements OnInit {
         this.Informe_estado[2] = estado;
       } else if (estado.EstadoSegPanel == 'EN PREPARACIÓN') {
         this.Informe_estado[1] = estado;
-      } else if (estado.EstadoSegPanel == 'ENVIADO') {
-        this.Informe_estado[2] = estado;
+        // } else if (estado.EstadoSegPanel == 'ENVIADO') {
+        //   this.Informe_estado[2] = estado;
       } else if (
         estado.EstadoSegPanel == 'RECIBIDO' ||
         estado.EstadoSegPanel == 'N/A'

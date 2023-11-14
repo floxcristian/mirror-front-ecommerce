@@ -35,10 +35,15 @@
         <!-- LOGO CYBER -->
         <div class="div_img_cyber">
           <picture>
-            <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
+            <!-- <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
             <source srcset="assets/images/cyberCircle.png" type="image/png" />
             <img
               src="assets/images/cyberCircle.png"
+              style="margin-top: 70px !important"
+              loading="lazy"
+            /> -->
+            <img
+              src="https://images.implementos.cl/uploads/cyber/cyber.webp"
               style="margin-top: 70px !important"
               loading="lazy"
             />
@@ -63,9 +68,13 @@
         *ngIf="plana.productos.cyber === 1 && !plana.productos.precioEscala && !folio"
       >
         <picture>
-          <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
+          <!-- <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
           <source srcset="assets/images/cyberCircle.png" type="image/png" />
-          <img src="assets/images/cyberCircle.png" loading="lazy" />
+          <img src="assets/images/cyberCircle.png" loading="lazy" /> -->
+          <img
+            src="https://images.implementos.cl/uploads/cyber/cyber.webp"
+            loading="lazy"
+          />
         </picture>
       </div>
 
@@ -118,7 +127,11 @@
           }}</b
         >
       </div>
-      <div class="nombre pt-2" style="font-size: 12px !important" *ngIf="folio">
+      <div
+        class="nombre pt-2"
+        style="font-size: 12px !important"
+        *ngIf="folio"
+      >
         {{ plana.productos.atributos[2].valor | slice:0:50 | capitalizeFirst }}
       </div>
       <div class="sku" *ngIf="!folio">
@@ -327,7 +340,8 @@
             {{ this.plana.productos.precio|currencyFormat}}
             <em>
               <span>
-                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva')
+                }}</span
               >
             </em>
           </div>
@@ -346,7 +360,8 @@
               <span
                 [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
               >
-                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva')
+                }}</span
               >
             </em>
           </div>
@@ -368,7 +383,8 @@
               <span
                 [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
               >
-                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva')
+                }}</span
               >
             </em>
           </div>
@@ -381,7 +397,8 @@
             {{ this.plana.productos.precio|currencyFormat}}
             <em>
               <span>
-                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva')
+                }}</span
               >
             </em>
           </div>
@@ -400,7 +417,8 @@
               <span
                 [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
               >
-                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva')
+                }}</span
               >
             </em>
           </div>
@@ -437,7 +455,8 @@
               <span
                 [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
               >
-                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva')
+                }}</span
               >
             </em>
           </div>
@@ -448,7 +467,8 @@
             {{ plana.productos.precio|currencyFormat}}
             <em>
               <span>
-                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}</span
+                {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva')
+                }}</span
               >
             </em>
           </div>

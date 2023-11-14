@@ -90,10 +90,13 @@
       [class.w-100]="innerWidth <= 426"
     >
       <div *ngIf="nombre != null" class="text-center mt-3 col-12">
-        <h1 class="pt-0 mb-3" style="text-transform: uppercase">
+        <!-- <h1 class="pt-0 mb-3" style="text-transform: uppercase">
           {{ nombre }}
-        </h1>
-        <!-- <app-block-header [header]="nombre" colorText="text-primary"></app-block-header> -->
+        </h1> -->
+        <app-block-header
+          [header]="nombre"
+          colorText="text-primary"
+        ></app-block-header>
       </div>
 
       <div

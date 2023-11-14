@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CatalogoService } from '../../../../shared/services/catalogo.service';
 import { FlipSetting, PageFlip, SizeType } from 'page-flip';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
@@ -26,10 +27,13 @@ export class PageVerNewsletterComponent implements OnInit {
   constructor(
     private responsive: BreakpointObserver,
     private catalogoService: CatalogoService,
+    private route: ActivatedRoute,
+    private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id') || 1;
     this.responsive
       .observe([
         Breakpoints.TabletPortrait,
@@ -65,14 +69,15 @@ export class PageVerNewsletterComponent implements OnInit {
       ? window.innerHeight
       : 900;
     console.log(this.dispositivo);
-    this.ObtenerDatos();
+    this.ObtenerDatos(id);
     setTimeout(() => {
       this.loadFlip();
     }, 1300);
   }
-  async ObtenerDatos() {
+  async ObtenerDatos(id: any) {
     try {
-      let respuesta = await this.catalogoService.obtenerNewsletter(1);
+      let respuesta = await this.catalogoService.obtenerNewsletter(id);
+      if (!respuesta.data) this.router.navigate(['/not-found']);
       this.portada = respuesta.data.paginas.shift();
       this.contraportada = respuesta.data.paginas.pop();
       this.portada = this.portada.imagen;

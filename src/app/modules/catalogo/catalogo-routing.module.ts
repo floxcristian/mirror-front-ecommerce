@@ -37,6 +37,10 @@ const routes: Routes = [
     component: PageVerCatalogoFlipComponent,
   },
   {
+    path: 'catalogos/news/:id',
+    component: PageVerNewsletterComponent,
+  },
+  {
     path: 'catalogos/news',
     component: PageVerNewsletterComponent,
   },

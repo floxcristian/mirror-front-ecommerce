@@ -87,7 +87,8 @@
                 color: black;
               "
             >
-              {{ plana.productos.atributos[2].valor | titlecase | slice:0:100 }}
+              {{ plana.productos.atributos[2].valor | titlecase | slice:0:100
+              }}
             </div>
             <div
               class="col-md-12 p-0 mt-1"
@@ -108,7 +109,7 @@
               />
               <div class="div_img_cyber_escala">
                 <picture>
-                  <source
+                  <!-- <source
                     srcset="assets/images/cyberCircle.webp"
                     type="image/webp"
                   />
@@ -118,6 +119,11 @@
                   />
                   <img
                     src="assets/images/cyberCircle.png"
+                    style="width: 50px"
+                    loading="lazy"
+                  /> -->
+                  <img
+                    src="https://images.implementos.cl/uploads/cyber/cyber.webp"
                     style="width: 50px"
                     loading="lazy"
                   />
@@ -141,13 +147,18 @@
             *ngIf="plana.productos.cyber === 1 && !plana.productos.precioEscala"
           >
             <picture>
-              <source
+              <!-- <source
                 srcset="assets/images/cyberCircle.webp"
                 type="image/webp"
               />
               <source srcset="assets/images/cyberCircle.png" type="image/png" />
               <img
                 src="assets/images/cyberCircle.png"
+                style="width: 50px"
+                loading="lazy"
+              /> -->
+              <img
+                src="https://images.implementos.cl/uploads/cyber/cyber.webp"
                 style="width: 50px"
                 loading="lazy"
               />
@@ -158,7 +169,7 @@
             <div *ngIf="precios" class="col-md-9 col-sm-9 p-0">
               <div *ngIf="preciosLista.length === 3 && tipo!='Automatico'">
                 <table
-                  class="table p-0 m-0 borderless"
+                  class="table2 p-0 m-0 borderless"
                   style="border-spacing: 0px !important"
                 >
                   <tbody>
@@ -207,7 +218,7 @@
               </div>
               <div *ngIf="preciosLista.length === 3 && tipo=='Automatico'">
                 <table
-                  class="table p-0 m-0 borderless"
+                  class="table2 p-0 m-0 borderless"
                   style="border-spacing: 0px !important"
                 >
                   <tbody>
@@ -262,7 +273,7 @@
                 </table>
               </div>
               <div *ngIf="preciosLista.length === 2 && tipo!='Automatico'">
-                <table class="table p-0 m-0 borderless">
+                <table class="table2 p-0 m-0 borderless">
                   <tbody>
                     <tr>
                       <td class="p-0 txtNormal">&nbsp;</td>
@@ -302,7 +313,7 @@
                 </table>
               </div>
               <div *ngIf="preciosLista.length === 2 && tipo=='Automatico'">
-                <table class="table p-0 m-0 borderless">
+                <table class="table2 p-0 m-0 borderless">
                   <tbody>
                     <tr>
                       <td class="p-0 txtNormal">&nbsp;</td>
@@ -364,7 +375,7 @@
               </div>
 
               <div *ngIf="preciosLista.length === 1">
-                <table class="table p-0 m-0 borderless">
+                <table class="table2 p-0 m-0 borderless">
                   <tbody>
                     <tr *ngIf="!plana.productos.cantidad">
                       <td class="p-0 txtNormal">&nbsp;</td>
@@ -631,14 +642,16 @@
               class="col-md-12 p-0 mt-1"
               style="font-size: 10px; text-align: left; color: #000000"
             >
-              <span> {{ plana.productos.atributos[0].valor | uppercase }}</span>
+              <span>
+                {{ plana.productos.atributos[0].valor | uppercase }}</span
+              >
             </div>
           </div>
 
           <div class="col-md-12 col-sm-12 d-flex p-0">
             <div *ngIf="precios" class="col-md-9 col-sm-9 p-0">
               <div>
-                <table class="table p-0 m-0 borderless">
+                <table class="table2 p-0 m-0 borderless">
                   <tbody>
                     <tr class="pt-1">
                       <td
@@ -712,7 +725,7 @@
           <img
             *ngIf="plana.productos.imagenes[0][0] == 1"
             class="img-fluid"
-            style="max-width: 90% !important; max-height: 130px"
+            style="max-width: 70% !important; max-height: 130px"
             src="https://images.implementos.cl/img/450/{{plana.productos.producto}}-1.jpg"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
@@ -721,7 +734,7 @@
           <img
             *ngIf="plana.productos.imagenes[0][1] == 1"
             class="img-fluid"
-            style="max-width: 90% !important; max-height: 130px"
+            style="max-width: 70% !important; max-height: 130px"
             src="https://images.implementos.cl/img/450/{{plana.productos.producto}}-2.jpg"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
@@ -730,7 +743,7 @@
           <img
             *ngIf="plana.productos.imagenes[0][2] == 1"
             class="img-fluid"
-            style="max-width: 90% !important; max-height: 130px"
+            style="max-width: 70% !important; max-height: 130px"
             src="https://images.implementos.cl/img/450/{{plana.productos.producto}}-3.jpg"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""

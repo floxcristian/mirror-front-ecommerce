@@ -62,7 +62,7 @@
                 style="position: absolute; top: 2px; right: 2px; z-index: 2"
               >
                 <picture *ngIf="(product?.cyberMonday || 0) > 0">
-                  <source
+                  <!-- <source
                     srcset="assets/images/cyberMondaySquare.webp"
                     type="image/webp"
                   />
@@ -75,13 +75,19 @@
                     height="100px"
                     width="100px"
                     class="float-end"
+                  /> -->
+                  <img
+                    src="https://images.implementos.cl/uploads/cyber/cyberMonday.webp"
+                    height="100px"
+                    width="100px"
+                    class="float-right"
                   />
                 </picture>
 
                 <picture
                   *ngIf="(product.cyber || 0) > 0 && product.cyberMonday === 0"
                 >
-                  <source
+                  <!-- <source
                     srcset="assets/images/cyberCircle.webp"
                     type="image/webp"
                   />
@@ -95,6 +101,13 @@
                     height="80px"
                     width="80px"
                     class="float-end"
+                  /> -->
+                  <img
+                    src="https://images.implementos.cl/uploads/cyber/cyber.webp"
+                    alt=""
+                    height="80px"
+                    width="80px"
+                    class="float-right"
                   />
                 </picture>
               </div>

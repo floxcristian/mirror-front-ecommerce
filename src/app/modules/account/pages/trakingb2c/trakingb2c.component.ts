@@ -70,7 +70,7 @@ export class Trakingb2cComponent implements OnInit {
       if (consulta != null) {
         this.detalle = consulta;
         this.OVEstados = consulta.estados;
-        this.DetalleOV = consulta.ModoEntrega;
+        this.DetalleOV = consulta.codModoEntregaNom;
         await this.detalles_productos();
         this.loadingShippingAll = false;
       } else {
