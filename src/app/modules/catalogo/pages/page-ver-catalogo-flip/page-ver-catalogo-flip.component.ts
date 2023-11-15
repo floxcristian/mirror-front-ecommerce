@@ -442,7 +442,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
           height: height,
           maxWidth: this.screenWidth,
           maxHeight: height * 1.1,
-          size: SizeType.FIXED,
+          size: 'fixed' as SizeType,
           minWidth: 315,
           minHeight: 680,
           maxShadowOpacity: 0.5,
@@ -477,7 +477,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
           height: 950,
           maxHeight: 940,
           maxWidth: 650,
-          size: SizeType.FIXED,
+          size: 'fixed' as SizeType,
           minWidth: 315, //315
           minHeight: 420, //420
           maxShadowOpacity: 0.5,
@@ -499,7 +499,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
           height: 950, //940
           maxWidth: 650,
           maxHeight: 950,
-          size: SizeType.FIXED,
+          size: 'fixed' as SizeType,
           minWidth: 650,
           minHeight: 950,
           maxShadowOpacity: 0.5,
