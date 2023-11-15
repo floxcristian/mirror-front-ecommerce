@@ -662,20 +662,20 @@
                 }"
               >
                 <td
-                  style="width: 50%; border-end: solid 2px; color: #00549d"
+                  style="width: 50%; border-right: solid 2px; color: #00549d"
                   *ngIf="precio.hasta !== 999"
                 >
                   {{ precio.desde }} a {{ precio.hasta }} und.
                 </td>
                 <td
-                  style="width: 50%; border-end: solid 2px; color: #00549d"
+                  style="width: 50%; border-right: solid 2px; color: #00549d"
                   *ngIf="precio.hasta === 999"
                 >
                   {{ precio.desde }} y más und.
                 </td>
                 <td
                   class="text-center"
-                  style="width: 50%; border-start: solid 2px; color: #00549d"
+                  style="width: 50%; border-left: solid 2px; color: #00549d"
                 >
                   {{
                     (!isVacio(usuario.iva)
