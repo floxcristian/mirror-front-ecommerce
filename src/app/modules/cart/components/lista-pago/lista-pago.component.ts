@@ -22,6 +22,8 @@ export class ListaPagoComponent implements OnInit {
       pago = await this.paymentService.getMetodosPago();
     }
     this.paymentMethods = pago;
+    if (this.paymentMethods.length > 0)
+      this.activepaymentMethod(this.paymentMethods[0]);
   }
 
   activepaymentMethod(item: any) {

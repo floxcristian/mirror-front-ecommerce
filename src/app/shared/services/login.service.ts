@@ -246,6 +246,12 @@ export class LoginService {
         },
         {
           type: 'link',
+          label: 'Mis Compras',
+          url: ['/', 'mi-cuenta', 'mis-compras'],
+          icon: 'fa-sharp fa-solid fa-bag-shopping',
+        },
+        {
+          type: 'link',
           label: 'Listas de productos',
           url: ['/', 'mi-cuenta', 'listas-de-productos'],
           icon: 'fas fa-list-ul',

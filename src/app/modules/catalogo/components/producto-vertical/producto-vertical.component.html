@@ -18,10 +18,15 @@
   </div>
   <div class="div_img_cyber" *ngIf="producto.cyber == 0">
     <picture>
-      <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
+      <!-- <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
       <source srcset="assets/images/cyberCircle.png" type="image/png" />
       <img
         src="assets/images/cyberCircle.png"
+        class="img_escala"
+        loading="lazy"
+      /> -->
+      <img
+        src="https://images.implementos.cl/uploads/cyber/cyber.webp"
         class="img_escala"
         loading="lazy"
       />
@@ -148,7 +153,10 @@
         *ngIf="producto.preciosScal && producto.preciosScal.length > 0"
       >
         <tr
-          *ngFor="let scala of producto.preciosScal | slice : -2; let i = index"
+          *ngFor="
+            let scala of producto.preciosScal | slice : -2;
+            let i = index
+          "
           [class.product-scala-sub]="
             (producto.preciosScal.length >= 2 && i == 1) ||
             (producto.preciosScal.length <= 1 && i == 0)

@@ -68,7 +68,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   mostrarCargando = false;
   linkBusquedaProductos = '#';
   searchControl!: FormControl;
-  private debounce = 1000;
+  private debounce = 400;
   buscando = true;
   back_key = false;
   mostrarResultados = false;

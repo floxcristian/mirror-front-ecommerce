@@ -3,7 +3,7 @@
   <form [formGroup]="formUsuario" (ngSubmit)="onSubmit(formUsuario.value)">
     <div class="form-subtitulo">Datos Empresa</div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
       <label for="fcc4chkcliente" class="labelGiroCC col-md-3" id="labelGiroCC"
         >Tipo de Cliente</label
       >
@@ -70,7 +70,7 @@
 
     <!-- datos empresa -->
 
-    <div class="form-group row">
+    <div class="mb-3 row">
       <label
         for="fcc4txtRutCC"
         class="labelGiroCC col-md-3"
@@ -94,7 +94,7 @@
       Debe ingresar RUT.
     </div>
 
-    <div class="form-group row" id="fcc4trNombreCC">
+    <div class="mb-3 row" id="fcc4trNombreCC">
       <label
         for="fcc4txtNombreCC"
         class="labelGiroCC col-md-3"
@@ -118,7 +118,7 @@
     </div>
 
     <div
-      class="form-group row"
+      class="mb-3 row"
       id="fcc4trApellidoCC"
       *ngIf="tipoCliente == TIPO_PERSONA"
     >
@@ -143,7 +143,7 @@
     </div>
 
     <div
-      class="form-group row"
+      class="mb-3 row"
       id="fcc4trdropGiro"
       *ngIf="tipoCliente != TIPO_PERSONA_BOLETA"
     >
@@ -173,7 +173,7 @@
     </div>
 
     <div
-      class="form-group row"
+      class="mb-3 row"
       id="fcc4trdropSegmentoCC"
       *ngIf="tipoCliente != TIPO_PERSONA_BOLETA"
     >
@@ -204,7 +204,7 @@
 
     <div class="form-subtitulo">Persona que Compra</div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
       <label for="fcc4txtCNombreCC" class="labelValidaContacto col-md-3"
         >Nombres</label
       >
@@ -222,7 +222,7 @@
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
       <label for="fcc4txtCApellidoCC" class="labelValidaContacto col-md-3"
         >Apellidos:</label
       >
@@ -240,7 +240,7 @@
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
       <label for="fcc4txtEmailCC" class="labelValidaContacto col-md-3"
         >Email</label
       >
@@ -283,7 +283,7 @@
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
       <label for="fcc4dropCodTelefono2" class="labelValidaContacto col-md-3"
         >Número contacto</label
       >
@@ -315,7 +315,8 @@
               >+569</a
             >
             <a class="dropdown-item" (click)="Select_fono('+56')"
-              ><i class="fa-solid fa-phone" style="margin-right: 1px"></i>+56</a
+              ><i class="fa-solid fa-phone" style="margin-right: 1px"></i
+              >+56</a
             >
           </div>
         </div>
@@ -334,8 +335,11 @@
       Datos de Facturación
     </div>
 
-    <div class="form-group row" id="fcc4trCalleCC">
-      <label for="fcc4txtCalleCC" class="labelGiroCC col-md-3" id="labelCalleCC"
+    <div class="mb-3 row" id="fcc4trCalleCC">
+      <label
+        for="fcc4txtCalleCC"
+        class="labelGiroCC col-md-3"
+        id="labelCalleCC"
         >Calle
       </label>
       <div class="col-md-9">
@@ -356,7 +360,7 @@
       Debe ingresar CALLE
     </div>
 
-    <div class="form-group row" id="fcc4trNumeroCC">
+    <div class="mb-3 row" id="fcc4trNumeroCC">
       <label
         for="fcc4txtNumeroCC"
         class="labelGiroCC col-md-3"
@@ -381,7 +385,7 @@
       Debe ingresar NUMERO
     </div>
 
-    <div class="form-group row" id="fcc4trdropComunaCC">
+    <div class="mb-3 row" id="fcc4trdropComunaCC">
       <label
         for="fcc4dropComunaCC"
         class="labelGiroCC col-md-3"
@@ -409,7 +413,10 @@
       </div>
     </div>
 
-    <div *ngIf="formUsuario.get('fcc4dropComunaCC')?.errors" style="color: red">
+    <div
+      *ngIf="formUsuario.get('fcc4dropComunaCC')?.errors"
+      style="color: red"
+    >
       Debe ingresar COMUNA
     </div>
 
@@ -417,8 +424,11 @@
       Clave de Acceso
     </div>
 
-    <div class="form-group row">
-      <label for="fcc4txtCalleCC" class="labelGiroCC col-md-3" id="labelCalleCC"
+    <div class="mb-3 row">
+      <label
+        for="fcc4txtCalleCC"
+        class="labelGiroCC col-md-3"
+        id="labelCalleCC"
         >Contraseña
       </label>
       <div class="col-md-9">
@@ -437,8 +447,11 @@
     <div *ngIf="formUsuario.get('pwd1')?.errors" style="color: red">
       La contraseña debe tener entre 6 y 24 caracteres de largo.
     </div>
-    <div class="form-group row">
-      <label for="fcc4txtCalleCC" class="labelGiroCC col-md-3" id="labelCalleCC"
+    <div class="mb-3 row">
+      <label
+        for="fcc4txtCalleCC"
+        class="labelGiroCC col-md-3"
+        id="labelCalleCC"
         >Contraseña
       </label>
       <div class="col-md-9">
@@ -458,10 +471,10 @@
       La contraseña debe tener entre 6 y 24 caracteres de largo.
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
       <div class="col-md-9"></div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
       <div class="col-md-9"></div>
     </div>
 

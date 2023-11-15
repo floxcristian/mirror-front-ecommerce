@@ -44,7 +44,7 @@
         Seleccione la tienda de su preferencia
       </p>
 
-      <div class="form-group">
+      <div class="mb-3">
         <select
           class="form-select w-100"
           aria-label="Default select example"
@@ -53,7 +53,7 @@
           (change)="estebleceTienda()"
         >
           <option [ngValue]="null">
-            {{ "Seleccione una tienda" | uppercase }}
+            {{ 'Seleccione una tienda' | uppercase }}
           </option>
           <option *ngFor="let item of tiendas" [ngValue]="item">
             {{ item.zona | uppercase }}

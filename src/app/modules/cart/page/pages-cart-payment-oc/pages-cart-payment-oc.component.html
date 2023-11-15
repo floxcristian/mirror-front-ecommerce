@@ -73,7 +73,9 @@
                 >de
                 <strong>{{ usuario[0].credito.de | currencyFormat }}</strong>
                 hasta
-                <strong>{{ usuario[0].credito.hasta | currencyFormat }}</strong>
+                <strong>{{
+                  usuario[0].credito.hasta | currencyFormat
+                }}</strong>
               </span>
               <span *ngIf="usuario[0].credito.hasta === -1"
                 >desde
@@ -419,7 +421,7 @@
   <div class="modal-body modal-body-min">
     ¿Esta seguro que desea rechazar la solicitud de compra?
 
-    <div class="form-group mt-3">
+    <div class="mb-3 mt-3">
       <label>Observación</label>
       <textarea
         rows="3"

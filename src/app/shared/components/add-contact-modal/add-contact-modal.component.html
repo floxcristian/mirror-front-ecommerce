@@ -18,7 +18,7 @@
   <form [formGroup]="formContacto">
     <div class="row">
       <div class="col-6">
-        <div class="form-group mb-0">
+        <div class="mb-3 mb-0">
           <input
             formControlName="contactRut"
             type="text"
@@ -40,7 +40,7 @@
         </p>
       </div>
       <div class="col-6">
-        <div class="form-group">
+        <div class="mb-3">
           <ng-select
             [clearable]="false"
             [searchable]="true"
@@ -57,7 +57,7 @@
     </div>
     <div class="row">
       <div class="col-6">
-        <div class="form-group">
+        <div class="mb-3">
           <input
             formControlName="nombre"
             type="text"
@@ -67,7 +67,7 @@
         </div>
       </div>
       <div class="col-6">
-        <div class="form-group">
+        <div class="mb-3">
           <input
             formControlName="apellido"
             type="text"
@@ -79,7 +79,7 @@
     </div>
     <div class="row">
       <div class="col-6">
-        <div class="form-group">
+        <div class="mb-3">
           <div class="input-group">
             <div class="input-group-prepend">
               <button
@@ -134,7 +134,7 @@
         </div>
       </div>
       <div class="col-6">
-        <div class="form-group">
+        <div class="mb-3">
           <autocomplete
             #emailValidate
             givenPlaceHolder="Email *"

@@ -1,5 +1,5 @@
 <app-tracking-steps
-  [tipoEntrega]="detalle.ModoEntrega"
+  [tipoEntrega]="detalle.codModoEntregaNom"
   [OVEstados]="OVEstados"
   [OV]="Ov"
 ></app-tracking-steps>
@@ -7,15 +7,16 @@
   <div [ngClass]="servicio_despacho.length > 0 ? 'col-sm-12' : 'col-sm-12'">
     <div class="info-entrega" style="margin-bottom: 10px">
       <div class="header">
-        <i class="fas fa-info-circle" style="margin-right: 10px"></i>INFORMACIÓN
+        <i class="fas fa-info-circle" style="margin-right: 10px"></i
+        >INFORMACIÓN
       </div>
       <div class="body" style="font-size: 14px">
         <div class="row">
           <font color="#0063b9" style="margin-right: 10px">Modo Entrega:</font>
-          <ng-container *ngIf="detalle.ModoEntrega == 'VEN- RPTDA'">
+          <ng-container *ngIf="detalle.codModoEntregaNom == 'RETDA'">
             Retiro en Tienda
           </ng-container>
-          <ng-container *ngIf="detalle.ModoEntrega == 'VEN- DPCLI'">
+          <ng-container *ngIf="detalle.codModoEntregaNom == 'DDLIO'">
             Despacho a Domicilio
           </ng-container>
         </div>

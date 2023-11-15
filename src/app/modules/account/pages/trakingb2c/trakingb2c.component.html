@@ -5,7 +5,7 @@
     [formGroup]="formBuscar"
     (ngSubmit)="buscarOrden(formBuscar.value)"
   >
-    <div class="form-group ms-0 me-sm-3 mb-2">
+    <div class="mb-3 ms-0 me-sm-3 mb-2">
       <input
         type="text"
         class="form-control"
@@ -37,10 +37,10 @@
                 <font color="#0063b9" style="margin-right: 10px"
                   >Modo Entrega:</font
                 >
-                <ng-container *ngIf="DetalleOV == 'VEN- RPTDA'">
+                <ng-container *ngIf="DetalleOV == 'RETDA'">
                   Retiro en Tienda
                 </ng-container>
-                <ng-container *ngIf="DetalleOV == 'VEN- DPCLI'">
+                <ng-container *ngIf="DetalleOV == 'DDLIO'">
                   Despacho a Domicilio
                 </ng-container>
               </div>
@@ -71,7 +71,8 @@
                   <tbody>
                     <tr *ngFor="let item of productos">
                       <td>
-                        <a [routerLink]="['/inicio/productos/ficha/', item.sku]"
+                        <a
+                          [routerLink]="['/inicio/productos/ficha/', item.sku]"
                           ><font color="#0063b9" style="margin-right: 10px">{{
                             item.sku
                           }}</font></a

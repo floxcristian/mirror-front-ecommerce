@@ -409,9 +409,9 @@
                   <div class="card-body m-0">
                     <h4 class="card-title" style="color: #005db9">Rut *</h4>
                     <form [formGroup]="formVisita">
-                      <div class="form-row">
+                      <div class="row">
                         <div class="col-sm-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <input
                               type="text"
                               formControlName="rut"
@@ -445,7 +445,7 @@
                           </div>
                         </div>
                         <div class="col-sm-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <input
                               formControlName="nombre"
                               type="text"
@@ -456,7 +456,7 @@
                           </div>
                         </div>
                         <div class="col-sm-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <input
                               formControlName="apellido"
                               type="text"
@@ -467,7 +467,7 @@
                           </div>
                         </div>
                         <div class="col-sm-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <div class="input-group">
                               <div class="input-group-prepend">
                                 <span class="input-group-text">+56 9</span>
@@ -685,8 +685,8 @@
                   [formGroup]="formOv"
                   *ngIf="paymentMethodActive == 'ordenCompra'"
                 >
-                  <div class="form-row mt-2" style="margin-top: 10px">
-                    <div class="form-group col-md-6">
+                  <div class="row mt-2" style="margin-top: 10px">
+                    <div class="mb-3 col-md-6">
                       <label>Número orden de compra</label>
                       <input
                         formControlName="folio"
@@ -696,7 +696,7 @@
                       />
                     </div>
                     <hr />
-                    <div class="form-group col-md-6">
+                    <div class="mb-3 col-md-6">
                       <label>Monto orden de compra</label>
                       <input
                         formControlName="monto"
@@ -706,7 +706,7 @@
                       />
                     </div>
                     <div
-                      class="form-group"
+                      class="mb-3"
                       [class.col-sm-12]="centrosCosto.length > 0"
                       [class.col-12]="centrosCosto.length == 0"
                     >
@@ -754,7 +754,7 @@
                     </div>
 
                     <div
-                      class="form-group col-md-12"
+                      class="mb-3 col-md-12"
                       *ngIf="centrosCosto.length > 0"
                     >
                       <label
@@ -788,7 +788,7 @@
                     </div>
                     <hr />
                     <div
-                      class="form-group col-md-12"
+                      class="mb-3 col-md-12"
                       *ngIf="centrosCosto.length == 0"
                     >
                       <label
@@ -829,10 +829,7 @@
                   </p>
                 </div>
 
-                <div
-                  class="form-row"
-                  *ngIf="paymentMethodActive == 'sinDefinir'"
-                >
+                <div class="row" *ngIf="paymentMethodActive == 'sinDefinir'">
                   <p class="text-center subtitle w-100 text-danger">
                     * Ha indicado que el supervisor al momento de aprobar la
                     compra, seleccionará la forma de pago.
@@ -958,9 +955,9 @@
                   <div class="card-body m-0">
                     <h4 class="card-title">Ingrese su RUT</h4>
                     <form [formGroup]="formVisita">
-                      <div class="form-row">
+                      <div class="row">
                         <div class="col-sm-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <input
                               type="text"
                               formControlName="rut"
@@ -994,7 +991,7 @@
                           </div>
                         </div>
                         <div class="col-sm-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <input
                               formControlName="nombre"
                               type="text"
@@ -1005,7 +1002,7 @@
                           </div>
                         </div>
                         <div class="col-sm-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <input
                               formControlName="apellido"
                               type="text"
@@ -1016,7 +1013,7 @@
                           </div>
                         </div>
                         <div class="col-md-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <div class="input-group">
                               <div class="input-group-prepend">
                                 <span class="input-group-text">+56 9</span>
@@ -1122,8 +1119,8 @@
 
             <ng-container *ngIf="!alertCartShow">
               <ng-container *ngIf="documentType == 'factura'">
-                <div class="form-row justify-content-center">
-                  <div class="form-group col-11">
+                <div class="row justify-content-center">
+                  <div class="mb-3 col-11">
                     <div *ngIf="invitado" class="row mt-2">
                       <div
                         *ngFor="let item of paymentMethods"
@@ -1231,8 +1228,8 @@
                   [formGroup]="formOv"
                   *ngIf="paymentMethodActive == 'ordenCompra'"
                 >
-                  <div class="form-row">
-                    <div class="form-group col-md-6">
+                  <div class="row">
+                    <div class="mb-3 col-md-6">
                       <label>Número orden de compra</label>
                       <input
                         formControlName="folio"
@@ -1242,7 +1239,7 @@
                       />
                     </div>
 
-                    <div class="form-group col-md-6">
+                    <div class="mb-3 col-md-6">
                       <label>Monto orden de compra</label>
                       <input
                         formControlName="monto"
@@ -1251,7 +1248,7 @@
                         placeholder="Ingrese el monto de su OC"
                       />
                     </div>
-                    <div class="form-group col-md-12">
+                    <div class="mb-3 col-md-12">
                       <label>Seleccione la orden de compra</label>
                       <div class="row">
                         <div class="col-12 d-flex justify-content-start">
@@ -1295,7 +1292,7 @@
                       </div>
                     </div>
 
-                    <div class="form-group col-md-6">
+                    <div class="mb-3 col-md-6">
                       <label>Centro de costo</label>
                       <select
                         class="form-control form-control-lg"
@@ -1334,10 +1331,7 @@
                   </p>
                 </div>
 
-                <div
-                  class="form-row"
-                  *ngIf="paymentMethodActive == 'sinDefinir'"
-                >
+                <div class="row" *ngIf="paymentMethodActive == 'sinDefinir'">
                   <p class="text-center subtitle w-100 text-danger">
                     * Ha indicado que el supervisor al momento de aprobar la
                     compra, seleccionará la forma de pago.

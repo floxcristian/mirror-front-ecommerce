@@ -125,7 +125,7 @@
             <div class="div_img_cyber">
               <!-- <img src="assets/images/cyberCircle.png" loading="lazy" /> -->
               <picture>
-                <source
+                <!-- <source
                   srcset="assets/images/cyberCircle.webp"
                   type="image/webp"
                 />
@@ -133,7 +133,11 @@
                   srcset="assets/images/cyberCircle.png"
                   type="image/png"
                 />
-                <img src="assets/images/cyberCircle.png" loading="lazy" />
+                <img src="assets/images/cyberCircle.png" loading="lazy" /> -->
+                <img
+                  src="https://images.implementos.cl/uploads/cyber/cyber.webp"
+                  loading="lazy"
+                />
               </picture>
             </div>
           </div>
@@ -167,10 +171,15 @@
         >
           <!-- <img style="width: 50px" src="assets/images/cyberCircle.png" loading="lazy" /> -->
           <picture>
-            <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
+            <!-- <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
             <source srcset="assets/images/cyberCircle.png" type="image/png" />
             <img
               src="assets/images/cyberCircle.png"
+              style="width: 50px"
+              loading="lazy"
+            /> -->
+            <img
+              src="https://images.implementos.cl/uploads/cyber/cyber.webp"
               style="width: 50px"
               loading="lazy"
             />
@@ -202,7 +211,8 @@
                 </tr>
                 <tr>
                   <td class="p-0 txtNormal">
-                    {{ preciosLista[1].desde }} a {{ preciosLista[1].hasta }} UN
+                    {{ preciosLista[1].desde }} a {{ preciosLista[1].hasta }}
+                    UN
                   </td>
                   <td class="p-0 pull-right txtNormal">
                     {{ preciosLista[1].precio | currencyFormat }} c/iva

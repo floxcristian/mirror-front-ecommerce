@@ -40,6 +40,7 @@ export class AccountComponent implements OnInit {
 
   ngOnInit() {
     this.usuario = this.root.getDataSesionUsuario();
+    if (this.usuario.rut !== '0') this.root.getPreferenciasCliente();
     this.isB2B =
       this.usuario.user_role === 'supervisor' ||
       this.usuario.user_role === 'comprador';
@@ -59,6 +60,7 @@ export class AccountComponent implements OnInit {
           (l) => !this.linksOcultosB2B.includes(l.label)
         );
       }
+      this.root.getPreferenciasCliente();
     });
 
     if (this.usuario != null) {

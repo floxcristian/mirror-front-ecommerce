@@ -15,12 +15,14 @@
     </ng-container>
 </ng-container> -->
 <ng-container *ngIf="innerWidth <= 1025">
-  <app-page-header
-    [breadcrumbs]="breadcrumbs"
-    [textToSearch]="textToSearch"
-    [totalRegistros]="PagTotalRegistros"
-  >
-  </app-page-header>
+  <div [ngStyle]="{ 'margin-top': banners ? '0px' : '30px' }">
+    <app-page-header
+      [breadcrumbs]="breadcrumbs"
+      [textToSearch]="textToSearch"
+      [totalRegistros]="PagTotalRegistros"
+    >
+    </app-page-header>
+  </div>
   <div
     class="col-sm"
     style="

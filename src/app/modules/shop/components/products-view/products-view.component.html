@@ -18,7 +18,7 @@
         <div
           *ngIf="totalRegistros > 0"
           class="col-12 order-3 order-lg-2 text-justify"
-          [class.ms-xl-2]="!isB2B && innerWidth >= 1550"
+          [class.ms-xl-2]="innerWidth >= 1550"
           style="padding-left: 0px; font-size: 18px"
         >
           (<strong>{{ totalRegistros }}</strong
@@ -39,36 +39,9 @@
       >
         <div
           *ngIf="!cargandoCatalogo"
-          class="col-4 col-lg-auto d-flex justify-content-start"
+          class="col-4 col-lg w-auto d-flex justify-content-start"
           style="margin-right: 5px"
         >
-          <!-- <div class="layout-switcher__list" *ngIf="totalRegistros > 0">
-            <button
-              name="setLayout"
-              title="Mosaico"
-              type="button"
-              class="layout-switcher__button"
-              [ngClass]="{
-                'layout-switcher__button--active': layout === 'grid'
-              }"
-              (click)="setLayout('grid')"
-            >
-              <app-icon name="layout-grid-16x16" size="16"></app-icon>
-            </button>
-
-            <button
-              name="setLayout2s"
-              title="Listado con atributos"
-              type="button"
-              class="layout-switcher__button d-none d-md-block d-lg-block"
-              [ngClass]="{
-                'layout-switcher__button--active': layout === 'list'
-              }"
-              (click)="setLayout('list')"
-            >
-              <app-icon name="layout-list-16x16" size="16"></app-icon>
-            </button>
-          </div> -->
           <div class="d-block d-lg-none">
             <button
               title="Filtros"
@@ -81,28 +54,10 @@
             </button>
           </div>
         </div>
-        <!-- <div
-          *ngIf="!isB2B && !cargandoCatalogo"
-          class="col-4 col-lg-auto d-flex justify-content-start"
-          style="margin-right: 5px"
-        >
-          <div class="d-block d-lg-none">
-            <button
-              title="Filtros"
-              type="button"
-              class="layout-switcher__button w-auto"
-              (click)="setVisibleFilter(true)"
-            >
-              <i class="fas fa-filter me-1"></i>
-              Filtros
-            </button>
-          </div>
-        </div> -->
-
         <div
           *ngIf="!cargandoCatalogo"
-          [class.col-11]="!isB2B && innerWidth > 991"
-          [class.col-8]="!isB2B && innerWidth <= 991"
+          [class.col-11]="innerWidth > 991"
+          [class.col-8]="innerWidth <= 991"
           class="me-2 w-100 d-flex justify-content-end"
         >
           <label for="view-options-sort">

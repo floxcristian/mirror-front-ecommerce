@@ -103,6 +103,7 @@ import { ButtonsSlideshowComponent } from './components/buttons-slideshow/button
 import { ButtonComponent } from './components/buttons-slideshow/components/button/button.component';
 import { ProductSlideshowSpecialsComponent } from '../pages/product-slideshow-specials/product-slideshow-specials.component';
 import { PipesModule } from './pipes/pipes.module';
+import { BlockHeaderComponent } from '../modules/blocks/components/block-header/block-header.component';
 
 const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
 const NGU_CAROUSEL_MODULES = [
@@ -186,6 +187,7 @@ const NGU_CAROUSEL_MODULES = [
     ProductCardB2cCmsComponent,
     ButtonsSlideshowComponent,
     ButtonComponent,
+    BlockHeaderComponent,
   ],
   imports: [
     CommonModule,
@@ -270,6 +272,7 @@ const NGU_CAROUSEL_MODULES = [
     FiltroMagicoModule,
     MenuCategoriaComponent,
     ...NGU_CAROUSEL_MODULES,
+    BlockHeaderComponent,
   ],
   providers: [DecimalPipe, DatePipe],
 })

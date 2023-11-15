@@ -1,4 +1,11 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CatalogoService } from '../../../../shared/services/catalogo.service';
@@ -418,6 +425,8 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     }
   }
 
+  minimo = false;
+  medio = false;
   loadFlip() {
     if (this.dispositivo === 'smartphone') {
       let porcentaje = 1.9;
@@ -426,73 +435,83 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       if (this.screenWidth <= 360 && this.screenWidth > 320) porcentaje = 6.2; //ok
       if (this.screenWidth <= 320 && this.screenWidth > 300) porcentaje = 7.0;
       let height = this.screenWidth * porcentaje;
-      const htmlElement = document.getElementById(
-        'demoBookExample'
-      ) as HTMLElement;
-      const flipSetting: Partial<FlipSetting> = {
-        width: this.screenWidth,
-        height: height,
-        maxWidth: this.screenWidth,
-        maxHeight: height * 1.1,
-        size: SizeType.FIXED,
-        minWidth: 315,
-        minHeight: 680,
-        maxShadowOpacity: 0.5,
-        disableFlipByClick: true,
-        flippingTime: 800,
-        clickEventForward: true,
-        showCover: true,
-        showPageCorners: true,
-        startZIndex: 5,
-        useMouseEvents: false,
-      };
-      this.pageFlip = new PageFlip(htmlElement, flipSetting);
+      this.pageFlip = new PageFlip(
+        document.getElementById('demoBookExample') as HTMLElement,
+        {
+          width: this.screenWidth,
+          height: height,
+          maxWidth: this.screenWidth,
+          maxHeight: height * 1.1,
+          size: SizeType.FIXED,
+          minWidth: 315,
+          minHeight: 680,
+          maxShadowOpacity: 0.5,
+          disableFlipByClick: true,
+          flippingTime: 800,
+          clickEventForward: true,
+          showCover: true,
+          showPageCorners: true,
+          startZIndex: 5,
+          useMouseEvents: false,
+        }
+      );
     }
     if (this.dispositivo === 'web') {
-      const htmlElement = document.getElementById(
-        'demoBookExample'
-      ) as HTMLElement;
-      console.log('size: ', SizeType);
-      const flipSetting: Partial<FlipSetting> = {
-        width: 650,
-        height: 940,
-        maxHeight: 940,
-        maxWidth: 650,
-        size: 'fixed' as SizeType, //SizeType.FIXED,
-        minWidth: 650, //315
-        minHeight: 940, //420
-        maxShadowOpacity: 0.5,
-        disableFlipByClick: true,
-        useMouseEvents: true,
-        flippingTime: 800,
-        clickEventForward: true,
-        showCover: true,
-        showPageCorners: true,
-        startZIndex: 5,
-      };
-      this.pageFlip = new PageFlip(htmlElement, flipSetting);
+      let numero;
+      if (this.screenWidth > 1440 && this.screenWidth < 1540) {
+        numero = 600;
+        this.medio = true;
+      } else if (this.screenWidth > 1540) {
+        numero = 650;
+      } else {
+        numero = 450;
+        this.minimo = true;
+      }
+      console.log(numero);
+      console.log(this.medio);
+
+      this.pageFlip = new PageFlip(
+        document.getElementById('demoBookExample') as HTMLElement,
+        {
+          width: numero,
+          height: 950,
+          maxHeight: 940,
+          maxWidth: 650,
+          size: SizeType.FIXED,
+          minWidth: 315, //315
+          minHeight: 420, //420
+          maxShadowOpacity: 0.5,
+          disableFlipByClick: true,
+          useMouseEvents: true,
+          flippingTime: 800,
+          clickEventForward: true,
+          showCover: true,
+          showPageCorners: true,
+          startZIndex: 5,
+        }
+      );
     }
     if (this.dispositivo === 'tablet') {
-      const htmlElement = document.getElementById(
-        'demoBookExample'
-      ) as HTMLElement;
-      this.pageFlip = new PageFlip(htmlElement, {
-        width: 650, //740
-        height: 950, //940
-        maxWidth: 650,
-        maxHeight: 950,
-        size: SizeType.FIXED,
-        minWidth: 650,
-        minHeight: 950,
-        maxShadowOpacity: 0.5,
-        disableFlipByClick: true,
-        flippingTime: 800,
-        clickEventForward: true,
-        showCover: true,
-        showPageCorners: true,
-        startZIndex: 5,
-        useMouseEvents: false,
-      });
+      this.pageFlip = new PageFlip(
+        document.getElementById('demoBookExample') as HTMLElement,
+        {
+          width: 650, //740
+          height: 950, //940
+          maxWidth: 650,
+          maxHeight: 950,
+          size: SizeType.FIXED,
+          minWidth: 650,
+          minHeight: 950,
+          maxShadowOpacity: 0.5,
+          disableFlipByClick: true,
+          flippingTime: 800,
+          clickEventForward: true,
+          showCover: true,
+          showPageCorners: true,
+          startZIndex: 5,
+          useMouseEvents: false,
+        }
+      );
     }
     this.pageFlip.loadFromHTML(document.querySelectorAll('.page'));
     this.pageFlip.on('flip', (e: any) => {

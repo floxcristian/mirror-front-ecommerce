@@ -15,11 +15,31 @@ import { RootService } from '../../../../shared/services/root.service';
 export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject();
   items: NavigationLink[] = [];
+  items_oficial: any[] = [];
   isOpen = false;
 
   private categoriaDetalle: any;
   private arrayCategorias: NavigationLink[] = [];
   private segundoNivel: any;
+  private categoriaDetalleOficial: any;
+  private arrayCategoriasOficial: NavigationLink[] = [];
+  private segundoNivelOficial: any;
+  // categorias_oficial:any[] = [{
+  //     "title" : "TIENDAS OFICIALES",
+  //     "id" : 1000,
+  //     "products" : 0,
+  //     "url" : "/tiendas-oficiales/",
+  //     "children" : [{   "title" : "INDIANA",
+  //             "products" : 0,
+  //             "url" : "/indiana/",
+  //             "children" : [],
+  //             "id" : 1001},
+  //             {"title" : "BLACKSMITH",
+  //             "products" : 0,
+  //             "url" : "/blacksmith/",
+  //             "children" : [],
+  //             "id" : 1002}]
+  // }]
 
   constructor(
     public menuCategorias: MenuCategoriasB2cService,
@@ -46,6 +66,7 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
       const categorias: CategoryApi[] = r.data;
       this.sortCategories(categorias);
       this.formatCategories(categorias);
+      // this.formatCategories2(this.categorias_oficial);
     });
   }
 
@@ -123,5 +144,40 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
         return 0;
       });
     }
+  }
+  //datos tienda oficial
+  formatCategories2(data: CategoryApi[]) {
+    for (const primeraCategoria of data) {
+      this.categoriaDetalleOficial = {
+        url: ['/', 'inicio', 'productos'],
+        label: `${primeraCategoria.title}`,
+        menu: [],
+      };
+
+      for (const segundaCategoria of primeraCategoria.children || []) {
+        this.segundoNivelOficial = {
+          items: [
+            {
+              label: `${segundaCategoria.title}`,
+              url: [
+                '/',
+                'inicio',
+                'productos',
+                this.root.replaceSlash(segundaCategoria.url),
+              ],
+              items: '',
+            },
+          ],
+        };
+        const tercerNivel: any[] = [];
+        this.segundoNivelOficial.items[0].items = tercerNivel;
+        this.categoriaDetalleOficial.menu.push(
+          this.segundoNivelOficial.items[0]
+        );
+      }
+      this.arrayCategoriasOficial.push(this.categoriaDetalleOficial);
+    }
+    this.items_oficial = this.arrayCategoriasOficial;
+    console.log('items', this.items_oficial);
   }
 }

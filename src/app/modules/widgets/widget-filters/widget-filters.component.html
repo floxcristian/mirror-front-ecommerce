@@ -90,9 +90,9 @@
               *ngIf="filter.type === 'categories'"
               class="filter-categories"
             >
-              <ul class="tree pt-2 pl-2 pr-4 pt-lg-0 pl-lg-0 pr-lg-0">
+              <ul class="tree pt-2 ps-2 pe-4 pt-lg-0 ps-lg-0 pe-lg-0">
                 <li *ngFor="let lvl1 of filter.options.items | slice : 0 : 5">
-                  <details class="ml-2" [open]="lvl1.open">
+                  <details class="ms-2" [open]="lvl1.open">
                     <summary>
                       <a
                         routerLinkActive="active"
@@ -103,7 +103,7 @@
                         (click)="marcarCategorias(lvl1)"
                       >
                         <div
-                          class="text-truncate mr-2"
+                          class="text-truncate me-2"
                           [tooltip]="lvl1.name | capitalizeFirst"
                         >
                           {{ lvl1.name | capitalizeFirst }}
@@ -124,7 +124,7 @@
                               (click)="marcarCategorias(lvl2)"
                             >
                               <div
-                                class="text-truncate mr-2"
+                                class="text-truncate me-2"
                                 [tooltip]="lvl2.name | capitalizeFirst"
                               >
                                 {{ lvl2.name | capitalizeFirst }}

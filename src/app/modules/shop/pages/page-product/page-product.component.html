@@ -105,7 +105,7 @@
                             <span *ngIf="!preciosNeto"
                               >{{ item?.precio?.precio | currencyFormat }}
                               <em
-                                ><span class="badge-pill badge-implementos">
+                                ><span class="rounded-pill badge-implementos">
                                   c/iva</span
                                 ></em
                               ></span
@@ -116,7 +116,9 @@
                                   | currencyFormat
                               }}
                               <em
-                                ><span class="badge-pill badge-primary-custom">
+                                ><span
+                                  class="rounded-pill badge-primary-custom"
+                                >
                                   neto</span
                                 ></em
                               ></span
@@ -129,7 +131,7 @@
                             <span *ngIf="!preciosNeto"
                               >{{ item?.precio?.precio | currencyFormat }}
                               <em
-                                ><span class="badge-pill badge-implementos">
+                                ><span class="rounded-pill badge-implementos">
                                   c/iva</span
                                 ></em
                               ></span
@@ -140,7 +142,9 @@
                                   | currencyFormat
                               }}
                               <em
-                                ><span class="badge-pill badge-primary-custom">
+                                ><span
+                                  class="rounded-pill badge-primary-custom"
+                                >
                                   neto</span
                                 ></em
                               ></span
@@ -149,7 +153,7 @@
                           <div
                             *ngIf="item?.precioComun !== item?.precio?.precio"
                             tooltip="Precio normal"
-                            class="product-card__old-price text-right"
+                            class="product-card__old-price text-end"
                           >
                             <span *ngIf="!preciosNeto"
                               >{{ item?.precioComun | currencyFormat }}
@@ -173,7 +177,7 @@
                           <div class="row">
                             <div class="col-12 text-center">
                               <i
-                                class="fal fa-minus-circle fa-xl mr-3"
+                                class="fal fa-minus-circle fa-xl me-3"
                                 style="cursor: pointer; color: #005cb9"
                                 role="button"
                                 (click)="obtienePrecioxCantidad(item, '-')"
@@ -187,7 +191,7 @@
                                 (change)="obtienePrecioxCantidad(item)"
                               />
                               <i
-                                class="fal fa-plus-circle fa-xl ml-3"
+                                class="fal fa-plus-circle fa-xl ms-3"
                                 style="cursor: pointer; color: #005cb9"
                                 (click)="obtienePrecioxCantidad(item, '+')"
                                 role="button"
@@ -569,7 +573,7 @@
                           <span *ngIf="!preciosNeto"
                             >{{ item?.precio?.precio | currencyFormat }}
                             <em
-                              ><span class="badge-pill badge-implementos">
+                              ><span class="rounded-pill badge-implementos">
                                 c/iva</span
                               ></em
                             ></span
@@ -579,7 +583,7 @@
                               item?.precio?.precio / (1 + IVA) | currencyFormat
                             }}
                             <em
-                              ><span class="badge-pill badge-primary-custom">
+                              ><span class="rounded-pill badge-primary-custom">
                                 neto</span
                               ></em
                             ></span
@@ -592,7 +596,7 @@
                           <span *ngIf="!preciosNeto"
                             >{{ item?.precio?.precio | currencyFormat }}
                             <em
-                              ><span class="badge-pill badge-implementos">
+                              ><span class="rounded-pill badge-implementos">
                                 c/iva</span
                               ></em
                             ></span
@@ -602,7 +606,7 @@
                               item?.precio?.precio / (1 + IVA) | currencyFormat
                             }}
                             <em
-                              ><span class="badge-pill badge-primary-custom">
+                              ><span class="rounded-pill badge-primary-custom">
                                 neto</span
                               ></em
                             ></span
@@ -611,7 +615,7 @@
                         <div
                           *ngIf="item?.precioComun !== item?.precio?.precio"
                           tooltip="Precio normal"
-                          class="product-card__old-price text-right"
+                          class="product-card__old-price text-end"
                         >
                           <span *ngIf="!preciosNeto"
                             >{{ item?.precioComun | currencyFormat }}
@@ -635,7 +639,7 @@
                         <div class="row">
                           <div class="col-12 text-center">
                             <i
-                              class="fal fa-minus-circle fa-xl mr-3"
+                              class="fal fa-minus-circle fa-xl me-3"
                               style="cursor: pointer; color: #005cb9"
                               role="button"
                               (click)="obtienePrecioxCantidad(item, '-')"
@@ -649,7 +653,7 @@
                               (change)="obtienePrecioxCantidad(item)"
                             />
                             <i
-                              class="fal fa-plus-circle fa-xl ml-3"
+                              class="fal fa-plus-circle fa-xl ms-3"
                               style="cursor: pointer; color: #005cb9"
                               (click)="obtienePrecioxCantidad(item, '+')"
                               role="button"

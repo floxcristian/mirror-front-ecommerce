@@ -726,7 +726,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
 
     if (formaEntrega === 'retiro') {
       this.retiroFlag = true;
-      this.recibeType = 'yo';
+      // this.recibeType = 'yo';
       this.showAllAddress = false;
       this.showNewAddress = false;
       this.direccion = false;
@@ -741,11 +741,11 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     } else if (formaEntrega === 'despacho' && this.isLogin) {
       this.selectedShippingId = null;
 
-      if (this.HideResumen()) {
-        this.recibeType = 'yo';
-      } else {
-        this.recibeType = 'yo';
-      }
+      // if (this.HideResumen()) {
+      //   this.recibeType = 'yo';
+      // } else {
+      //   this.recibeType = 'yo';
+      // }
       this.setDefaultAddress();
       if (this.selectedShippingId) {
         this.obtieneDespachos();
@@ -863,6 +863,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       ? (this.recibeOtra = true)
       : (this.recibeOtra = false);
     this.localS.set('recibe', {});
+    this.recibeOtraname = '';
   }
 
   reciboPedido(recibe: any) {

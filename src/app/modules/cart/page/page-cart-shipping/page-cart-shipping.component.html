@@ -89,7 +89,7 @@
               >
                 <strong>Entrega {{ i + 1 }}/{{ fechas.length }}</strong>
                 {{
-                  item ? (item | date : "EEEE dd MMMM, y ") : ("" | titlecase)
+                  item ? (item | date : 'EEEE dd MMMM, y ') : ('' | titlecase)
                 }}
               </p>
             </ng-container>
@@ -146,12 +146,12 @@
             </p>
             <ng-container *ngIf="items.length > 1">
               <font style="font-weight: normal"
-                >({{ " " + items.length + " PRODUCTOS" + " " }})</font
+                >({{ ' ' + items.length + ' PRODUCTOS' + ' ' }})</font
               >
             </ng-container>
             <ng-container *ngIf="items.length == 1">
               <font style="font-weight: normal"
-                >({{ " " + items.length + " PRODUCTO" + " " }})</font
+                >({{ ' ' + items.length + ' PRODUCTO' + ' ' }})</font
               >
             </ng-container>
           </div>
@@ -334,10 +334,10 @@
                 </div>
 
                 <div
-                  class="form-row ms-2 mt-4"
+                  class="row ms-2 mt-4"
                   *ngIf="shippingDaysStore.length > 0"
                 >
-                  <div class="form-group col-12" style="color: #0063b9">
+                  <div class="mb-3 col-12" style="color: #0063b9">
                     <label>Seleccione quien retira el pedido</label>
                     <div class="clearfix"></div>
 
@@ -402,7 +402,7 @@
                           class="fa-solid fa-map-location-dot"
                           style="font-size: 28px; color: #0063b9"
                         ></i>
-                        {{ showMap ? "Ocultar Mapa" : "Ver Mapa" }}
+                        {{ showMap ? 'Ocultar Mapa' : 'Ver Mapa' }}
                       </div>
                     </div>
                   </div>
@@ -692,7 +692,8 @@
                           style="width: 99%; color: #0063b9"
                         >
                           <h2 *ngIf="isLogin">
-                            Oops! . . . <i class="fas fa-shipping-fast mt-2"></i
+                            Oops! . . .
+                            <i class="fas fa-shipping-fast mt-2"></i
                             ><i
                               class="fas fa-exclamation-circle mt-2 float-end text-warning"
                             ></i>
@@ -715,7 +716,8 @@
                           style="width: 99%"
                         >
                           <h2 *ngIf="isLogin">
-                            Oops! . . . <i class="fas fa-shipping-fast mt-2"></i
+                            Oops! . . .
+                            <i class="fas fa-shipping-fast mt-2"></i
                             ><i
                               class="fas fa-exclamation-circle mt-2 float-end text-warning"
                             ></i>
@@ -740,7 +742,7 @@
                     >
                       <!-- Segmento correspondiente al formulario asociado a la persona que recibe el producto-->
                       <div
-                        class="form-row ms-2 mt-4"
+                        class="row ms-2 mt-4"
                         *ngIf="shippingDays.length > 0"
                       >
                         <!-- Formulario de  dias para despacho -->
@@ -748,7 +750,10 @@
                         <div class="row col-12">
                           <div class="col-12" style="padding-right: 0px">
                             <ng-container
-                              *ngFor="let item_0 of shippingDays; let i = index"
+                              *ngFor="
+                                let item_0 of shippingDays;
+                                let i = index
+                              "
                             >
                               <div
                                 style="
@@ -786,7 +791,9 @@
                                   [fletes]="item_0.fechas"
                                 ></app-grupo-detalle-fechas>
                                 <app-grupo-detalle-fechas
-                                  *ngIf="innerWidth > 450 && innerWidth <= 1420"
+                                  *ngIf="
+                                    innerWidth > 450 && innerWidth <= 1420
+                                  "
                                   [DIAS_SEMANA]="7"
                                   (itemSeleccionado)="
                                     setSeleccionarEnvio($event, i)
@@ -808,7 +815,7 @@
                         </div>
                         <!-- Fin Formulario de  dias para despacho -->
 
-                        <div class="form-group col-12" style="color: #0063b9">
+                        <div class="mb-3 col-12" style="color: #0063b9">
                           <div class="row ms-2 mt-3 mx-0">
                             <div class="col p-0">
                               <div class="form-check form-check-lg">
@@ -886,7 +893,9 @@
                             <div
                               class="cart-address-container pt-3 pb-3 ps-2"
                               [ngClass]="
-                                HideResumen() ? '' : 'd-flex align-items-center'
+                                HideResumen()
+                                  ? ''
+                                  : 'd-flex align-items-center'
                               "
                             >
                               <div class="row col-12">
@@ -1166,8 +1175,8 @@
               <div class="w-100 text-center mt-5">
                 <i class="far fa-file-pdf text-blue"></i>
                 <p class="text-center subtitle w-100 text-blue">
-                  Ha elegido generar una cotización, presione el boton continuar
-                  si esta seguro.
+                  Ha elegido generar una cotización, presione el boton
+                  continuar si esta seguro.
                 </p>
                 <button
                   type="button"

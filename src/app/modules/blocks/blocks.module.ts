@@ -26,7 +26,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
     BlockBrandsComponent,
     BlockSlideshowComponent,
     // components
-    BlockHeaderComponent,
+    // BlockHeaderComponent,
     BlockBrandsB2cComponent,
   ],
   imports: [
@@ -42,7 +42,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
     // blocks
     BlockBrandsComponent,
     BlockSlideshowComponent,
-    BlockHeaderComponent,
+    // BlockHeaderComponent,
     BlockBrandsB2cComponent,
   ],
 })
