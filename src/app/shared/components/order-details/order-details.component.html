@@ -17,7 +17,7 @@
           <span
             class="badge"
             [ngClass]="{
-              'badge-danger': data?.estado == 'rechazado',
+              'bg-danger': data?.estado == 'rechazado',
               'badge-warning': data?.estado == 'pendiente',
               'badge-info': data?.estado == 'generado',
               'badge-success': data?.estado == 'finalizado'
@@ -72,16 +72,16 @@
     <table class="table">
       <thead>
         <tr>
-          <th class="text-left">Imagen</th>
-          <th class="text-left">Producto</th>
-          <th class="text-left">Precio</th>
-          <th class="text-left">Unidad</th>
-          <th class="text-right">Total</th>
+          <th class="text-start">Imagen</th>
+          <th class="text-start">Producto</th>
+          <th class="text-start">Precio</th>
+          <th class="text-start">Unidad</th>
+          <th class="text-end">Total</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let item of data?.productos">
-          <th class="text-left">
+          <th class="text-start">
             <a [routerLink]="root.product(item.sku, item.nombre)">
               <img
                 class="img-fluid img-product lazyload"
@@ -90,13 +90,13 @@
               />
             </a>
           </th>
-          <th class="text-left">
+          <th class="text-start">
             <span class="d-blok">{{ item.nombre }}</span>
             <span class="d-block">{{ item.sku }}</span>
           </th>
-          <th class="text-left">{{ item.precio | currencyFormat }}</th>
-          <th class="text-left">{{ item.cantidad }}</th>
-          <th class="text-right">
+          <th class="text-start">{{ item.precio | currencyFormat }}</th>
+          <th class="text-start">{{ item.cantidad }}</th>
+          <th class="text-end">
             {{ item.cantidad * item.precio | currencyFormat }}
           </th>
         </tr>

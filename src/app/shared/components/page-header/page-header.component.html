@@ -2,7 +2,7 @@
   class="page-header {{ class }} ps-5"
   [ngClass]="{
     'px-lg-4': !class,
-    'pl-C': header == 'Contacto'
+    'ps-C': header == 'Contacto'
   }"
 >
   <div
@@ -31,7 +31,7 @@
             (<strong>{{ totalRegistros }}</strong
             >) Resultados en: <span> {{ decodedUrl(textToSearch) }}</span>
             <ng-container *ngIf="breadcrumbs.length > 0">
-              <strong> {{ breadcrumbs[0].label || "" | titlecase }} </strong>
+              <strong> {{ breadcrumbs[0].label || '' | titlecase }} </strong>
             </ng-container>
           </div>
         </div>
@@ -47,7 +47,7 @@
             >) Resultados en:
             <ng-container>
               <strong>
-                {{ url.split("=")[1].split("&")[0] | titlecase }}</strong
+                {{ url.split('=')[1].split('&')[0] | titlecase }}</strong
               >
             </ng-container>
           </div>
@@ -65,7 +65,7 @@
             (<strong>{{ totalRegistros }}</strong
             >) Resultados en: <span> {{ decodedUrl(textToSearch) }}</span>
             <ng-container *ngIf="breadcrumbs.length > 0">
-              <strong> {{ breadcrumbs[0].label || "" | titlecase }} </strong>
+              <strong> {{ breadcrumbs[0].label || '' | titlecase }} </strong>
             </ng-container>
           </div>
         </div>
@@ -81,7 +81,7 @@
             >) Resultados en:
             <ng-container>
               <strong>
-                {{ url.split("=")[1].split("&")[0] | titlecase }}</strong
+                {{ url.split('=')[1].split('&')[0] | titlecase }}</strong
               >
             </ng-container>
           </div>

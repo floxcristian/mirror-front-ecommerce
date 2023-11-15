@@ -1,19 +1,28 @@
 <div class="container mt-3">
-    <div class="card flex-grow-1 col-12 col-md-6 mx-auto align-items-center">
-        <div class="card-body col-12 px-lg-5">
+  <div class="card flex-grow-1 col-12 col-md-6 mx-auto align-items-center">
+    <div class="card-body col-12 px-lg-5">
+      <h5 class="pb-3">Recuperar contraseña</h5>
 
-            <h5 class="pb-3">Recuperar contraseña</h5>
-
-            <form [formGroup]="formRecoverpass" (ngSubmit)="recoverPass(formRecoverpass.value)">
-
-                <div class="form-group">
-                    <label>Ingrese su Email</label>
-                    <input formControlName="email" type="email" class="form-control form-control" placeholder="miCorreo@example.com">
-                </div>
-                <p><i>Recibirá un correo con un link para recuperar su contraseña.</i></p><br>
-
-                <button name="enviar"  class="btn btn-secondary btn-md">Enviar</button>
-            </form>
+      <form
+        [formGroup]="formRecoverpass"
+        (ngSubmit)="recoverPass(formRecoverpass.value)"
+      >
+        <div class="mb-3">
+          <label>Ingrese su Email</label>
+          <input
+            formControlName="email"
+            type="email"
+            class="form-control form-control"
+            placeholder="miCorreo@example.com"
+          />
         </div>
+        <p>
+          <i>Recibirá un correo con un link para recuperar su contraseña.</i>
+        </p>
+        <br />
+
+        <button name="enviar" class="btn btn-secondary btn-md">Enviar</button>
+      </form>
     </div>
+  </div>
 </div>

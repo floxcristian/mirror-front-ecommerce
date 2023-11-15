@@ -28,3 +28,13 @@
   background-color: white;
   border-radius: 10px;
 }
+
+@media (max-width: 445px) {
+  .boton {
+    cursor: pointer;
+    padding: 3px 2px;
+    color: #fff;
+    background-color: #0063b9;
+    border-radius: 10px;
+  }
+}
