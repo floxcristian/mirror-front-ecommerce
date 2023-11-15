@@ -560,6 +560,19 @@
                             *ngIf="showAllAddress"
                           >
                             <button
+                              class="btn btn-sm btn-link text-danger p-0 d-flex"
+                              style="align-items: center"
+                              tooltip="Eliminar dirección"
+                              placement="top"
+                              container="body"
+                              (click)="deleteAddress(direccion)"
+                            >
+                              <i
+                                class="fas fa-trash-alt text-danger mr-2"
+                                style="font-size: 16px !important"
+                              ></i>
+                            </button>
+                            <button
                               type="button"
                               (click)="changeAddress(direccion.recid)"
                               style="text-decoration: none; color: #0063b9"

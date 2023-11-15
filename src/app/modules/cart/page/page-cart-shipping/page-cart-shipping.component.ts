@@ -41,8 +41,16 @@ import { ShippingType } from '../../../../core/enums';
 import { ModalConfirmDatesComponent } from './components/modal-confirm-dates/modal-confirm-dates.component';
 import { map, takeUntil } from 'rxjs/operators';
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
+import { PreferenciasCliente } from '@shared/interfaces/preferenciasCliente';
+import { ClientsService } from '@shared/services/clients.service';
+import {
+  DataModal,
+  ModalComponent,
+  TipoIcon,
+  TipoModal,
+} from '@shared/components/modal/modal.component';
 
 export let browserRefresh = false;
 declare let dataLayer: any;
@@ -129,6 +137,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   grupoShippingCart: any = {};
   documentType = 'factura';
   loadingCotizacion = false;
+  direccionConfigurada!: PreferenciasCliente;
 
   constructor(
     public cart: CartService,
@@ -143,7 +152,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     private geoService: GeoLocationService,
     private geoLocationService: GeoLocationService,
     private cd: ChangeDetectorRef,
-    private readonly gtmService: GoogleTagManagerService
+    private readonly gtmService: GoogleTagManagerService,
+    private clientsService: ClientsService
   ) {
     this.localS.set('recibe', {});
     this.innerWidth = window.innerWidth;
@@ -160,6 +170,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     this.contacto_notificaciones();
     this.obtieneDireccionesCliente();
     this.obtieneTiendas();
+    this.direccionConfigurada = this.localS.get('preferenciasCliente');
 
     this.isLogin = this.loginService.isLogin();
 
@@ -214,7 +225,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {}
 
-  async obtieneDireccionesCliente() {
+  async obtieneDireccionesCliente(isDelete: boolean = false) {
     this.loadingShippingAll = true;
     const usuario = this.root.getDataSesionUsuario();
     this.logistics.obtieneDireccionesCliente(usuario.rut).subscribe(
@@ -222,6 +233,14 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
         this.loadingShippingAll = false;
 
         if (r.error === false) {
+          if (!isDelete) {
+            this.selectedShippingId = String(
+              Math.max.apply(
+                Math,
+                r.data.map((o: any) => o.recid)
+              )
+            );
+          }
           this.selectedShippingId = String(
             Math.max.apply(
               Math,
@@ -756,12 +775,18 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   }
 
   // Evento activado cuando se un usuario logeado agrega o cancela la accion de agregar una nueva direccion.
-  respuesta(event: any) {
+  respuesta(event: any, isDelete: boolean = false) {
     if (event) {
-      this.obtieneDireccionesCliente();
+      // this.obtieneDireccionesCliente();
       this.shippingSelected = null;
-      this.showAllAddress = false;
-      window.scrollTo({ top: 0 });
+      if (isDelete) {
+        this.obtieneDireccionesCliente(true);
+        this.showAllAddress = true;
+      } else {
+        this.obtieneDireccionesCliente();
+        this.showAllAddress = false;
+        window.scrollTo({ top: 0 });
+      }
     } else {
       this.showNewAddress = false;
       window.scrollTo({ top: 0 });
@@ -1383,5 +1408,59 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
         this.toast.error('Ha ocurrido un error al generar la cotización');
       }
     );
+  }
+
+  // Eliminar dirección
+  deleteAddress(direccion: any) {
+    const initialState: DataModal = {
+      titulo: 'Confirmación',
+      mensaje: `¿Esta seguro que desea <strong>eliminar</strong> esta direccion?<br><br>
+                  Calle: <strong>${direccion.calle}</strong><br>
+                  Número: <strong>${direccion.numero}</strong>`,
+      tipoIcon: TipoIcon.QUESTION,
+      tipoModal: TipoModal.QUESTION,
+    };
+    const bsModalRef: BsModalRef = this.modalService.show(ModalComponent, {
+      initialState,
+      ignoreBackdropClick: true,
+    });
+    bsModalRef.content.event.subscribe(async (res: any) => {
+      if (res) {
+        const usuario: Usuario = this.root.getDataSesionUsuario();
+        const request = {
+          codEmpleado: 0,
+          codUsuario: 0,
+          cuentaUsuario: usuario.username,
+          rutUsuario: usuario.rut,
+          nombreUsuario: `${usuario.first_name} ${usuario.last_name}`,
+        };
+        const respuesta: any = await this.clientsService
+          .eliminaDireccion(
+            request,
+            this.userSession.rut ?? '',
+            direccion.recid
+          )
+          .toPromise();
+        if (!respuesta.error) {
+          this.toast.success('Dirección eliminada exitosamente.');
+          if (
+            this.direccionConfigurada.direccionDespacho?.recid ===
+            direccion.recid
+          )
+            this.cambioDireccionPreferenciaCliente(direccion.recid);
+          this.respuesta(true);
+        } else {
+          this.toast.error(respuesta.msg);
+        }
+      }
+    });
+  }
+
+  //Se activa si se elimina la dirección preferencia del cliente
+  cambioDireccionPreferenciaCliente(recid: any) {
+    let nueva_preferencia = this.addresses.find((x) => x.recid != recid);
+    console.log('nueva', nueva_preferencia);
+    // this.logistics.guardarDireccionCliente(nueva_preferencia);
+    this.localS.set('preferenciasCliente', nueva_preferencia);
   }
 }
