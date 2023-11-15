@@ -164,12 +164,12 @@
     >
       <div class="card h-100">
         <div class="card-header" style="color: #0063b9; margin-left: 17px">
-          ELIGE EL TIPO DE ENTREGA
+          ELIGE EL TIPO DE ENTREGAx
         </div>
         <div class="card-body">
           <div name="detalleDespacho">
             <tabset [justified]="true" #tabsShipping>
-              <!-- TAB retiro en tienda -->
+              <!-- Start::tab retiro en tienda -->
               <tab
                 [disabled]="loadingShipping"
                 (selectTab)="onSelect($event, 'retiro')"
@@ -480,8 +480,9 @@
                 </div>
                 <br />
               </tab>
+              <!-- End::tab retiro en tienda -->
 
-              <!-- End tab retiro en tienda -->
+              <!-- Start::tab despacho a domicilio -->
               <tab
                 [disabled]="loadingShippingStore"
                 (selectTab)="onSelect($event, 'despacho')"
@@ -611,6 +612,7 @@
                   <!-- END tarjeta de direcciones del usuario -->
 
                   <!-- Tarjeta de direcciones del invitado -->
+
                   <app-add-address
                     [invitado]="true"
                     *ngIf="usuarioInvitado && !direccion"
@@ -950,7 +952,9 @@
                     </div>
                   </div>
                 </div>
+                <!-- Start::agregar dirección -->
                 <div class="row" *ngIf="showNewAddress">
+                  se debe mostrar esto
                   <div class="col-12 collapse" id="collapsenewAddress">
                     <app-add-address
                       [invitado]="false"
@@ -958,7 +962,10 @@
                     ></app-add-address>
                   </div>
                 </div>
+                <!-- End::agregar dirección -->
               </tab>
+              <!-- End::tab despacho a domicilio -->
+
               <!-- retiro chilexpress -->
               <tab *ngIf="false" (selectTab)="onSelect($event, 'sucursal')">
                 <ng-template tabHeading>
@@ -1114,17 +1121,6 @@
                 </div>
 
                 <div class="mt-3 col-6 ps-0 ps-1">
-                  <!-- FIXME: no es variables recidDireccion es recib -->
-                  <!--
-                  <pre style="background-color: yellow">
-                    shippingSelected: {{shippingSelected}}
-                    <br>
-                    cartSession?.recidDireccion: {{cartSession?.recidDireccion}}
-                    <br>
-                    productsValidate.length: {{productsValidate.length}}
-                    <br>
-                    recibeOtra: {{recibeOtra}}
-                  </pre> -->
                   <button
                     name="next"
                     *ngIf="userSession.user_role != 'comprador'"
@@ -1221,13 +1217,9 @@
       >
         <div class="card h-100">
           <div class="card-header" style="margin-bottom: 1px !important">
-            <!-- FIXME: NI IDEA QUE HACEN -->
-            <!-- <div class="mostrarResumen" (click)="setShowDetalleProductos = !setShowDetalleProductos">
-              <div class="ms-1" style="display: inline-block">Resumen de tu compra</div>
-            </div> -->
             <div
               class="mostrarResumen"
-              (click)="setShowDetalleProductos(!showDetalleProductos)"
+              (click)="showDetalleProductos = !showDetalleProductos"
             >
               <div class="ms-1" style="display: inline-block">
                 Resumen de tu compra
@@ -1260,31 +1252,19 @@
                 </div>
 
                 <div class="mt-3 col-6 ps-0 ps-1">
-                  <!-- FIXME: no es variables recidDireccion es recib -->
-                  <!-- <button
-                    name="next"
-                    *ngIf="userSession.user_role != 'comprador'"
-                    [disabled]="
-                      shippingSelected == null || cartSession?.recidDireccion == 0 || !productsValidate.length || recibeOtra
-                    "
-                    (click)="next()"
-                    class="btn btn-lg btn-secondary w-100 text-center"
-                  >
-                    Ir a pagar <i class="fas fa-chevron-right"></i>
-                  </button> -->
                   <button
                     name="next"
                     *ngIf="userSession.user_role != 'comprador'"
                     [disabled]="
                       shippingSelected == null ||
-                      cartSession.recid == 0 ||
+                      cartSession?.recidDireccion == 0 ||
                       !productsValidate.length ||
                       recibeOtra
                     "
                     (click)="next()"
                     class="btn btn-lg btn-secondary w-100 text-center"
                   >
-                    Ir a pagar2 <i class="fas fa-chevron-right"></i>
+                    Ir a pagar <i class="fas fa-chevron-right"></i>
                   </button>
 
                   <button
@@ -1422,8 +1402,7 @@
             </div> -->
 
           <div class="mt-3 col-12 ps-0 ps-1">
-            <!-- FIXME: no es variables recidDireccion es recib -->
-            <!-- <button
+            <button
               name="next"
               *ngIf="userSession.user_role != 'comprador'"
               [disabled]="
@@ -1437,21 +1416,6 @@
               class="btn btn-lg btn-secondary w-100 text-center"
             >
               Ir a pagar <i class="fas fa-chevron-right"></i>
-            </button> -->
-            <button
-              name="next"
-              *ngIf="userSession.user_role != 'comprador'"
-              [disabled]="
-                shippingSelected == null ||
-                cartSession.recid == 0 ||
-                !productsValidate.length ||
-                recibeOtra ||
-                !select_grupos
-              "
-              (click)="next()"
-              class="btn btn-lg btn-secondary w-100 text-center"
-            >
-              Ir a pagar3 <i class="fas fa-chevron-right"></i>
             </button>
 
             <button

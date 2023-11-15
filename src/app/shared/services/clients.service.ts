@@ -1,22 +1,18 @@
-// Angular
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-// Rxjs
-import { Observable } from 'rxjs';
-// Environment
-import { environment } from '@env/environment';
-// Services
-import { RootService } from './root.service';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { isVacio } from '../utils/utilidades';
-// Interfaces
+import { environment } from '../../../environments/environment';
 import { Usuario } from '../interfaces/login';
+import { RootService } from './root.service';
 import { Flota } from '../interfaces/flota';
+import { isVacio } from '../utils/utilidades';
+import { Observable } from 'rxjs';
 import { ResponseApi } from '../interfaces/response-api';
 import { ArticuloFavorito } from '../interfaces/articuloFavorito';
 import { Dominios } from '../interfaces/dominios';
 import { CargosContactoResponse } from '../interfaces/cargoContacto';
 import { TiposContactoResponse } from '../interfaces/tiposContacto';
+import { map, retry } from 'rxjs/operators';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +23,29 @@ export class ClientsService {
     private root: RootService,
     private localS: LocalStorageService
   ) {}
+
+  obtenerGiros(rut: string) {
+    return this.http
+      .get(`${environment.apiCustomer}girosSII`, {
+        params: {
+          rut,
+        },
+      })
+      .pipe(
+        map((res: any) => {
+          if (res.error)
+            throw new Error('Has error an occurred on giros SII.');
+          return res;
+        }),
+        retry(3)
+      );
+  }
+
+  buscarVentas(rut: any) {
+    const call =
+      environment.apiCustomer + `ventas?rut=${rut}&ventasporPagina=10000`;
+    return this.http.get(call);
+  }
 
   buscarOvsGeneradas() {
     const estado = 'generado';
@@ -58,16 +77,25 @@ export class ClientsService {
   }
 
   updatePassword(data: any) {
+    // console.log(data);
+
     const call = environment.apiCMS + `users/` + data.clientId;
     return this.http.patch(call, data);
   }
 
-  updateIVA(data: any): Observable<ResponseApi> {
+  updateIVA(data: any) {
+    // console.log(data);
+
     const call = environment.apiCustomer + `actualizarIva`;
     return this.http.put<ResponseApi>(call, data);
   }
 
   /* Admin Usuarios */
+
+  buscarUsuarios(rut = '') {
+    const call = environment.apiCMS + `users?rut=${rut}`;
+    return this.http.get(call);
+  }
 
   buscarUsuario(id: string) {
     const call = environment.apiCMS + `users/${id}`;
@@ -125,7 +153,6 @@ export class ClientsService {
 
     return consulta;
   }
-
   async ValidarCorreo(data: any) {
     let consulta = null;
     const endpoint = `${environment.apiCustomer}buscarCorreo`;
@@ -149,6 +176,12 @@ export class ClientsService {
   }
 
   /* home user's data */
+
+  buscarVentasPeriodo(rut: any) {
+    const call = environment.apiCustomer + `ventasPeriodo?rut=${rut}`;
+    return this.http.get(call);
+  }
+
   graficoVentaValorada(request: any) {
     let consulta = null;
 
@@ -174,6 +207,11 @@ export class ClientsService {
     return consulta;
   }
 
+  buscarPendientesEntrega(rut: any) {
+    const call = environment.apiCustomer + `pendienteentrega?rut=${rut}`;
+    return this.http.get(call);
+  }
+
   buscarSaldo(rut: any) {
     const call = environment.apiCustomer + `saldo?rut=${rut}`;
     return this.http.get(call);
@@ -185,51 +223,64 @@ export class ClientsService {
   }
 
   register(data: any) {
-    return this.http.post<ResponseApi>(
-      environment.apiCustomer + `nuevo`,
-      data
-    );
+    return this.http.post(environment.apiCustomer + `nuevo`, data);
   }
 
   registerb2b(data: any) {
-    return this.http.post<ResponseApi>(
-      environment.apiCustomer + `nuevob2b`,
-      data
-    );
+    return this.http.post(environment.apiCustomer + `nuevob2b`, data);
   }
   validateCustomer(rut: any) {
-    return this.http.get<ResponseApi>(
-      environment.apiCustomer + `rut?rut=${rut}`
-    );
+    return this.http.get(environment.apiCustomer + `rut?rut=${rut}`);
   }
 
   validateCustomerb2b(rut: any) {
-    return this.http.get<ResponseApi>(
-      environment.apiCustomer + `rutb2b?rut=${rut}`
-    );
+    return this.http.get(environment.apiCustomer + `rutb2b?rut=${rut}`);
   }
-  getDataClient(data: any): Observable<ResponseApi> {
-    return this.http.post<ResponseApi>(
-      environment.apiCustomer + `GetDatosCliente`,
-      data
-    );
+  getDataClient(data: any) {
+    return this.http.post(environment.apiCustomer + `GetDatosCliente`, data);
   }
 
   getCustomerDebt(data: any) {
-    return this.http.post<ResponseApi>(
-      environment.apiCustomer + `deuda/listado`,
-      data
-    );
+    return this.http.post(environment.apiCustomer + `deuda/listado`, data);
   }
 
   generatePayment(data: any) {
-    return this.http.post<ResponseApi>(
-      environment.apiCustomer + `deuda/generaPago`,
-      data
-    );
+    return this.http.post(environment.apiCustomer + `deuda/generaPago`, data);
   }
 
   // carro de compra
+  async get_carroComprarb2c(rut: string) {
+    let consulta = null;
+    const url = `${environment.apiShoppingCart}carrob2c?rut=${rut}`;
+    consulta = await this.http.get(url).toPromise();
+    return consulta;
+  }
+
+  getPreciosPorRut(
+    pagina: number,
+    preciosPorPagina: number,
+    sucursal: string
+  ) {
+    const usuario: Usuario = this.localS.get('usuario');
+    const params: any = {
+      rut: usuario.rut,
+      sucursal,
+    };
+
+    if (pagina != null && preciosPorPagina != null) {
+      params['pagina'] = pagina.toString();
+      params['preciosPorPagina'] = preciosPorPagina.toString();
+    }
+
+    return this.http.get(`${environment.apiCustomer}listaPreciosPorRut`, {
+      params,
+    });
+  }
+
+  getIndicadoresEconomicos() {
+    return this.http.get(environment.apiCustomer + `indicadoresEconomicos`);
+  }
+
   getBusquedasVin(rut: string): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
       environment.apiCustomer + `busquedasVin?rutCliente=${rut}`
@@ -254,10 +305,7 @@ export class ClientsService {
   }
 
   setConcurso(data: any) {
-    return this.http.post<ResponseApi>(
-      environment.apiCustomer + `concurso`,
-      data
-    );
+    return this.http.post(environment.apiCustomer + `concurso`, data);
   }
 
   setCyberday(data: any) {
@@ -265,24 +313,15 @@ export class ClientsService {
   }
 
   setFormularioCyber(data: any) {
-    return this.http.post<ResponseApi>(
-      environment.apiCustomer + `formularioCyber`,
-      data
-    );
+    return this.http.post(environment.apiCustomer + `formularioCyber`, data);
   }
 
   setDevolucion(data: any) {
-    return this.http.post<ResponseApi>(
-      environment.apiCustomer + `devolucion`,
-      data
-    );
+    return this.http.post(environment.apiCustomer + `devolucion`, data);
   }
 
-  setConcursoGiftCard(data: any): Observable<ResponseApi> {
-    return this.http.post<ResponseApi>(
-      environment.apiCustomer + `concursoGiftcard`,
-      data
-    );
+  setConcursoGiftCard(data: any) {
+    return this.http.post(environment.apiCustomer + `concursoGiftcard`, data);
   }
 
   deleteBusquedaVin(busqueda: Flota) {
@@ -311,6 +350,14 @@ export class ClientsService {
 
   updateFlota(request: any) {
     return this.http.put(environment.apiCustomer + `flota`, request);
+  }
+
+  getVehiculo(chassisPatente: string) {
+    const httpParams = new HttpParams().set('chasis_patente', chassisPatente);
+
+    return this.http.get(environment.apiCustomer + `vehiculo`, {
+      params: httpParams,
+    });
   }
 
   getListaArticulosFavoritos(rut: string): Observable<ResponseApi> {
@@ -449,10 +496,9 @@ export class ClientsService {
 
   async cargaFavoritosLocalStorage(rut: string) {
     let favoritos: ArticuloFavorito;
-    const resp: ResponseApi | undefined =
-      await this.getListaArticulosFavoritos(rut).toPromise();
-    if (resp?.data.length > 0) {
-      favoritos = resp?.data[0];
+    const resp: any = await this.getListaArticulosFavoritos(rut).toPromise();
+    if (resp.data.length > 0) {
+      favoritos = resp.data[0];
 
       this.localS.set('favoritos', favoritos);
     } else {
@@ -507,6 +553,12 @@ export class ClientsService {
   getCargosContacto(): Observable<CargosContactoResponse> {
     return this.http.get<CargosContactoResponse>(
       `${environment.apiCustomer}filtros/cargosContacto`
+    );
+  }
+
+  getTiposContacto(): Observable<TiposContactoResponse> {
+    return this.http.get<TiposContactoResponse>(
+      `${environment.apiCustomer}filtros/tiposContacto`
     );
   }
 

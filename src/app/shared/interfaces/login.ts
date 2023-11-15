@@ -38,6 +38,11 @@ export interface Usuario {
   credito?: any;
   ultimoCierre?: moment.Moment;
   fechaControl?: moment.Moment;
+  calle?: string;
+  comuna?: string;
+  numero?: string;
+  comunaCompleta?: string;
+  requiereValidacion?: boolean;
 }
 
 /**

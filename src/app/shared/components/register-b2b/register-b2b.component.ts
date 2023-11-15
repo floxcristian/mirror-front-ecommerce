@@ -102,7 +102,7 @@ export class Registerb2bComponent implements OnInit {
     this.formUsuario.controls['email'].setValue(dataSave.email);
 
     this.clientService.registerb2b(dataSave).subscribe(
-      (r: ResponseApi) => {
+      (r: any) => {
         this.loadingForm = false;
 
         if (r.error) {
@@ -125,7 +125,7 @@ export class Registerb2bComponent implements OnInit {
     if (this.formUsuario.controls['rut'].status === 'VALID') {
       value = value.replace(/\./g, '');
       this.clientService.validateCustomerb2b(value).subscribe(
-        (r: ResponseApi) => {
+        (r: any) => {
           if (r.error === false) {
             if (r.data) {
               this.isValidRut = false;

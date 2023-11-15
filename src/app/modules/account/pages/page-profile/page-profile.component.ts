@@ -99,7 +99,7 @@ export class PageProfileComponent implements OnDestroy, OnInit {
       rut: this.usuario.rut,
     };
     this.loadingClient = true;
-    this.clientsService.getDataClient(data).subscribe((r: ResponseApi) => {
+    this.clientsService.getDataClient(data).subscribe((r: any) => {
       this.loadingClient = false;
       //comente este codigo hasta que se arregle la api de cliente
       //https://b2b-api.implementos.cl/api/cliente/GetDatosCliente
