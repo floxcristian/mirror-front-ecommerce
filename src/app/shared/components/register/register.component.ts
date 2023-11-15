@@ -185,7 +185,7 @@ export class RegisterComponent implements OnInit {
     }
 
     this.clientService.register(dataSave).subscribe(
-      (r: ResponseApi) => {
+      (r: any) => {
         this.loadingForm = false;
 
         if (r.error) {
@@ -388,7 +388,7 @@ export class RegisterComponent implements OnInit {
     if (this.formUsuario.controls['rut'].status === 'VALID') {
       value = value.replace(/\./g, '');
       this.clientService.validateCustomer(value).subscribe(
-        (r: ResponseApi) => {
+        (r: any) => {
           if (r.error === false) {
             if (r.data) {
               this.isValidRut = false;

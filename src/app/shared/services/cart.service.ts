@@ -1379,4 +1379,8 @@ export class CartService {
       id: idCarro,
     });
   }
+
+  updateCartAndUserTurn(params: any) {
+    return this.http.post(`${environment.apiShoppingCart}prepay`, params);
+  }
 }

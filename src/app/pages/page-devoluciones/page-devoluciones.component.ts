@@ -132,7 +132,7 @@ export class PageDevolucionesComponent implements OnInit {
     this.cargando = true;
     this.clientsService
       .setDevolucion(this.formulario.value)
-      .subscribe((resp: ResponseApi) => {
+      .subscribe((resp: any) => {
         if (resp.error) {
           this.toast.error(resp.msg);
           this.cargando = false;

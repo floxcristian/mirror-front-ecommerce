@@ -5,16 +5,14 @@ import {
   OnDestroy,
   ViewChild,
   ChangeDetectorRef,
-  PLATFORM_ID,
-  Inject,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { DatePipe, isPlatformBrowser } from '@angular/common';
+import { DatePipe } from '@angular/common';
 // Libs
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 // Rxjs
-import { Subject, Subscription } from 'rxjs';
+import { of, Subject, Subscription } from 'rxjs';
 // Models
 import {
   ProductCart,
@@ -42,10 +40,12 @@ import { GeoLocationService } from '../../../../shared/services/geo-location.ser
 import { ShippingType } from '../../../../core/enums';
 import { ModalConfirmDatesComponent } from './components/modal-confirm-dates/modal-confirm-dates.component';
 import { map, takeUntil } from 'rxjs/operators';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
+
 export let browserRefresh = false;
+declare let dataLayer: any;
 @Component({
   selector: 'app-page-cart-shipping',
   templateUrl: './page-cart-shipping.component.html',
@@ -62,7 +62,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject();
   usuarioInvitado: boolean = false;
   invitado!: Usuario;
-  direccion: boolean | null = false;
+  direccion: boolean = false;
   usuarioInv: any;
   recibeType = 'yo';
   recibeOtra: boolean = false;
@@ -75,7 +75,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   retiro = '';
   conflictoEntrega: boolean = false;
   //variables para el despachos
-  shippingType = '';
+  shippingType: string = '';
   tienda_actual: any = null;
   grupos = 0;
   items: any[] = [];
@@ -87,7 +87,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   fecha_actual = moment().startOf('day').toISOString();
   sucursal = null;
 
-  shippingSelected!: ShippingService | null;
+  shippingSelected: ShippingService | null = null;
 
   userSession!: Usuario;
   cartSession!: any; //CartData;
@@ -105,7 +105,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   fecha = new Date();
   // despacho
   cardShippingActive = 0;
-  grupoShippingActive: number | undefined = 0;
+  grupoShippingActive: number | null = 0;
   selectedShippingId: any;
   selectedStoreItem = {};
   addresses: ShippingAddress[] = [];
@@ -117,8 +117,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   tituloRecibe: string = 'Persona que recibe';
   loadingShippingAll = false;
   showAllAddress: boolean = false;
-  isLogin = false;
-  loadingResumen = false;
+  public isLogin = false;
+  public loadingResumen = false;
   subscription!: Subscription;
 
   // productos validados
@@ -143,13 +143,10 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     private geoService: GeoLocationService,
     private geoLocationService: GeoLocationService,
     private cd: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) private platformId: Object,
     private readonly gtmService: GoogleTagManagerService
   ) {
     this.localS.set('recibe', {});
-    this.innerWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
+    this.innerWidth = window.innerWidth;
 
     this.tienda_actual = this.localS.get('geolocalizacion');
   }
@@ -236,7 +233,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
             if (item.recid === this.selectedShippingId) {
               item.default = true;
             }
-            if (item.deptocasa?.length || 0 > 0) {
+            if (item.deptocasa?.length) {
               item.direccionCompleta =
                 item.calle +
                 ' ' +
@@ -400,17 +397,18 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
           this.TiendasCargadas = true;
 
           // Seleccionamos tienda actual y ademas lo colocamos en el primer lugar de la lista.
-          var tiendaActual = this.shippingStore.find(
-            (store) =>
-              store.comuna.toUpperCase() ===
-              this.geoService
-                .getTiendaSeleccionada()
-                ?.zona.toUpperCase()
+          let tiendaActual = this.shippingStore.find((store) => {
+            const selectedStore = this.geoService.getTiendaSeleccionada();
+            return (
+              store.codigo.toUpperCase() ===
+              (selectedStore?.codigo || '')
+                .toUpperCase()
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, '')
-          );
+            );
+          });
 
-          if (tiendaActual && tiendaActual.recid.length) {
+          if (tiendaActual?.recid.length) {
             var tiendas = this.shippingStore.filter(
               (store) => store.recid != tiendaActual?.recid
             );
@@ -444,9 +442,11 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     const usuario = this.root.getDataSesionUsuario();
 
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
+    console.log('shippingStore: ', this.shippingStore);
     const resultado = this.shippingStore.find(
       (item) => item.recid == this.selectedShippingIdStore
     );
+    console.log('resultado: ', resultado);
 
     if (!resultado) return;
 
@@ -461,6 +461,12 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       tipo: 'RC',
     };
 
+    /*
+    const sucursal = {
+      usuario: usuario.username,
+      sucursal: disponible.codigo
+    };*/
+
     if (removeShipping) {
       this.shippingSelected = null;
       // reiniciamos las variables del despacho
@@ -472,6 +478,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       this.cart.removeTotalDiscount();
     }
 
+    //this.logistics.obtieneDespachoCompleto(sucursal).subscribe(async (resp: any) => {
     const consulta: any = await this.logistics.obtienRetiro(data).toPromise();
     if (consulta.error) {
       this.shippingDaysStore = [];
@@ -526,6 +533,69 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     return `${first_name} ${last_name}`;
   }
 
+  /**
+   * TODO: juntar con seleccionar despacho.
+   */
+  //  seleccionaDespachoInvitado(item: ShippingService, pos): void {
+  // // invitado solamente <<<<<<<<<<<<<<<
+
+  //   let invitado: any = this.localS.get('invitado');
+  //   invitado.tipoEnvio = 'DES';
+  //   this.localS.remove('invitado');
+  //   this.localS.set('invitado', invitado);
+  //   this.usuarioInv = this.localS.get('invitado');
+  //   // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  //   this.recibeYoname = this.getFullName(invitado);
+
+  //   this.cardShippingActive = item.index;
+  //   this.grupoShippingActive = this.shippingDays[pos].grupo;
+  //   this.shippingSelected = this.shippingDays[pos].fechas.find(item => item.index === this.cardShippingActive);
+  //   this.productosSeleccionado = this.shippingDays[pos].productodespacho;
+  //   this.recidDireccion = 0;
+  //   const nombre = `Despacho ` + this.datePipe.transform(this.shippingSelected.fecha, 'EEEE dd MMM');
+
+  //   const envio: CartTotal = {
+  //     price: this.shippingSelected.precio,
+  //     title: nombre,
+  //     type: 'shipping'
+  //   };
+
+  //   this.cart.addTotalShipping(envio);
+
+  //   // guardamos el despacho y vericamos si tiene descuento o no
+  //   this.saveShipping();
+  // }
+
+  /**
+   *
+   */
+  // seleccionaDespachoOriginal(item: ShippingService, pos: number): void {
+  //   this.obj_fecha[pos] = item; // no esta
+  //   this.recibeYoname = this.getFullName(this.userSession);
+
+  //   this.cardShippingActive = item.index;
+  //   this.grupoShippingActive = this.shippingDays[pos].grupo;
+  //   this.shippingSelected = this.shippingDays[pos].fechas.find(item => item.index === this.cardShippingActive);
+  //   this.productosSeleccionado = this.shippingDays[pos].productodespacho;
+  //   this.recidDireccion = this.selectedShippingId;
+  //   const nombre = `Despacho ` + this.datePipe.transform(this.shippingSelected.fecha, 'EEEE dd MMM');
+  //   const envio: CartTotal = {
+  //     price: this.shippingSelected.precio,
+  //     title: nombre,
+  //     type: 'shipping'
+  //   };
+
+  //   this.cart.addTotalShipping(envio);
+  //   // guardamos el despacho y vericamos si tiene descuento o no
+  //   this.saveShipping();
+
+  //   // TODO:
+  //   this.fechas[pos] = this.shippingSelected.fecha;
+  //   this.localS.set('fechas', this.fechas);
+  //   this.localS.remove('tiendaRetiro');
+  // }
+
   /* funcion de prueba*/
   seleccionaDespacho(item: ShippingService, pos: number) {
     let invitado: any = null;
@@ -543,7 +613,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       this.usuarioInv = this.localS.get('invitado');
     }
 
-    this.grupoShippingActive = this.shippingDays[pos].grupo;
+    this.grupoShippingActive = this.shippingDays[pos].grupo ?? null;
     this.productosSeleccionado = this.shippingDays[pos].productodespacho;
 
     this.cardShippingActive = item.index;
@@ -575,7 +645,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   seleccionaRetiro(item: ShippingService, pos: number) {
     this.obj_fecha[pos] = item;
     this.cardShippingActiveStore = item.index;
-    this.grupoShippingActive = this.shippingDaysStore[pos].grupo;
+    this.grupoShippingActive = this.shippingDaysStore[pos].grupo ?? null;
     this.shippingSelected = (this.shippingDaysStore[pos].fechas || []).find(
       (item) => item.index === this.cardShippingActiveStore
     );
@@ -615,9 +685,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     if (!this.loadingResumen) this.loadingResumen = true;
     if (this.shippingSelected?.tipoenvio === 'TIENDA')
       this.shippingSelected.tipopedido = 'VEN- RPTDA';
-    else if (this.shippingSelected) {
+    else if (this.shippingSelected)
       this.shippingSelected.tipopedido = 'VEN- DPCLI';
-    }
     const despacho = {
       id: this.shippingSelected?.id,
       tipo: this.shippingSelected?.tipoenvio,
@@ -1009,7 +1078,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       this.setDefaultAddress();
       this.obtieneDespachos();
     } else {
-      this.direccion = null;
+      this.direccion = false; // null;
     }
     this.showDetalleProductos = false;
     this.onSelect(null, 'retiro');
@@ -1120,7 +1189,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   async eliminarGrupo(index: any) {
     this.loadingShipping = true;
     this.loadingResumen = true;
-    const resultado = this.addresses.find(
+    const resultado: any = this.addresses.find(
       (item) => item.recid == this.selectedShippingId
     );
 
@@ -1130,7 +1199,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       params = {
         usuario: usuario.username,
         id: index,
-        destino: resultado?.comuna,
+        destino: resultado.comuna,
       };
     } else {
       let disponible: any = this.shippingStore.find(
@@ -1242,20 +1311,29 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     } else this.loadingResumen = false;
   }
 
-  setSeleccionarEnvioChilexpress(item: any, pos: any) {}
+  setSeleccionarEnvioChilexpress(item: any, pos: any) {
+    /* let i = 0;
+    //console.log(item);
+    this.fechas_despacho.forEach(resp => {
+      this.setSeleccionarEnvio(item, pos);
+      i = i + 1;
+      pos = i;
+    });*/
+  }
 
-  ver_fechas(): void {
-    if (this.shippingDaysStore) {
+  ver_fechas() {
+    if (this.shippingDaysStore.length) {
+      console.log('xxx: ', this.shippingDaysStore);
       let menor = this.shippingDaysStore[0].fechas?.[0].fecha;
       let menor_fecha: any = new Date(menor);
-      this.shippingDaysStore.map((item: any) => {
-        let fecha_comparar: any = new Date(item.fechas[0].fecha);
+      this.shippingDaysStore.map((item) => {
+        let fecha_comparar: any = new Date(item.fechas?.[0].fecha);
         if (menor_fecha.getTime() >= fecha_comparar.getTime()) {
           menor = item.fechas?.[0].fecha;
           menor_fecha = new Date(menor);
         }
       });
-      // Start::obtener el día de retiro en tienda.
+
       if (moment(menor).startOf('day').toISOString() === this.fecha_actual) {
         this.retiro = 'Retira Hoy';
       } else {
@@ -1273,7 +1351,6 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
         else if (moment(menor).weekday() == 7)
           this.retiro = 'Retira el día  domingo';
       }
-      // End::obtener el día de retiro en tienda.
     }
   }
 

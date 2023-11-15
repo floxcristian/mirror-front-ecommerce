@@ -90,7 +90,7 @@ export class PagePaymentPortalComponent implements OnInit {
       },
     };
 
-    this.clientsService.getCustomerDebt(data).subscribe((r: ResponseApi) => {
+    this.clientsService.getCustomerDebt(data).subscribe((r: any) => {
       this.customerDebt = r.data[0].documento_cobros;
       this.dtTrigger.next('');
       this.addCheckBoxs(this.customerDebt);
@@ -208,7 +208,7 @@ export class PagePaymentPortalComponent implements OnInit {
 
     this.loadingPayment = true;
     this.clientsService.generatePayment(data).subscribe(
-      (r: ResponseApi) => {
+      (r: any) => {
         this.loadingPayment = false;
 
         if (r.error) {

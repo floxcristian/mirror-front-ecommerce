@@ -79,7 +79,7 @@ export class PageCyberComponent implements OnInit {
     this.cargando = true;
     this.clientsService
       .setFormularioCyber(this.formulario.value)
-      .subscribe((resp: ResponseApi) => {
+      .subscribe((resp: any) => {
         if (resp.error) {
           this.toast.error(resp.msg);
           this.cargando = false;

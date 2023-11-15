@@ -4,7 +4,7 @@
       <h5 [innerHTML]="title | safeHtml">{{ title }}</h5>
       <button
         type="button"
-        class="close"
+        class="btn-close"
         data-dismiss="modal"
         aria-label="Close"
         (click)="cerrar()"
@@ -27,7 +27,7 @@
         (click)="rechazar()"
         data-dismiss="modal"
       >
-        {{ textBtnFalse || "Cancelar" }}
+        {{ textBtnFalse || 'Cancelar' }}
       </button>
       <button
         type="button"
@@ -35,7 +35,7 @@
         (click)="aceptar()"
         data-dismiss="modal"
       >
-        {{ textBtnTrue || "Confirmar" }}
+        {{ textBtnTrue || 'Confirmar' }}
       </button>
     </div>
   </div>

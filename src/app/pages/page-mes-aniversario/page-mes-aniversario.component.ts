@@ -72,7 +72,7 @@ export class PageMesAniversarioComponent implements OnInit {
     this.cargando = true;
     this.clientsService
       .setConcurso(this.formulario.value)
-      .subscribe((resp: ResponseApi) => {
+      .subscribe((resp: any) => {
         if (resp.error) {
           this.toast.error(resp.msg);
           this.cargando = false;

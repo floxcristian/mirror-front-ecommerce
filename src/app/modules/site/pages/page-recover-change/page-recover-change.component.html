@@ -1,29 +1,43 @@
 <div class="container mt-3">
-    <div class="card flex-grow-1 col-12 col-md-6 mx-auto align-items-center">
-        <div class="card-body col-12 px-lg-5" *ngIf="!tokenValido">
+  <div class="card flex-grow-1 col-12 col-md-6 mx-auto align-items-center">
+    <div class="card-body col-12 px-lg-5" *ngIf="!tokenValido">
+      <h5 class="pb-3">Modificar contraseña</h5>
 
-            <h5 class="pb-3">Modificar contraseña</h5>
-
-            <p class="mb-4 text-justify">Su token ya ha sido usado o no es válido.</p>
-
-        </div>
-
-        <div class="card-body col-12 px-lg-5" *ngIf="tokenValido">
-
-            <h5 class="pb-3">Modificar contraseña</h5>
-
-            <p class="mb-4 text-justify">Ingrese su nueva contraseña 2 veces y luego presione "Enviar", debe tener al menos 6 caracteres de largo y contener al menos un número.</p>
-
-            <form [formGroup]="formChangepass" (ngSubmit)="changePass(formChangepass.value)">
-
-                <div class="form-group col-12 col-lg-6 mx-auto">
-                    <input formControlName="clientId" type="hidden">
-                    <input formControlName="pwd1" type="password" class="form-control mb-2" placeholder="ingrese contraseña">
-                    <input formControlName="pwd2" type="password" class="form-control" placeholder="ingrésela nuevamente">
-                    <br />
-                    <button name="enviar" class="btn btn-secondary">Enviar</button>
-                </div>
-            </form>
-        </div>
+      <p class="mb-4 text-justify">
+        Su token ya ha sido usado o no es válido.
+      </p>
     </div>
+
+    <div class="card-body col-12 px-lg-5" *ngIf="tokenValido">
+      <h5 class="pb-3">Modificar contraseña</h5>
+
+      <p class="mb-4 text-justify">
+        Ingrese su nueva contraseña 2 veces y luego presione "Enviar", debe
+        tener al menos 6 caracteres de largo y contener al menos un número.
+      </p>
+
+      <form
+        [formGroup]="formChangepass"
+        (ngSubmit)="changePass(formChangepass.value)"
+      >
+        <div class="mb-3 col-12 col-lg-6 mx-auto">
+          <input formControlName="clientId" type="hidden" />
+          <input
+            formControlName="pwd1"
+            type="password"
+            class="form-control mb-2"
+            placeholder="ingrese contraseña"
+          />
+          <input
+            formControlName="pwd2"
+            type="password"
+            class="form-control"
+            placeholder="ingrésela nuevamente"
+          />
+          <br />
+          <button name="enviar" class="btn btn-secondary">Enviar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

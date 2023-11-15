@@ -3,21 +3,17 @@
   (window:resize)="onResize($event)"
   style="margin-bottom: 40px"
 >
-  <!-- <h1 class="mt-4 mb-3">Escoge tu forma de pago</h1> -->
   <app-guided-steps [step]="3"></app-guided-steps>
 
   <div class="row">
+    <!-- Start::despacho a domicilio o retiro en tienda (desktop) -->
     <ng-container *ngIf="innerWidth >= 450">
       <div
-        class="col-xl-3 col-lg-3 col-md-6"
+        class="col-xl-4 col-lg-4 col-md-6"
         style="padding: 15px; background-color: #e3e3e3; margin-right: 10px"
       >
         <div class="card h-100">
           <div class="card-body">
-            <!-- ========================================= -->
-            <!-- DESPACHO COLLAPSE - INI -->
-            <!-- ========================================= -->
-
             <div
               class="card-header"
               style="display: inline-block"
@@ -26,9 +22,7 @@
               Información de retiro
             </div>
 
-            <!-- ========================================= -->
-            <!-- DESPACHO_A_DOMICILIO - INI -->
-            <!-- ========================================= -->
+            <!-- Start::despacho a domicilio (desktop) -->
             <div
               *ngIf="cartSession.despacho?.tipo != 'TIENDA'"
               class="row block_despacho"
@@ -59,6 +53,7 @@
                   </div>
                 </div>
               </div>
+              <!-- Start::información de despacho a domicilio -->
               <div class="col-12">
                 <ul class="list-group lista_despacho">
                   <li
@@ -69,10 +64,6 @@
                     <div class="row" style="color: #0063b9">
                       <div class="col-12" style="color: #0063b9">
                         <i
-                          class="fa-solid fa-circle-check"
-                          style="color: #118565"
-                        ></i>
-                        <i
                           class="fas fa-truck"
                           style="margin-right: 10px; color: #0063b9"
                         ></i>
@@ -80,52 +71,6 @@
                           direccionDespacho.numero
                         }}, depto/casa: {{ direccionDespacho.deptocasa }},
                         {{ direccionDespacho.comuna }}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item" tooltip="Tipo de Documento ">
-                    <div class="row">
-                      <div class="col-12">
-                        <span style="font-weight: bold; color: #0063b9">{{
-                          "Tipo de Documento" | uppercase
-                        }}</span>
-                      </div>
-                      <div class="col-12">
-                        <p
-                          *ngIf="!esBoleta"
-                          style="color: #0063b9; margin-bottom: -2px"
-                        >
-                          <i
-                            class="fa-solid fa-circle-check"
-                            style="color: #118565"
-                          ></i
-                          ><i
-                            class="fas fa-file-alt"
-                            style="margin-right: 10px; color: #0063b9"
-                          ></i>
-                          Factura
-                        </p>
-                        <p
-                          *ngIf="esBoleta"
-                          style="color: #0063b9; margin-bottom: -2px"
-                        >
-                          <i
-                            class="fa-solid fa-circle-check"
-                            style="color: #118565"
-                          ></i
-                          ><i
-                            class="fas fa-file-alt"
-                            style="margin-right: 10px; color: #0063b9"
-                          ></i>
-                          Boleta
-                          <a
-                            *ngIf="esBoleta"
-                            title="Si necesitas Factura Debes registrarte como Empresa"
-                            [routerLink]="['/sitio', 'registro-usuario']"
-                            class="float-end"
-                            >¿ Necesitas Factura ?</a
-                          >
-                        </p>
                       </div>
                     </div>
                   </li>
@@ -139,22 +84,16 @@
                       </div>
                       <div class="col-12" style="color: #0063b9">
                         <span *ngIf="recibe.company">
+                          <!-- <i class="fa-solid fa-circle-check" style="color: #118565"></i> -->
                           <i
-                            class="fa-solid fa-circle-check"
-                            style="color: #118565"
-                          ></i
-                          ><i
                             class="fas fa-people-carry"
                             style="margin-right: 10px; color: #0063b9"
                           ></i
                           >{{ recibe.company }}
                         </span>
                         <span *ngIf="!recibe.company">
+                          <!-- <i class="fa-solid fa-circle-check" style="color: #118565"></i> -->
                           <i
-                            class="fa-solid fa-circle-check"
-                            style="color: #118565"
-                          ></i
-                          ><i
                             class="fas fa-people-carry"
                             style="margin-right: 10px; color: #0063b9"
                           ></i>
@@ -177,32 +116,92 @@
                         >
                       </div>
                       <div class="col-12" style="color: #0063b9">
-                        <i
-                          class="fa-solid fa-circle-check"
-                          style="color: #118565"
-                        ></i>
+                        <!-- <i class="fa-solid fa-circle-check" style="color: #118565"></i> -->
                         <i
                           class="fa-solid fa-calendar-days"
                           style="margin-right: 10px; color: #0063b9"
                         ></i>
                         {{
                           item
-                            ? (item | date : "EEEE dd MMMM, y ")
-                            : ("" | titlecase)
+                            ? ((item | date : 'EEEE dd MMMM, y ') || ''
+                              | titlecase)
+                            : ''
                         }}
                       </div>
                     </div>
                   </li>
                 </ul>
               </div>
-            </div>
-            <!-- ========================================= -->
-            <!-- DESPACHO_A_DOMICILIO - FIN -->
-            <!-- ========================================= -->
 
-            <!-- ========================================= -->
-            <!-- RETIRO_EN_TIENDA - INI -->
-            <!-- ========================================= -->
+              <!-- Start::configurar boleta o factura (desktop) -->
+              <div class="col-12" style="margin-top: 1rem">
+                <!-- Start::tipo de documento (desktop) -->
+                <div
+                  class="list-group-item"
+                  tooltip="Tipo de Documento"
+                  style="margin-bottom: 1rem"
+                >
+                  <div class="row">
+                    <div class="col-12">
+                      <span style="font-weight: bold; color: #0063b9"
+                        >TIPO DE DOCUMENTO</span
+                      >
+                    </div>
+                    <div class="col-12">
+                      <ng-select
+                        [(ngModel)]="selectedDocument"
+                        placeholder="Seleccionar documento..."
+                        notFoundText="No se han encontrado giros"
+                        [loading]="cargandoGiros"
+                        [disabled]="cargandoGiros"
+                      >
+                        <ng-option
+                          *ngFor="let document of documentOptions"
+                          [value]="document.id"
+                          >{{ document.name }}</ng-option
+                        >
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+                <!-- End::tipo de documento (desktop) -->
+
+                <!-- Start::giro (desktop) -->
+                <div
+                  class="list-group-item"
+                  tooltip="Giros"
+                  style="margin-bottom: 1rem"
+                  *ngIf="selectedDocument === 'FEL' && !userSession.giro"
+                >
+                  <div class="row">
+                    <div class="col-12">
+                      <span style="font-weight: bold; color: #0063b9"
+                        >GIROS</span
+                      >
+                    </div>
+                    <div class="col-12">
+                      <ng-select
+                        [(ngModel)]="selectedGiro"
+                        placeholder="Seleccionar giro..."
+                        [loading]="cargandoGiros"
+                        loadingText="Cargando giros'"
+                      >
+                        <ng-option
+                          *ngFor="let giro of girosOptions"
+                          [value]="giro.codigo"
+                          >{{ giro.nombre }}</ng-option
+                        >
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+                <!-- End::giro (desktop) -->
+              </div>
+              <!-- End::configurar boleta o factura (desktop) -->
+            </div>
+            <!-- End::despacho a domicilio (desktop) -->
+
+            <!-- Start::retiro en tienda (mobile) -->
             <div
               *ngIf="cartSession.despacho?.tipo == 'TIENDA'"
               class="row block_despacho"
@@ -238,55 +237,9 @@
                   <li class="list-group-item" tooltip="Fecha de entrega ">
                     <div class="row">
                       <div class="col-12" style="color: #0063b9">
-                        <i
-                          class="fa-solid fa-circle-check"
-                          style="color: #118565"
-                        ></i>
+                        <!--<i class="fa-solid fa-circle-check" style="color: #118565"></i> -->
                         <i class="fas fa-store-alt" style="color: #0063b9"></i>
-                        {{ tiendaRetiro.direccion | titlecase }}
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item" tooltip="Tipo de Documento ">
-                    <div class="row">
-                      <div class="col-12">
-                        <span style="font-weight: bold; color: #0063b9"
-                          >TIPO DE DOCUMENTO</span
-                        >
-                      </div>
-                      <div class="col-12">
-                        <p
-                          *ngIf="!esBoleta"
-                          style="color: #0063b9; margin-bottom: -2px"
-                        >
-                          <i
-                            class="fa-solid fa-circle-check"
-                            style="color: #118565"
-                          ></i
-                          ><i
-                            class="fas fa-file-alt"
-                            style="color: #0063b9"
-                          ></i>
-                          Factura
-                        </p>
-                        <p
-                          *ngIf="esBoleta"
-                          style="color: #0063b9; margin-bottom: -2px"
-                        >
-                          <i
-                            class="fa-solid fa-circle-check"
-                            style="color: #118565"
-                          ></i>
-                          <i class="fas fa-file-alt" style="color: #0063b9"></i>
-                          Boleta
-                          <a
-                            *ngIf="esBoleta"
-                            title="Si necesitas Factura Debes registrarte como Empresa"
-                            [routerLink]="['/sitio', 'registro-usuario']"
-                            class="float-end"
-                            >¿ Necesitas Factura ?</a
-                          >
-                        </p>
+                        {{ tiendaRetiro.direccion || '' | titlecase }}
                       </div>
                     </div>
                   </li>
@@ -303,38 +256,20 @@
                         >
                       </div>
                       <div class="col-12" style="color: #0063b9">
-                        <span
-                          ><i
-                            class="fa-solid fa-circle-check"
-                            style="color: #118565"
-                          ></i
-                          ><i
+                        <span>
+                          <!--<i class="fa-solid fa-circle-check" style="color: #118565"></i
+                          > -->
+                          <i
                             class="fas fa-people-carry"
                             style="color: #0063b9"
-                          ></i
-                          >{{
+                          ></i>
+                          {{
                             cartSession.observacion ==
-                            "Persona que recibe: Titular de la Venta"
-                              ? "Titular de la compra"
-                              : (cartSession.observacion || "")
-                                  .split("Celular")[0]
-                                  .split("Recibe:")[1]
-                          }}</span
-                        >
-                        <span
-                          ><i
-                            class="fa-solid fa-circle-check"
-                            style="color: #118565"
-                          ></i
-                          ><i
-                            class="fas fa-people-carry"
-                            style="color: #0063b9"
-                          ></i
-                          >{{
-                            cartSession.observacion ==
-                            "Persona que recibe: Titular de la Venta"
-                              ? "Titular de la compra"
-                              : ""
+                            'Persona que recibe: Titular de la Venta'
+                              ? 'Titular de la compra'
+                              : (cartSession.observacion || '')
+                                  .split('Celular')[0]
+                                  .split('Recibe:')[1]
                           }}</span
                         >
                       </div>
@@ -354,37 +289,208 @@
                         >
                       </div>
                       <div class="col-12" style="color: #0063b9">
-                        <i
-                          class="fa-solid fa-circle-check"
-                          style="color: #118565"
-                        ></i>
+                        <!--<i class="fa-solid fa-circle-check" style="color: #118565"></i> -->
                         <i
                           class="fa-solid fa-calendar-days"
                           style="margin-right: 10px; color: #0063b9"
                         ></i>
                         {{
                           item
-                            ? (item | date : "EEEE dd MMMM, y ")
-                            : ("" | titlecase)
+                            ? ((item | date : 'EEEE dd MMMM, y ') || ''
+                              | titlecase)
+                            : ''
                         }}
                       </div>
                     </div>
                   </li>
                 </ul>
               </div>
+              <div class="col-12" style="margin-top: 1rem">
+                <div
+                  class="list-group-item"
+                  tooltip="Tipo de Documento"
+                  style="margin-bottom: 1rem"
+                >
+                  <div
+                    class="row"
+                    style="margin-left: -1.1rem; margin-right: -1.1rem"
+                  >
+                    <div class="col-12">
+                      <span style="font-weight: bold; color: #0063b9"
+                        >TIPO DE DOCUMENTO</span
+                      >
+                    </div>
+                    <div class="col-12">
+                      <ng-select
+                        [(ngModel)]="selectedDocument"
+                        placeholder="Seleccionar documento..."
+                        notFoundText="No se han encontrado giros"
+                        [loading]="cargandoGiros"
+                        [disabled]="cargandoGiros"
+                      >
+                        <ng-option
+                          *ngFor="let document of documentOptions"
+                          [value]="document.id"
+                          >{{ document.name }}</ng-option
+                        >
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="list-group-item"
+                  tooltip="Giros"
+                  *ngIf="selectedDocument === 'FEL' && !userSession.giro"
+                  style="margin-bottom: 1rem"
+                >
+                  <div
+                    class="row"
+                    style="margin-left: -1.1rem; margin-right: -1.1rem"
+                  >
+                    <div class="col-12">
+                      <span style="font-weight: bold; color: #0063b9"
+                        >GIROS</span
+                      >
+                    </div>
+                    <div class="col-12">
+                      <ng-select
+                        [(ngModel)]="selectedGiro"
+                        placeholder="Seleccionar giro..."
+                        [loading]="cargandoGiros"
+                        loadingText="Cargando giros'"
+                      >
+                        <ng-option
+                          *ngFor="let giro of girosOptions"
+                          [value]="giro.codigo"
+                          >{{ giro.nombre }}</ng-option
+                        >
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="list-group-item"
+                  tooltip="Dirección"
+                  *ngIf="selectedDocument === 'FEL' && invitado"
+                >
+                  <div class="col-12" style="padding: 0 !important">
+                    <app-map
+                      titulo="DIRECCIÓN"
+                      (clearAdress)="clearAddress()"
+                      [tienda]="tienda"
+                      [autocompletado]="autocompletado"
+                      (setDireccion)="setAddress($event)"
+                      (geolocalizacion)="geolocalizacion($event)"
+                    ></app-map>
+                  </div>
+                  <form [formGroup]="formDireccion">
+                    <div
+                      class="row g-3"
+                      style="margin-top: 1rem; margin-left: 0.1rem"
+                    >
+                      <div
+                        class="mb-2 col-md-12"
+                        style="padding: 0 !important"
+                      >
+                        <label>Calle (*)</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="calle"
+                          (blur)="cargarDireccion()"
+                        />
+                      </div>
+
+                      <div
+                        class="mb-2 col-md-12"
+                        style="padding: 0 !important"
+                      >
+                        <label for="inputPassword4">Número</label>
+                        <input
+                          type="number"
+                          class="form-control"
+                          formControlName="numero"
+                          (blur)="cargarDireccion()"
+                          maxLength="9"
+                          min="1"
+                          max="999999999"
+                          appPhoneChar
+                        />
+                      </div>
+                      <!--<div class="mb-3 col-md-6">
+                        <label>Departamento</label>
+                        <input type="text" class="form-control" formControlName="depto" (blur)="cargarDireccion()" />
+                      </div> -->
+
+                      <div
+                        class="mb-3 col-md-12"
+                        style="padding: 0 !important"
+                      >
+                        <label>Comuna (*)</label>
+                        <ng-select
+                          [clearable]="false"
+                          [searchable]="true"
+                          [items]="comunas"
+                          bindLabel="value"
+                          bindValue="id"
+                          formControlName="comuna"
+                          class="form-control-select form-control"
+                          placeholder="Comuna*"
+                          (blur)="cargarDireccion()"
+                          (change)="obtenerLocalidades($event)"
+                        >
+                        </ng-select>
+                      </div>
+
+                      <div class="mb-3 col-md-12" hidden>
+                        <label for="inputPassword4">Localización (*)</label>
+                        <div *ngIf="!localidades">
+                          <p>Seleccione una comuna para ver localidades</p>
+                        </div>
+                        <div *ngIf="localidades">
+                          <ng-select
+                            [clearable]="false"
+                            [searchable]="true"
+                            [items]="localidades"
+                            bindLabel="localidad"
+                            bindValue="localidad"
+                            formControlName="localizacion"
+                            class="form-control-select form-control"
+                            placeholder="Comuna*"
+                            (change)="cargarDireccion()"
+                            (blur)="cargarDireccion()"
+                          >
+                          </ng-select>
+                        </div>
+                      </div>
+                      <!--
+                      <div class="mb-3 col-md-12">
+                        <label for="validationTextarea">Referencia</label>
+                        <textarea
+                          class="form-control"
+                          placeholder="Ingrese referencia para su direccion"
+                          formControlName="referencia"
+                        ></textarea>
+                      </div>-->
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
-            <!-- ========================================= -->
-            <!-- RETIRO_EN_TIENDA - FIN -->
-            <!-- ========================================= -->
-            <!-- ========================================= -->
-            <!-- DESPACHO COLLAPSE - FIN -->
-            <!-- ========================================= -->
+            <!-- End::retiro en tienda (mobile) -->
           </div>
         </div>
       </div>
       <div
-        class="col-xl-4 col-lg-4 col-md-6"
-        style="padding: 15px; background-color: #e3e3e3; margin-right: 10px"
+        class="col-xl-3 col-lg-3 col-md-6"
+        style="
+          min-width: 30%;
+          padding: 15px;
+          background-color: #e3e3e3;
+          margin-right: 10px;
+        "
       >
         <div class="card h-100">
           <div
@@ -404,37 +510,35 @@
               <div class="row">
                 <div style="margin-bottom: 10px; padding: 5px">
                   <div class="card-body m-0">
-                    <h4 class="card-title" style="color: #005db9">Rut *</h4>
                     <form [formGroup]="formVisita">
-                      <div class="form-row">
+                      <div class="row g-3">
+                        <div class="col-sm-12" style="margin-bottom: 11px">
+                          <h4 class="card-title" style="color: #005db9">
+                            Rut *
+                          </h4>
+                        </div>
                         <div class="col-sm-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <input
                               type="text"
                               formControlName="rut"
                               class="form-control"
                               placeholder="RUT*"
                               formatRut
+                              (blur)="onBlur()"
                             />
 
                             <p
                               *ngIf="
-                                formVisita.controls['rut'].errors?.['invalidRut'] &&
-                                formVisita.controls['rut'].touched
+                              formVisita.controls['rut'].errors?.['invalidRut'] &&
+                              formVisita.controls['rut'].touched
                               "
                               class="text-error-form-2 pull-right"
                             >
                               El RUT ingresado no es válido
                             </p>
-
                             <p
                               *ngIf="isInvoice"
-                              class="text-error-form-2 pull-right"
-                            >
-                              Debes ingresar el rut de empresa.
-                            </p>
-                            <p
-                              *ngIf="false"
                               class="text-error-form-2 pull-right"
                             >
                               Debes ingresar el rut de empresa.
@@ -442,7 +546,7 @@
                           </div>
                         </div>
                         <div class="col-sm-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <input
                               formControlName="nombre"
                               type="text"
@@ -453,7 +557,7 @@
                           </div>
                         </div>
                         <div class="col-sm-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <input
                               formControlName="apellido"
                               type="text"
@@ -464,7 +568,7 @@
                           </div>
                         </div>
                         <div class="col-sm-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <div class="input-group">
                               <div class="input-group-prepend">
                                 <span class="input-group-text">+56 9</span>
@@ -521,7 +625,7 @@
                 <h4 class="text-danger text-center">
                   {{
                     rejectedCode != -11
-                      ? "Pago Rechazado"
+                      ? 'Pago Rechazado'
                       : alertCart?.detalleMensaje
                   }}
                 </h4>
@@ -594,7 +698,7 @@
                       <div
                         class="col-sm-2 d-flex justify-content-center align-items-center"
                       >
-                        <div class="custom-control custom-radio">
+                        <div class="form-check">
                           <!--icon pago-->
                           <i
                             class="fa-sharp fa-solid fa-circle-check"
@@ -640,7 +744,7 @@
                       <div
                         class="col-sm-2 d-flex justify-content-center align-items-center"
                       >
-                        <div class="custom-control custom-radio">
+                        <div class="form-check">
                           <!--icon pago-->
                           <i
                             class="fa-sharp fa-solid fa-circle-check"
@@ -682,8 +786,8 @@
                   [formGroup]="formOv"
                   *ngIf="paymentMethodActive == 'ordenCompra'"
                 >
-                  <div class="form-row mt-2" style="margin-top: 10px">
-                    <div class="form-group col-md-6">
+                  <div class="row g-3 mt-2" style="margin-top: 10px">
+                    <div class="mb-3 col-md-6">
                       <label>Número orden de compra</label>
                       <input
                         formControlName="folio"
@@ -693,7 +797,7 @@
                       />
                     </div>
                     <hr />
-                    <div class="form-group col-md-6">
+                    <div class="mb-3 col-md-6">
                       <label>Monto orden de compra</label>
                       <input
                         formControlName="monto"
@@ -703,7 +807,7 @@
                       />
                     </div>
                     <div
-                      class="form-group"
+                      class="mb-3"
                       [class.col-sm-12]="centrosCosto.length > 0"
                       [class.col-12]="centrosCosto.length == 0"
                     >
@@ -751,7 +855,7 @@
                     </div>
 
                     <div
-                      class="form-group col-md-12"
+                      class="mb-3 col-md-12"
                       *ngIf="centrosCosto.length > 0"
                     >
                       <label
@@ -772,7 +876,9 @@
                         class="form-control form-control-lg"
                         formControlName="centroCosto"
                       >
-                        <option [value]="''">Seleccione centro de costo</option>
+                        <option [value]="''">
+                          Seleccione centro de costo
+                        </option>
                         <option
                           *ngFor="let item of centrosCosto"
                           [value]="item.codigo"
@@ -783,7 +889,7 @@
                     </div>
                     <hr />
                     <div
-                      class="form-group col-md-12"
+                      class="mb-3 col-md-12"
                       *ngIf="centrosCosto.length == 0"
                     >
                       <label
@@ -825,7 +931,7 @@
                 </div>
 
                 <div
-                  class="form-row"
+                  class="row g-3"
                   *ngIf="paymentMethodActive == 'sinDefinir'"
                 >
                   <p class="text-center subtitle w-100 text-danger">
@@ -884,10 +990,10 @@
         </div>
       </div>
     </ng-container>
+    <!-- End::despacho a domicilio o retiro en tienda (desktop) -->
+
+    <!-- Start::forma de pago (mobile) -->
     <ng-container *ngIf="innerWidth < 450">
-      <!-- ========================================= -->
-      <!-- FORMA DE PAGO -->
-      <!-- ========================================= -->
       <div class="container ms-4">
         <div
           class="cart-address-container ms-3 col-12 col-lg-12 pt-3 pb-2 ps-2"
@@ -913,12 +1019,12 @@
               </p>
               <ng-container *ngIf="items.length > 1">
                 <font style="font-weight: normal"
-                  >({{ " " + items.length + " PRODUCTOS" + " " }})</font
+                  >({{ ' ' + items.length + ' PRODUCTOS' + ' ' }})</font
                 >
               </ng-container>
               <ng-container *ngIf="items.length == 1">
                 <font style="font-weight: normal"
-                  >({{ " " + items.length + " PRODUCTO" + " " }})</font
+                  >({{ ' ' + items.length + ' PRODUCTO' + ' ' }})</font
                 >
               </ng-container>
             </div>
@@ -953,9 +1059,9 @@
                   <div class="card-body m-0">
                     <h4 class="card-title">Ingrese su RUT</h4>
                     <form [formGroup]="formVisita">
-                      <div class="form-row">
+                      <div class="row g-3">
                         <div class="col-sm-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <input
                               type="text"
                               formControlName="rut"
@@ -966,22 +1072,15 @@
 
                             <p
                               *ngIf="
-                                formVisita.controls['rut'].errors?.['invalidRut'] &&
-                                formVisita.controls['rut'].touched
+                              formVisita.controls['rut'].errors?.['invalidRut'] &&
+                              formVisita.controls['rut'].touched
                               "
                               class="text-error-form-2 pull-right"
                             >
                               El RUT ingresado no es válido
                             </p>
-
                             <p
                               *ngIf="isInvoice"
-                              class="text-error-form-2 pull-right"
-                            >
-                              Debes ingresar el rut de empresa.
-                            </p>
-                            <p
-                              *ngIf="false"
                               class="text-error-form-2 pull-right"
                             >
                               Debes ingresar el rut de empresa.
@@ -989,7 +1088,7 @@
                           </div>
                         </div>
                         <div class="col-sm-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <input
                               formControlName="nombre"
                               type="text"
@@ -1000,7 +1099,7 @@
                           </div>
                         </div>
                         <div class="col-sm-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <input
                               formControlName="apellido"
                               type="text"
@@ -1011,7 +1110,7 @@
                           </div>
                         </div>
                         <div class="col-md-12">
-                          <div class="form-group">
+                          <div class="mb-3">
                             <div class="input-group">
                               <div class="input-group-prepend">
                                 <span class="input-group-text">+56 9</span>
@@ -1068,7 +1167,7 @@
                 <h4 class="text-danger text-center">
                   {{
                     rejectedCode != -11
-                      ? "Pago Rechazado"
+                      ? 'Pago Rechazado'
                       : alertCart?.detalleMensaje
                   }}
                 </h4>
@@ -1117,8 +1216,8 @@
 
             <ng-container *ngIf="!alertCartShow">
               <ng-container *ngIf="documentType == 'factura'">
-                <div class="form-row justify-content-center">
-                  <div class="form-group col-11">
+                <div class="row g-3 justify-content-center">
+                  <div class="mb-3 col-11">
                     <div *ngIf="invitado" class="row mt-2">
                       <div
                         *ngFor="let item of paymentMethods"
@@ -1138,6 +1237,7 @@
                           >
                             <div class="form-check">
                               <div class="form-check">
+                                <!--icon pago-->
                                 <i
                                   class="fa-sharp fa-solid fa-circle-check"
                                   style="font-size: 20px"
@@ -1187,8 +1287,7 @@
                           <div
                             class="col-2 d-flex justify-content-center align-items-center"
                           >
-                            <div class="custom-control custom-radio">
-                              <!--icon pago-->
+                            <div class="form-check">
                               <i
                                 class="fa-sharp fa-solid fa-circle-check"
                                 style="font-size: 20px"
@@ -1203,7 +1302,6 @@
                           </div>
 
                           <div class="col-10">
-                            <!--  <i class="fas fa-check-circle iconOk"></i> -->
                             <span>
                               <img
                                 *ngIf="item.iconImage"
@@ -1226,8 +1324,8 @@
                   [formGroup]="formOv"
                   *ngIf="paymentMethodActive == 'ordenCompra'"
                 >
-                  <div class="form-row">
-                    <div class="form-group col-md-6">
+                  <div class="row g-3">
+                    <div class="mb-3 col-md-6">
                       <label>Número orden de compra</label>
                       <input
                         formControlName="folio"
@@ -1237,7 +1335,7 @@
                       />
                     </div>
 
-                    <div class="form-group col-md-6">
+                    <div class="mb-3 col-md-6">
                       <label>Monto orden de compra</label>
                       <input
                         formControlName="monto"
@@ -1246,7 +1344,7 @@
                         placeholder="Ingrese el monto de su OC"
                       />
                     </div>
-                    <div class="form-group col-md-12">
+                    <div class="mb-3 col-md-12">
                       <label>Seleccione la orden de compra</label>
                       <div class="row">
                         <div class="col-12 d-flex justify-content-start">
@@ -1290,13 +1388,15 @@
                       </div>
                     </div>
 
-                    <div class="form-group col-md-6">
+                    <div class="mb-3 col-md-6">
                       <label>Centro de costo</label>
                       <select
                         class="form-control form-control-lg"
                         formControlName="centroCosto"
                       >
-                        <option [value]="''">Seleccione centro de costo</option>
+                        <option [value]="''">
+                          Seleccione centro de costo
+                        </option>
                         <option
                           *ngFor="let item of centrosCosto"
                           [value]="item.codigo"
@@ -1328,7 +1428,7 @@
                 </div>
 
                 <div
-                  class="form-row"
+                  class="row g-3"
                   *ngIf="paymentMethodActive == 'sinDefinir'"
                 >
                   <p class="text-center subtitle w-100 text-danger">
@@ -1385,11 +1485,10 @@
           </div>
         </div>
       </div>
-      <!-- ========================================= -->
-      <!-- FIN FORMA DE PAGO -->
-      <!-- ========================================= -->
     </ng-container>
+    <!-- End::forma de pago (mobile) -->
 
+    <!-- Start::resumen de pedido (mobile y desktop) -->
     <div
       class="col-xl-4 col-lg-4 col-md-12"
       style="padding: 15px; background-color: #e3e3e3"
@@ -1409,7 +1508,10 @@
             *ngIf="innerWidth >= 450"
           >
           </app-detalle-carro-productos>
+
+          <!-- Start::botones anterior e ir a pagar (desktop) -->
           <ng-container *ngIf="innerWidth >= 450">
+            <!-- Start:: -->
             <div class="row">
               <div
                 class="col-sm-12"
@@ -1422,25 +1524,33 @@
                 ></app-codigo-oc>
               </div>
             </div>
+            <!-- End:: -->
+
             <div class="row m-0">
+              <!-- Start:: botón anterior (desktop) -->
               <div class="mt-3 col-6 ps-0 ps-1" *ngIf="!cd_ver">
                 <a
                   [routerLink]="['/', 'carro-compra', 'metodo-de-envio']"
                   class="btn btn-border-primary w-100 btn-lg text-center"
                 >
-                  <i class="fas fa-chevron-left" style="margin-right: 10px"></i>
+                  <i
+                    class="fas fa-chevron-left"
+                    style="margin-right: 10px"
+                  ></i>
                   Anterior
                 </a>
               </div>
+              <!-- End:: botón anterior (desktop) -->
 
+              <!-- Start::botón ir a pagar (desktop) (ir a pagar1) -->
               <div class="mt-3 col-6 ps-0 ps-1">
                 <button
-                  name="paymentOv "
+                  name="paymentOv"
                   *ngIf="
                     userSession.user_role != 'comprador' &&
                     !userSession.requiereValidacion &&
                     !['webPay', 'mercadopago', 'khipu'].includes(
-                      paymentMethodActive
+                      paymentMethodActive || ''
                     ) &&
                     !invitado
                   "
@@ -1449,13 +1559,20 @@
                     formOv.invalid ||
                     isVacio(paymentMethodActive) ||
                     isVacio(archivo) ||
-                    loadingPage
+                    loadingPage ||
+                    !selectedDocument ||
+                    (!userSession.giro &&
+                      selectedDocument === 'FEL' &&
+                      !selectedGiro)
                   "
                   class="btn btn-lg btn-secondary w-100 text-center"
                 >
-                  Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  Ir a pagar<i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
+                <!-- Start::ir a pagar2 pago con sms-->
                 <button
                   name="paymentOvSms "
                   *ngIf="
@@ -1463,7 +1580,7 @@
                     userSession.requiereValidacion &&
                     !cd_ver &&
                     !['webPay', 'mercadopago', 'khipu'].includes(
-                      paymentMethodActive
+                      paymentMethodActive || ''
                     ) &&
                     !invitado
                   "
@@ -1471,7 +1588,11 @@
                   [disabled]="
                     formOv.invalid ||
                     isVacio(paymentMethodActive) ||
-                    loadingPage
+                    loadingPage ||
+                    !selectedDocument ||
+                    (!userSession.giro &&
+                      selectedDocument === 'FEL' &&
+                      !selectedGiro)
                   "
                   class="btn btn-lg btn-secondary w-100 text-center"
                 >
@@ -1481,8 +1602,9 @@
                     style="margin-left: 3px"
                   ></i>
                 </button>
+                <!-- End::ir a pagar2 -->
 
-                <!-- Ningún pago seleccionado -->
+                <!-- Start::ningún pago seleccionado siendo invitado (no tiene acción) (desktop) (ir a pagar3) -->
                 <button
                   name="paymentwebpay2 "
                   [disabled]="true"
@@ -1490,12 +1612,27 @@
                   class="btn btn-lg btn-secondary w-100 text-center"
                 >
                   Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  <i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
+                <!-- End::ningún pago seleccionado siendo invitado (no tiene acción) (desktop) (ir a pagar3) -->
 
+                <!-- Start::pagar con mercadopago (no comprador ni invitado) (desktop) (ir a pagar4)-->
+                <!--<pre>
+                  userSession.user_role: {{ userSession.user_role }}
+                </pre> -->
                 <button
                   name="paymentMercadopago"
-                  [disabled]="btnWebpayPost || alertCartShow"
+                  [disabled]="
+                    btnWebpayPost ||
+                    alertCartShow ||
+                    !selectedDocument ||
+                    (!userSession.giro &&
+                      selectedDocument === 'FEL' &&
+                      !selectedGiro)
+                  "
                   *ngIf="
                     userSession.user_role != 'comprador' &&
                     paymentMethodActive == 'mercadopago' &&
@@ -1505,26 +1642,50 @@
                   class="btn btn-lg btn-secondary w-100 text-center"
                 >
                   Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  <i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
+                <!-- End::pagar con mercadopago (no comprador ni invitado) (desktop) (ir a pagar4) -->
+
+                <!-- Start::pagar con mercadopago siendo invitado (desktop) (ir a pagar5)-->
                 <button
+                  *ngIf="invitado && paymentMethodActive == 'mercadopago'"
                   name="paymentMercadopago2 "
                   [disabled]="
                     !formVisita.valid ||
                     !validado ||
                     alertCartShow ||
-                    btnWebpayPost
+                    btnWebpayPost ||
+                    (!userSession.giro &&
+                      selectedDocument === 'FEL' &&
+                      !selectedGiro) ||
+                    (invitado &&
+                      selectedDocument === 'FEL' &&
+                      (!formDireccion.valid || !tienda))
                   "
-                  *ngIf="invitado && paymentMethodActive == 'mercadopago'"
                   (click)="paymentMercadopago()"
                   class="btn btn-lg btn-secondary w-100 tex-tcenter"
                 >
                   Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  <i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
+                <!-- End::pagar con mercadopago siendo invitado (desktop) (ir a pagar5) -->
+
+                <!-- Start::pagar con khipu (no comprador ni invitado) (desktop) (ir a pagar6) -->
                 <button
                   name="paymentKhipu"
-                  [disabled]="btnWebpayPost || alertCartShow"
+                  [disabled]="
+                    btnWebpayPost ||
+                    alertCartShow ||
+                    (!userSession.giro &&
+                      selectedDocument === 'FEL' &&
+                      !selectedGiro)
+                  "
                   *ngIf="
                     userSession.user_role != 'comprador' &&
                     paymentMethodActive == 'khipu' &&
@@ -1534,27 +1695,50 @@
                   class="btn btn-lg btn-secondary w-100 text-center"
                 >
                   Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  <i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
+                <!-- End::pagar con khipu (no comprador ni invitado) (desktop) (ir a pagar6) -->
+
+                <!-- Start::pagar con khipu siendo invitado (desktop) (ir a pagar7) -->
                 <button
                   name="paymentKhipu"
                   [disabled]="
                     !formVisita.valid ||
                     !validado ||
                     alertCartShow ||
-                    btnWebpayPost
+                    btnWebpayPost ||
+                    (!userSession.giro &&
+                      selectedDocument === 'FEL' &&
+                      !selectedGiro) ||
+                    (invitado &&
+                      selectedDocument === 'FEL' &&
+                      (!formDireccion.valid || !tienda))
                   "
                   *ngIf="invitado && paymentMethodActive == 'khipu'"
                   (click)="paymentKhipu('')"
                   class="btn btn-lg btn-secondary w-100 tex-tcenter"
                 >
                   Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  <i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
+                <!-- End::pagar con khipu siendo invitado (desktop) (ir a pagar7) -->
 
+                <!-- Start::pagar con webpay (no comprador ni invitado) (desktop) (ir a pagar8) -->
                 <button
                   name="paymentWebpay"
-                  [disabled]="btnWebpayPost || alertCartShow"
+                  [disabled]="
+                    btnWebpayPost ||
+                    alertCartShow ||
+                    (!userSession.giro &&
+                      selectedDocument === 'FEL' &&
+                      !selectedGiro)
+                  "
                   *ngIf="
                     userSession.user_role != 'comprador' &&
                     paymentMethodActive == 'webPay' &&
@@ -1564,24 +1748,44 @@
                   class="btn btn-lg btn-secondary w-100 text-center"
                 >
                   Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  <i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
+                <!-- End::pagar con webpay (no comprador ni invitado) (desktop) (ir a pagar8) -->
+
+                <!-- Start::pagar con webpay siendo invitado (desktop) (ir a pagar9) -->
+                <!--<pre style="background-color: yellow">
+                tienda: {{ tienda }}
+                </pre> -->
                 <button
                   name="paymentwebpay2"
                   [disabled]="
                     !formVisita.valid ||
                     !validado ||
                     alertCartShow ||
-                    btnWebpayPost
+                    btnWebpayPost ||
+                    (!userSession.giro &&
+                      selectedDocument === 'FEL' &&
+                      !selectedGiro) ||
+                    (invitado &&
+                      selectedDocument === 'FEL' &&
+                      (!formDireccion.valid || !tienda))
                   "
                   *ngIf="invitado && paymentMethodActive == 'webPay'"
                   (click)="creteateTransactionTransBank()"
                   class="btn btn-lg btn-secondary w-100 text-center"
                 >
                   Ir a pagar
-                  <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
+                  <i
+                    class="fas fa-chevron-right"
+                    style="margin-left: 10px"
+                  ></i>
                 </button>
+                <!-- End::pagar con webpay siendo invitado (desktop) (ir a pagar9) -->
 
+                <!-- Start::solicitar compra siendo comprador (desktop) -->
                 <button
                   name="purchaseRequestAll "
                   *ngIf="
@@ -1594,7 +1798,9 @@
                 >
                   Solicitar Compra *
                 </button>
+                <!-- End::solicitar compra siendo comprador (desktop) -->
 
+                <!-- Start::solicitar compra siendo comprador (desktop) -->
                 <button
                   name="purchaseRequest "
                   *ngIf="
@@ -1607,19 +1813,23 @@
                   Solicitar Compra *
                 </button>
               </div>
+              <!-- End::botón ir a pagar (desktop) (ir a pagar1)  -->
 
               <div class="mt-3 col-12 ps-0 ps-1">
                 <em *ngIf="userSession.user_role == 'comprador'"
-                  >* Se generará una solicitud de compra y debe ser aprobada por
-                  tu supervisor antes de generar el pedido.
+                  >* Se generará una solicitud de compra y debe ser aprobada
+                  por tu supervisor antes de generar el pedido.
                 </em>
               </div>
             </div>
           </ng-container>
+          <!-- End::botones anterior e ir a pagar (desktop) -->
         </div>
       </div>
     </div>
+    <!-- End::resumen de pedido (mobile y desktop) -->
 
+    <!-- Start::despacho a domicilio o retiro en tienda (mobile) -->
     <ng-container *ngIf="innerWidth < 450">
       <div class="col-xl-4 col-lg-4 col-md-6" [class.mb-3]="innerWidth < 450">
         <div
@@ -1630,10 +1840,6 @@
           }"
         >
           <div class="card-body">
-            <!-- ========================================= -->
-            <!-- DESPACHO COLLAPSE - INI -->
-            <!-- ========================================= -->
-
             <div
               class="card-header"
               style="display: inline-block; color: #005db9"
@@ -1641,13 +1847,12 @@
               Información de retiro
             </div>
 
-            <!-- ========================================= -->
-            <!-- DESPACHO_A_DOMICILIO - INI -->
-            <!-- ========================================= -->
+            <!-- Start::despacho a domicilio (mobile) -->
             <div
               *ngIf="cartSession.despacho?.tipo != 'TIENDA'"
               class="row block_despacho"
             >
+              <!-- Start::despacho -->
               <div
                 class="col-12"
                 style="flex-direction: column; justify-content: center"
@@ -1673,22 +1878,17 @@
                   </div>
                 </div>
               </div>
+              <!-- End::despacho -->
+
               <div class="col-12">
                 <ul class="list-group lista_despacho">
+                  <!-- Start::despacho -->
                   <li
                     *ngIf="direccionDespacho"
                     class="list-group-item"
                     tooltip="Dirección de entrega "
                   >
                     <div class="row">
-                      <div
-                        class="ms-3 col-1 d-flex justify-content-center align-items-center"
-                      >
-                        <i
-                          class="fa-solid fa-circle-check"
-                          style="color: #118565"
-                        ></i>
-                      </div>
                       <div class="col-10 d-flex justify-content-start">
                         <div class="row" style="color: #005db9 !important">
                           <div class="col-12">
@@ -1705,6 +1905,9 @@
                       </div>
                     </div>
                   </li>
+                  <!-- End::despacho -->
+
+                  <!-- Start::tipo de documento -->
                   <li class="list-group-item" tooltip="Tipo de Documento ">
                     <div class="row">
                       <div
@@ -1756,6 +1959,7 @@
                       </div>
                     </div>
                   </li>
+                  <!-- End::tipo de documento -->
 
                   <li class="list-group-item" tooltip="Persona que recibe ">
                     <div class="row">
@@ -1778,7 +1982,10 @@
                               >RECIBE</span
                             >
                           </div>
-                          <div class="col-12" style="color: #005db9 !important">
+                          <div
+                            class="col-12"
+                            style="color: #005db9 !important"
+                          >
                             <span *ngIf="recibe.company"
                               ><i
                                 class="fas fa-people-carry"
@@ -1798,6 +2005,8 @@
                       </div>
                     </div>
                   </li>
+
+                  <!-- Start::fecha entrega -->
                   <li
                     *ngFor="let item of fechas_entregas; let i = index"
                     class="list-group-item"
@@ -1828,130 +2037,50 @@
                             ></i>
                             {{
                               item
-                                ? (item | date : "EEEE dd MMMM, y ")
-                                : ("" | titlecase)
+                                ? ((item | date : 'EEEE dd MMMM, y ') || ''
+                                  | titlecase)
+                                : ''
                             }}
                           </div>
                         </div>
                       </div>
                     </div>
                   </li>
+                  <!-- End::fecha entrega -->
                 </ul>
               </div>
             </div>
-            <!-- ========================================= -->
-            <!-- DESPACHO_A_DOMICILIO - FIN -->
-            <!-- ========================================= -->
+            <!-- End::despacho a domicilio (mobile) -->
 
-            <!-- ========================================= -->
-            <!-- RETIRO_EN_TIENDA - INI -->
-            <!-- ========================================= -->
+            <!-- Start::retiro en tienda (mobile) -->
             <div
               *ngIf="cartSession.despacho?.tipo == 'TIENDA'"
               class="row block_despacho"
             >
-              <div
-                class="col-12"
-                style="flex-direction: column; justify-content: center"
-              >
-                <div
-                  style="
-                    color: #0063b9;
-                    font-size: small;
-                    font-weight: bold;
-                    padding-left: 10px;
-                    border-left: 1px solid #005db9;
-                    border-right: 1px solid #005db9;
-                    border-radius: 0px;
-                    border-top: 1px solid #005db9;
-                  "
-                >
-                  <div
-                    class="row"
-                    style="padding-top: 10px; margin-bottom: -5px"
-                  >
-                    <div class="ms-3 col-1"></div>
-                    <div class="col-10">
-                      {{ tiendaRetiro.nombre }}
-                    </div>
-                  </div>
-                </div>
-              </div>
               <div class="col-12" style="color: #005db9 !important">
                 <ul class="list-group lista_despacho">
-                  <li class="list-group-item" tooltip="Fecha de entrega ">
+                  <li
+                    class="list-group-item"
+                    tooltip="Fecha de entrega "
+                    style="border-top: 1px solid #005db9"
+                  >
                     <div class="row">
-                      <div class="ms-3 col-1 d-flex justify-content-center">
-                        <i
-                          class="fa-solid fa-circle-check"
-                          style="color: #118565"
-                        ></i>
-                      </div>
-                      <div class="col-10 d-flex justify-content-start">
+                      <div class="col-12 d-flex justify-content-start">
                         <div class="row">
-                          <div class="col-12" style="color: #005db9 !important">
+                          <div class="col-12">
+                            <span style="font-weight: bold; color: #005db9">{{
+                              tiendaRetiro.nombre
+                            }}</span>
+                          </div>
+                          <div
+                            class="col-12"
+                            style="color: #005db9 !important"
+                          >
                             <i
                               class="fas fa-store-alt"
                               style="color: #005db9 !important"
                             ></i>
                             {{ tiendaRetiro.direccion | titlecase }}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item" tooltip="Tipo de Documento ">
-                    <div class="row">
-                      <div
-                        class="ms-3 col-1 d-flex justify-content-center align-items-center"
-                      >
-                        <i
-                          class="fa-solid fa-circle-check"
-                          style="color: #118565"
-                        ></i>
-                      </div>
-                      <div class="col-10 d-flex justify-content-start">
-                        <div class="row">
-                          <div class="col-12">
-                            <span style="font-weight: bold; color: #005db9"
-                              >TIPO DE DOCUMENTO</span
-                            >
-                          </div>
-                          <div class="col-12">
-                            <p
-                              style="
-                                color: #005db9 !important;
-                                margin-bottom: -2px;
-                              "
-                              *ngIf="!esBoleta"
-                            >
-                              <i
-                                class="fas fa-file-alt"
-                                style="color: #005db9 !important"
-                              ></i>
-                              Factura
-                            </p>
-                            <p
-                              style="
-                                color: #005db9 !important;
-                                margin-bottom: -2px;
-                              "
-                              *ngIf="esBoleta"
-                            >
-                              <i
-                                class="fas fa-file-alt"
-                                style="color: #005db9 !important"
-                              ></i>
-                              Boleta
-                              <a
-                                *ngIf="esBoleta"
-                                title="Si necesitas Factura Debes registrarte como Empresa"
-                                [routerLink]="['/sitio', 'registro-usuario']"
-                                class="float-end"
-                                style="color: #0063b9"
-                                >¿ Necesitas Factura ?</a
-                              >
-                            </p>
                           </div>
                         </div>
                       </div>
@@ -1964,41 +2093,31 @@
                     tooltip="Persona que recibe "
                   >
                     <div class="row">
-                      <div
-                        class="ms-3 col-1 d-flex justify-content-center align-items-center"
-                      >
-                        <i
-                          class="fa-solid fa-circle-check"
-                          style="color: #118565"
-                        ></i>
-                      </div>
-                      <div class="col-10 d-flex justify-content-start">
+                      <div class="col-12 d-flex justify-content-start">
                         <div class="row">
-                          <div class="col-12" style="color: #005db9 !important">
+                          <div
+                            class="col-12"
+                            style="color: #005db9 !important"
+                          >
                             <span style="font-weight: bold"
                               >RETIRA EN TIENDA</span
                             >
                           </div>
-                          <div class="col-12" style="color: #005db9 !important">
+                          <div
+                            class="col-12"
+                            style="color: #005db9 !important"
+                          >
                             <i
                               class="fas fa-people-carry"
                               style="color: #005db9 !important"
-                            ></i
-                            >\
-
+                            ></i>
                             <span>{{
                               cartSession.observacion ==
-                              "Persona que recibe: Titular de la Venta"
-                                ? "Titular de la compra"
-                                : (cartSession.observacion || "")
-                                    .split("Celular")[0]
-                                    .split("Recibe:")[1]
-                            }}</span>
-                            <span>{{
-                              cartSession.observacion ==
-                              "Persona que recibe: Titular de la Venta"
-                                ? "Titular de la compra"
-                                : ""
+                              'Persona que recibe: Titular de la Venta'
+                                ? 'Titular de la compra'
+                                : (cartSession.observacion || '')
+                                    .split('Celular')[0]
+                                    .split('Recibe:')[1]
                             }}</span>
                           </div>
                         </div>
@@ -2011,15 +2130,11 @@
                     tooltip="Fecha de entrega "
                   >
                     <div class="row">
-                      <div
-                        class="ms-3 col-1 d-flex justify-content-center align-items-center"
-                      >
-                        <i
-                          class="fa-solid fa-circle-check"
-                          style="color: #118565"
-                        ></i>
-                      </div>
-                      <div class="col-10 d-flex justify-content-start">
+                      <!--
+                      <div class="ms-3 col-1 d-flex justify-content-center align-items-center">
+                        <i class="fa-solid fa-circle-check" style="color: #118565"></i>
+                      </div> -->
+                      <div class="col-12 d-flex justify-content-start">
                         <div class="row">
                           <div class="col-12" style="color: #0063b9">
                             <span style="font-weight: bold"
@@ -2035,8 +2150,9 @@
                             ></i>
                             {{
                               item
-                                ? (item | date : "EEEE dd MMMM, y ")
-                                : ("" | titlecase)
+                                ? ((item | date : 'EEEE dd MMMM, y ') || ''
+                                  | titlecase)
+                                : ''
                             }}
                           </div>
                         </div>
@@ -2045,19 +2161,167 @@
                   </li>
                 </ul>
               </div>
+              <div class="col-12" style="margin-top: 1rem">
+                <div
+                  class="list-group-item"
+                  tooltip="Tipo de Documento"
+                  style="margin-bottom: 1rem"
+                >
+                  <div class="row">
+                    <div
+                      class="col-12"
+                      style="color: #005db9 !important; font-size: 13px"
+                    >
+                      <span style="font-weight: bold">TIPO DE DOCUMENTO</span>
+                    </div>
+                    <div class="col-12">
+                      <ng-select
+                        [(ngModel)]="selectedDocument"
+                        placeholder="Seleccionar documento..."
+                      >
+                        <ng-option
+                          *ngFor="let document of documentOptions"
+                          [value]="document.id"
+                          >{{ document.name }}</ng-option
+                        >
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="list-group-item"
+                  tooltip="Giros"
+                  style="margin-bottom: 1rem"
+                  *ngIf="selectedDocument === 'FEL' && !userSession.giro"
+                >
+                  <div class="row">
+                    <div class="col-12">
+                      <span style="font-weight: bold; color: #0063b9"
+                        >GIROS</span
+                      >
+                    </div>
+                    <div class="col-12">
+                      <ng-select
+                        [(ngModel)]="selectedGiro"
+                        placeholder="Seleccionar giro..."
+                        [loading]="cargandoGiros"
+                        loadingText="Cargando giros'"
+                      >
+                        <ng-option
+                          *ngFor="let giro of girosOptions"
+                          [value]="giro.codigo"
+                          >{{ giro.nombre }}</ng-option
+                        >
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="list-group-item"
+                  tooltip="Dirección"
+                  *ngIf="selectedDocument === 'FEL' && invitado"
+                >
+                  <div>
+                    <app-map
+                      titulo="DIRECCIÓN"
+                      (clearAdress)="clearAddress()"
+                      [tienda]="tienda"
+                      [autocompletado]="autocompletado"
+                      (setDireccion)="setAddress($event)"
+                      (geolocalizacion)="geolocalizacion($event)"
+                    ></app-map>
+                  </div>
+                  <form [formGroup]="formDireccion">
+                    <div class="row g-3" style="margin-top: 1rem">
+                      <div class="mb-2 col-md-12">
+                        <label>Calle (*)</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="calle"
+                          (blur)="cargarDireccion()"
+                        />
+                      </div>
+
+                      <div class="mb-2 col-md-12">
+                        <label for="inputPassword4">Número</label>
+                        <input
+                          type="number"
+                          class="form-control"
+                          formControlName="numero"
+                          (blur)="cargarDireccion()"
+                          maxLength="9"
+                          min="1"
+                          max="999999999"
+                          appPhoneChar
+                        />
+                      </div>
+                      <!--<div class="mb-3 col-md-6">
+                        <label>Departamento</label>
+                        <input type="text" class="form-control" formControlName="depto" (blur)="cargarDireccion()" />
+                      </div> -->
+
+                      <div class="mb-2 col-md-12">
+                        <label>Comuna (*)</label>
+                        <ng-select
+                          [clearable]="false"
+                          [searchable]="true"
+                          [items]="comunas"
+                          bindLabel="value"
+                          bindValue="id"
+                          formControlName="comuna"
+                          class="form-control-select form-control"
+                          placeholder="Comuna*"
+                          (blur)="cargarDireccion()"
+                          (change)="obtenerLocalidades($event)"
+                        >
+                        </ng-select>
+                      </div>
+
+                      <div class="mb-2 col-md-6" hidden>
+                        <label for="inputPassword4">Localización (*)</label>
+                        <div *ngIf="!localidades">
+                          <p>Seleccione una comuna para ver localidades</p>
+                        </div>
+                        <div *ngIf="localidades">
+                          <ng-select
+                            [clearable]="false"
+                            [searchable]="true"
+                            [items]="localidades"
+                            bindLabel="localidad"
+                            bindValue="localidad"
+                            formControlName="localizacion"
+                            class="form-control-select form-control"
+                            placeholder="Comuna*"
+                            (change)="cargarDireccion()"
+                            (blur)="cargarDireccion()"
+                          >
+                          </ng-select>
+                        </div>
+                      </div>
+                      <!--<div class="mb-3 col-md-12">
+                        <label for="validationTextarea">Referencia</label>
+                        <textarea
+                          class="form-control"
+                          placeholder="Ingrese referencia para su direccion"
+                          formControlName="referencia"
+                        ></textarea>
+                      </div> -->
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
-            <!-- ========================================= -->
-            <!-- RETIRO_EN_TIENDA - FIN -->
-            <!-- ========================================= -->
-            <!-- ========================================= -->
-            <!-- DESPACHO COLLAPSE - FIN -->
-            <!-- ========================================= -->
+            <!-- End::retiro en tienda (mobile) -->
           </div>
         </div>
       </div>
     </ng-container>
+    <!-- End::despacho a domicilio o retiro en tienda (mobile) -->
   </div>
 </div>
+<!-- Start::resumen de tu compra (mobile) (no existe en desktop)-->
 <ng-container *ngIf="innerWidth < 450">
   <div style="margin-top: 50px">
     <div class="footer_page">
@@ -2122,13 +2386,14 @@
 
         <div class="row">
           <div class="mt-3 col-12 ps-3 ps-3">
+            <!-- Start::ir a pagar (mobile) (ir a pagar10)  -->
             <button
               name="paymentOv "
               *ngIf="
                 userSession.user_role != 'comprador' &&
                 !userSession.requiereValidacion &&
                 !['webPay', 'mercadopago', 'khipu'].includes(
-                  paymentMethodActive
+                  paymentMethodActive || ''
                 ) &&
                 !invitado
               "
@@ -2137,13 +2402,19 @@
                 formOv.invalid ||
                 isVacio(paymentMethodActive) ||
                 isVacio(archivo) ||
-                loadingPage
+                loadingPage ||
+                (!userSession.giro &&
+                  selectedDocument === 'FEL' &&
+                  !selectedGiro)
               "
               class="btn btn-lg btn-secondary w-100 text-center"
             >
               Ir a pagar
               <i class="fas fa-chevron-right" style="margin-left: 10px"></i>
             </button>
+            <!-- End::ir a pagar (mobile) (ir a pagar10) -->
+
+            <!-- Start:: (ir a pagar11) -->
             <button
               name="paymentOvSms "
               *ngIf="
@@ -2156,7 +2427,12 @@
               "
               (click)="paymentOvSms()"
               [disabled]="
-                formOv.invalid || isVacio(paymentMethodActive) || loadingPage
+                formOv.invalid ||
+                isVacio(paymentMethodActive) ||
+                loadingPage ||
+                (!userSession.giro &&
+                  selectedDocument === 'FEL' &&
+                  !selectedGiro)
               "
               class="btn btn-lg btn-secondary w-100 text-center"
             >
@@ -2165,10 +2441,18 @@
                 style="margin-left: 10px"
               ></i>
             </button>
+            <!-- End::(ir a pagar11) -->
 
+            <!-- Start::pagar con webpay (no comprador ni invitado) (mobile) (ir a pagar12) -->
             <button
               name="paymentWebpay "
-              [disabled]="btnWebpayPost || alertCartShow"
+              [disabled]="
+                btnWebpayPost ||
+                alertCartShow ||
+                (!userSession.giro &&
+                  selectedDocument === 'FEL' &&
+                  !selectedGiro)
+              "
               *ngIf="
                 userSession.user_role != 'comprador' &&
                 paymentMethodActive == 'webPay' &&
@@ -2179,21 +2463,42 @@
             >
               Ir a pagar <i class="fas fa-chevron-right"></i>
             </button>
+            <!-- End::pagar con webpay (no comprador ni invitado) (mobile) (ir a pagar12) -->
+
+            <!-- Start::pagar con webpay siendo invitado (mobile) (ir a pagar13) -->
             <button
-              name="paymentwebpay2 "
-              [disabled]="
-                !formVisita.valid || !validado || alertCartShow || btnWebpayPost
-              "
+              name="paymentwebpay2"
               *ngIf="invitado && paymentMethodActive == 'webPay'"
+              [disabled]="
+                !formVisita.valid ||
+                !validado ||
+                alertCartShow ||
+                btnWebpayPost ||
+                (!userSession.giro &&
+                  selectedDocument === 'FEL' &&
+                  !selectedGiro) ||
+                (invitado &&
+                  selectedDocument === 'FEL' &&
+                  (!formDireccion.valid || !tienda))
+              "
               (click)="creteateTransactionTransBank()"
               class="btn btn-lg btn-secondary w-100 text-center"
             >
               Ir a pagar <i class="fas fa-chevron-rightp"></i>
             </button>
+            <!-- End::pagar con webpay siendo invitado (mobile) (ir a pagar13) -->
 
+            <!-- Start::pagar con mercadopago (no comprador ni invitado) (mobile) (ir a pagar14) -->
             <button
               name="paymentMercadopago"
-              [disabled]="btnWebpayPost || alertCartShow"
+              [disabled]="
+                btnWebpayPost ||
+                alertCartShow ||
+                !selectedDocument ||
+                (!userSession.giro &&
+                  selectedDocument === 'FEL' &&
+                  !selectedGiro)
+              "
               *ngIf="
                 userSession.user_role != 'comprador' &&
                 paymentMethodActive == 'mercadopago' &&
@@ -2204,18 +2509,33 @@
             >
               Ir a pagar <i class="fas fa-chevron-right"></i>
             </button>
+            <!-- End::pagar con mercadopago (no comprador ni invitado) (mobile) (ir a pagar14) -->
+
+            <!-- Start::pagar con mercadopago siendo invitado (mobile) (ir a pagar15) -->
             <button
+              *ngIf="invitado && paymentMethodActive == 'mercadopago'"
               name="paymentMercadopago2 "
               [disabled]="
-                !formVisita.valid || !validado || alertCartShow || btnWebpayPost
+                !formVisita.valid ||
+                !validado ||
+                alertCartShow ||
+                btnWebpayPost ||
+                !selectedDocument ||
+                (!userSession.giro &&
+                  selectedDocument === 'FEL' &&
+                  !selectedGiro) ||
+                (invitado &&
+                  selectedDocument === 'FEL' &&
+                  (!formDireccion.valid || !tienda))
               "
-              *ngIf="invitado && paymentMethodActive == 'mercadopago'"
               (click)="paymentMercadopago()"
               class="btn btn-lg btn-secondary w-100 tex-tcenter"
             >
               Ir a pagar <i class="fas fa-chevron-right"></i>
             </button>
+            <!-- End::pagar con mercadopago siendo invitado (mobile) (ir a pagar15) -->
 
+            <!-- Start::solicitar compra -->
             <button
               name="purchaseRequestAll "
               *ngIf="
@@ -2240,6 +2560,7 @@
             >
               Solicitar Compra *
             </button>
+            <!-- End::solicitar compra -->
           </div>
 
           <div
@@ -2265,6 +2586,7 @@
     </div>
   </div>
 </ng-container>
+<!-- End::resumen de tu compra (mobile) (no existe en desktop)-->
 
 <ng-container *ngIf="paymentWebpayForm">
   <form
@@ -2288,7 +2610,6 @@
       name="amount"
       [value]="totalCarro"
     />
-
     <br />
 
     <input
@@ -2339,7 +2660,7 @@
   modal
 </button>
 
-<!--Modal para informar a cliente que hubieron problemas de stock -->
+<!-- Start::modal para informar a cliente que hubieron problemas de stock -->
 <div
   class="modal fade"
   #stockAlertModal
@@ -2408,6 +2729,7 @@
     </div>
   </div>
 </div>
+<!-- End::modal para informar a cliente que hubieron problemas de stock -->
 
 <ng-template #bankmodal let-c="close" let-d="dismiss">
   <app-bancoslist></app-bancoslist>

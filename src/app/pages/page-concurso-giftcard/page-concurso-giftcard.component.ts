@@ -58,7 +58,7 @@ export class PageConcursoGiftcardComponent implements OnInit {
     this.cargando = true;
     this.clientsService
       .setConcursoGiftCard(this.formulario.value)
-      .subscribe((resp: ResponseApi) => {
+      .subscribe((resp: any) => {
         if (resp.error) {
           this.toast.error(resp.msg);
           this.cargando = false;

@@ -4,6 +4,7 @@ import {
   FormGroup,
   Validators,
   FormControl,
+  FormArray,
 } from '@angular/forms';
 import { LogisticsService } from '../../services/logistics.service';
 import { ToastrService } from 'ngx-toastr';
@@ -57,10 +58,16 @@ export class AddAddressComponent implements OnInit {
 
   ngOnInit() {
     this.loadComunas();
+
+    //this.formDireccion.statusChanges(value=>console.log('value',value))
   }
 
   set_direccion(data: any[]) {
+    //this.clearAddress();
+
+    /* if(this.getAddressData(data[0], 'street_number')){ */
     const buscar = this.getAddressData(data[0], 'locality').toUpperCase();
+
     const existe = this.comunas.filter((comuna) => comuna.value == buscar);
 
     if (existe.length != 0) {
@@ -95,10 +102,10 @@ export class AddAddressComponent implements OnInit {
     /*  } */
   }
 
-  getAddressData(address_components: any, tipo: string) {
+  getAddressData(address_components: any[], tipo: string) {
     let value = '';
 
-    address_components.forEach((element: any) => {
+    address_components.forEach((element) => {
       if (element.types[0] == tipo) {
         value = element.long_name;
         return;
@@ -209,11 +216,11 @@ export class AddAddressComponent implements OnInit {
       nombreUsuario: `${usuario.first_name} ${usuario.last_name}`,
     };
 
-    const resultado = await this.clientsService
+    const resultado: any = await this.clientsService
       .addAdreess(direccion)
       .toPromise();
 
-    if (resultado?.error) {
+    if (resultado.error) {
       this.toastr.error('No se logro agregar la direccion');
       this.respuesta.emit(false);
     } else {
@@ -241,6 +248,7 @@ export class AddAddressComponent implements OnInit {
       (r: any) => {
         this.coleccionComuna = r.data;
         this.comunas = r.data.map((record: any) => {
+          // console.log('r.data',r.data);
           const v =
             record.comuna + '@' + record.provincia + '@' + record.region;
           return { id: v, value: record.comuna };
@@ -255,7 +263,7 @@ export class AddAddressComponent implements OnInit {
   obtenerLocalidades(event: any) {
     const localidades: any[] = [];
     const comunaArr = event.id.split('@');
-    const comunas = this.coleccionComuna.filter(
+    const comunas: any[] = this.coleccionComuna.filter(
       (comuna) => comuna.comuna == comunaArr[0]
     );
     comunas.map((comuna) =>

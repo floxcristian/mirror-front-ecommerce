@@ -1,262 +1,482 @@
+<div
+  class="d-none d-lg-flex justify-content-center"
+  style="width: 100%; height: 100%; background-color: #111d27"
+>
+  <div
+    class="d-flex justify-content-center"
+    style="width: 1024px; min-height: 773px"
+  >
+    <div class="container-lg">
+      <div class="row">
+        <div class="col-8">
+          <div class="row">
+            <img
+              src="../../../assets/images/concursos/mes-aniversario/web_1024/FOTO-UP-3.png"
+            />
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <img
+                src="../../../assets/images/concursos/mes-aniversario/web_1024/TXT-3.png"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="img-bicicleta-lg position-relative"></div>
+          </div>
+          <div class="row">
+            <div class="img-sku-lg position-relative"></div>
+          </div>
+        </div>
+        <div
+          class="col-4 d-flex flex-column justify-content-center"
+          style="max-width: 300px"
+        >
+          <div
+            class="d-flex flex-column align-items-center justify-content-center"
+            style="color: white; font-size: 1.25rem"
+          >
+            <p class="mb-2" style="font-weight: lighter">
+              Registra tu Boleta o Factura
+            </p>
+          </div>
 
-<div class="d-none d-lg-flex justify-content-center" style="width: 100%;height: 100%; background-color:#111d27">
-    <div class="d-flex justify-content-center" style="width: 1024px;min-height: 773px;">
-        <div class="container-lg">
+          <form [formGroup]="formulario">
+            <div style="color: white">
+              <div class="mb-3 mb-4">
+                <label for="rut"
+                  >Rut <small>(sin puntos y con guión)</small></label
+                >
+                <input
+                  type="text"
+                  formControlName="rut"
+                  class="form-control form-control-sm"
+                  id="rut"
+                  [(ngModel)]="datos.rut"
+                  autocomplete="off"
+                />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    (formulario.get('rut')?.touched ||
+                      formulario.get('rut')?.dirty) &&
+                    formulario.get('rut')?.hasError('rutMalo')
+                  "
+                >
+                  Rut no válido
+                </div>
+              </div>
+              <div class="mb-3 mb-4">
+                <label for="nombre">Nombre</label>
+                <input
+                  type="text"
+                  formControlName="nombre"
+                  class="form-control form-control-sm"
+                  id="nombre"
+                  [(ngModel)]="datos.nombre"
+                  autocomplete="off"
+                />
+              </div>
+              <div class="mb-3 mb-4">
+                <label for="email">Correo Electrónico</label>
+                <input
+                  type="email"
+                  formControlName="email"
+                  class="form-control form-control-sm"
+                  id="email"
+                  [(ngModel)]="datos.email"
+                  autocomplete="off"
+                />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    (formulario.get('email')?.touched ||
+                      formulario.get('email')?.dirty) &&
+                    formulario.get('email')?.invalid
+                  "
+                >
+                  Email no es válido
+                </div>
+              </div>
+              <label for="celular">Celular</label>
+              <div class="input-group input-group-sm mb-3 mb-4">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="codigo">+56 9</span>
+                </div>
+                <input
+                  type="number"
+                  formControlName="celular"
+                  class="form-control form-control-sm"
+                  [(ngModel)]="datos.celular"
+                  style="border-radius: 0px 10px 10px 0px !important"
+                  id="celular"
+                  aria-describedby="codigo"
+                  aria-label="celular"
+                  autocomplete="off"
+                />
+                <div
+                  class="invalid-feedback"
+                  style="bottom: -19px"
+                  *ngIf="
+                    (formulario.get('celular')?.touched ||
+                      formulario.get('celular')?.dirty) &&
+                    formulario.get('celular')?.invalid
+                  "
+                >
+                  Número no válido
+                </div>
+              </div>
+              <div class="mb-3 mb-4">
+                <label for="documento">Boleta / Factura</label>
+                <input
+                  type="number"
+                  formControlName="documento"
+                  class="form-control form-control-sm"
+                  id="documento"
+                  [(ngModel)]="datos.documento"
+                  autocomplete="off"
+                />
+              </div>
+              <div class="d-flex justify-content-center">
+                <button
+                  class="btn btn-sm btn-secondary btn-custom mt-2"
+                  [ngClass]="{ 'btn-loading': cargando }"
+                  (click)="enviar()"
+                  [class.disabled]="formulario.invalid"
+                  [disabled]="formulario.invalid"
+                >
+                  ENVIAR
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="d-none d-sm-flex d-md-flex d-lg-none justify-content-center"
+  style="width: 100%; height: 100%; overflow: auto; background-color: #111d27"
+>
+  <div class="position-relative" style="width: 768px; height: 1639px">
+    <div class="d-flex justify-content-center" style="max-width: 768px">
+      <div class="container-small">
+        <div class="row">
+          <div class="col-12">
             <div class="row">
-                <div class="col-8">
-                    <div class="row">
-                        <img src="../../../assets/images/concursos/mes-aniversario/web_1024/FOTO-UP-3.png" />
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <img src="../../../assets/images/concursos/mes-aniversario/web_1024/TXT-3.png" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="img-bicicleta-lg position-relative">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="img-sku-lg position-relative">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4 d-flex flex-column justify-content-center" style="max-width: 300px;">
-                    <div class="d-flex flex-column align-items-center justify-content-center"
-                        style="color:white; font-size: 1.25rem;">
-                        <p class="mb-2" style="font-weight: lighter;">Registra tu Boleta o Factura</p>
-                    </div>
-
-                    <form [formGroup]="formulario">
-                        <div style="color: white;">
-                            <div class="form-group mb-4">
-                                <label for="rut">Rut <small>(sin puntos y con guión)</small></label>
-                                <input type="text" formControlName="rut" class="form-control form-control-sm" id="rut"
-                                    [(ngModel)]="datos.rut" autocomplete="off">
-                                <div class="invalid-feedback"
-                                    *ngIf="(formulario.get('rut')?.touched || formulario.get('rut')?.dirty) && formulario.get('rut')?.hasError('rutMalo')">
-                                    Rut no válido</div>
-                            </div>
-                            <div class="form-group mb-4">
-                                <label for="nombre">Nombre</label>
-                                <input type="text" formControlName="nombre" class="form-control form-control-sm" id="nombre"
-                                    [(ngModel)]="datos.nombre" autocomplete="off">
-                            </div>
-                            <div class="form-group mb-4">
-                                <label for="email">Correo Electrónico</label>
-                                <input type="email" formControlName="email" class="form-control form-control-sm" id="email"
-                                    [(ngModel)]="datos.email" autocomplete="off">
-                                <div class="invalid-feedback"
-                                    *ngIf="(formulario.get('email')?.touched || formulario.get('email')?.dirty) && formulario.get('email')?.invalid">
-                                    Email no es válido</div>
-                            </div>
-                            <label for="celular">Celular</label>
-                            <div class="input-group input-group-sm form-group mb-4">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="codigo">+56 9</span>
-                                </div>
-                                <input type="number" formControlName="celular" class="form-control form-control-sm"
-                                    [(ngModel)]="datos.celular" style="border-radius: 0px 10px 10px 0px !important" id="celular"
-                                    aria-describedby="codigo" aria-label="celular" autocomplete="off">
-                                <div class="invalid-feedback" style="bottom: -19px;"
-                                    *ngIf="(formulario.get('celular')?.touched || formulario.get('celular')?.dirty) && formulario.get('celular')?.invalid">
-                                    Número no válido</div>
-                            </div>
-                            <div class="form-group mb-4">
-                                <label for="documento">Boleta / Factura</label>
-                                <input type="number" formControlName="documento" class="form-control form-control-sm"
-                                    id="documento" [(ngModel)]="datos.documento" autocomplete="off">
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                <button class="btn btn-sm btn-secondary btn-custom mt-2" [ngClass]="{'btn-loading': cargando}"
-                                    (click)="enviar()" [class.disabled]="formulario.invalid"
-                                    [disabled]="formulario.invalid">ENVIAR</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+              <div class="col-12">
+                <img
+                  src="../../../assets/images/concursos/mes-aniversario/web_768/FOTO-UP-2.png"
+                />
+              </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="d-none d-sm-flex d-md-flex d-lg-none justify-content-center"
-    style="width: 100%;height: 100%; overflow: auto; background-color: #111d27;">
-    <div class="position-relative" style="width: 768px;height: 1639px;">
-        <div class="d-flex justify-content-center" style="max-width: 768px;">
-            <div class="container-small">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="row">
-                            <div class="col-12">
-                                <img src="../../../assets/images/concursos/mes-aniversario/web_768/FOTO-UP-2.png" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <img src="../../../assets/images/concursos/mes-aniversario/web_768/TXT.png" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="img-bicicleta-small position-relative">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="img-sku-sm position-absolute">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row justify-content-md-center justify-content-sm-center">
-                    <div class="col-8">
-                    <div class="row justify-content-start flex-column align-items-center">
-
-                        <div class="d-flex flex-column align-items-center justify-content-center" style="color:white; font-size: 1.25rem;">
-                            <p class="mb-2" style="font-weight: lighter;">Registra tu Boleta o Factura</p>
-                        </div>
-
-                        <div class="col-12 mt-2 mb-2">
-                            <form [formGroup]="formulario">
-                                <div style="color: white;">
-                                    <div class="form-group">
-                                        <label for="rut">Rut <small>(sin puntos y con guión)</small></label>
-                                        <input type="text" formControlName="rut" class="form-control form-control-sm" id="rut"
-                                            [(ngModel)]="datos.rut" autocomplete="off">
-                                        <div class="invalid-feedback"
-                                            *ngIf="(formulario.get('rut')?.touched || formulario.get('rut')?.dirty) && formulario.get('rut')?.hasError('rutMalo')">
-                                            Rut no válido</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="nombre">Nombre</label>
-                                        <input type="text" formControlName="nombre" class="form-control form-control-sm" id="nombre"
-                                            [(ngModel)]="datos.nombre" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Correo Electrónico</label>
-                                        <input type="email" formControlName="email" class="form-control form-control-sm" id="email"
-                                            [(ngModel)]="datos.email" autocomplete="off">
-                                        <div class="invalid-feedback"
-                                            *ngIf="(formulario.get('email')?.touched || formulario.get('email')?.dirty) && formulario.get('email')?.invalid">
-                                            Email no es válido</div>
-                                    </div>
-                                    <label for="celular">Celular</label>
-                                    <div class="input-group input-group-sm form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="codigo">+56 9</span>
-                                        </div>
-                                        <input type="number" formControlName="celular" class="form-control form-control-sm"
-                                            [(ngModel)]="datos.celular" style="border-radius: 0px 10px 10px 0px !important"
-                                            id="celular" aria-describedby="codigo" aria-label="celular" autocomplete="off">
-                                        <div class="invalid-feedback" style="bottom: -19px;"
-                                            *ngIf="(formulario.get('celular')?.touched || formulario.get('celular')?.dirty) && formulario.get('celular')?.invalid">
-                                            Número no válido</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="documento">Boleta / Factura</label>
-                                        <input type="text" formControlName="documento" class="form-control form-control-sm"
-                                            id="documento" [(ngModel)]="datos.documento" autocomplete="off">
-                                    </div>
-                                    <div class="d-flex justify-content-center mb-4">
-                                        <button class="btn btn-sm btn-secondary btn-custom mt-2"
-                                            [ngClass]="{'btn-loading': cargando}" [class.disabled]="formulario.invalid"
-                                            [disabled]="formulario.invalid" (click)="enviar()">ENVIAR</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="d-flex d-sm-none d-md-none d-lg-none justify-content-center"
-    style="width: 100%;height: 100%; overflow: auto; background-color: #111d27;">
-    <div style="width: 320px;height: 266px;margin-top: 20px;">
-        <div class="container-xsmall">
             <div class="row">
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col-12">
-                            <img src="../../../assets/images/concursos/mes-aniversario/web_320/FOTO-UP.png" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <img src="../../../assets/images/concursos/mes-aniversario/web_320/TXT.png" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="img-bicicleta-xs position-relative">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="img-sku-xs position-absolute">
-                        </div>
-                    </div>
-                </div>
+              <div class="col-12">
+                <img
+                  src="../../../assets/images/concursos/mes-aniversario/web_768/TXT.png"
+                />
+              </div>
             </div>
-            <div class="row justify-content-center" style="margin-top: -25px;">
-                <div class="col-10">
-                    <div class="row justify-content-start flex-column align-items-center">
-                        <div class="d-flex flex-column align-items-center justify-content-center" style="color:white; font-size: 1.25rem;">
-                            <p class="mb-2" style="font-weight: lighter;">Registra tu Boleta o Factura</p>
-                        </div>
-                        <div class="col-12 mt-2 mb-2">
-                            <form [formGroup]="formulario">
-                                <div style="color: white;">
-                                    <div class="form-group">
-                                        <label for="rut">Rut <small>(sin puntos y con guión)</small></label>
-                                        <input type="text" formControlName="rut" class="form-control form-control-sm" id="rut"
-                                            [(ngModel)]="datos.rut" autocomplete="off">
-                                        <div class="invalid-feedback"
-                                            *ngIf="(formulario.get('rut')?.touched || formulario.get('rut')?.dirty) && formulario.get('rut')?.hasError('rutMalo')">
-                                            Rut no válido</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="nombre">Nombre</label>
-                                        <input type="text" formControlName="nombre" class="form-control form-control-sm" id="nombre"
-                                            [(ngModel)]="datos.nombre" autocomplete="off">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Correo Electrónico</label>
-                                        <input type="email" formControlName="email" class="form-control form-control-sm" id="email"
-                                            [(ngModel)]="datos.email" autocomplete="off">
-                                        <div class="invalid-feedback"
-                                            *ngIf="(formulario.get('email')?.touched || formulario.get('email')?.dirty) && formulario.get('email')?.invalid">
-                                            Email no es válido</div>
-                                    </div>
-                                    <label for="celular">Celular</label>
-                                    <div class="input-group input-group-sm form-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="codigo">+56 9</span>
-                                        </div>
-                                        <input type="number" formControlName="celular" class="form-control form-control-sm"
-                                            [(ngModel)]="datos.celular" style="border-radius: 0px 10px 10px 0px !important"
-                                            id="celular" aria-describedby="codigo" aria-label="celular" autocomplete="off">
-                                        <div class="invalid-feedback" style="bottom: -19px;"
-                                            *ngIf="(formulario.get('celular')?.touched || formulario.get('celular')?.dirty) && formulario.get('celular')?.invalid">
-                                            Número no válido</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="documento">Boleta / Factura</label>
-                                        <input type="text" formControlName="documento" class="form-control form-control-sm"
-                                            id="documento" [(ngModel)]="datos.documento" autocomplete="off">
-                                    </div>
-                                    <div class="d-flex justify-content-center mb-4">
-                                        <button class="btn btn-sm btn-secondary btn-custom mt-2"
-                                            [ngClass]="{'btn-loading': cargando}" [class.disabled]="formulario.invalid"
-                                            [disabled]="formulario.invalid" (click)="enviar()">ENVIAR</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+            <div class="row">
+              <div class="img-bicicleta-small position-relative"></div>
             </div>
+            <div class="row">
+              <div class="img-sku-sm position-absolute"></div>
+            </div>
+          </div>
         </div>
+        <div class="row justify-content-md-center justify-content-sm-center">
+          <div class="col-8">
+            <div
+              class="row justify-content-start flex-column align-items-center"
+            >
+              <div
+                class="d-flex flex-column align-items-center justify-content-center"
+                style="color: white; font-size: 1.25rem"
+              >
+                <p class="mb-2" style="font-weight: lighter">
+                  Registra tu Boleta o Factura
+                </p>
+              </div>
+
+              <div class="col-12 mt-2 mb-2">
+                <form [formGroup]="formulario">
+                  <div style="color: white">
+                    <div class="mb-3">
+                      <label for="rut"
+                        >Rut <small>(sin puntos y con guión)</small></label
+                      >
+                      <input
+                        type="text"
+                        formControlName="rut"
+                        class="form-control form-control-sm"
+                        id="rut"
+                        [(ngModel)]="datos.rut"
+                        autocomplete="off"
+                      />
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="
+                          (formulario.get('rut')?.touched ||
+                            formulario.get('rut')?.dirty) &&
+                          formulario.get('rut')?.hasError('rutMalo')
+                        "
+                      >
+                        Rut no válido
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="nombre">Nombre</label>
+                      <input
+                        type="text"
+                        formControlName="nombre"
+                        class="form-control form-control-sm"
+                        id="nombre"
+                        [(ngModel)]="datos.nombre"
+                        autocomplete="off"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label for="email">Correo Electrónico</label>
+                      <input
+                        type="email"
+                        formControlName="email"
+                        class="form-control form-control-sm"
+                        id="email"
+                        [(ngModel)]="datos.email"
+                        autocomplete="off"
+                      />
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="
+                          (formulario.get('email')?.touched ||
+                            formulario.get('email')?.dirty) &&
+                          formulario.get('email')?.invalid
+                        "
+                      >
+                        Email no es válido
+                      </div>
+                    </div>
+                    <label for="celular">Celular</label>
+                    <div class="input-group input-group-sm mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="codigo">+56 9</span>
+                      </div>
+                      <input
+                        type="number"
+                        formControlName="celular"
+                        class="form-control form-control-sm"
+                        [(ngModel)]="datos.celular"
+                        style="border-radius: 0px 10px 10px 0px !important"
+                        id="celular"
+                        aria-describedby="codigo"
+                        aria-label="celular"
+                        autocomplete="off"
+                      />
+                      <div
+                        class="invalid-feedback"
+                        style="bottom: -19px"
+                        *ngIf="
+                          (formulario.get('celular')?.touched ||
+                            formulario.get('celular')?.dirty) &&
+                          formulario.get('celular')?.invalid
+                        "
+                      >
+                        Número no válido
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="documento">Boleta / Factura</label>
+                      <input
+                        type="text"
+                        formControlName="documento"
+                        class="form-control form-control-sm"
+                        id="documento"
+                        [(ngModel)]="datos.documento"
+                        autocomplete="off"
+                      />
+                    </div>
+                    <div class="d-flex justify-content-center mb-4">
+                      <button
+                        class="btn btn-sm btn-secondary btn-custom mt-2"
+                        [ngClass]="{ 'btn-loading': cargando }"
+                        [class.disabled]="formulario.invalid"
+                        [disabled]="formulario.invalid"
+                        (click)="enviar()"
+                      >
+                        ENVIAR
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
+<div
+  class="d-flex d-sm-none d-md-none d-lg-none justify-content-center"
+  style="width: 100%; height: 100%; overflow: auto; background-color: #111d27"
+>
+  <div style="width: 320px; height: 266px; margin-top: 20px">
+    <div class="container-xsmall">
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12">
+              <img
+                src="../../../assets/images/concursos/mes-aniversario/web_320/FOTO-UP.png"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <img
+                src="../../../assets/images/concursos/mes-aniversario/web_320/TXT.png"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="img-bicicleta-xs position-relative"></div>
+          </div>
+          <div class="row">
+            <div class="img-sku-xs position-absolute"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center" style="margin-top: -25px">
+        <div class="col-10">
+          <div
+            class="row justify-content-start flex-column align-items-center"
+          >
+            <div
+              class="d-flex flex-column align-items-center justify-content-center"
+              style="color: white; font-size: 1.25rem"
+            >
+              <p class="mb-2" style="font-weight: lighter">
+                Registra tu Boleta o Factura
+              </p>
+            </div>
+            <div class="col-12 mt-2 mb-2">
+              <form [formGroup]="formulario">
+                <div style="color: white">
+                  <div class="mb-3">
+                    <label for="rut"
+                      >Rut <small>(sin puntos y con guión)</small></label
+                    >
+                    <input
+                      type="text"
+                      formControlName="rut"
+                      class="form-control form-control-sm"
+                      id="rut"
+                      [(ngModel)]="datos.rut"
+                      autocomplete="off"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        (formulario.get('rut')?.touched ||
+                          formulario.get('rut')?.dirty) &&
+                        formulario.get('rut')?.hasError('rutMalo')
+                      "
+                    >
+                      Rut no válido
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="nombre">Nombre</label>
+                    <input
+                      type="text"
+                      formControlName="nombre"
+                      class="form-control form-control-sm"
+                      id="nombre"
+                      [(ngModel)]="datos.nombre"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="email">Correo Electrónico</label>
+                    <input
+                      type="email"
+                      formControlName="email"
+                      class="form-control form-control-sm"
+                      id="email"
+                      [(ngModel)]="datos.email"
+                      autocomplete="off"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        (formulario.get('email')?.touched ||
+                          formulario.get('email')?.dirty) &&
+                        formulario.get('email')?.invalid
+                      "
+                    >
+                      Email no es válido
+                    </div>
+                  </div>
+                  <label for="celular">Celular</label>
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="codigo">+56 9</span>
+                    </div>
+                    <input
+                      type="number"
+                      formControlName="celular"
+                      class="form-control form-control-sm"
+                      [(ngModel)]="datos.celular"
+                      style="border-radius: 0px 10px 10px 0px !important"
+                      id="celular"
+                      aria-describedby="codigo"
+                      aria-label="celular"
+                      autocomplete="off"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      style="bottom: -19px"
+                      *ngIf="
+                        (formulario.get('celular')?.touched ||
+                          formulario.get('celular')?.dirty) &&
+                        formulario.get('celular')?.invalid
+                      "
+                    >
+                      Número no válido
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="documento">Boleta / Factura</label>
+                    <input
+                      type="text"
+                      formControlName="documento"
+                      class="form-control form-control-sm"
+                      id="documento"
+                      [(ngModel)]="datos.documento"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <div class="d-flex justify-content-center mb-4">
+                    <button
+                      class="btn btn-sm btn-secondary btn-custom mt-2"
+                      [ngClass]="{ 'btn-loading': cargando }"
+                      [class.disabled]="formulario.invalid"
+                      [disabled]="formulario.invalid"
+                      (click)="enviar()"
+                    >
+                      ENVIAR
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

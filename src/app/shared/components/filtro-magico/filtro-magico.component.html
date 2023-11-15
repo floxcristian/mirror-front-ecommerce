@@ -1,4 +1,4 @@
-<div class="form-row">
+<div class="row g-3">
   <ng-container *ngFor="let filtro of filtrosMagicos.filtros; let i = index">
     <div class="input-container" [ngClass]="filtro.class || ''">
       <ng-container
@@ -7,7 +7,9 @@
           (filtro.tipo === 'select-multiple' && !filtro.groupBy)
         "
       >
-        <label *ngIf="filtro.mostrarLabel !== false">{{ filtro.nombre }}</label>
+        <label *ngIf="filtro.mostrarLabel !== false">{{
+          filtro.nombre
+        }}</label>
         <ng-select
           [multiple]="filtro.tipo === 'select-multiple'"
           placeholder="Seleccione..."
@@ -26,8 +28,12 @@
         </ng-select>
       </ng-container>
 
-      <ng-container *ngIf="filtro.tipo === 'select-multiple' && filtro.groupBy">
-        <label *ngIf="filtro.mostrarLabel !== false">{{ filtro.nombre }}</label>
+      <ng-container
+        *ngIf="filtro.tipo === 'select-multiple' && filtro.groupBy"
+      >
+        <label *ngIf="filtro.mostrarLabel !== false">{{
+          filtro.nombre
+        }}</label>
         <ng-select
           [multiple]="true"
           placeholder="Seleccione..."
@@ -51,7 +57,9 @@
       </ng-container>
 
       <ng-container *ngIf="filtro.tipo === 'select-search-multiple'">
-        <label *ngIf="filtro.mostrarLabel !== false">{{ filtro.nombre }}</label>
+        <label *ngIf="filtro.mostrarLabel !== false">{{
+          filtro.nombre
+        }}</label>
         <app-select-search-multiple
           [nuevosValores]="filtrosBind[filtro.key]"
           (valoresSeleccionados)="selectSearchChanged(filtro.key, $event)"
@@ -64,7 +72,9 @@
       </ng-container>
 
       <ng-container *ngIf="filtro.tipo === 'dropdown-input'">
-        <label *ngIf="filtro.mostrarLabel !== false">{{ filtro.nombre }}</label>
+        <label *ngIf="filtro.mostrarLabel !== false">{{
+          filtro.nombre
+        }}</label>
         <div class="input-group">
           <div class="input-group-prepend mb-2">
             <button
@@ -78,7 +88,7 @@
               <span>{{
                 filtrosModel[filtro.key].dropdown
                   ? filtro?.opcionDropdown(filtrosModel[filtro.key].dropdown)
-                  : "Seleccione"
+                  : 'Seleccione'
               }}</span>
             </button>
             <div class="dropdown-menu">
@@ -102,7 +112,9 @@
       </ng-container>
 
       <ng-container *ngIf="filtro.tipo === 'dropdown-select-multiple'">
-        <label *ngIf="filtro.mostrarLabel !== false">{{ filtro.nombre }}</label>
+        <label *ngIf="filtro.mostrarLabel !== false">{{
+          filtro.nombre
+        }}</label>
         <div class="input-group dropdown-select-multiple">
           <div class="input-group-prepend">
             <button
@@ -116,7 +128,7 @@
               <span>{{
                 filtrosModel[filtro.key].dropdown
                   ? filtro?.opcionDropdown(filtrosModel[filtro.key].dropdown)
-                  : "Seleccione"
+                  : 'Seleccione'
               }}</span>
             </button>
             <div class="dropdown-menu">
@@ -149,7 +161,9 @@
       </ng-container>
 
       <ng-container *ngIf="filtro.tipo === 'rango-fechas'">
-        <label *ngIf="filtro.mostrarLabel !== false">{{ filtro.nombre }}</label>
+        <label *ngIf="filtro.mostrarLabel !== false">{{
+          filtro.nombre
+        }}</label>
         <div class="input-group">
           <input
             [(ngModel)]="filtrosBind[filtro.key]['desde']"

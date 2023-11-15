@@ -10,7 +10,7 @@
         <h3 class="card-title">Registro de Usuario</h3>
         <div class="row">
           <div class="col-md-6">
-            <div class="form-group">
+            <div class="mb-3">
               <div class="col p-0">
                 <div class="form-check form-check-lg">
                   <span class="form-check-input input-check">
@@ -43,7 +43,7 @@
             </div>
           </div>
           <div class="col-md-6">
-            <div class="form-group">
+            <div class="mb-3">
               <div class="col p-0">
                 <div class="form-check form-check-lg">
                   <span class="form-check-input input-check">
@@ -100,7 +100,7 @@
         </div>
 
         <form [formGroup]="formUsuario">
-          <div class="form-row">
+          <div class="row g-3">
             <!-- rut -->
             <ng-container *ngIf="isInvoice">
               <h2 class="form-title col-md-12" style="color: #0063b9">
@@ -151,7 +151,7 @@
                 </p>
               </div>
               <div class="col-md-12 mt-3">
-                <div class="form-group">
+                <div class="mb-3">
                   <!-- <label>Email</label> -->
                   <input
                     formControlName="razonsocial"
@@ -162,7 +162,7 @@
                 </div>
               </div>
               <div class="col-md-12">
-                <div class="form-group">
+                <div class="mb-3">
                   <!-- <label>Email</label> -->
                   <ng-select
                     [clearable]="false"
@@ -253,7 +253,7 @@
             </div>
 
             <div class="col-12 mt-3" *ngIf="isInvoice">
-              <div class="form-group">
+              <div class="mb-3">
                 <ng-select
                   [clearable]="false"
                   [searchable]="true"
@@ -271,7 +271,7 @@
 
             <!-- nombre -->
             <div class="col-md-12 mt-3">
-              <div class="form-group">
+              <div class="mb-3">
                 <!-- <label>Nombre</label> -->
                 <input
                   formControlName="nombre"
@@ -283,7 +283,7 @@
               </div>
             </div>
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="mb-3">
                 <!-- <label>Apellido</label> -->
                 <input
                   formControlName="apellido"
@@ -296,7 +296,7 @@
             </div>
 
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="mb-3">
                 <label style="color: #0063b9; font-weight: 100"
                   ><font style="margin-right: 10px">Codigo *</font>
                   <font>Telefono Fijo/Celular</font></label
@@ -359,7 +359,7 @@
               </div>
             </div>
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="mb-3">
                 <autocomplete
                   #emailValidate
                   givenPlaceHolder="Email"
@@ -371,7 +371,7 @@
             </div>
 
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="mb-3">
                 <input
                   type="password"
                   formControlName="pwd"
@@ -391,7 +391,7 @@
             </div>
 
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="mb-3">
                 <input
                   type="password"
                   formControlName="confirmPwd"
@@ -431,7 +431,7 @@
               </app-map>
             </div>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <div class="row m-0">
               <div
                 class="col-md-9 ps-0"
@@ -460,7 +460,7 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="mb-3">
             <div class="row m-0">
               <div
                 class="col-md-6 ps-0"
@@ -492,7 +492,7 @@
             </div>
           </div>
 
-          <div class="form-group col-md-12 px-0">
+          <div class="mb-3 col-md-12 px-0">
             <textarea
               class="form-control"
               placeholder="Ingrese una referencia para su dirección"
@@ -501,7 +501,7 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="mb-3">
                 <div class="col p-0">
                   <div class="form-check form-check-lg">
                     <span class="form-check-input input-check">
@@ -534,7 +534,7 @@
               </div>
             </div>
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="mb-3">
                 <div class="col p-0">
                   <div class="form-check form-check-lg">
                     <span class="form-check-input input-check">
@@ -608,7 +608,9 @@
               (click)="registerUser(emailValidate)"
               type="button"
               [disabled]="
-                !formUsuario.valid || loadingForm || !emailValidate.correoValido
+                !formUsuario.valid ||
+                loadingForm ||
+                !emailValidate.correoValido
               "
               class="btn btn-lg btn-secondary w-100 text-center"
             >
