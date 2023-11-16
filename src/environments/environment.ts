@@ -1,7 +1,5 @@
 export const environment = {
   production: true,
-  TOKEN:
-    'EAAMJCcU6xi4BAIcIytWwO0n9YvkHUPYXmkmQJDOMKiPmiHvzUZCGaiUsjUqDT5XQYhRZAxyBCn3a39306eSBRVBcRIuI59J8LOXEl34CgfbsDCiZBXyu9R0Mluw1ZAOPMiEeb8wU82v2S5jITxjRSaNeihawZAM78IsxDtUkJXba5fKyJvq015AZBmu7oEWaYZD',
   IVA: 0.19,
   // APIs
   apiShoppingCart: 'https://b2b-api.implementos.cl/api/carro/',
@@ -37,10 +35,13 @@ export const environment = {
   // Carro de compras
   urlPaymentVoucher:
     'https://www.implementos.cl/carro-compra/gracias-por-tu-compra/',
+  urlNotificaciones: 'https://b2b-api.implementos.cl/api/notificaciones',
+  // No Env.
+  urlPaymentOmniCanceled:
+    'https://www.implementos.cl/carro-compra/omni-forma-de-pago',
   urlPaymentCanceled: 'https://www.implementos.cl/carro-compra/forma-de-pago/',
   urlPaymentOmniVoucher:
     'https://www.implementos.cl/carro-compra/omni-gracias-por-tu-compra/',
-  urlPaymentOmniCanceled:
-    'https://www.implementos.cl/carro-compra/omni-forma-de-pago',
-  urlNotificaciones: 'https://b2b-api.implementos.cl/api/notificaciones',
+  // Nuevo Ecommerce
+  apiEcommerce: 'http://10.158.15.204:8080',
 };
