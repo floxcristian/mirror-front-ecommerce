@@ -10,7 +10,6 @@ import { environment } from '@env/environment';
 export class CmsService {
   constructor(private http: HttpClient) {}
 
-  /* Nuevos Productos */
   obtenerNuevosProductos() {
     var call = environment.apiCMS + 'products/new-products';
     return this.http.get(call);

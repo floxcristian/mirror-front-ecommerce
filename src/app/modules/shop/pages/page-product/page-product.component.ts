@@ -232,9 +232,10 @@ export class PageProductComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (!this.buscadorService.isFiltroSeleccionado()) {
+    /*if (!this.buscadorService.isFiltroSeleccionado()) {
       this.buscadorService.filtrosVisibles(true);
-    }
+    }*/
+    this.buscadorService.filtrosVisibles(true);
     this.despachoCliente.unsubscribe();
   }
 

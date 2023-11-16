@@ -111,8 +111,8 @@ export class CartService {
 
   add(
     producto: Product,
-    quantity: number,
-    options: { name: string; value: string }[] = []
+    quantity: number
+    //options: { name: string; value: string }[] = []
   ): Observable<any> {
     // Sucursal
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
@@ -251,7 +251,7 @@ export class CartService {
   }
 
   calc(totalesFull = false): void {
-    let quantity = 0;
+    // let quantity = 0;
     let subtotal = 0;
     let totalNeto = 0;
 
@@ -492,7 +492,6 @@ export class CartService {
       );
   }
 
-  //funcion para el load Omni
   async loadOmni(id: any) {
     this.loadingCart = false;
 
@@ -942,74 +941,8 @@ export class CartService {
       })
     );
   }
-  //* funcion para el cambio de sucursalPrecio//
 
-  updateShippingPrecio(despacho: any) {
-    // Sucursal
-    const sucursal = this.tiendaPrecio.codigo;
-    const carro: CartData = this.localS.get('carroCompraB2B') as any;
-    const usuario: Usuario = this.root.getDataSesionUsuario();
-    const invitado: Usuario = this.localS.get('invitado') as any;
-    const recibe: any = this.localS.get('recibe');
-    const productos = (carro.productos || []).map((item) => {
-      return {
-        sku: item.sku,
-        cantidad: item.cantidad,
-      };
-    });
-
-    const data = {
-      usuario: usuario.username ? usuario.username : invitado._id,
-      rut: usuario.rut ? usuario.rut : 0,
-      sucursal,
-      productos,
-      despacho,
-      invitado,
-      recibe,
-    };
-    return this.http.post(environment.apiShoppingCart + 'articulo', data).pipe(
-      map((r: any) => {
-        this.loadPrecio(sucursal);
-        return r;
-      })
-    );
-  }
-
-  updateShippingPrecioDespacho(despacho: any) {
-    // Sucursal
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const sucursal = tiendaSeleccionada?.codigo;
-    const carro: CartData = this.localS.get('carroCompraB2B') as any;
-    const usuario: Usuario = this.root.getDataSesionUsuario();
-    const invitado: Usuario = this.localS.get('invitado') as any;
-    const recibe: any = this.localS.get('recibe');
-    const productos = (carro.productos || []).map((item) => {
-      return {
-        sku: item.sku,
-        cantidad: item.cantidad,
-      };
-    });
-
-    const data = {
-      usuario: usuario.username ? usuario.username : invitado._id,
-      rut: usuario.rut ? usuario.rut : 0,
-      sucursal,
-      productos,
-      despacho,
-      invitado,
-      recibe,
-    };
-    // const data = data
-
-    return this.http.post(environment.apiShoppingCart + 'articulo', data).pipe(
-      map((r: any) => {
-        this.loadPrecio(sucursal);
-        return r;
-      })
-    );
-  }
-
-  emitValidateProducts(products: any) {
+  emitValidateProducts(products: any): void {
     this.shippingValidateProductsSubject$.next(products);
   }
 
@@ -1035,11 +968,6 @@ export class CartService {
   }
 
   subeOrdenDeCompra(data: any) {
-    const optionsHeader = {
-      headers: new HttpHeaders({
-        'Content-Type': 'multipart/form-data',
-      }),
-    };
     const formData: FormData = new FormData();
     // tslint:disable-next-line: forin
     for (const key in data) {
@@ -1130,13 +1058,6 @@ export class CartService {
     );
   }
 
-  pendingOrders(data: any) {
-    return this.http.post(
-      environment.apiShoppingCart + 'listadoPedidos',
-      data
-    );
-  }
-
   getOrderDetail(id: any) {
     return this.http.get(environment.apiShoppingCart + `detallePedido/${id}`);
   }
@@ -1182,13 +1103,6 @@ export class CartService {
     );
   }
 
-  getInfoOV(ov: string) {
-    let params = new HttpParams().append('ov', ov);
-    return this.http.get(`${environment.apiShoppingCart}detallepago`, {
-      params: params,
-    });
-  }
-
   getSaveCart(pagina: number, carrosPorPagina: number) {
     const usuario: Usuario = this.localS.get('usuario') as any;
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
@@ -1230,7 +1144,6 @@ export class CartService {
   }
 
   /**
-   * @author ignacio zapata  \"2020-09-28\
    * @desc Metodo utilizado para setear el origen a los productos agregados al carro desde un catalogo dinamico.
    * @params dato de tipo producto.
    * @return
@@ -1252,7 +1165,6 @@ export class CartService {
   }
 
   /**
-   * @author José Espinoza
    * @description Actualiza y obtiene la primera visita del gracias por tu compra en el carro
    * @param idCarro
    * Ejemplo de respuesta:
@@ -1275,7 +1187,6 @@ export class CartService {
   }
 
   /**
-   * @author Ignacio zapata
    * @description Valida el stock actual con la cantidad de productos solicitadas de un carro especifico.
    * @param idCarro
    */
@@ -1341,13 +1252,6 @@ export class CartService {
     );
   }
 
-  ingresarContacto(data: any) {
-    return this.http.post(
-      environment.apiShoppingCart + `agregarContactos`,
-      data
-    );
-  }
-
   confirmarGtag(id: any) {
     return this.http.get(
       environment.apiShoppingCart + 'googleTag/verificar?id=' + id
@@ -1380,6 +1284,11 @@ export class CartService {
     });
   }
 
+  /**
+   * Actualiza el giro y usuario del carro, previo al pago.
+   * @param params
+   * @returns
+   */
   updateCartAndUserTurn(params: any) {
     return this.http.post(`${environment.apiShoppingCart}prepay`, params);
   }

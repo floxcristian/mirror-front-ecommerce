@@ -58,6 +58,7 @@ export class CompareService implements OnDestroy {
     );
   }
 
+  /*
   remove(product: Product): Observable<void> {
     // timer only for demo
     return timer(1000).pipe(
@@ -72,7 +73,7 @@ export class CompareService implements OnDestroy {
         }
       })
     );
-  }
+  }*/
 
   private save(): void {
     localStorage.setItem('compareItems', JSON.stringify(this.data.items));

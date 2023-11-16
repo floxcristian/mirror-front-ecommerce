@@ -21,11 +21,7 @@ export class CatalogoService {
 
   async obtenerCatalogos(estado: string) {
     let url = `${environment.apiCatalogo}obtenerCatalogos?tipo=Web&datos=true&estado=${estado}`;
-    let consulta: any = await this.http.get(url).toPromise();
-
-    if (!consulta.error) {
-      return consulta.data;
-    }
+    return this.http.get(url).toPromise();
   }
 
   async obtenerCatalogoId(id: any) {
@@ -75,7 +71,7 @@ export class CatalogoService {
   }
   async obtenerNewsletter(id: any) {
     const call = `${environment.apiCatalogo}obtenerNewsletter`;
-    let consulta: any = await this.http.post(call, { id: id }).toPromise();
+    let consulta: any = await this.http.post(call, { id }).toPromise();
     return consulta;
   }
   getComparacionMatriz(

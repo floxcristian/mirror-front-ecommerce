@@ -149,9 +149,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (!this.buscadorService.isFiltroSeleccionado()) {
-      this.buscadorService.filtrosVisibles(true);
-    }
+    //if (!this.buscadorService.isFiltroSeleccionado()) {
+    this.buscadorService.filtrosVisibles(true);
+    //}
     this.despachoCliente.unsubscribe();
   }
 
@@ -166,11 +166,12 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           : this.sidebarPosition;
     });
 
+    /*
     this.buscadorService.buscadorFiltrosExternosVisibles$.subscribe(
       (data: boolean) => {
         this.filtrosVehiculoVisibles = data;
       }
-    );
+    );*/
 
     this.filtrosFlota = (
       (await this.clientsService
@@ -221,11 +222,12 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         isVacio(this.modelo) &&
         isVacio(this.anio)
       ) {
-        if (this.buscadorService.isFiltroSeleccionado()) {
+        this.filtrosVehiculoVisibles = true;
+        /*if (this.buscadorService.isFiltroSeleccionado()) {
           this.filtrosVehiculoVisibles = false;
         } else {
           this.filtrosVehiculoVisibles = true;
-        }
+        }*/
       } else {
         this.filtrosVehiculoVisibles = false;
       }

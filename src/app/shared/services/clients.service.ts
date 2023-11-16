@@ -1,18 +1,22 @@
+// Angular
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+// Rxjs
+import { Observable } from 'rxjs';
+import { map, retry } from 'rxjs/operators';
+// Environment
+import { environment } from '@env/environment';
+
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 import { Usuario } from '../interfaces/login';
 import { RootService } from './root.service';
 import { Flota } from '../interfaces/flota';
 import { isVacio } from '../utils/utilidades';
-import { Observable } from 'rxjs';
 import { ResponseApi } from '../interfaces/response-api';
 import { ArticuloFavorito } from '../interfaces/articuloFavorito';
 import { Dominios } from '../interfaces/dominios';
 import { CargosContactoResponse } from '../interfaces/cargoContacto';
 import { TiposContactoResponse } from '../interfaces/tiposContacto';
-import { map, retry } from 'rxjs/operators';
-import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -41,12 +45,6 @@ export class ClientsService {
       );
   }
 
-  buscarVentas(rut: any) {
-    const call =
-      environment.apiCustomer + `ventas?rut=${rut}&ventasporPagina=10000`;
-    return this.http.get(call);
-  }
-
   buscarOvsGeneradas() {
     const estado = 'generado';
     const call =
@@ -62,39 +60,29 @@ export class ClientsService {
   }
 
   cotizacionAOV(idCarro: any, usuario: any) {
-    const data = {
+    return this.http.put(environment.apiShoppingCart + `cotizacionov`, {
       numero: idCarro,
       usuario,
-    };
-
-    return this.http.put(environment.apiShoppingCart + `cotizacionov`, data);
+    });
   }
 
-  /* Recuperar contraseña */
-
+  /**
+   * Recuperar contraseña.
+   * @param data
+   * @returns
+   */
   recuperarPassword(data: any) {
     return this.http.post(environment.apiCMS + `users/recover-pass`, data);
   }
 
   updatePassword(data: any) {
-    // console.log(data);
-
     const call = environment.apiCMS + `users/` + data.clientId;
     return this.http.patch(call, data);
   }
 
   updateIVA(data: any) {
-    // console.log(data);
-
     const call = environment.apiCustomer + `actualizarIva`;
     return this.http.put<ResponseApi>(call, data);
-  }
-
-  /* Admin Usuarios */
-
-  buscarUsuarios(rut = '') {
-    const call = environment.apiCMS + `users?rut=${rut}`;
-    return this.http.get(call);
   }
 
   buscarUsuario(id: string) {
@@ -130,28 +118,21 @@ export class ClientsService {
   }
 
   async updateProfile(data: any) {
-    let consulta = null;
     const endpoint = `${environment.apiCustomer}actualizarPerfil`;
     const params = `?rut=${data.rut}&nombre=${data.nombre}&apellido=${data.apellido}&correo=${data.correo}&telefono=${data.telefono}`;
     const url = `${endpoint}${params}`;
-    consulta = await this.http.get(url).toPromise();
-
-    return consulta;
+    return this.http.get(url).toPromise();
   }
 
   async changePassword(data: any) {
-    let consulta = null;
     const usuario: Usuario = this.root.getDataSesionUsuario();
     const params: any = {
       correo: usuario.username,
       passActual: data.password,
       passNueva: data.pwd,
     };
-
     const url = `${environment.apiCustomer}actualizarContrasenna`;
-    consulta = await this.http.get(url, { params }).toPromise();
-
-    return consulta;
+    return this.http.get(url, { params }).toPromise();
   }
   async ValidarCorreo(data: any) {
     let consulta = null;
@@ -164,7 +145,6 @@ export class ClientsService {
   }
 
   /* Aux */
-
   buscarComunas() {
     const call = environment.apiLogistic + `comunas`;
     return this.http.get(call);
@@ -175,20 +155,9 @@ export class ClientsService {
     return this.http.get(call);
   }
 
-  /* home user's data */
-
-  buscarVentasPeriodo(rut: any) {
-    const call = environment.apiCustomer + `ventasPeriodo?rut=${rut}`;
-    return this.http.get(call);
-  }
-
   graficoVentaValorada(request: any) {
-    let consulta = null;
-
     const url = `${environment.apiCustomer}graficos/ventaValorada?rutCliente=${request.rutCliente}&anio=${request.anio}`;
-    consulta = this.http.get(url);
-
-    return consulta;
+    return this.http.get(url);
   }
 
   graficoVentasPorUen(request: any) {
@@ -205,11 +174,6 @@ export class ClientsService {
     consulta = this.http.get(url + params);
 
     return consulta;
-  }
-
-  buscarPendientesEntrega(rut: any) {
-    const call = environment.apiCustomer + `pendienteentrega?rut=${rut}`;
-    return this.http.get(call);
   }
 
   buscarSaldo(rut: any) {
@@ -248,39 +212,6 @@ export class ClientsService {
     return this.http.post(environment.apiCustomer + `deuda/generaPago`, data);
   }
 
-  // carro de compra
-  async get_carroComprarb2c(rut: string) {
-    let consulta = null;
-    const url = `${environment.apiShoppingCart}carrob2c?rut=${rut}`;
-    consulta = await this.http.get(url).toPromise();
-    return consulta;
-  }
-
-  getPreciosPorRut(
-    pagina: number,
-    preciosPorPagina: number,
-    sucursal: string
-  ) {
-    const usuario: Usuario = this.localS.get('usuario');
-    const params: any = {
-      rut: usuario.rut,
-      sucursal,
-    };
-
-    if (pagina != null && preciosPorPagina != null) {
-      params['pagina'] = pagina.toString();
-      params['preciosPorPagina'] = preciosPorPagina.toString();
-    }
-
-    return this.http.get(`${environment.apiCustomer}listaPreciosPorRut`, {
-      params,
-    });
-  }
-
-  getIndicadoresEconomicos() {
-    return this.http.get(environment.apiCustomer + `indicadoresEconomicos`);
-  }
-
   getBusquedasVin(rut: string): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
       environment.apiCustomer + `busquedasVin?rutCliente=${rut}`
@@ -290,13 +221,6 @@ export class ClientsService {
   getFlota(rut: string): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
       environment.apiCustomer + `flota?rutCliente=${rut}`
-    );
-  }
-
-  setBusquedaVin(request: any): Observable<ResponseApi> {
-    return this.http.post<ResponseApi>(
-      environment.apiCustomer + `busquedaVin`,
-      request
     );
   }
 
@@ -352,14 +276,6 @@ export class ClientsService {
     return this.http.put(environment.apiCustomer + `flota`, request);
   }
 
-  getVehiculo(chassisPatente: string) {
-    const httpParams = new HttpParams().set('chasis_patente', chassisPatente);
-
-    return this.http.get(environment.apiCustomer + `vehiculo`, {
-      params: httpParams,
-    });
-  }
-
   getListaArticulosFavoritos(rut: string): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
       environment.apiCustomer + `favoritos/lista?rut=${rut}`
@@ -393,9 +309,6 @@ export class ClientsService {
     idLista: string
   ): Observable<ResponseApi> {
     const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
       body: {
         sku,
         rut,
@@ -452,9 +365,6 @@ export class ClientsService {
     idLista: string
   ): Observable<ResponseApi> {
     const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
       body: {
         rut,
       },
@@ -553,12 +463,6 @@ export class ClientsService {
   getCargosContacto(): Observable<CargosContactoResponse> {
     return this.http.get<CargosContactoResponse>(
       `${environment.apiCustomer}filtros/cargosContacto`
-    );
-  }
-
-  getTiposContacto(): Observable<TiposContactoResponse> {
-    return this.http.get<TiposContactoResponse>(
-      `${environment.apiCustomer}filtros/tiposContacto`
     );
   }
 
