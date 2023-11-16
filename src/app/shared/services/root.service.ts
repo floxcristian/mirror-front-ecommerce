@@ -130,19 +130,21 @@ export class RootService {
     return preferencias;
   }
 
-  post(): string {
-    return `${this.path}/blog/post-classic`;
-  }
+  //* NO SE UTILIZA
+  // post(): string {
+  //   return `${this.path}/blog/post-classic`;
+  // }
 
   url(url: string): string {
     return this.path + url;
   }
 
-  limpiaTextos(producto: Product) {
-    producto.nombre = producto.nombre.replace(/(^"|"$)/g, '');
+  // limpiaTextos(producto: Product) {
+  //   producto.nombre = producto.nombre.replace(/(^"|"$)/g, '');
 
-    return producto;
-  }
+  //   return producto;
+  // }
+  //* FIN NO SE UTILIZA
 
   limpiaAtributos(product: Product): void {
     if (product.atributos == null) {
@@ -161,10 +163,10 @@ export class RootService {
 
     product.atributos = att;
   }
-
-  getUrlImagenMiniaturaWidget(sku: any) {
-    return environment.urlFotowidgetProductos + `${sku}.jpg?alt=media`;
-  }
+  // NO SE UTILIZA
+  // getUrlImagenMiniaturaWidget(sku: any) {
+  //   return environment.urlFotowidgetProductos + `${sku}.jpg?alt=media`;
+  // }
 
   getUrlImagenMiniatura(product: any) {
     if (Object.keys(product.images).length > 0) {
@@ -191,21 +193,21 @@ export class RootService {
       }
     } else return 'assets/images/products/no-image-listado-2.jpg';
   }
+  //NO SE UTILIZA
+  // requestUrlImagenMiniatura(sku: any) {
+  //   const urlVerificaImagen =
+  //     environment.urlFotoListadoProductos + `${sku}.jpg`;
+  //   return this.http.get(urlVerificaImagen);
+  // }
 
-  requestUrlImagenMiniatura(sku: any) {
-    const urlVerificaImagen =
-      environment.urlFotoListadoProductos + `${sku}.jpg`;
-    return this.http.get(urlVerificaImagen);
-  }
+  // getUrlImagenFicha(sku: any) {
+  //   return environment.urlFotoFichaProducto + `${sku}.jpg?alt=media`;
+  // }
 
-  getUrlImagenFicha(sku: any) {
-    return environment.urlFotoFichaProducto + `${sku}.jpg?alt=media`;
-  }
-
-  requestUrlImagenFicha(sku: any) {
-    const urlVerificaImagen = environment.urlFotoFichaProducto + `${sku}.jpg`;
-    return this.http.get(urlVerificaImagen);
-  }
+  // requestUrlImagenFicha(sku: any) {
+  //   const urlVerificaImagen = environment.urlFotoFichaProducto + `${sku}.jpg`;
+  //   return this.http.get(urlVerificaImagen);
+  // }
 
   returnUrlNoImagen() {
     return 'assets/images/products/no-image-ficha.jpg';
@@ -221,9 +223,10 @@ export class RootService {
     }
   }
 
-  getModalRefBuscador() {
-    return this.modalBuscador;
-  }
+  //NO SE UTILIZA
+  // getModalRefBuscador() {
+  //   return this.modalBuscador;
+  // }
 
   errorLoadImage($event: any) {
     $event.target.src = 'assets/images/products/no-imagen.jpg';

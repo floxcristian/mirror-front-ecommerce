@@ -16,17 +16,17 @@ export class MobileMenuService {
     @Inject(PLATFORM_ID)
     private platformId: any
   ) {}
+  //  NO SE UTILIZA
+  // open(): void {
+  //   if (isPlatformBrowser(this.platformId)) {
+  //     const bodyWidth = document.body.offsetWidth;
 
-  open(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const bodyWidth = document.body.offsetWidth;
-
-      document.body.style.overflow = 'hidden';
-      document.body.style.paddingRight =
-        document.body.offsetWidth - bodyWidth + 'px';
-      this.openSubject$.next(true);
-    }
-  }
+  //     document.body.style.overflow = 'hidden';
+  //     document.body.style.paddingRight =
+  //       document.body.offsetWidth - bodyWidth + 'px';
+  //     this.openSubject$.next(true);
+  //   }
+  // }
 
   close(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -37,7 +37,7 @@ export class MobileMenuService {
     }
   }
 
-  toggle(): void {
-    this.openSubject$.next(!this.openSubject$.value);
-  }
+  // toggle(): void {
+  //   this.openSubject$.next(!this.openSubject$.value);
+  // }
 }

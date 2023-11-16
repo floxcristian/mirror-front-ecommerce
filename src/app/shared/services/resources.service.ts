@@ -44,13 +44,14 @@ export class ResourcesService {
 
   constructor() {}
 
-  loadScript(url: string): Promise<void> {
-    return this.scriptTask(url)();
-  }
+  //NO SE UTILIZA
+  // loadScript(url: string): Promise<void> {
+  //   return this.scriptTask(url)();
+  // }
 
-  loadStyle(url: string): Promise<void> {
-    return this.styleTask(url)();
-  }
+  // loadStyle(url: string): Promise<void> {
+  //   return this.styleTask(url)();
+  // }
 
   loadLibrary(library: string): Promise<void> {
     return this.libraries[library]();

@@ -10,7 +10,8 @@ export class StoreService {
   phone = ['800 330 088'];
   hours = 'Lu-Vie: 9:00 a 18:30 hrs. Sab: 9:00 a 13:00 hrs.';
 
-  get primaryPhone(): string | null {
-    return this.phone.length > 0 ? this.phone[0] : null;
-  }
+  //NO SE UTILIZA
+  // get primaryPhone(): string | null {
+  //   return this.phone.length > 0 ? this.phone[0] : null;
+  // }
 }
