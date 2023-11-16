@@ -16,9 +16,6 @@ import { MobileHeaderComponent } from './components/mobile-header/mobile-header.
 import { MobileHeaderAccountComponent } from './components/mobile-header-account/mobile-header-account.component';
 import { MobileLinksComponent } from './components/mobile-links/mobile-links.component';
 import { TopbarMobileComponent } from '../header/components/topbar-mobile/topbar-mobile.component';
-//B2B
-import { MobileHeaderB2bComponent } from './components/mobile-header-b2b/mobile-header-b2b.component';
-import { MobileBarraBusquedaComponent } from './components/mobile-header-b2b/components/mobile-barra-busqueda/mobile-barra-busqueda.component';
 
 @NgModule({
   declarations: [
@@ -28,8 +25,6 @@ import { MobileBarraBusquedaComponent } from './components/mobile-header-b2b/com
     MobileCategoriasComponent,
     MobileHeaderAccountComponent,
     TopbarMobileComponent,
-    MobileHeaderB2bComponent,
-    MobileBarraBusquedaComponent,
   ],
   imports: [
     CommonModule,
@@ -41,10 +36,6 @@ import { MobileBarraBusquedaComponent } from './components/mobile-header-b2b/com
     BsDropdownModule.forRoot(),
     TooltipModule.forRoot(),
   ],
-  exports: [
-    MobileHeaderComponent,
-    MobileMenuComponent,
-    MobileHeaderB2bComponent,
-  ],
+  exports: [MobileHeaderComponent, MobileMenuComponent],
 })
 export class MobileModule {}
