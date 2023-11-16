@@ -10,7 +10,6 @@ import { ShopRoutingModule } from './shop-routing.module';
 import { BlocksModule } from '../blocks/blocks.module';
 import { SharedModule } from '../../shared/shared.module';
 import { WidgetsModule } from '../widgets/widgets.module';
-import { FooterModule } from '../footer/footer.module';
 import { HeaderModule } from '../header/header.module';
 // Pages
 import { PageProductComponent } from './pages/page-product/page-product.component';
@@ -49,7 +48,6 @@ import { ProductStockComponent } from '../../shared/components/product-stock/pro
     ShopRoutingModule,
     WidgetsModule,
     NgSelectModule,
-    FooterModule,
     HeaderModule,
   ],
 })

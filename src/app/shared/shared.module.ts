@@ -50,7 +50,6 @@ import { InputNumberComponent } from './components/input-number/input-number.com
 import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 //import { PaginationComponent } from './components/pagination/pagination.component';
-import { ProductCardB2bComponent } from './components/product-card-b2b/product-card-b2b.component';
 //import { ProductFeatureSpecialComponent } from './components/product-feature-special/product-feature-special.component';
 import { ProductsViewComponent } from '../modules/shop/components/products-view/products-view.component';
 //import { ProductSliderComponent } from './components/product-slider/product-slider.component';
@@ -95,7 +94,6 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
 import { ProductCardB2cFichaComponent } from './components/product-card-b2c-ficha/product-card-b2c-ficha.component';
 import { AddContactModalComponent } from './components/add-contact-modal/add-contact-modal.component';
 import { UpdateContactModalComponent } from './components/update-contact-modal/update-contact-modal.component';
-// import { Productb2bComponent } from './components/productb2b/productb2b.component';
 import { AvisoStockComponent } from './components/aviso-stock/aviso-stock.component';
 import { CountdownTimerModule } from './../../../projects/countdown-timer/src/lib/countdown-timer.module';
 import { ProductCardB2cCmsComponent } from './components/product-card-b2c-cms/product-card-b2c-cms.component';
@@ -139,7 +137,6 @@ const NGU_CAROUSEL_MODULES = [
     LoadingBarComponent,
     PageHeaderComponent,
     // PaginationComponent,
-    ProductCardB2bComponent,
     // ProductFeatureSpecialComponent,
     LoadingElementComponent,
     // ProductSliderComponent,
@@ -183,7 +180,6 @@ const NGU_CAROUSEL_MODULES = [
     UpdateAddressModalComponent,
     AddContactModalComponent,
     UpdateContactModalComponent,
-    // Productb2bComponent,
     ProductCardB2cCmsComponent,
     ButtonsSlideshowComponent,
     ButtonComponent,
@@ -235,7 +231,6 @@ const NGU_CAROUSEL_MODULES = [
     LoadingBarComponent,
     PageHeaderComponent,
     // PaginationComponent,
-    ProductCardB2bComponent,
     ProductCardB2cComponent,
     LoadingElementComponent,
     // ProductSliderComponent,

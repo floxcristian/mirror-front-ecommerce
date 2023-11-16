@@ -14,7 +14,6 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { BlocksModule } from '../modules/blocks/blocks.module';
 import { HeaderModule } from '../modules/header/header.module';
 import { HeaderB2bModule } from '../modules/account/components/header/header-b2b.module';
-import { FooterModule } from '../modules/footer/footer.module';
 import { MobileModule } from '../modules/mobile/mobile.module';
 import { SharedModule } from '../shared/shared.module';
 import { CatalogoModule } from '../modules/catalogo/catalogo.module';
@@ -28,7 +27,6 @@ import { PageMesDelCamioneroComponent } from '../pages/page-mes-del-camionero/pa
 import { PageCyberComponent } from './../pages/page-cyber/page-cyber.component';
 import { PageMesAniversarioComponent } from '../pages/page-mes-aniversario/page-mes-aniversario.component';
 import { LayoutComponent } from '../layout/layout.component';
-import { B2bComponent } from '../layout/b2b/b2b.component';
 import { B2cComponent } from '../layout/b2c/b2c.component';
 import { VerificarpagoComponent } from './pages/verificarpago/verificarpago.component';
 import { PageCiberdayFormComponent } from './pages/page-ciberday-form/page-ciberday-form.component';
@@ -54,7 +52,6 @@ import { PageMesDelCamionero23Component } from '../pages/page-mes-del-camionero2
     PageMesDelCamioneroComponent,
     PageMesAniversarioComponent,
     RegistroOkModalComponent,
-    B2bComponent,
     B2cComponent,
     LayoutComponent,
     VerificarpagoComponent,
@@ -78,7 +75,6 @@ import { PageMesDelCamionero23Component } from '../pages/page-mes-del-camionero2
     BlocksModule,
     HeaderModule,
     HeaderB2bModule,
-    FooterModule,
     FooterB2cModule,
     MobileModule,
     CatalogoModule,

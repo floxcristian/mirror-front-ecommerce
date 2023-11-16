@@ -35,9 +35,6 @@ import { SearchComponent } from './components/search/search.component';
 import { TopbarComponent } from './components/topbar/topbar.component';
 
 //B2B
-import { SearchVinB2bComponent } from './components/search-vin-b2b/search-vin-b2b.component';
-import { BusquedasRecientesModalComponent } from './components/search-vin-b2b/components/barra-busqueda/components/busquedas-recientes-modal/busquedas-recientes-modal.component';
-import { BarraBusquedaComponent } from './components/search-vin-b2b/components/barra-busqueda/barra-busqueda.component';
 import { DireccionDespachoComponent } from './components/search-vin-b2b/components/direccion-despacho/direccion-despacho.component';
 
 @NgModule({
@@ -53,11 +50,8 @@ import { DireccionDespachoComponent } from './components/search-vin-b2b/componen
     TopbarComponent,
     ModalStoresComponent,
     AccountComponent,
-    SearchVinB2bComponent,
     MobileSearchComponent,
     DireccionDespachoComponent,
-    BarraBusquedaComponent,
-    BusquedasRecientesModalComponent,
     MenuCategoriasB2cComponent,
     MenuCategoriaB2cMobileComponent,
     Nivel2Component,
@@ -84,7 +78,6 @@ import { DireccionDespachoComponent } from './components/search-vin-b2b/componen
     MenuComponent,
     MegamenuComponent,
     ModalStoresComponent,
-    SearchVinB2bComponent,
     MobileSearchComponent,
     TopbarComponent,
     SearchComponent,

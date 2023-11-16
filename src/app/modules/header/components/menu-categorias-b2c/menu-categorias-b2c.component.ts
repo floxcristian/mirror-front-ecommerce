@@ -24,22 +24,30 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
   private categoriaDetalleOficial: any;
   private arrayCategoriasOficial: NavigationLink[] = [];
   private segundoNivelOficial: any;
-  // categorias_oficial:any[] = [{
-  //     "title" : "TIENDAS OFICIALES",
-  //     "id" : 1000,
-  //     "products" : 0,
-  //     "url" : "/tiendas-oficiales/",
-  //     "children" : [{   "title" : "INDIANA",
-  //             "products" : 0,
-  //             "url" : "/indiana/",
-  //             "children" : [],
-  //             "id" : 1001},
-  //             {"title" : "BLACKSMITH",
-  //             "products" : 0,
-  //             "url" : "/blacksmith/",
-  //             "children" : [],
-  //             "id" : 1002}]
-  // }]
+  categorias_oficial: any[] = [
+    {
+      title: 'TIENDAS OFICIALES',
+      id: 1000,
+      products: 0,
+      url: '/tiendas-oficiales/',
+      children: [
+        {
+          title: 'INDIANA',
+          products: 0,
+          url: '/indiana/',
+          children: [],
+          id: 1001,
+        },
+        {
+          title: 'BLACKSMITH',
+          products: 0,
+          url: '/blacksmith/',
+          children: [],
+          id: 1002,
+        },
+      ],
+    },
+  ];
 
   constructor(
     public menuCategorias: MenuCategoriasB2cService,
@@ -66,7 +74,7 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
       const categorias: CategoryApi[] = r.data;
       this.sortCategories(categorias);
       this.formatCategories(categorias);
-      // this.formatCategories2(this.categorias_oficial);
+      this.formatCategories2(this.categorias_oficial);
     });
   }
 

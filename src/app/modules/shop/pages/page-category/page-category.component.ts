@@ -85,6 +85,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   filtrosFlota!: Flota[];
   filtrosBusquedas!: Flota[];
   isB2B: boolean;
+  marca_tienda = '';
 
   despachoCliente!: Subscription;
 
@@ -186,6 +187,18 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe((query) => {
       // Seteamos el origen del buscador
       this.setOrigenes();
+      this.marca_tienda = query['filter_MARCA'] ? query['filter_MARCA'] : '';
+      console.log('marca:', this.marca_tienda);
+      if (this.marca_tienda != '') {
+        let banner_local: any = this.localS.get('bannersMarca');
+        if (
+          banner_local &&
+          banner_local.marca.toLowerCase() ===
+            this.marca_tienda.toLocaleLowerCase()
+        )
+          this.banners = banner_local;
+        else this.banners = null;
+      } else this.banners = null;
 
       // Se cargan los queryParams entrantes
       this.marca = query['marca'] ? query['marca'] : '';
@@ -561,10 +574,10 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.formatCategories(r.categoriasTree, r.levelFilter);
     this.formatFilters(r.filtros);
     this.agregarMatrizProducto(r.articulos);
-    // if (r.banners && r.banners.length > 0) {
-    //   this.banners = r.banners[0];
-    //   this.localS.set('bannersMarca', r.banners[0]);
-    // } else this.banners = null;
+    if (r.banners && r.banners.length > 0) {
+      this.banners = r.banners[0];
+      this.localS.set('bannersMarca', r.banners[0]);
+    } else this.banners = null;
   }
 
   private agregarMatrizProducto(productos: any) {
@@ -1020,7 +1033,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     if (this.anio !== '') {
       queryParams = { ...queryParams, ...{ anio: this.anio } };
     }
-    // if (this.marca_tienda !== '') queryParams = { ...queryParams, ...{ filter_MARCA: this.marca_tienda } };
+    if (this.marca_tienda !== '')
+      queryParams = { ...queryParams, ...{ filter_MARCA: this.marca_tienda } };
     return queryParams;
   }
 
