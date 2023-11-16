@@ -63,21 +63,22 @@ export class WishlistService implements OnDestroy {
     );
   }
 
-  remove(product: Product): Observable<void> {
-    // timer only for demo
-    return timer(1000).pipe(
-      map(() => {
-        const index = this.data.items.findIndex(
-          (item) => item.sku === product.sku
-        );
+  //NO SE UTILIZA
+  // remove(product: Product): Observable<void> {
+  //   // timer only for demo
+  //   return timer(1000).pipe(
+  //     map(() => {
+  //       const index = this.data.items.findIndex(
+  //         (item) => item.sku === product.sku
+  //       );
 
-        if (index !== -1) {
-          this.data.items.splice(index, 1);
-          this.save();
-        }
-      })
-    );
-  }
+  //       if (index !== -1) {
+  //         this.data.items.splice(index, 1);
+  //         this.save();
+  //       }
+  //     })
+  //   );
+  // }
 
   private save(): void {
     this.localS.set('wishlistItems', this.data.items as any);

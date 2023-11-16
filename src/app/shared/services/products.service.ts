@@ -84,12 +84,13 @@ export class ProductsService {
       { params }
     );
   }
-  getPropularProducts(params: any): Observable<ResponseApi> {
-    return this.http.get<ResponseApi>(
-      environment.apiCatalogo + 'popularesproducto',
-      { params }
-    );
-  }
+  //NO SE UTILIZA
+  // getPropularProducts(params: any): Observable<ResponseApi> {
+  //   return this.http.get<ResponseApi>(
+  //     environment.apiCatalogo + 'popularesproducto',
+  //     { params }
+  //   );
+  // }
 
   getHomePage(params: any) {
     return this.http.get(environment.apiElastic + 'homepageCms', { params });

@@ -34,10 +34,10 @@ export class LogisticsService {
   obtienRetiro(data: any) {
     return this.http.post(environment.apiLogistic + `retirocarro`, data);
   }
-
-  obtieneDireccionesTienda() {
-    return this.http.get(this.urlApi + `direccionestiendas`);
-  }
+  //NO SE UTILIZA
+  // obtieneDireccionesTienda() {
+  //   return this.http.get(this.urlApi + `direccionestiendas`);
+  // }
 
   obtieneDireccionesTiendaRetiro(params: any): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
