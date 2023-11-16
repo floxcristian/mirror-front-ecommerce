@@ -19,7 +19,7 @@ export class CatalogoService {
   });
   constructor(private http: HttpClient) {}
 
-  async obtenerCatalogos(estado: string) {
+  async obtenerCatalogos(estado: string): Promise<any> {
     let url = `${environment.apiCatalogo}obtenerCatalogos?tipo=Web&datos=true&estado=${estado}`;
     return this.http.get(url).toPromise();
   }
