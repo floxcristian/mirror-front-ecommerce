@@ -105,7 +105,6 @@ export class ProductsService {
   }
 
   getEspeciales(params: any) {
-    console.log('getEspeciales: ', params);
     return this.http.get(environment.apiElastic + 'especiales', { params });
   }
 

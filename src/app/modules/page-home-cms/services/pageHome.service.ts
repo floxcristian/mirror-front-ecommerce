@@ -12,12 +12,6 @@ export class PageHomeService {
   getPagehomeCms() {
     return this.http.get(environment.apiElastic + 'newhomepageCms');
   }
-  //update pagina home
-  getBlogEntries() {
-    return this.http
-      .get(`${environment.apiCMS}posts`)
-      .pipe(map((res: any) => res.data));
-  }
 
   buscarProductosElactic(params: any) {
     return this.http.get(environment.apiElastic + `especialCms`, { params });

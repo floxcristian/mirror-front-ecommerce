@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 // Environment
 import { environment } from '@env/environment';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -25,11 +26,10 @@ export class CmsService {
     return this.http.post(call, data);
   }
 
-  /* Blog */
-
   obtenerPosts() {
-    var call = environment.apiCMS + `posts/`;
-    return this.http.get(call);
+    return this.http
+      .get(`${environment.apiCMS}posts`)
+      .pipe(map((res: any) => res.data));
   }
 
   obtenerPost(data: any) {

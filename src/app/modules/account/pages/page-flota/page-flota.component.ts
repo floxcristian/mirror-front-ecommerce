@@ -1,3 +1,4 @@
+// Angular
 import {
   Component,
   OnDestroy,
@@ -6,8 +7,11 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
+// Ngx-bootstrap
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+// Libs
 import { ToastrService } from 'ngx-toastr';
+// Rxjs
 import { forkJoin, Subject } from 'rxjs';
 import { AddFlotaModalComponent } from '../../../../shared/components/add-flota-modal/add-flota-modal.component';
 import {
@@ -56,7 +60,6 @@ export class PageFlotaComponent implements OnInit, OnDestroy {
       ...this.dtOptions,
       ...{ dom: '<"row"<"col-6"l><"col-6"f>><"row"<"col-6"i><"col-6"p>> t' },
     };
-
     this.getData();
   }
 

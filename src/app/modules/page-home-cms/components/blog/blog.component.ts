@@ -1,5 +1,6 @@
 import { Component, Input, EventEmitter, OnInit, Output } from '@angular/core';
 import { PageHomeService } from '../../services/pageHome.service';
+import { CmsService } from '@shared/services/cms.service';
 
 @Component({
   selector: 'app-blog-home',
@@ -24,7 +25,7 @@ export class BlogComponent implements OnInit {
   data: any;
   currentOpenItemIndex = 0;
   @Output() elementoEvent: EventEmitter<any> = new EventEmitter();
-  constructor(private pageHomeService: PageHomeService) {}
+  constructor(private cmsService: CmsService) {}
 
   ngOnInit(): void {}
 
@@ -33,7 +34,7 @@ export class BlogComponent implements OnInit {
   }
 
   fetchBlogs() {
-    this.pageHomeService.getBlogEntries().subscribe((res) => {
+    this.cmsService.obtenerPosts().subscribe((res) => {
       this.blogs = res.slice(0, 4);
       this.blogs = this.blogs.map((item, index) => ({
         ...item,

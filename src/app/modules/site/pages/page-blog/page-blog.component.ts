@@ -31,10 +31,8 @@ export class PageBlogComponent implements OnInit {
 
   cargarPosts() {
     this.cms.obtenerPosts().subscribe((r: any) => {
-      // console.log(r.data[0]);
-
-      this.noticia = r.data[0];
-      this.noticias = r.data;
+      this.noticia = r[0];
+      this.noticias = r;
     });
   }
 

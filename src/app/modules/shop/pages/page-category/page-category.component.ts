@@ -8,7 +8,6 @@ import {
   ProductFilter,
   ProductFilterCategory,
   ProductFilterCheckbox,
-  ProductFilterCheckboxFlota,
 } from '../../../../shared/interfaces/product-filter';
 import { ProductsService } from '../../../../shared/services/products.service';
 import { RootService } from '../../../../shared/services/root.service';
@@ -46,9 +45,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   ultimosProductos!: Product[];
   filters: ProductFilter[] = [];
-  // filtersCache: ProductFilter[] = [];
   filterCategories: Category[] = [];
-  // filtrosBusquedaProducto = [];
   filterQuery: any;
   filterQueryVehicle: any;
   removableFilters: any = [];
@@ -130,7 +127,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private seoService: SeoService,
     private canonicalService: CanonicalService,
-    private clientsService: ClientsService,
     private buscadorService: BuscadorService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
@@ -166,23 +162,17 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           : this.sidebarPosition;
     });
 
-    /*
-    this.buscadorService.buscadorFiltrosExternosVisibles$.subscribe(
-      (data: boolean) => {
-        this.filtrosVehiculoVisibles = data;
-      }
-    );*/
-
-    this.filtrosFlota = (
+    /*this.filtrosFlota = (
       (await this.clientsService
         .getFlota(this.usuario.rut || '0')
         .toPromise()) as ResponseApi
-    ).data;
-    this.filtrosBusquedas = (
+    ).data;*/
+
+    /*this.filtrosBusquedas = (
       (await this.clientsService
         .getBusquedasVin(this.usuario.rut || '0')
         .toPromise()) as ResponseApi
-    ).data;
+    ).data;*/
 
     let metadataCount = 0;
     this.route.queryParams.subscribe((query) => {
@@ -572,7 +562,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     if (this.products.length == 0) this.breadcrumbs = [];
     this.formatoPaginacion(r, texto);
     this.filters = [];
-    this.formatFiltersFlota();
+    // this.formatFiltersFlota();
     this.formatCategories(r.categoriasTree, r.levelFilter);
     this.formatFilters(r.filtros);
     this.agregarMatrizProducto(r.articulos);
@@ -766,7 +756,10 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.filters.push(filtros);
   }
 
-  private formatFiltersFlota() {
+  /**
+   *
+   */
+  /*private formatFiltersFlota() {
     const filtro: ProductFilterCheckboxFlota = {
       name: 'MI FLOTA',
       type: 'checkboxFlota',
@@ -845,7 +838,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     });
 
     this.filters.push(filtro);
-  }
+  }*/
 
   private formatFilters(atr: any) {
     console.log('formatFilters: ', atr);
