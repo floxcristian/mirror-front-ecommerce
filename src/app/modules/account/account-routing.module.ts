@@ -11,7 +11,6 @@ import { PageOvsListComponent } from './pages/page-ovs-list/page-ovs-list.compon
 import { PageUsuariosComponent } from './pages/page-usuarios/page-usuarios.component';
 import { PageProductsCategoriesComponent } from './pages/page-products-categories/page-products-categories.component';
 import { PageNewProductsComponent } from './pages/page-new-products/page-new-products.component';
-import { PageSlidesComponent } from './pages/page-slides/page-slides.component';
 import { PageAddressesListComponent } from './pages/page-addresses-list/page-addresses-list.component';
 import { PageProfileComponent } from './pages/page-profile/page-profile.component';
 import { PagePasswordComponent } from './pages/page-password/page-password.component';
@@ -94,10 +93,6 @@ const routes: Routes = [
       {
         path: 'productos-nuevos',
         component: PageNewProductsComponent,
-      },
-      {
-        path: 'diapositivas',
-        component: PageSlidesComponent,
       },
       {
         path: 'solicitudes-de-compras',

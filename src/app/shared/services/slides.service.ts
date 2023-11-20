@@ -19,19 +19,4 @@ export class SlidesService {
   obtieneSlides() {
     return this.http.get(environment.apiCMS + 'slides/');
   }
-
-  crearSlide(data: any) {
-    var call = environment.apiCMS + `slides`;
-    return this.http.post(call, data);
-  }
-
-  updateSlide(data: any) {
-    var call = environment.apiCMS + `slides/` + data['_id'];
-    return this.http.patch(call, data);
-  }
-
-  deleteSlide(data: any) {
-    var call = environment.apiCMS + `slides/` + data['_id'];
-    return this.http.delete(call, data);
-  }
 }
