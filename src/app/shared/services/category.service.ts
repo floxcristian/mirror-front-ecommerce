@@ -17,10 +17,6 @@ export class CategoryService {
 
   constructor(private http: HttpClient) {}
 
-  obtieneCategorias() {
-    return this.http.get(`${environment.apib2b}/api/categorias/listado`);
-  }
-
   obtieneCategoriasHeader() {
     return this.http
       .get(environment.apiCMS + 'categories/categorias-header/')
