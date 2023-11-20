@@ -31,23 +31,12 @@ export class LogisticsService {
   obtienRetiro(data: any) {
     return this.http.post(environment.apiLogistic + `retirocarro`, data);
   }
-  //NO SE UTILIZA
-  // obtieneDireccionesTienda() {
-  //   return this.http.get(this.urlApi + `direccionestiendas`);
-  // }
 
   obtieneDireccionesTiendaRetiro(params: any): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
       environment.apiLogistic + `tiendasretiroomni`,
       { params }
     );
-  }
-
-  obtieneEstadoOV(OV: string) {
-    let consulta: any = this.http.get(
-      environment.apiLogistic + 'prestador-seguimiento/' + OV
-    );
-    return consulta;
   }
 
   obtieneComunas() {

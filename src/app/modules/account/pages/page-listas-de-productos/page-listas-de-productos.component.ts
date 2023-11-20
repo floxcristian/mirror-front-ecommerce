@@ -20,7 +20,6 @@ import { AgregarListaProductosMasivaModalComponent } from '../../../../shared/co
 import { AgregarListaProductosUnitariaModalComponent } from '../../../../shared/components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
 import { CartService } from '../../../../shared/services/cart.service';
 import { isPlatformBrowser } from '@angular/common';
-// import { ItemsControl } from '@ngu/carousel/lib/ngu-carousel/ngu-carousel';
 
 @Component({
   selector: 'app-page-listas-de-productos',

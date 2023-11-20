@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { LogisticsService } from '../../services/logistics.service';
 
 @Component({
   selector: 'app-tracking-steps',
@@ -8,7 +7,6 @@ import { LogisticsService } from '../../services/logistics.service';
 })
 export class TrackingStepsComponent implements OnInit {
   @Input() OVEstados: any[] = [];
-  @Input() OV = '';
 
   @Input() tipoEntrega = 'RPTDA';
   estado_envio: any = {};
@@ -22,7 +20,7 @@ export class TrackingStepsComponent implements OnInit {
     'RECIBIDO',
     'N/A',
   ];
-  constructor(private logisticservice: LogisticsService) {}
+  constructor() {}
 
   ngOnInit() {
     this.informarEstados();
@@ -32,27 +30,6 @@ export class TrackingStepsComponent implements OnInit {
     this.informarEstados();
   }
 
-  async buscarDespachOV() {
-    this.estado_envio = {};
-    let consulta: any = await this.logisticservice
-      .obtieneEstadoOV(this.OV)
-      .toPromise();
-    let estado_envio: any = [];
-
-    if (consulta.data.length > 0) {
-      if (consulta.data[0].CodigoPrestador == 'CORREOSCHI')
-        estado_envio = consulta.data.filter((r: any) => r.CodigoEstado == '4');
-      else if (consulta.data[0].CodigoPrestador == 'SAMEX') {
-        estado_envio = consulta.data.filter((r: any) => r.CodigoEstado == '9');
-        //estado_envio= Array.from(new Set(estado_envio.Estado));
-      }
-    }
-
-    if (estado_envio.length > 0) {
-      this.estado_envio.nombre = 'En Despacho a domicilio';
-      this.estado_envio.fecha = estado_envio[0].FechaEstadoOT;
-    }
-  }
   buscarRetirOV() {
     let estado_envio = this.OVEstados.filter(
       (r) =>

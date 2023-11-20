@@ -3,7 +3,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { Lista } from '../../interfaces/articuloFavorito';
 import { ArticuloLista } from '../../interfaces/articuloLista';
-import { Articulo } from '../../interfaces/articulos.response';
 import { Usuario } from '../../interfaces/login';
 import { ResponseApi } from '../../interfaces/response-api';
 import { ClientsService } from '../../services/clients.service';
