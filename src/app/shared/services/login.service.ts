@@ -94,12 +94,6 @@ export class LoginService {
         },
         {
           type: 'link',
-          label: 'Productos Nuevos',
-          url: ['/', 'mi-cuenta', 'productos-nuevos'],
-          icon: 'fab fa-product-hunt',
-        },
-        {
-          type: 'link',
           label: 'Cerrar sesión',
           url: ['/', 'mi-cuenta', 'login'],
           icon: 'fas fa-power-off',

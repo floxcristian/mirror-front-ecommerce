@@ -20,7 +20,6 @@ import { PageInvoicesListComponent } from './pages/page-invoices-list/page-invoi
 import { PageOvsListComponent } from './pages/page-ovs-list/page-ovs-list.component';
 import { PageUsuariosComponent } from './pages/page-usuarios/page-usuarios.component';
 import { PageProductsCategoriesComponent } from './pages/page-products-categories/page-products-categories.component';
-import { PageNewProductsComponent } from './pages/page-new-products/page-new-products.component';
 import { PagePasswordComponent } from './pages/page-password/page-password.component';
 import { PageProfileComponent } from './pages/page-profile/page-profile.component';
 import { PagePendingOrdersComponent } from './pages/page-pending-orders/page-pending-orders.component';
@@ -70,7 +69,6 @@ import { CardDashboardNoChartComponent } from '../../shared/components/card-dash
     PageOvsListComponent,
     PageUsuariosComponent,
     PageProductsCategoriesComponent,
-    PageNewProductsComponent,
     PagePasswordComponent,
     PageProfileComponent,
     PagePendingOrdersComponent,
