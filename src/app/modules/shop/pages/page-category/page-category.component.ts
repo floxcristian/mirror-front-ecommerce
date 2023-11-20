@@ -31,7 +31,6 @@ import { isVacio } from '../../../../shared/utils/utilidades';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { Subscription } from 'rxjs';
 import { Flota } from '../../../../shared/interfaces/flota';
-import { ClientsService } from '../../../../shared/services/clients.service';
 import { BuscadorService } from '../../../../shared/services/buscador.service';
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
@@ -79,7 +78,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   anio = '';
   marca = '';
   modelo = '';
-  filtrosFlota!: Flota[];
+  // filtrosFlota!: Flota[];
   filtrosBusquedas!: Flota[];
   isB2B: boolean;
   marca_tienda = '';
@@ -145,9 +144,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    //if (!this.buscadorService.isFiltroSeleccionado()) {
     this.buscadorService.filtrosVisibles(true);
-    //}
     this.despachoCliente.unsubscribe();
   }
 
@@ -179,7 +176,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       // Seteamos el origen del buscador
       this.setOrigenes();
       this.marca_tienda = query['filter_MARCA'] ? query['filter_MARCA'] : '';
-      console.log('marca:', this.marca_tienda);
+
       if (this.marca_tienda != '') {
         let banner_local: any = this.localS.get('bannersMarca');
         if (
