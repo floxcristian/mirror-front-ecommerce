@@ -1,9 +1,17 @@
+// Angular
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PLATFORM_ID, Inject } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+// Rxjs
+import { Subscription } from 'rxjs';
+// Environment
+import { environment } from '@env/environment';
 import {
   Product,
   ProductCategory,
 } from '../../../../shared/interfaces/product';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
   ProductFilter,
   ProductFilterCategory,
@@ -20,16 +28,10 @@ import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { CartService } from '../../../../shared/services/cart.service';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { GeoLocation } from '../../../../shared/interfaces/geo-location';
-import { PLATFORM_ID, Inject } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { CanonicalService } from '../../../../shared/services/canonical.service';
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-import { environment } from '@env/environment';
 import { isVacio } from '../../../../shared/utils/utilidades';
-
 import { LogisticsService } from '../../../../shared/services/logistics.service';
-import { Subscription } from 'rxjs';
 import { Flota } from '../../../../shared/interfaces/flota';
 import { BuscadorService } from '../../../../shared/services/buscador.service';
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
@@ -79,8 +81,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   marca = '';
   modelo = '';
   // filtrosFlota!: Flota[];
-  filtrosBusquedas!: Flota[];
-  isB2B: boolean;
+  //filtrosBusquedas!: Flota[];
   marca_tienda = '';
 
   despachoCliente!: Subscription;
@@ -137,9 +138,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       this.productosPorPagina = 25;
     }
     this.usuario = this.root.getDataSesionUsuario();
-    this.isB2B =
-      this.usuario.user_role === 'supervisor' ||
-      this.usuario.user_role === 'comprador';
     this.preferenciaCliente = this.localS.get('preferenciasCliente');
   }
 
@@ -175,9 +173,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe((query) => {
       // Seteamos el origen del buscador
       this.setOrigenes();
-      this.marca_tienda = query['filter_MARCA'] ? query['filter_MARCA'] : '';
+      this.marca_tienda = query['filter_MARCA'] || '';
 
-      if (this.marca_tienda != '') {
+      if (this.marca_tienda) {
         let banner_local: any = this.localS.get('bannersMarca');
         if (
           banner_local &&
@@ -189,10 +187,10 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       } else this.banners = null;
 
       // Se cargan los queryParams entrantes
-      this.marca = query['marca'] ? query['marca'] : '';
+      /*this.marca = query['marca'] ? query['marca'] : '';
       this.modelo = query['modelo'] ? query['modelo'] : '';
-      this.anio = query['anio'] ? query['anio'] : '';
-      if (!isVacio(query['chassis'])) {
+      this.anio = query['anio'] ? query['anio'] : '';*/
+      /*if (!isVacio(query['chassis'])) {
         if (Array.isArray(query['chassis'])) {
           query['chassis'].forEach((element) => {
             this.chassis.push(element);
@@ -200,7 +198,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         } else {
           this.chassis.push(query['chassis']);
         }
-      }
+      }*/
 
       // control del componente filtros
       if (
@@ -1016,7 +1014,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   }
 
   armaQueryParams(queryParams: any) {
-    if (this.marca !== '') {
+    /*if (this.marca !== '') {
       queryParams = { ...queryParams, ...{ marca: this.marca } };
     }
     if (this.modelo !== '') {
@@ -1024,7 +1022,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     }
     if (this.anio !== '') {
       queryParams = { ...queryParams, ...{ anio: this.anio } };
-    }
+    }*/
     if (this.marca_tienda !== '')
       queryParams = { ...queryParams, ...{ filter_MARCA: this.marca_tienda } };
     return queryParams;
