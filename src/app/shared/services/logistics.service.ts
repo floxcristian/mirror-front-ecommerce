@@ -27,9 +27,6 @@ export class LogisticsService {
       this.urlApi + `direccionescliente?rut=${clienteRut}&tipo=2`
     );
   }
-  obtieneDespachoProducto(data: any) {
-    return this.http.post(this.urlApi + `despachoProducto`, data);
-  }
 
   obtienRetiro(data: any) {
     return this.http.post(environment.apiLogistic + `retirocarro`, data);

@@ -88,6 +88,10 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     const usuario: Usuario = this.root.getDataSesionUsuario();
     if (['supervisor', 'comprador'].includes(usuario.user_role || '')) {
+      delete usuario.ultimoCierre;
+      this.localS.set('usuario', usuario);
+    }
+    /*if (['supervisor', 'comprador'].includes(usuario.user_role || '')) {
       const data: FormData = new FormData();
 
       usuario.fechaControl = moment();
@@ -104,7 +108,8 @@ export class AppComponent implements AfterViewInit, OnInit {
               this.localS.set('usuario', usuario);
             });
         });
-    }
+    }*/
+
     if (isPlatformBrowser(this.platformId)) {
       window.onbeforeunload = (event) => {
         const u: Usuario = this.root.getDataSesionUsuario();

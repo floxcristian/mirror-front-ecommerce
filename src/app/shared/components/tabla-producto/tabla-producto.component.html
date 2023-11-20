@@ -1,9 +1,0 @@
-<hr />
-
-<div class="table-responsive">
-  <ng-container *ngIf="!loadingData">
-    <ng-container *ngFor="let item of productsData">
-      <app-producto-tr [product]="item" [origen]="origen"></app-producto-tr>
-    </ng-container>
-  </ng-container>
-</div>

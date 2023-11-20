@@ -70,11 +70,9 @@ import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.
 import { ScrollTopComponent } from './components/scroll-top/scroll-top.component';
 //import { VideoComponent } from './components/video/video.component';
 import { ModalComponent } from './components/modal/modal.component';
-import { TablaProductoComponent } from './components/tabla-producto/tabla-producto.component';
 import { AddFlotaModalComponent } from './components/add-flota-modal/add-flota-modal.component';
 import { ProductCardB2cComponent } from './components/product-card-b2c/product-card-b2c.component';
 import { UpdateFlotaModalComponent } from './components/update-flota-modal/update-flota-modal.component';
-import { PorductoTrComponent } from './components/tabla-producto/porducto-tr/producto-tr.component';
 import { InputNumberProductComponent } from './components/input-number-product/input-number-product.component';
 import { WishListModalComponent } from './components/wish-list-modal/wish-list-modal.component';
 import { ProductListCardComponent } from './components/product-list-card/product-list-card.component';
@@ -157,11 +155,9 @@ const NGU_CAROUSEL_MODULES = [
     ScrollTopComponent,
     // VideoComponent,
     ModalComponent,
-    TablaProductoComponent,
     AddFlotaModalComponent,
     ProductCardB2cComponent,
     UpdateFlotaModalComponent,
-    PorductoTrComponent,
     InputNumberProductComponent,
     WishListModalComponent,
     ProductListCardComponent,

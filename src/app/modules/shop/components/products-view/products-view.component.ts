@@ -51,7 +51,6 @@ export class ProductsViewComponent {
   selectedItem = this.limit;
   innerWidth: number;
   url: string;
-  class = 'grid';
 
   constructor(
     @Inject(DOCUMENT) document: any,
@@ -109,19 +108,6 @@ export class ProductsViewComponent {
       );
     if ((this.textToSearch?.length || 0) > 70)
       this.textToSearch = 'Búsqueda personalizada';
-  }
-
-  setLayout(value: Layout): void {
-    this.layout = value;
-    if (value === 'grid') {
-      this.class = 'grid';
-    } else {
-      this.class = 'list';
-    }
-    this.cambiaPagina.emit({
-      page: 1,
-      scroll: false,
-    });
   }
 
   onPageChange(pageNumber: number): void {

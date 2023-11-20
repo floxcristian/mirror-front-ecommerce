@@ -14,7 +14,6 @@ import { ComentarioArticulo } from '../interfaces/comentariosArticulo';
 })
 export class CatalogoService {
   headers = new HttpHeaders({
-    'Content-Type': 'application/json',
     Authorization: `Basic c2VydmljZXM6MC49ajNEMnNzMS53Mjkt`,
   });
   constructor(private http: HttpClient) {}

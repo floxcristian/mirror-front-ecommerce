@@ -99,26 +99,18 @@
           *ngIf="cargandoCatalogo"
           text="Cargando productos"
         ></app-loading-element>
-        <ng-container *ngIf="class == 'grid'">
-          <div
-            *ngFor="let product of products"
-            class="products-list__item mb-1 me-1"
-          >
-            <app-product-card-b2c-cms
-              [paramsCategory]="paramsCategory"
-              [origen]="origen"
-              [product]="product"
-              [grid]="layout"
-            >
-            </app-product-card-b2c-cms>
-          </div>
-        </ng-container>
-        <div class="col-12 col-lg-12" *ngIf="class == 'list'">
-          <app-tabla-producto
-            [origen]="origen"
+
+        <div
+          *ngFor="let product of products"
+          class="products-list__item mb-1 me-1"
+        >
+          <app-product-card-b2c-cms
             [paramsCategory]="paramsCategory"
-            [products]="products"
-          ></app-tabla-producto>
+            [origen]="origen"
+            [product]="product"
+            [grid]="layout"
+          >
+          </app-product-card-b2c-cms>
         </div>
       </div>
     </div>

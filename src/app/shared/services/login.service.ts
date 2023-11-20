@@ -44,13 +44,6 @@ export class LoginService {
     return this.http.post(environment.apiCMS + 'users/login', data);
   }
 
-  registroSesion(data: any, idSesion: string, accion: string) {
-    const apiUrl = `${environment.apiCMS}users/sesion/${idSesion}/${accion}`;
-    return this.http
-      .post(`${environment.apiCMS}users/sesion/${idSesion}/${accion}`, data)
-      .toPromise();
-  }
-
   notify(data: any) {
     if (data === null) {
       const usuario = this.root.getDataSesionUsuario();
