@@ -212,20 +212,10 @@ export class ClientsService {
     return this.http.post(environment.apiCustomer + `deuda/generaPago`, data);
   }
 
-  getBusquedasVin(rut: string): Observable<ResponseApi> {
+  getListaArticulosFavoritos(rut: string): Observable<ResponseApi> {
     return this.http.get<ResponseApi>(
-      environment.apiCustomer + `busquedasVin?rutCliente=${rut}`
+      environment.apiCustomer + `favoritos/lista?rut=${rut}`
     );
-  }
-
-  getFlota(rut: string): Observable<ResponseApi> {
-    return this.http.get<ResponseApi>(
-      environment.apiCustomer + `flota?rutCliente=${rut}`
-    );
-  }
-
-  setFlota(request: any) {
-    return this.http.post(environment.apiCustomer + `flota`, request);
   }
 
   setConcurso(data: any) {
@@ -246,40 +236,6 @@ export class ClientsService {
 
   setConcursoGiftCard(data: any) {
     return this.http.post(environment.apiCustomer + `concursoGiftcard`, data);
-  }
-
-  deleteBusquedaVin(busqueda: Flota) {
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-      body: {
-        idFlota: busqueda._id,
-      },
-    };
-    return this.http.delete(environment.apiCustomer + `busquedaVin`, options);
-  }
-
-  deleteFlota(flota: Flota) {
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-      body: {
-        idFlota: flota._id,
-      },
-    };
-    return this.http.delete(environment.apiCustomer + `flota`, options);
-  }
-
-  updateFlota(request: any) {
-    return this.http.put(environment.apiCustomer + `flota`, request);
-  }
-
-  getListaArticulosFavoritos(rut: string): Observable<ResponseApi> {
-    return this.http.get<ResponseApi>(
-      environment.apiCustomer + `favoritos/lista?rut=${rut}`
-    );
   }
 
   setListaArticulosFavoritos(
@@ -510,9 +466,6 @@ export class ClientsService {
     contactoId: string
   ): Observable<ResponseApi> {
     const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
       body: request,
     };
     return this.http.delete<ResponseApi>(
@@ -521,16 +474,59 @@ export class ClientsService {
     );
   }
 
-  getContactos(params: any) {
-    return this.http.post(
-      environment.apiCustomer + 'filtros/ContactosCompradorb2b',
-      params
-    );
-  }
-
   getBloqueo(rutCliente: string) {
     return this.http.get(
       `${environment.apiCustomer}bloqueo?rut=${rutCliente}`
     );
+  }
+
+  // NOVA
+  deleteBusquedaVin(busqueda: Flota) {
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      body: {
+        idFlota: busqueda._id,
+      },
+    };
+    return this.http.delete(environment.apiCustomer + `busquedaVin`, options);
+  }
+
+  // NOVA
+  deleteFlota(flota: Flota) {
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      body: {
+        idFlota: flota._id,
+      },
+    };
+    return this.http.delete(environment.apiCustomer + `flota`, options);
+  }
+
+  // NOVA
+  updateFlota(request: any) {
+    return this.http.put(environment.apiCustomer + `flota`, request);
+  }
+
+  // NOVA
+  getBusquedasVin(rut: string): Observable<ResponseApi> {
+    return this.http.get<ResponseApi>(
+      environment.apiCustomer + `busquedasVin?rutCliente=${rut}`
+    );
+  }
+
+  // NOVA
+  getFlota(rut: string): Observable<ResponseApi> {
+    return this.http.get<ResponseApi>(
+      environment.apiCustomer + `flota?rutCliente=${rut}`
+    );
+  }
+
+  // NOVA
+  setFlota(request: any) {
+    return this.http.post(environment.apiCustomer + `flota`, request);
   }
 }

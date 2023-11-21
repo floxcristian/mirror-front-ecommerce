@@ -40,7 +40,6 @@ import { ModalConfirmComponent } from './components/modal-confirm/modal-confirm.
 import { BancoslistComponent } from './components/bancoslist/bancoslist.component';
 import { MapChilexpressComponent } from './components/map-chilexpress/map-chilexpress.component';
 import { SucursalesComponent } from './components/sucursales/sucursales.component';
-import { FormContactoComponent } from './components/form-contacto/form-contacto.component';
 import { AgregarCentroCostoComponent } from './components/agregar-centro-costo/agregar-centro-costo.component';
 import { ResumenRetiroComponent } from './components/resumen-retiro/resumen-retiro.component';
 import { ListaPagoComponent } from './components/lista-pago/lista-pago.component';
@@ -76,9 +75,7 @@ import { CardProductCardComponent } from './components/card-product-card/card-pr
     PageCartChilexpressComponent,
     MapChilexpressComponent,
     SucursalesComponent,
-
     PageDownloadpdfComponent,
-    FormContactoComponent,
     ModalConfirmDatesComponent,
     AgregarCentroCostoComponent,
     PageOmniCartOvSuccessComponent,
