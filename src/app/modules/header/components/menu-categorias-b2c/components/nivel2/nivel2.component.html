@@ -18,10 +18,26 @@
           class="mb-3 d-flex justify-content-between"
           *ngFor="let item of nivel2"
         >
-          <div class="text-truncate" (click)="menuCategorias.open(3, item)">
+          <div
+            *ngIf="item.items.length > 0"
+            class="text-truncate"
+            (click)="menuCategorias.open(3, item)"
+          >
             {{ item.label | titlecase }}
           </div>
-          <div (click)="menuCategorias.open(3, item)">
+          <div
+            *ngIf="item.items.length === 0"
+            class="text-truncate"
+            (click)="seleccionar()"
+            [routerLink]="item.url"
+            [queryParams]="{ filter_MARCA: item.url.at(-1) }"
+          >
+            {{ item.label | titlecase }}
+          </div>
+          <div
+            *ngIf="item.items.length > 0"
+            (click)="menuCategorias.open(3, item)"
+          >
             <i class="fa-solid fa-chevron-right"></i>
           </div>
         </li>
