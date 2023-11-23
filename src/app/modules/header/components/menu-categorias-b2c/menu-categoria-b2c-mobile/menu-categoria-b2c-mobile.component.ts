@@ -26,6 +26,7 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 export class MenuCategoriaB2cMobileComponent implements OnInit {
   private destroy$: Subject<any> = new Subject();
   items: NavigationLink[] = [];
+  items_oficial: any[] = [];
   isOpen = false;
   templateTiendaModal!: TemplateRef<any>;
   modalRefTienda!: BsModalRef;
@@ -33,6 +34,61 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
   private categoriaDetalle: any;
   private arrayCategorias: NavigationLink[] = [];
   private segundoNivel: any;
+  private categoriaDetalleOficial: any;
+  private arrayCategoriasOficial: NavigationLink[] = [];
+  private segundoNivelOficial: any;
+  categorias_oficial: any[] = [
+    {
+      title: 'TIENDAS OFICIALES',
+      id: 1000,
+      products: 0,
+      url: '/tiendas-oficiales/',
+      children: [
+        {
+          title: 'BLACKSMITH',
+          products: 0,
+          url: '/blacksmith/',
+          children: [],
+          id: 1001,
+        },
+        {
+          title: 'GOTEK',
+          products: 0,
+          url: '/gotek/',
+          children: [],
+          id: 1002,
+        },
+        {
+          title: 'INDIANA',
+          products: 0,
+          url: '/indiana/',
+          children: [],
+          id: 1002,
+        },
+        {
+          title: 'MARCOPOLO',
+          products: 0,
+          url: '/marcopolo/',
+          children: [],
+          id: 1004,
+        },
+        {
+          title: 'POWERTRUCK',
+          products: 0,
+          url: '/powertruck/',
+          children: [],
+          id: 1005,
+        },
+        {
+          title: 'RANDON',
+          products: 0,
+          url: '/randon/',
+          children: [],
+          id: 1006,
+        },
+      ],
+    },
+  ];
   @ViewChild('menuTienda', { static: false }) menuTienda!: DropdownDirective;
   constructor(
     public menuCategorias: MenuCategoriasB2cService,
@@ -76,6 +132,7 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
       const categorias: CategoryApi[] = r.data;
       this.sortCategories(categorias);
       this.formatCategories(categorias);
+      this.formatCategories2(this.categorias_oficial);
     });
   }
 
@@ -169,5 +226,40 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
 
   estableceModalTienda(template: any) {
     this.templateTiendaModal = template;
+  }
+  //datos tienda oficial
+  formatCategories2(data: CategoryApi[]) {
+    for (const primeraCategoria of data) {
+      this.categoriaDetalleOficial = {
+        url: ['/', 'inicio', 'productos'],
+        label: `${primeraCategoria.title}`,
+        menu: [],
+      };
+
+      for (const segundaCategoria of primeraCategoria.children || []) {
+        this.segundoNivelOficial = {
+          items: [
+            {
+              label: `${segundaCategoria.title}`,
+              url: [
+                '/',
+                'inicio',
+                'productos',
+                this.root.replaceSlash(segundaCategoria.url),
+              ],
+              items: '',
+            },
+          ],
+        };
+        const tercerNivel: any[] = [];
+        this.segundoNivelOficial.items[0].items = tercerNivel;
+        this.categoriaDetalleOficial.menu.push(
+          this.segundoNivelOficial.items[0]
+        );
+      }
+      this.arrayCategoriasOficial.push(this.categoriaDetalleOficial);
+    }
+    this.items_oficial = this.arrayCategoriasOficial;
+    console.log('items', this.items_oficial);
   }
 }
