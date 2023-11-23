@@ -105,11 +105,6 @@ export class ClientsService {
     return this.http.patch(call, data);
   }
 
-  deleteUsuario(data: any) {
-    const call = environment.apiCMS + `users/` + data._id;
-    return this.http.delete(call, data);
-  }
-
   addAdreess(request: any): Observable<ResponseApi> {
     return this.http.post<ResponseApi>(
       `${environment.apiCustomer}direccionCRM`,

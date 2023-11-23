@@ -166,24 +166,6 @@ export class PageUsuariosComponent implements OnInit {
     this.formUsuario.patchValue(user);
   }
 
-  deleteUser(data: any) {
-    if (confirm('Esta seguro de eliminar el usuario "' + data.email + '"')) {
-      data['id'] = data['_id'];
-
-      this.clients.deleteUsuario(data).subscribe(
-        () => {
-          this.toastr.success('Usuario eliminado exitosamente');
-          this.formUser();
-
-          this.loadData();
-        },
-        (error) => {
-          this.toastr.error('Error de conexión, para eliminar usuarios');
-          this.loadingData = false;
-        }
-      );
-    }
-  }
   reloadWindow(): void {
     window.location.reload();
   }
