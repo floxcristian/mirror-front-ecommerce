@@ -1,3 +1,4 @@
+<h1>page home template</h1>
 <div class="col-sm-12 p-0" style="margin-top: 60px">
   <div
     class="cargandoCent text-center"
@@ -44,6 +45,7 @@
         <br />
         <br />
       </ng-container>
+      <!-- Start:: especialCms -->
       <ng-container *ngIf="item.tipo === 'lista'">
         <app-lista_producto
           *ngIf="!carga_listo_especial"
@@ -55,6 +57,7 @@
         <br />
         <br />
       </ng-container>
+      <!-- End:: especialCms -->
     </ng-container>
   </ng-container>
 </div>

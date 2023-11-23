@@ -1,3 +1,4 @@
+// Angular
 import {
   Component,
   OnInit,
@@ -5,11 +6,12 @@ import {
   Input,
   ChangeDetectorRef,
 } from '@angular/core';
+// Libs
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+// Services
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
-import { ProductsService } from '../../../../shared/services/products.service';
 import { PromesaService } from '../../services/promesa.service';
 import { MpSimuladorHeaderFiltrosMagicos } from './mp-simulador-header.filtros-magicos';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-despacho',
@@ -19,6 +21,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 export class DespachoComponent implements OnInit {
   @Input() product!: any;
   @Input() tiendaActual: any = [];
+
   tiendaSeleccionada: any = [];
   stock: any = 0;
   stock_bodega: any = 0;
@@ -34,14 +37,10 @@ export class DespachoComponent implements OnInit {
   promesas: any = [];
   modo: string = this.MODOS.DESPACHO;
 
-  @Input() sinStockSuficienteDespacho: Boolean = false;
-  @Input() sinStockSuficienteTiendaActual: Boolean = false;
-  @Input() stockProgramado: Boolean = false;
   stockMax: any = 0;
   @Input() cantidad: any = 0;
 
   constructor(
-    private productsService: ProductsService,
     private promesaService: PromesaService,
     private modalService: BsModalService,
     private geoLocationService: GeoLocationService,
@@ -49,10 +48,6 @@ export class DespachoComponent implements OnInit {
   ) {}
   localidad: any = [];
   async ngOnInit() {
-    await this.sinStockSuficienteTiendaActual;
-    await this.sinStockSuficienteDespacho;
-    await this.stockProgramado;
-
     this.cd.detectChanges();
   }
 

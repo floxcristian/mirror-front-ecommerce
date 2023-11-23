@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { LoginService } from '../../shared/services/login.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { LogisticsService } from '@shared/services/logistics.service';
 
 @Component({
   selector: 'app-registro',
@@ -32,7 +33,7 @@ export class PageRegistroComponent implements OnInit {
     private clients: ClientsService,
     private toastr: ToastrService,
     private router: Router,
-
+    private logisticService: LogisticsService,
     private loginService: LoginService,
     private localS: LocalStorageService
   ) {}
@@ -68,7 +69,7 @@ export class PageRegistroComponent implements OnInit {
   }
 
   formUser() {
-    this.clients.buscarComunas().subscribe(
+    this.logisticService.obtieneComunas().subscribe(
       (r: any) => {
         this.comunas = r.data.map((record: any) => {
           var v = record.comuna + '@' + record.recid + '@' + record.region;

@@ -197,7 +197,6 @@ export class UpdateAddressModalComponent implements OnInit {
     const direccion: any = {
       recid: this.direccion.recid,
       rut: usuario.rut,
-
       tipo: 'DES',
       region: comunaArr[2],
       comuna: comunaArr[0],

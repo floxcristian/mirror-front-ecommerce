@@ -13,6 +13,11 @@ export class PageHomeService {
     return this.http.get(environment.apiElastic + 'newhomepageCms');
   }
 
+  /**
+   * Según Jose se usa cuando se administra el dashboard.
+   * @param params
+   * @returns
+   */
   buscarProductosElactic(params: any) {
     return this.http.get(environment.apiElastic + `especialCms`, { params });
   }

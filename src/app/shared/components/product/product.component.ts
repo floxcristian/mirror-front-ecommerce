@@ -115,10 +115,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   estado = true;
   products: Product[] = [];
   videos!: any[];
-  sinStockSuficienteDespacho!: boolean;
-  sinStockSuficienteTiendaActual!: boolean;
-  sinStockOtrasTiendas!: boolean;
-  sinStockProgramados!: boolean;
 
   // Promesas
   addButtonMovilPromise!: Subscription;
@@ -262,7 +258,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   addingToCart = false;
   addingToWishlist = false;
   addingToCompare = false;
-  stockProgramado = false;
   disponibilidadSku: any;
   headerLayout!: string;
 
@@ -334,10 +329,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     if (this.layout !== 'quickview' && isPlatformBrowser(this.platformId)) {
       this.photoSwipePromise = this.photoSwipe.load().subscribe();
     }
-    if (
-      this.usuario.user_role !== 'supervisor' &&
-      this.usuario.user_role !== 'comprador'
-    ) {
+    if (!['supervisor', 'comprador'].includes(this.usuario.user_role || '')) {
       this.gtmService.pushTag({
         event: 'productView',
         pagePath: window.location.href,
@@ -406,8 +398,9 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   async Actualizar() {
     await this.obtienePrecioEscala();
   }
-  carouselTileLoad(data: any) {
-    const arr = this.carouselItems;
+
+  carouselTileLoad() {
+    // const arr = this.carouselItems;
     this.carouselItems = [...this.carouselItems, ...this.mainItems];
   }
 
@@ -467,7 +460,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
    * @param tienda
    */
   async comprobarStock(sku: any, tienda: any, product: any): Promise<void> {
-    this.stockProgramado = true;
     this.stockTiendaActual = 0;
     return;
   }
