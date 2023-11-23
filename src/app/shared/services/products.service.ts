@@ -31,7 +31,6 @@ export class ProductsService {
       sucursal,
       rut: usuario.rut,
     };
-    console.log('buscarProductosElactic [barra búsqueda]: ', params);
     return this.http.get(environment.apiElastic2, { params });
   }
 
@@ -106,12 +105,6 @@ export class ProductsService {
 
   getEspeciales(params: any) {
     return this.http.get(environment.apiElastic + 'especiales', { params });
-  }
-
-  getFicha(sku: any) {
-    return this.http.get(
-      environment.apiCMS + 'products/descripcion-ficha?sku=' + sku
-    );
   }
 
   enviarCorreoSolicitudProductoSinStock(params: any) {

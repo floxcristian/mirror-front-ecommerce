@@ -11,9 +11,7 @@ import { CartService } from '../../services/cart.service';
 export class AddcartButtonComponent implements OnInit {
   @Input() addingToCart!: boolean;
   @Input() disponibilidad!: boolean;
-  @Input() sinStockOtrasTiendas!: boolean;
-  @Input() sinStockSuficienteDespacho!: boolean;
-  @Input() sinStockSuficienteTiendaActual!: boolean;
+
   @Output() quantity: EventEmitter<any> = new EventEmitter();
   cantidad: FormControl = new FormControl(1);
   constructor(public route: Router, private cartService: CartService) {}
@@ -24,7 +22,7 @@ export class AddcartButtonComponent implements OnInit {
     this.cartService.addProductfromMovilButton();
   }
 
-  HideButton() {
+  HideButton(): boolean {
     if (this.route.url.indexOf('productos/ficha') == -1) {
       return true;
     } else {

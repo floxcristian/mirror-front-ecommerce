@@ -1,7 +1,11 @@
+// Angular
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+// Rxjs
 import { Subscription } from 'rxjs';
+// Models
 import { GeoLocation } from '../../../../shared/interfaces/geo-location';
 import { Usuario } from '../../../../shared/interfaces/login';
+// Services
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { DirectionService } from '../../../../shared/services/direction.service';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
@@ -17,13 +21,23 @@ import { LoginService } from '../../../../shared/services/login.service';
   styleUrls: ['./page-home-template.component.scss'],
 })
 export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
+  // Productos
   lstProductos: any[] = [];
   url: any[] = [];
+  // Productos
   lstProductos1: any[] = [];
   url1: any[] = [];
+  // Otro...
   preferenciasCliente!: PreferenciasCliente;
   user!: Usuario;
   despachoCliente!: Subscription;
+
+  //declarando la variable para ver los tipos
+  carga = true;
+  carga_producto_home = true;
+  carga_listo_especial = true;
+  pageHome: any = [];
+
   constructor(
     private pageHomeService: PageHomeService,
     private root: RootService,
@@ -34,17 +48,13 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     private localStorage: LocalStorageService,
     private loginService: LoginService
   ) {}
-  //declarando la variable para ver los tipos
-  carga = true;
-  carga_producto_home = true;
-  carga_listo_especial = true;
-  pageHome: any = [];
-  async ngOnInit() {
+
+  async ngOnInit(): Promise<void> {
     this.user = this.root.getDataSesionUsuario();
     this.cargarPage();
-    const geo: GeoLocation = this.localStorage.get('geolocalizacion');
 
-    if (geo != null) {
+    const geo: GeoLocation = this.localStorage.get('geolocalizacion');
+    if (geo) {
       this.root.getPreferenciasCliente().then((preferencias) => {
         this.preferenciasCliente = preferencias;
         this.cargarHome();
@@ -53,7 +63,7 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.geoLocationService.localizacionObs$.subscribe(
       async (r: GeoLocation) => {
         this.cargarHome();
@@ -81,7 +91,7 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
     let params: any;
-    if (this.preferenciasCliente && this.preferenciasCliente.direccionDespacho)
+    if (this.preferenciasCliente?.direccionDespacho)
       params = {
         sucursal,
         rut,
@@ -104,6 +114,8 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     const rut = this.user.rut;
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
+
+    // Format params.
     let params: any;
     if (this.preferenciasCliente && this.preferenciasCliente.direccionDespacho)
       params = {
@@ -112,22 +124,32 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
         localidad: this.preferenciasCliente.direccionDespacho.comuna,
       };
     else params = { sucursal, rut };
+
     this.url1 = [];
     this.lstProductos1 = [];
-    let r: any = await this.pageHomeService
+    // FIXME: eliminar
+    const response: any = await this.pageHomeService
       .buscarProductosElactic(params)
       .toPromise();
-    this.url1 = r.urls;
-    this.lstProductos1 = r.data;
+
+    console.log('buscarProductosElactic: ', response);
+    this.url1 = response.urls;
+    this.lstProductos1 = response.data;
+
     this.carga_listo_especial = false;
   }
 
   async cargarPage() {
-    let consulta: any = await this.pageHomeService
+    const response: any = await this.pageHomeService
       .getPagehomeCms()
       .toPromise();
-    this.pageHome = consulta.data[0].page;
+    this.pageHome = response.data[0].page;
+    console.log('pageHome: ', response);
     this.carga = false;
+    this.scrollToTop();
+  }
+
+  scrollToTop(): void {
     document.body.scrollTop = 0; // Safari
     document.documentElement.scrollTop = 0; // Other
   }

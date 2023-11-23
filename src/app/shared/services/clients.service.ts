@@ -144,12 +144,6 @@ export class ClientsService {
     return consulta;
   }
 
-  /* Aux */
-  buscarComunas() {
-    const call = environment.apiLogistic + `comunas`;
-    return this.http.get(call);
-  }
-
   buscarGiros() {
     const call = environment.apiCustomer + `giros`;
     return this.http.get(call);
@@ -281,9 +275,6 @@ export class ClientsService {
     rut: string
   ): Observable<ResponseApi> {
     const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
       body: {
         sku,
         rut,
@@ -399,9 +390,6 @@ export class ClientsService {
 
   deleteCentroCosto(rut: string, idCentro: string) {
     const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
       body: {
         rut,
       },

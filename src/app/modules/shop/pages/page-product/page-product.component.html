@@ -393,35 +393,12 @@
             class="nav mb-3 mt-5 justify-content-center justify-content-lg-start"
             id="myTab"
           >
-            <li
-              class="nav-item me-5"
-              [ngStyle]="{
-                display: descripcionDesktop?.visible ? 'list-item' : 'none'
-              }"
-            >
-              <a
-                class="nav-link"
-                [class.active]="descripcionDesktop?.visible"
-                id="descripcion-tab"
-                data-bs-toggle="tab"
-                href="#descripcion"
-                role="tab"
-                aria-controls="descripcion"
-                [attr.aria-selected]="
-                  descripcionDesktop?.visible ? true : false
-                "
-              >
-                Descripción<br />
-              </a>
-              <div class="w-100"></div>
-            </li>
             <li class="nav-item me-5">
               <a
-                class="nav-link"
+                class="nav-link active"
                 id="detallesTecnicos-tab"
                 data-bs-toggle="tab"
                 href="#detallesTecnicos"
-                [class.active]="!descripcionDesktop?.visible"
                 role="tab"
                 aria-controls="detallesTecnicos"
                 aria-selected="false"
@@ -448,42 +425,7 @@
 
           <div class="tab-content border-0" id="myTabContent">
             <div
-              class="tab-pane fade"
-              [class.show]="descripcionDesktop?.visible"
-              [class.active]="descripcionDesktop?.visible"
-              id="descripcion"
-              role="tabpanel"
-              aria-labelledby="descripcion-tab"
-            >
-              <app-descripcion
-                #descripcionDesktop
-                [sku]="product?.sku"
-              ></app-descripcion>
-            </div>
-
-            <ng-container
-              *ngIf="
-                user.user_role != 'temp' && user.user_role != 'compradorb2c'
-              "
-            >
-              <div
-                class="tab-pane fade"
-                [class.show]="descripcionDesktop?.visible"
-                [class.active]="descripcionDesktop?.visible"
-                id="stock"
-                role="tabpanel"
-                aria-labelledby="descripcion-tab"
-              >
-                <app-product-stock
-                  #stockDesktop
-                  [sku]="product?.sku"
-                ></app-product-stock>
-              </div>
-            </ng-container>
-            <div
-              class="tab-pane fade"
-              [class.show]="!descripcionDesktop?.visible"
-              [class.active]="!descripcionDesktop?.visible"
+              class="tab-pane fade active show"
               id="detallesTecnicos"
               role="tabpanel"
               aria-labelledby="detallesTecnicos-tab"
@@ -849,50 +791,6 @@
           <!-- Fin Recomendados de productos -->
 
           <div class="accordion" id="accordionExample">
-            <div
-              id="headingOne"
-              [ngStyle]="{
-                display: descripcionMobile?.visible ? '' : 'none'
-              }"
-            >
-              <h6
-                class="d-flex justify-content-between align-items-center fw-normal mb-0"
-              >
-                <div>Descripción</div>
-                <button
-                  class="btn btn-link btn-sm collapsed"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-target="#collapseOne"
-                  aria-expanded="false"
-                  aria-controls="collapseOne"
-                  (click)="controlaChevron(0)"
-                >
-                  <i
-                    style="color: #dfdfdf"
-                    class="fas fa-chevron-{{
-                      acordion[0].abierto ? 'down' : 'up'
-                    }} fa-lg"
-                  ></i>
-                </button>
-              </h6>
-            </div>
-
-            <div
-              id="collapseOne"
-              class="collapse"
-              aria-labelledby="headingOne"
-              data-parent="#accordionExample"
-              [ngStyle]="{
-                display: descripcionMobile?.visible ? '' : 'none'
-              }"
-            >
-              <app-descripcion
-                #descripcionMobile
-                [sku]="product?.sku"
-              ></app-descripcion>
-            </div>
-            <hr />
             <div id="headingTwo">
               <h6 class="d-flex justify-content-between fw-normal mb-0">
                 <div>Detalles Técnicos</div>

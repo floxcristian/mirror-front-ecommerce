@@ -16,7 +16,6 @@ import { PageProductComponent } from './pages/page-product/page-product.componen
 import { PageCategoryComponent } from './pages/page-category/page-category.component';
 // Components
 import { ComentariosComponent } from './components/comentarios/comentarios.component';
-import { DescripcionComponent } from './components/descripcion/descripcion.component';
 import { MapaFichasComponent } from './components/despacho/mapa-fichas/mapa-fichas.component';
 import { DespachoComponent } from './components/despacho/despacho.component';
 import { DetalleTecnicosComponent } from './components/detalle-tecnicos/detalle-tecnicos.component';
@@ -32,7 +31,6 @@ import { ProductStockComponent } from '../../shared/components/product-stock/pro
     PageProductComponent,
     ProductComponent,
     ProductStockComponent,
-    DescripcionComponent,
     DespachoComponent,
     FechasPromesasComponent,
     MapaFichasComponent,

@@ -18,7 +18,7 @@
               #myCarousel
               [inputs]="carouselConfig"
               [dataSource]="carouselItems"
-              (carouselLoad)="carouselTileLoad($event)"
+              (carouselLoad)="carouselTileLoad()"
               style="position: unset"
             >
               <div *nguCarouselDef="let item" class="item">
@@ -438,12 +438,7 @@
                 <!-- BOTON PARA DESKTOP y TABLET -->
                 <div class="col-sm-7 d-none d-sm-block">
                   <button
-                    *ngIf="
-                      disponibilidad &&
-                      (!sinStockOtrasTiendas ||
-                        !sinStockSuficienteDespacho ||
-                        !sinStockSuficienteTiendaActual)
-                    "
+                    *ngIf="disponibilidad"
                     name="Agregar "
                     type="button "
                     class="btn btn-secondary btn-lg w-100 text-center btn-add-cart w-100"
@@ -470,24 +465,6 @@
                       style="margin-right: 5px"
                     ></i>
                     SIN STOCK
-                  </button>
-                  <button
-                    *ngIf="
-                      disponibilidad &&
-                      sinStockOtrasTiendas &&
-                      sinStockSuficienteDespacho &&
-                      sinStockSuficienteTiendaActual
-                    "
-                    disabled
-                    name="Agregar "
-                    type="button "
-                    class="btn btn-warning btn-lg w-100 text-center btn-add-cart w-100"
-                    [ngClass]="{ 'btn-loading': addingToCart }"
-                    appClick
-                    style="background-color: #8a8984"
-                  >
-                    <i class="fas fa-shopping-cart me-1"></i>Seleccione otra
-                    Cantidad
                   </button>
                 </div>
               </div>
@@ -525,11 +502,6 @@
                 *ngIf="tiendaActual && !estado"
                 [product]="product"
                 [tiendaActual]="tiendaActual"
-                [sinStockSuficienteDespacho]="sinStockSuficienteDespacho"
-                [sinStockSuficienteTiendaActual]="
-                  sinStockSuficienteTiendaActual
-                "
-                [stockProgramado]="stockProgramado"
                 [cantidad]="quantity.value"
               ></app-despacho>
             </div>
@@ -552,22 +524,6 @@
                 }}
               </button>
             </div>
-            <!-- <div
-              *ngIf="!stock"
-              class="listaBotones d-flex"
-              style="margin-left: 10px"
-            >
-              <button
-                name="addingToWishlist"
-                class="addListaBoton btn btn-light btn-svg-icon px-2"
-                type="button"
-                [ngStyle]="{ color: favorito ? '#10753d' : '#3d464d' }"
-                (click)="OpenAvisoStock()"
-                [ngClass]="{ 'btn-loading': addingToWishlist }"
-              >
-                {{ ' Avisar Disponibilidad ' }}
-              </button>
-            </div> -->
           </div>
         </div>
       </div>
@@ -827,11 +783,6 @@
                 *ngIf="tiendaActual && !estado"
                 [product]="product"
                 [tiendaActual]="tiendaActual"
-                [sinStockSuficienteDespacho]="sinStockSuficienteDespacho"
-                [sinStockSuficienteTiendaActual]="
-                  sinStockSuficienteTiendaActual
-                "
-                [stockProgramado]="stockProgramado"
                 [cantidad]="quantity.value"
               ></app-despacho>
             </div>
@@ -883,9 +834,6 @@
 <!-- botton add card en movile -->
 <app-addcart-button
   [disponibilidad]="disponibilidad"
-  [sinStockOtrasTiendas]="sinStockOtrasTiendas"
-  [sinStockSuficienteDespacho]="sinStockSuficienteDespacho"
-  [sinStockSuficienteTiendaActual]="sinStockSuficienteTiendaActual"
   (quantity)="updateCart($event)"
   class="d-block d-sm-none"
 ></app-addcart-button>

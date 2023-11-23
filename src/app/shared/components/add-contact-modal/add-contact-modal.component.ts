@@ -93,7 +93,6 @@ export class AddContactModalComponent implements OnInit {
     if (!isVacio(usuario)) {
       const request: any = {
         rut: usuario.rut,
-
         contactRut: data.contactRut,
         nombre: data.nombre,
         apellido: data.apellido,
@@ -101,7 +100,6 @@ export class AddContactModalComponent implements OnInit {
         mail: emailValidado,
         telefono: this.tipo_fono + data.telefono,
         cargo: data.cargo,
-
         codEmpleado: 0,
         codUsuario: 0,
         cuentaUsuario: usuario.username,
