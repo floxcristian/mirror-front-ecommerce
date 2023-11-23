@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
 import { environment } from '@env/environment';
 
 @Injectable({
@@ -8,9 +7,13 @@ import { environment } from '@env/environment';
 })
 export class PageHomeService {
   constructor(private http: HttpClient) {}
-  //cargar pagina home
+
   getPagehomeCms() {
     return this.http.get(environment.apiElastic + 'newhomepageCms');
+  }
+
+  getHomePage(params: any) {
+    return this.http.get(environment.apiElastic + 'homepageCms', { params });
   }
 
   /**

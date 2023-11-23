@@ -83,20 +83,8 @@ export class ProductsService {
       { params }
     );
   }
-  //NO SE UTILIZA
-  // getPropularProducts(params: any): Observable<ResponseApi> {
-  //   return this.http.get<ResponseApi>(
-  //     environment.apiCatalogo + 'popularesproducto',
-  //     { params }
-  //   );
-  // }
-
-  getHomePage(params: any) {
-    return this.http.get(environment.apiElastic + 'homepageCms', { params });
-  }
 
   getHomePageB2b(params: any) {
-    console.log('getHomePageB2b: ', params);
     return this.http.get(environment.apiElastic + 'homepage-b2b', { params });
   }
   getHomePageB2c(params: any) {

@@ -53,12 +53,6 @@ export class ClientsService {
     return this.http.get(call);
   }
 
-  confirmarOV(idCarro: any) {
-    return this.http.post(environment.apiShoppingCart + `confirmar`, {
-      id: idCarro,
-    });
-  }
-
   cotizacionAOV(idCarro: any, usuario: any) {
     return this.http.put(environment.apiShoppingCart + `cotizacionov`, {
       numero: idCarro,

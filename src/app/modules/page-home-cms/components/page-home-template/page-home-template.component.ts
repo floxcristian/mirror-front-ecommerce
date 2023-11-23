@@ -101,7 +101,7 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
 
     this.url = [];
     this.lstProductos = [];
-    let r: any = await this.productsService.getHomePage(params).toPromise();
+    let r: any = await this.pageHomeService.getHomePage(params).toPromise();
     this.url = r.urls;
     this.lstProductos = r.data;
     //match entre los productos;

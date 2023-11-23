@@ -1,14 +1,12 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { Order } from '../../../../shared/interfaces/order';
-import { orders } from '../../../../../data/account-orders';
+import { Component, OnInit } from '@angular/core';
 import { Usuario } from '../../../../shared/interfaces/login';
 import { RootService } from '../../../../shared/services/root.service';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { ToastrService } from 'ngx-toastr';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Subject } from 'rxjs';
 
 import * as moment from 'moment';
+import { CartService } from '@shared/services/cart.service';
 
 @Component({
   selector: 'app-page-ovs-list',
@@ -29,7 +27,8 @@ export class PageOvsListComponent implements OnInit {
   constructor(
     private root: RootService,
     private toastr: ToastrService,
-    private carroService: ClientsService
+    private carroService: ClientsService,
+    private cartService: CartService
   ) {
     this.usuario = this.root.getDataSesionUsuario();
     this.loadingData = true;
@@ -82,7 +81,7 @@ export class PageOvsListComponent implements OnInit {
   }
 
   confirmarOV(idCarro: any) {
-    this.carroService.confirmarOV(idCarro).subscribe((r: any) => {
+    this.cartService.confirmarOV(idCarro).subscribe((r: any) => {
       this.toastr.success('Error de conexión, para obtener ovs');
       window.location.reload();
     });
