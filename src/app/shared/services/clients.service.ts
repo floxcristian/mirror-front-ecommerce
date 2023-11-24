@@ -89,11 +89,6 @@ export class ClientsService {
     return this.http.post(call, data);
   }
 
-  registrarUsuario(data: any) {
-    const call = environment.apiCMS + `users/register`;
-    return this.http.post(call, data);
-  }
-
   updateUsuario(data: any) {
     const call = environment.apiCMS + `users/` + data._id;
     return this.http.patch(call, data);
@@ -199,18 +194,6 @@ export class ClientsService {
     return this.http.get<ResponseApi>(
       environment.apiCustomer + `favoritos/lista?rut=${rut}`
     );
-  }
-
-  setConcurso(data: any) {
-    return this.http.post(environment.apiCustomer + `concurso`, data);
-  }
-
-  setCyberday(data: any) {
-    return this.http.post(environment.apiCustomer + `ciberday`, data);
-  }
-
-  setFormularioCyber(data: any) {
-    return this.http.post(environment.apiCustomer + `formularioCyber`, data);
   }
 
   setDevolucion(data: any) {

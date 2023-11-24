@@ -9,15 +9,10 @@ import { CatalogoRoutingModule } from '../modules/catalogo/catalogo-routing.modu
 import { PageNotFoundComponent } from '../pages/page-not-found/page-not-found.component';
 import { PageHomeOneComponent } from '../pages/page-home-one/page-home-one.component';
 import { PageSpecialsComponent } from '../pages/page-specials/page-specials.component';
-import { PageRegistroComponent } from '../pages/page-registro/page-registro.component';
-import { PageMesDelCamioneroComponent } from '../pages/page-mes-del-camionero/page-mes-del-camionero.component';
-import { PageMesAniversarioComponent } from '../pages/page-mes-aniversario/page-mes-aniversario.component';
-import { PageCyberComponent } from '../pages/page-cyber/page-cyber.component';
+
 import { VerificarpagoComponent } from './pages/verificarpago/verificarpago.component';
-import { PageCiberdayFormComponent } from './pages/page-ciberday-form/page-ciberday-form.component';
 import { AuthGuard } from '../core/guards/auth.guard';
 import { PageDevolucionesComponent } from '../pages/page-devoluciones/page-devoluciones.component';
-import { PageMesDelCamionero23Component } from '../pages/page-mes-del-camionero23/page-mes-del-camionero23.component';
 
 const routes: Routes = [
   {
@@ -25,37 +20,12 @@ const routes: Routes = [
     pathMatch: 'full',
     redirectTo: 'inicio',
   },
-  {
-    path: 'registro',
-    component: PageRegistroComponent,
-    data: {
-      headerLayout: 'classic',
-    },
-  },
-  {
-    path: 'mes-del-camionero',
-    component: PageMesDelCamioneroComponent,
-  },
-  {
-    path: 'implementos-cyberday',
-    component: PageCiberdayFormComponent,
-  },
-  {
-    path: 'mes-aniversario',
-    component: PageMesAniversarioComponent,
-  },
-  {
-    path: 'cyber-implementos',
-    component: PageCyberComponent,
-  },
+
   {
     path: 'devoluciones',
     component: PageDevolucionesComponent,
   },
-  {
-    path: 'mes-del-camionero-23',
-    component: PageMesDelCamionero23Component,
-  },
+
   {
     path: 'verificar-pago',
     component: VerificarpagoComponent,

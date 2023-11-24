@@ -21,45 +21,31 @@ import { WidgetsModule } from '../modules/widgets/widgets.module';
 // Components
 import { PageHomeOneComponent } from '../pages/page-home-one/page-home-one.component';
 import { PageNotFoundComponent } from '../pages/page-not-found/page-not-found.component';
-import { PageRegistroComponent } from '../pages/page-registro/page-registro.component';
 import { PageSpecialsComponent } from '../pages/page-specials/page-specials.component';
-import { PageMesDelCamioneroComponent } from '../pages/page-mes-del-camionero/page-mes-del-camionero.component';
-import { PageCyberComponent } from './../pages/page-cyber/page-cyber.component';
-import { PageMesAniversarioComponent } from '../pages/page-mes-aniversario/page-mes-aniversario.component';
+
 import { LayoutComponent } from '../layout/layout.component';
 import { B2cComponent } from '../layout/b2c/b2c.component';
 import { VerificarpagoComponent } from './pages/verificarpago/verificarpago.component';
-import { PageCiberdayFormComponent } from './pages/page-ciberday-form/page-ciberday-form.component';
-import { RegistroOkModalComponent } from '../pages/components/registro-ok-modal/registro-ok-modal.component';
+
 import { RouterModule } from '@angular/router';
 import { FooterB2cModule } from '../modules/footer-b2c/footer-b2c.module';
 import { PageHomeCmsModule } from '../modules/page-home-cms/page-home-cms.module';
 
 import { PageDevolucionesComponent } from '../pages/page-devoluciones/page-devoluciones.component';
 import { DevolucionOkModalComponent } from '../pages/components/devolucion-ok-modal/devolucion-ok-modal.component';
-import { ConcursoGiftcardOkModalComponent } from '../pages/components/concurso-giftcard-ok-modal/concurso-giftcard-ok-modal.component';
-import { PageMesDelCamionero23Component } from '../pages/page-mes-del-camionero23/page-mes-del-camionero23.component';
 
 @NgModule({
   declarations: [
-    PageCiberdayFormComponent,
     // pages
     PageHomeOneComponent,
     PageNotFoundComponent,
-    PageRegistroComponent,
     PageSpecialsComponent,
-    PageMesDelCamioneroComponent,
-    PageMesAniversarioComponent,
-    RegistroOkModalComponent,
+
     B2cComponent,
     LayoutComponent,
     VerificarpagoComponent,
-
-    PageCyberComponent,
     PageDevolucionesComponent,
     DevolucionOkModalComponent,
-    ConcursoGiftcardOkModalComponent,
-    PageMesDelCamionero23Component,
   ],
   imports: [
     AuthRoutingModule,
