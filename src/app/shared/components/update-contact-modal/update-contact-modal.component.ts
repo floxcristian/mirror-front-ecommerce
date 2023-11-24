@@ -13,11 +13,11 @@ import {
   CargosContactoResponse,
 } from '../../interfaces/cargoContacto';
 import { Contacto } from '../../interfaces/cliente';
-import { Dominios, ListaDominios } from '../../interfaces/dominios';
 import { Usuario } from '../../interfaces/login';
 import { ResponseApi } from '../../interfaces/response-api';
 import { ClientsService } from '../../services/clients.service';
 import { RootService } from '../../services/root.service';
+import { getDomainsToAutocomplete } from './domains-autocomplete';
 import {
   isVacio,
   rutPersonaValidator,
@@ -52,7 +52,7 @@ export class UpdateContactModalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getDominios();
+    this.domains = getDomainsToAutocomplete();
     this.getCargos();
     this.formDefault();
   }
@@ -93,19 +93,6 @@ export class UpdateContactModalComponent implements OnInit {
       this.formContacto.get('contactRut')?.disable();
     }
     this.Select_fono(this.tipo_fono);
-  }
-
-  getDominios() {
-    this.clientsService.getDominiosFrecuentes().subscribe(
-      (response: any) => {
-        Object.keys(response.data).map((key) => {
-          this.domains.push({ value: response?.data[key].dominio || '' });
-        });
-      },
-      (error) => {
-        this.toastr.error(error.error.msg);
-      }
-    );
   }
 
   getCargos() {

@@ -9,7 +9,6 @@ import { CartService } from '../../services/cart.service';
 import { PasswordValidator } from '../../validations/password';
 import { Usuario } from '../../interfaces/login';
 import { Router } from '@angular/router';
-import { Dominios } from '../../interfaces/dominios';
 import {
   CargoContacto,
   CargosContactoResponse,
@@ -17,6 +16,7 @@ import {
 import { rutValidator } from '../../utils/utilidades';
 import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete/angular-email-autocomplete.component';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { getDomainsToAutocomplete } from './domains-autocomplete';
 
 @Component({
   selector: 'app-register',
@@ -66,7 +66,7 @@ export class RegisterComponent implements OnInit {
     this.loadGiro();
     this.loadComunas();
     this.formDefault();
-    this.getDominios();
+    this.domains = getDomainsToAutocomplete();
     this.getCargos();
     this.formBlock();
   }
@@ -101,15 +101,6 @@ export class RegisterComponent implements OnInit {
     );
 
     this.Select_fono(this.tipo_fono);
-  }
-
-  getDominios() {
-    this.clientService.getDominiosFrecuentes().subscribe((response: any) => {
-      Object.keys(response.data).map((key) => {
-        let aux_dominio = { value: response.data[key].dominio };
-        this.domains.push(aux_dominio);
-      });
-    });
   }
 
   loadGiro() {

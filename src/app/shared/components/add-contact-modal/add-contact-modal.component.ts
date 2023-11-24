@@ -20,6 +20,7 @@ import {
   rutPersonaValidator,
   rutValidator,
 } from '../../utils/utilidades';
+import { getDomainsToAutocomplete } from './domains-autocomplete';
 
 @Component({
   selector: 'app-add-contact-modal',
@@ -45,7 +46,7 @@ export class AddContactModalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getDominios();
+    this.domains = getDomainsToAutocomplete();
     this.getCargos();
     this.formDefault();
   }
@@ -59,19 +60,6 @@ export class AddContactModalComponent implements OnInit {
       cargo: [, Validators.required],
     });
     this.Select_fono(this.tipo_fono);
-  }
-
-  getDominios() {
-    this.clientsService.getDominiosFrecuentes().subscribe(
-      (response: any) => {
-        Object.keys(response.data).map((key) => {
-          this.domains.push({ value: response.data[key].dominio || '' });
-        });
-      },
-      (error) => {
-        this.toastr.error(error.error.msg);
-      }
-    );
   }
 
   getCargos() {

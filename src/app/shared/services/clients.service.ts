@@ -389,10 +389,6 @@ export class ClientsService {
     );
   }
 
-  getDominiosFrecuentes(): Observable<Dominios> {
-    return this.http.get<Dominios>(`${environment.apiCustomer}dominios`);
-  }
-
   getCargosContacto(): Observable<CargosContactoResponse> {
     return this.http.get<CargosContactoResponse>(
       `${environment.apiCustomer}filtros/cargosContacto`

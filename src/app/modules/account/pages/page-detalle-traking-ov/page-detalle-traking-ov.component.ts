@@ -1,6 +1,10 @@
+// Angular
 import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+// Services
 import { TrackingService } from '../../../../shared/services/tracking.service';
+// Libs
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+// Components
 import { Modal_reciboComponent } from '../../components/modal_recibo/modal_recibo/modal_recibo.component';
 
 @Component({
@@ -22,28 +26,31 @@ export class DetalleTrakingOvComponent implements OnInit {
   entrega_despacho = {};
   nombre_servicio = '';
   OVEstados: any[] = [];
-  loadingShippingAll: boolean = false;
-  //   OVEstado: any=[];
+  loadingShippingAll: boolean;
   EstadoOV: any = [];
   bsModalRef?: BsModalRef;
+
   constructor(
     private _TrackingService: TrackingService,
     private modalService: BsModalService
   ) {
     this.subestados = [];
+    this.loadingShippingAll = true;
   }
 
   async ngOnInit() {
-    this.loadingShippingAll = true;
+    console.log('algoo...');
     this.buscar_detalle_estado();
   }
 
   async ngOnChanges(changes: SimpleChanges) {
+    console.log('ngOnChanges...');
     this.loadingShippingAll = true;
     this.buscar_detalle_estado();
   }
 
   async buscar_detalle_estado() {
+    console.log('buscar_detalle_estado...');
     let consulta: any = await this._TrackingService
       .DetalleOV(this.Ov)
       .toPromise();
@@ -61,7 +68,7 @@ export class DetalleTrakingOvComponent implements OnInit {
   }
 
   async ver_recibo() {
-    let consulta: any = await this._TrackingService
+    const consulta: any = await this._TrackingService
       .recibo(this.Ov)
       .toPromise();
     this.recibo = consulta.data[0];
