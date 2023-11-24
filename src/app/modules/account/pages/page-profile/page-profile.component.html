@@ -88,7 +88,7 @@
         </app-loading-element>
         <div class="row mt-3">
           <div class="col-5 title2 m-0"><span>Precios productos:</span></div>
-          <div class="col-7 text-start">
+          <div class="col-7">
             <div class="form-check form-switch">
               <input
                 type="checkbox"
@@ -102,13 +102,17 @@
               <label
                 class="form-check-label"
                 for="iva"
-                style="cursor: pointer; font-weight: normal"
+                style="
+                  cursor: pointer;
+                  font-weight: normal;
+                  padding-left: 10px;
+                "
                 >{{
                   !isVacio(usuario.iva)
                     ? usuario.iva
-                      ? "Con IVA"
-                      : "Sin IVA"
-                    : "Con IVA"
+                      ? 'Con IVA'
+                      : 'Sin IVA'
+                    : 'Con IVA'
                 }}</label
               >
             </div>
@@ -121,7 +125,7 @@
           <div class="col-7 d-flex align-items-center">
             <div class="text-start">
               {{
-                direccionDespacho?.calle + " " + direccionDespacho?.numero
+                direccionDespacho?.calle + ' ' + direccionDespacho?.numero
                   | capitalizeFirst
               }}
             </div>
