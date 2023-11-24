@@ -217,10 +217,6 @@ export class ClientsService {
     return this.http.post(environment.apiCustomer + `devolucion`, data);
   }
 
-  setConcursoGiftCard(data: any) {
-    return this.http.post(environment.apiCustomer + `concursoGiftcard`, data);
-  }
-
   setListaArticulosFavoritos(
     nombre: string,
     rut: string

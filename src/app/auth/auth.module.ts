@@ -37,7 +37,6 @@ import { PageHomeCmsModule } from '../modules/page-home-cms/page-home-cms.module
 
 import { PageDevolucionesComponent } from '../pages/page-devoluciones/page-devoluciones.component';
 import { DevolucionOkModalComponent } from '../pages/components/devolucion-ok-modal/devolucion-ok-modal.component';
-import { PageConcursoGiftcardComponent } from '../pages/page-concurso-giftcard/page-concurso-giftcard.component';
 import { ConcursoGiftcardOkModalComponent } from '../pages/components/concurso-giftcard-ok-modal/concurso-giftcard-ok-modal.component';
 import { PageMesDelCamionero23Component } from '../pages/page-mes-del-camionero23/page-mes-del-camionero23.component';
 
@@ -59,7 +58,6 @@ import { PageMesDelCamionero23Component } from '../pages/page-mes-del-camionero2
     PageCyberComponent,
     PageDevolucionesComponent,
     DevolucionOkModalComponent,
-    PageConcursoGiftcardComponent,
     ConcursoGiftcardOkModalComponent,
     PageMesDelCamionero23Component,
   ],

@@ -17,7 +17,6 @@ import { VerificarpagoComponent } from './pages/verificarpago/verificarpago.comp
 import { PageCiberdayFormComponent } from './pages/page-ciberday-form/page-ciberday-form.component';
 import { AuthGuard } from '../core/guards/auth.guard';
 import { PageDevolucionesComponent } from '../pages/page-devoluciones/page-devoluciones.component';
-import { PageConcursoGiftcardComponent } from '../pages/page-concurso-giftcard/page-concurso-giftcard.component';
 import { PageMesDelCamionero23Component } from '../pages/page-mes-del-camionero23/page-mes-del-camionero23.component';
 
 const routes: Routes = [
@@ -52,10 +51,6 @@ const routes: Routes = [
   {
     path: 'devoluciones',
     component: PageDevolucionesComponent,
-  },
-  {
-    path: 'concurso-giftcard',
-    component: PageConcursoGiftcardComponent,
   },
   {
     path: 'mes-del-camionero-23',
