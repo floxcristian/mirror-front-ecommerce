@@ -22,7 +22,7 @@
               <a
                 role="button"
                 data-bs-toggle="collapse"
-                [attr.data-target]="'#expand-' + i"
+                [attr.data-bs-target]="'#expand-' + i"
                 [attr.aria-expanded]="true"
                 [attr.aria-controls]="'expnd-' + i"
                 (click)="buscarOv(person)"
@@ -74,7 +74,7 @@
                   class="fas fa-store"
                   style="margin-right: 10px; color: #0063b9"
                 ></i>
-                {{ "En tienda" | titlecase }}</span
+                {{ 'En tienda' | titlecase }}</span
               >
             </ng-container>
             <ng-container
@@ -140,7 +140,7 @@
           <td style="text-align: right">
             {{ person.MontoNeto | currencyFormat }}
           </td>
-          <td>{{ person.FechaCompromisoCliente | date : "dd-MM-yyyy" }}</td>
+          <td>{{ person.FechaCompromisoCliente | date : 'dd-MM-yyyy' }}</td>
         </tr>
         <tr [attr.id]="'expand-' + i" class="collapse" aria-expanded="true">
           <td colspan="9">
