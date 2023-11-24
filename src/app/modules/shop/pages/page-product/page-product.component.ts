@@ -44,7 +44,7 @@ declare let fbq: any;
 })
 export class PageProductComponent implements OnInit, OnDestroy {
   categories = categories;
-  product!: Product | undefined;
+  product!: Product | undefined | any;
   recommendedProducts: Product[] = [];
   matrixProducts: Product[] = [];
   relatedProducts: Product[] = [];
@@ -342,12 +342,10 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
         this.product = { ...producto };
 
-        if (this.product) {
-          this.cart.cargarPrecioEnProducto(this.product);
-          this.setMeta(this.product);
-          this.productFacebook(this.product);
-          this.setBreadcrumbs(this.product);
-        }
+        this.cart.cargarPrecioEnProducto(this.product);
+        this.setMeta(this.product);
+        this.setBreadcrumbs(this.product);
+        this.productFacebook(this.product);
       },
       (error) => {
         this.toastr.error('Error de conexión, para obtener los articulos');
