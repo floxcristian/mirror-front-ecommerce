@@ -915,7 +915,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     this.shippingSelected = null;
 
     const data = {
-      usuario: invitado._id,
+      //FIXME: revisar bien el tema del id , hasta tener las nuevas apis
+      // usuario: invitado._id,
       destino: direccion.comuna
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, ''),
