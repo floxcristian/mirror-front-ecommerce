@@ -12,7 +12,7 @@ import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 // Rxjs
-import { of, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 // Models
 import {
   ProductCart,
@@ -51,6 +51,9 @@ import {
   TipoIcon,
   TipoModal,
 } from '@shared/components/modal/modal.component';
+import { SessionStorageService } from '@core/storage/session-storage.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 export let browserRefresh = false;
 declare let dataLayer: any;
@@ -97,7 +100,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
 
   shippingSelected: ShippingService | null = null;
 
-  userSession!: Usuario;
+  userSession!: ISession;
   cartSession!: any; //CartData;
   recidDireccion = 0;
   showMap: boolean = false;
@@ -153,7 +156,10 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     private geoLocationService: GeoLocationService,
     private cd: ChangeDetectorRef,
     private readonly gtmService: GoogleTagManagerService,
-    private clientsService: ClientsService
+    private clientsService: ClientsService,
+    // Services V2
+    private readonly sessionStorage: SessionStorageService,
+    private readonly sessionService: SessionService
   ) {
     this.localS.set('recibe', {});
     this.innerWidth = window.innerWidth;
@@ -166,7 +172,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
 
     this.invitado = this.localS.get('invitado');
     this.tienda_actual = this.localS.get('geolocalizacion');
-    this.userSession = this.root.getDataSesionUsuario();
+    this.userSession = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     this.contacto_notificaciones();
     this.obtieneDireccionesCliente();
     this.obtieneTiendas();
@@ -187,7 +193,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     this.cart.shippingValidateProducts$.subscribe((r: ProductCart[]) => {
       this.productsValidate = r;
       this.invitado = this.localS.get('invitado');
-      this.userSession = this.root.getDataSesionUsuario();
+      this.userSession = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
       this.grupoShippingCart.grupo = [];
     });
 
@@ -208,8 +214,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       });
     //marcaje google tag
     if (
-      this.userSession.user_role !== 'supervisor' &&
-      this.userSession.user_role !== 'comprador'
+      this.userSession.userRole !== 'supervisor' &&
+      this.userSession.userRole !== 'comprador'
     ) {
       this.gtmService.pushTag({
         event: 'shipping',
@@ -227,8 +233,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
 
   async obtieneDireccionesCliente(isDelete: boolean = false) {
     this.loadingShippingAll = true;
-    const usuario = this.root.getDataSesionUsuario();
-    this.logistics.obtieneDireccionesCliente(usuario.rut).subscribe(
+    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.logistics.obtieneDireccionesCliente(usuario.documentId).subscribe(
       (r: ResponseApi) => {
         this.loadingShippingAll = false;
 
@@ -287,15 +293,15 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   async contacto_notificaciones() {
     let data: any = {};
 
-    this.userSession = this.root.getDataSesionUsuario();
+    this.userSession = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
     this.invitado = this.localS.get('invitado');
-    if (this.userSession.user_role != 'temp') {
+    if (this.userSession.userRole != 'temp') {
       data.id = this.cartSession._id;
       data.texto4 = this.userSession.phone;
       data.texto5 = this.userSession.email;
       data.textoNombre =
-        this.userSession.first_name + ' ' + this.userSession.last_name;
-    } else if (this.userSession.user_role == 'temp' && this.invitado != null) {
+        this.userSession.firstName + ' ' + this.userSession.lastName;
+    } else if (this.userSession.userRole == 'temp' && this.invitado != null) {
       data.id = this.cartSession._id;
       data.texto4 = this.invitado.phone;
       data.texto5 = this.invitado.email;
@@ -312,7 +318,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   async obtieneDespachos(removeShipping = true) {
     this.fechas = [];
 
-    const usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
 
     const resultado = this.addresses.find(
@@ -386,7 +392,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   }
 
   obtieneTiendas() {
-    let usuarioRole = this.userSession.user_role;
+    let usuarioRole = this.userSession.userRole;
     let data_usuario;
 
     if (
@@ -403,7 +409,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     if (usuarioRole == 'temp') data_usuario = this.userSession.email;
 
     this.logistics
-      .obtieneDireccionesTiendaRetiro({ usuario: this.userSession.rut })
+      .obtieneDireccionesTiendaRetiro({ usuario: this.userSession.documentId })
       .subscribe(
         (r: ResponseApi) => {
           r.data.todos.map((item: ShippingStore) => {
@@ -458,7 +464,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
 
     // let idStore: any = this.selectedShippingIdStore;
     this.selectedShippingId = this.selectedShippingIdStore;
-    const usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
 
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
     console.log('shippingStore: ', this.shippingStore);
@@ -535,7 +541,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
           });
         });
       }
-      if (this.userSession.user_role == 'temp') {
+      if (this.userSession.userRole == 'temp') {
         this.loadingResumen = false;
       }
     }
@@ -1219,7 +1225,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       (item) => item.recid == this.selectedShippingId
     );
 
-    const usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
     let params = {};
     if (this.shippingType === ShippingType.DESPACHO) {
       params = {
@@ -1252,7 +1258,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   //realizando la funcion para chilexpress
   async obtieneChilexpress(removeShipping = true, chilexpress: any) {
     this.fechas = [];
-    const usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
 
     const resultado = this.addresses.find(
@@ -1426,18 +1432,18 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     });
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res) {
-        const usuario: Usuario = this.root.getDataSesionUsuario();
+        const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
         const request = {
           codEmpleado: 0,
           codUsuario: 0,
           cuentaUsuario: usuario.username,
-          rutUsuario: usuario.rut,
-          nombreUsuario: `${usuario.first_name} ${usuario.last_name}`,
+          rutUsuario: usuario.documentId,
+          nombreUsuario: `${usuario.firstName} ${usuario.lastName}`,
         };
         const respuesta: any = await this.clientsService
           .eliminaDireccion(
             request,
-            this.userSession.rut ?? '',
+            this.userSession.documentId ?? '',
             direccion.recid
           )
           .toPromise();

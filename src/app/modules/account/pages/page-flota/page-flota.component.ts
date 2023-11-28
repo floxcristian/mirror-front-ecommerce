@@ -25,6 +25,8 @@ import { Flota } from '../../../../shared/interfaces/flota';
 import { Usuario } from '../../../../shared/interfaces/login';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { RootService } from '../../../../shared/services/root.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-page-flota',
@@ -34,7 +36,7 @@ import { RootService } from '../../../../shared/services/root.service';
 export class PageFlotaComponent implements OnInit, OnDestroy {
   @ViewChildren(DataTableDirective) dtElements!: QueryList<DataTableDirective>;
 
-  userSession!: Usuario;
+  userSession!: ISession;
 
   busquedasRecientes: any[] = [];
   flota: any[] = [];
@@ -50,11 +52,13 @@ export class PageFlotaComponent implements OnInit, OnDestroy {
     private clientsService: ClientsService,
     public root: RootService,
     private toastr: ToastrService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit() {
-    this.userSession = this.root.getDataSesionUsuario();
+    this.userSession = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
     this.dtOptions = this.root.simpleDtOptions;
     this.dtOptions = {
       ...this.dtOptions,
@@ -71,8 +75,8 @@ export class PageFlotaComponent implements OnInit, OnDestroy {
   getData() {
     this.cargando = true;
     forkJoin([
-      this.clientsService.getBusquedasVin(this.userSession.rut || '0'),
-      this.clientsService.getFlota(this.userSession.rut || '0'),
+      this.clientsService.getBusquedasVin(this.userSession.documentId || '0'),
+      this.clientsService.getFlota(this.userSession.documentId || '0'),
     ]).subscribe((resp: any[]) => {
       this.busquedasRecientes = resp[0].data;
       this.flota = resp[1].data;

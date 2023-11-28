@@ -8,10 +8,10 @@ import {
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ClientsService } from '../../services/clients.service';
-import { Usuario } from '../../interfaces/login';
 import { isVacio } from '../../utils/utilidades';
-import { RootService } from '../../services/root.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-edit-profile-modal',
@@ -22,14 +22,15 @@ export class EditProfileModalComponent implements OnInit {
   @Input() modalEditRef!: BsModalRef;
   @Output() respuesta = new EventEmitter<any>();
   formPerfil: FormGroup;
-  user: Usuario;
+  user: ISession;
 
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
     private localS: LocalStorageService,
     private clientsService: ClientsService,
-    private rootService: RootService
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.formPerfil = this.fb.group({
       nombre: new FormControl(null, {
@@ -49,7 +50,7 @@ export class EditProfileModalComponent implements OnInit {
         ],
       }),
     });
-    this.user = this.rootService.getDataSesionUsuario();
+    this.user = this.sessionService.getSession(); //this.rootService.getDataSesionUsuario();
     this.cargarDatos();
   }
 
@@ -57,18 +58,18 @@ export class EditProfileModalComponent implements OnInit {
 
   cargarDatos() {
     this.formPerfil.setValue({
-      nombre: !isVacio(this.user.first_name) ? this.user.first_name : '',
-      apellido: !isVacio(this.user.last_name) ? this.user.last_name : '',
+      nombre: !isVacio(this.user.firstName) ? this.user.firstName : '',
+      apellido: !isVacio(this.user.lastName) ? this.user.lastName : '',
       telefono: !isVacio(this.user.phone) ? this.user.phone : '',
       correo: !isVacio(this.user.email) ? this.user.email : '',
     });
   }
 
   actualizaLocalStorage({ nombre, apellido, telefono, correo }: any) {
-    const user = this.rootService.getDataSesionUsuario();
+    const user = this.sessionService.getSession(); //this.rootService.getDataSesionUsuario();
 
-    user.first_name = nombre;
-    user.last_name = apellido;
+    user.firstName = nombre;
+    user.lastName = apellido;
     user.phone = telefono;
     user.email = correo;
 
@@ -78,7 +79,7 @@ export class EditProfileModalComponent implements OnInit {
   async editarPerfil() {
     const { nombre, apellido, telefono, correo } = this.formPerfil.value;
     const parametros = {
-      rut: this.user.rut,
+      rut: this.user.documentId,
       nombre,
       apellido,
       telefono,

@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@env/environment';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { RootService } from '../../../../shared/services/root.service';
 import { ToastrService } from 'ngx-toastr';
 import { DataTablesResponse } from '../../../../shared/interfaces/data-table';
@@ -19,6 +18,8 @@ import { Router } from '@angular/router';
 import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { isPlatformBrowser } from '@angular/common';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-page-quotation',
@@ -33,7 +34,7 @@ export class PageQuotationComponent implements OnInit {
 
   modalRef!: BsModalRef;
 
-  usuario!: Usuario;
+  usuario!: ISession;
   orders!: any[];
   urlDonwloadOC = environment.apiShoppingCart + 'getoc?id=';
   innerWidth: any;
@@ -47,7 +48,9 @@ export class PageQuotationComponent implements OnInit {
     private cartService: CartService,
     private modalService: BsModalService,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -56,7 +59,7 @@ export class PageQuotationComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    this.usuario = this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     if (!this.usuario.hasOwnProperty('username'))
       this.usuario.username = this.usuario.email;
   }

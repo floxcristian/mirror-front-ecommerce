@@ -19,6 +19,9 @@ import { Product, ProductPrecio, ProductOrigen } from '../interfaces/product';
 import { CartData, ProductCart, CartTotal } from '../interfaces/cart-item';
 import { Usuario } from '../interfaces/login';
 import { ResponseApi } from '../interfaces/response-api';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { SessionStorageService } from '@core/storage/session-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -106,7 +109,10 @@ export class CartService {
     private localS: LocalStorageService,
     private toast: ToastrService,
     private datePipe: DatePipe,
-    private geoLocationService: GeoLocationService
+    private geoLocationService: GeoLocationService,
+    // Services V2
+    private readonly sessionService: SessionService,
+    private readonly sessionStorage: SessionStorageService
   ) {}
 
   add(
@@ -129,13 +135,14 @@ export class CartService {
       ) || { cantidad: 0 };
     }
 
-    const usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
+    // this.root.getDataSesionUsuario();
 
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
 
     const data = {
       usuario: usuario.username,
-      rut: usuario.rut,
+      rut: usuario.documentId,
       sucursal,
       productos: [
         {
@@ -207,13 +214,14 @@ export class CartService {
       });
     });
 
-    const usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
+    // this.root.getDataSesionUsuario();
 
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
 
     const data = {
       usuario: usuario.username,
-      rut: usuario.rut,
+      rut: usuario.documentId,
       sucursal,
       productos,
     };
@@ -334,13 +342,13 @@ export class CartService {
     }
     this.loadingCart = true;
 
-    const usuario: Usuario = this.localS.get('usuario') as any;
-    if (usuario == null) {
+    const usuario = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario') as any;
+    if (!usuario) {
       return;
     }
 
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
-    if (!usuario.hasOwnProperty('rut')) usuario.rut = '0';
+    if (!usuario.hasOwnProperty('documentId')) usuario.documentId = '0';
 
     // Sucursal
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
@@ -349,7 +357,7 @@ export class CartService {
     this.http
       .get(
         environment.apiShoppingCart +
-          `?usuario=${usuario.username}&sucursal=${sucursal}&rut=${usuario.rut}`
+          `?usuario=${usuario.username}&sucursal=${sucursal}&rut=${usuario.documentId}`
       )
       .pipe(
         map((r: any) => {
@@ -455,8 +463,8 @@ export class CartService {
               this.cartTempData.grupos.forEach((item: any) => {
                 if (
                   array_precio[index] >= 60000 ||
-                  (usuario.user_role != 'compradorb2c' &&
-                    usuario.user_role != 'temp')
+                  (usuario.userRole != 'compradorb2c' &&
+                    usuario.userRole != 'temp')
                 ) {
                   descuento = descuento + item.despacho.descuento;
                 }
@@ -632,8 +640,8 @@ export class CartService {
       return;
     }
     this.loadingCart = true;
-    const usuario: Usuario = this.localS.get('usuario') as any;
-    if (usuario == null) {
+    const usuario = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario') as any;
+    if (!usuario) {
       return;
     }
     // Sucursal
@@ -643,7 +651,7 @@ export class CartService {
     this.http
       .get(
         environment.apiShoppingCart +
-          `?usuario=${usuario.username}&sucursal=${sucursal}&sucursalPrecio=${sucursalPrecio}&rut=${usuario.rut}`
+          `?usuario=${usuario.username}&sucursal=${sucursal}&sucursalPrecio=${sucursalPrecio}&rut=${usuario.documentId}`
       )
       .pipe(
         map((r: any) => {
@@ -749,8 +757,8 @@ export class CartService {
               this.cartTempData.grupos.forEach((item: any) => {
                 if (
                   array_precio[index] >= 60000 ||
-                  (usuario.user_role != 'compradorb2c' &&
-                    usuario.user_role != 'temp')
+                  (usuario.userRole != 'compradorb2c' &&
+                    usuario.userRole != 'temp')
                 ) {
                   descuento = descuento + item.despacho.descuento;
                 }
@@ -866,12 +874,13 @@ export class CartService {
     // Sucursal
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
-    const usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
+    // this.root.getDataSesionUsuario();
 
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
     const data = {
       usuario: usuario.username,
-      rut: usuario.rut,
+      rut: usuario.documentId,
       sucursal,
       productos,
     };
@@ -914,7 +923,8 @@ export class CartService {
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
     const carro: CartData = this.localS.get('carroCompraB2B') as any;
-    const usuario: Usuario = this.root.getDataSesionUsuario();
+    const usuario: ISession = this.sessionService.getSession();
+    // this.root.getDataSesionUsuario();
     const invitado: Usuario = this.localS.get('invitado') as any;
     const recibe: any = this.localS.get('recibe');
     const productos = (carro.productos || []).map((item) => {
@@ -926,7 +936,7 @@ export class CartService {
 
     const data = {
       usuario: usuario.username ? usuario.username : invitado._id,
-      rut: usuario.rut ? usuario.rut : 0,
+      rut: usuario.documentId ? usuario.documentId : 0,
       sucursal,
       productos,
       despacho,
@@ -1003,8 +1013,9 @@ export class CartService {
 
   cargarPrecioEnProducto(producto: Product) {
     //obtiene el usuario
-    const user = this.root.getDataSesionUsuario();
-    let rut = user && user.rut ? user.rut : 0;
+    const user = this.sessionService.getSession();
+    // this.root.getDataSesionUsuario();
+    let rut = user && user.documentId;
 
     //obtiene la tienda seleccionada
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
@@ -1090,6 +1101,7 @@ export class CartService {
   saveCarroTemp(params: any) {
     return this.http.post(`${environment.apiShoppingCart}carrotemp`, params);
   }
+
   agregaInvitado(params: any) {
     return this.http.post(
       `${environment.apiShoppingCart}agregarinvitado`,
@@ -1104,10 +1116,10 @@ export class CartService {
   }
 
   getSaveCart(pagina: number, carrosPorPagina: number) {
-    const usuario: Usuario = this.localS.get('usuario') as any;
-    if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
+    const usuario = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario') as any;
+    const username = usuario?.username || usuario?.email || '';
     let params: any = {
-      usuario: usuario.username,
+      usuario: username,
       estado: 'guardado',
       pagina: pagina.toString(),
       carroPorPagina: carrosPorPagina.toString(),
@@ -1118,8 +1130,8 @@ export class CartService {
   }
 
   setSaveCart(objeto: any): Observable<any> {
-    const usuario: Usuario = this.localS.get('usuario') as any;
-    if (usuario.login_temp) {
+    const usuario = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario') as any;
+    if (usuario?.login_temp) {
       this.toast.warning('Debe iniciar sesion para guardar el carro');
       throw Error('Debe iniciar sesion para guardar el carro');
       //return;
@@ -1130,7 +1142,6 @@ export class CartService {
   }
 
   /**
-   * @author ignacio zapata  \"2020-09-28\
    * @desc Metodo utilizado para guardar el origen y seccion al momento de ingresar a una ficha de producto.
    * @params
    * @return
@@ -1217,18 +1228,19 @@ export class CartService {
   cargar_carro() {
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
-    const usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
+    // this.root.getDataSesionUsuario();
     let consulta = null;
-    if (usuario.user_role != 'temp') {
+    if (usuario.userRole != 'temp') {
       usuario.username = usuario.username ? usuario.username : usuario.email;
       consulta = this.http.get(
         environment.apiShoppingCart +
-          `?usuario=${usuario.username}&sucursal=${sucursal}&rut=${usuario.rut}`
+          `?usuario=${usuario.username}&sucursal=${sucursal}&rut=${usuario.documentId}`
       );
     } else {
       consulta = this.http.get(
         environment.apiShoppingCart +
-          `?usuario=${usuario.email}&sucursal=${sucursal}&rut=${usuario.rut}`
+          `?usuario=${usuario.email}&sucursal=${sucursal}&rut=${usuario.documentId}`
       );
     }
     return consulta;

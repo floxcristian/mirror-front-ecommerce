@@ -14,6 +14,7 @@ import { GeoLocation } from '../../../../shared/interfaces/geo-location';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { SessionStorageService } from '@core/storage/session-storage.service';
 class DataTablesResponse {
   data!: any[];
   draw!: number;
@@ -51,7 +52,9 @@ export class PageListaPreciosComponent implements OnInit {
     public root: RootService,
     private localS: LocalStorageService,
     private geoLocationService: GeoLocationService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Storage
+    private readonly sessionStorage: SessionStorageService
   ) {
     this.innerWidth = window.innerWidth;
     // cambio de sucursal
@@ -98,9 +101,10 @@ export class PageListaPreciosComponent implements OnInit {
   async buscarPrecios() {
     this.showLoading = true;
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const usuario: Usuario = this.localS.get('usuario');
+    //const usuario: Usuario = this.localS.get('usuario');
+    const user = this.sessionStorage.get();
     let parametros: any = {
-      rut: usuario.rut,
+      rut: user?.documentId,
       sucursal: tiendaSeleccionada?.codigo,
     };
 
@@ -126,7 +130,7 @@ export class PageListaPreciosComponent implements OnInit {
             dataTablesParameters.order[0].column
           ].data;
         parametros.data_order = dataTablesParameters.order[0].dir;
-        if (this.categoria != null) {
+        if (this.categoria) {
           parametros.categoria = this.categoria;
         } else parametros.categoria = null;
         let params = Object.assign(dataTablesParameters, parametros);

@@ -1,14 +1,14 @@
-import { AfterViewInit, Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { ArticuloFavorito, Lista } from '../../interfaces/articuloFavorito';
-import { Usuario } from '../../interfaces/login';
 import { Product } from '../../interfaces/product';
 import { ResponseApi } from '../../interfaces/response-api';
 import { ClientsService } from '../../services/clients.service';
-import { RootService } from '../../services/root.service';
 import { isVacio } from '../../utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 export interface DataWishListModal {
   producto: Product;
@@ -32,20 +32,21 @@ export class WishListModalComponent implements OnInit {
   cantCaracteres = 0;
   maxCaracteres = 40;
 
-  usuario!: Usuario;
+  usuario!: ISession;
 
   event: EventEmitter<any> = new EventEmitter();
 
   constructor(
     public ModalRef: BsModalRef,
-    private rootService: RootService,
     private toast: ToastrService,
     private localS: LocalStorageService,
-    private clientsService: ClientsService
+    private clientsService: ClientsService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit() {
-    this.usuario = this.rootService.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); //this.rootService.getDataSesionUsuario();
 
     this.listas = this.listas.map((l) => {
       l.checked = !isVacio(this.listasEnQueExiste.find((e) => e._id === l._id))
@@ -57,10 +58,10 @@ export class WishListModalComponent implements OnInit {
 
   getListas() {
     this.clientsService
-      .getListaArticulosFavoritos(this.usuario.rut || '')
+      .getListaArticulosFavoritos(this.usuario.documentId)
       .subscribe((resp: ResponseApi) => {
         if (resp.data.length > 0) {
-          if (resp.data[0].listas.length > 0) {
+          if (resp.data[0].listas.length) {
             this.listas = resp.data[0].listas;
 
             this.listas = this.listas.map((l) => {
@@ -90,12 +91,12 @@ export class WishListModalComponent implements OnInit {
     }
 
     this.clientsService
-      .setListaArticulosFavoritos(this.nombre, this.usuario.rut || '')
+      .setListaArticulosFavoritos(this.nombre, this.usuario.documentId)
       .subscribe(async (resp: ResponseApi) => {
         if (!resp.error) {
           // se agrega la lista en el LocalStorage
           await this.clientsService.cargaFavoritosLocalStorage(
-            this.usuario.rut || ''
+            this.usuario.documentId
           );
 
           this.refreshListasEnQueExiste();
@@ -109,7 +110,10 @@ export class WishListModalComponent implements OnInit {
 
   listaPredeterminada(lista: Lista) {
     this.clientsService
-      .predeterminadaListaArticulosFavoritos(this.usuario.rut || '', lista._id)
+      .predeterminadaListaArticulosFavoritos(
+        this.usuario.documentId,
+        lista._id
+      )
       .subscribe((resp: ResponseApi) => {
         if (!resp.error) {
           this.getListas();
@@ -125,14 +129,14 @@ export class WishListModalComponent implements OnInit {
       const resp: ResponseApi = (await this.clientsService
         .setArticulosFavoritos(
           this.producto.sku,
-          this.usuario.rut || '',
+          this.usuario.documentId,
           lista._id
         )
         .toPromise()) as ResponseApi;
       if (!resp.error) {
         // se agrega sku en la lista del LocalStorage
         await this.clientsService.cargaFavoritosLocalStorage(
-          this.usuario.rut || ''
+          this.usuario.documentId
         );
 
         this.refreshListasEnQueExiste();
@@ -142,14 +146,14 @@ export class WishListModalComponent implements OnInit {
       const resp: ResponseApi = (await this.clientsService
         .deleteArticulosFavoritos(
           this.producto.sku,
-          this.usuario.rut || '',
+          this.usuario.documentId,
           lista._id
         )
         .toPromise()) as ResponseApi;
       if (!resp.error) {
         // se elimina sku de la lista en LocalStorage
         await this.clientsService.cargaFavoritosLocalStorage(
-          this.usuario.rut || ''
+          this.usuario.documentId
         );
 
         this.refreshListasEnQueExiste();

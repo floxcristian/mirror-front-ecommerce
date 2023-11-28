@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { RootService } from '../../../../shared/services/root.service';
 import { calculaIcono } from '../../../../shared/utils/utilidades';
-import { Usuario } from '../../../../shared/interfaces/login';
+
 import { UsersService } from '../../service/users.service';
 import { ToastrService } from 'ngx-toastr';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 export interface Archivo {
   archivo: File;
   nombre: string;
@@ -16,19 +17,21 @@ export interface Archivo {
   styleUrls: ['./page-gestion-usuario.component.scss'],
 })
 export class PageGestionUsuarioComponent implements OnInit {
-  userSession!: Usuario;
+  userSession!: ISession;
   nuevo: any = [];
   existe: any = [];
   constructor(
     private userService: UsersService,
-    private rootService: RootService,
-    private toast: ToastrService
+
+    private toast: ToastrService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
   archivo!: Archivo | undefined;
   idArchivo!: string;
   isExcel: Boolean = false;
   ngOnInit() {
-    this.userSession = this.rootService.getDataSesionUsuario();
+    this.userSession = this.sessionService.getSession(); //this.rootService.getDataSesionUsuario();
   }
 
   onFileChange(event: any): void {
@@ -58,16 +61,16 @@ export class PageGestionUsuarioComponent implements OnInit {
     }
     const data = {
       file: this.archivo?.archivo,
-      id: this.userSession._id,
+      id: this.userSession.documentId,
       accion: 'guardar',
     };
     let respuesta: any = await this.userService.uploadExcel(data).toPromise();
-    if (respuesta.nuevo.length > 0) {
+    if (respuesta.nuevo.length) {
       respuesta.nuevo.forEach((item: any) => {
         this.nuevo.push(item);
       });
     }
-    if (respuesta.duplicados.length > 0) {
+    if (respuesta.duplicados.length) {
       respuesta.duplicados.forEach((item: any) => {
         this.existe.push(item);
       });

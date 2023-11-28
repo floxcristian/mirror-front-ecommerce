@@ -3,7 +3,6 @@ import { products } from '../../../data/shop-products';
 import { categories } from '../../../data/shop-block-categories';
 import { Category } from '../../shared/interfaces/category';
 import { Banner } from '../../shared/interfaces/banner';
-import { CmsService } from '../../shared/services/cms.service';
 import { ActivatedRoute } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 
@@ -21,7 +20,6 @@ export class PageSpecialsComponent implements OnInit {
   viewMode: 'grid' | 'grid-with-features' | 'list' = 'grid';
 
   constructor(
-    private cmsService: CmsService,
     private route: ActivatedRoute,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {

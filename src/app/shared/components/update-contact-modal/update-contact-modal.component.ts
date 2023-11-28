@@ -13,10 +13,8 @@ import {
   CargosContactoResponse,
 } from '../../interfaces/cargoContacto';
 import { Contacto } from '../../interfaces/cliente';
-import { Usuario } from '../../interfaces/login';
 import { ResponseApi } from '../../interfaces/response-api';
 import { ClientsService } from '../../services/clients.service';
-import { RootService } from '../../services/root.service';
 import { getDomainsToAutocomplete } from './domains-autocomplete';
 import {
   isVacio,
@@ -25,6 +23,7 @@ import {
 } from '../../utils/utilidades';
 import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete/angular-email-autocomplete.component';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Component({
   selector: 'app-update-contact-modal',
@@ -47,8 +46,9 @@ export class UpdateContactModalComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private root: RootService,
-    private clientsService: ClientsService
+    private clientsService: ClientsService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit(): void {
@@ -110,13 +110,13 @@ export class UpdateContactModalComponent implements OnInit {
     this.loadingForm = true;
     const data = { ...this.formContacto.value };
     const emailValidado = email.inputValue;
-    const usuario: Usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
 
     if (data.telefono !== '' || emailValidado !== '') {
       if (!isVacio(usuario)) {
         const request: any = {
           contactoId: this.contacto.contactoId,
-          rut: usuario.rut,
+          rut: usuario.documentId,
 
           nombre: data.nombre,
           apellido: data.apellido,
@@ -128,8 +128,8 @@ export class UpdateContactModalComponent implements OnInit {
           codEmpleado: 0,
           codUsuario: 0,
           cuentaUsuario: usuario.username,
-          rutUsuario: usuario.rut,
-          nombreUsuario: `${usuario.first_name} ${usuario.last_name}`,
+          rutUsuario: usuario.documentId,
+          nombreUsuario: `${usuario.firstName} ${usuario.lastName}`,
         };
 
         if (this.formContacto.get('contactRut')?.status !== 'DISABLED') {

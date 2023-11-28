@@ -8,13 +8,13 @@ import {
 } from '@angular/core';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { RootService } from '../../../../shared/services/root.service';
-import { Usuario } from '../../../../shared/interfaces/login';
-import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { Subject } from 'rxjs';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '@env/environment';
 import { isPlatformBrowser } from '@angular/common';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-page-payment-portal',
@@ -28,7 +28,7 @@ export class PagePaymentPortalComponent implements OnInit {
   modalPaymentMethodsRef!: BsModalRef;
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
-  user!: Usuario;
+  user!: ISession;
   customerDebt: any;
   loading = true;
   documentToPay: any[] = [];
@@ -71,7 +71,9 @@ export class PagePaymentPortalComponent implements OnInit {
     private root: RootService,
     private modalService: BsModalService,
     private toastr: ToastrService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -79,14 +81,14 @@ export class PagePaymentPortalComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.user = this.root.getDataSesionUsuario();
+    this.user = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     this.getData();
     this.dtOptions = this.root.simpleDtOptions;
   }
   getData() {
     const data = {
       where: {
-        rut: this.user.rut,
+        rut: this.user.documentId,
       },
     };
 
@@ -202,7 +204,7 @@ export class PagePaymentPortalComponent implements OnInit {
       item: this.documentToPay,
       order_total: this.totalToPay,
       client_email: this.user.email,
-      client_code: this.user.rut,
+      client_code: this.user.documentId,
       client_name: this.user.company,
     };
 

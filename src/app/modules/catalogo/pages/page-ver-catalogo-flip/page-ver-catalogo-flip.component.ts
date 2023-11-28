@@ -1,15 +1,8 @@
-import {
-  Component,
-  Inject,
-  OnInit,
-  PLATFORM_ID,
-  ViewChild,
-  ElementRef,
-} from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CatalogoService } from '../../../../shared/services/catalogo.service';
-import { FlipSetting, PageFlip, SizeType } from 'page-flip';
+import { PageFlip, SizeType } from 'page-flip';
 import { CartService } from '../../../../shared/services/cart.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
@@ -18,6 +11,7 @@ import { isVacio } from '../../../../shared/utils/utilidades';
 import { environment } from '@env/environment';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Component({
   selector: 'app-page-ver-catalogo-flip',
@@ -61,7 +55,9 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     public cart: CartService,
     public root: RootService,
     private responsive: BreakpointObserver,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   getTags() {
@@ -155,8 +151,8 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   }
 
   async establecerPrecio() {
-    let user = this.root.getDataSesionUsuario();
-    let rut = user ? user.rut : '0';
+    let user = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    let rut = user ? user.documentId : '0';
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
 

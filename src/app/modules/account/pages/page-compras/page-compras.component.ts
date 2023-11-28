@@ -3,6 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CartService } from '../../../../shared/services/cart.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { TrackingService } from '../../../../shared/services/tracking.service';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Component({
   selector: 'app-page-compras',
@@ -14,7 +15,9 @@ export class PageComprasComponent implements OnInit {
     public root: RootService,
     private _TrackingService: TrackingService,
     private cart: CartService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   currentPage: number = 1;
@@ -37,9 +40,9 @@ export class PageComprasComponent implements OnInit {
     this.loadData = true;
 
     this.data = [];
-    const usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     let user: any = {
-      rut: usuario.rut,
+      rut: usuario.documentId,
     };
     let params = {
       data_order: 'asc',
@@ -47,7 +50,7 @@ export class PageComprasComponent implements OnInit {
       draw: 1,
       length: this.maxlength,
       order: [{ column: 0, dir: 'asc' }],
-      rut: usuario.rut,
+      rut: usuario.documentId,
       search: { value: this.search, regex: false },
       start: this.page - 1,
     };

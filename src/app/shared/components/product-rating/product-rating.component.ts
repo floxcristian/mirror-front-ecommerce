@@ -12,7 +12,6 @@ import { ResumenComentario } from '../../interfaces/comentariosArticulo';
 import { Product } from '../../interfaces/product';
 import { ResponseApi } from '../../interfaces/response-api';
 import { CatalogoService } from '../../services/catalogo.service';
-import { RootService } from '../../services/root.service';
 import { AddCommentModalComponent } from '../add-comment-modal/add-comment-modal.component';
 import {
   DataModal,
@@ -21,6 +20,7 @@ import {
   TipoModal,
 } from '../modal/modal.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Component({
   selector: 'app-product-rating',
@@ -43,8 +43,9 @@ export class ProductRatingComponent implements OnChanges {
     private modalService: BsModalService,
     private catalogoService: CatalogoService,
     private toastrService: ToastrService,
-    private root: RootService,
-    public router: Router
+    public router: Router,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -84,9 +85,9 @@ export class ProductRatingComponent implements OnChanges {
   }
 
   escribirComentario() {
-    const usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
 
-    if (usuario.user_role !== 'temp') {
+    if (usuario.userRole !== 'temp') {
       const initialState = {
         producto: this.producto,
       };

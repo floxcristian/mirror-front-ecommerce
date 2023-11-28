@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Usuario } from '../../../../shared/interfaces/login';
-import { RootService } from '../../../../shared/services/root.service';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { ToastrService } from 'ngx-toastr';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-page-invoices-list',
@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./page-invoices-list.component.sass'],
 })
 export class PageInvoicesListComponent implements OnInit {
-  usuario: Usuario;
+  usuario: ISession;
   invoices: String[] = [];
   visible_columns: String[] = [
     'Factura',
@@ -35,12 +35,14 @@ export class PageInvoicesListComponent implements OnInit {
   ];
 
   constructor(
-    private root: RootService,
     private toastr: ToastrService,
-    private clients: ClientsService
+    private clients: ClientsService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
-    this.usuario = this.root.getDataSesionUsuario();
-    this.clients.buscarFacturas(this.usuario.rut).subscribe(
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+
+    this.clients.buscarFacturas(this.usuario.documentId).subscribe(
       (r: any) => {
         this.invoices = r.data;
         this.toastr.info('Facturas cargadas');

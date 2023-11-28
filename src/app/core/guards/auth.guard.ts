@@ -4,21 +4,22 @@ import {
   RouterStateSnapshot,
   Router,
 } from '@angular/router';
-import { Usuario } from '../../shared/interfaces/login';
 import { LoginService } from '../../shared/services/login.service';
-import { RootService } from '../../shared/services/root.service';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard {
   constructor(
-    private root: RootService,
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const usuario: Usuario = this.root.getDataSesionUsuario();
-    const links = this.loginService.setRoles(usuario.user_role);
+    // const usuario: Usuario = this.root.getDataSesionUsuario();
+    const user = this.sessionService.getSession();
+    const links = this.loginService.setRoles(user.userRole);
 
     const urls = links.map((x: any) => {
       x.url.shift();

@@ -9,11 +9,11 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Usuario } from '../../../../shared/interfaces/login';
-import { RootService } from '../../../../shared/services/root.service';
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { isPlatformBrowser } from '@angular/common';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-lista_producto',
@@ -67,7 +67,7 @@ export class Lista_productoComponent implements OnInit {
   productList: any;
   preferenciasCliente!: PreferenciasCliente;
   products: any;
-  user!: Usuario;
+  user!: ISession;
   cargar: boolean = false;
   title = 'Arrastre lista de elemento';
   subtitle!: string;
@@ -75,9 +75,10 @@ export class Lista_productoComponent implements OnInit {
   screenHeight: any;
   isVacio = isVacio;
   constructor(
-    private root: RootService,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -89,7 +90,7 @@ export class Lista_productoComponent implements OnInit {
 
   ngOnInit(): void {
     this.ruta = this.router.url === '/inicio' ? 'home' : this.router.url;
-    this.user = this.root.getDataSesionUsuario();
+    this.user = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     this.get_productos();
   }
 

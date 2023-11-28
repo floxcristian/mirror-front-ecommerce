@@ -26,6 +26,8 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
+import { SessionStorageService } from '@core/storage/session-storage.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 interface Item {
   ProductCart: ProductCart;
@@ -62,7 +64,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
   IVA = environment.IVA || 0.19;
   isVacio = isVacio;
   @Input() id: any;
-  user: any;
+  user!: ISession | null;
   usuario: any;
   sinStock: boolean = false;
   isB2B!: boolean;
@@ -107,7 +109,9 @@ export class PagesCartPaymentOcComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private direction: DirectionService, // @Inject(WINDOW) private window: Window
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly sessionStorage: SessionStorageService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -118,7 +122,8 @@ export class PagesCartPaymentOcComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.id = params['cart_id'] ? params['cart_id'] : params['cart-id'];
     });
-    this.user = this.localS.get('usuario');
+    // this.user = this.localS.get('usuario');
+    this.user = this.sessionStorage.get();
 
     let consulta: any = await this.cart.cargar_carro_oc(this.id).toPromise();
     this.cartSession = consulta.data.carro;
@@ -162,12 +167,12 @@ export class PagesCartPaymentOcComponent implements OnInit {
   }
 
   async verificar_usuario() {
-    if (!this.user.login_temp) {
+    if (!this.user?.login_temp) {
       let consulta: any = await this.cart
-        .verificar_supervisor(this.user.rut)
+        .verificar_supervisor(this.user?.documentId)
         .toPromise();
       this.usuario = consulta.data.filter(
-        (item: any) => item.username == this.user.username
+        (item: any) => item.username == this.user?.username
       );
       if (this.usuario.length == 0) {
         this.propietario = false;
@@ -198,14 +203,15 @@ export class PagesCartPaymentOcComponent implements OnInit {
     console.log($event);
     if ($event) {
       this.usuarioTemp = !$event;
-      this.user = this.localS.get('usuario');
+      // this.user = this.localS.get('usuario');
+      this.user = this.sessionStorage.get();
       await this.verificar_usuario();
     }
   }
 
   async aceptar_compra() {
     let formOv = {
-      user_role: this.user.user_role,
+      user_role: this.user?.userRole,
       id: this.cartSession._id,
       file: this.cartSession.ordenCompra.file,
       centroCosto: this.cartSession.ordenCompra.centroCosto,
@@ -214,7 +220,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
       credito: true,
     };
 
-    let consulta: any = await this.cart.subeOrdenDeCompra(formOv).toPromise();
+    await this.cart.subeOrdenDeCompra(formOv).toPromise();
     this.verificar_oc = true;
   }
 
@@ -229,8 +235,8 @@ export class PagesCartPaymentOcComponent implements OnInit {
     // genera la orden de compra
     const data = {
       id: this.cartSession._id,
-      usuario: this.user.username,
-      rutCliente: this.user.rut,
+      usuario: this.user?.username,
+      rutCliente: this.user?.documentId,
       tipo: 2,
       formaPago: 'OC',
       web: 1,

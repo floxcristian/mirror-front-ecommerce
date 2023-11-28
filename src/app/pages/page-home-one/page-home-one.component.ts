@@ -4,10 +4,9 @@ import { brands } from '../../../data/shop-brands';
 import { products } from '../../../data/shop-products';
 import { categories } from '../../../data/shop-block-categories';
 import { Category } from '../../shared/interfaces/category';
-import { CmsService } from '../../shared/services/cms.service';
 import { isPlatformBrowser } from '@angular/common';
-import { RootService } from '../../shared/services/root.service';
 import { brandsB2c } from '../../../data/shop-brands-b2c';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Component({
   selector: 'app-home',
@@ -46,8 +45,7 @@ export class PageHomeOneComponent implements OnInit {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private cmsService: CmsService,
-    private rootService: RootService
+    private readonly sessionService: SessionService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -75,8 +73,10 @@ export class PageHomeOneComponent implements OnInit {
         image_tablet: '../../../assets/images/slides/tiendas/TIENDAS.webp',
       },
     ];
-    const role = this.rootService.getDataSesionUsuario().user_role;
-    this.isB2B = role === 'supervisor' || role === 'comprador';
+    const user = this.sessionService.getSession();
+    const userRole = user.userRole;
+    //const role = this.rootService.getDataSesionUsuario().user_role;
+    this.isB2B = ['supervisor', 'comprador'].includes(userRole || '');
 
     this.cargaParcializada();
   }

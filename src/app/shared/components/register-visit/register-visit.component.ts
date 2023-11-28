@@ -16,6 +16,7 @@ import { Usuario } from '../../interfaces/login';
 import { rutValidator } from '../../../shared/utils/utilidades';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { SessionStorageService } from '@core/storage/session-storage.service';
 
 @Component({
   selector: 'app-register-visit',
@@ -45,7 +46,9 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     private localS: LocalStorageService,
     private router: Router,
     private loginService: LoginService,
-    private cartService: CartService
+    private cartService: CartService,
+    // Services V2
+    private readonly sessionStorage: SessionStorageService
   ) {
     this.formDefault();
   }
@@ -102,15 +105,12 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
 
       dataSave.tipoCliente = 1;
       dataSave.telefono = this.tipo_fono + dataSave.telefono;
-      const user: Usuario = this.localS.get('usuario');
-      let userIdOld = null;
-      if (user !== null) {
-        userIdOld = user.email;
-      }
+      const user = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario');
 
       let usuarioVisita: Usuario;
       usuarioVisita = await this.setUsuario(dataSave);
-      usuarioVisita._id = user._id;
+      // FIXME: antes se usaba, y ahora??
+      // usuarioVisita._id = user._id;
 
       this.cartService.agregaInvitado(usuarioVisita).subscribe((r: any) => {});
 
@@ -138,11 +138,13 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     };
     return await usuario;
   }
+
   login() {
-    const user: Usuario = this.localS.get('usuario');
+    // const user: Usuario = this.localS.get('usuario');
+    const user = this.sessionStorage.get();
 
     let userIdOld: any = null;
-    if (user !== null) {
+    if (user) {
       userIdOld = user.email;
     }
 

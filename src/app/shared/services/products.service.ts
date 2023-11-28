@@ -10,6 +10,7 @@ import { GeoLocationService } from './geo-location.service';
 import { RootService } from './root.service';
 // Interfaces
 import { ResponseApi } from '../interfaces/response-api';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,18 +19,20 @@ export class ProductsService {
   constructor(
     private http: HttpClient,
     private root: RootService,
-    private geoLocationService: GeoLocationService
+    private geoLocationService: GeoLocationService,
+    private readonly sessionService: SessionService
   ) {}
 
   buscarProductosElactic(texto: any) {
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
-    const usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
+    //this.root.getDataSesionUsuario();
 
     const params: any = {
       word: texto,
       sucursal,
-      rut: usuario.rut,
+      rut: usuario.documentId,
     };
     return this.http.get(environment.apiElastic2, { params });
   }

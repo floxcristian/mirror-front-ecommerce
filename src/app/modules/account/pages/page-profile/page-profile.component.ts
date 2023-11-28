@@ -31,6 +31,9 @@ import {
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
+import { SessionStorageService } from '@core/storage/session-storage.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-page-profile',
@@ -38,7 +41,7 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./page-profile.component.scss'],
 })
 export class PageProfileComponent implements OnDestroy, OnInit {
-  usuario: Usuario | any;
+  usuario: ISession;
   dataClient!: Cliente;
   addresses!: Direccion[];
   contacts!: Contacto[];
@@ -76,9 +79,12 @@ export class PageProfileComponent implements OnDestroy, OnInit {
     private toastr: ToastrService,
     private localS: LocalStorageService,
     private modalService: BsModalService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Storage
+    private readonly sessionStorage: SessionStorageService,
+    private readonly sessionService: SessionService
   ) {
-    this.usuario = this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
@@ -96,7 +102,7 @@ export class PageProfileComponent implements OnDestroy, OnInit {
 
   getDataClient() {
     const data = {
-      rut: this.usuario.rut,
+      rut: this.usuario.documentId,
     };
     this.loadingClient = true;
     this.clientsService.getDataClient(data).subscribe((r: any) => {
@@ -134,15 +140,18 @@ export class PageProfileComponent implements OnDestroy, OnInit {
     } else {
       this.toastr.success('Se actualizo con exito la configuración del IVA');
       this.actualizaLocalStorage(parametros.iva);
-      this.usuario = this.root.getDataSesionUsuario();
+      this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     }
   }
 
   actualizaLocalStorage(iva: boolean) {
-    const user = this.root.getDataSesionUsuario();
-    user.iva = iva;
-
-    this.localS.set('usuario', user);
+    // const user = this.root.getDataSesionUsuario();
+    const user = this.sessionStorage.get();
+    if (user) {
+      user.iva = iva;
+      this.sessionStorage.set(user);
+      // this.localS.set('usuario', user);
+    }
   }
 
   openModalAddAddress() {
@@ -174,18 +183,18 @@ export class PageProfileComponent implements OnDestroy, OnInit {
     });
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res) {
-        const usuario: Usuario = this.root.getDataSesionUsuario();
+        const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
         const request = {
           codEmpleado: 0,
           codUsuario: 0,
           cuentaUsuario: usuario.username,
-          rutUsuario: usuario.rut,
-          nombreUsuario: `${usuario.first_name} ${usuario.last_name}`,
+          rutUsuario: usuario.documentId,
+          nombreUsuario: `${usuario.firstName} ${usuario.lastName}`,
         };
         const respuesta: any = await this.clientsService
           .eliminaDireccion(
             request,
-            this.usuario?.rut || '',
+            this.usuario?.documentId || '',
             direccion.recid || 0
           )
           .toPromise();
@@ -230,16 +239,16 @@ export class PageProfileComponent implements OnDestroy, OnInit {
     });
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res) {
-        const usuario: Usuario = this.root.getDataSesionUsuario();
+        const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
         const request = {
           codEmpleado: 0,
           codUsuario: 0,
           cuentaUsuario: usuario.username,
-          rutUsuario: usuario.rut,
-          nombreUsuario: `${usuario.first_name} ${usuario.last_name}`,
+          rutUsuario: usuario.documentId,
+          nombreUsuario: `${usuario.firstName} ${usuario.lastName}`,
         };
         const respuesta: any = await this.clientsService
-          .eliminaContacto(request, usuario.rut || '', contacto.contactoId)
+          .eliminaContacto(request, usuario.documentId, contacto.contactoId)
           .toPromise();
         if (!respuesta.error) {
           this.toastr.success('Contacto eliminado exitosamente.');
@@ -265,7 +274,7 @@ export class PageProfileComponent implements OnDestroy, OnInit {
 
   respuesta(event: any) {
     if (event) {
-      this.usuario = this.root.getDataSesionUsuario();
+      this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
       this.getDataClient();
     }
   }

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@env/environment';
-import { Usuario } from '../../../../shared/interfaces/login';
-import { RootService } from '../../../../shared/services/root.service';
 import { DataTablesResponse } from '../../../../shared/interfaces/data-table';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-page-pending-orders',
@@ -12,18 +12,22 @@ import { DataTablesResponse } from '../../../../shared/interfaces/data-table';
 })
 export class PagePendingOrdersComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
-  usuario!: Usuario;
+  usuario!: ISession;
   orders!: any[];
   urlDonwloadOC = environment.apiShoppingCart + 'getoc?id=';
   viewActive = 'list';
   orderId = null;
   title: string = '';
 
-  constructor(private http: HttpClient, private root: RootService) {}
+  constructor(
+    private http: HttpClient,
+    // Services V2
+    private readonly sessionService: SessionService
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
-    this.usuario = this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     if (!this.usuario.hasOwnProperty('username'))
       this.usuario.username = this.usuario.email;
   }

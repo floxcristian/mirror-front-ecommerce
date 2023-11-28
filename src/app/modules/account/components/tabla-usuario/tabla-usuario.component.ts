@@ -4,6 +4,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { ToastrService } from 'ngx-toastr';
 import { UsersService } from '../../service/users.service';
 import { environment } from '@env/environment';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 class DataTablesResponse {
   data!: any[];
@@ -20,11 +21,11 @@ class DataTablesResponse {
 export class TablaUsuarioComponent implements OnInit {
   @ViewChild(DataTableDirective, { static: false })
   datatableElement!: DataTableDirective;
+  @Input() userSession!: ISession;
   dtOptions: DataTables.Settings = {};
   loadingData = false;
   users: any = [];
   editUser = false;
-  @Input() userSession: any;
   constructor(
     private httpClient: HttpClient,
     private toastr: ToastrService,
@@ -42,7 +43,7 @@ export class TablaUsuarioComponent implements OnInit {
 
   loadData() {
     let user: any = {
-      rut: this.userSession.rut,
+      rut: this.userSession.documentId,
     };
     this.dtOptions = {
       pagingType: 'full_numbers',

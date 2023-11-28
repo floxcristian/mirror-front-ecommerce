@@ -90,7 +90,7 @@
                         <li
                           role="menuitem"
                           *ngIf="
-                            usuario.user_role == 'supervisor' &&
+                            usuario.userRole == 'supervisor' &&
                             item?.folio == null
                           "
                         >
@@ -103,7 +103,7 @@
                         <li
                           role="menuitem"
                           *ngIf="
-                            usuario.user_role == 'supervisor' &&
+                            usuario.userRole == 'supervisor' &&
                             item?.folio != null &&
                             item?.estado == 'pendiente'
                           "
@@ -120,7 +120,7 @@
                         <li
                           role="menuitem"
                           *ngIf="
-                            usuario.user_role == 'supervisor' &&
+                            usuario.userRole == 'supervisor' &&
                             item?.folio != null &&
                             item?.estado == 'pendiente'
                           "
@@ -157,7 +157,7 @@
               (click)="approveOrder(order)"
               *ngIf="
                 order?.folio != null &&
-                usuario.user_role == 'supervisor' &&
+                usuario.userRole == 'supervisor' &&
                 order?.estado == 'pendiente'
               "
             >
@@ -169,7 +169,7 @@
               (click)="refuseOrder(order)"
               *ngIf="
                 order?.folio != null &&
-                usuario.user_role == 'supervisor' &&
+                usuario.userRole == 'supervisor' &&
                 order?.estado == 'pendiente'
               "
             >
@@ -181,7 +181,7 @@
               (click)="backToList()"
               *ngIf="
                 order?.folio == null &&
-                usuario.user_role == 'supervisor' &&
+                usuario.userRole == 'supervisor' &&
                 order?.estado == 'pendiente'
               "
             >

@@ -3,10 +3,11 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { Lista } from '../../interfaces/articuloFavorito';
 import { ArticuloLista } from '../../interfaces/articuloLista';
-import { Usuario } from '../../interfaces/login';
 import { ResponseApi } from '../../interfaces/response-api';
 import { ClientsService } from '../../services/clients.service';
 import { RootService } from '../../services/root.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-agregar-lista-productos-unitaria-modal',
@@ -27,7 +28,7 @@ export class AgregarListaProductosUnitariaModalComponent implements OnInit {
   cantCaracteres = 0;
   maxCaracteres = 40;
 
-  usuario!: Usuario;
+  usuario!: ISession;
 
   event: EventEmitter<any> = new EventEmitter();
 
@@ -35,18 +36,20 @@ export class AgregarListaProductosUnitariaModalComponent implements OnInit {
     public ModalRef: BsModalRef,
     private toastr: ToastrService,
     private clientsService: ClientsService,
-    public rootService: RootService
+    public rootService: RootService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit() {
-    this.usuario = this.rootService.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); // this.rootService.getDataSesionUsuario();
     this.seleccionandoLista = this.modo === 'lista' ? true : false;
     this.getListas();
   }
 
   getListas() {
     this.clientsService
-      .getListaArticulosFavoritos(this.usuario.rut || '0')
+      .getListaArticulosFavoritos(this.usuario.documentId || '0')
       .subscribe((resp: ResponseApi) => {
         if (resp.data.length > 0) {
           if (resp.data[0].listas.length > 0) {
@@ -96,7 +99,7 @@ export class AgregarListaProductosUnitariaModalComponent implements OnInit {
       idLista = this.lista._id;
     }
 
-    request.rut = this.usuario.rut;
+    request.rut = this.usuario.documentId;
     request.skus = this.skus.map((s) => s.sku);
 
     this.guardando = true;

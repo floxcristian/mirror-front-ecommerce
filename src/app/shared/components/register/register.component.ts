@@ -7,7 +7,6 @@ import { ResponseApi } from '../../interfaces/response-api';
 import { LoginService } from '../../services/login.service';
 import { CartService } from '../../services/cart.service';
 import { PasswordValidator } from '../../validations/password';
-import { Usuario } from '../../interfaces/login';
 import { Router } from '@angular/router';
 import {
   CargoContacto,
@@ -17,6 +16,7 @@ import { rutValidator } from '../../utils/utilidades';
 import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete/angular-email-autocomplete.component';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { getDomainsToAutocomplete } from './domains-autocomplete';
+import { SessionStorageService } from '@core/storage/session-storage.service';
 
 @Component({
   selector: 'app-register',
@@ -59,7 +59,9 @@ export class RegisterComponent implements OnInit {
     private localS: LocalStorageService,
     private loginService: LoginService,
     private cartService: CartService,
-    private router: Router
+    private router: Router,
+    // Services V2
+    private readonly sessionStorage: SessionStorageService
   ) {}
 
   ngOnInit() {
@@ -169,9 +171,10 @@ export class RegisterComponent implements OnInit {
     delete dataSave.confirmPwd;
 
     // guardamos id de carro actual
-    const user: Usuario = this.localS.get('usuario');
+    // const user: Usuario = this.localS.get('usuario');
+    const user = this.sessionStorage.get();
     let userIdOld: any = null;
-    if (user !== null) {
+    if (user) {
       userIdOld = user.email;
     }
 
@@ -256,9 +259,9 @@ export class RegisterComponent implements OnInit {
     delete dataSave.confirmPwd;
 
     // guardamos id de carro actual
-    const user: Usuario = this.localS.get('usuario');
+    const user = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario');
     let userIdOld: any = null;
-    if (user !== null) {
+    if (user) {
       userIdOld = user.email;
     }
 
@@ -298,10 +301,10 @@ export class RegisterComponent implements OnInit {
   }
 
   login() {
-    const user: Usuario = this.localS.get('usuario');
+    const user = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario');
 
     let userIdOld: any = null;
-    if (user !== null) {
+    if (user) {
       userIdOld = user.email;
     }
 

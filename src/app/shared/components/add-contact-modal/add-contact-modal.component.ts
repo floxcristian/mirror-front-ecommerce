@@ -6,21 +6,15 @@ import {
   CargoContacto,
   CargosContactoResponse,
 } from '../../interfaces/cargoContacto';
-import { Dominios } from '../../interfaces/dominios';
-import { Usuario } from '../../interfaces/login';
 import { ResponseApi } from '../../interfaces/response-api';
-import {
-  TipoContacto,
-  TiposContactoResponse,
-} from '../../interfaces/tiposContacto';
 import { ClientsService } from '../../services/clients.service';
-import { RootService } from '../../services/root.service';
 import {
   isVacio,
   rutPersonaValidator,
   rutValidator,
 } from '../../utils/utilidades';
 import { getDomainsToAutocomplete } from './domains-autocomplete';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Component({
   selector: 'app-add-contact-modal',
@@ -41,8 +35,9 @@ export class AddContactModalComponent implements OnInit {
     public ModalRef: BsModalRef,
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private root: RootService,
-    private clientsService: ClientsService
+    private clientsService: ClientsService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit(): void {
@@ -76,11 +71,11 @@ export class AddContactModalComponent implements OnInit {
     this.loadingForm = true;
     const data: any = { ...this.formContacto.value };
     const emailValidado = email.inputValue;
-    const usuario: Usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
 
     if (!isVacio(usuario)) {
       const request: any = {
-        rut: usuario.rut,
+        rut: usuario.documentId,
         contactRut: data.contactRut,
         nombre: data.nombre,
         apellido: data.apellido,
@@ -91,8 +86,8 @@ export class AddContactModalComponent implements OnInit {
         codEmpleado: 0,
         codUsuario: 0,
         cuentaUsuario: usuario.username,
-        rutUsuario: usuario.rut,
-        nombreUsuario: `${usuario.first_name} ${usuario.last_name}`,
+        rutUsuario: usuario.documentId,
+        nombreUsuario: `${usuario.firstName} ${usuario.lastName}`,
       };
 
       this.clientsService.nuevoContacto(request).subscribe(

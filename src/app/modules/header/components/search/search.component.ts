@@ -30,10 +30,11 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { ShippingAddress } from '../../../../shared/interfaces/address';
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LoginService } from '../../../../shared/services/login.service';
 import { DireccionDespachoComponent } from '../search-vin-b2b/components/direccion-despacho/direccion-despacho.component';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-header-search',
@@ -82,7 +83,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   direccion!: ShippingAddress | any;
   despachoClienteRef!: Subscription;
   isVacio = isVacio;
-  usuario!: Usuario;
+  usuario!: ISession;
   usuarioRef!: Subscription;
 
   constructor(
@@ -98,7 +99,9 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     private logisticsService: LogisticsService,
     private cartService: CartService,
     private loginService: LoginService,
-    private readonly gtmService: GoogleTagManagerService
+    private readonly gtmService: GoogleTagManagerService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit() {
@@ -127,8 +130,8 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
         }, 700);
       }
     });
-    this.usuario = this.root.getDataSesionUsuario();
-    if (this.usuario.rut !== '0')
+    this.usuario = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
+    if (this.usuario.documentId !== '0')
       this.root.getPreferenciasCliente().then((preferencias) => {
         this.direccion = preferencias.direccionDespacho;
       });
@@ -140,7 +143,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
           usuario.user_role = '';
         }
         this.usuario = usuario;
-        if (this.usuario.rut !== '0')
+        if (this.usuario.documentId !== '0')
           this.root.getPreferenciasCliente().then((preferencias) => {
             this.direccion = preferencias.direccionDespacho;
           });

@@ -7,11 +7,9 @@ import {
 } from '@angular/forms';
 import { LogisticsService } from '../../services/logistics.service';
 import { ToastrService } from 'ngx-toastr';
-import { Usuario } from '../../interfaces/login';
 import { ClientsService } from '../../services/clients.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { RootService } from '../../services/root.service';
-// import { DireccionMap } from '../map/map.component';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Component({
   selector: 'app-address-modal',
@@ -35,8 +33,9 @@ export class AddressModalComponent implements OnInit {
     private fb: FormBuilder,
     private logisticsService: LogisticsService,
     private toastr: ToastrService,
-    private root: RootService,
-    private clientsService: ClientsService
+    private clientsService: ClientsService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.formDireccion = this.fb.group({
       calle: new FormControl(
@@ -175,10 +174,10 @@ export class AddressModalComponent implements OnInit {
       referencia,
     } = this.formDireccion.value;
     const comunaArr = comuna.split('@');
-    const usuario: Usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
 
     const direccion = {
-      rut: usuario.rut,
+      rut: usuario.documentId,
       tipo: 'DES',
       region: comunaArr[2],
       comuna: comunaArr[0],
@@ -194,8 +193,8 @@ export class AddressModalComponent implements OnInit {
       codEmpleado: 0,
       codUsuario: 0,
       cuentaUsuario: usuario.username,
-      rutUsuario: usuario.rut,
-      nombreUsuario: `${usuario.first_name} ${usuario.last_name}`,
+      rutUsuario: usuario.documentId,
+      nombreUsuario: `${usuario.firstName} ${usuario.lastName}`,
     };
 
     const resultado = await this.clientsService

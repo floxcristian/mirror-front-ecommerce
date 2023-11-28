@@ -25,8 +25,8 @@
       class="icon-title mt-1"
       *ngIf="this.usuario != null && this.usuario.login_temp == false"
     >
-      {{ usuario.first_name | capitalizeFirst : true }}
-      {{ usuario.last_name | capitalizeFirst : true }}
+      {{ usuario.firstName | capitalizeFirst : true }}
+      {{ usuario.lastName | capitalizeFirst : true }}
     </span>
   </span>
 
@@ -51,7 +51,7 @@
       *ngIf="this.usuario != null && this.usuario.login_temp == false"
     >
       Hola!
-      <strong>{{ usuario.first_name | capitalizeFirst : true }}</strong></span
+      <strong>{{ usuario.firstName | capitalizeFirst : true }}</strong></span
     >
   </span>
 
@@ -78,8 +78,8 @@
       <p class="fw-bold title-sesion">
         Bienvenido
         <span *ngIf="this.usuario != null">
-          {{ usuario.first_name | capitalizeFirst : true }}
-          {{ usuario.last_name | capitalizeFirst : true }}
+          {{ usuario.firstName | capitalizeFirst : true }}
+          {{ usuario.lastName | capitalizeFirst : true }}
         </span>
       </p>
       <p class="fw-bold">

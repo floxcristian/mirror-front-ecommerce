@@ -1,12 +1,7 @@
 // Angular
 import { Injectable } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-// Libs
-import { v4 as uuidv4 } from 'uuid';
-// Environment
-import { environment } from '@env/environment';
 // Pipes
 import { SlugifyPipe } from '../pipes/slugify.pipe';
 // Services
@@ -14,9 +9,9 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { LogisticsService } from './logistics.service';
 // Interfaces
 import { Product } from '../interfaces/product';
-import { Usuario } from '../interfaces/login';
 import { PreferenciasCliente } from '../interfaces/preferenciasCliente';
 import { isVacio } from '../utils/utilidades';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Injectable({
   providedIn: 'root',
@@ -30,10 +25,11 @@ export class RootService {
   constructor(
     public slugify: SlugifyPipe,
     public decimal: DecimalPipe,
-    private http: HttpClient,
     private localS: LocalStorageService,
     private router: Router,
-    private logisticsService: LogisticsService
+    private logisticsService: LogisticsService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.setDataTableBasic();
   }
@@ -86,25 +82,24 @@ export class RootService {
     return url.toString();
   }
 
+  /*
   getDataSesionUsuario() {
     const data: Usuario = this.localS.get('usuario') as any;
 
     const id = uuidv4();
 
-    if (data == null) {
-      const dataTemp: Usuario = {
-        login_temp: true,
-        rut: '0',
-        _id: id,
-        email: id,
-        user_role: 'temp',
-      };
-      this.localS.set('usuario', dataTemp);
-      return dataTemp;
-    } else {
-      return data;
-    }
-  }
+    if (data) return data;
+
+    const dataTemp: Usuario = {
+      login_temp: true,
+      rut: '0',
+      _id: id,
+      email: id,
+      user_role: 'temp',
+    };
+    this.localS.set('usuario', dataTemp);
+    return dataTemp;
+  }*/
 
   async getPreferenciasCliente() {
     let preferencias: PreferenciasCliente = this.localS.get(
@@ -118,9 +113,9 @@ export class RootService {
       };
     }
     if (isVacio(preferencias.direccionDespacho)) {
-      const usuario = this.getDataSesionUsuario();
+      const usuario = this.sessionService.getSession(); //this.getDataSesionUsuario();
       const resp: any = await this.logisticsService
-        .obtieneDireccionesCliente(usuario.rut)
+        .obtieneDireccionesCliente(usuario.documentId)
         .toPromise();
       if (resp.data.length > 0) {
         preferencias.direccionDespacho = resp.data[0];
@@ -130,21 +125,9 @@ export class RootService {
     return preferencias;
   }
 
-  //* NO SE UTILIZA
-  // post(): string {
-  //   return `${this.path}/blog/post-classic`;
-  // }
-
   url(url: string): string {
     return this.path + url;
   }
-
-  // limpiaTextos(producto: Product) {
-  //   producto.nombre = producto.nombre.replace(/(^"|"$)/g, '');
-
-  //   return producto;
-  // }
-  //* FIN NO SE UTILIZA
 
   limpiaAtributos(product: Product): void {
     if (product.atributos == null) {
@@ -163,10 +146,6 @@ export class RootService {
 
     product.atributos = att;
   }
-  // NO SE UTILIZA
-  // getUrlImagenMiniaturaWidget(sku: any) {
-  //   return environment.urlFotowidgetProductos + `${sku}.jpg?alt=media`;
-  // }
 
   getUrlImagenMiniatura(product: any) {
     if (Object.keys(product.images).length > 0) {
@@ -193,21 +172,6 @@ export class RootService {
       }
     } else return 'assets/images/products/no-image-listado-2.jpg';
   }
-  //NO SE UTILIZA
-  // requestUrlImagenMiniatura(sku: any) {
-  //   const urlVerificaImagen =
-  //     environment.urlFotoListadoProductos + `${sku}.jpg`;
-  //   return this.http.get(urlVerificaImagen);
-  // }
-
-  // getUrlImagenFicha(sku: any) {
-  //   return environment.urlFotoFichaProducto + `${sku}.jpg?alt=media`;
-  // }
-
-  // requestUrlImagenFicha(sku: any) {
-  //   const urlVerificaImagen = environment.urlFotoFichaProducto + `${sku}.jpg`;
-  //   return this.http.get(urlVerificaImagen);
-  // }
 
   returnUrlNoImagen() {
     return 'assets/images/products/no-image-ficha.jpg';
@@ -222,11 +186,6 @@ export class RootService {
       this.modalBuscador.hide();
     }
   }
-
-  //NO SE UTILIZA
-  // getModalRefBuscador() {
-  //   return this.modalBuscador;
-  // }
 
   errorLoadImage($event: any) {
     $event.target.src = 'assets/images/products/no-imagen.jpg';

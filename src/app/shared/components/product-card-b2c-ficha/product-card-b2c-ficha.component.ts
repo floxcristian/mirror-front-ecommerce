@@ -23,6 +23,8 @@ import { Router } from '@angular/router';
 import { isVacio } from '../../utils/utilidades';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-product-card-b2c-ficha',
@@ -30,6 +32,7 @@ import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./product-card-b2c-ficha.component.scss'],
 })
 export class ProductCardB2cFichaComponent implements OnInit {
+  IVA = environment.IVA || 0.19;
   private destroy$: Subject<void> = new Subject();
   @Input() isOnProductPage!: boolean;
   @Input() home: boolean = false;
@@ -64,7 +67,7 @@ export class ProductCardB2cFichaComponent implements OnInit {
   @Input() paramsCategory!: any;
   @Input() origen!: string[];
   @Input() tipoOrigen: string = '';
-  usuario: any;
+  usuario!: ISession;
   porcentaje = 0;
   addingToCart = false;
   addingToWishlist = false;
@@ -85,7 +88,9 @@ export class ProductCardB2cFichaComponent implements OnInit {
     public compare: CompareService,
     public quickview: QuickviewService,
     public currency: CurrencyService,
-    public sanitizer: DomSanitizer
+    public sanitizer: DomSanitizer,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     if (this.route.url.includes('/especial/')) this.home = true;
   }
@@ -94,7 +99,7 @@ export class ProductCardB2cFichaComponent implements OnInit {
     this.currency.changes$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.cd.markForCheck();
     });
-    this.usuario = this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     this.cargaPrecio();
     if (this.productData.precio_escala)
       this.preciosEscalas = this.productData.escala;

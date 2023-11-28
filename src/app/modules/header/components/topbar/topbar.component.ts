@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 // Environment
 import { environment } from '@env/environment';
 // Models
-import { Usuario } from '../../../../shared/interfaces/login';
+import { ISession } from '@core/models-v2/auth/session.interface';
 // Services
 import { CurrencyService } from '../../../../shared/services/currency.service';
 import { LoginService } from '../../../../shared/services/login.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { SessionStorageService } from '@core/storage/session-storage.service';
 
 @Component({
   selector: 'app-header-topbar',
@@ -35,16 +36,19 @@ export class TopbarComponent {
   ];
 
   @Input() logo: any;
-  usuario: Usuario;
+  usuario: ISession | null;
   logoSrc = environment.logoSrc;
 
   constructor(
     public currencyService: CurrencyService,
     private router: Router,
     public loginService: LoginService,
-    public localS: LocalStorageService
+    public localS: LocalStorageService,
+    // Services V2
+    private readonly sessionStorage: SessionStorageService
   ) {
-    this.usuario = this.localS.get('usuario') as any;
+    // this.usuario = this.localS.get('usuario') as any;
+    this.usuario = this.sessionStorage.get();
 
     this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
       if (!usuario.hasOwnProperty('user_role')) {

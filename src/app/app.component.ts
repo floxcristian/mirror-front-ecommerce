@@ -27,15 +27,13 @@ import { WishlistService } from './shared/services/wishlist.service';
 import { CurrencyService } from './shared/services/currency.service';
 import { SeoService } from './shared/services/seo.service';
 import { GeoLocationService } from './shared/services/geo-location.service';
-import { LoginService } from './shared/services/login.service';
-import { RootService } from './shared/services/root.service';
-import { LocalStorageService } from './core/modules/local-storage/local-storage.service';
 // Models
 import { ProductCart } from './shared/interfaces/cart-item';
 import { GeoLocation } from './shared/interfaces/geo-location';
-import { Usuario } from './shared/interfaces/login';
 // Components
 import { AlertCartMinComponent } from './shared/components/alert-cart-min/alert-cart-min.component';
+import { SessionStorageService } from '@core/storage/session-storage.service';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Component({
   selector: 'app-root',
@@ -71,9 +69,9 @@ export class AppComponent implements AfterViewInit, OnInit {
     private modalService: BsModalService,
     private seoService: SeoService,
     private geoService: GeoLocationService,
-    private login: LoginService,
-    private root: RootService,
-    private localS: LocalStorageService
+    // Services V2
+    private readonly sessionStorage: SessionStorageService,
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit(): void {
@@ -86,10 +84,12 @@ export class AppComponent implements AfterViewInit, OnInit {
     };
     this.seoService.generarMetaTag({});
 
-    const usuario: Usuario = this.root.getDataSesionUsuario();
-    if (['supervisor', 'comprador'].includes(usuario.user_role || '')) {
-      delete usuario.ultimoCierre;
-      this.localS.set('usuario', usuario);
+    // const usuario: Usuario = this.root.getDataSesionUsuario();
+    const user = this.sessionService.getSession();
+    if (['supervisor', 'comprador'].includes(user?.userRole)) {
+      delete user?.ultimoCierre;
+      this.sessionStorage.set(user);
+      // this.localS.set('usuario', user);
     }
     /*if (['supervisor', 'comprador'].includes(usuario.user_role || '')) {
       const data: FormData = new FormData();
@@ -112,17 +112,20 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     if (isPlatformBrowser(this.platformId)) {
       window.onbeforeunload = (event) => {
-        const u: Usuario = this.root.getDataSesionUsuario();
-        if (u.user_role === 'supervisor' || u.user_role === 'comprador') {
-          u.ultimoCierre = moment();
-          this.localS.set('usuario', u);
+        const user = this.sessionService.getSession();
+        //const u: Usuario = this.root.getDataSesionUsuario();
+        if (user && ['supervisor', 'comprador'].includes(user.userRole)) {
+          user.ultimoCierre = moment();
+          this.sessionStorage.set(user);
+          // this.localS.set('usuario', user);
         }
       };
     }
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        const u: Usuario = this.root.getDataSesionUsuario();
+        const user = this.sessionService.getSession();
+        // const u: Usuario = this.root.getDataSesionUsuario();
         if (event.url.includes('/carro-compra')) {
           this.document.body.classList.remove('home');
           this.document.body.classList.remove('pdp');
@@ -142,8 +145,7 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.add('categoria');
           $('.webchatStartButtonContainer').hide();
         } else if (
-          u.user_role === 'supervisor' ||
-          u.user_role === 'comprador'
+          ['supervisor', 'comprador'].includes(user?.userRole || '')
         ) {
           this.document.body.classList.remove('home');
           this.document.body.classList.remove('pdp');

@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { Category } from '../../../../shared/interfaces/category';
-import { RootService } from '../../../../shared/services/root.service';
 
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 
 import { Router } from '@angular/router';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-page-products-categories',
@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./page-products-categories.component.sass'],
 })
 export class PageProductsCategoriesComponent implements OnInit {
-  usuario: Usuario;
+  usuario: ISession;
   category!: Category;
   selectedCategory!: Category;
   editing = false;
@@ -32,8 +32,12 @@ export class PageProductsCategoriesComponent implements OnInit {
   preview!: string;
   percentDone: any = 0;
 
-  constructor(private root: RootService, public router: Router) {
-    this.usuario = this.root.getDataSesionUsuario();
+  constructor(
+    public router: Router,
+    // Services V2
+    private readonly sessionService: SessionService
+  ) {
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
   }
 
   ngOnInit() {}

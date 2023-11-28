@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Usuario } from '../../../../shared/interfaces/login';
-import { RootService } from '../../../../shared/services/root.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-header-b2b',
@@ -8,11 +8,15 @@ import { RootService } from '../../../../shared/services/root.service';
   styleUrls: ['./header-b2b.component.scss'],
 })
 export class HeaderB2bComponent implements OnInit {
-  usuario!: Usuario;
+  usuario!: ISession;
 
-  constructor(private root: RootService) {}
+  constructor(
+    // Services V2
+    private readonly sessionService: SessionService
+  ) {}
 
   ngOnInit() {
-    this.usuario = this.root.getDataSesionUsuario();
+    // this.usuario = this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
   }
 }

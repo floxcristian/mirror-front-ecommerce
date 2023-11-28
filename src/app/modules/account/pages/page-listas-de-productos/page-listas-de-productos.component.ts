@@ -9,7 +9,6 @@ import {
 } from '../../../../shared/components/modal/modal.component';
 import { Lista } from '../../../../shared/interfaces/articuloFavorito';
 import { TiendaLocation } from '../../../../shared/interfaces/geo-location';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
@@ -20,6 +19,8 @@ import { AgregarListaProductosMasivaModalComponent } from '../../../../shared/co
 import { AgregarListaProductosUnitariaModalComponent } from '../../../../shared/components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
 import { CartService } from '../../../../shared/services/cart.service';
 import { isPlatformBrowser } from '@angular/common';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-page-listas-de-productos',
@@ -28,7 +29,7 @@ import { isPlatformBrowser } from '@angular/common';
 })
 export class PageListasDeProductosComponent implements OnInit {
   innerWidth: number;
-  usuario!: Usuario;
+  usuario!: ISession;
   tiendaSeleccionada!: TiendaLocation | undefined;
   origen!: string[];
   listas: any = [];
@@ -43,7 +44,9 @@ export class PageListasDeProductosComponent implements OnInit {
     private modalService: BsModalService,
     private cart: CartService,
     private geoLocal: GeoLocationService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -51,7 +54,7 @@ export class PageListasDeProductosComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.usuario = this.rootService.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); //this.rootService.getDataSesionUsuario();
     this.tiendaSeleccionada = this.geoLocal.getTiendaSeleccionada();
     this.getListas();
   }
@@ -61,7 +64,7 @@ export class PageListasDeProductosComponent implements OnInit {
     this.listas_temp = [];
     this.showLoading = true;
     this.clientsService
-      .getListaArticulosFavoritos(this.usuario.rut || '0')
+      .getListaArticulosFavoritos(this.usuario.documentId || '0')
       .subscribe((resp: ResponseApi) => {
         if (resp.data.length > 0) {
           if (resp.data[0].listas.length > 0) {
@@ -88,7 +91,7 @@ export class PageListasDeProductosComponent implements OnInit {
     let precio = precios.find(
       (p) =>
         p.sucursal === this.tiendaSeleccionada?.codigo &&
-        p.rut === this.usuario.rut
+        p.rut === this.usuario.documentId
     );
 
     if (isVacio(precio)) {
@@ -118,7 +121,7 @@ export class PageListasDeProductosComponent implements OnInit {
         const respuesta: any = await this.clientsService
           .updateListaArticulosFavoritos(
             res,
-            this.usuario.rut || '0',
+            this.usuario.documentId || '0',
             lista._id
           )
           .toPromise();
@@ -145,7 +148,10 @@ export class PageListasDeProductosComponent implements OnInit {
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res) {
         const respuesta: any = await this.clientsService
-          .deleteListaArticulosFavoritos(this.usuario.rut || '0', lista._id)
+          .deleteListaArticulosFavoritos(
+            this.usuario.documentId || '0',
+            lista._id
+          )
           .toPromise();
         if (!respuesta.error) {
           this.toastr.success('Lista eliminada exitosamente.');
@@ -170,7 +176,11 @@ export class PageListasDeProductosComponent implements OnInit {
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res) {
         const respuesta: any = await this.clientsService
-          .deleteArticulosFavoritos(sku, this.usuario.rut || '0', lista._id)
+          .deleteArticulosFavoritos(
+            sku,
+            this.usuario.documentId || '0',
+            lista._id
+          )
           .toPromise();
         if (!respuesta.error) {
           this.toastr.success('Producto eliminado exitosamente.');
@@ -185,7 +195,7 @@ export class PageListasDeProductosComponent implements OnInit {
   listaPredeterminada(lista: Lista) {
     this.clientsService
       .predeterminadaListaArticulosFavoritos(
-        this.usuario.rut || '0',
+        this.usuario.documentId || '0',
         lista._id
       )
       .subscribe((resp: ResponseApi) => {
@@ -229,7 +239,7 @@ export class PageListasDeProductosComponent implements OnInit {
     let resp = '';
     if (!isVacio(prod.codigos)) {
       const codigo = prod.codigos.find(
-        (c: any) => c.rutCliente === this.usuario.rut
+        (c: any) => c.rutCliente === this.usuario.documentId
       );
       if (!isVacio(codigo)) {
         resp = codigo.codigoCliente;

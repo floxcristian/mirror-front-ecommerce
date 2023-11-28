@@ -6,9 +6,10 @@ import { Subject } from 'rxjs';
 import { FormControl, Validators } from '@angular/forms';
 import { takeUntil, map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { environment } from '@env/environment';
 import { isVacio } from '../../../../shared/utils/utilidades';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 interface Item {
   ProductCart: ProductCart;
@@ -31,7 +32,7 @@ export class DropcartComponent implements OnInit, OnDestroy {
   updating = false;
   saveTimer: any;
   saveTimerLocalCart: any;
-  usuario!: Usuario;
+  usuario!: ISession;
   IVA = environment.IVA || 0.19;
   isVacio = isVacio;
 
@@ -40,13 +41,15 @@ export class DropcartComponent implements OnInit, OnDestroy {
   constructor(
     public cart: CartService,
     public root: RootService,
-    private toast: ToastrService
+    private toast: ToastrService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.cart.load();
   }
 
   ngOnInit(): void {
-    this.usuario = this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
 
     this.cart.items$
       .pipe(

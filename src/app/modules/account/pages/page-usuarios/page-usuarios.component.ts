@@ -9,6 +9,8 @@ import { DataTableDirective } from 'angular-datatables';
 import { environment } from '@env/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { rutValidator } from '../../../../shared/utils/utilidades';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 class DataTablesResponse {
   data!: any[];
@@ -24,7 +26,7 @@ class DataTablesResponse {
 })
 export class PageUsuariosComponent implements OnInit {
   prueba = [];
-  usuario: Usuario | any;
+  usuario: ISession;
   selectedUsuario!: Usuario | null;
   loadingData = true;
   users: any[] = [];
@@ -43,9 +45,11 @@ export class PageUsuariosComponent implements OnInit {
     private clients: ClientsService,
     private modalService: BsModalService,
     private fb: FormBuilder,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
-    this.usuario = this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     this.loadingData = true;
   }
 

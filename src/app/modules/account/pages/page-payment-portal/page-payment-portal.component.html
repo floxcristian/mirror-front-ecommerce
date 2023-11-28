@@ -69,7 +69,7 @@
           </div>
           <div class="col-lg-4 text-center">
             <h5>{{ user.company }}</h5>
-            <h6>Rut: {{ user.rut }}</h6>
+            <h6>Rut: {{ user.documentId }}</h6>
           </div>
           <div class="col-lg-4" [class.text-end]="innerWidth > 450">
             <span class="fw-bold">Pagar facturas vencidas </span>
@@ -105,13 +105,13 @@
               <tr>
                 <th class="fw-bold titilo-w">Fecha</th>
                 <td class="text-start">
-                  {{ item.fechaCreacion | date : "dd-MM-yyyy" }}
+                  {{ item.fechaCreacion | date : 'dd-MM-yyyy' }}
                 </td>
               </tr>
               <tr>
                 <th class="fw-bold titilo-w">Vencimiento</th>
                 <td class="text-start">
-                  {{ item.fechaVencimiento | date : "dd-MM-yyyy" }}
+                  {{ item.fechaVencimiento | date : 'dd-MM-yyyy' }}
                 </td>
               </tr>
               <tr>
@@ -188,8 +188,8 @@
                 <td>{{ item.nota_venta }}</td>
                 <td>{{ item.ordencompra }}</td>
                 <td>{{ item.folio }}</td>
-                <td>{{ item.fechaCreacion | date : "dd-MM-yyyy" }}</td>
-                <td>{{ item.fechaVencimiento | date : "dd-MM-yyyy" }}</td>
+                <td>{{ item.fechaCreacion | date : 'dd-MM-yyyy' }}</td>
+                <td>{{ item.fechaVencimiento | date : 'dd-MM-yyyy' }}</td>
                 <td class="text-end">{{ item.saldo | currencyFormat }}</td>
                 <td>
                   <span

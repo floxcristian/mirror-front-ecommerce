@@ -12,6 +12,8 @@ import { Link } from '../../../../shared/interfaces/link';
 import { RootService } from '../../../../shared/services/root.service';
 import { Usuario } from '../../../../shared/interfaces/login';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 export type Layout = 'grid' | 'grid-with-features' | 'list';
 
 @Component({
@@ -40,7 +42,7 @@ export class ProductsViewComponent {
   @Output() cambiaPagina: EventEmitter<any> = new EventEmitter();
   @Output() itemPorPagina: EventEmitter<number> = new EventEmitter();
   @Output() filterState: EventEmitter<number> = new EventEmitter();
-  usuario: Usuario;
+  usuario!: ISession;
   isB2B: boolean;
   tipo_orden = null;
   @Output() sort: EventEmitter<any> = new EventEmitter();
@@ -56,7 +58,9 @@ export class ProductsViewComponent {
     @Inject(DOCUMENT) document: any,
     private root: RootService,
     @Inject(PLATFORM_ID) private platformId: Object,
-    private readonly gtmService: GoogleTagManagerService
+    private readonly gtmService: GoogleTagManagerService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.location = document.location.search;
     this.url = window.location.href;
@@ -84,15 +88,15 @@ export class ProductsViewComponent {
       ];
     }
 
-    this.usuario = this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     this.isB2B =
-      this.usuario.user_role === 'supervisor' ||
-      this.usuario.user_role === 'comprador';
+      this.usuario.userRole === 'supervisor' ||
+      this.usuario.userRole === 'comprador';
   }
   ngOnInit() {
     if (
-      this.usuario.user_role !== 'supervisor' &&
-      this.usuario.user_role !== 'comprador'
+      this.usuario.userRole !== 'supervisor' &&
+      this.usuario.userRole !== 'comprador'
     ) {
       this.gtmService.pushTag({
         event: 'categorie_view',

@@ -1,6 +1,6 @@
 // Angular
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 // Rxjs
 import { Observable } from 'rxjs';
 import { map, retry } from 'rxjs/operators';
@@ -8,15 +8,13 @@ import { map, retry } from 'rxjs/operators';
 import { environment } from '@env/environment';
 
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
-import { Usuario } from '../interfaces/login';
-import { RootService } from './root.service';
+
 import { Flota } from '../interfaces/flota';
 import { isVacio } from '../utils/utilidades';
 import { ResponseApi } from '../interfaces/response-api';
 import { ArticuloFavorito } from '../interfaces/articuloFavorito';
-import { Dominios } from '../interfaces/dominios';
 import { CargosContactoResponse } from '../interfaces/cargoContacto';
-import { TiposContactoResponse } from '../interfaces/tiposContacto';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,8 +22,9 @@ import { TiposContactoResponse } from '../interfaces/tiposContacto';
 export class ClientsService {
   constructor(
     private http: HttpClient,
-    private root: RootService,
-    private localS: LocalStorageService
+    private localS: LocalStorageService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   obtenerGiros(rut: string) {
@@ -109,7 +108,7 @@ export class ClientsService {
   }
 
   async changePassword(data: any) {
-    const usuario: Usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
     const params: any = {
       correo: usuario.username,
       passActual: data.password,

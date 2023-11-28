@@ -3,8 +3,10 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { TrackingStep } from '../../../../shared/interfaces/tracking';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { SessionService } from '@core/states-v2/session.service';
+import { SessionStorageService } from '@core/storage/session-storage.service';
 
 @Component({
   selector: 'app-page-tracking',
@@ -20,16 +22,19 @@ export class PageTrackingComponent implements OnInit {
   OVEstado: any = [];
   EstadoOV: any = [];
   DetalleOV: any = {};
-  usuario: any;
+  usuario: ISession | null;
   constructor(
-    private localS: LocalStorageService,
+    //  private localS: LocalStorageService,
     private route: ActivatedRoute,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly sessionStorage: SessionStorageService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
-    this.usuario = this.localS.get('usuario');
+    // this.usuario = this.localS.get('usuario');
+    this.usuario = this.sessionStorage.get();
   }
 
   ngOnInit() {

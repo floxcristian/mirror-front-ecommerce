@@ -26,7 +26,7 @@
       *ngIf="this.usuario != null && this.usuario.login_temp == false"
       style="font-size: 0.5rem !important"
     >
-      {{ usuario.first_name | capitalizeFirst : true }}
+      {{ usuario.firstName | capitalizeFirst : true }}
     </span>
   </span>
 
@@ -50,12 +50,12 @@
       <p class="fw-bold title-sesion">
         Bienvenido
         <span *ngIf="this.usuario != null">
-          {{ usuario.first_name | capitalizeFirst : true }}
-          {{ usuario.last_name | capitalizeFirst : true }}
+          {{ usuario.firstName | capitalizeFirst : true }}
+          {{ usuario.lastName | capitalizeFirst : true }}
         </span>
       </p>
       <p class="fw-bold">
-        Se han cargado tus precios especiales de {{ usuario.company }}
+        Se han cargado tus precios especiales de {{ usuario?.company || '' }}
       </p>
       <p class="text-gray-2 subtitle mb-2">
         Recuerda que puedes ingresar a tu cuenta para:

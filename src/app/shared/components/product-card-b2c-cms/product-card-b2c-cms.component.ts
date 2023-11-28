@@ -23,6 +23,8 @@ import { Router } from '@angular/router';
 import { isVacio } from '../../utils/utilidades';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-product-card-b2c-cms',
@@ -62,7 +64,7 @@ export class ProductCardB2cCmsComponent implements OnInit {
   @Input() paramsCategory: any;
   @Input() origen!: string[];
   @Input() tipoOrigen: string = '';
-  usuario: any;
+  usuario!: ISession;
   porcentaje = 0;
   addingToCart = false;
   addingToWishlist = false;
@@ -85,7 +87,9 @@ export class ProductCardB2cCmsComponent implements OnInit {
     public compare: CompareService,
     public quickview: QuickviewService,
     public currency: CurrencyService,
-    public sanitizer: DomSanitizer
+    public sanitizer: DomSanitizer,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     if (this.route.url.includes('/especial/')) this.home = true;
   }
@@ -94,7 +98,7 @@ export class ProductCardB2cCmsComponent implements OnInit {
     this.currency.changes$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.cd.markForCheck();
     });
-    this.usuario = this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     this.cargaPrecio();
     if (this.productData.precio_escala)
       this.preciosEscalas = this.productData.escala;

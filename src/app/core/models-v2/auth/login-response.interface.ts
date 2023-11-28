@@ -1,33 +1,9 @@
 export interface ILoginResponse {
-  user: IUser;
-  token: IToken;
+  user: IUserResponse;
+  token: ITokenResponse;
 }
 
-export interface IUser {
-  username: string;
-  password: string;
-  userType: number;
-  active: boolean;
-  email: string;
-  firstName: string;
-  lastName: string;
-  company: string;
-  segment: string;
-  businessLine: string;
-  city: string;
-  documentId: string;
-  avatar: string;
-  country: string;
-  b2bRequestStatus: string;
-  phone: string;
-  userRole: string;
-  createdAt: string;
-  updatedAt: string;
-  lastLogin: string;
-  companies?: string[];
-  creditLine: ICreditLine;
-  preferences: IPreferences;
-}
+export type IUserResponse = IUserEssentials & IUserOptionals;
 
 export interface ICreditLine {
   enabled: boolean;
@@ -40,7 +16,36 @@ export interface IPreferences {
   iva: boolean;
 }
 
-export interface IToken {
+export interface ITokenResponse {
   accessToken: string;
   refreshToken: string;
+}
+
+export interface IUserEssentials {
+  documentId: string;
+  email: string;
+  userRole: string;
+}
+
+export interface IUserOptionals {
+  username: string;
+  password: string;
+  userType: number;
+  active: boolean;
+  firstName: string;
+  lastName: string;
+  company: string;
+  segment: string;
+  businessLine: string;
+  city: string;
+  avatar: string;
+  country: string;
+  b2bRequestStatus: string;
+  phone: string;
+  createdAt: string;
+  updatedAt: string;
+  lastLogin: string;
+  companies?: string[];
+  creditLine: ICreditLine;
+  preferences: IPreferences;
 }

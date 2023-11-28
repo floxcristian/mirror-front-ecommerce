@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { EditarListaProductosComponent } from '../editar-lista-productos/editar-lista-productos.component';
 import { Lista } from '../../interfaces/articuloFavorito';
-import { Usuario } from '../../interfaces/login';
 import { Product, ProductOrigen } from '../../interfaces/product';
 import { CartService } from '../../services/cart.service';
 import { ClientsService } from '../../services/clients.service';
@@ -17,6 +16,8 @@ import { ProductListModalComponent } from './components/product-list-modal/produ
 import { AgregarListaProductosMasivaModalComponent } from '../agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
 import { isVacio } from '../../utils/utilidades';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-product-list-card',
@@ -34,7 +35,7 @@ export class ProductListCardComponent implements OnInit {
   @Input() lista!: Lista;
   @Input() origen!: string[];
 
-  usuario!: Usuario;
+  usuario!: ISession;
   addingToCart = false;
 
   @Output() getListas = new EventEmitter<any>();
@@ -44,11 +45,13 @@ export class ProductListCardComponent implements OnInit {
     private clientsService: ClientsService,
     private cart: CartService,
     private toastr: ToastrService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit() {
-    this.usuario = this.rootService.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); // this.rootService.getDataSesionUsuario();
   }
 
   addToCart(): void {
@@ -96,7 +99,7 @@ export class ProductListCardComponent implements OnInit {
         const respuesta: any = await this.clientsService
           .updateListaArticulosFavoritos(
             res,
-            this.usuario.rut || '',
+            this.usuario.documentId || '',
             this.lista._id
           )
           .toPromise();
@@ -124,7 +127,7 @@ export class ProductListCardComponent implements OnInit {
       if (res) {
         const respuesta: any = await this.clientsService
           .deleteListaArticulosFavoritos(
-            this.usuario.rut || '',
+            this.usuario.documentId || '',
             this.lista._id
           )
           .toPromise();
@@ -172,7 +175,7 @@ export class ProductListCardComponent implements OnInit {
     let resp = '';
     if (!isVacio(prod.codigos)) {
       const codigo = prod.codigos.find(
-        (c: any) => c.rutCliente === this.usuario.rut
+        (c: any) => c.rutCliente === this.usuario.documentId
       );
       if (!isVacio(codigo)) {
         resp = codigo.codigoCliente;

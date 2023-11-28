@@ -14,9 +14,10 @@ import {
 import { Product } from '../../../..//shared/interfaces/product';
 import { ResponseApi } from '../../../..//shared/interfaces/response-api';
 import { CatalogoService } from '../../../..//shared/services/catalogo.service';
-import { RootService } from '../../../..//shared/services/root.service';
+
 import { calculaTiempo } from '../../../..//shared/utils/utilidades';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Component({
   selector: 'app-comentarios',
@@ -42,7 +43,8 @@ export class ComentariosComponent implements OnChanges {
     private modalService: BsModalService,
     private catalogoService: CatalogoService,
     private toastrService: ToastrService,
-    private root: RootService
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -116,9 +118,9 @@ export class ComentariosComponent implements OnChanges {
   }
 
   escribirComentario() {
-    const usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
 
-    if (usuario.user_role !== 'temp') {
+    if (usuario.userRole !== 'temp') {
       const initialState = {
         producto: this.producto,
       };

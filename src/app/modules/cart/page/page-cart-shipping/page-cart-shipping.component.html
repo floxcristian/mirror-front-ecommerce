@@ -1136,7 +1136,7 @@
                 <div class="mt-3 col-6 ps-0 ps-1">
                   <button
                     name="next"
-                    *ngIf="userSession.user_role != 'comprador'"
+                    *ngIf="userSession.userRole != 'comprador'"
                     [disabled]="
                       shippingSelected == null ||
                       cartSession?.recidDireccion == 0 ||
@@ -1151,7 +1151,7 @@
 
                   <button
                     name="selectedShippingId"
-                    *ngIf="userSession.user_role == 'comprador'"
+                    *ngIf="userSession.userRole == 'comprador'"
                     [disabled]="shippingSelected == null"
                     (click)="next()"
                     class="btn btn-lg btn-secondary w-100 text-center"
@@ -1166,7 +1166,7 @@
               class="row text-primary mt-3"
               *ngIf="
                 documentType != 'cotizacion' &&
-                userSession.user_role !== 'compradorb2c' &&
+                userSession.userRole !== 'compradorb2c' &&
                 !invitado
               "
             >
@@ -1267,7 +1267,7 @@
                 <div class="mt-3 col-6 ps-0 ps-1">
                   <button
                     name="next"
-                    *ngIf="userSession.user_role != 'comprador'"
+                    *ngIf="userSession.userRole != 'comprador'"
                     [disabled]="
                       shippingSelected == null ||
                       cartSession?.recidDireccion == 0 ||
@@ -1282,7 +1282,7 @@
 
                   <button
                     name="selectedShippingId"
-                    *ngIf="userSession.user_role == 'comprador'"
+                    *ngIf="userSession.userRole == 'comprador'"
                     [disabled]="shippingSelected == null"
                     (click)="next()"
                     class="btn btn-lg btn-secondary w-100 text-center"
@@ -1417,7 +1417,7 @@
           <div class="mt-3 col-12 ps-0 ps-1">
             <button
               name="next"
-              *ngIf="userSession.user_role != 'comprador'"
+              *ngIf="userSession.userRole != 'comprador'"
               [disabled]="
                 shippingSelected == null ||
                 cartSession?.recidDireccion == 0 ||
@@ -1433,7 +1433,7 @@
 
             <button
               name="selectedShippingId"
-              *ngIf="userSession.user_role == 'comprador'"
+              *ngIf="userSession.userRole == 'comprador'"
               [disabled]="shippingSelected == null"
               (click)="next()"
               class="btn btn-lg btn-secondary w-100 text-center"

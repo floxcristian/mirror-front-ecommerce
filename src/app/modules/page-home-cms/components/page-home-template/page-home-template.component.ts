@@ -15,6 +15,8 @@ import { RootService } from '../../../../shared/services/root.service';
 import { PageHomeService } from '../../services/pageHome.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { LoginService } from '../../../../shared/services/login.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 @Component({
   selector: 'app-page-home-template',
   templateUrl: './page-home-template.component.html',
@@ -29,7 +31,7 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
   url1: any[] = [];
   // Otro...
   preferenciasCliente!: PreferenciasCliente;
-  user!: Usuario;
+  user!: ISession;
   despachoCliente!: Subscription;
 
   //declarando la variable para ver los tipos
@@ -46,11 +48,13 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     private logisticsService: LogisticsService,
     private geoLocationService: GeoLocationService,
     private localStorage: LocalStorageService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.user = this.root.getDataSesionUsuario();
+    this.user = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
     this.cargarPage();
 
     const geo: GeoLocation = this.localStorage.get('geolocalizacion');
@@ -87,7 +91,7 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
 
   async cargarHome() {
     this.carga_producto_home = true;
-    const rut = this.user.rut;
+    const rut = this.user.documentId;
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
     let params: any;
@@ -111,7 +115,7 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
 
   async get_productos() {
     this.carga_listo_especial = true;
-    const rut = this.user.rut;
+    const rut = this.user.documentId;
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
 
@@ -132,7 +136,6 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
       .buscarProductosElactic(params)
       .toPromise();
 
-    console.log('buscarProductosElactic: ', response);
     this.url1 = response.urls;
     this.lstProductos1 = response.data;
 
@@ -144,7 +147,7 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
       .getPagehomeCms()
       .toPromise();
     this.pageHome = response.data[0].page;
-    console.log('pageHome: ', response);
+
     this.carga = false;
     this.scrollToTop();
   }

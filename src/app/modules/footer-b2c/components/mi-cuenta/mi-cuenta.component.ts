@@ -6,11 +6,11 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { LoginService } from '../../../../shared/services/login.service';
-import { RootService } from '../../../../shared/services/root.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-mi-cuenta',
@@ -20,7 +20,7 @@ import { isPlatformBrowser } from '@angular/common';
 export class MiCuentaComponent implements OnInit {
   screenWidth: any;
   terminos = false;
-  usuario!: Usuario;
+  usuario!: ISession;
   links = [
     { label: 'Mi cuenta', url: 'resumen' },
     { label: 'Mis pedidos', url: 'pedidos-pendientes' },
@@ -33,8 +33,9 @@ export class MiCuentaComponent implements OnInit {
     private router: Router,
     private loginService: LoginService,
     private localStorage: LocalStorageService,
-    private root: RootService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -42,7 +43,7 @@ export class MiCuentaComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.usuario = await this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
 
     this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
       this.usuario = usuario;

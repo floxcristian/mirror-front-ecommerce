@@ -3,11 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { Lista } from '../../interfaces/articuloFavorito';
-import { Usuario } from '../../interfaces/login';
 import { ResponseApi } from '../../interfaces/response-api';
 import { ClientsService } from '../../services/clients.service';
 import { RootService } from '../../services/root.service';
 import { isVacio } from '../../utils/utilidades';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-agregar-lista-productos-masiva-modal',
@@ -35,7 +36,7 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
   collapsed1State = true;
   collapsed2State = true;
 
-  usuario!: Usuario;
+  usuario!: ISession;
   form!: FormGroup;
 
   event: EventEmitter<any> = new EventEmitter();
@@ -45,11 +46,13 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
     private fb: FormBuilder,
     public rootService: RootService,
     private toast: ToastrService,
-    private clientsService: ClientsService
+    private clientsService: ClientsService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit() {
-    this.usuario = this.rootService.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); //this.rootService.getDataSesionUsuario();
     this.form = this.fb.group({
       file: ['', Validators.required],
     });
@@ -59,7 +62,7 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
 
   getListas() {
     this.clientsService
-      .getListaArticulosFavoritos(this.usuario.rut || '')
+      .getListaArticulosFavoritos(this.usuario.documentId)
       .subscribe((resp: ResponseApi) => {
         if (resp.data.length > 0) {
           if (resp.data[0].listas.length > 0) {
@@ -138,7 +141,7 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
       idLista = this.lista._id;
     }
 
-    formData.append('rut', this.usuario.rut || '');
+    formData.append('rut', this.usuario.documentId);
     formData.append('file', this.file);
 
     this.procesandoExcel = true;

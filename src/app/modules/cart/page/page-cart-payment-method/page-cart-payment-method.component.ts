@@ -56,6 +56,9 @@ import { DireccionMap } from 'src/app/shared/components/map/map.component';
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
+import { SessionStorageService } from '@core/storage/session-storage.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { SessionService } from '@core/states-v2/session.service';
 
 declare const $: any;
 export interface Archivo {
@@ -81,7 +84,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   files: any = [];
   loadingPage = false;
   loadingText = 'Generando orden de compra...';
-  userSession!: Usuario;
+  userSession!: ISession;
   cartSession: CartData;
   uploadedFiles!: File;
   documentType = 'factura';
@@ -154,7 +157,10 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private logistics: LogisticsService,
     private clientsService: ClientsService,
     private readonly gtmService: GoogleTagManagerService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Storage
+    private readonly sessionStorage: SessionStorageService,
+    private readonly sessionService: SessionService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -176,7 +182,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   ngDoCheck() {
-    this.userSession = this.root.getDataSesionUsuario();
+    this.userSession = this.sessionService.getSession();
+    //this.userSession = this.root.getDataSesionUsuario();
     // this.userSession['requiereValidacion'] = true;
     this.cartSession = this.localS.get('carroCompraB2B');
     this.fechas_entregas = this.localS.get('fechas');
@@ -196,7 +203,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   obtenerGiros(): void {
     this.girosOptions = [];
-    let rut = this.userSession.rut;
+    let rut = this.userSession?.documentId;
     if (this.invitado) {
       let formattedRut = this.formVisita.value.rut.includes('-')
         ? this.formVisita.value.rut
@@ -209,7 +216,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       this.clientsService.obtenerGiros(rut ?? '').subscribe(
         (res: any) => {
           this.girosOptions = res.giros || [];
-          console.log('girosOptions: ', this.girosOptions);
+
           if (this.girosOptions.length) {
             this.documentOptions = [
               { id: 'BEL', name: 'BOLETA' },
@@ -223,7 +230,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
             this.documentOptions = [{ id: 'BEL', name: 'BOLETA' }];
             this.selectedDocument = 'BEL';
           }*/
-          console.log('giros: ', res);
+
           this.cargandoGiros = false;
         },
         (error) => {
@@ -242,15 +249,15 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
    * @returns
    */
   checkIsB2b(): boolean {
-    const { user_role: userRole } = this.root.getDataSesionUsuario();
-    return ['supervisor', 'comprador'].includes(userRole ?? '');
+    const user = this.sessionService.getSession();
+    return ['supervisor', 'comprador'].includes(user.userRole);
   }
 
   async ngOnInit() {
-    this.userSession = this.root.getDataSesionUsuario();
+    this.userSession = this.sessionService.getSession();
+    // this.root.getDataSesionUsuario();
     this.isB2B = this.checkIsB2b();
-    console.log('[-] isB2B: ', this.isB2B);
-    if (this.isB2B || this.userSession.giro) {
+    if (this.isB2B || this.userSession.businessLine) {
       this.documentOptions.push({ id: 'FEL', name: 'FACTURA' });
     }
     if (this.invitado) {
@@ -268,10 +275,10 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.fechas_entregas = this.localS.get('fechas');
     this.pagoKhipu = this.localS.get('Metodo') || null;
     this.esBoleta =
-      this.userSession.giro == '' || this.userSession.giro == null;
-    this.selectedDocument = this.userSession.giro ? 'FEL' : 'BEL';
-    console.log('[-] selectedDocument: ', this.selectedDocument);
-    console.log('[-] userSession.giro: ', this.userSession.giro);
+      this.userSession?.businessLine == '' ||
+      this.userSession?.businessLine == null;
+    this.selectedDocument = this.userSession?.businessLine ? 'FEL' : 'BEL';
+
     this.formOV();
     this.cart.load();
 
@@ -316,7 +323,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
     /* Se cargan los centros de costo */
     this.clientsService
-      .getCentrosCosto(this.userSession.rut ?? '')
+      .getCentrosCosto(this.userSession?.documentId ?? '')
       .subscribe((resp: any) => {
         if (!resp.error) {
           this.centrosCosto = resp.data;
@@ -374,15 +381,15 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       this.paymentKhipu(r);
     });
     if (
-      this.userSession.user_role !== 'supervisor' &&
-      this.userSession.user_role !== 'comprador'
+      this.userSession?.userRole !== 'supervisor' &&
+      this.userSession?.userRole !== 'comprador'
     ) {
       this.gtmService.pushTag({
         event: 'payment',
         pagePath: window.location.href,
       });
     }
-    if (!this.userSession.giro) {
+    if (!this.userSession?.businessLine) {
       this.obtenerGiros();
     }
   }
@@ -419,7 +426,9 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   obtieneTiendaSegunRecid(recid: any) {
     this.logistics
-      .obtieneDireccionesTiendaRetiro({ usuario: this.userSession.rut })
+      .obtieneDireccionesTiendaRetiro({
+        usuario: this.userSession?.documentId,
+      })
       .subscribe(
         (r: ResponseApi) => {
           this.tiendaRetiro = r.data.filter(
@@ -438,8 +447,9 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   obtieneDireccionCliente() {
-    const usuario = this.root.getDataSesionUsuario();
-    this.logistics.obtieneDireccionesCliente(usuario.rut).subscribe(
+    // const usuario = this.root.getDataSesionUsuario();
+    const user = this.sessionService.getSession();
+    this.logistics.obtieneDireccionesCliente(user.documentId).subscribe(
       (r: ResponseApi) => {
         if (r.error === false) {
           for (let dir of r.data) {
@@ -478,11 +488,11 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.paymentMethods = await this.paymentService.getMetodosPago();
     //if(this.userSession.username!='claudio.montoya@biopc.cl') this.paymentMethods.pop();
     if (
-      this.userSession.user_role === 'comprador' ||
-      this.userSession.user_role === 'supervisor'
+      this.userSession?.userRole === 'comprador' ||
+      this.userSession?.userRole === 'supervisor'
     ) {
       const respBloqueo: any = await this.clientsService
-        .getBloqueo(this.userSession.rut ?? '')
+        .getBloqueo(this.userSession.documentId ?? '')
         .toPromise();
       if (respBloqueo.error) {
         this.getBloqueoError = true;
@@ -507,7 +517,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   formOV() {
     this.formOv = this.fb.group({
-      user_role: this.userSession.user_role,
+      user_role: this.userSession?.userRole,
       id: this.cartSession._id,
       file: [null],
       centroCosto: [''],
@@ -572,7 +582,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       // genera la orden de compra
       const data = {
         id: this.cartSession._id,
-        usuario: this.userSession.email,
+        usuario: this.userSession?.email,
         tipo: 2,
         formaPago: 'OC',
         web: 1,
@@ -618,7 +628,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         };
 
         this.cart.load();
-        if (this.userSession.user_role === 'supervisor') {
+        if (this.userSession?.userRole === 'supervisor') {
           await this.cart.confirmarOV(this.cartSession._id).toPromise();
           this.router.navigate(
             ['/', 'carro-compra', 'gracias-por-tu-compra'],
@@ -647,7 +657,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   finishQuotation(): void {
     const data = {
       id: this.cartSession._id,
-      usuario: this.userSession.username,
+      usuario: this.userSession?.username,
       tipo: this.QUOTATION_TYPE,
       formaPago: 'OC',
     };
@@ -685,7 +695,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   purchaseRequest() {
     const data = {
       id: this.cartSession._id,
-      usuario: this.userSession.username,
+      usuario: this.userSession?.username,
       tipo: 2,
       formaPago: 'OC',
     };
@@ -827,15 +837,17 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         let resp: any = await this.cart.saveCarroTemp(objeto).toPromise();
 
         if (!resp.error) {
-          let userCambio: any = this.root.getDataSesionUsuario();
-          userCambio._id = user.email;
+          let userCambio = this.sessionService.getSession();
+          // let userCambio: any = this.root.getDataSesionUsuario();
+          //userCambio._id = user.email;
           userCambio.email = user.email;
-          userCambio.user_role = 'compradorB2c';
-          userCambio.rut = user.rut;
+          userCambio.userRole = 'compradorB2c';
+          userCambio.documentId = user.rut;
           userCambio.login_temp = true;
-          userCambio.first_name = this.formVisita.value.nombre || '';
-          userCambio.last_name = this.formVisita.value.apellido || '';
-          this.localS.set('usuario', userCambio);
+          userCambio.firstName = this.formVisita.value.nombre || '';
+          userCambio.lastName = this.formVisita.value.apellido || '';
+          this.sessionStorage.set(userCambio);
+          // this.localS.set('usuario', userCambio);
         }
       }
     }
@@ -904,7 +916,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
     modal.content?.event.subscribe(async (res) => {
       const request: any = {
-        rut: this.userSession.rut,
+        rut: this.userSession?.documentId,
         codigo: res.codigo,
         nombre: res.nombre,
       };
@@ -917,7 +929,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       if (!respuesta.error) {
         this.toast.success('Centro de costo ingresado exitosamente.');
         let resp: any = await this.clientsService
-          .getCentrosCosto(this.userSession.rut ?? '')
+          .getCentrosCosto(this.userSession?.documentId ?? '')
           .toPromise();
         if (!resp.error) {
           this.centrosCosto = resp.data;
@@ -950,7 +962,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     const params = {
       cartId: this.cartSession._id,
       username: this.userSession.username,
-      rutClient: this.userSession.rut,
+      rutClient: this.userSession.documentId,
       calle:
         isValidAddress && this.formDireccion.value.calle
           ? this.formDireccion.value.calle
@@ -1061,7 +1073,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
           id_carro: documento,
           usuario_email: this.userSession.username,
           usuario_name:
-            this.userSession.first_name + ' ' + this.userSession.last_name,
+            this.userSession.firstName + ' ' + this.userSession.lastName,
           bank: banco,
         };
       } else {
@@ -1144,11 +1156,11 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       this.cd_ver = false;
       let data: any = this.formOv.value;
       data.file = this.archivo !== undefined ? this.archivo?.archivo : null;
-      if (this.userSession.credito) {
+      if (this.userSession.creditLine) {
         if (
-          this.totalCarro >= this.userSession.credito.de &&
-          (this.totalCarro < this.userSession.credito.hasta ||
-            this.userSession.credito.hasta == -1)
+          this.totalCarro >= this.userSession.creditLine.fromAmount &&
+          (this.totalCarro < this.userSession.creditLine.toAmount ||
+            this.userSession.creditLine.toAmount == -1)
         ) {
           data.credito = true;
         } else {

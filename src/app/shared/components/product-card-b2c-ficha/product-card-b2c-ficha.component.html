@@ -597,7 +597,7 @@
                 (!isVacio(usuario.iva)
                   ? usuario.iva
                     ? precio.precio
-                    : precio.precio / (1 + usuario.iva)
+                    : precio.precio / (1 + IVA)
                   : precio.precio
                 ) | currencyFormat
               }}

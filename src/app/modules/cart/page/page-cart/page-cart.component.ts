@@ -12,11 +12,9 @@ import { Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { RootService } from '../../../../shared/services/root.service';
 import { ToastrService } from 'ngx-toastr';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { Router } from '@angular/router';
 import { Banner } from '../../../../shared/interfaces/banner';
-import { CmsService } from '../../../../shared/services/cms.service';
 import { HostListener } from '@angular/core';
 import { Product } from '../../../../shared/interfaces/product';
 import { ProductsService } from '../../../../shared/services/products.service';
@@ -28,6 +26,9 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { isPlatformBrowser } from '@angular/common';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { PreferenciasCliente } from '@shared/interfaces/preferenciasCliente';
+import { SessionStorageService } from '@core/storage/session-storage.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { SessionService } from '@core/states-v2/session.service';
 
 interface Item {
   ProductCart: ProductCart;
@@ -55,7 +56,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
   isVacio = isVacio;
 
   recommendedProducts: Product[] = [];
-  user!: Usuario;
+  user!: ISession;
   isB2B!: boolean;
   SumaTotal = 0;
   carouselOptions = {
@@ -99,11 +100,13 @@ export class PageCartComponent implements OnInit, OnDestroy {
     private toast: ToastrService,
     private localS: LocalStorageService,
     private geoLocationService: GeoLocationService,
-    private cmsService: CmsService,
     private productoService: ProductsService,
     private direction: DirectionService, // @Inject(WINDOW) private window: Window
+    private readonly gtmService: GoogleTagManagerService,
     @Inject(PLATFORM_ID) private platformId: Object,
-    private readonly gtmService: GoogleTagManagerService
+    // Services V2
+    private readonly sessionStorage: SessionStorageService,
+    private readonly sessionService: SessionService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -113,7 +116,8 @@ export class PageCartComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const _this = this;
-    this.user = this.root.getDataSesionUsuario();
+    //this.user = this.root.getDataSesionUsuario();
+    this.user = this.sessionService.getSession();
     this.cart.items$
       .pipe(
         takeUntil(this.destroy$),
@@ -141,14 +145,14 @@ export class PageCartComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.cart.dropCartActive$.next(false);
     });
-    if (['supervisor', 'comprador'].includes(this.user.user_role || '')) {
+    if (['supervisor', 'comprador'].includes(this.user?.userRole || '')) {
       this.gtmService.pushTag({
         event: 'cart',
         pagePath: window.location.href,
       });
     }
     this.isB2B = ['supervisor', 'comprador'].includes(
-      this.user.user_role || ''
+      this.user?.userRole || ''
     );
   }
 
@@ -244,8 +248,8 @@ export class PageCartComponent implements OnInit, OnDestroy {
       obj.listaSku.push(item.ProductCart.sku);
     }
 
-    if (this.user != null) {
-      obj.rut = this.user.rut;
+    if (this.user) {
+      obj.rut = this.user.documentId;
     }
     if (this.preferenciaCliente && this.preferenciaCliente.direccionDespacho)
       obj.localidad = this.preferenciaCliente.direccionDespacho.comuna

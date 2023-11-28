@@ -46,7 +46,6 @@ import { ResponseApi } from '../../../shared/interfaces/response-api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GeoLocationService } from '../../services/geo-location.service';
 import { GeoLocation } from '../../interfaces/geo-location';
-import { Usuario } from '../../interfaces/login';
 
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ArticuloFavorito, Lista } from '../../interfaces/articuloFavorito';
@@ -61,6 +60,9 @@ import { NguCarousel, NguCarouselConfig } from '@ngu/carousel';
 import { AvisoStockComponent } from '../aviso-stock/aviso-stock.component';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { SessionStorageService } from '@core/storage/session-storage.service';
 interface ProductImage {
   id: string;
   url: string;
@@ -130,7 +132,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   listasEnQueExiste: Lista[] = [];
   listaPredeterminada!: Lista | undefined;
 
-  usuario: Usuario;
+  usuario: ISession;
   isB2B: boolean;
   IVA = environment.IVA || 0.19;
   isVacio = isVacio;
@@ -290,12 +292,15 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     private clientsService: ClientsService,
     private cd: ChangeDetectorRef,
     private fb: FormBuilder,
-    private readonly gtmService: GoogleTagManagerService
+    private readonly gtmService: GoogleTagManagerService,
+    // Services V2
+    private readonly sessionService: SessionService,
+    private readonly sessionStorage: SessionStorageService
   ) {
-    this.usuario = this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     this.isB2B =
-      this.usuario.user_role === 'supervisor' ||
-      this.usuario.user_role === 'comprador';
+      this.usuario.userRole === 'supervisor' ||
+      this.usuario.userRole === 'comprador';
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
@@ -329,7 +334,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     if (this.layout !== 'quickview' && isPlatformBrowser(this.platformId)) {
       this.photoSwipePromise = this.photoSwipe.load().subscribe();
     }
-    if (!['supervisor', 'comprador'].includes(this.usuario.user_role || '')) {
+    if (!['supervisor', 'comprador'].includes(this.usuario.userRole || '')) {
       this.gtmService.pushTag({
         event: 'productView',
         pagePath: window.location.href,
@@ -380,9 +385,9 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       ],
       numero_telefono: ['', [Validators.required, Validators.maxLength(14)]],
     });
-    if (this.usuario.user_role != 'temp') {
+    if (this.usuario.userRole != 'temp') {
       this.formAvisoStock.controls['nombre'].setValue(
-        this.usuario.first_name + ' ' + this.usuario.last_name
+        this.usuario.firstName + ' ' + this.usuario.lastName
       );
       this.formAvisoStock.controls['email'].setValue(this.usuario.email);
       this.formAvisoStock.controls['numero_telefono'].setValue(
@@ -408,13 +413,13 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     const params: any = {
       sku,
     };
-    const usuario = this.root.getDataSesionUsuario();
-    if (usuario.rut) {
-      params['rut'] = usuario.rut;
+    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    if (usuario.documentId) {
+      params['rut'] = usuario.documentId;
     }
-
     this.estado = false;
   }
+
   cargaPrecio(producto: any) {
     this.cart.cargarPrecioEnProducto(producto);
   }
@@ -466,11 +471,11 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   async updateCart(cantidad: any) {
     this.quantity.setValue(cantidad);
-    const usuario: Usuario = this.localS.get('usuario');
+    const usuario = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario');
     let rut: string | undefined = '0';
 
-    if (usuario != null) {
-      rut = usuario.rut;
+    if (usuario) {
+      rut = usuario?.documentId;
     }
 
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
@@ -488,13 +493,13 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       .toPromise();
     this.cantidadFaltantePrecioEscala = 0;
     if (datos['precio_escala']) {
-      this.product.precioComun = !isVacio(usuario.iva)
-        ? usuario.iva
+      this.product.precioComun = !isVacio(usuario?.iva)
+        ? usuario?.iva
           ? datos['precioComun']
           : datos['precioComun'] / (1 + this.IVA)
         : datos['precioComun'];
-      this.product.precio.precio = !isVacio(usuario.iva)
-        ? usuario.iva
+      this.product.precio.precio = !isVacio(usuario?.iva)
+        ? usuario?.iva
           ? datos['precio'].precio
           : datos['precio'].precio / (1 + this.IVA)
         : datos['precio'].precio;
@@ -514,10 +519,10 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       });
     }
   }
-  addToCart(): void {
-    const usuario = this.root.getDataSesionUsuario();
 
-    if (usuario == null) {
+  addToCart(): void {
+    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    if (!usuario) {
       this.toast.warning(
         'Debe iniciar sesion para poder comprar',
         'Información'
@@ -565,7 +570,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       const resp: ResponseApi = (await this.clientsService
         .deleteTodosArticulosFavoritos(
           this.product.sku,
-          this.usuario.rut || ''
+          this.usuario.documentId || ''
         )
         .toPromise()) as ResponseApi;
 
@@ -574,7 +579,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
         this.cd.markForCheck();
         // se elimina sku de la lista en LocalStorage
         await this.clientsService.cargaFavoritosLocalStorage(
-          this.usuario.rut || ''
+          this.usuario.documentId || ''
         );
         this.refreshListasEnQueExiste();
         this.toast.success('Se eliminó de todas las listas');
@@ -582,11 +587,11 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       let listas: Lista[] = [];
       const resp: ResponseApi = (await this.clientsService
-        .getListaArticulosFavoritos(this.usuario.rut || '')
+        .getListaArticulosFavoritos(this.usuario.documentId || '')
         .toPromise()) as ResponseApi;
 
       if (resp.data.length) {
-        if (resp.data[0].listas.length > 0) {
+        if (resp.data[0].listas.length) {
           listas = resp.data[0].listas;
 
           const listaPredeterminada: Lista | undefined = listas.find(
@@ -596,14 +601,14 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
           const resp1: ResponseApi = (await this.clientsService
             .setArticulosFavoritos(
               this.product.sku,
-              this.usuario.rut || '',
+              this.usuario.documentId || '',
               listaPredeterminada?._id || ''
             )
             .toPromise()) as ResponseApi;
           if (!resp1.error) {
             // se agrega sku en la lista del LocalStorage
             await this.clientsService.cargaFavoritosLocalStorage(
-              this.usuario.rut || ''
+              this.usuario.documentId || ''
             );
 
             this.refreshListasEnQueExiste();
@@ -644,7 +649,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   async addToWishlistOptions() {
     let listas: Lista[] = [];
     const resp: ResponseApi = (await this.clientsService
-      .getListaArticulosFavoritos(this.usuario.rut || '')
+      .getListaArticulosFavoritos(this.usuario.documentId)
       .toPromise()) as ResponseApi;
     if (resp.data.length) {
       if (resp.data[0].listas.length) {
@@ -827,7 +832,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     const params = {
       sucursal: tiendaSeleccionada?.codigo,
       sku: this.product.sku,
-      rut: this.usuario.rut,
+      rut: this.usuario.documentId,
     };
     const resp: any = await this.cart.getPriceScale(params).toPromise();
     this.preciosEscalas = resp.data.map((p: any) => {
@@ -852,7 +857,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   OpenAvisoStock() {
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const modalAviso = this.modalService.show(AvisoStockComponent, {
+    this.modalService.show(AvisoStockComponent, {
       backdrop: 'static',
       keyboard: false,
       initialState: {

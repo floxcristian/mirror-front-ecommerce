@@ -32,14 +32,17 @@
             style="color: #0063b9 !important; font-size: 18px"
           >
             <p>
-              Estimado <strong>{{ " " + usuario.nombre_completo }}</strong
+              Estimado
+              <strong>{{
+                ' ' + usuario.firstName + ' ' + usuario.lastName
+              }}</strong
               >, hemos recibido su compra y su pago de
-              <strong> {{ " " + total | currencyFormat }}{{ " " }}</strong
+              <strong> {{ ' ' + total | currencyFormat }}{{ ' ' }}</strong
               >fue procesado correctamente.
             </p>
             <p>
               En breve le enviaremos un correo a
-              <strong>{{ " " + usuario.email }}</strong> con la confirmación de
+              <strong>{{ ' ' + usuario.email }}</strong> con la confirmación de
               su pedido:
             </p>
           </div>
@@ -48,7 +51,7 @@
               class="btn btn-lg btn-secondary w-100 text-center"
               style="font-size: 24px; padding-bottom: 45px"
             >
-              N° {{ " " + numeroCarro }}
+              N° {{ ' ' + numeroCarro }}
             </button>
           </div>
           <div class="col-12 mt-4 text-center">
@@ -97,15 +100,18 @@
           style="color: #0063b9; font-size: 16px"
         >
           <p>
-            Estimado <strong>{{ " " + usuario.nombre_completo }}</strong
+            Estimado
+            <strong>{{
+              ' ' + usuario.firstName + ' ' + usuario.lastName
+            }}</strong
             >, hemos recibido su compra y su pago de
-            <strong> {{ " " + total | currencyFormat }}{{ " " }}</strong
+            <strong> {{ ' ' + total | currencyFormat }}{{ ' ' }}</strong
             >fue procesado correctamente.
           </p>
           <p>
             En breve le enviaremos un correo a
-            <strong>{{ " " + usuario.email }}</strong> con la confirmación de su
-            pedido:
+            <strong>{{ ' ' + usuario.email }}</strong> con la confirmación de
+            su pedido:
           </p>
         </div>
         <div class="col-12 mt-3">
@@ -113,7 +119,7 @@
             class="btn btn-lg btn-secondary w-100 text-center"
             style="font-size: 24px"
           >
-            N° {{ " " + numeroCarro }}
+            N° {{ ' ' + numeroCarro }}
           </button>
         </div>
         <div class="col-12 mt-4 text-center">

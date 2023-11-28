@@ -26,9 +26,10 @@ import { Subscription } from 'rxjs';
 import { LogisticsService } from '../../services/logistics.service';
 import { isVacio } from '../../utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { isPlatformBrowser } from '@angular/common';
 import { LoginService } from '@shared/services/login.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-product-slideshow',
@@ -38,7 +39,7 @@ import { LoginService } from '@shared/services/login.service';
 export class ProductSlideshowComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
-  user!: Usuario;
+  user!: ISession;
   isB2B!: boolean;
   cargando = true;
 
@@ -126,10 +127,11 @@ export class ProductSlideshowComponent
     private localStorage: LocalStorageService,
     private router: Router,
     private clientsService: ClientsService,
-    private modalService: BsModalService,
     private logisticsService: LogisticsService,
     private loginService: LoginService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -140,8 +142,8 @@ export class ProductSlideshowComponent
 
   ngOnInit() {
     this.ruta = this.router.url === '/inicio' ? 'home' : this.router.url;
-    this.user = this.root.getDataSesionUsuario();
-    const role = this.user.user_role;
+    this.user = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    const role = this.user.userRole;
     this.isB2B = role === 'supervisor' || role === 'comprador';
   }
 
@@ -175,7 +177,7 @@ export class ProductSlideshowComponent
     // cuando se inicia sesion
     this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
       console.log('hola inicieß');
-      this.user = usuario;
+      this.user = usuario as any;
       this.root.getPreferenciasCliente().then((preferencias) => {
         this.preferenciasCliente = preferencias;
         this.cargarHome();
@@ -214,7 +216,7 @@ export class ProductSlideshowComponent
 
   cargarHome() {
     this.cargando = true;
-    const rut = this.user.rut;
+    const rut = this.user.documentId;
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
     const localidad = !isVacio(this.preferenciasCliente.direccionDespacho)
@@ -224,7 +226,7 @@ export class ProductSlideshowComponent
       ?.normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '');
     let params: any = { sucursal, rut, localidad: localidad_limpia };
-    if (this.user.rut !== '0' && !this.isB2B) {
+    if (this.user.documentId !== '0' && !this.isB2B) {
       this.url = [];
       this.lstProductos = [];
       this.productsService.getHomePageB2c(params).subscribe((r: any) => {
@@ -232,7 +234,7 @@ export class ProductSlideshowComponent
         this.lstProductos = r.data;
         this.cargando = false;
       });
-    } else if (this.user.rut !== '0' && this.isB2B) {
+    } else if (this.user.documentId !== '0' && this.isB2B) {
       this.url = [];
       this.lstProductos = [];
       this.productsService.getHomePageB2b(params).subscribe((r: any) => {
@@ -257,7 +259,7 @@ export class ProductSlideshowComponent
   cargarListas() {
     this.listas = [];
     this.clientsService
-      .getListaArticulosFavoritos(this.user.rut || '')
+      .getListaArticulosFavoritos(this.user.documentId)
       .subscribe((resp: ResponseApi) => {
         if (resp.data.length > 0) {
           if (resp.data[0].listas.length > 0) {

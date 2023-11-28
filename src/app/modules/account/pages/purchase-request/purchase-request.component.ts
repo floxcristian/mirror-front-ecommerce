@@ -2,13 +2,14 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { Usuario } from '../../../../shared/interfaces/login';
-import { RootService } from '../../../../shared/services/root.service';
 import { DataTablesResponse } from '../../../../shared/interfaces/data-table';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { CartService } from '../../../../shared/services/cart.service';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { Router } from '@angular/router';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-purchase-request',
@@ -24,7 +25,7 @@ export class PurchaseRequestComponent implements OnInit {
   modalRefuseRef!: BsModalRef;
 
   dtOptions: DataTables.Settings = {};
-  usuario!: Usuario;
+  usuario!: ISession;
   orders!: any[];
   urlDonwloadOC = environment.apiShoppingCart + 'getoc?id=';
   title = '';
@@ -38,15 +39,16 @@ export class PurchaseRequestComponent implements OnInit {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private root: RootService,
     private modalService: BsModalService,
     private toast: ToastrService,
-    private cart: CartService
+    private cart: CartService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit(): void {
     this.loadData();
-    this.usuario = this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     if (!this.usuario.hasOwnProperty('username'))
       this.usuario.username = this.usuario.email;
     this.title = 'Solicitudes de compra pendientes de aprobación';

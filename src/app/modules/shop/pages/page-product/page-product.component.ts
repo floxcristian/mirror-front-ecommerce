@@ -34,6 +34,8 @@ import { isVacio } from '../../../../shared/utils/utilidades';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { LoginService } from '../../../../shared/services/login.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { SessionService } from '@core/states-v2/session.service';
 declare const $: any;
 declare let fbq: any;
 
@@ -54,7 +56,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
   stock: boolean = true;
   layout: 'standard' | 'columnar' | 'sidebar' = 'standard';
   sidebarPosition: 'start' | 'end' = 'start'; // For LTR scripts "start" is "left" and "end" is "right"
-  user: Usuario;
+  //user: Usuario;
+  user: ISession;
   isB2B: boolean;
   origen: string[] = [];
   innerWidth: number;
@@ -144,7 +147,9 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private catalogoService: CatalogoService,
     private logistic: LogisticsService,
     private loginService: LoginService,
-    private localS: LocalStorageService
+    private localS: LocalStorageService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     this.preferenciaCliente = this.localS.get('preferenciasCliente');
@@ -168,7 +173,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
     //Cuando se inicia sesión
     this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
-      this.user = this.root.getDataSesionUsuario();
+      // this.user = this.root.getDataSesionUsuario();
+      this.user = this.sessionService.getSession();
       this.root.getPreferenciasCliente().then((preferencias) => {
         if (this.product) {
           this.preferenciaCliente = preferencias;
@@ -182,10 +188,11 @@ export class PageProductComponent implements OnInit, OnDestroy {
       ? window.innerWidth
       : 900;
 
-    this.user = this.root.getDataSesionUsuario();
-    this.isB2B =
-      this.user.user_role === 'supervisor' ||
-      this.user.user_role === 'comprador';
+    //this.user = this.root.getDataSesionUsuario();
+    this.user = this.sessionService.getSession();
+    this.isB2B = ['supervisor', 'comprador'].includes(
+      this.user?.userRole || ''
+    );
 
     this.route.data.subscribe((data: any) => {
       this.layout = 'layout' in data ? data.layout : this.layout;
@@ -324,11 +331,12 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
   getDetailProduct(sku: any) {
     let params = null;
-    const usuario = this.root.getDataSesionUsuario();
+    const user = this.sessionService.getSession();
+    // const usuario = this.root.getDataSesionUsuario();
 
-    if (usuario != null) {
+    if (user) {
       params = {
-        rut: usuario.rut,
+        rut: user.documentId,
       };
     }
 
@@ -417,9 +425,9 @@ export class PageProductComponent implements OnInit, OnDestroy {
     };
     let rut: string = '0';
     if (this.user != null) {
-      obj.rut = this.user.rut || '0';
-      obj1.rut = this.user.rut || '0';
-      rut = this.user.rut || '0';
+      obj.rut = this.user.documentId || '0';
+      obj1.rut = this.user.documentId || '0';
+      rut = this.user.documentId || '0';
     }
     if (this.preferenciaCliente && this.preferenciaCliente.direccionDespacho) {
       obj.localidad = this.preferenciaCliente.direccionDespacho.comuna
@@ -517,7 +525,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     let rut = '0';
 
     if (this.user != null) {
-      rut = this.user.rut || '0';
+      rut = this.user.documentId || '0';
     }
     const parametrosPrecios = {
       sku: producto.sku,
@@ -529,13 +537,13 @@ export class PageProductComponent implements OnInit, OnDestroy {
       .getPriceProduct(parametrosPrecios)
       .toPromise();
     if (datos['precio_escala']) {
-      producto.precioComun = !isVacio(this.user.iva)
-        ? this.user.iva
+      producto.precioComun = !isVacio(this.user?.iva)
+        ? this.user?.iva
           ? datos['precioComun']
           : datos['precioComun'] / (1 + this.IVA)
         : datos['precioComun'];
-      producto.precio.precio = !isVacio(this.user.iva)
-        ? this.user.iva
+      producto.precio.precio = !isVacio(this.user?.iva)
+        ? this.user?.iva
           ? datos['precio'].precio
           : datos['precio'].precio / (1 + this.IVA)
         : datos['precio'].precio;

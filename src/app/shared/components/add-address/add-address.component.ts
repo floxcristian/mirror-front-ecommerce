@@ -4,13 +4,11 @@ import {
   FormGroup,
   Validators,
   FormControl,
-  FormArray,
 } from '@angular/forms';
 import { LogisticsService } from '../../services/logistics.service';
 import { ToastrService } from 'ngx-toastr';
-import { Usuario } from '../../interfaces/login';
 import { ClientsService } from '../../services/clients.service';
-import { RootService } from '../../services/root.service';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Component({
   selector: 'app-add-address',
@@ -34,8 +32,9 @@ export class AddAddressComponent implements OnInit {
     private fb: FormBuilder,
     private logisticsService: LogisticsService,
     private toastr: ToastrService,
-    private root: RootService,
-    private clientsService: ClientsService
+    private clientsService: ClientsService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.formDireccion = this.fb.group({
       calle: new FormControl(null, {
@@ -193,10 +192,10 @@ export class AddAddressComponent implements OnInit {
       referencia,
     } = this.formDireccion.value;
     const comunaArr = comuna.split('@');
-    const usuario: Usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
 
     const direccion = {
-      rut: usuario.rut,
+      rut: usuario.documentId,
       tipo: 'DES',
       region: comunaArr[2],
       comuna: comunaArr[0],
@@ -212,8 +211,8 @@ export class AddAddressComponent implements OnInit {
       codEmpleado: 0,
       codUsuario: 0,
       cuentaUsuario: usuario.username,
-      rutUsuario: usuario.rut,
-      nombreUsuario: `${usuario.first_name} ${usuario.last_name}`,
+      rutUsuario: usuario.documentId,
+      nombreUsuario: `${usuario.firstName} ${usuario.lastName}`,
     };
 
     const resultado: any = await this.clientsService

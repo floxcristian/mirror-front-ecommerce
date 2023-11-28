@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { rutValidator } from '../../shared/utils/utilidades';
+import { isVacio, rutValidator } from '../../shared/utils/utilidades';
 import { ClientsService } from '../../shared/services/clients.service';
 import { ToastrService } from 'ngx-toastr';
 import { DevolucionOkModalComponent } from '../components/devolucion-ok-modal/devolucion-ok-modal.component';
@@ -65,29 +65,26 @@ export class PageDevolucionesComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.data = params['data'];
 
-      /*
       if (isVacio(this.data)) {
         this.router.navigate(['/', 'inicio']);
-      }*/
+      }
 
       try {
         const dataDecoded = atob(this.data);
         const partes = dataDecoded.split(';');
 
-        /*
         if (partes.length < 6) {
           this.router.navigate(['/', 'inicio']);
-        }*/
-        /*
+        }
         this.rut = partes[0];
         this.nombre = partes[1];
         this.ov = partes[2];
         this.monto = partes[3];
         this.tipoDevolucion = partes[4];
-        this.formaPago = partes[5];*/
+        this.formaPago = partes[5];
       } catch (e) {
         console.log(e);
-        //this.router.navigate(['/', 'inicio']);
+        this.router.navigate(['/', 'inicio']);
       }
     });
 

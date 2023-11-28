@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { RootService } from '../../../../shared/services/root.service';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { ToastrService } from 'ngx-toastr';
@@ -7,6 +6,8 @@ import { Subject } from 'rxjs';
 
 import * as moment from 'moment';
 import { CartService } from '@shared/services/cart.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-page-ovs-list',
@@ -14,7 +15,7 @@ import { CartService } from '@shared/services/cart.service';
   styleUrls: ['./page-ovs-list.component.sass'],
 })
 export class PageOvsListComponent implements OnInit {
-  usuario: Usuario;
+  usuario: ISession;
   loadingData = true;
   carros: any[] = [];
 
@@ -28,9 +29,11 @@ export class PageOvsListComponent implements OnInit {
     private root: RootService,
     private toastr: ToastrService,
     private carroService: ClientsService,
-    private cartService: CartService
+    private cartService: CartService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
-    this.usuario = this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     this.loadingData = true;
   }
 

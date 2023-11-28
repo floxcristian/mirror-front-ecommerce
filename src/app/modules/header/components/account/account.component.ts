@@ -1,9 +1,9 @@
 import { LoginService } from './../../../../shared/services/login.service';
-//import { LocalStorageService } from 'angular-2-local-storage';
-import { Usuario } from './../../../../shared/interfaces/login';
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { RootService } from './../../../../shared/services/root.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-account',
@@ -11,7 +11,7 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
   styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent implements OnInit {
-  usuario!: Usuario;
+  usuario!: ISession;
 
   mostrarMenu: boolean = false;
   mostrarBienvenida: boolean = false;
@@ -35,15 +35,17 @@ export class AccountComponent implements OnInit {
     public localS: LocalStorageService,
     private root: RootService,
     public loginService: LoginService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit() {
-    this.usuario = this.root.getDataSesionUsuario();
-    if (this.usuario.rut !== '0') this.root.getPreferenciasCliente();
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    if (this.usuario.documentId !== '0') this.root.getPreferenciasCliente();
     this.isB2B =
-      this.usuario.user_role === 'supervisor' ||
-      this.usuario.user_role === 'comprador';
+      this.usuario.userRole === 'supervisor' ||
+      this.usuario.userRole === 'comprador';
 
     this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
       if (!usuario.hasOwnProperty('user_role')) {
@@ -53,7 +55,7 @@ export class AccountComponent implements OnInit {
       this.usuario = usuario;
       this.mostrarMenu = true;
       this.mostrarBienvenida = true;
-      this.linkMiCuenta = this.loginService.setRoles(this.usuario.user_role);
+      this.linkMiCuenta = this.loginService.setRoles(this.usuario.userRole);
 
       if (this.isB2B) {
         this.linkMiCuenta = this.linkMiCuenta.filter(
@@ -64,7 +66,7 @@ export class AccountComponent implements OnInit {
     });
 
     if (this.usuario != null) {
-      this.linkMiCuenta = this.loginService.setRoles(this.usuario.user_role);
+      this.linkMiCuenta = this.loginService.setRoles(this.usuario.userRole);
       if (this.isB2B) {
         this.linkMiCuenta = this.linkMiCuenta.filter(
           (l) => !this.linksOcultosB2B.includes(l.label)

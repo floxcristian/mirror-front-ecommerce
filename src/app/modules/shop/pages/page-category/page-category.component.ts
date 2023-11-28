@@ -36,6 +36,9 @@ import { Flota } from '../../../../shared/interfaces/flota';
 import { BuscadorService } from '../../../../shared/services/buscador.service';
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { SessionStorageService } from '@core/storage/session-storage.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Component({
   selector: 'app-grid',
@@ -108,7 +111,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   innerWidth: number;
 
   origen!: any[];
-  usuario: Usuario;
+  usuario: ISession;
   preferenciaCliente!: PreferenciasCliente;
   banners: any;
 
@@ -127,7 +130,10 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private seoService: SeoService,
     private canonicalService: CanonicalService,
-    private buscadorService: BuscadorService
+    private buscadorService: BuscadorService,
+    // Storage
+    private readonly sessionStorage: SessionStorageService,
+    private readonly sessionService: SessionService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -137,7 +143,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     } else {
       this.productosPorPagina = 25;
     }
-    this.usuario = this.root.getDataSesionUsuario();
+    // this.usuario = this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
     this.preferenciaCliente = this.localS.get('preferenciasCliente');
   }
 
@@ -147,7 +154,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.usuario = this.root.getDataSesionUsuario();
+    // this.usuario = this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
     this.route.data.subscribe((data) => {
       this.columns = 'columns' in data ? data['columns'] : this.columns;
       this.viewMode = 'viewMode' in data ? data['viewMode'] : this.viewMode;
@@ -293,13 +301,13 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         const tiendaSeleccionada =
           this.geoLocationService.getTiendaSeleccionada();
         const sucursal = tiendaSeleccionada?.codigo;
-        if (this.usuario.rut === '0') {
+        if (this.usuario?.documentId === '0') {
           parametros = {
             categoria: category,
             word: this.textToSearch,
             sucursal: sucursal,
             pageSize: this.productosPorPagina,
-            rut: this.usuario.rut,
+            rut: this.usuario.documentId,
           };
         } else {
           parametros = {
@@ -310,7 +318,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
               .replace(/[\u0300-\u036f]/g, ''),
             sucursal: sucursal,
             pageSize: this.productosPorPagina,
-            rut: this.usuario.rut,
+            rut: this.usuario?.documentId,
           };
         }
 
@@ -341,13 +349,13 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           let parametros = {};
           const tiendaSeleccionada =
             this.geoLocationService.getTiendaSeleccionada();
-          if (this.usuario.rut === '0') {
+          if (this.usuario?.documentId === '0') {
             parametros = {
               categoria: '',
               word: this.textToSearch,
               sucursal: tiendaSeleccionada?.codigo,
               pageSize: this.productosPorPagina,
-              rut: this.usuario.rut,
+              rut: this.usuario.documentId,
             };
           } else {
             parametros = {
@@ -358,7 +366,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
                 .replace(/[\u0300-\u036f]/g, ''),
               pageSize: this.productosPorPagina,
               sucursal: tiendaSeleccionada?.codigo,
-              rut: this.usuario.rut,
+              rut: this.usuario?.documentId,
             };
           }
           this.removableFilters = this.filterQuery;
@@ -487,10 +495,11 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     }
 
     // verificamos si esta la session iniciada
-    const usuario: Usuario = this.localS.get('usuario');
+    // const usuario: Usuario = this.localS.get('usuario');
+    const usuario = this.sessionStorage.get();
 
-    if (usuario != null) {
-      this.parametrosBusqueda.rut = usuario.rut || '0';
+    if (usuario) {
+      this.parametrosBusqueda.rut = usuario.documentId || '0';
       if (
         this.preferenciaCliente &&
         this.preferenciaCliente.direccionDespacho
@@ -593,8 +602,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.PagTotalRegistros = r.totalResult;
     //console.log(this.PagTotalRegistros);
     if (texto != '' && r != null) {
-      const user: Usuario = this.localS.get('usuario');
-      if (user != null) {
+      // const user: Usuario = this.localS.get('usuario');
+      const user = this.sessionStorage.get();
+      if (user) {
         const parametro = {
           _id: user.email,
           busqueda: texto,

@@ -3,9 +3,9 @@ import { ShippingAddress } from '../../../../../../shared/interfaces/address';
 import { PreferenciasCliente } from '../../../../../../shared/interfaces/preferenciasCliente';
 import { ResponseApi } from '../../../../../../shared/interfaces/response-api';
 import { LogisticsService } from '../../../../../../shared/services/logistics.service';
-import { RootService } from '../../../../../../shared/services/root.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Component({
   selector: 'app-direccion-despacho',
@@ -22,13 +22,14 @@ export class DireccionDespachoComponent implements OnInit {
     public ModalRef: BsModalRef,
     private logisticsService: LogisticsService,
     private localS: LocalStorageService,
-    private rootService: RootService
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   async ngOnInit() {
-    const usuario = this.rootService.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession(); //this.rootService.getDataSesionUsuario();
     const resp: ResponseApi = (await this.logisticsService
-      .obtieneDireccionesCliente(usuario.rut)
+      .obtieneDireccionesCliente(usuario.documentId)
       .toPromise()) as ResponseApi;
 
     const direccionConfigurada: PreferenciasCliente = this.localS.get(

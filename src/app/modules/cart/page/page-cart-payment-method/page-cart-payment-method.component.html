@@ -170,7 +170,9 @@
                   class="list-group-item"
                   tooltip="Giros"
                   style="margin-bottom: 1rem"
-                  *ngIf="selectedDocument === 'FEL' && !userSession.giro"
+                  *ngIf="
+                    selectedDocument === 'FEL' && !userSession.businessLine
+                  "
                 >
                   <div class="row">
                     <div class="col-12">
@@ -339,7 +341,9 @@
                 <div
                   class="list-group-item"
                   tooltip="Giros"
-                  *ngIf="selectedDocument === 'FEL' && !userSession.giro"
+                  *ngIf="
+                    selectedDocument === 'FEL' && !userSession.businessLine
+                  "
                   style="margin-bottom: 1rem"
                 >
                   <div
@@ -815,18 +819,23 @@
                           <label
                             [for]="idArchivo"
                             [ngStyle]="{
-                              cursor: userSession.requiereValidacion
+                              cursor: userSession.creditLine
+                                ?.requiresConfirmation
                                 ? 'not-allowed'
                                 : 'pointer'
                             }"
-                            [class.disabled]="userSession.requiereValidacion"
+                            [class.disabled]="
+                              userSession.creditLine?.requiresConfirmation
+                            "
                             class="btn btn-sm btn-primary me-2"
                             >Seleccionar Archivo</label
                           >
                           <input
                             type="file"
                             [id]="idArchivo"
-                            [disabled]="userSession.requiereValidacion"
+                            [disabled]="
+                              userSession.creditLine?.requiresConfirmation
+                            "
                             (change)="onFileChange($event)"
                             style="display: none"
                           />
@@ -968,7 +977,7 @@
             *ngIf="
               documentType != 'cotizacion' &&
               paymentMethodActive != 'ordenCompra' &&
-              userSession.user_role !== 'compradorb2c' &&
+              userSession.userRole !== 'compradorb2c' &&
               !invitado
             "
           >
@@ -1346,18 +1355,23 @@
                           <label
                             [for]="idArchivo"
                             [ngStyle]="{
-                              cursor: userSession.requiereValidacion
+                              cursor: userSession.creditLine
+                                ?.requiresConfirmation
                                 ? 'not-allowed'
                                 : 'pointer'
                             }"
-                            [class.disabled]="userSession.requiereValidacion"
+                            [class.disabled]="
+                              userSession.creditLine?.requiresConfirmation
+                            "
                             class="btn btn-sm btn-primary me-2"
                             >Seleccionar Archivo</label
                           >
                           <input
                             type="file"
                             [id]="idArchivoMobile"
-                            [disabled]="userSession.requiereValidacion"
+                            [disabled]="
+                              userSession.creditLine?.requiresConfirmation
+                            "
                             (change)="onFileChange($event)"
                             style="display: none"
                           />
@@ -1462,7 +1476,7 @@
             *ngIf="
               documentType != 'cotizacion' &&
               paymentMethodActive != 'ordenCompra' &&
-              userSession.user_role !== 'compradorb2c' &&
+              userSession.userRole !== 'compradorb2c' &&
               !invitado
             "
           >
@@ -1507,7 +1521,7 @@
             <div class="row">
               <div
                 class="col-sm-12"
-                *ngIf="cd_ver && userSession.requiereValidacion"
+                *ngIf="cd_ver && userSession.creditLine?.requiresConfirmation"
               >
                 <app-codigo-oc
                   [id]="cartSession._id"
@@ -1539,8 +1553,8 @@
                 <button
                   name="paymentOv"
                   *ngIf="
-                    userSession.user_role != 'comprador' &&
-                    !userSession.requiereValidacion &&
+                    userSession.userRole != 'comprador' &&
+                    !userSession.creditLine?.requiresConfirmation &&
                     !['webPay', 'mercadopago', 'khipu'].includes(
                       paymentMethodActive || ''
                     ) &&
@@ -1553,7 +1567,7 @@
                     isVacio(archivo) ||
                     loadingPage ||
                     !selectedDocument ||
-                    (!userSession.giro &&
+                    (!userSession.businessLine &&
                       selectedDocument === 'FEL' &&
                       !selectedGiro)
                   "
@@ -1569,8 +1583,8 @@
                 <button
                   name="paymentOvSms "
                   *ngIf="
-                    userSession.user_role != 'comprador' &&
-                    userSession.requiereValidacion &&
+                    userSession.userRole != 'comprador' &&
+                    userSession.creditLine?.requiresConfirmation &&
                     !cd_ver &&
                     !['webPay', 'mercadopago', 'khipu'].includes(
                       paymentMethodActive || ''
@@ -1583,7 +1597,7 @@
                     isVacio(paymentMethodActive) ||
                     loadingPage ||
                     !selectedDocument ||
-                    (!userSession.giro &&
+                    (!userSession.businessLine &&
                       selectedDocument === 'FEL' &&
                       !selectedGiro)
                   "
@@ -1622,12 +1636,12 @@
                     btnWebpayPost ||
                     alertCartShow ||
                     !selectedDocument ||
-                    (!userSession.giro &&
+                    (!userSession.businessLine &&
                       selectedDocument === 'FEL' &&
                       !selectedGiro)
                   "
                   *ngIf="
-                    userSession.user_role != 'comprador' &&
+                    userSession.userRole != 'comprador' &&
                     paymentMethodActive == 'mercadopago' &&
                     !invitado
                   "
@@ -1651,7 +1665,7 @@
                     !validado ||
                     alertCartShow ||
                     btnWebpayPost ||
-                    (!userSession.giro &&
+                    (!userSession.businessLine &&
                       selectedDocument === 'FEL' &&
                       !selectedGiro) ||
                     (invitado &&
@@ -1675,12 +1689,12 @@
                   [disabled]="
                     btnWebpayPost ||
                     alertCartShow ||
-                    (!userSession.giro &&
+                    (!userSession.businessLine &&
                       selectedDocument === 'FEL' &&
                       !selectedGiro)
                   "
                   *ngIf="
-                    userSession.user_role != 'comprador' &&
+                    userSession.userRole != 'comprador' &&
                     paymentMethodActive == 'khipu' &&
                     !invitado
                   "
@@ -1703,7 +1717,7 @@
                     !validado ||
                     alertCartShow ||
                     btnWebpayPost ||
-                    (!userSession.giro &&
+                    (!userSession.businessLine &&
                       selectedDocument === 'FEL' &&
                       !selectedGiro) ||
                     (invitado &&
@@ -1728,12 +1742,12 @@
                   [disabled]="
                     btnWebpayPost ||
                     alertCartShow ||
-                    (!userSession.giro &&
+                    (!userSession.businessLine &&
                       selectedDocument === 'FEL' &&
                       !selectedGiro)
                   "
                   *ngIf="
-                    userSession.user_role != 'comprador' &&
+                    userSession.userRole != 'comprador' &&
                     paymentMethodActive == 'webPay' &&
                     !invitado
                   "
@@ -1759,7 +1773,7 @@
                     !validado ||
                     alertCartShow ||
                     btnWebpayPost ||
-                    (!userSession.giro &&
+                    (!userSession.businessLine &&
                       selectedDocument === 'FEL' &&
                       !selectedGiro) ||
                     (invitado &&
@@ -1782,7 +1796,7 @@
                 <button
                   name="purchaseRequestAll "
                   *ngIf="
-                    userSession.user_role == 'comprador' &&
+                    userSession.userRole == 'comprador' &&
                     paymentMethodActive != 'sinDefinir'
                   "
                   (click)="purchaseRequestAll()"
@@ -1797,7 +1811,7 @@
                 <button
                   name="purchaseRequest "
                   *ngIf="
-                    userSession.user_role == 'comprador' &&
+                    userSession.userRole == 'comprador' &&
                     paymentMethodActive == 'sinDefinir'
                   "
                   (click)="purchaseRequest()"
@@ -1809,7 +1823,7 @@
               <!-- End::botón ir a pagar (desktop) (ir a pagar1)  -->
 
               <div class="mt-3 col-12 ps-0 ps-1">
-                <em *ngIf="userSession.user_role == 'comprador'"
+                <em *ngIf="userSession.userRole == 'comprador'"
                   >* Se generará una solicitud de compra y debe ser aprobada
                   por tu supervisor antes de generar el pedido.
                 </em>
@@ -2183,7 +2197,9 @@
                   class="list-group-item"
                   tooltip="Giros"
                   style="margin-bottom: 1rem"
-                  *ngIf="selectedDocument === 'FEL' && !userSession.giro"
+                  *ngIf="
+                    selectedDocument === 'FEL' && !userSession.businessLine
+                  "
                 >
                   <div class="row">
                     <div class="col-12">
@@ -2381,8 +2397,8 @@
             <button
               name="paymentOv "
               *ngIf="
-                userSession.user_role != 'comprador' &&
-                !userSession.requiereValidacion &&
+                userSession.userRole != 'comprador' &&
+                !userSession.creditLine?.requiresConfirmation &&
                 !['webPay', 'mercadopago', 'khipu'].includes(
                   paymentMethodActive || ''
                 ) &&
@@ -2394,7 +2410,7 @@
                 isVacio(paymentMethodActive) ||
                 isVacio(archivo) ||
                 loadingPage ||
-                (!userSession.giro &&
+                (!userSession.businessLine &&
                   selectedDocument === 'FEL' &&
                   !selectedGiro)
               "
@@ -2409,8 +2425,8 @@
             <button
               name="paymentOvSms "
               *ngIf="
-                userSession.user_role != 'comprador' &&
-                userSession.requiereValidacion &&
+                userSession.userRole != 'comprador' &&
+                userSession.creditLine?.requiresConfirmation &&
                 !cd_ver &&
                 paymentMethodActive != 'webPay' &&
                 paymentMethodActive != 'mercadopago' &&
@@ -2421,7 +2437,7 @@
                 formOv.invalid ||
                 isVacio(paymentMethodActive) ||
                 loadingPage ||
-                (!userSession.giro &&
+                (!userSession.businessLine &&
                   selectedDocument === 'FEL' &&
                   !selectedGiro)
               "
@@ -2440,12 +2456,12 @@
               [disabled]="
                 btnWebpayPost ||
                 alertCartShow ||
-                (!userSession.giro &&
+                (!userSession.businessLine &&
                   selectedDocument === 'FEL' &&
                   !selectedGiro)
               "
               *ngIf="
-                userSession.user_role != 'comprador' &&
+                userSession.userRole != 'comprador' &&
                 paymentMethodActive == 'webPay' &&
                 !invitado
               "
@@ -2465,7 +2481,7 @@
                 !validado ||
                 alertCartShow ||
                 btnWebpayPost ||
-                (!userSession.giro &&
+                (!userSession.businessLine &&
                   selectedDocument === 'FEL' &&
                   !selectedGiro) ||
                 (invitado &&
@@ -2486,12 +2502,12 @@
                 btnWebpayPost ||
                 alertCartShow ||
                 !selectedDocument ||
-                (!userSession.giro &&
+                (!userSession.businessLine &&
                   selectedDocument === 'FEL' &&
                   !selectedGiro)
               "
               *ngIf="
-                userSession.user_role != 'comprador' &&
+                userSession.userRole != 'comprador' &&
                 paymentMethodActive == 'mercadopago' &&
                 !invitado
               "
@@ -2512,7 +2528,7 @@
                 alertCartShow ||
                 btnWebpayPost ||
                 !selectedDocument ||
-                (!userSession.giro &&
+                (!userSession.businessLine &&
                   selectedDocument === 'FEL' &&
                   !selectedGiro) ||
                 (invitado &&
@@ -2530,7 +2546,7 @@
             <button
               name="purchaseRequestAll "
               *ngIf="
-                userSession.user_role == 'comprador' &&
+                userSession.userRole == 'comprador' &&
                 paymentMethodActive != 'sinDefinir'
               "
               (click)="purchaseRequestAll()"
@@ -2543,7 +2559,7 @@
             <button
               name="purchaseRequest "
               *ngIf="
-                userSession.user_role == 'comprador' &&
+                userSession.userRole == 'comprador' &&
                 paymentMethodActive == 'sinDefinir'
               "
               (click)="purchaseRequest()"
@@ -2556,7 +2572,7 @@
 
           <div
             class="mt-3 col-12 ps-0 ps-1"
-            *ngIf="userSession.user_role == 'comprador'"
+            *ngIf="userSession.userRole == 'comprador'"
           >
             <em
               >* Se generará una solicitud de compra y debe ser aprobada por tu

@@ -6,12 +6,12 @@ import {
   isVacio,
 } from '../../../../shared/utils/utilidades';
 import { CartData } from '../../../../shared/interfaces/cart-item';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { CartService } from '../../../../shared/services/cart.service';
 import { v1 as uuidv1 } from 'uuid';
-import { RootService } from '../../../../shared/services/root.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 declare var $: any;
 
 export interface Archivo {
@@ -29,7 +29,7 @@ export interface Archivo {
 export class PageCargaMasivaProdComponent implements OnInit {
   archivo!: Archivo | undefined;
 
-  userSession!: Usuario;
+  userSession!: ISession;
   cartSession!: CartData;
 
   productosCargados: any[] = [];
@@ -52,8 +52,9 @@ export class PageCargaMasivaProdComponent implements OnInit {
   constructor(
     private cartService: CartService,
     private localS: LocalStorageService,
-    private root: RootService,
-    private toast: ToastrService
+    private toast: ToastrService,
+    // ServicesV2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit() {
@@ -91,7 +92,7 @@ export class PageCargaMasivaProdComponent implements OnInit {
       return;
     }
 
-    this.userSession = this.root.getDataSesionUsuario();
+    this.userSession = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     this.cartSession = this.localS.get('carroCompraB2B');
 
     const data = {
@@ -99,7 +100,7 @@ export class PageCargaMasivaProdComponent implements OnInit {
       usuario: this.userSession.hasOwnProperty('username')
         ? this.userSession.username
         : this.userSession.email,
-      rut: this.userSession.rut,
+      rut: this.userSession.documentId,
       accion: 'guardar',
     };
 

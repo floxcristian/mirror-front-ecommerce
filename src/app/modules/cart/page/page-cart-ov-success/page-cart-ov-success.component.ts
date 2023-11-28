@@ -14,9 +14,10 @@ import { Subscription } from 'rxjs';
 // Services
 import { PaymentService } from './../../../../shared/services/payment.service';
 import { CartService } from '../../../../shared/services/cart.service';
-import { RootService } from '../../../../shared/services/root.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 declare let fbq: any;
 
 @Component({
@@ -36,7 +37,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
   showFolioMsj: boolean = false;
   carro: any = [];
   total: any = 0;
-  usuario: any = {};
+  usuario!: ISession;
   screenWidth: any;
   fbclid!: string;
   gclid: string = '';
@@ -52,10 +53,11 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private cart: CartService,
     private localS: LocalStorageService,
-    private root: RootService,
     private paymentService: PaymentService,
     @Inject(PLATFORM_ID) private platformId: Object,
-    private readonly gtmService: GoogleTagManagerService
+    private readonly gtmService: GoogleTagManagerService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.cart.load();
     this.screenWidth = isPlatformBrowser(this.platformId)
@@ -141,9 +143,9 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
   }
 
   mostrar_detalle(): void {
-    this.usuario = this.root.getDataSesionUsuario();
-    this.usuario.nombre_completo =
-      this.usuario.first_name + ' ' + this.usuario.last_name;
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+
+    this.usuario.firstName + ' ' + this.usuario.lastName;
   }
 
   /**

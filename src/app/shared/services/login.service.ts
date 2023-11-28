@@ -7,9 +7,10 @@ import { Subject, Observable } from 'rxjs';
 import { environment } from '@env/environment';
 // Services
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { RootService } from './root.service';
 // Interfaces
 import { Login, Usuario } from '../interfaces/login';
+import { SessionService } from '@core/states-v2/session.service';
+import { SessionStorageService } from '@core/storage/session-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,14 +24,16 @@ export class LoginService {
   constructor(
     private http: HttpClient,
     private localS: LocalStorageService,
-    private root: RootService
+    // Services V2
+    private readonly sessionService: SessionService,
+    private readonly sessionStorage: SessionStorageService
   ) {}
 
   isLogin() {
-    if (this.localS.get('usuario') == null) {
+    const user = this.sessionStorage.get();
+    if (!user) {
       return false;
     } else {
-      const user: Usuario = this.localS.get('usuario') as any;
       if (user.login_temp) {
         return false;
       } else {
@@ -45,8 +48,8 @@ export class LoginService {
   }
 
   notify(data: any) {
-    if (data === null) {
-      const usuario = this.root.getDataSesionUsuario();
+    if (!data) {
+      const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
       this.loginSession$.next(usuario);
     } else {
       this.loginSession$.next(data);

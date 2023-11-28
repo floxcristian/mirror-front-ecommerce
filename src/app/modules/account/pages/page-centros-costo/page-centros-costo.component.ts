@@ -16,11 +16,12 @@ import {
   TipoModal,
 } from '../../../../shared/components/modal/modal.component';
 import { CentroCosto } from '../../../../shared/interfaces/centroCosto';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { AddCentroCostoModalComponent } from './components/add-centro-costo-modal/add-centro-costo-modal.component';
 import { EditCentroCostoModalComponent } from './components/edit-centro-costo-modal/edit-centro-costo-modal.component';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-page-centros-costo',
@@ -30,7 +31,7 @@ import { EditCentroCostoModalComponent } from './components/edit-centro-costo-mo
 export class PageCentrosCostoComponent implements OnInit, OnDestroy {
   @ViewChildren(DataTableDirective) dtElements!: QueryList<DataTableDirective>;
 
-  userSession!: Usuario;
+  userSession!: ISession;
 
   centrosCosto: CentroCosto[] = [];
 
@@ -42,11 +43,13 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
     private clientsService: ClientsService,
     public root: RootService,
     private toastr: ToastrService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit() {
-    this.userSession = this.root.getDataSesionUsuario();
+    this.userSession = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     this.dtOptions = this.root.simpleDtOptions;
     this.dtOptions = {
       ...this.dtOptions,
@@ -64,7 +67,7 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
     this.cargando = true;
 
     this.clientsService
-      .getCentrosCosto(this.userSession.rut || '')
+      .getCentrosCosto(this.userSession.documentId)
       .subscribe((resp: any) => {
         this.centrosCosto = resp.data;
         this.cargando = false;
@@ -97,7 +100,7 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res !== '') {
         const request: any = {
-          rut: this.userSession.rut,
+          rut: this.userSession.documentId,
           codigo: res.codigo,
           nombre: res.nombre,
         };
@@ -131,7 +134,7 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res !== '') {
         const respuesta: any = await this.clientsService
-          .updateCentroCosto(res, this.userSession.rut || '', centroCosto._id)
+          .updateCentroCosto(res, this.userSession.documentId, centroCosto._id)
           .toPromise();
         if (!respuesta.error) {
           this.toastr.success('Centro de costo actualizado exitosamente.');
@@ -157,7 +160,7 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res) {
         const respuesta: any = await this.clientsService
-          .deleteCentroCosto(this.userSession.rut || '', centroCosto._id)
+          .deleteCentroCosto(this.userSession.documentId, centroCosto._id)
           .toPromise();
         if (!respuesta.error) {
           this.toastr.success('Centro de costo eliminado exitosamente.');

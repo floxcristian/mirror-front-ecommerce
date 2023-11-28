@@ -7,6 +7,7 @@ import { CartService } from '../../../../shared/services/cart.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Component({
   selector: 'app-page-ver-catalogo',
@@ -35,7 +36,9 @@ export class PageVerCatalogoComponent implements OnInit {
     public root: RootService,
     private router: Router,
     public cart: CartService,
-    private toast: ToastrService
+    private toast: ToastrService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.page = 0;
     this.onResize();
@@ -100,8 +103,8 @@ export class PageVerCatalogoComponent implements OnInit {
   }
 
   async establecerPrecio() {
-    let user = this.root.getDataSesionUsuario();
-    let rut = user ? user.rut : '0';
+    let user = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    let rut = user ? user.documentId : '0';
 
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;

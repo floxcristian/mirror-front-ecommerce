@@ -2,10 +2,10 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 // Services
-import { RootService } from '../shared/services/root.service';
 import { LocalStorageService } from '../core/modules/local-storage/local-storage.service';
 import { CategoryService } from '../shared/services/category.service';
 import { isPlatformBrowser } from '@angular/common';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Component({
   selector: 'app-layout',
@@ -19,11 +19,12 @@ export class LayoutComponent implements OnInit {
   tipo: string = 'b2c';
 
   constructor(
-    private readonly rootService: RootService,
     private readonly route: ActivatedRoute,
     private readonly localS: LocalStorageService,
     private categoriesService: CategoryService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit(): void {
@@ -48,9 +49,10 @@ export class LayoutComponent implements OnInit {
    * @returns
    */
   checkIsB2b() {
-    let { user_role: userRole } = this.rootService.getDataSesionUsuario();
-    if (!userRole) userRole = '';
-    if (['supervisor', 'comprador'].includes(userRole)) this.tipo = 'b2b';
+    // let { user_role: userRole } = this.rootService.getDataSesionUsuario();
+    const session = this.sessionService.getSession();
+    if (['supervisor', 'comprador'].includes(session.userRole))
+      this.tipo = 'b2b';
   }
 
   /**

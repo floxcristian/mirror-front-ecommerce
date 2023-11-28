@@ -20,6 +20,8 @@ import { Subscription } from 'rxjs';
 import { PreferenciasCliente } from '@shared/interfaces/preferenciasCliente';
 import { LoginService } from '@shared/services/login.service';
 import { LogisticsService } from '@shared/services/logistics.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 export type Layout = 'grid' | 'grid-with-features' | 'list';
 
@@ -37,7 +39,7 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
   banners: any;
   producto_espacial: any = [];
   @Input() nombre: string | undefined = undefined;
-  user!: Usuario;
+  user!: ISession;
   isB2B!: boolean;
   cantItem: number = 4;
   innerWidth: number;
@@ -75,7 +77,9 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     private router: Router,
     private loginService: LoginService,
     private logistic: LogisticsService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -86,8 +90,8 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
   sidebarPosition: 'start' | 'end' = 'start';
 
   async ngOnInit() {
-    this.user = this.root.getDataSesionUsuario();
-    const role = this.user.user_role;
+    this.user = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
+    const role = this.user.userRole;
     this.isB2B = role === 'supervisor' || role === 'comprador';
 
     let url: string = this.router.url;
@@ -133,7 +137,7 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
   }
 
   async cargaEspeciales() {
-    let rut = this.user.rut;
+    let rut = this.user.documentId;
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo || '';
     var especials = this.router.url.split('/').pop();

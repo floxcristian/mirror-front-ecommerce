@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ComentarioArticulo } from '../../interfaces/comentariosArticulo';
-import { Usuario } from '../../interfaces/login';
 import { Product } from '../../interfaces/product';
 import { ResponseApi } from '../../interfaces/response-api';
 import { CatalogoService } from '../../services/catalogo.service';
-import { RootService } from '../../services/root.service';
 import { isVacio } from '../../utils/utilidades';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-add-comment-modal',
@@ -16,7 +16,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class AddCommentModalComponent implements OnInit {
   @Input() producto!: Product;
-  usuario!: Usuario;
+  usuario!: ISession;
   urlImg = '';
 
   valoracion!: number;
@@ -31,9 +31,10 @@ export class AddCommentModalComponent implements OnInit {
 
   constructor(
     public ModalRef: BsModalRef,
-    private root: RootService,
     private catalogoService: CatalogoService,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit() {
@@ -43,10 +44,10 @@ export class AddCommentModalComponent implements OnInit {
       this.urlImg = this.producto.images[0]['150'][0];
     }
 
-    this.usuario = this.root.getDataSesionUsuario();
-    if (this.usuario.user_role !== 'temp') {
-      this.nombre = `${(this.usuario.first_name || '').split(' ')[0]} ${
-        (this.usuario.last_name || '').split(' ')[0]
+    this.usuario = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
+    if (this.usuario.userRole !== 'temp') {
+      this.nombre = `${(this.usuario.firstName || '').split(' ')[0]} ${
+        (this.usuario.lastName || '').split(' ')[0]
       }`;
       this.correo = this.usuario.email || '';
       this.camposDisabled = true;

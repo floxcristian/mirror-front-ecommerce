@@ -7,6 +7,8 @@ import {
 } from '@angular/forms';
 import { CartService } from '../../../../shared/services/cart.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { SessionStorageService } from '@core/storage/session-storage.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-codigo-oc',
@@ -16,7 +18,7 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 export class CodigoOcComponent implements OnInit {
   formulario!: FormGroup;
   @Input() id: any = null;
-  user: any = null;
+  user!: ISession | null;
   fecha_limite = new Date();
   finishDateString = '';
   reenviar_codigo: boolean = false;
@@ -26,7 +28,9 @@ export class CodigoOcComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private cartService: CartService,
-    private localS: LocalStorageService
+    private localS: LocalStorageService,
+    // Storage
+    private readonly sessionStorage: SessionStorageService
   ) {
     this.iniciar_formulario();
   }
@@ -40,7 +44,8 @@ export class CodigoOcComponent implements OnInit {
     );
     this.finishDateString = this.fecha_limite.toISOString();
     await this.id;
-    this.user = this.localS.get('usuario');
+    // this.user = this.localS.get('usuario');
+    this.user = this.sessionStorage.get();
   }
   // se inicia el formulario
   iniciar_formulario() {
@@ -58,7 +63,10 @@ export class CodigoOcComponent implements OnInit {
     let param = {
       id: this.id,
       codigo: this.formulario.controls['codigo'].value,
-      aprobador: `${this.user.first_name} ${this.user.last_name}`,
+      aprobador:
+        this.user?.firstName && this.user?.lastName
+          ? `${this.user?.firstName} ${this.user?.lastName}`
+          : '',
     };
 
     let r: any = await this.cartService.confirmarOc(param).toPromise();

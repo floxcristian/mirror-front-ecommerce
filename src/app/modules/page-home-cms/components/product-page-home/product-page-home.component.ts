@@ -8,8 +8,6 @@ import {
   PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
-import { RootService } from '../../../../shared/services/root.service';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { Subscription } from 'rxjs';
 import { isVacio } from '../../../../shared/utils/utilidades';
@@ -19,6 +17,8 @@ import { VerMasProductoComponent } from '../ver-mas-producto/ver-mas-producto.co
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { isPlatformBrowser } from '@angular/common';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 interface ITempProduct {
   _id: any;
@@ -43,7 +43,7 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
   @ViewChild('popoverContent', { static: false }) myPopover!: NgbPopover;
 
   tipo_producto!: ITempProduct[];
-  user!: Usuario;
+  user!: ISession;
   id!: string;
   layout = 'grid-lg';
   preferenciasCliente!: PreferenciasCliente;
@@ -59,12 +59,14 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
   sPosition = 0;
   screenWidth: any;
   screenHeight: any;
+
   constructor(
-    private root: RootService,
     private router: Router,
     private modalService: BsModalService,
     private direction: DirectionService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -114,7 +116,7 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.index_seleccionado = this.sPosition;
     this.ruta = this.router.url === '/inicio' ? 'home' : this.router.url;
-    this.user = this.root.getDataSesionUsuario();
+    this.user = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     this.cargarHome();
   }
 

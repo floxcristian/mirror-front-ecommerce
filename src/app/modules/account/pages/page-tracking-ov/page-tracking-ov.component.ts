@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { RootService } from '../../../../shared/services/root.service';
 import { environment } from '@env/environment';
 import { DataTableDirective } from 'angular-datatables';
+import { SessionService } from '@core/states-v2/session.service';
 
 class DataTablesResponse {
   data!: any[];
@@ -27,7 +27,11 @@ export class PageTrackingOvComponent implements OnInit {
   // We use this trigger because fetching the list of persons can be quite long,
   // thus we ensure the data is fetched before rendering
 
-  constructor(private httpClient: HttpClient, private root: RootService) {}
+  constructor(
+    private httpClient: HttpClient,
+    // Services V2
+    private readonly sessionService: SessionService
+  ) {}
 
   ngOnInit(): void {
     this.resultado_busqueda();
@@ -39,9 +43,9 @@ export class PageTrackingOvComponent implements OnInit {
 
   async resultado_busqueda() {
     this.loadData = true;
-    const usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     let user: any = {
-      rut: usuario.rut,
+      rut: usuario.documentId,
     };
 
     //utilizacion de dtOption para filtrar datos/

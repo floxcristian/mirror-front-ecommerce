@@ -3,14 +3,15 @@ import { ClientsService } from '../../../../shared/services/clients.service';
 import { ToastrService } from 'ngx-toastr';
 import { RootService } from '../../../../shared/services/root.service';
 import { Usuario } from '../../../../shared/interfaces/login';
-import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
 import { Data } from '../../../../shared/components/card-dashboard-no-chart/card-dashboard-no-chart.component';
 import { GraficoVentaValorada } from '../../../../shared/interfaces/graficoVentaValorada';
-import { ChartDataset, ChartConfiguration, ChartOptions } from 'chart.js';
+import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { Context } from 'chartjs-plugin-datalabels';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { GraficoVentasPorUen } from '../../../../shared/interfaces/graficoVentaPorUen';
 import { isPlatformBrowser } from '@angular/common';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-page-dashboard',
@@ -20,7 +21,7 @@ import { isPlatformBrowser } from '@angular/common';
 export class PageDashboardComponent {
   // graficos
   chartHistorySale: any;
-  usuario: Usuario | any;
+  usuario: ISession;
 
   ventaMes: any;
   detalleVenta: any;
@@ -51,22 +52,22 @@ export class PageDashboardComponent {
   constructor(
     private clientService: ClientsService,
     private toastr: ToastrService,
-    private root: RootService,
-    private currency: CurrencyFormatPipe,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
 
-    this.usuario = this.root.getDataSesionUsuario();
-    if (['supervisor', 'comprador'].includes(this.usuario.user_role))
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    if (['supervisor', 'comprador'].includes(this.usuario.userRole))
       this.isB2B = true;
     this.loadChart();
   }
 
   loadChart() {
-    const rut = this.usuario.rut;
+    const rut = this.usuario.documentId;
     this.clientService
       .graficoVentaValorada({
         rutCliente: rut,

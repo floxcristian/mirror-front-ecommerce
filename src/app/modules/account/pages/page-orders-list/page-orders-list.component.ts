@@ -1,13 +1,12 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-
-import { Usuario } from '../../../../shared/interfaces/login';
-import { RootService } from '../../../../shared/services/root.service';
 import { Subject } from 'rxjs';
 import { environment } from '@env/environment';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
 import { isPlatformBrowser } from '@angular/common';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 class DataTablesResponse {
   data!: any[];
@@ -22,7 +21,7 @@ class DataTablesResponse {
   styleUrls: ['./page-orders-list.component.scss'],
 })
 export class PageOrdersListComponent implements OnInit {
-  usuario: Usuario;
+  usuario: ISession;
   loadingData = true;
   rows: any[] = [];
   datatableElement!: DataTableDirective;
@@ -31,11 +30,12 @@ export class PageOrdersListComponent implements OnInit {
   innerWidth: any;
 
   constructor(
-    private root: RootService,
     private httpClient: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly sessionService: SessionService
   ) {
-    this.usuario = this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
     this.loadingData = false;
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -52,7 +52,7 @@ export class PageOrdersListComponent implements OnInit {
 
   async construir_tabla() {
     let user: any = {
-      rut: this.usuario.rut,
+      rut: this.usuario.documentId,
     };
 
     this.dtOptions = {
