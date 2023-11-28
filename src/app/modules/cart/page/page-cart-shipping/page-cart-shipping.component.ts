@@ -54,6 +54,7 @@ import {
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 
 export let browserRefresh = false;
 declare let dataLayer: any;
@@ -158,8 +159,10 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     private readonly gtmService: GoogleTagManagerService,
     private clientsService: ClientsService,
     // Services V2
+    private readonly sessionService: SessionService,
+    // Storage V2
     private readonly sessionStorage: SessionStorageService,
-    private readonly sessionService: SessionService
+    private readonly invitadoStorage: InvitadoStorageService
   ) {
     this.localS.set('recibe', {});
     this.innerWidth = window.innerWidth;
@@ -170,7 +173,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.cartSession = this.localS.get('carroCompraB2B');
 
-    this.invitado = this.localS.get('invitado');
+    // this.invitado = this.localS.get('invitado');
+    this.invitado = this.invitadoStorage.get();
     this.tienda_actual = this.localS.get('geolocalizacion');
     this.userSession = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     this.contacto_notificaciones();
@@ -192,7 +196,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
 
     this.cart.shippingValidateProducts$.subscribe((r: ProductCart[]) => {
       this.productsValidate = r;
-      this.invitado = this.localS.get('invitado');
+      // this.invitado = this.localS.get('invitado');
+      this.invitado = this.invitadoStorage.get();
       this.userSession = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
       this.grupoShippingCart.grupo = [];
     });
@@ -294,7 +299,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     let data: any = {};
 
     this.userSession = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
-    this.invitado = this.localS.get('invitado');
+    // this.invitado = this.localS.get('invitado');
+    this.invitado = this.invitadoStorage.get();
     if (this.userSession.userRole != 'temp') {
       data.id = this.cartSession._id;
       data.texto4 = this.userSession.phone;
@@ -631,11 +637,15 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       this.obj_fecha[pos] = item;
     }
     if (this.invitado) {
-      invitado = this.localS.get('invitado');
+      // invitado = this.localS.get('invitado');
+
+      invitado = this.invitadoStorage.get();
       this.recibeYoname = this.getFullName(invitado);
       this.recidDireccion = 0;
-      this.localS.set('invitado', invitado);
-      this.usuarioInv = this.localS.get('invitado');
+      // this.localS.set('invitado', invitado);
+      this.invitadoStorage.set(invitado);
+      // this.usuarioInv = this.localS.get('invitado');
+      this.usuarioInv = this.invitadoStorage.get();
     }
 
     this.grupoShippingActive = this.shippingDays[pos].grupo ?? null;
@@ -854,12 +864,16 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       this.retiroFlag = false;
     }
 
-    let invitado: any = this.localS.get('invitado');
+    // let invitado: any = this.localS.get('invitado');
+    let invitado = this.invitadoStorage.get();
     if (invitado != null) {
       invitado.tipoEnvio = 'RC';
-      this.localS.remove('invitado');
-      this.localS.set('invitado', invitado);
-      this.usuarioInv = this.localS.get('invitado');
+      // this.localS.remove('invitado');
+      this.invitadoStorage.remove();
+      // this.localS.set('invitado', invitado);
+      this.invitadoStorage.set(invitado);
+      // this.usuarioInv = this.localS.get('invitado');
+      this.usuarioInv = this.invitadoStorage.get();
 
       this.obtieneDespachos();
     }
@@ -873,7 +887,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   usuarioVisita(invitado: any) {
     this.usuarioInvitado = true;
     invitado.tipoEnvio = '';
-    this.localS.set('invitado', invitado);
+    // this.localS.set('invitado', invitado);
+    this.invitadoStorage.set(invitado);
 
     this.contacto_notificaciones();
     window.scrollTo({ top: 0 });
@@ -882,16 +897,20 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   // evento ejecutado cuando un invitado agrega una nueva direccion.
   async direccionVisita(direccion: any, removeShipping = true) {
     this.direccion = true;
-    let invitado: any = this.localS.get('invitado');
+    // let invitado: any = this.localS.get('invitado');
+    let invitado = this.invitadoStorage.get();
 
     invitado.calle = direccion.calle;
     invitado.comuna = direccion.comuna;
     invitado.comunaCompleta = direccion.comunaCompleta;
     invitado.numero = direccion.numero;
     invitado.depto = direccion.depto ? direccion.depto : 0;
-    this.localS.remove('invitado');
-    this.localS.set('invitado', invitado);
-    this.usuarioInv = this.localS.get('invitado');
+    // this.localS.remove('invitado');
+    this.invitadoStorage.remove();
+    // this.localS.set('invitado', invitado);
+    this.invitadoStorage.set(invitado);
+    // this.usuarioInv = this.localS.get('invitado');
+    this.usuarioInv = this.invitadoStorage.get();
     this.loadingShipping = true;
     this.shippingSelected = null;
 

@@ -59,6 +59,7 @@ import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
+import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 
 declare const $: any;
 export interface Archivo {
@@ -160,13 +161,16 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     @Inject(PLATFORM_ID) private platformId: Object,
     // Storage
     private readonly sessionStorage: SessionStorageService,
+    private readonly invitadoStorage: InvitadoStorageService,
+    // Services V2
     private readonly sessionService: SessionService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
     this.formDefault();
-    this.invitado = this.localS.get('invitado');
+    // this.invitado = this.localS.get('invitado');
+    this.invitado = this.invitadoStorage.get();
     if (this.invitado) {
       this.formVisita.setValue({
         rut: this.invitado.rut,
@@ -746,14 +750,18 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     if (this.formVisita.valid) {
       this.validado = true;
 
-      let invitado: any = this.localS.get('invitado');
+      // let invitado: any = this.localS.get('invitado');
+      let invitado = this.invitadoStorage.get();
       invitado.rut = this.getValidRutFormat(this.formVisita.value.rut);
-      invitado.carro_id = this.cartSession._id;
+      invitado.carro_id = this.cartSession._id || '';
       invitado.tipoEnvio =
         this.cartSession.despacho?.codTipo === 'VEN- DPCLI' ? 'DES' : 'RC';
-      this.localS.remove('invitado');
-      this.localS.set('invitado', invitado);
-      this.invitado = this.localS.get('invitado');
+      // this.localS.remove('invitado');
+      this.invitadoStorage.remove();
+      // this.localS.set('invitado', invitado);
+      this.invitadoStorage.set(invitado);
+      // this.invitado = this.localS.get('invitado');
+      this.invitado = this.invitadoStorage.get();
       active_khipu = true;
     }
 
@@ -1390,7 +1398,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       depto: dataSave.depto,
     };
 
-    let invitado: any = this.localS.get('invitado');
+    // let invitado: any = this.localS.get('invitado');
+    let invitado = this.invitadoStorage.get();
 
     invitado.calle = direccion.calle;
     invitado.comuna = direccion.comuna;
@@ -1398,13 +1407,16 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     invitado.numero = direccion.numero;
     invitado.depto = direccion.depto ? direccion.depto : 0;
 
-    this.localS.remove('invitado');
-    this.localS.set('invitado', invitado);
+    // this.localS.remove('invitado');
+    this.invitadoStorage.remove();
+    // this.localS.set('invitado', invitado);
+    this.invitadoStorage.set(invitado);
 
     /*
     invitado.rut = this.getValidRutFormat(this.formVisita.value.rut);
     invitado.carro_id = this.cartSession._id;
     invitado.tipoEnvio = this.cartSession.despacho.codTipo === 'VEN- DPCLI' ? 'DES' : 'RC';*/
-    this.invitado = this.localS.get('invitado');
+    // this.invitado = this.localS.get('invitado');
+    this.invitado = this.invitadoStorage.get();
   }
 }

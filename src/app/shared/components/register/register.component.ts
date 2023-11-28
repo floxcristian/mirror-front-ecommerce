@@ -17,6 +17,8 @@ import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { getDomainsToAutocomplete } from './domains-autocomplete';
 import { SessionStorageService } from '@core/storage/session-storage.service';
+import { AuthServiceV2 } from '@core/services-v2/auth.service';
+import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 
 @Component({
   selector: 'app-register',
@@ -61,7 +63,9 @@ export class RegisterComponent implements OnInit {
     private cartService: CartService,
     private router: Router,
     // Services V2
-    private readonly sessionStorage: SessionStorageService
+    private readonly sessionStorage: SessionStorageService,
+    private readonly authService: AuthServiceV2,
+    private readonly authStateService: AuthStateServiceV2
   ) {}
 
   ngOnInit() {
@@ -195,13 +199,15 @@ export class RegisterComponent implements OnInit {
           password: this.formUsuario.value.pwd,
         };
 
-        this.loginService.iniciarSesion(dataLogin).subscribe(
-          (r: any) => {
-            if (r.status === 'OK') {
-              const data = { ...r.data, login_temp: false };
-              this.localS.set('usuario', data);
-              this.loginService.notify(data);
-
+        this.authService
+          .login(dataLogin.username, dataLogin.password)
+          .subscribe({
+            next: (res) => {
+              const iva = res.user.preferences.iva ?? true;
+              const data = { ...res.user, login_temp: false, iva };
+              //FIXME: revisar si dejar en data o manipular otro nombre
+              this.sessionStorage.set(data);
+              this.authStateService.setSession(data);
               if (userIdOld !== null) {
                 const dataPut = {
                   origen: userIdOld,
@@ -216,14 +222,41 @@ export class RegisterComponent implements OnInit {
                 this.cartService.load();
               }
               this.router.navigate(['/inicio']);
-            } else {
-              this.toastr.error(`${r.errors[0]}`);
-            }
-          },
-          (e) => {
-            this.toastr.error(e.error.msg);
-          }
-        );
+            },
+            error: (err) => {
+              this.toastr.error(err.message);
+            },
+          });
+
+        // this.loginService.iniciarSesion(dataLogin).subscribe(
+        //   (r: any) => {
+        //     if (r.status === 'OK') {
+        //       const data = { ...r.data, login_temp: false };
+        //       this.localS.set('usuario', data);
+        //       this.loginService.notify(data);
+
+        //       if (userIdOld !== null) {
+        //         const dataPut = {
+        //           origen: userIdOld,
+        //           destino: data.email,
+        //         };
+        //         this.cartService
+        //           .cartTransfer(dataPut)
+        //           .subscribe((res: ResponseApi) => {
+        //             this.cartService.load();
+        //           });
+        //       } else {
+        //         this.cartService.load();
+        //       }
+        //       this.router.navigate(['/inicio']);
+        //     } else {
+        //       this.toastr.error(`${r.errors[0]}`);
+        //     }
+        //   },
+        //   (e) => {
+        //     this.toastr.error(e.error.msg);
+        //   }
+        // );
       },
       (error) => {
         this.toastr.error('Error de conexión con el servidor');
@@ -269,35 +302,61 @@ export class RegisterComponent implements OnInit {
       username: this.formUsuario.value.email,
       password: this.formUsuario.value.pwd,
     };
-
-    this.loginService.iniciarSesion(dataLogin).subscribe(
-      (r: any) => {
-        if (r.status === 'OK') {
-          const data = { ...r.data, login_temp: false };
-          this.localS.set('usuario', data);
-          this.loginService.notify(data);
-
-          if (userIdOld !== null) {
-            const dataPut = {
-              origen: userIdOld,
-              destino: data.username,
-            };
-            this.cartService
-              .cartTransfer(dataPut)
-              .subscribe((res: ResponseApi) => {
-                this.cartService.load();
-              });
-          } else {
-            this.cartService.load();
-          }
+    this.authService.login(dataLogin.username, dataLogin.password).subscribe({
+      next: (res) => {
+        const iva = res.user.preferences.iva ?? true;
+        const data = { ...res.user, login_temp: false, iva };
+        //FIXME: revisar si dejar en data o manipular otro nombre
+        this.sessionStorage.set(data);
+        this.authStateService.setSession(data);
+        if (userIdOld !== null) {
+          const dataPut = {
+            origen: userIdOld,
+            destino: data.email,
+          };
+          this.cartService
+            .cartTransfer(dataPut)
+            .subscribe((res: ResponseApi) => {
+              this.cartService.load();
+            });
         } else {
-          this.toastr.error(`${r.errors[0]}`);
+          this.cartService.load();
         }
+        this.router.navigate(['/inicio']);
       },
-      (e) => {
-        this.toastr.error(e.error.msg);
-      }
-    );
+      error: (err) => {
+        this.toastr.error(err.message);
+      },
+    });
+
+    // this.loginService.iniciarSesion(dataLogin).subscribe(
+    //   (r: any) => {
+    //     if (r.status === 'OK') {
+    //       const data = { ...r.data, login_temp: false };
+    //       this.localS.set('usuario', data);
+    //       this.loginService.notify(data);
+
+    //       if (userIdOld !== null) {
+    //         const dataPut = {
+    //           origen: userIdOld,
+    //           destino: data.username,
+    //         };
+    //         this.cartService
+    //           .cartTransfer(dataPut)
+    //           .subscribe((res: ResponseApi) => {
+    //             this.cartService.load();
+    //           });
+    //       } else {
+    //         this.cartService.load();
+    //       }
+    //     } else {
+    //       this.toastr.error(`${r.errors[0]}`);
+    //     }
+    //   },
+    //   (e) => {
+    //     this.toastr.error(e.error.msg);
+    //   }
+    // );
   }
 
   login() {
@@ -313,35 +372,62 @@ export class RegisterComponent implements OnInit {
       password: this.formUsuario.value.pwd,
     };
 
-    this.loginService.iniciarSesion(dataLogin).subscribe(
-      (r: any) => {
-        if (r.status === 'OK') {
-          const data = { ...r.data, login_temp: false };
-
-          this.localS.set('usuario', data);
-          this.loginService.notify(data);
-
-          if (userIdOld !== null) {
-            const dataPut = {
-              origen: userIdOld,
-              destino: data.email,
-            };
-            this.cartService
-              .cartTransfer(dataPut)
-              .subscribe((res: ResponseApi) => {
-                this.cartService.load();
-              });
-          } else {
-            this.cartService.load();
-          }
+    this.authService.login(dataLogin.username, dataLogin.password).subscribe({
+      next: (res) => {
+        const iva = res.user.preferences.iva ?? true;
+        const data = { ...res.user, login_temp: false, iva };
+        //FIXME: revisar si dejar en data o manipular otro nombre
+        this.sessionStorage.set(data);
+        this.authStateService.setSession(data);
+        if (userIdOld !== null) {
+          const dataPut = {
+            origen: userIdOld,
+            destino: data.email,
+          };
+          this.cartService
+            .cartTransfer(dataPut)
+            .subscribe((res: ResponseApi) => {
+              this.cartService.load();
+            });
         } else {
-          this.toastr.error(`${r.errors[0]}`);
+          this.cartService.load();
         }
+        this.router.navigate(['/inicio']);
       },
-      (e) => {
-        this.toastr.error(e.error.msg);
-      }
-    );
+      error: (err) => {
+        this.toastr.error(err.message);
+      },
+    });
+
+    // this.loginService.iniciarSesion(dataLogin).subscribe(
+    //   (r: any) => {
+    //     if (r.status === 'OK') {
+    //       const data = { ...r.data, login_temp: false };
+
+    //       this.localS.set('usuario', data);
+    //       this.loginService.notify(data);
+
+    //       if (userIdOld !== null) {
+    //         const dataPut = {
+    //           origen: userIdOld,
+    //           destino: data.email,
+    //         };
+    //         this.cartService
+    //           .cartTransfer(dataPut)
+    //           .subscribe((res: ResponseApi) => {
+    //             this.cartService.load();
+    //           });
+    //       } else {
+    //         this.cartService.load();
+    //       }
+    //     } else {
+    //       this.toastr.error(`${r.errors[0]}`);
+    //     }
+    //   },
+    //   (e) => {
+    //     this.toastr.error(e.error.msg);
+    //   }
+    // );
   }
 
   invoice() {

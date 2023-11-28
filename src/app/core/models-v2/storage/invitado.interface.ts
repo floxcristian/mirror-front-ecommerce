@@ -7,4 +7,5 @@ export interface IInvitado {
   comunaCompleta: string;
   numero: string;
   depto: string;
+  _id: string;
 }

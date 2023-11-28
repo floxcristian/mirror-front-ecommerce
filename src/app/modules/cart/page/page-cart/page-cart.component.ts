@@ -29,6 +29,7 @@ import { PreferenciasCliente } from '@shared/interfaces/preferenciasCliente';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
+import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 
 interface Item {
   ProductCart: ProductCart;
@@ -105,8 +106,10 @@ export class PageCartComponent implements OnInit, OnDestroy {
     private readonly gtmService: GoogleTagManagerService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
+    private readonly sessionService: SessionService,
+    // Storage V2
     private readonly sessionStorage: SessionStorageService,
-    private readonly sessionService: SessionService
+    private readonly invitadoStorage: InvitadoStorageService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -213,7 +216,8 @@ export class PageCartComponent implements OnInit, OnDestroy {
   }
 
   limpiarInvitado() {
-    this.localS.remove('invitado');
+    // this.localS.remove('invitado');
+    this.invitadoStorage.remove();
   }
 
   async setSaveCart() {

@@ -11,6 +11,7 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { Login, Usuario } from '../interfaces/login';
 import { SessionService } from '@core/states-v2/session.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
+import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +27,9 @@ export class LoginService {
     private localS: LocalStorageService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly sessionStorage: SessionStorageService
+    private readonly sessionStorage: SessionStorageService,
+    // Storage V2
+    private readonly invitadoStorage: InvitadoStorageService
   ) {}
 
   isLogin() {
@@ -37,7 +40,8 @@ export class LoginService {
       if (user.login_temp) {
         return false;
       } else {
-        this.localS.remove('invitado');
+        // this.localS.remove('invitado');
+        this.invitadoStorage.remove();
         return true;
       }
     }
