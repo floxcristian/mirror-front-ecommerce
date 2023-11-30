@@ -5,6 +5,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 
 @Component({
   selector: 'app-mobile-header-account',
@@ -39,14 +40,38 @@ export class MobileHeaderAccountComponent implements OnInit {
     public localS: LocalStorageService,
     private cd: ChangeDetectorRef,
     // Services V2
-    private readonly sessionStorage: SessionStorageService
+    private readonly sessionStorage: SessionStorageService,
+    private readonly authStateService: AuthStateServiceV2
   ) {}
 
   ngOnInit() {
     // this.usuario = this.localS.get('usuario') as any;
     this.usuario = this.sessionStorage.get();
 
-    this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
+    this.authStateService.session$.subscribe((user) => {
+      if (user.userRole === 'superadmin') {
+        this.linkMiCuenta = [
+          {
+            label: 'Órdenes de Venta',
+            url: ['/', 'mi-cuenta', 'ordenes'],
+            icon: 'far fa-file-alt',
+          },
+          {
+            label: 'Cerrar sesión',
+            url: ['/', 'mi-cuenta', 'login'],
+            icon: 'fas fa-power-off',
+            dark: true,
+          },
+        ];
+      }
+
+      this.usuario = user;
+      this.mostrarMenu = true;
+      this.mostrarBienvenida = true;
+      this.linkMiCuenta = this.loginService.setRoles(this.usuario.userRole);
+    });
+
+    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
       if (!usuario.hasOwnProperty('user_role')) {
         if (usuario['user_role'] === 'superadmin') {
           this.linkMiCuenta = [
@@ -71,10 +96,10 @@ export class MobileHeaderAccountComponent implements OnInit {
       this.mostrarMenu = true;
       this.mostrarBienvenida = true;
       this.linkMiCuenta = this.loginService.setRoles(this.usuario?.userRole);
-    });
+    });*/
 
-    if (this.usuario != null) {
-      this.linkMiCuenta = this.loginService.setRoles(this.usuario?.userRole);
+    if (this.usuario) {
+      this.linkMiCuenta = this.loginService.setRoles(this.usuario.userRole);
     }
     this.cd.detectChanges();
   }

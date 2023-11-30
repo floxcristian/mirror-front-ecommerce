@@ -30,6 +30,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { LoginService } from '@shared/services/login.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 
 @Component({
   selector: 'app-product-slideshow',
@@ -39,7 +40,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 export class ProductSlideshowComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
-  user!: ISession;
+  user!: ISession | null;
   isB2B!: boolean;
   cargando = true;
 
@@ -131,7 +132,8 @@ export class ProductSlideshowComponent
     private loginService: LoginService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly authStateService: AuthStateServiceV2
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -175,14 +177,20 @@ export class ProductSlideshowComponent
     );
 
     // cuando se inicia sesion
-    this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
-      console.log('hola inicieß');
-      this.user = usuario as any;
+    this.authStateService.session$.subscribe((user) => {
+      this.user = user;
       this.root.getPreferenciasCliente().then((preferencias) => {
         this.preferenciasCliente = preferencias;
         this.cargarHome();
       });
     });
+    /*this.loginService.loginSessionObs$.subscribe((usuario: Usuario) => {
+      this.user = usuario as any;
+      this.root.getPreferenciasCliente().then((preferencias) => {
+        this.preferenciasCliente = preferencias;
+        this.cargarHome();
+      });
+    });*/
   }
 
   ngOnDestroy(): void {
@@ -216,7 +224,7 @@ export class ProductSlideshowComponent
 
   cargarHome() {
     this.cargando = true;
-    const rut = this.user.documentId;
+    const rut = this.user?.documentId;
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo;
     const localidad = !isVacio(this.preferenciasCliente.direccionDespacho)
@@ -226,7 +234,7 @@ export class ProductSlideshowComponent
       ?.normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '');
     let params: any = { sucursal, rut, localidad: localidad_limpia };
-    if (this.user.documentId !== '0' && !this.isB2B) {
+    if (this.user?.documentId !== '0' && !this.isB2B) {
       this.url = [];
       this.lstProductos = [];
       this.productsService.getHomePageB2c(params).subscribe((r: any) => {
@@ -234,7 +242,7 @@ export class ProductSlideshowComponent
         this.lstProductos = r.data;
         this.cargando = false;
       });
-    } else if (this.user.documentId !== '0' && this.isB2B) {
+    } else if (this.user?.documentId !== '0' && this.isB2B) {
       this.url = [];
       this.lstProductos = [];
       this.productsService.getHomePageB2b(params).subscribe((r: any) => {
@@ -259,7 +267,7 @@ export class ProductSlideshowComponent
   cargarListas() {
     this.listas = [];
     this.clientsService
-      .getListaArticulosFavoritos(this.user.documentId)
+      .getListaArticulosFavoritos(this.user?.documentId || '')
       .subscribe((resp: ResponseApi) => {
         if (resp.data.length > 0) {
           if (resp.data[0].listas.length > 0) {

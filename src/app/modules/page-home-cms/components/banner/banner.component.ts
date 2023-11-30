@@ -18,7 +18,7 @@ export class BannerComponent implements OnInit {
   screenHeight: any;
   @Input() set banner(value: any) {
     this.elementoData = value;
-    this.bannerCms = this.elementoData.elemento;
+    this.bannerCms = this.elementoData.element;
   }
   bannerCms: any;
   elementoData: any;

@@ -19,14 +19,11 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
-
-interface ITempProduct {
-  _id: any;
-  skus: any[];
-  url: any;
-  title: any;
-  image: any;
-}
+import {
+  IElement1,
+  IElement2,
+  IPageData,
+} from '@core/models-v2/cms/homePage-response.interface';
 
 @Component({
   selector: 'app-product-page-home',
@@ -34,15 +31,14 @@ interface ITempProduct {
   styleUrls: ['./product-page-home.component.scss'],
 })
 export class ProductPageHomeComponent implements OnInit, OnDestroy {
-  @Input() set producto(value: any) {
+  @Input() set producto(value: IPageData) {
     this.id = value.id;
-    this.tipo_producto = value.elemento;
+    this.tipo_producto = value.element as IElement1[];
   }
-  @Input() lstProductos: any[] = [];
-  @Input() url: any[] = [];
+
   @ViewChild('popoverContent', { static: false }) myPopover!: NgbPopover;
 
-  tipo_producto!: ITempProduct[];
+  tipo_producto!: IElement1[];
   user!: ISession;
   id!: string;
   layout = 'grid-lg';
@@ -113,7 +109,8 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
     items: 1.4,
     autoplay: false,
   };
-  ngOnInit() {
+
+  ngOnInit(): void {
     this.index_seleccionado = this.sPosition;
     this.ruta = this.router.url === '/inicio' ? 'home' : this.router.url;
     this.user = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
@@ -129,30 +126,11 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
   //cargahome
   async cargarHome() {
     this.cargando = true;
-
-    //match entre los productos;
-    this.match_listaProducto();
+    this.producto_selecionado = this.tipo_producto[0];
+    this.index_seleccionado = 0;
     this.cargando = false;
   }
 
-  async match_listaProducto() {
-    this.tipo_producto.map((item) => {
-      let filtro_sku: any = this.lstProductos.filter(
-        (lstprod) => lstprod.nombre === item.title
-      );
-      let filtro_url: any = this.url.filter(
-        (link) => link.nombre === item.title
-      );
-
-      if (filtro_sku.length > 0) {
-        item.skus = filtro_sku[0].skus;
-        item.url = filtro_url[0].url;
-      }
-    });
-    this.producto_selecionado = this.tipo_producto[0];
-
-    this.index_seleccionado = 0;
-  }
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.screenWidth = isPlatformBrowser(this.platformId)
@@ -177,7 +155,6 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
       el = el.parentNode;
       clase = el.classList;
     }
-
     el.style['box-shadow'] = '0 4px 4px 0 rgb(0 0 0 / 50%)';
   }
 
@@ -196,10 +173,11 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
     event.popover.open();
   }
 
+  /*
   seleccionar(index: any) {
     this.producto_selecionado = this.tipo_producto[index];
     this.index_seleccionado = index;
-  }
+  }*/
 
   openModal(item: any) {
     this.bsModalRef = this.modalService.show(VerMasProductoComponent, {
@@ -211,6 +189,7 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
     });
     this.bsModalRef.content.closeBtnName = 'Close';
   }
+
   async getData(event: any) {
     let index = event.startPosition;
     if (index >= this.tipo_producto.length) index = 0;
@@ -226,6 +205,7 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
     this.producto_selecionado = this.tipo_producto[index];
     this.index_seleccionado = index;
   }
+
   async getData2(event: any) {
     let index = event.startPosition;
     if (index >= this.tipo_producto.length) index = 0;

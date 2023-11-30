@@ -17,19 +17,15 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { LoginService } from '../../../../shared/services/login.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { CmsService } from '@core/services-v2/cms.service';
+import { IPage } from '@core/models-v2/cms/homePage-response.interface';
+import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 @Component({
   selector: 'app-page-home-template',
   templateUrl: './page-home-template.component.html',
   styleUrls: ['./page-home-template.component.scss'],
 })
 export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
-  // Productos
-  lstProductos: any[] = [];
-  url: any[] = [];
-  // Productos
-  lstProductos1: any[] = [];
-  url1: any[] = [];
-  // Otro...
   preferenciasCliente!: PreferenciasCliente;
   user!: ISession;
   despachoCliente!: Subscription;
@@ -38,7 +34,7 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
   carga = true;
   carga_producto_home = true;
   carga_listo_especial = true;
-  pageHome: any = [];
+  pageHome: IPage[] = [];
 
   constructor(
     private pageHomeService: PageHomeService,
@@ -50,7 +46,9 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     private localStorage: LocalStorageService,
     private loginService: LoginService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly csmService: CmsService,
+    private readonly authStateService: AuthStateServiceV2
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -61,8 +59,7 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     if (geo) {
       this.root.getPreferenciasCliente().then((preferencias) => {
         this.preferenciasCliente = preferencias;
-        this.cargarHome();
-        this.get_productos();
+        this.cargarPage();
       });
     }
   }
@@ -70,86 +67,46 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.geoLocationService.localizacionObs$.subscribe(
       async (r: GeoLocation) => {
-        this.cargarHome();
-        this.get_productos();
+        this.cargarPage();
       }
     );
-    this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
+
+    this.authStateService.session$.subscribe((user) => {
       this.root.getPreferenciasCliente().then((preferencias) => {
         this.preferenciasCliente = preferencias;
-        this.cargarHome();
-        this.get_productos();
+        this.cargarPage();
       });
     });
+    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
+      this.root.getPreferenciasCliente().then((preferencias) => {
+        this.preferenciasCliente = preferencias;
+        this.cargarPage();
+      });
+    });*/
 
     this.logisticsService.direccionCliente$.subscribe((r) => {
       this.preferenciasCliente.direccionDespacho = r;
-      this.cargarHome();
-      this.get_productos();
+      this.cargarPage();
     });
   }
 
-  async cargarHome() {
-    this.carga_producto_home = true;
-    const rut = this.user.documentId;
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const sucursal = tiendaSeleccionada?.codigo;
-    let params: any;
-    if (this.preferenciasCliente?.direccionDespacho)
-      params = {
-        sucursal,
-        rut,
-        localidad: this.preferenciasCliente.direccionDespacho.comuna,
-      };
-    else params = { sucursal, rut };
-
-    this.url = [];
-    this.lstProductos = [];
-    let r: any = await this.pageHomeService.getHomePage(params).toPromise();
-    this.url = r.urls;
-    this.lstProductos = r.data;
-    //match entre los productos;
-
-    this.carga_producto_home = false;
-  }
-
-  async get_productos() {
-    this.carga_listo_especial = true;
-    const rut = this.user.documentId;
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const sucursal = tiendaSeleccionada?.codigo;
-
-    // Format params.
-    let params: any;
-    if (this.preferenciasCliente && this.preferenciasCliente.direccionDespacho)
-      params = {
-        sucursal,
-        rut,
-        localidad: this.preferenciasCliente.direccionDespacho.comuna,
-      };
-    else params = { sucursal, rut };
-
-    this.url1 = [];
-    this.lstProductos1 = [];
-    // FIXME: eliminar
-    const response: any = await this.pageHomeService
-      .buscarProductosElactic(params)
-      .toPromise();
-
-    this.url1 = response.urls;
-    this.lstProductos1 = response.data;
-
-    this.carga_listo_especial = false;
-  }
-
   async cargarPage() {
-    const response: any = await this.pageHomeService
-      .getPagehomeCms()
-      .toPromise();
-    this.pageHome = response.data[0].page;
-
-    this.carga = false;
-    this.scrollToTop();
+    const rut = this.user.documentId;
+    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+    const sucursal = tiendaSeleccionada?.codigo
+      ? tiendaSeleccionada?.codigo
+      : 'SAN BRNRDO';
+    const localidad = this.preferenciasCliente?.direccionDespacho
+      ? this.preferenciasCliente.direccionDespacho.comuna
+      : '';
+    this.csmService.getHomePage(rut, sucursal, localidad).subscribe({
+      next: (res) => {
+        this.pageHome = res.data[0].page;
+        this.carga = false;
+        this.scrollToTop();
+      },
+      error: (err) => {},
+    });
   }
 
   scrollToTop(): void {

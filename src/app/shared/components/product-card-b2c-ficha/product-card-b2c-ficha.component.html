@@ -13,7 +13,7 @@
 
   <div
     class="product-card__badges-list"
-    *ngIf="productData.precio_escala"
+    *ngIf="productData.priceInfo.hasScalePrice"
     style="margin-left: 0px !important"
   >
     <div *ngIf="!preciosEscalas">
@@ -60,101 +60,61 @@
     </div>
   </div>
 
-  <div
-    class="product-card__badges-list-right"
-    *ngIf="productData.cyberMonday || 0 > 0"
-  >
-    <div
-      class="badge_cyber float-end"
-      style="position: absolute; top: 5px; right: 1px"
+  <!-- <div
+      class="product-card__badges-list-right"
+      *ngIf="productData.cyberMonday || 0 > 0"
     >
-      <picture>
-        <!-- <source
-          srcset="assets/images/cyberMondaySquare.webp"
-          type="image/webp"
-        />
-        <source
-          srcset="assets/images/cyberMondaySquare.png"
-          type="image/png"
-        />
-        <img
-          src="assets/images/cyberMondaySquare.png"
-          alt=""
-          class="me-1 mt-sm-1"
-          style="
-            position: absolute;
-            width: 50px !important;
-            height: 50px;
-            top: 3px;
-            right: 1px;
-            z-index: 8;
-          "
-          alt="logo oferta"
-        /> -->
-        <img
-          src="https://images.implementos.cl/uploads/cyber/cyberMonday.webp"
-          alt=""
-          class="me-1 mt-sm-1"
-          style="
-            position: absolute;
-            width: 50px !important;
-            height: 50px;
-            top: 3px;
-            right: 1px;
-            z-index: 8;
-          "
-          alt="logo oferta"
-        />
-      </picture>
+      <div
+        class="badge_cyber float-end"
+        style="position: absolute; top: 5px; right: 1px"
+      >
+        <picture>
+          <img
+            src="https://images.implementos.cl/uploads/cyber/cyberMonday.webp"
+            alt=""
+            class="me-1 mt-sm-1"
+            style="
+              position: absolute;
+              width: 50px !important;
+              height: 50px;
+              top: 3px;
+              right: 1px;
+              z-index: 8;
+            "
+            alt="logo oferta"
+          />
+        </picture>
+      </div>
     </div>
-  </div>
 
-  <div
-    class="product-card__badges-list-right"
-    *ngIf="productData.cyber || (0 > 0 && productData.cyberMonday === 0)"
-  >
     <div
-      class="badge_cyber float-end"
-      style="position: absolute; top: 5px; right: 1px"
+      class="product-card__badges-list-right"
+      *ngIf="productData.cyber || (0 > 0 && productData.cyberMonday === 0)"
     >
-      <picture>
-        <!-- <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
-        <source srcset="assets/images/cyberCircle.png" type="image/png" />
-        <img
-          src="assets/images/cyberCircle.png"
-          alt=""
-          height="60px"
-          width="60px"
-          class="me-1 mt-sm-1 img"
-          style="
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            top: 3px;
-            right: 1px;
-            z-index: 8;
-          "
-          alt="logo oferta"
-        /> -->
-        <img
-          src="https://images.implementos.cl/uploads/cyber/cyber.webp"
-          alt=""
-          height="60px"
-          width="60px"
-          class="me-1 mt-sm-1 img"
-          style="
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            top: 3px;
-            right: 1px;
-            z-index: 8;
-          "
-          alt="logo oferta"
-        />
-      </picture>
-    </div>
-  </div>
+      <div
+        class="badge_cyber float-end"
+        style="position: absolute; top: 5px; right: 1px"
+      >
+        <picture>
+          <img
+            src="https://images.implementos.cl/uploads/cyber/cyber.webp"
+            alt=""
+            height="60px"
+            width="60px"
+            class="me-1 mt-sm-1 img"
+            style="
+              position: absolute;
+              width: 50px;
+              height: 50px;
+              top: 3px;
+              right: 1px;
+              z-index: 8;
+            "
+            alt="logo oferta"
+          />
+        </picture>
+      </div>
+    </div> -->
 
   <div
     [ngClass]="
@@ -166,7 +126,7 @@
       appClick
       (click)="setOrigenBeforeFicha()"
       [routerLink]="
-        root.product(productData.sku, productData.nombre, paramsCategory)
+        root.product(productData.sku, productData.name, paramsCategory)
       "
     >
       <img
@@ -174,7 +134,7 @@
         class="img-fluid lazyload"
         [class.imgH]="home"
         [class.imgC]="cartClass"
-        [alt]="productData.nombre"
+        [alt]="productData.name"
       />
     </a>
   </div>
@@ -186,10 +146,10 @@
           (click)="setOrigenBeforeFicha()"
           appClick
           [routerLink]="
-            root.product(productData.sku, productData.nombre, paramsCategory)
+            root.product(productData.sku, productData.name, paramsCategory)
           "
           >{{
-            productData.marca
+            productData.brand
               | replace : '^SIN MARCA$' : 'IMPLEMENTOS'
               | replace : '^0$' : 'IMPLEMENTOS'
           }}</a
@@ -200,11 +160,11 @@
           appClick
           (click)="setOrigenBeforeFicha()"
           [routerLink]="
-            root.product(productData.sku, productData.nombre, paramsCategory)
+            root.product(productData.sku, productData.name, paramsCategory)
           "
         >
           <span class="nombreP" style="-webkit-box-orient: vertical">
-            {{ productData.nombre | capitalizeFirst }}
+            {{ productData.name | capitalizeFirst }}
           </span>
         </a>
       </div>
@@ -212,44 +172,60 @@
 
     <ng-container
       *ngIf="
-        productData.stockTienda !== undefined &&
-        productData.stockEmpresa !== undefined
+        productData.stockSummary.branchStock !== undefined &&
+        productData.stockSummary.companyStock !== undefined
       "
     >
       <!-- <div class="product-card__prices text-end ps-0" style="padding-top: 8px !important" *ngIf="productData?.stockTienda > 0 || productData.stockEmpresa > 0"> -->
       <div
         class="product-card__prices text-end ps-0"
         style="padding-top: 4px !important; height: 40px"
-        *ngIf="productData.stockTienda > 0 || productData.stockEmpresa > 0"
+        *ngIf="
+          productData.stockSummary.branchStock > 0 ||
+          productData.stockSummary.companyStock > 0
+        "
         [ngStyle]="{
           display:
-            productData.precioComun == productData.precio.precio
+            productData.priceInfo.commonPrice ==
+            productData.priceInfo.customerPrice
               ? 'flex'
               : 'block',
           'align-items':
-            productData.precioComun == productData.precio.precio
+            productData.priceInfo.commonPrice ==
+            productData.priceInfo.customerPrice
               ? 'center'
               : 'unset'
         }"
       >
-        <ng-container *ngIf="!productData.compareAtPrice">
+        <ng-container>
           <div
-            *ngIf="productData?.precioComun == productData?.precio?.precio"
+            *ngIf="
+              productData.priceInfo.commonPrice ==
+              productData.priceInfo.customerPrice
+            "
             class="product-card__new-price col-12"
             style="padding-left: 0 !important; padding-right: 5px !important"
             [style.font-size]="isOnProductPage ? '17px' : '21px'"
           >
-            {{ productData.precio.precio | currencyFormat }} <em> c/iva </em>
+            {{ productData.priceInfo.customerPrice | currencyFormat }}
+            <em> c/iva </em>
           </div>
           <div
-            *ngIf="productData?.precioComun != productData?.precio?.precio"
+            *ngIf="
+              productData.priceInfo.commonPrice !=
+              productData.priceInfo.customerPrice
+            "
             class="product-card__new-price text-danger col-12"
             style="padding-left: 0 !important; padding-right: 5px !important"
           >
-            {{ productData.precio.precio | currencyFormat }} <em> c/iva </em>
+            {{ productData.priceInfo.customerPrice | currencyFormat }}
+            <em> c/iva </em>
           </div>
           <div
-            *ngIf="productData?.precioComun != productData?.precio?.precio"
+            *ngIf="
+              productData.priceInfo.commonPrice !=
+              productData.priceInfo.customerPrice
+            "
             tooltip="Precio normal"
             class="product-card__old-price col-12"
             style="
@@ -258,7 +234,8 @@
               padding-right: 5px !important;
             "
           >
-            {{ productData.precioComun | currencyFormat }} <em> c/iva </em>
+            {{ productData.priceInfo.commonPrice | currencyFormat }}
+            <em> c/iva </em>
             <br />
           </div>
         </ng-container>
@@ -266,8 +243,8 @@
     </ng-container>
     <ng-container
       *ngIf="
-        productData.stockTienda === undefined &&
-        productData.stockEmpresa === undefined
+        productData.stockSummary.branchStock === undefined &&
+        productData.stockSummary.companyStock === undefined
       "
     >
       <!-- <div class="product-card__prices text-end ps-0" style="padding-top: 8px !important"> -->
@@ -275,17 +252,24 @@
         class="product-card__prices text-end ps-0"
         style="padding-top: 4px !important; height: 40px"
       >
-        <ng-container *ngIf="!productData.compareAtPrice">
+        <ng-container>
           <div
-            *ngIf="productData?.precioComun == productData?.precio?.precio"
+            *ngIf="
+              productData.priceInfo.commonPrice ==
+              productData.priceInfo.customerPrice
+            "
             class="product-card__new-price col-12"
             style="padding-left: 0 !important; padding-right: 5px !important"
             [style.font-size]="isOnProductPage ? '17px' : '21px'"
           >
-            {{ productData.precio.precio | currencyFormat }} <em> c/iva </em>
+            {{ productData.priceInfo.customerPrice | currencyFormat }}
+            <em> c/iva </em>
           </div>
           <div
-            *ngIf="productData?.precioComun != productData?.precio?.precio"
+            *ngIf="
+              productData.priceInfo.commonPrice !=
+              productData.priceInfo.customerPrice
+            "
             class="product-card__new-price text-danger col-12"
             style="
               padding-left: 0 !important;
@@ -293,10 +277,14 @@
               margin-left: 5px;
             "
           >
-            {{ productData.precio.precio | currencyFormat }} <em> c/iva </em>
+            {{ productData.priceInfo.customerPrice | currencyFormat }}
+            <em> c/iva </em>
           </div>
           <div
-            *ngIf="productData?.precioComun != productData?.precio?.precio"
+            *ngIf="
+              productData.priceInfo.commonPrice !=
+              productData.priceInfo.customerPrice
+            "
             tooltip="Precio normal"
             class="product-card__old-price col-12"
             style="
@@ -305,14 +293,15 @@
               padding-right: 5px !important;
             "
           >
-            {{ productData.precioComun | currencyFormat }} <em> c/iva </em>
+            {{ productData.priceInfo.commonPrice | currencyFormat }}
+            <em> c/iva </em>
             <br />
           </div>
         </ng-container>
       </div>
     </ng-container>
 
-    <ul
+    <!-- <ul
       *ngIf="productData.atributos?.length"
       class="product-card__features-list"
     >
@@ -334,12 +323,10 @@
           Ver más...</a
         >
       </li>
-    </ul>
+    </ul> -->
   </div>
   <!-- Momentaneo para ver "llega y retiro" -->
-  <ng-container
-    *ngIf="productData.stockTienda > 0 || productData.stockEmpresa > 0"
-  >
+  <ng-container *ngIf="productData.deliverySupply.pickupIsToday !== null">
     <div
       class="product-card__info flex-column mt-1"
       style="padding-bottom: 4px"
@@ -348,11 +335,49 @@
         <div>
           <ng-container
             *ngIf="
-              productData.fechaEntrega !== undefined &&
-              productData.fechaEntrega != null
+              productData.deliverySupply.deliveryIsToday !== null &&
+              productData.deliverySupply.deliveryIsToday
             "
           >
-            <ng-container>
+            <i class="fas fa-shipping-fast me-2"></i>
+            <div
+              style="
+                margin-top: 2px;
+                padding: 0px 5px;
+                background-color: #00800033;
+                border-radius: 4px;
+              "
+            >
+              <i
+                style="
+                  color: green;
+                  font-weight: bold;
+                  font-style: normal;
+                  font-size: 12px;
+                "
+                >Retira hoy</i
+              >
+            </div>
+          </ng-container>
+          <ng-container
+            *ngIf="
+              productData.deliverySupply.deliveryIsToday !== null &&
+              !productData.deliverySupply.deliveryIsToday
+            "
+          >
+            <div
+              *ngIf="
+                productData.deliverySupply.deliveryDate &&
+                  productData.deliverySupply.deliveryDate == null;
+                else fechaEntregaDelivery
+              "
+            >
+              <i class="fas fa-shipping-fast me-2" style="color: grey"></i>
+              <i style="color: grey; font-style: normal; font-size: 12px"
+                >No disponible</i
+              >
+            </div>
+            <ng-template #fechaEntregaDelivery>
               <i class="fas fa-shipping-fast me-2"></i>
               <i
                 style="
@@ -362,24 +387,38 @@
                   font-size: 12px;
                 "
                 >Llega
-                {{ productData.fechaEntrega | date : 'dd/MM' | uppercase }}</i
+                {{
+                  productData.deliverySupply.deliveryDate
+                    | date : 'dd/MM'
+                    | uppercase
+                }}</i
               >
-            </ng-container>
+            </ng-template>
           </ng-container>
-          <ng-container
-            *ngIf="
-              productData.fechaEntrega !== undefined &&
-              productData.fechaEntrega == null
-            "
-          >
-            <i class="fas fa-shipping-fast me-2" style="color: grey"></i>
-            <i style="color: grey; font-style: normal; font-size: 12px"
-              >No disponible</i
+          <!-- <ng-container
+          *ngIf="
+            productData.deliverySupply.deliveryIsToday !== undefined &&
+            !productData.deliverySupply.deliveryIsToday
+          "
+        >
+            <i class="fas fa-shipping-fast me-2"></i>
+            <i
+              style="
+                color: black;
+                font-weight: bold;
+                font-style: normal;
+                font-size: 12px;
+              "
+              >Llega
+              {{ productData.fechaEntrega | date : 'dd/MM' | uppercase }}</i
             >
-          </ng-container>
+        </ng-container> -->
         </div>
         <ng-container
-          *ngIf="productData.retiro !== undefined && productData.retiro"
+          *ngIf="
+            productData.deliverySupply.pickupIsToday !== null &&
+            productData.deliverySupply.pickupIsToday
+          "
         >
           <div class="d-flex align-items-center">
             <i class="fas fa-store me-2"></i>
@@ -404,14 +443,17 @@
           </div>
         </ng-container>
         <ng-container
-          *ngIf="productData.retiro !== undefined && !productData.retiro"
+          *ngIf="
+            productData.deliverySupply.pickupIsToday !== null &&
+            !productData.deliverySupply.pickupIsToday
+          "
         >
           <div
             style="margin-top: 2px"
             *ngIf="
-              productData.fechaEntregaRetiro &&
-                productData.fechaEntregaRetiro == null;
-              else fechaEntrega
+              productData.deliverySupply.pickupDate &&
+                productData.deliverySupply.pickupDate == null;
+              else fechaEntregaRetiro
             "
           >
             <i class="fas fa-store me-2" style="color: grey"></i>
@@ -419,7 +461,7 @@
               >No disponible</i
             >
           </div>
-          <ng-template #fechaEntrega>
+          <ng-template #fechaEntregaRetiro>
             <div style="margin-top: 2px">
               <i class="fas fa-store me-2"></i>
               <i
@@ -431,7 +473,9 @@
                 "
                 >Retira
                 {{
-                  productData.fechaEntregaRetiro | date : 'dd/MM' | uppercase
+                  productData.deliverySupply.pickupDate
+                    | date : 'dd/MM'
+                    | uppercase
                 }}</i
               >
             </div>
@@ -445,7 +489,10 @@
   <!-- Texto cuando no haya stock del producto -->
   <div
     class="product-card__info"
-    *ngIf="productData?.stockTienda === 0 && productData?.stockEmpresa === 0"
+    *ngIf="
+      productData.stockSummary.branchStock === 0 &&
+      productData.stockSummary.companyStock === 0
+    "
   >
     <ng-container>
       <div class="no_stock">
@@ -462,13 +509,13 @@
       <div
         class="product-card__buttons"
         *ngIf="
-          productData.stockTienda === undefined &&
-          productData.stockEmpresa === undefined
+          productData.stockSummary.branchStock === undefined &&
+          productData.stockSummary.companyStock === undefined
         "
       >
         <button
           name="addToCart"
-          [disabled]="!productData.precio"
+          [disabled]="!productData.priceInfo.price"
           class="btn btn-secondary product-card__addtocart w-100"
           type="button"
           appClick
@@ -479,46 +526,7 @@
         </button>
         <button
           name="add"
-          [disabled]="!productData.precio"
-          class="btn btn-secondary product-card__addtocart product-card__addtocart--list"
-          type="button"
-          appClick
-          (click)="addToCart()"
-          [ngClass]="{ 'btn-loading': addingToCart }"
-        >
-          <div class="text-center" style="font-size: 14px">AGREGAR</div>
-        </button>
-        <button
-          name="addingToWishlist"
-          *ngIf="grid == 'list'"
-          ngbTooltip="Tooltip on top"
-          class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist"
-          type="button"
-          appClick
-          (click)="addToWishlist()"
-          [ngClass]="{ 'btn-loading': addingToWishlist }"
-        >
-          <i class="far fa-heart"></i>
-        </button>
-      </div>
-      <div
-        class="product-card__buttons"
-        *ngIf="productData.stockTienda > 0 || productData.stockEmpresa > 0"
-      >
-        <button
-          name="addToCart"
-          [disabled]="!productData.precio"
-          class="btn btn-secondary product-card__addtocart w-100"
-          type="button"
-          appClick
-          (click)="addToCart()"
-          [ngClass]="{ 'btn-loading': addingToCart }"
-        >
-          <div class="text-center" style="font-size: 14px">AGREGAR</div>
-        </button>
-        <button
-          name="add"
-          [disabled]="!productData.precio"
+          [disabled]="!productData.priceInfo.price"
           class="btn btn-secondary product-card__addtocart product-card__addtocart--list"
           type="button"
           appClick
@@ -543,12 +551,55 @@
       <div
         class="product-card__buttons"
         *ngIf="
-          productData?.stockTienda === 0 && productData?.stockEmpresa === 0
+          productData.stockSummary.branchStock > 0 ||
+          productData.stockSummary.companyStock > 0
+        "
+      >
+        <button
+          name="addToCart"
+          [disabled]="!productData.priceInfo.price"
+          class="btn btn-secondary product-card__addtocart w-100"
+          type="button"
+          appClick
+          (click)="addToCart()"
+          [ngClass]="{ 'btn-loading': addingToCart }"
+        >
+          <div class="text-center" style="font-size: 14px">AGREGAR</div>
+        </button>
+        <button
+          name="add"
+          [disabled]="!productData.priceInfo.price"
+          class="btn btn-secondary product-card__addtocart product-card__addtocart--list"
+          type="button"
+          appClick
+          (click)="addToCart()"
+          [ngClass]="{ 'btn-loading': addingToCart }"
+        >
+          <div class="text-center" style="font-size: 14px">AGREGAR</div>
+        </button>
+        <button
+          name="addingToWishlist"
+          *ngIf="grid == 'list'"
+          ngbTooltip="Tooltip on top"
+          class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist"
+          type="button"
+          appClick
+          (click)="addToWishlist()"
+          [ngClass]="{ 'btn-loading': addingToWishlist }"
+        >
+          <i class="far fa-heart"></i>
+        </button>
+      </div>
+      <div
+        class="product-card__buttons"
+        *ngIf="
+          productData.stockSummary.branchStock === 0 &&
+          productData.stockSummary.companyStock === 0
         "
       >
         <button
           [routerLink]="
-            root.product(productData.sku, productData.nombre, paramsCategory)
+            root.product(productData.sku, productData.name, paramsCategory)
           "
           class="btn btn-secondary product-card__addtocart w-100"
           type="button"
@@ -568,11 +619,11 @@
       appClick
       (click)="setOrigenBeforeFicha(); modalEscalaRef.hide()"
       [routerLink]="
-        root.product(productData.sku, productData.nombre, paramsCategory)
+        root.product(productData.sku, productData.name, paramsCategory)
       "
     >
       <span class="nombreP">
-        {{ productData.nombre | slice : 0 : 30 | uppercase }} {{ ' ...' }}
+        {{ productData.name | slice : 0 : 30 | uppercase }} {{ ' ...' }}
       </span>
     </a>
     <table>
@@ -590,15 +641,18 @@
             }"
           >
             <td>
-              <strong>{{ precio.desde }} - {{ precio.hasta }} ud.</strong>
+              <strong
+                >{{ precio.fromQuantity }} -
+                {{ precio.toQuantity }} ud.</strong
+              >
             </td>
             <td style="color: #0063b9">
               {{
                 (!isVacio(usuario.iva)
                   ? usuario.iva
-                    ? precio.precio
-                    : precio.precio / (1 + IVA)
-                  : precio.precio
+                    ? precio.price
+                    : precio.price / (1 + IVA)
+                  : precio.price
                 ) | currencyFormat
               }}
             </td>

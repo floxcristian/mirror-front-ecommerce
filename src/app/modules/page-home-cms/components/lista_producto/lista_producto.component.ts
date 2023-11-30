@@ -29,11 +29,11 @@ export class Lista_productoComponent implements OnInit {
     this.productData = value;
 
     if (this.productData) {
-      if (this.productData.elemento) {
-        this.product_list = this.productData.elemento;
+      if (this.productData.element) {
+        this.product_list = this.productData.element;
       } else this.product_list = this.productData.data;
 
-      this.productList = this.product_list.values;
+      this.productList = this.product_list.articles;
       this.title = this.product_list.title;
       this.subtitle = this.product_list.subtitle;
     }
@@ -99,17 +99,17 @@ export class Lista_productoComponent implements OnInit {
     await this.match_listaProducto();
   }
   async match_listaProducto() {
-    let filtro_sku: any = this.lstProductos.filter(
-      (lstprod) => lstprod.nombre === this.product_list.title
-    );
-    let filtro_url: any = this.url.filter(
-      (link) => link.nombre === this.product_list.title
-    );
+    // let filtro_sku: any = this.lstProductos.filter(
+    //   (lstprod) => lstprod.nombre === this.product_list.title
+    // );
+    // let filtro_url: any = this.url.filter(
+    //   (link) => link.nombre === this.product_list.title
+    // );
 
-    if (filtro_sku.length > 0) {
-      this.product_list.skus = filtro_sku[0].skus;
-      this.product_list.url = filtro_url[0].url;
-    }
+    // if (filtro_sku.length > 0) {
+    //   this.product_list.skus = filtro_sku[0].skus;
+    //   this.product_list.url = filtro_url[0].url;
+    // }
 
     this.cargar = false;
   }

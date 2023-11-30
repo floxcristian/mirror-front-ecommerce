@@ -39,6 +39,7 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
+import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 
 @Component({
   selector: 'app-grid',
@@ -133,7 +134,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     private buscadorService: BuscadorService,
     // Storage
     private readonly sessionStorage: SessionStorageService,
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly authStateService: AuthStateServiceV2
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -419,15 +421,23 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.authStateService.session$.subscribe((user) => {
+      this.reinicaFiltros();
+      this.parametrosBusqueda.rut = user.documentId || '0';
+      this.root.getPreferenciasCliente().then((preferencias) => {
+        this.preferenciaCliente = preferencias;
+        this.cargarCatalogoProductos(this.parametrosBusqueda, '');
+      });
+    });
     // cuando se inicia sesion
-    this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
+    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
       this.reinicaFiltros();
       this.parametrosBusqueda.rut = usuario.rut || '0';
       this.root.getPreferenciasCliente().then((preferencias) => {
         this.preferenciaCliente = preferencias;
         this.cargarCatalogoProductos(this.parametrosBusqueda, '');
       });
-    });
+    });*/
 
     // cuando cambiamos sucursal
     this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {

@@ -17,9 +17,9 @@ import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
   providedIn: 'root',
 })
 export class LoginService {
-  private loginSession$: Subject<any> = new Subject();
+  /*private loginSession$: Subject<any> = new Subject();
   readonly loginSessionObs$: Observable<any> =
-    this.loginSession$.asObservable();
+    this.loginSession$.asObservable();*/
   linkMiCuenta: any = [];
 
   constructor(
@@ -47,10 +47,12 @@ export class LoginService {
     }
   }
 
+  /*
   iniciarSesion(data: Login) {
     return this.http.post(environment.apiCMS + 'users/login', data);
-  }
+  }*/
 
+  /*
   notify(data: any) {
     if (!data) {
       const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
@@ -58,7 +60,7 @@ export class LoginService {
     } else {
       this.loginSession$.next(data);
     }
-  }
+  }*/
 
   setRoles(profile: any) {
     if (profile === 'superadmin') {

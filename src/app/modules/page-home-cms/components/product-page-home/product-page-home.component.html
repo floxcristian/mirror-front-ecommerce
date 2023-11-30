@@ -73,7 +73,7 @@
                 class="col-6-producto d-flex"
                 style="padding-left: 5px; padding-right: 5px"
                 *ngFor="
-                  let product of item.skus | slice : 0 : 4;
+                  let product of item.articles | slice : 0 : 4;
                   let i = index
                 "
               >
@@ -85,7 +85,7 @@
                 >
                   <app-product-card-b2c-cms
                     [product]="product"
-                    [origen]="[ruta, '', product.nombre.trim(), '']"
+                    [origen]="[ruta, '', product.name.trim(), '']"
                     [home]="true"
                     [layout]="layout"
                     [cartClass]="true"
@@ -120,7 +120,7 @@
         *ngFor="let item of tipo_producto; let i = index"
         class="products-list__item"
       >
-        <ng-template carouselSlide [id]="item._id">
+        <ng-template carouselSlide [id]="item.title">
           <div
             [class.text-truncate]="item.title.length > 15"
             [class.select_active]="index_seleccionado == i"
@@ -166,7 +166,7 @@
         *ngFor="let item of tipo_producto; let i = index"
         class="products-list__item"
       >
-        <ng-template carouselSlide [id]="item._id">
+        <ng-template carouselSlide [id]="item.title">
           <img
             [src]="tipo_producto[i].image"
             class="img-fluid-product-mobile"

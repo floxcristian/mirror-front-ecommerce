@@ -65,13 +65,11 @@ export class CajaConceptoComponent implements OnInit {
   construir() {
     let h = 0;
     let y_array: any = [
-      ...new Set(
-        this.concepto.elemento.data.layout.map((item: any) => item.y)
-      ),
+      ...new Set(this.concepto.element.data.layout.map((item: any) => item.y)),
     ];
 
     y_array.forEach((itemy: any) => {
-      this.row = this.concepto.elemento.data.layout.filter(
+      this.row = this.concepto.element.data.layout.filter(
         (item: any) => item.y == itemy
       );
 

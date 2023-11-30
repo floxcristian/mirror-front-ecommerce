@@ -2,6 +2,7 @@ import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { PageHomeService } from '../../../modules/page-home-cms/services/pageHome.service';
 import { DirectionService } from '../../services/direction.service';
 import { isPlatformBrowser } from '@angular/common';
+import { CmsService } from '@core/services-v2/cms.service';
 
 @Component({
   selector: 'app-buttons-slideshow',
@@ -35,7 +36,9 @@ export class ButtonsSlideshowComponent implements OnInit {
   constructor(
     private pagehomeService: PageHomeService,
     private direction: DirectionService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly cmsService: CmsService
   ) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -50,8 +53,16 @@ export class ButtonsSlideshowComponent implements OnInit {
   }
 
   async getCajaValor(): Promise<void> {
-    await this.pagehomeService.getCajaValor().subscribe((data: any) => {
-      this.botones1 = data.data;
+    // await this.pagehomeService.getCajaValor().subscribe((data: any) => {
+    //   this.botones1 = data.data;
+    // });
+    await this.cmsService.getValueBoxes().subscribe({
+      next: (res) => {
+        this.botones1 = res.data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
     });
   }
 }

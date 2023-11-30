@@ -12,6 +12,7 @@ import { isVacio } from '../../utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { SessionStorageService } from '@core/storage/session-storage.service';
 
 @Component({
   selector: 'app-edit-profile-modal',
@@ -30,7 +31,8 @@ export class EditProfileModalComponent implements OnInit {
     private localS: LocalStorageService,
     private clientsService: ClientsService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly sessionStorage: SessionStorageService
   ) {
     this.formPerfil = this.fb.group({
       nombre: new FormControl(null, {
@@ -73,7 +75,8 @@ export class EditProfileModalComponent implements OnInit {
     user.phone = telefono;
     user.email = correo;
 
-    this.localS.set('usuario', user);
+    //this.localS.set('usuario', user);
+    this.sessionStorage.set(user);
   }
 
   async editarPerfil() {

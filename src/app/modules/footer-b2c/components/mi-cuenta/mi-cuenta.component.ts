@@ -11,6 +11,7 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 
 @Component({
   selector: 'app-mi-cuenta',
@@ -35,7 +36,8 @@ export class MiCuentaComponent implements OnInit {
     private localStorage: LocalStorageService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly authStateService: AuthStateServiceV2
   ) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -45,17 +47,21 @@ export class MiCuentaComponent implements OnInit {
   async ngOnInit() {
     this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
 
-    this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
-      this.usuario = usuario;
+    this.authStateService.session$.subscribe((user) => {
+      this.usuario = user;
     });
+
+    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
+      this.usuario = usuario;
+    });*/
   }
 
   validarCuenta(link: any): void {
     this.localStorage.set('ruta', link.url);
     const usuario = this.usuario;
-    if (usuario == null) {
+    if (!usuario) {
       this.router.navigate(['sitio', 'iniciar-sesion']);
-    } else if (usuario?.login_temp === true) {
+    } else if (usuario.login_temp) {
       this.router.navigate(['sitio', 'iniciar-sesion']);
     } else if (link.label != 'Cerrar sesión') {
       this.router.navigate(['/mi-cuenta', link.url]);

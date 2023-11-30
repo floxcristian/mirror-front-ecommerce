@@ -14,7 +14,7 @@
           <a [href]="slide.url">
             <ng-container>
               <img
-                [src]="slide.image_tablet"
+                [src]="slide.imageTablet"
                 [alt]="slide.alt"
                 [title]="slide.alt"
                 class=".img-fluid-product lazyload"
@@ -27,13 +27,13 @@
                 </h3>
                 <h6
                   class="fw-normal text-center"
-                  *ngIf="!isVacio(slide.descripcion)"
+                  *ngIf="!isVacio(slide.description)"
                 >
-                  {{ slide.descripcion }}
+                  {{ slide.description }}
                 </h6>
               </div>
               <div class="mundo" [ngStyle]="style[i]"></div>
-              <div class="poligono" [ngStyle]="slide.style_color"></div>
+              <div class="poligono" [ngStyle]="slide.styleColor"></div>
             </div>
           </a>
         </div>
@@ -57,7 +57,7 @@
           <a [href]="slide.url">
             <ng-container>
               <img
-                [src]="slide.image_tablet"
+                [src]="slide.imageTablet"
                 [alt]="slide.alt"
                 [title]="slide.alt"
                 class=".img-fluid-product lazyload"
@@ -70,13 +70,13 @@
                 </h3>
                 <h6
                   class="fw-normal text-center"
-                  *ngIf="!isVacio(slide.descripcion)"
+                  *ngIf="!isVacio(slide.description)"
                 >
-                  {{ slide.descripcion }}
+                  {{ slide.description }}
                 </h6>
               </div>
               <div class="mundo_0" [ngStyle]="style[i]"></div>
-              <div class=".poligono_0" [ngStyle]="slide.style_color"></div>
+              <div class=".poligono_0" [ngStyle]="slide.styleColor"></div>
             </div>
           </a>
         </div>
@@ -101,7 +101,7 @@
           <a [href]="slide.url">
             <ng-container *ngIf="innerWidth >= 500">
               <img
-                [src]="slide.image_mobile"
+                [src]="slide.imageMobile"
                 [alt]="slide.alt"
                 [title]="slide.alt"
                 class=".img-fluid-product lazyload"
@@ -110,7 +110,7 @@
 
             <ng-container *ngIf="innerWidth < 500">
               <img
-                [src]="slide.image_tablet"
+                [src]="slide.imageTablet"
                 [alt]="slide.alt"
                 [title]="slide.alt"
                 class=".img-fluid-product lazyload"
@@ -123,13 +123,13 @@
                 </h3>
                 <h6
                   class="fw-normal text-center"
-                  *ngIf="!isVacio(slide.descripcion)"
+                  *ngIf="!isVacio(slide.description)"
                 >
-                  {{ slide.descripcion }}
+                  {{ slide.description }}
                 </h6>
               </div>
               <div class="mundo" [ngStyle]="style[i]"></div>
-              <div class="poligono" [ngStyle]="slide.style_color"></div>
+              <div class="poligono" [ngStyle]="slide.styleColor"></div>
             </div>
           </a>
         </div>

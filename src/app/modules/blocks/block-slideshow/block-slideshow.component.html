@@ -5,23 +5,23 @@
     [ngClass]="{ item: true }"
   >
     <ng-container *ngFor="let slide of slides; let i = index">
-      <ng-template carouselSlide [id]="slide.image_classic">
-        <a [href]="slide.btn_url">
+      <ng-template carouselSlide [id]="slide.imageClassic">
+        <a [href]="slide.buttonUrl">
           <img
             *ngIf="innerWidth < 450"
-            [src]="slide.image_mobile"
+            [src]="slide.imageMobile"
             [alt]="slide.alt"
             class="lazyload"
           />
           <img
             *ngIf="innerWidth > 450 && innerWidth < 1025"
-            [src]="slide.image_classic"
+            [src]="slide.imageClassic"
             [alt]="slide.alt"
             class="lazyload"
           />
           <img
             *ngIf="innerWidth > 1025"
-            [src]="slide.image_classic"
+            [src]="slide.imageClassic"
             [alt]="slide.alt"
             class="lazyload"
           />
@@ -48,8 +48,8 @@
 
     <p>
       Queremos informarte acerca de las nuevas medidas que hemos tomado en
-      Implementos, para seguir entregando nuestros servicios de manera segura, y
-      para proteger tu salud y la de nuestros trabajadores.
+      Implementos, para seguir entregando nuestros servicios de manera segura,
+      y para proteger tu salud y la de nuestros trabajadores.
     </p>
 
     <p>PREFIERE NUESTROS CANALES DIGITALES:</p>
@@ -74,8 +74,8 @@
         sanitizante en nuestras tiendas para minimizar los riesgos de contagio.
       </li>
       <li>
-        Recuerda que debes permanecer en el interior de nuestras tiendas sólo el
-        tiempo necesario
+        Recuerda que debes permanecer en el interior de nuestras tiendas sólo
+        el tiempo necesario
       </li>
       <li>Mantener al menos 1,5 mt de distancia de otras personas.</li>
     </ul>

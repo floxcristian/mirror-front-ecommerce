@@ -4,6 +4,7 @@ import { RootService } from './../../../../shared/services/root.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 
 @Component({
   selector: 'app-account',
@@ -37,7 +38,8 @@ export class AccountComponent implements OnInit {
     public loginService: LoginService,
     private cd: ChangeDetectorRef,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly authStateService: AuthStateServiceV2
   ) {}
 
   ngOnInit() {
@@ -47,7 +49,21 @@ export class AccountComponent implements OnInit {
       this.usuario.userRole === 'supervisor' ||
       this.usuario.userRole === 'comprador';
 
-    this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
+    this.authStateService.session$.subscribe((user) => {
+      this.usuario = user;
+      this.mostrarMenu = true;
+      this.mostrarBienvenida = true;
+      this.linkMiCuenta = this.loginService.setRoles(this.usuario.userRole);
+
+      if (this.isB2B) {
+        this.linkMiCuenta = this.linkMiCuenta.filter(
+          (l) => !this.linksOcultosB2B.includes(l.label)
+        );
+      }
+      this.root.getPreferenciasCliente();
+    });
+
+    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
       if (!usuario.hasOwnProperty('user_role')) {
         usuario.user_role = '';
       }
@@ -63,9 +79,9 @@ export class AccountComponent implements OnInit {
         );
       }
       this.root.getPreferenciasCliente();
-    });
+    });*/
 
-    if (this.usuario != null) {
+    if (this.usuario) {
       this.linkMiCuenta = this.loginService.setRoles(this.usuario.userRole);
       if (this.isB2B) {
         this.linkMiCuenta = this.linkMiCuenta.filter(

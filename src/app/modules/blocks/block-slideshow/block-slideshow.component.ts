@@ -11,6 +11,7 @@ import { DirectionService } from '../../../shared/services/direction.service';
 import { SlidesService } from '../../../shared/services/slides.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { isPlatformBrowser } from '@angular/common';
+import { CmsService } from '@core/services-v2/cms.service';
 
 @Component({
   selector: 'app-block-slideshow',
@@ -46,7 +47,9 @@ export class BlockSlideshowComponent implements OnInit {
     public sanitizer: DomSanitizer,
     private direction: DirectionService,
     private slidesService: SlidesService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    // Servicios V2
+    private readonly cmsService: CmsService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -55,8 +58,16 @@ export class BlockSlideshowComponent implements OnInit {
   }
 
   cargarGaleria() {
-    this.slidesService.obtieneSlides().subscribe((r: any) => {
-      this.slides = r.data;
+    // this.slidesService.obtieneSlides().subscribe((r: any) => {
+    //   this.slides = r.data;
+    // });
+    this.cmsService.getSliders().subscribe({
+      next: (res) => {
+        this.slides = res.data;
+      },
+      error: (err) => {
+        console.error(err);
+      },
     });
   }
 

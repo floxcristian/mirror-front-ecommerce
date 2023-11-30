@@ -6,10 +6,10 @@
     <div class="col-20" *ngFor="let item of botones1">
       <a [href]="item.url">
         <app-button
-          [imagen]="item.imagen"
-          [titulo]="item.titulo"
-          [linea1]="item.linea1"
-          [linea2]="item.linea2"
+          [imagen]="item.image"
+          [titulo]="item.title"
+          [linea1]="item.subtext1"
+          [linea2]="item.subtext2"
         >
         </app-button>
       </a>
@@ -35,10 +35,10 @@
       >
         <a [href]="item.url">
           <app-button
-            [imagen]="item.imagen"
-            [titulo]="item.titulo"
-            [linea1]="item.linea1"
-            [linea2]="item.linea2"
+            [imagen]="item.image"
+            [titulo]="item.title"
+            [linea1]="item.subtext1"
+            [linea2]="item.subtext2"
           >
           </app-button>
         </a>

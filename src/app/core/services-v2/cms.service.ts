@@ -1,8 +1,17 @@
 // Angular
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import {
+  IBlogResponse,
+  IBlogsResponse,
+} from '@core/models-v2/cms/blog-response.interface';
+import { IHomePageResponse } from '@core/models-v2/cms/homePage-response.interface';
+import { ISliderResponse } from '@core/models-v2/cms/slider-reponse.interface';
+import { IValueBoxResponse } from '@core/models-v2/cms/valueBox-response.interface';
+import { IWorldResponse } from '@core/models-v2/cms/world-response.interface';
 // Environment
 import { environment } from '@env/environment';
+import { Observable } from 'rxjs';
 
 const API_CMS = `${environment.apiEcommerce}/api/v1/cms`;
 
@@ -19,34 +28,55 @@ export class CmsService {
     return this.http.get(`${API_CMS}/categories`);
   }
 
-  getSliders() {
-    return this.http.get(`${API_CMS}/sliders`);
+  getSliders(): Observable<ISliderResponse> {
+    return this.http.get<ISliderResponse>(`${API_CMS}/sliders`);
   }
 
-  getValueBoxes() {
-    return this.http.get(`${API_CMS}/value-boxes`);
+  getValueBoxes(): Observable<IValueBoxResponse> {
+    return this.http.get<IValueBoxResponse>(`${API_CMS}/value-boxes`);
   }
 
-  getWorlds() {
-    return this.http.get(`${API_CMS}/worlds`);
+  getWorlds(): Observable<IWorldResponse> {
+    return this.http.get<IWorldResponse>(`${API_CMS}/worlds`);
   }
 
-  getHomePage(documentId: string, branchCode: string) {
-    return this.http.get(`${API_CMS}/homepage`, {
-      params: { documentId, branchCode },
+  getHomePage(
+    documentId: string,
+    branchCode: string,
+    location: string
+  ): Observable<IHomePageResponse> {
+    return this.http.get<IHomePageResponse>(`${API_CMS}/homepage`, {
+      params: { documentId, branchCode, location },
+    });
+  }
+
+  getCustomHomePage(documentId: string, branchCode: string, location: string) {
+    return this.http.get(`${API_CMS}/custom-homepage`, {
+      params: { documentId, branchCode, location },
+    });
+  }
+
+  getSpecial(
+    special: string,
+    documentId: string,
+    branchCode: string,
+    location: string
+  ) {
+    return this.http.get(`${API_CMS}/special`, {
+      params: { special, documentId, branchCode, location },
     });
   }
 
   /**********************************************
    * BLOG
    **********************************************/
-  getPosts(quantity: number) {
-    return this.http.get(`${API_CMS}/blog/posts`, {
+  getPosts(quantity: number): Observable<IBlogsResponse> {
+    return this.http.get<IBlogsResponse>(`${API_CMS}/blog/posts`, {
       params: { quantity },
     });
   }
 
-  getPostDetail(postId: string) {
-    return this.http.get(`${API_CMS}/blog/posts/${postId}`);
+  getPostDetail(postId: string): Observable<IBlogResponse> {
+    return this.http.get<IBlogResponse>(`${API_CMS}/blog/posts/${postId}`);
   }
 }

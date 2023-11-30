@@ -35,6 +35,7 @@ import { LoginService } from '../../../../shared/services/login.service';
 import { DireccionDespachoComponent } from '../search-vin-b2b/components/direccion-despacho/direccion-despacho.component';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 
 @Component({
   selector: 'app-header-search',
@@ -101,7 +102,8 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     private loginService: LoginService,
     private readonly gtmService: GoogleTagManagerService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly authStateService: AuthStateServiceV2
   ) {}
 
   ngOnInit() {
@@ -136,7 +138,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
         this.direccion = preferencias.direccionDespacho;
       });
 
-    this.usuarioRef = this.loginService.loginSessionObs$
+    /*this.usuarioRef = this.loginService.loginSessionObs$
       .pipe()
       .subscribe((usuario) => {
         if (!usuario.hasOwnProperty('user_role')) {
@@ -147,7 +149,16 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
           this.root.getPreferenciasCliente().then((preferencias) => {
             this.direccion = preferencias.direccionDespacho;
           });
-      });
+      });*/
+
+    this.usuarioRef = this.authStateService.session$.subscribe((user) => {
+      this.usuario = user;
+      if (this.usuario.documentId !== '0')
+        this.root.getPreferenciasCliente().then((preferencias) => {
+          this.direccion = preferencias.direccionDespacho;
+        });
+    });
+
     this.despachoClienteRef =
       this.logisticsService.direccionCliente$.subscribe((r) => {
         this.direccion = r;

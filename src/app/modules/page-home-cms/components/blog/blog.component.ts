@@ -1,6 +1,6 @@
 import { Component, Input, EventEmitter, OnInit, Output } from '@angular/core';
 import { PageHomeService } from '../../services/pageHome.service';
-import { CmsService } from '@shared/services/cms.service';
+import { CmsService } from '@core/services-v2/cms.service';
 
 @Component({
   selector: 'app-blog-home',
@@ -11,8 +11,8 @@ export class BlogComponent implements OnInit {
   @Input() set config(value: any) {
     this.data = value;
     if (this.data) {
-      if (value.elemento) {
-        this.data = value.elemento;
+      if (value.element) {
+        this.data = value.element;
       } else {
         this.data = value;
       }
@@ -25,7 +25,11 @@ export class BlogComponent implements OnInit {
   data: any;
   currentOpenItemIndex = 0;
   @Output() elementoEvent: EventEmitter<any> = new EventEmitter();
-  constructor(private cmsService: CmsService) {}
+  constructor(
+    // private cmsService: CmsService
+    //Services V2
+    private readonly cmsService: CmsService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -34,24 +38,48 @@ export class BlogComponent implements OnInit {
   }
 
   fetchBlogs() {
-    this.cmsService.obtenerPosts().subscribe((res) => {
-      this.blogs = res.slice(0, 4);
-      this.blogs = this.blogs.map((item, index) => ({
-        ...item,
-        collapsed: index === this.currentOpenItemIndex,
-      }));
-      //console.log('this.blogs.length: ', this.blogs.length);
-      if (this.blogs.length) {
-        setInterval(() => {
-          this.blogs[this.currentOpenItemIndex].collapsed = false;
-          this.currentOpenItemIndex =
-            this.currentOpenItemIndex === this.blogs.length - 1
-              ? 0
-              : this.currentOpenItemIndex + 1;
-          this.clickCollapse(this.currentOpenItemIndex);
-        }, 5000);
-      }
+    let quantity = 5;
+    this.cmsService.getPosts(quantity).subscribe({
+      next: (res) => {
+        this.blogs = res.data;
+        this.blogs = this.blogs.map((item, index) => ({
+          ...item,
+          collapsed: index === this.currentOpenItemIndex,
+        }));
+        //console.log('this.blogs.length: ', this.blogs.length);
+        if (this.blogs.length) {
+          setInterval(() => {
+            this.blogs[this.currentOpenItemIndex].collapsed = false;
+            this.currentOpenItemIndex =
+              this.currentOpenItemIndex === this.blogs.length - 1
+                ? 0
+                : this.currentOpenItemIndex + 1;
+            this.clickCollapse(this.currentOpenItemIndex);
+          }, 5000);
+        }
+      },
+      error: (err) => {
+        console.log(err);
+      },
     });
+    // this.cmsService.obtenerPosts().subscribe((res) => {
+    //   this.blogs = res.slice(0, 4);
+    //   this.blogs = this.blogs.map((item, index) => ({
+    //     ...item,
+    //     collapsed: index === this.currentOpenItemIndex,
+    //   }));
+    //   //console.log('this.blogs.length: ', this.blogs.length);
+    //   if (this.blogs.length) {
+    //     setInterval(() => {
+    //       this.blogs[this.currentOpenItemIndex].collapsed = false;
+    //       this.currentOpenItemIndex =
+    //         this.currentOpenItemIndex === this.blogs.length - 1
+    //           ? 0
+    //           : this.currentOpenItemIndex + 1;
+    //       this.clickCollapse(this.currentOpenItemIndex);
+    //     }, 5000);
+    //   }
+    // });
   }
 
   clickCollapse(index: number) {

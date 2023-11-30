@@ -44,13 +44,13 @@
       data-with-features="false"
     >
       <owl-carousel-o
-        *ngIf="product_list.skus.length"
+        *ngIf="product_list.articles.length"
         class="carouselLista"
         [options]="carouselOptions"
         appOwlPreventClick
       >
         <ng-container
-          *ngFor="let prod of product_list.skus; let i = index"
+          *ngFor="let prod of product_list.articles; let i = index"
           class="products-list__item"
         >
           <ng-template carouselSlide>
@@ -58,7 +58,7 @@
               (mouseover)="over($event)"
               (mouseleave)="leave($event)"
               [product]="prod"
-              [origen]="[ruta, '', prod.nombre.trim(), '']"
+              [origen]="[ruta, '', prod.name.trim(), '']"
               [home]="true"
               [layout]="layout"
               [cartClass]="true"

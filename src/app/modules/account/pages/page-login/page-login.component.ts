@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { LoginService } from '../../../../shared/services/login.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
+import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,9 @@ export class PageLoginComponent {
     private router: Router,
     private localS: LocalStorageService,
     private loginService: LoginService,
-    private readonly sessionStorage: SessionStorageService
+    // Services V2
+    private readonly sessionStorage: SessionStorageService,
+    private readonly authStateService: AuthStateServiceV2
   ) {
     // Cerramos la sesion del usuario
     // this.localS.remove('usuario');
@@ -25,7 +28,8 @@ export class PageLoginComponent {
     this.localS.remove('ordenCompraCargada');
     this.localS.remove('buscadorB2B');
     this.localS.remove('favoritos');
-    this.loginService.notify(null);
+    this.authStateService.setSession(null);
+    // this.loginService.notify(null);
 
     this.router.navigate(['/inicio']).then(() => {
       window.location.reload();

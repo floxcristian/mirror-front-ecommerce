@@ -9,6 +9,7 @@ import { isVacio } from '../../../../shared/utils/utilidades';
 import { DirectionService } from '../../../../shared/services/direction.service';
 import { PageHomeService } from '../../services/pageHome.service';
 import { isPlatformBrowser } from '@angular/common';
+import { CmsService } from '@core/services-v2/cms.service';
 
 @Component({
   selector: 'app-slide-mundo',
@@ -47,7 +48,9 @@ export class SlideMundoComponent implements OnInit {
   constructor(
     private direction: DirectionService,
     private pageHomeService: PageHomeService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    //Services V2
+    private readonly cmsService: CmsService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -65,13 +68,27 @@ export class SlideMundoComponent implements OnInit {
   }
 
   async Carga_mundo() {
-    let consulta: any = await this.pageHomeService.getMundoCms().toPromise();
-    this.slides = consulta.data;
-    this.slides.forEach((item: any) => {
-      this.style.push({
-        cursor: 'pointer',
-        'background-image': "url('" + item.image_overlay + "')",
-      });
+    // let consulta: any = await this.pageHomeService.getMundoCms().toPromise();
+    // this.slides = consulta.data;
+    // this.slides.forEach((item: any) => {
+    //   this.style.push({
+    //     cursor: 'pointer',
+    //     'background-image': "url('" + item.image_overlay + "')",
+    //   });
+    // });
+    this.cmsService.getWorlds().subscribe({
+      next: (res) => {
+        this.slides = res.data;
+        this.slides.forEach((item: any) => {
+          this.style.push({
+            cursor: 'pointer',
+            'background-image': "url('" + item.imageOverlay + "')",
+          });
+        });
+      },
+      error: (err) => {
+        console.log(err);
+      },
     });
   }
 }

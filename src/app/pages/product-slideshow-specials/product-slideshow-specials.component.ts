@@ -22,6 +22,7 @@ import { LoginService } from '@shared/services/login.service';
 import { LogisticsService } from '@shared/services/logistics.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 
 export type Layout = 'grid' | 'grid-with-features' | 'list';
 
@@ -79,7 +80,8 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     private logistic: LogisticsService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly authStateService: AuthStateServiceV2
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -98,19 +100,27 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     this.ruta = url.split('/');
     this.preferenciaCliente = this.localStorage.get('preferenciasCliente');
     const geo: GeoLocation = await this.localStorage.get('geolocalizacion');
-    if (geo != null) {
+    if (geo) {
       this.cargaEspeciales();
     }
     this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
       this.cargaEspeciales();
     });
     // cuando se inicia sesion
-    this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
+    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
+      this.root.getPreferenciasCliente().then((preferencias) => {
+        this.preferenciaCliente = preferencias;
+        this.cargaEspeciales();
+      });
+    });*/
+
+    this.authStateService.session$.subscribe((user) => {
       this.root.getPreferenciasCliente().then((preferencias) => {
         this.preferenciaCliente = preferencias;
         this.cargaEspeciales();
       });
     });
+
     //Cuando se cambia de dirección despacho
     this.despachoCliente = this.logistic.direccionCliente$.subscribe((r) => {
       this.preferenciaCliente.direccionDespacho = r;

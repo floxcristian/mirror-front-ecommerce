@@ -25,6 +25,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 
 @Component({
   selector: 'app-product-card-b2c-ficha',
@@ -45,14 +46,12 @@ export class ProductCardB2cFichaComponent implements OnInit {
   isVacio = isVacio;
   @ViewChild('modalEscala', { static: false }) modalEscala!: TemplateRef<any>;
   modalEscalaRef!: BsModalRef;
-  @Input() set product(value: Product) {
+  @Input() set product(value: any) {
     this.productData = value;
-    this.productData.nombre = this.root.limpiarNombres(
-      this.productData.nombre
-    );
-
-    this.quality = this.root.setQuality(this.productData);
-    this.root.limpiaAtributos(value);
+    this.productData.name = this.root.limpiarNombres(this.productData.name);
+    //comentado por el momento
+    // this.quality = this.root.setQuality(this.productData);
+    // this.root.limpiaAtributos(value);
   }
 
   @Input() layout:
@@ -74,7 +73,8 @@ export class ProductCardB2cFichaComponent implements OnInit {
   addingToCompare = false;
   showingQuickview = false;
   urlImage = environment.urlFotoOmnichannel;
-  productData!: Product & { url?: SafeUrl; gimage?: SafeUrl };
+  // productData!: Product & { url?: SafeUrl; gimage?: SafeUrl };
+  productData!: IArticle;
   quality: any = 0;
   precioProducto = 0;
   today = Date.now();
@@ -101,8 +101,8 @@ export class ProductCardB2cFichaComponent implements OnInit {
     });
     this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
     this.cargaPrecio();
-    if (this.productData.precio_escala)
-      this.preciosEscalas = this.productData.escala;
+    if (this.productData.priceInfo.hasScalePrice)
+      this.preciosEscalas = this.productData.priceInfo.scalePrice;
   }
 
   ngOnDestroy(): void {
@@ -111,65 +111,76 @@ export class ProductCardB2cFichaComponent implements OnInit {
   }
 
   cargaPrecio() {
-    if (this.productData.precioComun === undefined) {
-      this.productData.precioComun = this.productData.precio.precioComun;
-      this.productData.precio_escala = this.productData.precio.precio_escala;
+    // if (this.productData.precioComun === undefined) {
+    //   this.productData.precioComun = this.productData.precio.precioComun;
+    //   this.productData.precio_escala = this.productData.precio.precio_escala;
+    // }
+    if (this.productData.priceInfo.commonPrice === undefined) {
+      this.productData.priceInfo.commonPrice =
+        this.productData.priceInfo.commonPrice;
+      // this.productData.precio_escala = this.productData.precio.precio_escala;
     }
 
     if (this.home) {
-      if (this.productData.precioComun || 0 > this.productData.precio.precio) {
+      if (
+        (this.productData.priceInfo.commonPrice || 0) >
+        this.productData.priceInfo.customerPrice
+      ) {
         this.porcentaje_descuento();
       }
       return;
     }
 
     //calcular porcentaje de descuento
-    if (this.productData.precioComun || 0 > this.productData.precio.precio) {
+    if (
+      (this.productData.priceInfo.commonPrice || 0) >
+      this.productData.priceInfo.customerPrice
+    ) {
       this.porcentaje_descuento();
     }
     let url: string = this.root.product(
       this.productData.sku,
-      this.productData.nombre,
+      this.productData.name,
       false
     );
     let gimage: string =
       'https://images.implementos.cl/img/watermarked/' +
       this.productData.sku +
       '-watermarked.jpg';
-
-    this.productData.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    this.productData.gimage =
-      this.sanitizer.bypassSecurityTrustResourceUrl(gimage);
+    // FIXME: revisar si se utilizan estas variables
+    // this.productData.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    // this.productData.gimage =
+    //   this.sanitizer.bypassSecurityTrustResourceUrl(gimage);
   }
 
   addToCart(): void {
     if (this.addingToCart) {
       return;
     }
+    //FIXME: ARREGLAR CARRITO
+    // this.productData.origen = {} as ProductOrigen;
 
-    this.productData.origen = {} as ProductOrigen;
+    // if (this.origen) {
+    //   // Seteamos el origen de donde se hizo click a add cart.
+    //   this.productData.origen.origen = this.origen[0] ? this.origen[0] : '';
+    //   this.productData.origen.subOrigen = this.origen[1] ? this.origen[1] : '';
+    //   this.productData.origen.seccion = this.origen[2] ? this.origen[2] : '';
+    //   this.productData.origen.recomendado = this.origen[3]
+    //     ? this.origen[3]
+    //     : '';
+    //   this.productData.origen.ficha = false;
+    //   this.productData.origen.cyber = this.productData.cyber
+    //     ? this.productData.cyber
+    //     : 0;
+    // }
 
-    if (this.origen) {
-      // Seteamos el origen de donde se hizo click a add cart.
-      this.productData.origen.origen = this.origen[0] ? this.origen[0] : '';
-      this.productData.origen.subOrigen = this.origen[1] ? this.origen[1] : '';
-      this.productData.origen.seccion = this.origen[2] ? this.origen[2] : '';
-      this.productData.origen.recomendado = this.origen[3]
-        ? this.origen[3]
-        : '';
-      this.productData.origen.ficha = false;
-      this.productData.origen.cyber = this.productData.cyber
-        ? this.productData.cyber
-        : 0;
-    }
-
-    this.addingToCart = true;
-    this.cart.add(this.productData, 1).subscribe({
-      complete: () => {
-        this.addingToCart = false;
-        this.cd.markForCheck();
-      },
-    });
+    // this.addingToCart = true;
+    // this.cart.add(this.productData, 1).subscribe({
+    //   complete: () => {
+    //     this.addingToCart = false;
+    //     this.cd.markForCheck();
+    //   },
+    // });
   }
 
   addToWishlist(): void {
@@ -178,13 +189,13 @@ export class ProductCardB2cFichaComponent implements OnInit {
     }
 
     this.addingToWishlist = true;
-
-    this.wishlist.add(this.productData).subscribe({
-      complete: () => {
-        this.addingToWishlist = false;
-        this.cd.markForCheck();
-      },
-    });
+    //FIXME: ARREGLAR AGREGAR LISTA
+    // this.wishlist.add(this.productData).subscribe({
+    //   complete: () => {
+    //     this.addingToWishlist = false;
+    //     this.cd.markForCheck();
+    //   },
+    // });
   }
 
   addToCompare(): void {
@@ -193,12 +204,13 @@ export class ProductCardB2cFichaComponent implements OnInit {
     }
 
     this.addingToCompare = true;
-    this.compare.add(this.productData).subscribe({
-      complete: () => {
-        this.addingToCompare = false;
-        this.cd.markForCheck();
-      },
-    });
+    // FIXME: ARREGLAR AGREGAR COMPARAR
+    // this.compare.add(this.productData).subscribe({
+    //   complete: () => {
+    //     this.addingToCompare = false;
+    //     this.cd.markForCheck();
+    //   },
+    // });
   }
 
   showQuickview(): void {
@@ -207,12 +219,13 @@ export class ProductCardB2cFichaComponent implements OnInit {
     }
 
     this.showingQuickview = true;
-    this.quickview.show(this.productData).subscribe({
-      complete: () => {
-        this.showingQuickview = false;
-        this.cd.markForCheck();
-      },
-    });
+    //FIXME: ARREGLAR VISTA RAPIDA
+    // this.quickview.show(this.productData).subscribe({
+    //   complete: () => {
+    //     this.showingQuickview = false;
+    //     this.cd.markForCheck();
+    //   },
+    // });
   }
 
   /**
@@ -227,9 +240,10 @@ export class ProductCardB2cFichaComponent implements OnInit {
 
   porcentaje_descuento() {
     let descuento =
-      this.productData.precioComun || 0 - this.productData.precio.precio;
+      (this.productData.priceInfo.commonPrice || 0) -
+      this.productData.priceInfo.customerPrice;
     this.porcentaje = Math.round(
-      (descuento / (this.productData.precioComun || 0)) * 100
+      (descuento / (this.productData.priceInfo.commonPrice || 1)) * 100
     );
   }
 

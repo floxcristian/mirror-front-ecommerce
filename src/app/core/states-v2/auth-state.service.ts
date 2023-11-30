@@ -1,7 +1,7 @@
 // Angular
 import { Injectable } from '@angular/core';
 // Rxjs
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from './session.service';
@@ -10,15 +10,12 @@ import { SessionService } from './session.service';
   providedIn: 'root',
 })
 export class AuthStateServiceV2 {
-  private sessionSubject: BehaviorSubject<ISession | null> =
-    new BehaviorSubject<ISession | null>(null);
-  readonly session$: Observable<ISession | null> =
-    this.sessionSubject.asObservable();
+  private sessionSubject: Subject<ISession> = new Subject<ISession>();
+  readonly session$: Observable<ISession> = this.sessionSubject.asObservable();
 
   constructor(private readonly sessionService: SessionService) {}
 
-  // notify
-  setSession(session: ISession): void {
+  setSession(session: ISession | null): void {
     if (session) {
       this.sessionSubject.next(session);
     } else {

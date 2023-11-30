@@ -55,6 +55,7 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
+import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 
 export let browserRefresh = false;
 declare let dataLayer: any;
@@ -160,8 +161,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     private clientsService: ClientsService,
     // Services V2
     private readonly sessionService: SessionService,
-    // Storage V2
     private readonly sessionStorage: SessionStorageService,
+    private readonly authStateService: AuthStateServiceV2,
     private readonly invitadoStorage: InvitadoStorageService
   ) {
     this.localS.set('recibe', {});
@@ -761,11 +762,16 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   }
 
   subscribeOnLogin() {
-    this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
+    this.authStateService.session$.subscribe((user) => {
       this.isLogin = this.loginService.isLogin();
       this.obtieneDireccionesCliente();
       this.contacto_notificaciones();
     });
+    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
+      this.isLogin = this.loginService.isLogin();
+      this.obtieneDireccionesCliente();
+      this.contacto_notificaciones();
+    });*/
   }
 
   openModal() {

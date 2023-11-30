@@ -86,8 +86,8 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     // const usuario: Usuario = this.root.getDataSesionUsuario();
     const user = this.sessionService.getSession();
-    if (['supervisor', 'comprador'].includes(user?.userRole)) {
-      delete user?.ultimoCierre;
+    if (['supervisor', 'comprador'].includes(user.userRole)) {
+      delete user.ultimoCierre;
       this.sessionStorage.set(user);
       // this.localS.set('usuario', user);
     }

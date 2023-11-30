@@ -37,6 +37,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/states-v2/session.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -84,7 +85,8 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly sessionStorage: SessionStorageService
+    private readonly sessionStorage: SessionStorageService,
+    private readonly authStateService: AuthStateServiceV2
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -158,9 +160,12 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
   }
 
   subscribeLogin() {
-    this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
+    this.authStateService.session$.subscribe(() => {
       this.updateLink();
     });
+    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
+      this.updateLink();
+    });*/
   }
 
   updateLink() {
