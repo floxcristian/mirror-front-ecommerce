@@ -2,7 +2,7 @@
   <div class="product__content_232 d-flex row px-sm-4">
     <!--  NOMBRE VERSION MOVIL -->
     <div class="col-12 d-block d-sm-none">
-      <h5 class="mb-1 text-start">{{ product.nombre | capitalizeFirst }}</h5>
+      <h5 class="mb-1 text-start">{{ product.name | capitalizeFirst }}</h5>
     </div>
 
     <!-- DESKTOP  TABLET  MOBILE -->
@@ -24,8 +24,10 @@
               <div *nguCarouselDef="let item" class="item">
                 <div
                   class="tile"
-                  (click)="featuredCarousel.to(item.id); setActiveImage(item)"
+                  (click)="featuredCarousel.to(item.id); "
+
                 >
+                <!-- setActiveImage(item) -->
                   <img
                     *ngIf="!item.video"
                     [ngClass]="{
@@ -56,13 +58,14 @@
               class="product-gallery__featured position-relative"
               style="border: 1px solid #aaa"
             >
-              <div
+              <!-- <div
                 class="col float-end"
                 *ngIf="product.cyber || product.cyberMonday"
                 style="position: absolute; top: 2px; right: 2px; z-index: 2"
               >
                 <picture *ngIf="(product?.cyberMonday || 0) > 0">
-                  <!-- <source
+                  // TODO:esto estaba comentado
+                  <source
                     srcset="assets/images/cyberMondaySquare.webp"
                     type="image/webp"
                   />
@@ -75,7 +78,9 @@
                     height="100px"
                     width="100px"
                     class="float-end"
-                  /> -->
+                  />
+
+                  ///
                   <img
                     src="https://images.implementos.cl/uploads/cyber/cyberMonday.webp"
                     height="100px"
@@ -87,7 +92,9 @@
                 <picture
                   *ngIf="(product.cyber || 0) > 0 && product.cyberMonday === 0"
                 >
-                  <!-- <source
+
+                // esto estaba comentado
+                  <source
                     srcset="assets/images/cyberCircle.webp"
                     type="image/webp"
                   />
@@ -101,7 +108,9 @@
                     height="80px"
                     width="80px"
                     class="float-end"
-                  /> -->
+                  />
+
+                  //
                   <img
                     src="https://images.implementos.cl/uploads/cyber/cyber.webp"
                     alt=""
@@ -110,7 +119,7 @@
                     class="float-end"
                   />
                 </picture>
-              </div>
+              </div> -->
               <div
                 style="
                   position: absolute;
@@ -122,42 +131,42 @@
                 <div
                   class="float-end"
                   *ngIf="
-                    product.marca == 'BLACKSMITH' ||
-                    product.marca == 'SUNTECH' ||
-                    product.marca == 'INDIANA' ||
-                    product.marca == 'RANDON'
+                    product.brand == 'BLACKSMITH' ||
+                    product.brand == 'SUNTECH' ||
+                    product.brand == 'INDIANA' ||
+                    product.brand == 'RANDON'
                   "
                 >
                   <img
                     src="https://images.implementos.cl/marcas/small/{{
-                      product.marca
+                      product.brand
                     }}.PNG"
-                    alt="{{ product.marca }}"
+                    alt="{{ product.brand }}"
                   />
                 </div>
               </div>
 
+              <!-- (changed)="featuredCarouselTranslated($event)" -->
               <owl-carousel-o
                 [options]="carouselOptions"
-                (changed)="featuredCarouselTranslated($event)"
                 appOwlPreventClick
                 #featuredCarousel
               >
                 <ng-container *ngFor="let image of images">
                   <ng-template
                     carouselSlide
-                    [id]="image.id"
-                    *ngIf="!image.video"
+                    [id]="image"
+                    *ngIf="!image"
                   >
+                  <!-- (click)="openPhotoSwipe($event, image)" -->
                     <a
                       appClick
-                      (click)="openPhotoSwipe($event, image)"
-                      href="{{ image.url }}"
+                      href="{{ image }}"
                       target="_blank"
                     >
                       <img
-                        [src]="image.url"
-                        [alt]="product.nombre"
+                        [src]="image"
+                        [alt]="product.name"
                         class="lazyload"
                         (load)="onLoadImage()"
                         (error)="root.errorLoadImage($event)"
@@ -180,7 +189,7 @@
         <div class="d-flex justify-content-between mb-1">
           <div>
             {{
-              product.marca
+              product.brand
                 | replace : '^SIN MARCA$' : 'IMPLEMENTOS'
                 | replace : '^0$' : 'IMPLEMENTOS'
             }}
@@ -193,7 +202,7 @@
         </div>
         <div class="d-flex justify-content-between">
           <h5 class="product__name mb-1">
-            {{ product.nombre | capitalizeFirst }}
+            {{ product.name | capitalizeFirst }}
           </h5>
           <app-share-button
             [producto]="product"
@@ -203,7 +212,7 @@
         <div class="row">
           <div class="col">
             <p class="mb-2">
-              <span class="text-lowercase">{{ product.descripcion }}</span>
+              <span class="text-lowercase">{{ product.description }}</span>
             </p>
           </div>
         </div>
@@ -364,36 +373,36 @@
             [class.my-4]="preciosEscalas.length <= 1"
             [class.my-0]="preciosEscalas.length > 1"
           >
-            <ng-container *ngIf="product.precio">
+            <ng-container *ngIf="product.price">
               <div class="row">
                 <div class="col-md-12">
                   <span
-                    *ngIf="product?.precio?.rut != 0"
+                    *ngIf="product?.priceInfo?.documentId != ''"
                     tooltip="Precio con descuento cliente"
                     class="text-price-product me-2 text-danger"
                     [ngStyle]="{
                       'font-size.rem': preciosEscalas.length > 1 ? '1.6' : '2'
                     }"
-                    >{{ product.precio.precio | currencyFormat }}</span
+                    >{{ product.priceInfo.price | currencyFormat }}</span
                   >
 
                   <span
-                    *ngIf="product?.precio?.rut == 0"
+                    *ngIf="product.priceInfo.documentId  == ''"
                     class="text-price-product me-2"
                     [ngStyle]="{
                       'font-size.rem': preciosEscalas.length > 1 ? '1.6' : '2'
                     }"
-                    >{{ product.precio.precio | currencyFormat }}</span
+                    >{{  product.priceInfo.price  | currencyFormat }}</span
                   >
 
                   <span
-                    *ngIf="product?.precioComun != product?.precio?.precio"
+                    *ngIf="product.priceInfo.commonPrice != product.price"
                     tooltip="Precio normal"
                     class="product__old-price me-2"
                     [ngStyle]="{
                       'font-size.rem': preciosEscalas.length > 1 ? '1.6' : '2'
                     }"
-                    >{{ product.precioComun | currencyFormat }}</span
+                    >{{ product.priceInfo.commonPrice | currencyFormat }}</span
                   >
 
                   <span class="text-civa">
@@ -410,7 +419,7 @@
             </ng-container>
 
             <span
-              *ngIf="!product.precio"
+              *ngIf="!product.price"
               class="d-block w-100 text-start text-uppercase"
               >...</span
             >
@@ -446,8 +455,8 @@
                       'btn-loading': addingToCart
                     }"
                     appClick
-                    (click)="addToCart()"
-                  >
+                    >
+                    <!-- (click)="addToCart()" -->
                     <i class="fas fa-shopping-cart"></i> AGREGAR
                   </button>
                   <button
@@ -538,30 +547,30 @@
       <div>
         <div class="d-flex justify-content-between align-items-center">
           <div class="product__prices my-3">
-            <ng-container *ngIf="product?.precio">
+            <ng-container *ngIf="product.price">
               <div class="row">
                 <div class="col-md-12">
                   <span
-                    *ngIf="product?.precio?.rut != 0"
+                    *ngIf="product.priceInfo.documentId != ''"
                     tooltip="Precio con descuento cliente"
                     class="text-price-product me-2 text-danger"
                     style="font-size: 2rem"
-                    >{{ product.precio.precio | currencyFormat }}</span
+                    >{{ product.priceInfo.price | currencyFormat }}</span
                   >
 
                   <span
-                    *ngIf="product?.precio?.rut == 0"
+                    *ngIf="product.priceInfo.documentId == ''"
                     class="text-price-product me-2"
                     style="font-size: 2rem"
-                    >{{ product.precio.precio | currencyFormat }}</span
+                    >{{ product.priceInfo.price | currencyFormat }}</span
                   >
 
                   <span
-                    *ngIf="product?.precioComun != product?.precio?.precio"
+                    *ngIf="product.priceInfo.commonPrice != product.priceInfo.price"
                     tooltip="Precio normal"
                     class="product__old-price me-2"
                     style="font-size: 2rem"
-                    >{{ product.precioComun | currencyFormat }}</span
+                    >{{ product.priceInfo.commonPrice  | currencyFormat }}</span
                   >
 
                   <span class="text-civa">
@@ -578,7 +587,7 @@
             </ng-container>
 
             <span
-              *ngIf="!product.precio"
+              *ngIf="!product.price"
               class="d-block w-100 text-start text-uppercase"
               >...</span
             >
@@ -604,7 +613,7 @@
         <div class="d-flex justify-content-start mb-1">
           <div>
             {{
-              product.marca
+              product.brand
                 | replace : '^SIN MARCA$' : 'IMPLEMENTOS'
                 | replace : '^0$' : 'IMPLEMENTOS'
             }}
@@ -613,7 +622,7 @@
         <div class="row mb-2">
           <div class="col">
             <p class="mb-2">
-              <span class="text-lowercase">{{ product.descripcion }}</span>
+              <span class="text-lowercase">{{ product.description }}</span>
             </p>
           </div>
         </div>

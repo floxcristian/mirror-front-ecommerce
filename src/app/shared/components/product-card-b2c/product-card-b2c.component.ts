@@ -18,6 +18,7 @@ import { environment } from '@env/environment';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
+import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 @Component({
   selector: 'app-product-card-b2c',
   templateUrl: './product-card-b2c.component.html',
@@ -28,13 +29,13 @@ export class ProductCardB2cComponent implements OnInit {
   private destroy$: Subject<void> = new Subject();
   @Input() home: boolean = false;
   @Input() cartClass!: boolean;
-  @Input() set product(value: Product | any) {
+  @Input() set product(value: IArticleResponse | any) {
     this.productData = value;
     this.productData.nombre = this.root.limpiarNombres(
       this.productData.nombre
     );
 
-    this.quality = this.root.setQuality(this.productData);
+    this.quality = this.root.setQuality(value);
     this.root.limpiaAtributos(value);
   }
 
@@ -148,12 +149,12 @@ export class ProductCardB2cComponent implements OnInit {
     }
 
     this.addingToCart = true;
-    this.cart.add(this.productData, 1).subscribe({
-      complete: () => {
-        this.addingToCart = false;
-        this.cd.markForCheck();
-      },
-    });
+    // this.cart.add(this.productData, 1).subscribe({
+    //   complete: () => {
+    //     this.addingToCart = false;
+    //     this.cd.markForCheck();
+    //   },
+    // });
   }
 
   addToWishlist(): void {

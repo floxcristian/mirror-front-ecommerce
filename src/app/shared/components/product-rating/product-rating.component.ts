@@ -21,6 +21,7 @@ import {
 } from '../modal/modal.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { SessionService } from '@core/states-v2/session.service';
+import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 
 @Component({
   selector: 'app-product-rating',
@@ -28,7 +29,8 @@ import { SessionService } from '@core/states-v2/session.service';
   styleUrls: ['./product-rating.component.scss'],
 })
 export class ProductRatingComponent implements OnChanges {
-  @Input() producto!: Product;
+  // @Input() producto!: IArticleResponse;
+  @Input() producto!: any;
   @Output() comentarioGuardado: EventEmitter<boolean> = new EventEmitter();
   @Output() leerComentarios: EventEmitter<boolean> = new EventEmitter();
 

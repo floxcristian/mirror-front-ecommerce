@@ -16,14 +16,14 @@
       <ng-container *ngIf="producto.images['0']['150'].length != 0">
         <img
           [src]="producto.images['0']['150']['0']"
-          [alt]="producto.nombre"
+          [alt]="producto.name"
           class="lazyload"
         />
       </ng-container>
       <ng-container *ngIf="producto.images['0']['150'].length == 0">
         <img
           src="assets/images/products/no-image-ficha.jpg"
-          [alt]="producto.nombre"
+          [alt]="producto.name"
         />
       </ng-container>
     </div>
@@ -39,7 +39,7 @@
         </div>
         <div class="col-sm-12 d-flex justify-content-left">
           <label style="margin-right: 10px">Nombre: </label>
-          {{ producto.nombre }}
+          {{ producto.name }}
         </div>
       </div>
     </div>

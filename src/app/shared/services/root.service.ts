@@ -12,6 +12,7 @@ import { Product } from '../interfaces/product';
 import { PreferenciasCliente } from '../interfaces/preferenciasCliente';
 import { isVacio } from '../utils/utilidades';
 import { SessionService } from '@core/states-v2/session.service';
+import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -129,13 +130,13 @@ export class RootService {
     return this.path + url;
   }
 
-  limpiaAtributos(product: Product): void {
-    if (product.atributos == null) {
+  limpiaAtributos(product: IArticleResponse): void {
+    if (product.attributes == null) {
       return;
     }
-    const att = product.atributos.filter((val: any) => {
+    const att = product.attributes.filter((val: any) => {
       if (val.nombre === 'CERTIFICADO PDF') {
-        product.certificadoPdf = val.valor;
+        // product.certificadoPdf = val.valor;
       }
 
       // tslint:disable-next-line: triple-equals
@@ -144,7 +145,7 @@ export class RootService {
       }
     });
 
-    product.atributos = att;
+    // product.atributos = att;
   }
 
   getUrlImagenMiniatura(product: any) {
@@ -199,14 +200,14 @@ export class RootService {
     return str.replace(char, char2);
   }
 
-  setQuality(product: Product) {
+  setQuality(product: IArticleResponse) {
     if (
       typeof product !== 'undefined' &&
-      typeof product.atributos !== 'undefined' &&
-      product.atributos !== null
+      typeof product.attributes !== 'undefined' &&
+      product.attributes !== null
     ) {
       return (
-        product.atributos.find((item: any) => item.nombre === 'CALIDAD') || {
+        product.attributes.find((item: any) => item.nombre === 'CALIDAD') || {
           valor: 0,
         }
       );

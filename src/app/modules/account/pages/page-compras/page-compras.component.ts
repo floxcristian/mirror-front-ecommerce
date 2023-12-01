@@ -109,16 +109,16 @@ export class PageComprasComponent implements OnInit {
     }
 
     this.addingToCart = true;
-    this.cart.add(item, 1).subscribe((resp) => {
-      {
-        this.addingToCart = false;
-        if (!resp.error) {
-          this.toastr.success(
-            `Productos "${item.sku}" agregado al carro correctamente.`
-          );
-        }
-      }
-    });
+    // this.cart.add(item, 1).subscribe((resp) => {
+    //   {
+    //     this.addingToCart = false;
+    //     if (!resp.error) {
+    //       this.toastr.success(
+    //         `Productos "${item.sku}" agregado al carro correctamente.`
+    //       );
+    //     }
+    //   }
+    // });
   }
 
   searchCantProduct(sku: string, index: number) {

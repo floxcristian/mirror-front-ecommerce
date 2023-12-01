@@ -63,6 +63,7 @@ import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionStorageService } from '@core/storage/session-storage.service';
+import { IArticleResponse, ImageArticle } from '@core/models-v2/article/article-response.interface';
 interface ProductImage {
   id: string;
   url: string;
@@ -105,7 +106,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   mainItems: any[] = [...this.carouselItems];
   cantidadFaltantePrecioEscala!: number;
 
-  private dataProduct!: Product & { url?: SafeUrl; gimage?: SafeUrl };
+  private dataProduct!: IArticleResponse & { url?: SafeUrl; gimage?: SafeUrl };
   private dataLayout: Layout = 'standard';
 
   showGallery = true;
@@ -115,7 +116,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   quality: any;
   disponibilidad = false;
   estado = true;
-  products: Product[] = [];
+  products: IArticleResponse[] = [];
   videos!: any[];
 
   // Promesas
@@ -174,7 +175,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     return this.dataLayout;
   }
 
-  @Input() set product(value: Product | undefined) {
+  @Input() set product(value: IArticleResponse | undefined) {
     if (typeof value === 'undefined') {
       return;
     }
@@ -191,19 +192,19 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
     if (value) {
       this.dataProduct = value;
-      this.dataProduct.nombre = this.dataProduct.nombre.replace(/("|')/g, '');
-      this.formatImageSlider(value);
+      this.dataProduct.name = this.dataProduct.name.replace(/("|')/g, '');
+     // this.formatImageSlider(value);
     }
     this.quality = this.root.setQuality(value);
     this.root.limpiaAtributos(value);
 
-    for (const i in this.dataProduct.atributos) {
-      if (this.dataProduct.atributos[i].nombre == 'VIDEO') {
+    for (const i in this.dataProduct.attributes) {
+      if (this.dataProduct.attributes[i].name == 'VIDEO') {
         this.videos.push({
-          ...this.dataProduct.atributos[i],
+          ...this.dataProduct.attributes[i],
           thumb:
             'https://i.ytimg.com/vi/' +
-            this.dataProduct.atributos[i].valor.split('/embed')[1] +
+            this.dataProduct.attributes[i].value.split('/embed')[1] +
             '/1.jpg',
         });
       }
@@ -211,7 +212,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
     const url: string = this.root.product(
       this.dataProduct.sku,
-      this.dataProduct.nombre,
+      this.dataProduct.name,
       false
     );
     const gimage: string =
@@ -238,12 +239,12 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     ];
   }
 
-  get product(): Product {
+  get product() {
     return this.dataProduct;
   }
 
-  images: ProductImage[] = [];
-  imagesThumbs: ProductImage[] = [];
+  images: ImageArticle[] = [];
+  imagesThumbs: ImageArticle[] = [];
 
   carouselOptions: Partial<OwlCarouselOConfig> = {
     autoplay: false,
@@ -343,7 +344,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     // Observable cuyo fin es saber cuando se presiona el boton agregar al carro utilizado para los dispositivos moviles.
     this.addButtonMovilPromise = this.cart.onAddingmovilButton$.subscribe(
       () => {
-        this.addToCart();
+       // this.addToCart();
       }
     );
     this.iniciarFormulario();
@@ -438,20 +439,20 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  setActiveImage(image: ProductImage): void {
-    this.images.forEach(
-      (eachImage) => (eachImage.active = eachImage === image)
-    );
-  }
+  // setActiveImage(image: ImageArticle): void {
+  //   this.images.forEach(
+  //     (eachImage) => (eachImage  === image)
+  //   );
+  // }
 
-  featuredCarouselTranslated(event: SlidesOutputData): void {
-    if (event.slides?.length) {
-      const activeImageId = event.slides[0].id;
-      this.images.forEach(
-        (eachImage) => (eachImage.active = eachImage.id === activeImageId)
-      );
-    }
-  }
+  // featuredCarouselTranslated(event: SlidesOutputData): void {
+  //   if (event.slides?.length) {
+  //     const activeImageId = event.slides[0].id;
+  //     this.images.forEach(
+  //       (eachImage) => (eachImage === activeImageId)
+  //     );
+  //   }
+  // }
 
   /**
    * @author Cristobal Burgos 09-02-2021
@@ -479,10 +480,10 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    this.comprobarStock(this.product.sku, tiendaSeleccionada, this.product);
+    this.comprobarStock(this.product!.sku, tiendaSeleccionada, this.product);
 
     const parametrosPrecios = {
-      sku: this.product.sku,
+      sku: this.product!.sku,
       sucursal: tiendaSeleccionada?.codigo,
       rut,
       cantidad,
@@ -493,16 +494,13 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       .toPromise();
     this.cantidadFaltantePrecioEscala = 0;
     if (datos['precio_escala']) {
-      this.product.precioComun = !isVacio(usuario?.iva)
-        ? usuario?.iva
-          ? datos['precioComun']
-          : datos['precioComun'] / (1 + this.IVA)
-        : datos['precioComun'];
-      this.product.precio.precio = !isVacio(usuario?.iva)
-        ? usuario?.iva
-          ? datos['precio'].precio
-          : datos['precio'].precio / (1 + this.IVA)
-        : datos['precio'].precio;
+      this.product!.priceInfo.commonPrice = !isVacio(usuario!.iva) ?
+        (usuario?.iva ? datos['precioComun'] : datos['precioComun'] / (1 + this.IVA)) :
+        datos['precioComun'];
+
+      this.product!.priceInfo.price = !isVacio(usuario?.iva) ?
+        (usuario?.iva ? datos['precio'].precio : datos['precio'].precio / (1 + this.IVA)) :
+        datos['precio'].precio;
 
       // pinta de rojo los precios escala
       this.preciosEscalas = this.preciosEscalas.map((p, i) => {
@@ -510,7 +508,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
           this.cantidadFaltantePrecioEscala =
             p.desde - (cantidad ? parseInt(cantidad) : 0);
         }
-        if (p.precio === this.product.precio.precio) {
+        if (p.precio ===  this.product!.priceInfo.price ) {
           p.marcado = true;
         } else {
           p.marcado = false;
@@ -520,56 +518,56 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  addToCart(): void {
-    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
-    if (!usuario) {
-      this.toast.warning(
-        'Debe iniciar sesion para poder comprar',
-        'Información'
-      );
-      return;
-    }
+  // addToCart(): void {
+  //   const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+  //   if (!usuario) {
+  //     this.toast.warning(
+  //       'Debe iniciar sesion para poder comprar',
+  //       'Información'
+  //     );
+  //     return;
+  //   }
 
-    if (!this.addingToCart && this.product && this.quantity.value > 0) {
-      this.product.origen = {} as ProductOrigen;
+  //   if (!this.addingToCart && this.product && this.quantity.value > 0) {
+  //     this.product.origin = {} as ProductOrigen;
 
-      if (this.origen) {
-        this.product.origen.origen = this.origen[0] ? this.origen[0] : '';
-        this.product.origen.subOrigen = this.origen[1] ? this.origen[1] : '';
-        this.product.origen.seccion = this.origen[2] ? this.origen[2] : '';
-        this.product.origen.recomendado = this.origen[3] ? this.origen[3] : '';
-        this.product.origen.ficha = true;
-        this.product.origen.cyber = this.product.cyber
-          ? this.product.cyber
-          : 0;
-      }
+  //     if (this.origen) {
+  //       this.product.origen.origen = this.origen[0] ? this.origen[0] : '';
+  //       this.product.origen.subOrigen = this.origen[1] ? this.origen[1] : '';
+  //       this.product.origen.seccion = this.origen[2] ? this.origen[2] : '';
+  //       this.product.origen.recomendado = this.origen[3] ? this.origen[3] : '';
+  //       this.product.origen.ficha = true;
+  //       this.product.origen.cyber = this.product.cyber
+  //         ? this.product.cyber
+  //         : 0;
+  //     }
 
-      this.addingToCart = true;
+  //     this.addingToCart = true;
 
-      this.addcartPromise = this.cart
-        .add(this.product, this.quantity.value)
-        .subscribe(
-          (r) => {},
-          (e) => {
-            this.toast.warning(
-              'Ha ocurrido un error en el proceso',
-              'Información'
-            );
-            this.addingToCart = false;
-          },
-          () => {
-            this.addingToCart = false;
-          }
-        );
-    }
-  }
+  //     this.addcartPromise = this.cart
+  //       .add(this.product, this.quantity.value)
+  //       .subscribe(
+  //         (r) => {},
+  //         (e) => {
+  //           this.toast.warning(
+  //             'Ha ocurrido un error en el proceso',
+  //             'Información'
+  //           );
+  //           this.addingToCart = false;
+  //         },
+  //         () => {
+  //           this.addingToCart = false;
+  //         }
+  //       );
+  //   }
+  // }
 
   async addToWishlist() {
     if (this.favorito) {
       // saca SKU de todas las listas en que existe
       const resp: ResponseApi = (await this.clientsService
         .deleteTodosArticulosFavoritos(
-          this.product.sku,
+          this.product!.sku,
           this.usuario.documentId || ''
         )
         .toPromise()) as ResponseApi;
@@ -600,7 +598,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
           // agregamos SKU a lista predeterminada
           const resp1: ResponseApi = (await this.clientsService
             .setArticulosFavoritos(
-              this.product.sku,
+              this.product!.sku,
               this.usuario.documentId || '',
               listaPredeterminada?._id || ''
             )
@@ -625,7 +623,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       }
 
       const initialState: DataWishListModal = {
-        producto: this.product,
+        producto: this.product!,
         listas: [],
         listasEnQueExiste: this.listasEnQueExiste,
       };
@@ -658,7 +656,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     const initialState: DataWishListModal = {
-      producto: this.product,
+      producto: this.product!,
       listas,
       listasEnQueExiste: this.listasEnQueExiste,
     };
@@ -678,7 +676,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     const favoritos: ArticuloFavorito = this.localS.get('favoritos');
     if (!isVacio(favoritos)) {
       favoritos.listas.forEach((lista) => {
-        if (!isVacio(lista.skus.find((sku) => sku === this.product.sku))) {
+        if (!isVacio(lista.skus.find((sku) => sku === this.product!.sku))) {
           this.favorito = true;
           this.listasEnQueExiste.push(lista);
         }
@@ -687,137 +685,137 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.cd.markForCheck();
   }
 
-  addToCompare(): void {
-    if (!this.addingToCompare && this.product) {
-      this.addingToCompare = true;
+  // addToCompare(): void {
+  //   if (!this.addingToCompare && this.product) {
+  //     this.addingToCompare = true;
 
-      this.comparePromise = this.compare
-        .add(this.product)
-        .subscribe({ complete: () => (this.addingToCompare = false) });
-    }
-  }
+  //     this.comparePromise = this.compare
+  //       .add(this.product!)
+  //       .subscribe({ complete: () => (this.addingToCompare = false) });
+  //   }
+  // }
 
-  openPhotoSwipe(event: MouseEvent, image: ProductImage): void {
-    if (this.layout !== 'quickview') {
-      event.preventDefault();
+  // openPhotoSwipe(event: MouseEvent, image: ProductImage): void {
+  //   if (this.layout !== 'quickview') {
+  //     event.preventDefault();
 
-      const images = this.images.map((eachImage) => {
-        return {
-          src: eachImage.url,
-          msrc: eachImage.url,
-          w: 700,
-          h: 700,
-        };
-      });
-      const options = {
-        getThumbBoundsFn: (index: any) => {
-          const imageElement =
-            this.imageElements.toArray()[index].nativeElement;
-          const pageYScroll =
-            window.pageYOffset || document.documentElement.scrollTop;
-          const rect = imageElement.getBoundingClientRect();
+  //     const images = this.images.map((eachImage) => {
+  //       return {
+  //         src: eachImage.[url],
+  //         msrc: eachImage.url,
+  //         w: 700,
+  //         h: 700,
+  //       };
+  //     });
+  //     const options = {
+  //       getThumbBoundsFn: (index: any) => {
+  //         const imageElement =
+  //           this.imageElements.toArray()[index].nativeElement;
+  //         const pageYScroll =
+  //           window.pageYOffset || document.documentElement.scrollTop;
+  //         const rect = imageElement.getBoundingClientRect();
 
-          return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };
-        },
-        index: this.images.indexOf(image),
-        bgOpacity: 0.9,
-        history: false,
-      };
+  //         return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };
+  //       },
+  //       index: this.images.indexOf(image),
+  //       bgOpacity: 0.9,
+  //       history: false,
+  //     };
 
-      this.photoSwipe.open(images, options).subscribe((galleryRef) => {
-        galleryRef.listen('beforeChange', () => {
-          this.featuredCarousel.to(
-            this.images[galleryRef.getCurrentIndex()].id
-          );
-        });
-      });
-    }
-  }
+  //     this.photoSwipe.open(images, options).subscribe((galleryRef) => {
+  //       galleryRef.listen('beforeChange', () => {
+  //         this.featuredCarousel.to(
+  //           this.images[galleryRef.getCurrentIndex()].id
+  //         );
+  //       });
+  //     });
+  //   }
+  // }
 
   onLoadImage() {
     this.imageFichaCargada = true;
   }
 
-  formatImageSlider(product: any) {
-    let index = 0;
-    let image1000 = null;
-    let image150 = null;
-    if (typeof product.images === 'undefined') {
-      return;
-    }
-    if (product.images.length <= 0) {
-      image1000 = '../../../assets/images/products/no-image-listado-2.jpg';
-      image150 = '../../../assets/images/products/no-image-listado-2.jpg';
-      const image = {
-        id: product.sku.toString() + '_' + index++,
-        url: this.root.returnUrlNoImagen(),
-        active: index === 1 ? true : false,
-      };
+  // formatImageSlider(product: any) {
+  //   let index = 0;
+  //   let image1000 = null;
+  //   let image150 = null;
+  //   if (typeof product.images === 'undefined') {
+  //     return;
+  //   }
+  //   if (product.images.length <= 0) {
+  //     image1000 = '../../../assets/images/products/no-image-listado-2.jpg';
+  //     image150 = '../../../assets/images/products/no-image-listado-2.jpg';
+  //     const image = {
+  //       id: product.sku.toString() + '_' + index++,
+  //       url: this.root.returnUrlNoImagen(),
+  //       active: index === 1 ? true : false,
+  //     };
 
-      this.images.push(image);
-    } else {
-      // image1000='../../../assets/images/products/no-image-listado-2.jpg';
-      //image150='../../../assets/images/products/no-image-listado-2.jpg';
-      if (
-        product.images[0]['1000'].length == 0 ||
-        product.images[0]['150'].length == 0
-      ) {
-        image1000 = '../../../assets/images/products/no-image-listado-2.jpg';
-        image150 = '../../../assets/images/products/no-image-listado-2.jpg';
-        const image = {
-          id: product.sku.toString() + '_' + index++,
-          url: this.root.returnUrlNoImagen(),
-          active: index === 1 ? true : false,
-        };
+  //     this.images.push(image);
+  //   } else {
+  //     // image1000='../../../assets/images/products/no-image-listado-2.jpg';
+  //     //image150='../../../assets/images/products/no-image-listado-2.jpg';
+  //     if (
+  //       product.images[0]['1000'].length == 0 ||
+  //       product.images[0]['150'].length == 0
+  //     ) {
+  //       image1000 = '../../../assets/images/products/no-image-listado-2.jpg';
+  //       image150 = '../../../assets/images/products/no-image-listado-2.jpg';
+  //       const image = {
+  //         id: product.sku.toString() + '_' + index++,
+  //         url: this.root.returnUrlNoImagen(),
+  //         active: index === 1 ? true : false,
+  //       };
 
-        this.images.push(image);
-      } else {
-        image1000 = product.images[0]['1000'];
-        image150 = product.images[0]['150'];
+  //       this.images.push(images);
+  //     } else {
+  //       image1000 = product.images[0]['1000'];
+  //       image150 = product.images[0]['150'];
 
-        this.images = [];
-        this.imagesThumbs = [];
+  //       this.images = [];
+  //       this.imagesThumbs = [];
 
-        let key = 0;
-        for (const item of image1000) {
-          const image = {
-            id: product.sku.toString() + '_' + index++,
-            url: item,
-            urlThumbs: image150[key],
-            active: index === 1 ? true : false,
-            video: false,
-          };
+  //       let key = 0;
+  //       for (const item of image1000) {
+  //         const image = {
+  //           id: product.sku.toString() + '_' + index++,
+  //           url: item,
+  //           urlThumbs: image150[key],
+  //           active: index === 1 ? true : false,
+  //           video: false,
+  //         };
 
-          this.images.push(image);
-          key++;
-        }
-        let thumbVideo = '';
-        let urlVideo = '';
-        for (const i in product.atributos) {
-          if (product.atributos[i].nombre == 'VIDEO') {
-            (thumbVideo =
-              'https://i.ytimg.com/vi' +
-              product.atributos[i].valor.split('/embed')[1] +
-              '/1.jpg'),
-              (urlVideo = product.atributos[i].valor);
+  //         this.images.push(image);
+  //         key++;
+  //       }
+  //       let thumbVideo = '';
+  //       let urlVideo = '';
+  //       for (const i in product.atributos) {
+  //         if (product.atributos[i].nombre == 'VIDEO') {
+  //           (thumbVideo =
+  //             'https://i.ytimg.com/vi' +
+  //             product.atributos[i].valor.split('/embed')[1] +
+  //             '/1.jpg'),
+  //             (urlVideo = product.atributos[i].valor);
 
-            const image = {
-              id: product.sku.toString() + '_' + index++,
-              url: urlVideo,
-              urlThumbs: thumbVideo,
-              active: index === 1 ? true : false,
-              video: true,
-            };
-            this.images.push(image);
-            key++;
-          }
-        }
-      }
-    }
+  //           const image = {
+  //             id: product.sku.toString() + '_' + index++,
+  //             url: urlVideo,
+  //             urlThumbs: thumbVideo,
+  //             active: index === 1 ? true : false,
+  //             video: true,
+  //           };
+  //           this.images.push(image);
+  //           key++;
+  //         }
+  //       }
+  //     }
+  //   }
 
-    this.carouselItems = this.images;
-    this.mainItems = [...this.carouselItems];
-  }
+  //   this.carouselItems = this.images;
+  //   this.mainItems = [...this.carouselItems];
+  // }
 
   showStock() {
     this.modalRefStock = this.modalService.show(
@@ -831,7 +829,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
     const params = {
       sucursal: tiendaSeleccionada?.codigo,
-      sku: this.product.sku,
+      sku: this.product!.sku,
       rut: this.usuario.documentId,
     };
     const resp: any = await this.cart.getPriceScale(params).toPromise();
@@ -839,11 +837,11 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       return { ...p, marcado: false };
     });
 
-    if (!isVacio(this.product.precio)) {
+    if (!isVacio(this.product!.price)) {
       this.preciosEscalas.unshift({
         desde: 0,
         hasta: 0,
-        precio: this.product.precio.precio,
+        precio: this.product?.priceInfo.price,
         marcado: true,
       });
     }
@@ -861,7 +859,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       backdrop: 'static',
       keyboard: false,
       initialState: {
-        sku: this.product.sku,
+        sku: this.product?.sku,
         producto: this.product,
         sucursal: tiendaSeleccionada?.codigo,
         usuario: this.usuario,
@@ -902,7 +900,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     // let telefono = '56957897902'
     let telefono = '56932633571';
     let url = `https://api.whatsapp.com/send?phone=${telefono}&text=`;
-    let mensaje = `Hola, necesito el siguiente producto ${this.product.nombre} de SKU: ${this.product.sku}. Para que me atienda un ejecutivo.`;
+    let mensaje = `Hola, necesito el siguiente producto ${this.product?.name} de SKU: ${this.product!.sku}. Para que me atienda un ejecutivo.`;
     let url_final = url + mensaje;
     window.open(url_final);
   }
