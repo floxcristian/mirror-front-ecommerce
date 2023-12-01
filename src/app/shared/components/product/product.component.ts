@@ -63,10 +63,8 @@ import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionStorageService } from '@core/storage/session-storage.service';
-import {
-  IArticleResponse,
-  ImageArticle,
-} from '@core/models-v2/article/article-response.interface';
+import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
+import { IImage } from '@core/models-v2/cms/special-reponse.interface';
 interface ProductImage {
   id: string;
   url: string;
@@ -179,6 +177,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   @Input() set product(value: IArticleResponse | undefined) {
+    console.log('productx: ', value);
     if (typeof value === 'undefined') {
       return;
     }
@@ -246,8 +245,8 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     return this.dataProduct;
   }
 
-  images: ImageArticle[] = [];
-  imagesThumbs: ImageArticle[] = [];
+  images: any[] = [];
+  imagesThumbs: any[] = [];
 
   carouselOptions: Partial<OwlCarouselOConfig> = {
     autoplay: false,
@@ -330,6 +329,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   async ngOnInit() {
+    console.log('product2x: ', this.product);
     this.isMobile();
     window.onresize = () => {
       this.isMobile();
@@ -409,6 +409,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   carouselTileLoad() {
+    console.log('mainItems: ', this.mainItems);
     // const arr = this.carouselItems;
     this.carouselItems = [...this.carouselItems, ...this.mainItems];
   }
@@ -442,7 +443,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  // setActiveImage(image: ImageArticle): void {
+  // setActiveImage(image: IImage): void {
   //   this.images.forEach(
   //     (eachImage) => (eachImage  === image)
   //   );

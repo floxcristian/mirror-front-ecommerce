@@ -1,17 +1,11 @@
-export interface ImageArticle {
-  '150': string[];
-  '250': string[];
-  '450': string[];
-  '600': string[];
-  '1000': string[];
-  '2000': string[];
-}
+import { IArticle } from '../cms/special-reponse.interface';
 
 export interface CategoryDetail {
+  _id: string;
   id: number;
   slug: string;
   level: number;
-  parentId: number;
+  parentId: number | null;
   url: string;
   name: string;
   createdAt: string;
@@ -44,86 +38,48 @@ export interface CustomerCode {
 
 export interface MetaTag {
   code: string;
-  value: any;
-}
-
-export interface PriceInfo {
-  comments: string[];
-  commonPrice: number;
-  customerPrice: number;
-  discount: number;
-  documentId: string;
-  hasScalePrice: boolean;
-  minimumPrice: number;
-  netPrice: number;
-  price: number;
-  scalePrice: any[];
-  sellerMinimumPrice: number;
-  sku: string;
-}
-
-export interface DeliverySupply {
-  sku: string;
-  deliveryLocation: string;
-  deliveryBusinessDays: number;
-  deliveryWarehouse: string;
-  deliveryDate: string;
-  deliveryIsToday: boolean;
-  pickupLocation: string;
-  pickupBusinessDays: number;
-  pickupWarehouse: string;
-  pickupDate: string;
-  pickupIsToday: boolean;
-}
-
-export interface StockSummary {
-  sku: string;
-  companyStock: number;
-  branchStock: number;
-  stocks: {
-    branchCode: string;
-    quantity: number;
-  }[];
+  value: any; // number??
 }
 
 export interface Barcode {
   code: string;
 }
 
-export interface IArticleResponse {
-  assortment: number;
-  attributes: Attribute[];
-  barcodes: Barcode[];
-  barcodesSearch: Barcode[];
-  brand: string;
-  categories: CategoryDetail[];
-  category: string;
-  customerCodes: CustomerCode[];
-  deliverySupply: DeliverySupply;
-  description: string;
-  dropshipment: number;
-  dropshipmentType: string;
-  filters: Filter[];
-  images: ImageArticle[];
-  line: string;
-  lineBossId: string;
-  manufacturer: string;
-  matrix: string[];
-  metaTags: MetaTag[];
-  minimumPrice: number;
-  name: string;
-  partNumber: string;
-  popularity: number;
-  price: number;
-  priceInfo: PriceInfo;
-  promotionDetails: PromotionDetail[];
-  salesQuantity: number;
-  sbu: string;
-  score: number;
+export interface IMatrixItem {
   sku: string;
-  status: string;
-  stockSummary: StockSummary;
-  synonyms: string[];
-  tags: string[];
-  visible: number;
 }
+
+export interface ILineBoss {
+  name: string;
+  phone: string;
+}
+
+export type IArticleResponse = IArticle & {
+  assortment: number; //*
+  attributes: Attribute[]; // *
+  barcodes: Barcode[]; //*
+  barcodesSearch: Barcode[]; // *
+  categories: CategoryDetail[]; // *
+  category: string; // *
+  customerCodes: CustomerCode[]; // *
+  dropshipment: number; // *
+  dropshipmentType: string; // *
+  filters: Filter[]; // *
+  line: string; // *
+  lineBossId: string; // *
+  manufacturer: string; // *
+  matrix: IMatrixItem[]; // *
+  metaTags: MetaTag[]; // *
+  partNumber: string; // *
+  popularity: number; // *
+  price: number; // *
+  promotionDetails: PromotionDetail[]; // *
+  salesQuantity: number; // *
+  sbu: string; // *
+  score: number; // *
+  status: string; //*
+  synonyms: string[];
+  tags: string[]; // *
+  visible: number; // *
+  lineBoss: ILineBoss; //*
+};

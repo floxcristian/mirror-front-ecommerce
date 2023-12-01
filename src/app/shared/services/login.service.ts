@@ -24,7 +24,6 @@ export class LoginService {
       if (user.login_temp) {
         return false;
       } else {
-        // this.localS.remove('invitado');
         this.invitadoStorage.remove();
         return true;
       }

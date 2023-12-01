@@ -41,15 +41,16 @@ export interface IData {
 }
 
 export interface IArticle {
-  sku: string;
-  name: string;
-  description: string;
-  brand: string;
-  minimumPrice: number;
-  images: IImage[];
-  priceInfo: IPriceInfo;
-  deliverySupply: IDeliverySupply;
-  stockSummary: IStockSummary;
+  sku: string; //*
+  name: string; // *
+  brand: string; // *
+  minimumPrice: number; // *
+  images: IImage[]; // *
+  priceInfo: IPriceInfo; // *
+  deliverySupply: IDeliverySupply; // *
+  stockSummary: IStockSummary; // *
+  // No se usa..
+  description: string; // *
 }
 
 export interface IImage {
@@ -85,10 +86,10 @@ export interface IScalePrice {
 export interface IDeliverySupply {
   sku: string;
   deliveryLocation: string | null;
-  deliveryBusinessDays?: number | null;
-  deliveryWarehouse?: string | null;
-  deliveryDate?: string | null;
-  deliveryIsToday?: boolean | null;
+  deliveryBusinessDays: number | null;
+  deliveryWarehouse: string | null;
+  deliveryDate: string | null;
+  deliveryIsToday: boolean | null;
   pickupLocation: string | null;
   pickupBusinessDays: number | null;
   pickupWarehouse: string | null;

@@ -116,78 +116,78 @@ export class CartService {
     private readonly sessionStorage: SessionStorageService
   ) {}
 
-  // add(
-  //   producto: IArticleResponse,
-  //   quantity: number
-  //   //options: { name: string; value: string }[] = []
-  // ): Observable<any> {
-  //   // Sucursal
-  //   const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-  //   const sucursal = tiendaSeleccionada?.codigo;
+  add(
+    producto: any,
+    quantity: number
+    //options: { name: string; value: string }[] = []
+  ): Observable<any> {
+    // Sucursal
+    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+    const sucursal = tiendaSeleccionada?.codigo;
 
-  //   this.cartSession = this.localS.get('carroCompraB2B') as any;
-  //   let productoCarro;
+    this.cartSession = this.localS.get('carroCompraB2B') as any;
+    let productoCarro;
 
-  //   if (this.cartSession == null) {
-  //     productoCarro = { cantidad: 0 };
-  //   } else {
-  //     productoCarro = (this.cartSession.productos || []).find(
-  //       (item) => item.sku === producto.sku
-  //     ) || { cantidad: 0 };
-  //   }
+    if (this.cartSession == null) {
+      productoCarro = { cantidad: 0 };
+    } else {
+      productoCarro = (this.cartSession.productos || []).find(
+        (item) => item.sku === producto.sku
+      ) || { cantidad: 0 };
+    }
 
-  //   const usuario = this.sessionService.getSession();
-  //   // this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
+    // this.root.getDataSesionUsuario();
 
-  //   if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
+    if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
 
-  //   const data = {
-  //     usuario: usuario.username,
-  //     rut: usuario.documentId,
-  //     sucursal,
-  //     productos: [
-  //       {
-  //         sku: producto.sku,
-  //         cantidad: (productoCarro.cantidad || 0) + quantity,
-  //         origen: producto.origen ? producto.origen : null,
-  //         estado: producto.estado,
-  //       },
-  //     ],
-  //   };
+    const data = {
+      usuario: usuario.username,
+      rut: usuario.documentId,
+      sucursal,
+      productos: [
+        {
+          sku: producto.sku,
+          cantidad: (productoCarro.cantidad || 0) + quantity,
+          origen: producto.origen ? producto.origen : null,
+          estado: producto.estado,
+        },
+      ],
+    };
 
-  //   const url = environment.apiShoppingCart;
-  //   return this.http.post(`${environment.apiShoppingCart}articulo`, data).pipe(
-  //     map((r: any) => {
-  //       this.CartData = r.data;
+    const url = environment.apiShoppingCart;
+    return this.http.post(`${environment.apiShoppingCart}articulo`, data).pipe(
+      map((r: any) => {
+        this.CartData = r.data;
 
-  //       const productoCart: ProductCart = {
-  //         nombre: producto.nombre,
-  //         sku: producto.sku,
-  //         cantidad: quantity,
-  //         image: this.root.getUrlImagenMiniatura150(producto),
-  //       };
+        const productoCart: ProductCart = {
+          nombre: producto.nombre,
+          sku: producto.sku,
+          cantidad: quantity,
+          image: this.root.getUrlImagenMiniatura150(producto),
+        };
 
-  //       if (r.error !== true) {
-  //         this.onAddingSubject$.next(productoCart);
-  //         this.data.productos = this.CartData.productos;
-  //         /* se limpia OV cargada */
-  //         this.localS.remove('ordenCompraCargada');
-  //         this.save();
-  //         this.calc();
-  //       } else {
-  //         if (r.errorDetalle === 'Error: limite') {
-  //           this.toast.warning(
-  //             'Ha llegado al límite de 17 artículos en el carro.'
-  //           );
-  //         } else {
-  //           this.toast.error(r.msg);
-  //         }
-  //       }
+        if (r.error !== true) {
+          this.onAddingSubject$.next(productoCart);
+          this.data.productos = this.CartData.productos;
+          /* se limpia OV cargada */
+          this.localS.remove('ordenCompraCargada');
+          this.save();
+          this.calc();
+        } else {
+          if (r.errorDetalle === 'Error: limite') {
+            this.toast.warning(
+              'Ha llegado al límite de 17 artículos en el carro.'
+            );
+          } else {
+            this.toast.error(r.msg);
+          }
+        }
 
-  //       return r;
-  //     })
-  //   );
-  // }
+        return r;
+      })
+    );
+  }
 
   addLista(products: Product[] | any[] | undefined): Observable<any> {
     // Sucursal

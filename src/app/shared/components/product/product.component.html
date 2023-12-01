@@ -24,6 +24,7 @@
               <div *nguCarouselDef="let item" class="item">
                 <div class="tile" (click)="featuredCarousel.to(item.id)">
                   <!-- setActiveImage(item) -->
+
                   <img
                     *ngIf="!item.video"
                     [ngClass]="{

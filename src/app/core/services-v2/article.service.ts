@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 // Environment
 import { environment } from '@env/environment';
+import { Observable } from 'rxjs';
 
 const API_ARTICLE = `${environment.apiEcommerce}/api/v1/article`;
 
@@ -35,9 +36,10 @@ export class ArticleService {
   /**********************************************
    * ARTICLE
    **********************************************/
-  getArticle(sku: string) {
-    return this.http.get<IArticleResponse>(`${API_ARTICLE}/${sku}`);
+  /*getArticle(sku: string) {
+    return this.http.get(`${API_ARTICLE}/${sku}`);
   }
+  */
 
   /**********************************************
    * ARTICLE DATASHEET
@@ -46,7 +48,8 @@ export class ArticleService {
     sku: string;
     documentId: string;
     branchCode: string;
-  }) {
+    location?: string;
+  }): Observable<IArticleResponse> {
     const { sku, ..._params } = params;
     return this.http.get<IArticleResponse>(
       `${API_ARTICLE}/${sku}/data-sheet`,
@@ -60,8 +63,12 @@ export class ArticleService {
     documentId: string;
     branchCode: string;
     skus: string[];
-  }) {
-    return this.http.post(`${API_ARTICLE}/data-sheets`, params);
+    location?: string;
+  }): Observable<IArticleResponse[]> {
+    return this.http.post<IArticleResponse[]>(
+      `${API_ARTICLE}/data-sheets`,
+      params
+    );
   }
 
   /**********************************************
@@ -80,33 +87,42 @@ export class ArticleService {
     sku: string;
     documentId: string;
     branchCode: string;
-  }) {
+    location: string;
+  }): Observable<IArticleResponse[]> {
     const { sku, ..._params } = params;
-    return this.http.get(`${API_ARTICLE}/suggestion/${sku}/article-matrix`, {
-      params: _params,
-    });
+    return this.http.get<IArticleResponse[]>(
+      `${API_ARTICLE}/suggestion/${sku}/article-matrix`,
+      {
+        params: _params,
+      }
+    );
   }
 
-  getRelatedMatrix(params: {
+  getRelatedBySku(params: {
     sku: string;
     documentId: string;
     branchCode: string;
-  }) {
+    location: string;
+  }): Observable<IArticleResponse[]> {
     const { sku, ..._params } = params;
-    return this.http.get(`${API_ARTICLE}/suggestion/${sku}/article-related`, {
-      params: _params,
-    });
+    return this.http.get<IArticleResponse[]>(
+      `${API_ARTICLE}/suggestion/${sku}/article-related`,
+      {
+        params: _params,
+      }
+    );
   }
 
   getArticleSuggestionsBySku(params: {
     sku: string;
     documentId: string;
     branchCode: string;
+    location: string;
     quantityToSuggest: number;
-  }) {
+  }): Observable<IArticleResponse[]> {
     const { sku, ..._params } = params;
-    return this.http.get(
-      `${API_ARTICLE}/suggestion/${sku}/article-seggestions`,
+    return this.http.get<IArticleResponse[]>(
+      `${API_ARTICLE}/suggestion/${sku}/article-suggestions`,
       {
         params: _params,
       }
@@ -118,10 +134,13 @@ export class ArticleService {
     documentId: string;
     branchCode: string;
     quantityToSuggest: number;
-  }) {
-    return this.http.get(`${API_ARTICLE}/suggestion/article-suggestions`, {
-      params,
-    });
+  }): Observable<IArticleResponse[]> {
+    return this.http.get<IArticleResponse[]>(
+      `${API_ARTICLE}/suggestion/article-suggestions`,
+      {
+        params,
+      }
+    );
   }
 
   getArticleCustomerSuggestions(params: {

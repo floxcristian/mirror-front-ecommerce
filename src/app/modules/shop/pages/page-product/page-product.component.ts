@@ -37,6 +37,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { ArticleService } from '@core/services-v2/article.service';
+import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 declare const $: any;
 declare let fbq: any;
 
@@ -46,13 +47,14 @@ declare let fbq: any;
   styleUrls: ['./page-product.component.scss'],
 })
 export class PageProductComponent implements OnInit, OnDestroy {
+  //TODO: FINAL
   categories = categories;
   product!: Product | undefined | any;
-  recommendedProducts: Product[] = [];
-  matrixProducts: Product[] = [];
-  relatedProducts: Product[] = [];
+  recommendedProducts: IArticleResponse[] = [];
+  matrixProducts: IArticleResponse[] = [];
+  relatedProducts: IArticleResponse[] = [];
   // popularProducts: Product[] = [];
-  mixProducts: Product[] = [];
+  //mixProducts: IArticleResponse[] = [];
   minItems = 5;
   stock: boolean = true;
   layout: 'standard' | 'columnar' | 'sidebar' = 'standard';
@@ -226,7 +228,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
         console.log('PRODUCTS: ', this.product);
 
         this.getDetailArticle(sku);
-        this.getMixProducts(sku);
+        // this.getMixProducts(sku);
         // this.getMatrixProducts(sku);
         this.productoService.getStockProduct(sku).subscribe((r: any) => {
           let stockTienda = 0;
@@ -455,7 +457,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     const obj = {
       sku,
       rut: '',
-      sucursal: tiendaSeleccionada?.codigo,
+      sucursal: tiendaSeleccionada?.codigo || 'SAN BRNRDO',
       localidad: '',
     };
     const obj1 = {
@@ -466,11 +468,12 @@ export class PageProductComponent implements OnInit, OnDestroy {
       localidad: '',
     };
     let rut: string = '0';
-    if (this.user != null) {
+    if (this.user) {
       obj.rut = this.user.documentId || '0';
       obj1.rut = this.user.documentId || '0';
       rut = this.user.documentId || '0';
     }
+
     if (this.preferenciaCliente && this.preferenciaCliente.direccionDespacho) {
       obj.localidad = this.preferenciaCliente.direccionDespacho.comuna
         .normalize('NFD')
@@ -479,10 +482,26 @@ export class PageProductComponent implements OnInit, OnDestroy {
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '');
     }
+    const obj4 = {
+      sku: sku,
+      documentId: this.user.documentId || '0',
+      branchCode: tiendaSeleccionada?.codigo || 'SAN BRNRDO',
+      location: this.preferenciaCliente.direccionDespacho.comuna
+        ? this.preferenciaCliente.direccionDespacho.comuna
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+        : '',
+    };
     forkJoin([
-      this.productoService.getMatrixProducts(obj),
-      this.productoService.getRelatedProducts(obj),
-      this.productoService.getRecommendedProductsList(obj1),
+      // this.productoService.getMatrixProducts(obj),
+      this.articleService.getArticleMatrix(obj4),
+      // this.productoService.getRelatedProducts(obj),
+      this.articleService.getRelatedBySku(obj4),
+      // this.productoService.getRecommendedProductsList(obj1),
+      this.articleService.getArticleSuggestionsBySku({
+        ...obj4,
+        quantityToSuggest: 10,
+      }),
       this.catalogoService.getComparacionMatriz(
         sku,
         rut,
@@ -619,22 +638,22 @@ export class PageProductComponent implements OnInit, OnDestroy {
         }
 
         this.addingToCart = true;
-
-        this.addcartPromise = this.cart
-          .add(producto, producto.cantidad)
-          .subscribe(
-            (r) => {},
-            (e) => {
-              this.toastr.warning(
-                'Ha ocurrido un error en el proceso',
-                'Información'
-              );
-              this.addingToCart = false;
-            },
-            () => {
-              this.addingToCart = false;
-            }
-          );
+        //*moment
+        // this.addcartPromise = this.cart
+        //   .add(producto, producto.cantidad)
+        //   .subscribe(
+        //     (r) => {},
+        //     (e) => {
+        //       this.toastr.warning(
+        //         'Ha ocurrido un error en el proceso',
+        //         'Información'
+        //       );
+        //       this.addingToCart = false;
+        //     },
+        //     () => {
+        //       this.addingToCart = false;
+        //     }
+        //   );
       }
     }
   }
