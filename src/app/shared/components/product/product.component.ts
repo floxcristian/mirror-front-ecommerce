@@ -65,6 +65,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { IImage } from '@core/models-v2/cms/special-reponse.interface';
+import { IProductImage } from './image.interface';
 interface ProductImage {
   id: string;
   url: string;
@@ -146,7 +147,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   @ViewChild('featuredCarousel', { read: CarouselComponent, static: false })
   featuredCarousel!: CarouselComponent;
-  // @ViewChild('thumbnailsCarousel', { read: CarouselComponent, static: false }) thumbnailsCarousel: CarouselComponent;
   @ViewChildren('imageElement', { read: ElementRef })
   imageElements!: QueryList<ElementRef>;
   @ViewChild('modalStock', { read: TemplateRef, static: false })
@@ -195,7 +195,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     if (value) {
       this.dataProduct = value;
       this.dataProduct.name = this.dataProduct.name.replace(/("|')/g, '');
-      // this.formatImageSlider(value);
+      this.formatImageSlider(value);
     }
     this.quality = this.root.setQuality(value);
     this.root.limpiaAtributos(value);
@@ -245,7 +245,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     return this.dataProduct;
   }
 
-  images: any[] = [];
+  images: any[] = []; //IProductImage[] = [];
   imagesThumbs: any[] = [];
 
   carouselOptions: Partial<OwlCarouselOConfig> = {
@@ -300,7 +300,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     private readonly sessionService: SessionService,
     private readonly sessionStorage: SessionStorageService
   ) {
-    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
     this.isB2B =
       this.usuario.userRole === 'supervisor' ||
       this.usuario.userRole === 'comprador';
@@ -409,8 +409,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   carouselTileLoad() {
-    console.log('mainItems: ', this.mainItems);
-    // const arr = this.carouselItems;
     this.carouselItems = [...this.carouselItems, ...this.mainItems];
   }
 
@@ -418,7 +416,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     const params: any = {
       sku,
     };
-    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
     if (usuario.documentId) {
       params['rut'] = usuario.documentId;
     }
@@ -443,20 +441,19 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  // setActiveImage(image: IImage): void {
-  //   this.images.forEach(
-  //     (eachImage) => (eachImage  === image)
-  //   );
-  // }
+  setActiveImage(image: IImage): void {
+    console.log('setActiveImage: ', image);
+    // corregir esto..
+    this.images.forEach((eachImage) => eachImage === image);
+  }
 
-  // featuredCarouselTranslated(event: SlidesOutputData): void {
-  //   if (event.slides?.length) {
-  //     const activeImageId = event.slides[0].id;
-  //     this.images.forEach(
-  //       (eachImage) => (eachImage === activeImageId)
-  //     );
-  //   }
-  // }
+  featuredCarouselTranslated(event: SlidesOutputData): void {
+    if (event.slides?.length) {
+      const activeImageId = event.slides[0].id;
+      //fix
+      // this.images.forEach((eachImage) => eachImage === activeImageId);
+    }
+  }
 
   /**
    * @author Cristobal Burgos 09-02-2021
@@ -476,7 +473,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   async updateCart(cantidad: any) {
     this.quantity.setValue(cantidad);
-    const usuario = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario');
+    const usuario = this.sessionStorage.get();
     let rut: string | undefined = '0';
 
     if (usuario) {
@@ -713,127 +710,125 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   //   }
   // }
 
-  // openPhotoSwipe(event: MouseEvent, image: ProductImage): void {
-  //   if (this.layout !== 'quickview') {
-  //     event.preventDefault();
+  openPhotoSwipe(event: MouseEvent, image: ProductImage): void {
+    if (this.layout !== 'quickview') {
+      event.preventDefault();
 
-  //     const images = this.images.map((eachImage) => {
-  //       return {
-  //         src: eachImage.[url],
-  //         msrc: eachImage.url,
-  //         w: 700,
-  //         h: 700,
-  //       };
-  //     });
-  //     const options = {
-  //       getThumbBoundsFn: (index: any) => {
-  //         const imageElement =
-  //           this.imageElements.toArray()[index].nativeElement;
-  //         const pageYScroll =
-  //           window.pageYOffset || document.documentElement.scrollTop;
-  //         const rect = imageElement.getBoundingClientRect();
+      const images = this.images.map((eachImage) => {
+        return {
+          src: eachImage.url,
+          msrc: eachImage.url,
+          w: 700,
+          h: 700,
+        };
+      });
+      const options = {
+        getThumbBoundsFn: (index: any) => {
+          const imageElement =
+            this.imageElements.toArray()[index].nativeElement;
+          const pageYScroll =
+            window.pageYOffset || document.documentElement.scrollTop;
+          const rect = imageElement.getBoundingClientRect();
 
-  //         return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };
-  //       },
-  //       index: this.images.indexOf(image),
-  //       bgOpacity: 0.9,
-  //       history: false,
-  //     };
+          return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };
+        },
+        index: this.images.indexOf(image),
+        bgOpacity: 0.9,
+        history: false,
+      };
 
-  //     this.photoSwipe.open(images, options).subscribe((galleryRef) => {
-  //       galleryRef.listen('beforeChange', () => {
-  //         this.featuredCarousel.to(
-  //           this.images[galleryRef.getCurrentIndex()].id
-  //         );
-  //       });
-  //     });
-  //   }
-  // }
+      this.photoSwipe.open(images, options).subscribe((galleryRef) => {
+        galleryRef.listen('beforeChange', () => {
+          this.featuredCarousel.to(
+            this.images[galleryRef.getCurrentIndex()].id
+          );
+        });
+      });
+    }
+  }
 
   onLoadImage() {
     this.imageFichaCargada = true;
   }
 
-  // formatImageSlider(product: any) {
-  //   let index = 0;
-  //   let image1000 = null;
-  //   let image150 = null;
-  //   if (typeof product.images === 'undefined') {
-  //     return;
-  //   }
-  //   if (product.images.length <= 0) {
-  //     image1000 = '../../../assets/images/products/no-image-listado-2.jpg';
-  //     image150 = '../../../assets/images/products/no-image-listado-2.jpg';
-  //     const image = {
-  //       id: product.sku.toString() + '_' + index++,
-  //       url: this.root.returnUrlNoImagen(),
-  //       active: index === 1 ? true : false,
-  //     };
+  formatImageSlider(product: any) {
+    let index = 0;
+    let image1000 = null;
+    let image150 = null;
+    if (typeof product.images === 'undefined') {
+      return;
+    }
+    if (product.images.length <= 0) {
+      image1000 = '../../../assets/images/products/no-image-listado-2.jpg';
+      image150 = '../../../assets/images/products/no-image-listado-2.jpg';
+      const image: IProductImage = {
+        id: product.sku.toString() + '_' + index++,
+        url: this.root.returnUrlNoImagen(),
+        active: index === 1 ? true : false,
+      };
 
-  //     this.images.push(image);
-  //   } else {
-  //     // image1000='../../../assets/images/products/no-image-listado-2.jpg';
-  //     //image150='../../../assets/images/products/no-image-listado-2.jpg';
-  //     if (
-  //       product.images[0]['1000'].length == 0 ||
-  //       product.images[0]['150'].length == 0
-  //     ) {
-  //       image1000 = '../../../assets/images/products/no-image-listado-2.jpg';
-  //       image150 = '../../../assets/images/products/no-image-listado-2.jpg';
-  //       const image = {
-  //         id: product.sku.toString() + '_' + index++,
-  //         url: this.root.returnUrlNoImagen(),
-  //         active: index === 1 ? true : false,
-  //       };
+      this.images.push(image);
+    } else {
+      if (
+        product.images[0]['1000'].length == 0 ||
+        product.images[0]['150'].length == 0
+      ) {
+        image1000 = '../../../assets/images/products/no-image-listado-2.jpg';
+        image150 = '../../../assets/images/products/no-image-listado-2.jpg';
+        const image: IProductImage = {
+          id: product.sku.toString() + '_' + index++,
+          url: this.root.returnUrlNoImagen(),
+          active: index === 1 ? true : false,
+        };
 
-  //       this.images.push(images);
-  //     } else {
-  //       image1000 = product.images[0]['1000'];
-  //       image150 = product.images[0]['150'];
+        this.images.push(image);
+      } else {
+        image1000 = product.images[0]['1000'];
+        image150 = product.images[0]['150'];
 
-  //       this.images = [];
-  //       this.imagesThumbs = [];
+        this.images = [];
+        this.imagesThumbs = [];
 
-  //       let key = 0;
-  //       for (const item of image1000) {
-  //         const image = {
-  //           id: product.sku.toString() + '_' + index++,
-  //           url: item,
-  //           urlThumbs: image150[key],
-  //           active: index === 1 ? true : false,
-  //           video: false,
-  //         };
+        let key = 0;
+        for (const item of image1000) {
+          const image: IProductImage = {
+            id: product.sku.toString() + '_' + index++,
+            url: item,
+            urlThumbs: image150[key],
+            active: index === 1 ? true : false,
+            video: false,
+          };
 
-  //         this.images.push(image);
-  //         key++;
-  //       }
-  //       let thumbVideo = '';
-  //       let urlVideo = '';
-  //       for (const i in product.atributos) {
-  //         if (product.atributos[i].nombre == 'VIDEO') {
-  //           (thumbVideo =
-  //             'https://i.ytimg.com/vi' +
-  //             product.atributos[i].valor.split('/embed')[1] +
-  //             '/1.jpg'),
-  //             (urlVideo = product.atributos[i].valor);
+          this.images.push(image);
+          key++;
+        }
+        let thumbVideo = '';
+        let urlVideo = '';
+        for (const i in product.atributos) {
+          if (product.atributos[i].nombre == 'VIDEO') {
+            (thumbVideo =
+              'https://i.ytimg.com/vi' +
+              product.atributos[i].valor.split('/embed')[1] +
+              '/1.jpg'),
+              (urlVideo = product.atributos[i].valor);
 
-  //           const image = {
-  //             id: product.sku.toString() + '_' + index++,
-  //             url: urlVideo,
-  //             urlThumbs: thumbVideo,
-  //             active: index === 1 ? true : false,
-  //             video: true,
-  //           };
-  //           this.images.push(image);
-  //           key++;
-  //         }
-  //       }
-  //     }
-  //   }
+            const image: IProductImage = {
+              id: product.sku.toString() + '_' + index++,
+              url: urlVideo,
+              urlThumbs: thumbVideo,
+              active: index === 1 ? true : false,
+              video: true,
+            };
+            this.images.push(image);
+            key++;
+          }
+        }
+      }
+    }
 
-  //   this.carouselItems = this.images;
-  //   this.mainItems = [...this.carouselItems];
-  // }
+    this.carouselItems = this.images;
+    this.mainItems = [...this.carouselItems];
+  }
 
   showStock() {
     this.modalRefStock = this.modalService.show(
