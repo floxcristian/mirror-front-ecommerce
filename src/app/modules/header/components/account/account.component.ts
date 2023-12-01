@@ -1,10 +1,10 @@
-import { LoginService } from './../../../../shared/services/login.service';
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { RootService } from './../../../../shared/services/root.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { MenuService } from '@core/services-v2/menu/menu.service';
 
 @Component({
   selector: 'app-account',
@@ -35,15 +35,15 @@ export class AccountComponent implements OnInit {
   constructor(
     public localS: LocalStorageService,
     private root: RootService,
-    public loginService: LoginService,
     private cd: ChangeDetectorRef,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly authStateService: AuthStateServiceV2
+    private readonly authStateService: AuthStateServiceV2,
+    private readonly menuService: MenuService
   ) {}
 
   ngOnInit() {
-    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
     if (this.usuario.documentId !== '0') this.root.getPreferenciasCliente();
     this.isB2B =
       this.usuario.userRole === 'supervisor' ||
@@ -53,7 +53,7 @@ export class AccountComponent implements OnInit {
       this.usuario = user;
       this.mostrarMenu = true;
       this.mostrarBienvenida = true;
-      this.linkMiCuenta = this.loginService.setRoles(this.usuario.userRole);
+      this.linkMiCuenta = this.menuService.get(this.usuario.userRole);
 
       if (this.isB2B) {
         this.linkMiCuenta = this.linkMiCuenta.filter(
@@ -82,7 +82,7 @@ export class AccountComponent implements OnInit {
     });*/
 
     if (this.usuario) {
-      this.linkMiCuenta = this.loginService.setRoles(this.usuario.userRole);
+      this.linkMiCuenta = this.menuService.get(this.usuario.userRole);
       if (this.isB2B) {
         this.linkMiCuenta = this.linkMiCuenta.filter(
           (l) => !this.linksOcultosB2B.includes(l.label)

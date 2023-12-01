@@ -767,11 +767,6 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       this.obtieneDireccionesCliente();
       this.contacto_notificaciones();
     });
-    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
-      this.isLogin = this.loginService.isLogin();
-      this.obtieneDireccionesCliente();
-      this.contacto_notificaciones();
-    });*/
   }
 
   openModal() {

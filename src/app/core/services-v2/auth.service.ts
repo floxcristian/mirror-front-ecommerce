@@ -11,7 +11,7 @@ const API_AUTH = `${environment.apiEcommerce}/api/v1/auth`;
 @Injectable({
   providedIn: 'root',
 })
-export class AuthServiceV2 {
+export class AuthApiService {
   constructor(private http: HttpClient) {}
 
   login(username: string, password: string): Observable<ILoginResponse> {

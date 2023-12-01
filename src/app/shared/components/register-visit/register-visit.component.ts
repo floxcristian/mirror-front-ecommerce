@@ -10,14 +10,13 @@ import { ClientsService } from '../../services/clients.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ResponseApi } from '../../interfaces/response-api';
-import { LoginService } from '../../services/login.service';
 import { CartService } from '../../services/cart.service';
 import { Usuario } from '../../interfaces/login';
 import { rutValidator } from '../../../shared/utils/utilidades';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
-import { AuthServiceV2 } from '@core/services-v2/auth.service';
+import { AuthApiService } from '@core/services-v2/auth.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 
@@ -48,11 +47,10 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private localS: LocalStorageService,
     private router: Router,
-    private loginService: LoginService,
     private cartService: CartService,
     // Services V2
     private readonly sessionStorage: SessionStorageService,
-    private readonly authService: AuthServiceV2,
+    private readonly authService: AuthApiService,
     private readonly authStateService: AuthStateServiceV2
   ) {
     this.formDefault();

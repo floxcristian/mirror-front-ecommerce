@@ -6,6 +6,7 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { MenuService } from '@core/services-v2/menu/menu.service';
 
 @Component({
   selector: 'app-mobile-header-account',
@@ -41,7 +42,8 @@ export class MobileHeaderAccountComponent implements OnInit {
     private cd: ChangeDetectorRef,
     // Services V2
     private readonly sessionStorage: SessionStorageService,
-    private readonly authStateService: AuthStateServiceV2
+    private readonly authStateService: AuthStateServiceV2,
+    private readonly menuService: MenuService
   ) {}
 
   ngOnInit() {
@@ -68,7 +70,7 @@ export class MobileHeaderAccountComponent implements OnInit {
       this.usuario = user;
       this.mostrarMenu = true;
       this.mostrarBienvenida = true;
-      this.linkMiCuenta = this.loginService.setRoles(this.usuario.userRole);
+      this.linkMiCuenta = this.menuService.get(this.usuario.userRole);
     });
 
     /*this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
@@ -99,7 +101,7 @@ export class MobileHeaderAccountComponent implements OnInit {
     });*/
 
     if (this.usuario) {
-      this.linkMiCuenta = this.loginService.setRoles(this.usuario.userRole);
+      this.linkMiCuenta = this.menuService.get(this.usuario.userRole);
     }
     this.cd.detectChanges();
   }

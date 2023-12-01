@@ -14,7 +14,6 @@ import { ProductsService } from '../../../../shared/services/products.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { PageHomeService } from '../../services/pageHome.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { LoginService } from '../../../../shared/services/login.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { CmsService } from '@core/services-v2/cms.service';
@@ -44,7 +43,6 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     private logisticsService: LogisticsService,
     private geoLocationService: GeoLocationService,
     private localStorage: LocalStorageService,
-    private loginService: LoginService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly csmService: CmsService,
@@ -77,12 +75,6 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
         this.cargarPage();
       });
     });
-    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
-      this.root.getPreferenciasCliente().then((preferencias) => {
-        this.preferenciasCliente = preferencias;
-        this.cargarPage();
-      });
-    });*/
 
     this.logisticsService.direccionCliente$.subscribe((r) => {
       this.preferenciasCliente.direccionDespacho = r;

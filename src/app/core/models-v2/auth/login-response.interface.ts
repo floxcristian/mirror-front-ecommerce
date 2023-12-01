@@ -21,10 +21,18 @@ export interface ITokenResponse {
   refreshToken: string;
 }
 
+export type IUserRole =
+  | 'superadmin'
+  | 'supervisor'
+  | 'comprador'
+  | 'cms'
+  | 'compradorb2c'
+  | 'temp';
+
 export interface IUserEssentials {
   documentId: string;
   email: string;
-  userRole: string;
+  userRole: IUserRole;
   preferences: IPreferences;
 }
 

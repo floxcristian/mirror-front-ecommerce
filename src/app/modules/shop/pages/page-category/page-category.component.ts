@@ -22,7 +22,6 @@ import { RootService } from '../../../../shared/services/root.service';
 import { Category } from '../../../../shared/interfaces/category';
 import { Usuario } from '../../../../shared/interfaces/login';
 import { ElasticSearch } from '../../../../shared/interfaces/search';
-import { LoginService } from '../../../../shared/services/login.service';
 import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { CartService } from '../../../../shared/services/cart.service';
@@ -123,7 +122,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     private productsService: ProductsService,
     private root: RootService,
     private localS: LocalStorageService,
-    private loginService: LoginService,
     private capitalize: CapitalizeFirstPipe,
     private cartService: CartService,
     private geoLocationService: GeoLocationService,
@@ -145,7 +143,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     } else {
       this.productosPorPagina = 25;
     }
-    // this.usuario = this.root.getDataSesionUsuario();
+
     this.usuario = this.sessionService.getSession();
     this.preferenciaCliente = this.localS.get('preferenciasCliente');
   }
@@ -156,7 +154,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    // this.usuario = this.root.getDataSesionUsuario();
     this.usuario = this.sessionService.getSession();
     this.route.data.subscribe((data) => {
       this.columns = 'columns' in data ? data['columns'] : this.columns;
@@ -421,6 +418,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       }
     });
 
+    // cuando se inicia sesion
     this.authStateService.session$.subscribe((user) => {
       this.reinicaFiltros();
       this.parametrosBusqueda.rut = user.documentId || '0';
@@ -429,15 +427,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         this.cargarCatalogoProductos(this.parametrosBusqueda, '');
       });
     });
-    // cuando se inicia sesion
-    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
-      this.reinicaFiltros();
-      this.parametrosBusqueda.rut = usuario.rut || '0';
-      this.root.getPreferenciasCliente().then((preferencias) => {
-        this.preferenciaCliente = preferencias;
-        this.cargarCatalogoProductos(this.parametrosBusqueda, '');
-      });
-    });*/
 
     // cuando cambiamos sucursal
     this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {

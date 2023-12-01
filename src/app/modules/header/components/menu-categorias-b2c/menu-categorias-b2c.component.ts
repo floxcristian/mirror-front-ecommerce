@@ -6,6 +6,8 @@ import { NavigationLink } from '../../../../shared/interfaces/navigation-link';
 import { CategoryService } from '../../../../shared/services/category.service';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { RootService } from '../../../../shared/services/root.service';
+import { CmsService } from '@core/services-v2/cms.service';
+import { IChildren } from '@core/models-v2/cms/categories-response.interface';
 
 @Component({
   selector: 'app-menu-categorias-b2c',
@@ -80,7 +82,9 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
   constructor(
     public menuCategorias: MenuCategoriasB2cService,
     private categoriesService: CategoryService,
-    private root: RootService
+    private root: RootService,
+    //Services V2
+    private readonly cmsService: CmsService
   ) {
     this.obtieneCategorias();
   }
@@ -97,6 +101,17 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
   }
 
   obtieneCategorias() {
+    // this.cmsService.getCategories().subscribe({
+    //   next:(res)=>{
+    //     const categorias: IChildren[] = res.data;
+    //     this.sortCategories(categorias);
+    //     this.formatCategories(categorias);
+    //     this.formatCategories2(this.categorias_oficial);
+    //   },
+    //   error:(err)=>{
+    //     console.log(err)
+    //   }
+    // })
     this.categoriesService.$categoriasHeader.subscribe((r) => {
       console.log('categorias', r);
       const categorias: CategoryApi[] = r.data;
@@ -106,7 +121,7 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
     });
   }
 
-  formatCategories(data: CategoryApi[]) {
+  formatCategories(data: any[]) {
     for (const primeraCategoria of data) {
       this.categoriaDetalle = {
         url: [

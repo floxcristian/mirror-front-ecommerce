@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { LoginService } from '../../../../shared/services/login.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
+import { MenuService } from '@core/services-v2/menu/menu.service';
 
 @Component({
   selector: 'app-layout',
@@ -20,14 +20,12 @@ export class LayoutComponent {
 
   constructor(
     private localS: LocalStorageService,
-
-    private loginService: LoginService,
     // ServiciosV2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly menuService: MenuService
   ) {
-    // const usuario: Usuario = this.root.getDataSesionUsuario();
     const user = this.sessionService.getSession();
-    this.links = this.loginService.setRoles(user.userRole);
+    this.links = this.menuService.get(user.userRole);
     if (this.localS.get('menuCollapsed')) {
       this.menuCollapsed = this.localS.get('menuCollapsed');
     }

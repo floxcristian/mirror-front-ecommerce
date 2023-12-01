@@ -16,14 +16,14 @@
   <div class="col-sm-12 p-0">
     <div class="mb-5 mt-2">
       <ng-container *ngFor="let obj of lstProductos; let i = index">
-        <div *ngIf="obj.skus.length > 0" class="mb-5">
+        <div *ngIf="obj.articles.length > 0" class="mb-5">
           <div class="row mt-2">
             <div
               class="col-sm-12 d-flex justify-content-center"
               [ngStyle]="{ 'margin-bottom': '1.8rem' }"
             >
               <h1 class="text-h1">
-                {{ obj.nombre }}
+                {{ obj.title }}
               </h1>
             </div>
           </div>
@@ -39,7 +39,7 @@
                 appOwlPreventClick
               >
                 <ng-container
-                  *ngFor="let prod of obj.skus"
+                  *ngFor="let prod of obj.articles"
                   class="products-list__item"
                 >
                   <ng-template carouselSlide>
@@ -47,7 +47,7 @@
                       (mouseover)="over($event)"
                       (mouseleave)="leave($event)"
                       [product]="prod"
-                      [origen]="[ruta, '', prod.nombre.trim(), '']"
+                      [origen]="[ruta, '', prod.name.trim(), '']"
                       [home]="true"
                       [layout]="layout"
                       [cartClass]="true"

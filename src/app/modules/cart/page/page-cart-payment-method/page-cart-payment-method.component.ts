@@ -849,7 +849,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
           // let userCambio: any = this.root.getDataSesionUsuario();
           //userCambio._id = user.email;
           userCambio.email = user.email;
-          userCambio.userRole = 'compradorB2c';
+          userCambio.userRole = 'compradorb2c';
           userCambio.documentId = user.rut;
           userCambio.login_temp = true;
           userCambio.firstName = this.formVisita.value.nombre || '';

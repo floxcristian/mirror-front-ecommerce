@@ -18,7 +18,6 @@ import { ProductsService } from 'src/app/shared/services/products.service';
 import { isPlatformBrowser } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { PreferenciasCliente } from '@shared/interfaces/preferenciasCliente';
-import { LoginService } from '@shared/services/login.service';
 import { LogisticsService } from '@shared/services/logistics.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
@@ -76,7 +75,6 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     private geoLocationService: GeoLocationService,
     private localStorage: LocalStorageService,
     private router: Router,
-    private loginService: LoginService,
     private logistic: LogisticsService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
@@ -106,14 +104,8 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
       this.cargaEspeciales();
     });
-    // cuando se inicia sesion
-    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
-      this.root.getPreferenciasCliente().then((preferencias) => {
-        this.preferenciaCliente = preferencias;
-        this.cargaEspeciales();
-      });
-    });*/
 
+    // cuando se inicia sesion
     this.authStateService.session$.subscribe((user) => {
       this.root.getPreferenciasCliente().then((preferencias) => {
         this.preferenciaCliente = preferencias;

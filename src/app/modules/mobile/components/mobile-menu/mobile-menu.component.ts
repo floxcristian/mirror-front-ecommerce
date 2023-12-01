@@ -38,6 +38,7 @@ import { SessionService } from '@core/states-v2/session.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { MenuService } from '@core/services-v2/menu/menu.service';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -58,7 +59,8 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
   modalRefTienda!: BsModalRef;
 
   isOpen = false;
-  accountLinks: MobileMenuItem[] = [];
+  // accountLinks: MobileMenuItem[] = [];
+  accountLinks: any[] = [];
   links: MobileMenuItem[] = mobileMenu;
   logoSrc = environment.logoSrcWhite;
   usuario!: ISession | null;
@@ -86,14 +88,15 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
     // Services V2
     private readonly sessionService: SessionService,
     private readonly sessionStorage: SessionStorageService,
-    private readonly authStateService: AuthStateServiceV2
+    private readonly authStateService: AuthStateServiceV2,
+    private readonly menuService: MenuService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
     this.obtieneCategorias();
 
-    const role = this.sessionService.getSession().userRole; //this.root.getDataSesionUsuario().user_role;
+    const role = this.sessionService.getSession().userRole;
     this.isB2B = role === 'supervisor' || role === 'comprador';
   }
 
@@ -163,19 +166,15 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
     this.authStateService.session$.subscribe(() => {
       this.updateLink();
     });
-    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
-      this.updateLink();
-    });*/
   }
 
   updateLink() {
     const isLogin = this.loginService.isLogin();
-    // this.usuario = this.localS.get('usuario') as any;
     this.usuario = this.sessionStorage.get();
 
     if (isLogin) {
       const nameUser = this.usuario?.firstName + ' ' + this.usuario?.lastName;
-      const myAccount = this.loginService.setRoles(this.usuario?.userRole);
+      const myAccount = this.menuService.get(this.usuario?.userRole || 'temp');
       this.accountLinks = [
         { type: 'button', label: nameUser },
         { type: 'button', label: 'Mi Cuenta', children: myAccount },

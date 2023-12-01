@@ -17,7 +17,7 @@ import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { getDomainsToAutocomplete } from './domains-autocomplete';
 import { SessionStorageService } from '@core/storage/session-storage.service';
-import { AuthServiceV2 } from '@core/services-v2/auth.service';
+import { AuthApiService } from '@core/services-v2/auth.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 
@@ -65,7 +65,7 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     // Services V2
     private readonly sessionStorage: SessionStorageService,
-    private readonly authService: AuthServiceV2,
+    private readonly authService: AuthApiService,
     private readonly authStateService: AuthStateServiceV2
   ) {}
 

@@ -6,7 +6,6 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginService } from '../../../../shared/services/login.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/states-v2/session.service';
@@ -32,7 +31,6 @@ export class MiCuentaComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private loginService: LoginService,
     private localStorage: LocalStorageService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
@@ -45,15 +43,11 @@ export class MiCuentaComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
 
     this.authStateService.session$.subscribe((user) => {
       this.usuario = user;
     });
-
-    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
-      this.usuario = usuario;
-    });*/
   }
 
   validarCuenta(link: any): void {

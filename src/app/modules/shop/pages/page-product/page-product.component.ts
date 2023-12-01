@@ -32,7 +32,6 @@ import { randomElements } from '../../../../shared/utils/utilidades';
 import { CatalogoService } from '../../../../shared/services/catalogo.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
-import { LoginService } from '../../../../shared/services/login.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
@@ -147,7 +146,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private buscadorService: BuscadorService,
     private catalogoService: CatalogoService,
     private logistic: LogisticsService,
-    private loginService: LoginService,
     private localS: LocalStorageService,
     // Services V2
     private readonly sessionService: SessionService,
@@ -183,18 +181,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
         }
       });
     });
-    //Cuando se inicia sesión
-    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario: Usuario) => {
-      // this.user = this.root.getDataSesionUsuario();
-      this.user = this.sessionService.getSession();
-      this.root.getPreferenciasCliente().then((preferencias) => {
-        if (this.product) {
-          this.preferenciaCliente = preferencias;
-          this.cart.cargarPrecioEnProducto(this.product);
-          this.getMixProducts(this.product.sku);
-        }
-      });
-    });*/
 
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth

@@ -5,6 +5,8 @@ import {
   IBlogResponse,
   IBlogsResponse,
 } from '@core/models-v2/cms/blog-response.interface';
+import { ICategorieResponse } from '@core/models-v2/cms/categories-response.interface';
+import { ICustomHomePage } from '@core/models-v2/cms/customHomePage-response.interface';
 import { IHomePageResponse } from '@core/models-v2/cms/homePage-response.interface';
 import { ISliderResponse } from '@core/models-v2/cms/slider-reponse.interface';
 import { IValueBoxResponse } from '@core/models-v2/cms/valueBox-response.interface';
@@ -24,8 +26,8 @@ export class CmsService {
   /**********************************************
    * CMS
    **********************************************/
-  getCategories() {
-    return this.http.get(`${API_CMS}/categories`);
+  getCategories(): Observable<ICategorieResponse> {
+    return this.http.get<ICategorieResponse>(`${API_CMS}/categories`);
   }
 
   getSliders(): Observable<ISliderResponse> {
@@ -50,8 +52,12 @@ export class CmsService {
     });
   }
 
-  getCustomHomePage(documentId: string, branchCode: string, location: string) {
-    return this.http.get(`${API_CMS}/custom-homepage`, {
+  getCustomHomePage(
+    documentId: string,
+    branchCode: string,
+    location: string
+  ): Observable<ICustomHomePage> {
+    return this.http.get<ICustomHomePage>(`${API_CMS}/custom-homepage`, {
       params: { documentId, branchCode, location },
     });
   }

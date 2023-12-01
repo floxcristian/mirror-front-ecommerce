@@ -9,7 +9,7 @@ import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { AuthServiceV2 } from '@core/services-v2/auth.service';
+import { AuthApiService } from '@core/services-v2/auth.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
     private cart: CartService,
     private clientsService: ClientsService,
     private localStorage: LocalStorageService,
-    private readonly authService: AuthServiceV2,
+    private readonly authService: AuthApiService,
     private readonly authStateService: AuthStateServiceV2,
     // Storage
     private readonly sessionStorage: SessionStorageService,
