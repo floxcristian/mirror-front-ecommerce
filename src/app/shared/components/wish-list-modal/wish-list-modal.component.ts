@@ -9,9 +9,10 @@ import { isVacio } from '../../utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 
 export interface DataWishListModal {
-  producto: Product;
+  producto: IArticleResponse;
   listas: Lista[];
   listasEnQueExiste: Lista[];
 }
@@ -22,7 +23,7 @@ export interface DataWishListModal {
   styleUrls: ['./wish-list-modal.component.scss'],
 })
 export class WishListModalComponent implements OnInit {
-  producto!: Product;
+  producto!: IArticleResponse;
   listas!: Lista[];
   listasEnQueExiste!: Lista[];
 

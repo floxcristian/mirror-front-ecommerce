@@ -36,6 +36,7 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { ArticleService } from '@core/services-v2/article.service';
 declare const $: any;
 declare let fbq: any;
 
@@ -149,7 +150,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private localS: LocalStorageService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly authStateService: AuthStateServiceV2
+    private readonly authStateService: AuthStateServiceV2,
+    private readonly articleService: ArticleService
   ) {
     this.tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     this.preferenciaCliente = this.localS.get('preferenciasCliente');
@@ -221,6 +223,9 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
         const sku = params.id.split('-').reverse()[0];
         this.getDetailProduct(sku);
+        console.log('PRODUCTS: ', this.product);
+
+        this.getDetailArticle(sku);
         this.getMixProducts(sku);
         // this.getMatrixProducts(sku);
         this.productoService.getStockProduct(sku).subscribe((r: any) => {
@@ -326,6 +331,44 @@ export class PageProductComponent implements OnInit, OnDestroy {
       url: '',
     });
   }
+  // TODO: confirmar nombre de la función
+
+  getDetailArticle(sku: string) {
+    const user = this.sessionService.getSession();
+    console.log(' getDetailArticle user: ', user);
+    const selectedStore = this.geoLocationService.getTiendaSeleccionada();
+
+    if (user && selectedStore) {
+      const params = {
+        sku: sku,
+        documentId: user.documentId,
+        branchCode: selectedStore.codigo,
+      };
+
+      this.articleService
+        .getArticleDataSheet(params)
+        .subscribe((response: any) => {
+          console.log('getDetailArticle: ', response);
+          if (response) {
+            response.chassis = response.chassis || '';
+            const product = response;
+            delete product.price;
+            this.product = { ...product };
+            // TODO: probar funcion por funcion para ver si funciona
+            this.cart.cargarPrecioEnProducto(this.product);
+            this.setMeta(this.product);
+            this.setBreadcrumbs(this.product);
+            this.productFacebook(this.product);
+          } else {
+            this.toastr.error(
+              'Connection error, unable to fetch the articles'
+            );
+          }
+        });
+    } else {
+      console.error('User or store information is missing');
+    }
+  }
 
   getDetailProduct(sku: any) {
     let params = null;
@@ -340,18 +383,19 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
     this.productoService.obtieneDetalleProducto(sku, params).subscribe(
       (r: any) => {
-        r.data.chassis == null || r.data.chassis == undefined
-          ? (r.data.chassis = '')
-          : r.data.chassis;
-        const producto: any = r.data;
-        delete producto?.precio;
+        // r.data.chassis == null || r.data.chassis == undefined
+        //   ? (r.data.chassis = '')
+        //   : r.data.chassis;
+        // const producto: any = r.data;
+        // delete producto?.precio;
 
-        this.product = { ...producto };
+        // this.product = { ...producto };
+        console.log('getDetailProduct: ', r.data);
 
-        this.cart.cargarPrecioEnProducto(this.product);
-        this.setMeta(this.product);
-        this.setBreadcrumbs(this.product);
-        this.productFacebook(this.product);
+        // this.cart.cargarPrecioEnProducto(this.product);
+        // this.setMeta(this.product);
+        // this.setBreadcrumbs(this.product);
+        // this.productFacebook(this.product);
       },
       (error) => {
         this.toastr.error('Error de conexión, para obtener los articulos');

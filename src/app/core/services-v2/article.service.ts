@@ -1,6 +1,7 @@
 // Angular
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 // Environment
 import { environment } from '@env/environment';
 
@@ -35,7 +36,7 @@ export class ArticleService {
    * ARTICLE
    **********************************************/
   getArticle(sku: string) {
-    return this.http.get(`${API_ARTICLE}/${sku}`);
+    return this.http.get<IArticleResponse>(`${API_ARTICLE}/${sku}`);
   }
 
   /**********************************************
@@ -47,9 +48,12 @@ export class ArticleService {
     branchCode: string;
   }) {
     const { sku, ..._params } = params;
-    return this.http.get(`${API_ARTICLE}/${sku}/data-sheet`, {
-      params: _params,
-    });
+    return this.http.get<IArticleResponse>(
+      `${API_ARTICLE}/${sku}/data-sheet`,
+      {
+        params: _params,
+      }
+    );
   }
 
   getArticlesDatasheets(params: {

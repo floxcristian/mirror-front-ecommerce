@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Usuario } from '../../interfaces/login';
 import { Product } from '../../interfaces/product';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 
 @Component({
   selector: 'app-aviso-stock',
@@ -15,7 +16,7 @@ export class AvisoStockComponent {
   sku!: string;
   sucursal!: string;
   usuario!: Usuario;
-  producto!: Product;
+  producto!: IArticleResponse;
 
   //formuluario
   formulario!: FormGroup;

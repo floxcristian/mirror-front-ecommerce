@@ -26,6 +26,7 @@ import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
+import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 
 @Component({
   selector: 'app-product-card-b2c-ficha',
@@ -53,6 +54,17 @@ export class ProductCardB2cFichaComponent implements OnInit {
     // this.quality = this.root.setQuality(this.productData);
     // this.root.limpiaAtributos(value);
   }
+  //*inicio
+  // @Input() set product(value: IArticleResponse) {
+  //   this.productData = value;
+  //   // this.productData.nombre = this.root.limpiarNombres(
+  //   //   this.productData.nombre
+  //   // );
+
+  //   this.quality = this.root.setQuality(value);
+  //   this.root.limpiaAtributos(value);
+  // }
+  //**fin */
 
   @Input() layout:
     | 'grid-sm'
@@ -73,8 +85,8 @@ export class ProductCardB2cFichaComponent implements OnInit {
   addingToCompare = false;
   showingQuickview = false;
   urlImage = environment.urlFotoOmnichannel;
-  // productData!: Product & { url?: SafeUrl; gimage?: SafeUrl };
   productData!: IArticle;
+  // productData!: IArticleResponse & { url?: SafeUrl; gimage?: SafeUrl };
   quality: any = 0;
   precioProducto = 0;
   today = Date.now();
@@ -111,20 +123,15 @@ export class ProductCardB2cFichaComponent implements OnInit {
   }
 
   cargaPrecio() {
-    // if (this.productData.precioComun === undefined) {
-    //   this.productData.precioComun = this.productData.precio.precioComun;
-    //   this.productData.precio_escala = this.productData.precio.precio_escala;
+    // if (this.productData.priceInfo.commonPrice === undefined) {
+    //   this.productData.priceInfo.commonPrice = this.productData.priceInfo.commonPrice;
+    //   this.productData.priceInfo.scalePrice = this.productData.priceInfo.scalePrice;
     // }
-    if (this.productData.priceInfo.commonPrice === undefined) {
-      this.productData.priceInfo.commonPrice =
-        this.productData.priceInfo.commonPrice;
-      // this.productData.precio_escala = this.productData.precio.precio_escala;
-    }
 
     if (this.home) {
       if (
-        (this.productData.priceInfo.commonPrice || 0) >
-        this.productData.priceInfo.customerPrice
+        this.productData.priceInfo.commonPrice ||
+        0 > this.productData.priceInfo.price
       ) {
         this.porcentaje_descuento();
       }
@@ -190,6 +197,7 @@ export class ProductCardB2cFichaComponent implements OnInit {
 
     this.addingToWishlist = true;
     //FIXME: ARREGLAR AGREGAR LISTA
+
     // this.wishlist.add(this.productData).subscribe({
     //   complete: () => {
     //     this.addingToWishlist = false;
