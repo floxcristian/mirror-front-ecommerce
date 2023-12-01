@@ -48,6 +48,7 @@ export class SessionService {
   }
 
   isB2B(): boolean {
-    return true;
+    const session = this.getSession();
+    return ['supervisor', 'comprador'].includes(session.userRole);
   }
 }

@@ -12,7 +12,6 @@ import { SessionService } from '@core/states-v2/session.service';
   templateUrl: './layout.component.html',
 })
 export class LayoutComponent implements OnInit {
-  isB2B: boolean = false;
   fbclid: string | undefined = '';
   gclid: string = '';
   utm_campaign: string | undefined = '';
@@ -49,7 +48,6 @@ export class LayoutComponent implements OnInit {
    * @returns
    */
   checkIsB2b() {
-    // let { user_role: userRole } = this.rootService.getDataSesionUsuario();
     const session = this.sessionService.getSession();
     if (['supervisor', 'comprador'].includes(session.userRole))
       this.tipo = 'b2b';

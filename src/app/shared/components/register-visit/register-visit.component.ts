@@ -185,35 +185,6 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
         this.toastr.error(err.message);
       },
     });
-    // this.loginService.iniciarSesion(dataLogin).subscribe(
-    //   (r: any) => {
-    //     if (r.status === 'OK') {
-    //       const data = { ...r.data, login_temp: false };
-
-    //       this.localS.set('usuario', data);
-    //       this.loginService.notify(data);
-
-    //       if (userIdOld !== null) {
-    //         const dataPut = {
-    //           origen: userIdOld,
-    //           destino: data.email,
-    //         };
-    //         this.cartService
-    //           .cartTransfer(dataPut)
-    //           .subscribe((res: ResponseApi) => {
-    //             this.cartService.load();
-    //           });
-    //       } else {
-    //         this.cartService.load();
-    //       }
-    //     } else {
-    //       this.toastr.error(`${r.errors[0]}`);
-    //     }
-    //   },
-    //   (e) => {
-    //     this.toastr.error(e.error.msg);
-    //   }
-    // );
   }
 
   invoice() {
