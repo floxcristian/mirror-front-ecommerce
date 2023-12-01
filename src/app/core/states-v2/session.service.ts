@@ -21,10 +21,9 @@ export class SessionService {
       login_temp: true,
       documentId: '0',
       userRole: 'temp',
-      iva: true,
-      /*"preferences": {
-        "iva": true
-      }*/
+      preferences: {
+        iva: true,
+      },
     };
     this.sessionStorage.set(newSession);
     return newSession;

@@ -13,6 +13,7 @@ import { AuthServiceV2 } from '@core/services-v2/auth.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-header-login',
@@ -118,8 +119,11 @@ export class LoginComponent implements OnInit {
           }
 
           const iva = res.user.preferences.iva ?? true;
-
-          const data = { ...res.user, login_temp: false, iva };
+          const data: ISession = {
+            ...res.user,
+            login_temp: false,
+            preferences: { iva },
+          };
 
           // FIXME: revisar internamente.
           this.sessionStorage.set(data);

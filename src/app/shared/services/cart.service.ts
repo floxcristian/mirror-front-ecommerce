@@ -1029,14 +1029,14 @@ export class CartService {
     this.getPriceProduct(parametrosPrecios).subscribe((r: any) => {
       const precio: ProductPrecio = r.precio;
 
-      precio.precio = !isVacio(user.iva)
-        ? user.iva
+      precio.precio = !isVacio(user.preferences.iva)
+        ? user.preferences.iva
           ? precio.precio
           : precio.precio / (1 + this.IVA)
         : precio.precio;
       producto.precio = precio;
-      producto.precioComun = !isVacio(user.iva)
-        ? user.iva
+      producto.precioComun = !isVacio(user.preferences.iva)
+        ? user.preferences.iva
           ? r.precioComun
           : r.precioComun / (1 + this.IVA)
         : r.precioComun;

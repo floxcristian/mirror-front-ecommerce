@@ -46,8 +46,8 @@
           <span class="product-price">
             <span class="price-save fw-bold">
               {{
-                (!isVacio(usuario.iva)
-                  ? usuario.iva
+                (!isVacio(usuario.preferences.iva)
+                  ? usuario.preferences.iva
                     ? item.ProductCart.precio
                     : item.ProductCart.precio / (1 + IVA)
                   : item.ProductCart.precio
@@ -55,11 +55,11 @@
               }}
               <em>
                 {{
-                  !isVacio(usuario.iva)
-                    ? usuario.iva
-                      ? "c/iva"
-                      : "s/iva"
-                    : "c/iva"
+                  !isVacio(usuario.preferences.iva)
+                    ? usuario.preferences.iva
+                      ? 'c/iva'
+                      : 's/iva'
+                    : 'c/iva'
                 }}</em
               >
             </span>
@@ -80,8 +80,8 @@
         <div class="cart-price col-2 my-auto text-center">
           <span class="cart-price-value fw-bold"
             >{{
-              (!isVacio(usuario.iva)
-                ? (usuario.iva
+              (!isVacio(usuario.preferences.iva)
+                ? (usuario.preferences.iva
                     ? item.ProductCart.precio
                     : item.ProductCart.precio / (1 + IVA)) * item.quantity
                 : item.ProductCart.precio * item.quantity
@@ -89,11 +89,11 @@
             }}
             <em>
               {{
-                !isVacio(usuario.iva)
-                  ? usuario.iva
-                    ? "c/iva"
-                    : "s/iva"
-                  : "c/iva"
+                !isVacio(usuario.preferences.iva)
+                  ? usuario.preferences.iva
+                    ? 'c/iva'
+                    : 's/iva'
+                  : 'c/iva'
               }}</em
             ></span
           >

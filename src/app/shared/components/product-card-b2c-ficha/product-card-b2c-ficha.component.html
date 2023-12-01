@@ -648,8 +648,8 @@
             </td>
             <td style="color: #0063b9">
               {{
-                (!isVacio(usuario.iva)
-                  ? usuario.iva
+                (!isVacio(usuario.preferences.iva)
+                  ? usuario.preferences.iva
                     ? precio.price
                     : precio.price / (1 + IVA)
                   : precio.price

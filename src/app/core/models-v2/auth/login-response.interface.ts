@@ -25,6 +25,7 @@ export interface IUserEssentials {
   documentId: string;
   email: string;
   userRole: string;
+  preferences: IPreferences;
 }
 
 export interface IUserOptionals {
@@ -47,5 +48,4 @@ export interface IUserOptionals {
   lastLogin: string;
   companies?: string[];
   creditLine: ICreditLine;
-  preferences: IPreferences;
 }

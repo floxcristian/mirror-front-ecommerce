@@ -94,7 +94,11 @@
                 type="checkbox"
                 class="form-check-input"
                 id="iva"
-                [checked]="!isVacio(usuario.iva) ? usuario.iva : false"
+                [checked]="
+                  !isVacio(usuario.preferences.iva)
+                    ? usuario.preferences.iva
+                    : false
+                "
                 [disabled]="cargandoIVA"
                 (change)="actualizaIVA()"
                 style="cursor: pointer"
@@ -108,8 +112,8 @@
                   padding-left: 10px;
                 "
                 >{{
-                  !isVacio(usuario.iva)
-                    ? usuario.iva
+                  !isVacio(usuario.preferences.iva)
+                    ? usuario.preferences.iva
                       ? 'Con IVA'
                       : 'Sin IVA'
                     : 'Con IVA'

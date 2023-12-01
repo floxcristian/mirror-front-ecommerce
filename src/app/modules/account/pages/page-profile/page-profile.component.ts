@@ -128,7 +128,9 @@ export class PageProfileComponent implements OnDestroy, OnInit {
   async actualizaIVA() {
     const parametros = {
       username: this.usuario.username,
-      iva: isVacio(this.usuario.iva) ? false : !this.usuario.iva,
+      iva: isVacio(this.usuario.preferences.iva)
+        ? false
+        : !this.usuario.preferences.iva,
     };
 
     const resp: ResponseApi = (await this.clientsService
@@ -148,7 +150,7 @@ export class PageProfileComponent implements OnDestroy, OnInit {
     // const user = this.root.getDataSesionUsuario();
     const user = this.sessionStorage.get();
     if (user) {
-      user.iva = iva;
+      user.preferences.iva = iva;
       this.sessionStorage.set(user);
       // this.localS.set('usuario', user);
     }

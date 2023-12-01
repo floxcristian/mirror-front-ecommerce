@@ -16,7 +16,6 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CartService } from '../../../../shared/services/cart.service';
 import { Subject } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
-import { LoginService } from '../../../../shared/services/login.service';
 import { MobileMenuService } from '../../../../shared/services/mobile-menu.service';
 import { environment } from '@env/environment';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
@@ -69,7 +68,6 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
     private logisticsService: LogisticsService,
     private toastr: ToastrService,
     public cart: CartService,
-    public loginService: LoginService,
     public localS: LocalStorageService,
     private readonly gtmService: GoogleTagManagerService
   ) {}

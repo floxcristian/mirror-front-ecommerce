@@ -1,15 +1,6 @@
 // Angular
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-// Rxjs
-import { Subject, Observable } from 'rxjs';
-// Environment
-import { environment } from '@env/environment';
-// Services
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 // Interfaces
-import { Login, Usuario } from '../interfaces/login';
-import { SessionService } from '@core/states-v2/session.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 
@@ -17,18 +8,11 @@ import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
   providedIn: 'root',
 })
 export class LoginService {
-  /*private loginSession$: Subject<any> = new Subject();
-  readonly loginSessionObs$: Observable<any> =
-    this.loginSession$.asObservable();*/
   linkMiCuenta: any = [];
 
   constructor(
-    private http: HttpClient,
-    private localS: LocalStorageService,
     // Services V2
-    private readonly sessionService: SessionService,
     private readonly sessionStorage: SessionStorageService,
-    // Storage V2
     private readonly invitadoStorage: InvitadoStorageService
   ) {}
 
@@ -46,21 +30,6 @@ export class LoginService {
       }
     }
   }
-
-  /*
-  iniciarSesion(data: Login) {
-    return this.http.post(environment.apiCMS + 'users/login', data);
-  }*/
-
-  /*
-  notify(data: any) {
-    if (!data) {
-      const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
-      this.loginSession$.next(usuario);
-    } else {
-      this.loginSession$.next(data);
-    }
-  }*/
 
   setRoles(profile: any) {
     if (profile === 'superadmin') {

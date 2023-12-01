@@ -493,13 +493,13 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       .toPromise();
     this.cantidadFaltantePrecioEscala = 0;
     if (datos['precio_escala']) {
-      this.product.precioComun = !isVacio(usuario?.iva)
-        ? usuario?.iva
+      this.product.precioComun = !isVacio(usuario?.preferences.iva)
+        ? usuario?.preferences.iva
           ? datos['precioComun']
           : datos['precioComun'] / (1 + this.IVA)
         : datos['precioComun'];
-      this.product.precio.precio = !isVacio(usuario?.iva)
-        ? usuario?.iva
+      this.product.precio.precio = !isVacio(usuario?.preferences.iva)
+        ? usuario?.preferences.iva
           ? datos['precio'].precio
           : datos['precio'].precio / (1 + this.IVA)
         : datos['precio'].precio;

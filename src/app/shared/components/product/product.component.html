@@ -398,8 +398,8 @@
 
                   <span class="text-civa">
                     {{
-                      !isVacio(usuario.iva)
-                        ? usuario.iva
+                      !isVacio(usuario.preferences.iva)
+                        ? usuario.preferences.iva
                           ? 'c/iva'
                           : 's/iva'
                         : 'c/iva'
@@ -566,8 +566,8 @@
 
                   <span class="text-civa">
                     {{
-                      !isVacio(usuario.iva)
-                        ? usuario.iva
+                      !isVacio(usuario.preferences.iva)
+                        ? usuario.preferences.iva
                           ? 'c/iva'
                           : 's/iva'
                         : 'c/iva'
@@ -905,8 +905,8 @@
                   style="width: 50%; border-left: solid 2px; color: #00549d"
                 >
                   {{
-                    (!isVacio(usuario.iva)
-                      ? usuario.iva
+                    (!isVacio(usuario.preferences.iva)
+                      ? usuario.preferences.iva
                         ? precio.precio
                         : precio.precio / (1 + IVA)
                       : precio.precio

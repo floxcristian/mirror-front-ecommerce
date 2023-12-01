@@ -1,7 +1,7 @@
 // Angular
 import { Injectable } from '@angular/core';
 // Rxjs
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from './session.service';

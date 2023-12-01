@@ -549,13 +549,13 @@ export class PageProductComponent implements OnInit, OnDestroy {
       .getPriceProduct(parametrosPrecios)
       .toPromise();
     if (datos['precio_escala']) {
-      producto.precioComun = !isVacio(this.user?.iva)
-        ? this.user?.iva
+      producto.precioComun = !isVacio(this.user?.preferences.iva)
+        ? this.user?.preferences.iva
           ? datos['precioComun']
           : datos['precioComun'] / (1 + this.IVA)
         : datos['precioComun'];
-      producto.precio.precio = !isVacio(this.user?.iva)
-        ? this.user?.iva
+      producto.precio.precio = !isVacio(this.user?.preferences.iva)
+        ? this.user?.preferences.iva
           ? datos['precio'].precio
           : datos['precio'].precio / (1 + this.IVA)
         : datos['precio'].precio;

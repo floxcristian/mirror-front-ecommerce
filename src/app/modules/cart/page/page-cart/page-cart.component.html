@@ -216,8 +216,8 @@
                     >
                       <span class="cart-price-value"
                         >{{
-                          (!isVacio(user.iva)
-                            ? (user.iva
+                          (!isVacio(user.preferences.iva)
+                            ? (user.preferences.iva
                                 ? item.ProductCart.precio
                                 : item.ProductCart.precio / (1 + IVA)) *
                               item.quantity
@@ -226,8 +226,8 @@
                         }}
                         <em>
                           {{
-                            !isVacio(user.iva)
-                              ? user.iva
+                            !isVacio(user.preferences.iva)
+                              ? user.preferences.iva
                                 ? 'c/iva'
                                 : 's/iva'
                               : 'c/iva'

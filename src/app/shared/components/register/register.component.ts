@@ -19,6 +19,7 @@ import { getDomainsToAutocomplete } from './domains-autocomplete';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthServiceV2 } from '@core/services-v2/auth.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-register',
@@ -204,7 +205,11 @@ export class RegisterComponent implements OnInit {
           .subscribe({
             next: (res) => {
               const iva = res.user.preferences.iva ?? true;
-              const data = { ...res.user, login_temp: false, iva };
+              const data: ISession = {
+                ...res.user,
+                login_temp: false,
+                preferences: { iva },
+              };
               //FIXME: revisar si dejar en data o manipular otro nombre
               this.sessionStorage.set(data);
               this.authStateService.setSession(data);
@@ -305,7 +310,11 @@ export class RegisterComponent implements OnInit {
     this.authService.login(dataLogin.username, dataLogin.password).subscribe({
       next: (res) => {
         const iva = res.user.preferences.iva ?? true;
-        const data = { ...res.user, login_temp: false, iva };
+        const data: ISession = {
+          ...res.user,
+          login_temp: false,
+          preferences: { iva },
+        };
         //FIXME: revisar si dejar en data o manipular otro nombre
         this.sessionStorage.set(data);
         this.authStateService.setSession(data);
@@ -375,7 +384,11 @@ export class RegisterComponent implements OnInit {
     this.authService.login(dataLogin.username, dataLogin.password).subscribe({
       next: (res) => {
         const iva = res.user.preferences.iva ?? true;
-        const data = { ...res.user, login_temp: false, iva };
+        const data: ISession = {
+          ...res.user,
+          login_temp: false,
+          preferences: { iva },
+        };
         //FIXME: revisar si dejar en data o manipular otro nombre
         this.sessionStorage.set(data);
         this.authStateService.setSession(data);
