@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Product } from '../../../../shared/interfaces/product';
+import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 
 @Component({
   selector: 'app-detalle-tecnicos',
@@ -7,7 +8,7 @@ import { Product } from '../../../../shared/interfaces/product';
   styleUrls: ['./detalle-tecnicos.component.scss'],
 })
 export class DetalleTecnicosComponent implements OnInit {
-  @Input() producto!: Product | undefined;
+  @Input() producto!: IArticleResponse | undefined;
 
   w100!: boolean;
   innerWidth!: number;
