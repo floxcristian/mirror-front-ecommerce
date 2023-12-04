@@ -25,8 +25,7 @@
               <div *nguCarouselDef="let item" class="item">
                 <div
                   class="tile"
-                  (click)="featuredCarousel.to(item.id)"
-                  setActiveImage(item)
+                  (click)="featuredCarousel.to(item.id); setActiveImage(item)"
                 >
                   <img
                     *ngIf="!item.video"
@@ -153,11 +152,19 @@
                 #featuredCarousel
               >
                 <ng-container *ngFor="let image of images">
-                  <ng-template carouselSlide [id]="image" *ngIf="!image">
-                    <!-- (click)="openPhotoSwipe($event, image)" -->
-                    <a appClick href="{{ image }}" target="_blank">
+                  <ng-template
+                    carouselSlide
+                    [id]="image.id"
+                    *ngIf="!image.video"
+                  >
+                    <a
+                      appClick
+                      href="{{ image.url }}"
+                      (click)="openPhotoSwipe($event, image)"
+                      target="_blank"
+                    >
                       <img
-                        [src]="image"
+                        [src]="image.url"
                         [alt]="product.name"
                         class="lazyload"
                         (load)="onLoadImage()"

@@ -410,6 +410,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   carouselTileLoad() {
     this.carouselItems = [...this.carouselItems, ...this.mainItems];
+    console.log('carousel tiel', this.carouselItems);
   }
 
   getPopularProducts(sku: any) {
@@ -444,7 +445,10 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   setActiveImage(image: IImage): void {
     console.log('setActiveImage: ', image);
     // corregir esto..
-    this.images.forEach((eachImage) => eachImage === image);
+    // this.images.forEach((eachImage) => eachImage === image);
+    this.images.forEach(
+      (eachImage) => (eachImage.active = eachImage === image)
+    );
   }
 
   featuredCarouselTranslated(event: SlidesOutputData): void {
