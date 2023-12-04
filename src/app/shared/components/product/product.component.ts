@@ -185,7 +185,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.isChevron = this.skusChevron.includes(value.sku);
     /***************/
     this.getPopularProducts(value.sku);
-    // this.getDisponibilidad(value.sku); // revisarlo
     this.verificarDisponibilidad(value);
     this.comprobarStock(value.sku, this.tiendaActual, value); // revisar
     this.quantity.setValue(1);
@@ -427,21 +426,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   //revisar **
   cargaPrecio(producto: any) {
     this.cart.cargarPrecioEnProducto(producto);
-  }
-
-  //revisar si se utiliza
-  getDisponibilidad(sku: any) {
-    this.productsService.getdisponibilidadSku(sku).subscribe((r: any) => {
-      this.disponibilidadSku = r;
-      if (
-        !this.disponibilidadSku.despacho &&
-        !this.disponibilidadSku.retiroTienda
-      ) {
-        this.disponibilidad = false;
-      } else {
-        this.disponibilidad = true;
-      }
-    });
   }
   //Funcion nueva*
   verificarDisponibilidad(product: IArticleResponse) {
@@ -867,14 +851,14 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       return { ...p, marcado: false };
     });
 
-    if (!isVacio(this.product!.price)) {
-      this.preciosEscalas.unshift({
-        desde: 0,
-        hasta: 0,
-        precio: this.product?.priceInfo.price,
-        marcado: true,
-      });
-    }
+    // if (!isVacio(this.product!.price)) {
+    this.preciosEscalas.unshift({
+      desde: 0,
+      hasta: 0,
+      precio: this.product?.priceInfo.price,
+      marcado: true,
+    });
+    // }
   }
 
   verPreciosEscala() {
