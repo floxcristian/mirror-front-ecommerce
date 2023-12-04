@@ -224,11 +224,11 @@ export class PageProductComponent implements OnInit, OnDestroy {
         }
 
         const sku = params.id.split('-').reverse()[0];
-        this.getDetailProduct(sku);
+        // this.getDetailProduct(sku);
         console.log('PRODUCTS: ', this.product);
 
         this.getDetailArticle(sku);
-        // this.getMixProducts(sku);
+        this.getMixProducts(sku);
         // this.getMatrixProducts(sku);
         this.productoService.getStockProduct(sku).subscribe((r: any) => {
           let stockTienda = 0;
@@ -360,7 +360,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
             this.cart.cargarPrecioEnProducto(this.product);
             this.setMeta(this.product);
             this.setBreadcrumbs(this.product);
-            this.productFacebook(this.product);
+            // this.productFacebook(this.product);
           } else {
             this.toastr.error(
               'Connection error, unable to fetch the articles'
@@ -510,8 +510,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
     ]).subscribe((resp: any[]) => {
       this.matriz = [];
       this.comparacion = [];
-      this.relatedProducts = resp[1].data;
-      this.recommendedProducts = resp[2].data;
+      this.relatedProducts = resp[1];
+      this.recommendedProducts = resp[2];
       this.matrixProducts = resp[0].data;
       this.matriz = resp[3].data;
       this.matriz.map((p) => (p.cantidad = 1));

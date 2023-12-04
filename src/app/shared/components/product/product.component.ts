@@ -451,7 +451,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     if (event.slides?.length) {
       const activeImageId = event.slides[0].id;
       //fix
-      // this.images.forEach((eachImage) => eachImage === activeImageId);
+      this.images.forEach((eachImage) => eachImage === activeImageId);
     }
   }
 
@@ -751,7 +751,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.imageFichaCargada = true;
   }
 
-  formatImageSlider(product: any) {
+  formatImageSlider(product: IArticleResponse) {
     let index = 0;
     let image1000 = null;
     let image150 = null;
@@ -804,13 +804,13 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
         }
         let thumbVideo = '';
         let urlVideo = '';
-        for (const i in product.atributos) {
-          if (product.atributos[i].nombre == 'VIDEO') {
+        for (const i in product.attributes) {
+          if (product.attributes[i].name == 'VIDEO') {
             (thumbVideo =
               'https://i.ytimg.com/vi' +
-              product.atributos[i].valor.split('/embed')[1] +
+              product.attributes[i].value.split('/embed')[1] +
               '/1.jpg'),
-              (urlVideo = product.atributos[i].valor);
+              (urlVideo = product.attributes[i].value);
 
             const image: IProductImage = {
               id: product.sku.toString() + '_' + index++,
