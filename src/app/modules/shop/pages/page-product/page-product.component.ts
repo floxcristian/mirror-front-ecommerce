@@ -345,7 +345,13 @@ export class PageProductComponent implements OnInit, OnDestroy {
         sku: sku,
         documentId: user.documentId,
         branchCode: selectedStore.codigo,
+        location: selectedStore.comuna,
       };
+
+      if (this.preferenciaCliente.direccionDespacho !== null)
+        params.location = this.preferenciaCliente.direccionDespacho.comuna
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '');
 
       this.articleService
         .getArticleDataSheet(params)
@@ -354,10 +360,9 @@ export class PageProductComponent implements OnInit, OnDestroy {
           if (response) {
             response.chassis = response.chassis || '';
             const product = response;
-            delete product.price;
             this.product = { ...product };
             // TODO: probar funcion por funcion para ver si funciona
-            this.cart.cargarPrecioEnProducto(this.product);
+            // this.cart.cargarPrecioEnProducto(this.product); // ya no se utiliza
             this.setMeta(this.product);
             this.setBreadcrumbs(this.product);
             // this.productFacebook(this.product);

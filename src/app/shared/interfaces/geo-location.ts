@@ -17,4 +17,5 @@ export interface TiendaLocation {
   lat?: number;
   lon?: number;
   codigo: string;
+  comuna?: string;
 }

@@ -185,8 +185,9 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.isChevron = this.skusChevron.includes(value.sku);
     /***************/
     this.getPopularProducts(value.sku);
-    this.getDisponibilidad(value.sku);
-    this.comprobarStock(value.sku, this.tiendaActual, value);
+    // this.getDisponibilidad(value.sku); // revisarlo
+    this.verificarDisponibilidad(value);
+    this.comprobarStock(value.sku, this.tiendaActual, value); // revisar
     this.quantity.setValue(1);
     this.imageFichaCargada = false;
     this.images = [];
@@ -423,11 +424,12 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     }
     this.estado = false;
   }
-
+  //revisar **
   cargaPrecio(producto: any) {
     this.cart.cargarPrecioEnProducto(producto);
   }
 
+  //revisar si se utiliza
   getDisponibilidad(sku: any) {
     this.productsService.getdisponibilidadSku(sku).subscribe((r: any) => {
       this.disponibilidadSku = r;
@@ -441,11 +443,18 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
   }
-
+  //Funcion nueva*
+  verificarDisponibilidad(product: IArticleResponse) {
+    console.log('dispo product', product);
+    if (
+      product.deliverySupply.pickupDate == null &&
+      product.deliverySupply.pickupDate == null
+    )
+      this.disponibilidad = false;
+    else this.disponibilidad = true;
+  }
+  //Listo
   setActiveImage(image: IImage): void {
-    console.log('setActiveImage: ', image);
-    // corregir esto..
-    // this.images.forEach((eachImage) => eachImage === image);
     this.images.forEach(
       (eachImage) => (eachImage.active = eachImage === image)
     );
@@ -470,6 +479,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
    * @param sku
    * @param tienda
    */
+  //Revisar ***
   async comprobarStock(sku: any, tienda: any, product: any): Promise<void> {
     this.stockTiendaActual = 0;
     return;
@@ -714,6 +724,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   //   }
   // }
 
+  //Listo
   openPhotoSwipe(event: MouseEvent, image: ProductImage): void {
     if (this.layout !== 'quickview') {
       event.preventDefault();
@@ -755,6 +766,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.imageFichaCargada = true;
   }
 
+  //Listo
   formatImageSlider(product: IArticleResponse) {
     let index = 0;
     let image1000 = null;
@@ -841,6 +853,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
+  // Revisar **
   async obtienePrecioEscala() {
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
 
@@ -870,6 +883,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
+  //Revisar
   OpenAvisoStock() {
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     this.modalService.show(AvisoStockComponent, {
