@@ -63,24 +63,6 @@ export class AccountComponent implements OnInit {
       this.root.getPreferenciasCliente();
     });
 
-    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
-      if (!usuario.hasOwnProperty('user_role')) {
-        usuario.user_role = '';
-      }
-
-      this.usuario = usuario;
-      this.mostrarMenu = true;
-      this.mostrarBienvenida = true;
-      this.linkMiCuenta = this.loginService.setRoles(this.usuario.userRole);
-
-      if (this.isB2B) {
-        this.linkMiCuenta = this.linkMiCuenta.filter(
-          (l) => !this.linksOcultosB2B.includes(l.label)
-        );
-      }
-      this.root.getPreferenciasCliente();
-    });*/
-
     if (this.usuario) {
       this.linkMiCuenta = this.menuService.get(this.usuario.userRole);
       if (this.isB2B) {
@@ -91,6 +73,7 @@ export class AccountComponent implements OnInit {
     }
     this.cd.detectChanges();
   }
+
   cambiaElementosMenu(value: any) {
     this.mostrarMenu = value;
   }

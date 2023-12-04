@@ -1,5 +1,3 @@
-// import { LocalStorageService } from 'angular-2-local-storage';
-import { LoginService } from './../../../../shared/services/login.service';
 import { Usuario } from './../../../../shared/interfaces/login';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
@@ -37,7 +35,6 @@ export class MobileHeaderAccountComponent implements OnInit {
   ];
 
   constructor(
-    public loginService: LoginService,
     public localS: LocalStorageService,
     private cd: ChangeDetectorRef,
     // Services V2
@@ -47,7 +44,6 @@ export class MobileHeaderAccountComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // this.usuario = this.localS.get('usuario') as any;
     this.usuario = this.sessionStorage.get();
 
     this.authStateService.session$.subscribe((user) => {
@@ -72,33 +68,6 @@ export class MobileHeaderAccountComponent implements OnInit {
       this.mostrarBienvenida = true;
       this.linkMiCuenta = this.menuService.get(this.usuario.userRole);
     });
-
-    /*this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
-      if (!usuario.hasOwnProperty('user_role')) {
-        if (usuario['user_role'] === 'superadmin') {
-          this.linkMiCuenta = [
-            {
-              label: 'Órdenes de Venta',
-              url: ['/', 'mi-cuenta', 'ordenes'],
-              icon: 'far fa-file-alt',
-            },
-            {
-              label: 'Cerrar sesión',
-              url: ['/', 'mi-cuenta', 'login'],
-              icon: 'fas fa-power-off',
-              dark: true,
-            },
-          ];
-        } else {
-          usuario['user_role'] = '';
-        }
-      }
-
-      this.usuario = usuario;
-      this.mostrarMenu = true;
-      this.mostrarBienvenida = true;
-      this.linkMiCuenta = this.loginService.setRoles(this.usuario?.userRole);
-    });*/
 
     if (this.usuario) {
       this.linkMiCuenta = this.menuService.get(this.usuario.userRole);

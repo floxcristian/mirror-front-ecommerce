@@ -157,4 +157,14 @@ export class ArticleService {
       }
     );
   }
+
+  getComparacionMatriz(params: {
+    sku: any;
+    documentId: string;
+    branchCode: string;
+  }) {
+    return this.http.get(
+      `${API_ARTICLE}/suggestion/article-compare-matrix?sku=${params.sku}&documentId=${params.documentId}&branchCode=${params.branchCode}`
+    );
+  }
 }

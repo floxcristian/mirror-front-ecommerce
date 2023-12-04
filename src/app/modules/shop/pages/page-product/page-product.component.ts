@@ -230,13 +230,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
         this.getDetailArticle(sku);
         this.getMixProducts(sku);
         // this.getMatrixProducts(sku);
-        this.productoService.getStockProduct(sku).subscribe((r: any) => {
-          let stockTienda = 0;
-          r.map(async (stock: any) => {
-            stockTienda += stock.cantidad;
-          });
-          stockTienda > 0 ? (this.stock = true) : (this.stock = false);
-        });
       } else {
         this.router.navigate(['/inicio/**']);
       }
@@ -361,8 +354,10 @@ export class PageProductComponent implements OnInit, OnDestroy {
             response.chassis = response.chassis || '';
             const product = response;
             this.product = { ...product };
+            response.stockSummary.companyStock > 0
+              ? (this.stock = true)
+              : (this.stock = false);
             // TODO: probar funcion por funcion para ver si funciona
-            // this.cart.cargarPrecioEnProducto(this.product); // ya no se utiliza
             this.setMeta(this.product);
             this.setBreadcrumbs(this.product);
             // this.productFacebook(this.product);
@@ -459,68 +454,43 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
   getMixProducts(sku: any) {
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const obj = {
-      sku,
-      rut: '',
-      sucursal: tiendaSeleccionada?.codigo || 'SAN BRNRDO',
-      localidad: '',
-    };
-    const obj1 = {
-      listaSku: [sku],
-      rut: '',
-      sucursal: tiendaSeleccionada?.codigo,
-      cantidad: 10,
-      localidad: '',
-    };
     let rut: string = '0';
     if (this.user) {
-      obj.rut = this.user.documentId || '0';
-      obj1.rut = this.user.documentId || '0';
       rut = this.user.documentId || '0';
-    }
-
-    if (this.preferenciaCliente && this.preferenciaCliente.direccionDespacho) {
-      obj.localidad = this.preferenciaCliente.direccionDespacho.comuna
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
-      obj1.localidad = this.preferenciaCliente.direccionDespacho.comuna
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
     }
     const obj4 = {
       sku: sku,
       documentId: this.user.documentId || '0',
       branchCode: tiendaSeleccionada?.codigo || 'SAN BRNRDO',
-      location: this.preferenciaCliente.direccionDespacho.comuna
+      location: this.preferenciaCliente.direccionDespacho?.comuna
         ? this.preferenciaCliente.direccionDespacho.comuna
             .normalize('NFD')
             .replace(/[\u0300-\u036f]/g, '')
         : '',
     };
     forkJoin([
-      // this.productoService.getMatrixProducts(obj),
       this.articleService.getArticleMatrix(obj4),
-      // this.productoService.getRelatedProducts(obj),
       this.articleService.getRelatedBySku(obj4),
-      // this.productoService.getRecommendedProductsList(obj1),
       this.articleService.getArticleSuggestionsBySku({
         ...obj4,
         quantityToSuggest: 10,
       }),
-      this.catalogoService.getComparacionMatriz(
-        sku,
-        rut,
-        this.tiendaSeleccionada.codigo
-      ),
+
+      this.articleService.getComparacionMatriz(obj4),
+      // this.catalogoService.getComparacionMatriz(
+      //   sku,
+      //   rut,
+      //   this.tiendaSeleccionada.codigo
+      // ),
     ]).subscribe((resp: any[]) => {
       this.matriz = [];
       this.comparacion = [];
       this.relatedProducts = resp[1];
       this.recommendedProducts = resp[2];
-      this.matrixProducts = resp[0].data;
-      this.matriz = resp[3].data;
+      this.matrixProducts = resp[0].articles;
+      this.matriz = resp[3].articles;
       this.matriz.map((p) => (p.cantidad = 1));
-      this.formateaComparacion(resp[3].comparacion);
+      this.formateaComparacion(resp[3].comparison);
     });
   }
   formateaComparacion(comparacion: any[]) {
@@ -528,7 +498,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
       const key = Object.keys(element);
       const obj = {
         nombre: key[0],
-        valores: element[key[0]].map((x: any) => x.valor),
+        valores: element[key[0]].map((x: any) => x.value),
       };
       this.comparacion.push(obj);
     }

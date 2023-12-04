@@ -75,7 +75,6 @@ export class PageHomeOneComponent implements OnInit {
     ];
     const user = this.sessionService.getSession();
     const userRole = user.userRole;
-    //const role = this.rootService.getDataSesionUsuario().user_role;
     this.isB2B = ['supervisor', 'comprador'].includes(userRole || '');
 
     this.cargaParcializada();

@@ -25,7 +25,9 @@
               <div *nguCarouselDef="let item" class="item">
                 <div
                   class="tile"
-                  (click)="featuredCarousel.to(item.id); setActiveImage(item)"
+                  (click)="
+                    featuredCarousel.to(item.id); setActiveImage(item.id)
+                  "
                 >
                   <img
                     *ngIf="!item.video"
@@ -291,32 +293,32 @@
                 <div class="row" style="gap: 1rem">
                   <div class="col-md-12">
                     <label
-                      for="nombre"
+                      for="customerName"
                       style="color: #0063b9; font-weight: 100"
                       >Nombre*:</label
                     >
                     <div class="input-group">
                       <input
                         type="text"
-                        formControlName="nombre"
+                        formControlName="customerName"
                         class="form-control form-control-sm"
-                        id="nombre"
+                        id="customerName"
                         autocomplete="off"
                       />
                     </div>
                   </div>
                   <div class="col-md-12">
                     <label
-                      for="nombre"
+                      for="customerPhone"
                       style="color: #0063b9; font-weight: 100"
                       >Teléfono*:</label
                     >
                     <div class="input-group">
                       <input
                         type="text"
-                        formControlName="numero_telefono"
+                        formControlName="customerPhone"
                         class="form-control form-control-sm"
-                        id="telefono"
+                        id="customerPhone"
                       />
                     </div>
                   </div>
@@ -326,19 +328,19 @@
                     >
                     <div class="input-group">
                       <input
-                        type="email"
-                        formControlName="email"
+                        type="customerEmail"
+                        formControlName="customerEmail"
                         class="form-control form-control-sm"
-                        id="email"
+                        id="customerEmail"
                         autocomplete="off"
                       />
                       <div
                         class="invalid-feedback"
                         style="margin-bottom: 10px"
                         *ngIf="
-                          (formAvisoStock.get('email')?.touched ||
-                            formAvisoStock.get('email')?.dirty) &&
-                          formAvisoStock.get('email')?.invalid
+                          (formAvisoStock.get('customerEmail')?.touched ||
+                            formAvisoStock.get('customerEmail')?.dirty) &&
+                          formAvisoStock.get('customerEmail')?.invalid
                         "
                       >
                         Correo no es válido
@@ -694,32 +696,32 @@
                   <div class="row" style="gap: 1rem">
                     <div class="col-md-12">
                       <label
-                        for="nombre"
+                        for="customerName"
                         style="color: #0063b9; font-weight: 100"
                         >Nombre:</label
                       >
                       <div class="input-group">
                         <input
                           type="text"
-                          formControlName="nombre"
+                          formControlName="customerName"
                           class="form-control form-control-sm"
-                          id="nombre"
+                          id="customerName"
                           autocomplete="off"
                         />
                       </div>
                     </div>
                     <div class="col-md-12">
                       <label
-                        for="nombre"
+                        for="customerPhone"
                         style="color: #0063b9; font-weight: 100"
                         >Teléfono*:</label
                       >
                       <div class="input-group">
                         <input
                           type="text"
-                          formControlName="numero_telefono"
+                          formControlName="customerPhone"
                           class="form-control form-control-sm"
-                          id="telefono"
+                          id="customerPhone"
                         />
                       </div>
                     </div>
@@ -731,19 +733,19 @@
                       >
                       <div class="input-group">
                         <input
-                          type="email"
-                          formControlName="email"
+                          type="customerEmail"
+                          formControlName="customerEmail"
                           class="form-control form-control-sm"
-                          id="email"
+                          id="customerEmail"
                           autocomplete="off"
                         />
                         <div
                           class="invalid-feedback"
                           style="margin-bottom: 10px"
                           *ngIf="
-                            (formAvisoStock.get('email')?.touched ||
-                              formAvisoStock.get('email')?.dirty) &&
-                            formAvisoStock.get('email')?.invalid
+                            (formAvisoStock.get('customerEmail')?.touched ||
+                              formAvisoStock.get('customerEmail')?.dirty) &&
+                            formAvisoStock.get('customerEmail')?.invalid
                           "
                         >
                           Correo no es válido

@@ -34,7 +34,6 @@ import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { CartService } from '../../../../shared/services/cart.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
-import { LoginService } from '../../../../shared/services/login.service';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 // Constants
 import { ShippingType } from '../../../../core/enums';
@@ -130,8 +129,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   tituloRecibe: string = 'Persona que recibe';
   loadingShippingAll = false;
   showAllAddress: boolean = false;
-  public isLogin = false;
-  public loadingResumen = false;
+  isLogin!: boolean;
+  loadingResumen = false;
   subscription!: Subscription;
 
   // productos validados
@@ -152,7 +151,6 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     private datePipe: DatePipe,
     private router: Router,
     private localS: LocalStorageService,
-    private loginService: LoginService,
     private modalService: BsModalService,
     private geoService: GeoLocationService,
     private geoLocationService: GeoLocationService,
@@ -182,8 +180,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     this.obtieneDireccionesCliente();
     this.obtieneTiendas();
     this.direccionConfigurada = this.localS.get('preferenciasCliente');
-
-    this.isLogin = this.loginService.isLogin();
+    this.isLogin = this.sessionService.isLoggedIn();
 
     if (!this.HideResumen()) {
       this.recibeType = 'yo';
@@ -763,7 +760,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
 
   subscribeOnLogin() {
     this.authStateService.session$.subscribe((user) => {
-      this.isLogin = this.loginService.isLogin();
+      this.isLogin = this.sessionService.isLoggedIn();
       this.obtieneDireccionesCliente();
       this.contacto_notificaciones();
     });

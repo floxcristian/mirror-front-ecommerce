@@ -7,7 +7,6 @@ import { environment } from '@env/environment';
 import { ISession } from '@core/models-v2/auth/session.interface';
 // Services
 import { CurrencyService } from '../../../../shared/services/currency.service';
-import { LoginService } from '../../../../shared/services/login.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
@@ -43,27 +42,16 @@ export class TopbarComponent {
   constructor(
     public currencyService: CurrencyService,
     private router: Router,
-    public loginService: LoginService,
     public localS: LocalStorageService,
     // Services V2
     private readonly sessionStorage: SessionStorageService,
     private readonly authStateSession: AuthStateServiceV2
   ) {
-    // this.usuario = this.localS.get('usuario') as any;
     this.usuario = this.sessionStorage.get();
 
     this.authStateSession.session$.subscribe((user) => {
       this.usuario = user;
     });
-
-    /*
-    this.loginService.loginSessionObs$.pipe().subscribe((usuario) => {
-      if (!usuario.hasOwnProperty('user_role')) {
-        usuario['user_role'] = '';
-      }
-
-      this.usuario = usuario;
-    });*/
   }
 
   setCurrency(currency: any): void {

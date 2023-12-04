@@ -55,6 +55,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
   ) {
     this.formDefault();
   }
+
   ngOnChanges() {
     if (this.invitado) {
       if (this.invitado.phone?.slice(0, 4) !== '+569') {
@@ -111,10 +112,10 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
       const user = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario');
 
       let usuarioVisita: Usuario;
-      usuarioVisita = await this.setUsuario(dataSave);
+      usuarioVisita = this.setUsuario(dataSave);
+
       // FIXME: antes se usaba, y ahora??
       // usuarioVisita._id = user._id;
-
       this.cartService.agregaInvitado(usuarioVisita).subscribe((r: any) => {});
 
       this.returnLoginEvent.emit(usuarioVisita);
@@ -125,8 +126,8 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     }
   }
 
-  async setUsuario(formulario: any) {
-    let usuario = {
+  setUsuario(formulario: any) {
+    return {
       active: true,
       avatar: '',
       rut: formulario.rut,
@@ -139,7 +140,6 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
       phone: formulario.telefono,
       user_role: 'temp',
     };
-    return await usuario;
   }
 
   login() {

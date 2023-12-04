@@ -4,7 +4,6 @@ import { ToastrService } from 'ngx-toastr';
 import { LogisticsService } from '../../services/logistics.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ResponseApi } from '../../interfaces/response-api';
-import { LoginService } from '../../services/login.service';
 import { CartService } from '../../services/cart.service';
 import { PasswordValidator } from '../../validations/password';
 import { Router } from '@angular/router';
@@ -60,7 +59,6 @@ export class RegisterComponent implements OnInit {
     private logisticsService: LogisticsService,
     private fb: FormBuilder,
     private localS: LocalStorageService,
-    private loginService: LoginService,
     private cartService: CartService,
     private router: Router,
     // Services V2
@@ -205,21 +203,19 @@ export class RegisterComponent implements OnInit {
           .subscribe({
             next: (res) => {
               const iva = res.user.preferences.iva ?? true;
-              const data: ISession = {
+              const session: ISession = {
                 ...res.user,
                 login_temp: false,
                 preferences: { iva },
               };
-              //FIXME: revisar si dejar en data o manipular otro nombre
-              this.sessionStorage.set(data);
-              this.authStateService.setSession(data);
-              if (userIdOld !== null) {
-                const dataPut = {
-                  origen: userIdOld,
-                  destino: data.email,
-                };
+              this.sessionStorage.set(session);
+              this.authStateService.setSession(session);
+              if (userIdOld) {
                 this.cartService
-                  .cartTransfer(dataPut)
+                  .cartTransfer({
+                    origen: userIdOld,
+                    destino: session.email,
+                  })
                   .subscribe((res: ResponseApi) => {
                     this.cartService.load();
                   });
@@ -232,36 +228,6 @@ export class RegisterComponent implements OnInit {
               this.toastr.error(err.message);
             },
           });
-
-        // this.loginService.iniciarSesion(dataLogin).subscribe(
-        //   (r: any) => {
-        //     if (r.status === 'OK') {
-        //       const data = { ...r.data, login_temp: false };
-        //       this.localS.set('usuario', data);
-        //       this.loginService.notify(data);
-
-        //       if (userIdOld !== null) {
-        //         const dataPut = {
-        //           origen: userIdOld,
-        //           destino: data.email,
-        //         };
-        //         this.cartService
-        //           .cartTransfer(dataPut)
-        //           .subscribe((res: ResponseApi) => {
-        //             this.cartService.load();
-        //           });
-        //       } else {
-        //         this.cartService.load();
-        //       }
-        //       this.router.navigate(['/inicio']);
-        //     } else {
-        //       this.toastr.error(`${r.errors[0]}`);
-        //     }
-        //   },
-        //   (e) => {
-        //     this.toastr.error(e.error.msg);
-        //   }
-        // );
       },
       (error) => {
         this.toastr.error('Error de conexión con el servidor');
@@ -310,21 +276,19 @@ export class RegisterComponent implements OnInit {
     this.authService.login(dataLogin.username, dataLogin.password).subscribe({
       next: (res) => {
         const iva = res.user.preferences.iva ?? true;
-        const data: ISession = {
+        const session: ISession = {
           ...res.user,
           login_temp: false,
           preferences: { iva },
         };
-        //FIXME: revisar si dejar en data o manipular otro nombre
-        this.sessionStorage.set(data);
-        this.authStateService.setSession(data);
-        if (userIdOld !== null) {
-          const dataPut = {
-            origen: userIdOld,
-            destino: data.email,
-          };
+        this.sessionStorage.set(session);
+        this.authStateService.setSession(session);
+        if (userIdOld) {
           this.cartService
-            .cartTransfer(dataPut)
+            .cartTransfer({
+              origen: userIdOld,
+              destino: session.email,
+            })
             .subscribe((res: ResponseApi) => {
               this.cartService.load();
             });
@@ -337,35 +301,6 @@ export class RegisterComponent implements OnInit {
         this.toastr.error(err.message);
       },
     });
-
-    // this.loginService.iniciarSesion(dataLogin).subscribe(
-    //   (r: any) => {
-    //     if (r.status === 'OK') {
-    //       const data = { ...r.data, login_temp: false };
-    //       this.localS.set('usuario', data);
-    //       this.loginService.notify(data);
-
-    //       if (userIdOld !== null) {
-    //         const dataPut = {
-    //           origen: userIdOld,
-    //           destino: data.username,
-    //         };
-    //         this.cartService
-    //           .cartTransfer(dataPut)
-    //           .subscribe((res: ResponseApi) => {
-    //             this.cartService.load();
-    //           });
-    //       } else {
-    //         this.cartService.load();
-    //       }
-    //     } else {
-    //       this.toastr.error(`${r.errors[0]}`);
-    //     }
-    //   },
-    //   (e) => {
-    //     this.toastr.error(e.error.msg);
-    //   }
-    // );
   }
 
   login() {
@@ -384,21 +319,20 @@ export class RegisterComponent implements OnInit {
     this.authService.login(dataLogin.username, dataLogin.password).subscribe({
       next: (res) => {
         const iva = res.user.preferences.iva ?? true;
-        const data: ISession = {
+        const session: ISession = {
           ...res.user,
           login_temp: false,
           preferences: { iva },
         };
-        //FIXME: revisar si dejar en data o manipular otro nombre
-        this.sessionStorage.set(data);
-        this.authStateService.setSession(data);
-        if (userIdOld !== null) {
-          const dataPut = {
-            origen: userIdOld,
-            destino: data.email,
-          };
+
+        this.sessionStorage.set(session);
+        this.authStateService.setSession(session);
+        if (userIdOld) {
           this.cartService
-            .cartTransfer(dataPut)
+            .cartTransfer({
+              origen: userIdOld,
+              destino: session.email,
+            })
             .subscribe((res: ResponseApi) => {
               this.cartService.load();
             });
@@ -411,36 +345,6 @@ export class RegisterComponent implements OnInit {
         this.toastr.error(err.message);
       },
     });
-
-    // this.loginService.iniciarSesion(dataLogin).subscribe(
-    //   (r: any) => {
-    //     if (r.status === 'OK') {
-    //       const data = { ...r.data, login_temp: false };
-
-    //       this.localS.set('usuario', data);
-    //       this.loginService.notify(data);
-
-    //       if (userIdOld !== null) {
-    //         const dataPut = {
-    //           origen: userIdOld,
-    //           destino: data.email,
-    //         };
-    //         this.cartService
-    //           .cartTransfer(dataPut)
-    //           .subscribe((res: ResponseApi) => {
-    //             this.cartService.load();
-    //           });
-    //       } else {
-    //         this.cartService.load();
-    //       }
-    //     } else {
-    //       this.toastr.error(`${r.errors[0]}`);
-    //     }
-    //   },
-    //   (e) => {
-    //     this.toastr.error(e.error.msg);
-    //   }
-    // );
   }
 
   invoice() {

@@ -1,5 +1,4 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { LoginService } from '../../../../shared/services/login.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -33,16 +32,15 @@ export class LoginComponent implements OnInit {
   contentRegister = false;
 
   constructor(
-    private loginService: LoginService,
     private fb: FormBuilder,
     private router: Router,
     private toastr: ToastrService,
     private cart: CartService,
     private clientsService: ClientsService,
     private localStorage: LocalStorageService,
+    // Service V2
     private readonly authService: AuthApiService,
     private readonly authStateService: AuthStateServiceV2,
-    // Storage
     private readonly sessionStorage: SessionStorageService,
     private readonly invitadoStorage: InvitadoStorageService
   ) {
@@ -78,6 +76,8 @@ export class LoginComponent implements OnInit {
       )
       .subscribe({
         next: (res) => {
+          // Variable para saber la ruta de la pagina.
+          // Si esta en seguimiento este debe dirigirse a la pagina seguimiento en login.
           const url: any = this.localStorage.get('ruta');
           this.ruta = url || ['/inicio'];
 
@@ -89,7 +89,7 @@ export class LoginComponent implements OnInit {
             this.router.url.split('?')[0] != '/carro-compra/confirmar-orden-oc'
           ) {
             sub = this.cart.items$.subscribe((resp) => {
-              //si realiza login en sitio/iniciar-sesion podra dirigirse a seguimiento
+              // Si realiza login en sitio/iniciar-sesion podra dirigirse a seguimiento
               if (this.router.url == '/sitio/iniciar-sesion' && this.ruta) {
                 (resp?.length || 0) > 0
                   ? this.router.navigate(['/carro-compra', 'resumen'])
@@ -125,13 +125,9 @@ export class LoginComponent implements OnInit {
             preferences: { iva },
           };
 
-          // FIXME: revisar internamente.
           this.sessionStorage.set(data);
-          // this.localStorage.set('usuario', data);
-          //this.localStorage.remove('invitado');
           this.invitadoStorage.remove();
           this.authStateService.setSession(data);
-          //this.loginService.notify(data);
           this.verificaSession();
           if (userIdOld) {
             const dataPut = {
@@ -150,79 +146,9 @@ export class LoginComponent implements OnInit {
           this.toastr.error(err.message);
         },
       });
-
-    /*
-    this.loginService.iniciarSesion(this.form.value).subscribe(
-      (r: any) => {
-        //variable para saber la ruta de la pagina
-        // si esta en seguimiento este debe dirigirse a la pagina seguimiento en login
-        let url: any = this.localStorage.get('ruta');
-        this.ruta = url == null ? ['/inicio'] : url;
-
-        let queryParams: any = this.localStorage.get('queryParams');
-        queryParams = queryParams == null ? {} : queryParams;
-
-        let sub;
-
-        if (
-          this.router.url.split('?')[0] != '/carro-compra/confirmar-orden-oc'
-        ) {
-          sub = this.cart.items$.subscribe((resp) => {
-            //si realiza login en sitio/iniciar-sesion podra dirigirse a seguimiento
-            if (this.router.url == '/sitio/iniciar-sesion' && this.ruta) {
-              (resp?.length || 0) > 0
-                ? this.router.navigate(['/carro-compra', 'resumen'])
-                : this.router.navigate(this.ruta);
-            } else if (this.router.url != '/sitio/iniciar-sesion' && this.ruta)
-              (resp?.length || 0) > 0
-                ? this.router.navigate(['/carro-compra', 'resumen'])
-                : r.data.user_role === 'supervisor' ||
-                  r.data.user_role === 'comprador'
-                ? this.router.navigate(['/inicio']).then(() => {
-                    window.location.reload();
-                  })
-                : this.router.navigate([this.router.url]);
-          });
-        }
-
-        // Se carga lista de favoritos
-        this.clientsService.cargaFavoritosLocalStorage(r.data.rut);
-
-        if (
-          this.router.url.split('?')[0] != '/carro-compra/confirmar-orden-oc'
-        ) {
-          sub?.unsubscribe();
-        }
-
-        const iva = isVacio(r.data.iva) ? true : r.data.iva;
-
-        const data = { ...r.data, login_temp: false, iva };
-
-        this.localStorage.set('usuario', data);
-        this.localStorage.remove('invitado');
-        this.loginService.notify(data);
-        this.verificaSession();
-
-        if (userIdOld !== null) {
-          const dataPut = {
-            origen: userIdOld,
-            destino: data.email,
-          };
-          this.cart.cartTransfer(dataPut).subscribe((res: ResponseApi) => {
-            this.cart.load();
-          });
-        } else {
-          this.cart.load();
-        }
-      },
-      (e) => {
-        this.toastr.error(e.error.msg);
-      }
-    );*/
   }
 
   verificaSession() {
-    // const user: Usuario = this.localStorage.get('usuario') as Usuario;
     const user = this.sessionStorage.get();
     if (!user) {
       this.muestraLogin.emit(false);

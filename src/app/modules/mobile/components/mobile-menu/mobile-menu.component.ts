@@ -14,7 +14,6 @@ import { mobileMenu } from '../../../../../data/mobile-menu';
 import { MobileMenuItem } from '../../../../shared/interfaces/mobile-menu-item';
 import { environment } from '@env/environment';
 import { Usuario } from '../../../../shared/interfaces/login';
-import { LoginService } from '../../../../shared/services/login.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { NavigationLink } from '../../../../shared/interfaces/navigation-link';
 import { CategoryApi } from '../../../../shared/interfaces/category-api';
@@ -78,7 +77,6 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
   constructor(
     public mobilemenu: MobileMenuService,
     private localS: LocalStorageService,
-    private loginService: LoginService,
     private modalService: BsModalService,
     private categoriesService: CategoryService,
     private root: RootService,
@@ -169,7 +167,7 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
   }
 
   updateLink() {
-    const isLogin = this.loginService.isLogin();
+    const isLogin = this.sessionService.isLoggedIn();
     this.usuario = this.sessionStorage.get();
 
     if (isLogin) {

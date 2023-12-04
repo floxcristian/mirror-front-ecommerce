@@ -64,15 +64,17 @@ import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
-import { IImage } from '@core/models-v2/cms/special-reponse.interface';
 import { IProductImage } from './image.interface';
+import { InventoryService } from '@core/services-v2/inventory.service';
+
+/*
 interface ProductImage {
   id: string;
   url: string;
   active: boolean;
   video?: boolean;
   urlThumbs?: string;
-}
+}*/
 
 export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
 
@@ -245,7 +247,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     return this.dataProduct;
   }
 
-  images: any[] = []; //IProductImage[] = [];
+  images: IProductImage[] = [];
   imagesThumbs: any[] = [];
 
   carouselOptions: Partial<OwlCarouselOConfig> = {
@@ -298,7 +300,8 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     private readonly gtmService: GoogleTagManagerService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly sessionStorage: SessionStorageService
+    private readonly sessionStorage: SessionStorageService,
+    private readonly inventoryService: InventoryService
   ) {
     this.usuario = this.sessionService.getSession();
     this.isB2B =
@@ -376,8 +379,8 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   iniciarFormulario() {
     this.formAvisoStock = this.fb.group({
       sku: [this.product?.sku],
-      nombre: [, [Validators.required, Validators.maxLength(35)]],
-      email: [
+      customerName: [, [Validators.required, Validators.maxLength(35)]],
+      customerEmail: [
         ,
         [
           Validators.required,
@@ -387,14 +390,16 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
           ),
         ],
       ],
-      numero_telefono: ['', [Validators.required, Validators.maxLength(14)]],
+      customerPhone: ['', [Validators.required, Validators.maxLength(14)]],
     });
     if (this.usuario.userRole != 'temp') {
-      this.formAvisoStock.controls['nombre'].setValue(
+      this.formAvisoStock.controls['customerName'].setValue(
         this.usuario.firstName + ' ' + this.usuario.lastName
       );
-      this.formAvisoStock.controls['email'].setValue(this.usuario.email);
-      this.formAvisoStock.controls['numero_telefono'].setValue(
+      this.formAvisoStock.controls['customerEmail'].setValue(
+        this.usuario.email
+      );
+      this.formAvisoStock.controls['customerPhone'].setValue(
         this.usuario.phone
       );
     }
@@ -410,7 +415,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   carouselTileLoad() {
     this.carouselItems = [...this.carouselItems, ...this.mainItems];
-    console.log('carousel tiel', this.carouselItems);
   }
 
   getPopularProducts(sku: any) {
@@ -429,7 +433,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
   //Funcion nueva*
   verificarDisponibilidad(product: IArticleResponse) {
-    console.log('dispo product', product);
     if (
       product.deliverySupply.pickupDate == null &&
       product.deliverySupply.pickupDate == null
@@ -438,17 +441,21 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     else this.disponibilidad = true;
   }
   //Listo
-  setActiveImage(image: IImage): void {
-    this.images.forEach(
+  setActiveImage(imageId: string): void {
+    /*this.images.forEach(
       (eachImage) => (eachImage.active = eachImage === image)
-    );
+    );*/
+    this.images.forEach((itemImage) => {
+      itemImage.active = itemImage.id === imageId;
+    });
   }
 
   featuredCarouselTranslated(event: SlidesOutputData): void {
+    console.log('featuredCarouselTranslated: ', event);
     if (event.slides?.length) {
       const activeImageId = event.slides[0].id;
       //fix
-      this.images.forEach((eachImage) => eachImage === activeImageId);
+      // this.images.forEach((eachImage) => eachImage === activeImageId);
     }
   }
 
@@ -709,7 +716,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   // }
 
   //Listo
-  openPhotoSwipe(event: MouseEvent, image: ProductImage): void {
+  openPhotoSwipe(event: MouseEvent, image: IProductImage): void {
     if (this.layout !== 'quickview') {
       event.preventDefault();
 
@@ -892,22 +899,18 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   enviarCorreo() {
     if (this.formAvisoStock.valid) {
       let valor_formulario = this.formAvisoStock.value;
-      this.productsService
-        .enviarCorreoSolicitudProductoSinStock(valor_formulario)
-        .subscribe(
-          (res: any) => {
-            if (res.error) {
-              this.toast.warning('No ha sido posible enviar el mensaje');
-            } else {
-              this.toast.success(
-                'Mensaje enviado con éxito. Te contactaremos a la brevedad'
-              );
-            }
-          },
-          (error) => {
-            this.toast.warning('No ha sido posible enviar el mensaje');
-          }
-        );
+      valor_formulario.sku = this.product?.sku;
+      this.inventoryService.requestForStock(valor_formulario).subscribe({
+        next: (res) => {
+          this.toast.success(
+            'Mensaje enviado con éxito. Te contactaremos a la brevedad'
+          );
+        },
+        error: (err) => {
+          console.log(err);
+          this.toast.warning('No ha sido posible enviar el mensaje');
+        },
+      });
     }
   }
 
