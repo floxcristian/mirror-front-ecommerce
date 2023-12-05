@@ -59,7 +59,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
   stock: boolean = true;
   layout: 'standard' | 'columnar' | 'sidebar' = 'standard';
   sidebarPosition: 'start' | 'end' = 'start'; // For LTR scripts "start" is "left" and "end" is "right"
-  //user: Usuario;
   user: ISession;
   isB2B: boolean;
   origen: string[] = [];

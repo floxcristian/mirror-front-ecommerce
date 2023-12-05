@@ -1,25 +1,10 @@
 // Angular
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  ILoginResponse,
-  IUserRole,
-} from '@core/models-v2/auth/login-response.interface';
-// Rxjs
-import { Observable } from 'rxjs';
+import { IUserRole } from '@core/models-v2/auth/login-response.interface';
 // Models
 import { IMenuItem } from './menu-item.interface';
 // Constants
-import {
-  OVERVIEW_ITEM_MENU,
-  PROFILE_ITEM_MENU,
-  PURCHASE_HISTORY_ITEM_MENU,
-  TRACKING_ITEM_MENU,
-  LOGOUT_ITEM_MENU,
-  MY_PURCHASE_ITEM_MENU,
-} from './menu-items';
-// Environment
-import { environment } from '@env/environment';
+import { MenuItem } from './menu-items';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +14,7 @@ export class MenuService {
     let menuItems = [];
     if (profile === 'superadmin') {
       menuItems = [
-        PROFILE_ITEM_MENU,
+        MenuItem.PROFILE_ITEM_MENU(),
         {
           type: 'link',
           label: 'Órdenes de Venta',
@@ -42,7 +27,7 @@ export class MenuService {
           url: ['/', 'mi-cuenta', 'carros-guardados'],
           icon: 'fas fa-cart-arrow-down',
         },
-        TRACKING_ITEM_MENU,
+        MenuItem.TRACKING_ITEM_MENU(),
         {
           type: 'link',
           label: 'Usuarios',
@@ -55,12 +40,12 @@ export class MenuService {
           url: ['/', 'mi-cuenta', 'carga-masiva-prod'],
           icon: 'fas fa-file-upload',
         },
-        LOGOUT_ITEM_MENU,
+        MenuItem.LOGOUT_ITEM_MENU(),
       ];
     } else if (profile === 'supervisor') {
       menuItems = [
-        OVERVIEW_ITEM_MENU,
-        PROFILE_ITEM_MENU,
+        MenuItem.OVERVIEW_ITEM_MENU(),
+        MenuItem.PROFILE_ITEM_MENU(),
         {
           type: 'link',
           label: 'Usuarios',
@@ -79,7 +64,7 @@ export class MenuService {
           url: ['/', 'mi-cuenta', 'mis-centros-costos'],
           icon: 'fas fa-hand-holding-usd',
         },
-        MY_PURCHASE_ITEM_MENU,
+        MenuItem.MY_PURCHASE_ITEM_MENU(),
         {
           type: 'link',
           label: 'Listas de productos',
@@ -135,13 +120,13 @@ export class MenuService {
           url: ['/', 'mi-cuenta', 'carga-masiva-prod'],
           icon: 'fas fa-file-upload',
         },
-        TRACKING_ITEM_MENU,
-        LOGOUT_ITEM_MENU,
+        MenuItem.TRACKING_ITEM_MENU(),
+        MenuItem.LOGOUT_ITEM_MENU(),
       ];
     } else if (profile === 'comprador') {
       menuItems = [
-        OVERVIEW_ITEM_MENU,
-        PROFILE_ITEM_MENU,
+        MenuItem.OVERVIEW_ITEM_MENU(),
+        MenuItem.PROFILE_ITEM_MENU(),
         {
           type: 'link',
           label: 'Mi Flota',
@@ -154,7 +139,7 @@ export class MenuService {
           url: ['/', 'mi-cuenta', 'mis-centros-costos'],
           icon: 'fas fa-hand-holding-usd',
         },
-        MY_PURCHASE_ITEM_MENU,
+        MenuItem.MY_PURCHASE_ITEM_MENU(),
         {
           type: 'link',
           label: 'Listas de productos',
@@ -191,28 +176,28 @@ export class MenuService {
           url: ['/', 'mi-cuenta', 'cotizaciones'],
           icon: 'fas fa-file-invoice',
         },
-        PURCHASE_HISTORY_ITEM_MENU,
+        MenuItem.PURCHASE_HISTORY_ITEM_MENU(),
         {
           type: 'link',
           label: 'Carga Masiva Productos',
           url: ['/', 'mi-cuenta', 'carga-masiva-prod'],
           icon: 'fas fa-file-upload',
         },
-        TRACKING_ITEM_MENU,
-        LOGOUT_ITEM_MENU,
+        MenuItem.TRACKING_ITEM_MENU(),
+        MenuItem.LOGOUT_ITEM_MENU(),
       ];
     } else if (profile === 'cms') {
-      menuItems = [LOGOUT_ITEM_MENU];
+      menuItems = [MenuItem.LOGOUT_ITEM_MENU()];
     } else if (profile === 'compradorb2c') {
       menuItems = [
-        OVERVIEW_ITEM_MENU,
-        PROFILE_ITEM_MENU,
-        PURCHASE_HISTORY_ITEM_MENU,
-        TRACKING_ITEM_MENU,
-        LOGOUT_ITEM_MENU,
+        MenuItem.OVERVIEW_ITEM_MENU(),
+        MenuItem.PROFILE_ITEM_MENU(),
+        MenuItem.PURCHASE_HISTORY_ITEM_MENU(),
+        MenuItem.TRACKING_ITEM_MENU(),
+        MenuItem.LOGOUT_ITEM_MENU(),
       ];
     } else {
-      menuItems = [TRACKING_ITEM_MENU];
+      menuItems = [MenuItem.TRACKING_ITEM_MENU()];
     }
 
     return menuItems;

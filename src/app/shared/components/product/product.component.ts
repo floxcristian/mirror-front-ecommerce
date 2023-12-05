@@ -440,22 +440,17 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       this.disponibilidad = false;
     else this.disponibilidad = true;
   }
-  //Listo
+
   setActiveImage(imageId: string): void {
-    /*this.images.forEach(
-      (eachImage) => (eachImage.active = eachImage === image)
-    );*/
     this.images.forEach((itemImage) => {
       itemImage.active = itemImage.id === imageId;
     });
   }
 
   featuredCarouselTranslated(event: SlidesOutputData): void {
-    console.log('featuredCarouselTranslated: ', event);
     if (event.slides?.length) {
       const activeImageId = event.slides[0].id;
-      //fix
-      // this.images.forEach((eachImage) => eachImage === activeImageId);
+      this.setActiveImage(activeImageId);
     }
   }
 
