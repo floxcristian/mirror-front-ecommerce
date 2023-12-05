@@ -6,7 +6,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { CartService } from '../../../../shared/services/cart.service';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 
@@ -28,7 +27,6 @@ export class CodigoOcComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private cartService: CartService,
-    private localS: LocalStorageService,
     // Storage
     private readonly sessionStorage: SessionStorageService
   ) {
@@ -44,7 +42,6 @@ export class CodigoOcComponent implements OnInit {
     );
     this.finishDateString = this.fecha_limite.toISOString();
     await this.id;
-    // this.user = this.localS.get('usuario');
     this.user = this.sessionStorage.get();
   }
   // se inicia el formulario

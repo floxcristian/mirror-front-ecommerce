@@ -8,13 +8,11 @@ import {
 } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { Observable, Subject } from 'rxjs';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { environment } from '@env/environment';
 import { GeoLocation } from '../../../../shared/interfaces/geo-location';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { RootService } from '../../../../shared/services/root.service';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { SessionStorageService } from '@core/storage/session-storage.service';
+import { SessionService } from '@core/states-v2/session.service';
 class DataTablesResponse {
   data!: any[];
   draw!: number;
@@ -50,11 +48,10 @@ export class PageListaPreciosComponent implements OnInit {
   constructor(
     private httpClient: HttpClient,
     public root: RootService,
-    private localS: LocalStorageService,
     private geoLocationService: GeoLocationService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Storage
-    private readonly sessionStorage: SessionStorageService
+    private readonly sessionService: SessionService
   ) {
     this.innerWidth = window.innerWidth;
     // cambio de sucursal
@@ -101,10 +98,9 @@ export class PageListaPreciosComponent implements OnInit {
   async buscarPrecios() {
     this.showLoading = true;
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    //const usuario: Usuario = this.localS.get('usuario');
-    const user = this.sessionStorage.get();
+    const user = this.sessionService.getSession();
     let parametros: any = {
-      rut: user?.documentId,
+      rut: user.documentId,
       sucursal: tiendaSeleccionada?.codigo,
     };
 

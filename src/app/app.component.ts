@@ -53,7 +53,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   productCard!: ProductCart;
   s: any;
   node: any;
-  isOmni: boolean = false;
+  isOmni!: boolean;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -74,6 +74,20 @@ export class AppComponent implements AfterViewInit, OnInit {
     private readonly sessionService: SessionService
   ) {}
 
+  setLastSession(): void {
+    if (!this.sessionService.isB2B()) return;
+    const user = this.sessionService.getSession();
+    user.ultimoCierre = moment();
+    this.sessionStorage.set(user);
+  }
+
+  deleteLastSession(): void {
+    if (!this.sessionService.isB2B()) return;
+    const user = this.sessionService.getSession();
+    delete user.ultimoCierre;
+    this.sessionStorage.set(user);
+  }
+
   ngOnInit(): void {
     this.currency.options = {
       code: 'CLP',
@@ -84,46 +98,15 @@ export class AppComponent implements AfterViewInit, OnInit {
     };
     this.seoService.generarMetaTag({});
 
-    const user = this.sessionService.getSession();
-    if (['supervisor', 'comprador'].includes(user.userRole)) {
-      delete user.ultimoCierre;
-      this.sessionStorage.set(user);
-    }
-    /*if (['supervisor', 'comprador'].includes(usuario.user_role || '')) {
-      const data: FormData = new FormData();
-
-      usuario.fechaControl = moment();
-      data.append('usuario', JSON.stringify(usuario));
-      this.login
-        .registroSesion(data, usuario.id_sesion || '0', 'cierre')
-        .then((r: any) => {
-          delete usuario.fechaControl;
-          this.login
-            .registroSesion(data, usuario.id_sesion || '0', 'ingreso')
-            .then((resp: any) => {
-              usuario.id_sesion = resp.id_sesion;
-              delete usuario.ultimoCierre;
-              this.localS.set('usuario', usuario);
-            });
-        });
-    }*/
-
+    this.deleteLastSession();
     if (isPlatformBrowser(this.platformId)) {
       window.onbeforeunload = (event) => {
-        const user = this.sessionService.getSession();
-        //const u: Usuario = this.root.getDataSesionUsuario();
-        if (user && ['supervisor', 'comprador'].includes(user.userRole)) {
-          user.ultimoCierre = moment();
-          this.sessionStorage.set(user);
-          // this.localS.set('usuario', user);
-        }
+        this.setLastSession();
       };
     }
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        const user = this.sessionService.getSession();
-        // const u: Usuario = this.root.getDataSesionUsuario();
         if (event.url.includes('/carro-compra')) {
           this.document.body.classList.remove('home');
           this.document.body.classList.remove('pdp');
@@ -142,9 +125,7 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('carrito');
           this.document.body.classList.add('categoria');
           $('.webchatStartButtonContainer').hide();
-        } else if (
-          ['supervisor', 'comprador'].includes(user?.userRole || '')
-        ) {
+        } else if (this.sessionService.isB2B()) {
           this.document.body.classList.remove('home');
           this.document.body.classList.remove('pdp');
           this.document.body.classList.remove('carrito');

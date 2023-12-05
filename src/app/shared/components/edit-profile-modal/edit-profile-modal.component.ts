@@ -1,18 +1,21 @@
+// Angular
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
+// Services
 import { ClientsService } from '../../services/clients.service';
-import { isVacio } from '../../utils/utilidades';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
-import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionStorageService } from '@core/storage/session-storage.service';
+import { isVacio } from '../../utils/utilidades';
+// Models
+import { ISession } from '@core/models-v2/auth/session.interface';
+// Libs
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-profile-modal',
@@ -28,7 +31,6 @@ export class EditProfileModalComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private localS: LocalStorageService,
     private clientsService: ClientsService,
     // Services V2
     private readonly sessionService: SessionService,
@@ -52,7 +54,7 @@ export class EditProfileModalComponent implements OnInit {
         ],
       }),
     });
-    this.user = this.sessionService.getSession(); //this.rootService.getDataSesionUsuario();
+    this.user = this.sessionService.getSession();
     this.cargarDatos();
   }
 
@@ -68,14 +70,11 @@ export class EditProfileModalComponent implements OnInit {
   }
 
   actualizaLocalStorage({ nombre, apellido, telefono, correo }: any) {
-    const user = this.sessionService.getSession(); //this.rootService.getDataSesionUsuario();
-
+    const user = this.sessionService.getSession();
     user.firstName = nombre;
     user.lastName = apellido;
     user.phone = telefono;
     user.email = correo;
-
-    //this.localS.set('usuario', user);
     this.sessionStorage.set(user);
   }
 

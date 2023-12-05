@@ -494,11 +494,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     }
 
     // verificamos si esta la session iniciada
-    // const usuario: Usuario = this.localS.get('usuario');
-    const usuario = this.sessionStorage.get();
-
-    if (usuario) {
-      this.parametrosBusqueda.rut = usuario.documentId || '0';
+    const user = this.sessionService.getSession();
+    if (user) {
+      this.parametrosBusqueda.rut = user.documentId;
       if (
         this.preferenciaCliente &&
         this.preferenciaCliente.direccionDespacho
@@ -599,9 +597,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
 
     this.totalPaginas = r.totalPages;
     this.PagTotalRegistros = r.totalResult;
-    //console.log(this.PagTotalRegistros);
     if (texto != '' && r != null) {
-      // const user: Usuario = this.localS.get('usuario');
       const user = this.sessionStorage.get();
       if (user) {
         const parametro = {
@@ -981,7 +977,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
 
     if (this.textToSearch === '') {
       this.removableCategory = [];
-      if (this.chassis.length > 0) {
+      if (this.chassis.length) {
         this.router.navigate(['/', 'inicio', 'productos', 'todos'], {
           queryParams,
         });

@@ -343,7 +343,7 @@ export class CartService {
     }
     this.loadingCart = true;
 
-    const usuario = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario') as any;
+    const usuario = this.sessionStorage.get();
     if (!usuario) {
       return;
     }

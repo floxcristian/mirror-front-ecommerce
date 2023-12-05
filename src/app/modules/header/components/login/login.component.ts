@@ -50,11 +50,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.verificaSession();
   }
 
-  redirectTo(uri: string) {
+  redirectTo(uri: string): void {
     this.router
       .navigateByUrl('/', { skipLocationChange: true })
       .then(() => this.router.navigate([uri]));
@@ -177,6 +177,7 @@ export class LoginComponent implements OnInit {
     this.muestraLogin.emit(true);
     this.router.navigate(['/sitio', 'registro-usuario']);
   }
+
   ChangeType(input: any) {
     if (this.texto) this.texto = false;
     else this.texto = true;

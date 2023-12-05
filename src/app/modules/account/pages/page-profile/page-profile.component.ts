@@ -142,18 +142,14 @@ export class PageProfileComponent implements OnDestroy, OnInit {
     } else {
       this.toastr.success('Se actualizo con exito la configuración del IVA');
       this.actualizaLocalStorage(parametros.iva);
-      this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+      this.usuario = this.sessionService.getSession();
     }
   }
 
-  actualizaLocalStorage(iva: boolean) {
-    // const user = this.root.getDataSesionUsuario();
-    const user = this.sessionStorage.get();
-    if (user) {
-      user.preferences.iva = iva;
-      this.sessionStorage.set(user);
-      // this.localS.set('usuario', user);
-    }
+  actualizaLocalStorage(iva: boolean): void {
+    const user = this.sessionService.getSession();
+    user.preferences.iva = iva;
+    this.sessionStorage.set(user);
   }
 
   openModalAddAddress() {
@@ -185,7 +181,7 @@ export class PageProfileComponent implements OnDestroy, OnInit {
     });
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res) {
-        const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
+        const usuario = this.sessionService.getSession();
         const request = {
           codEmpleado: 0,
           codUsuario: 0,

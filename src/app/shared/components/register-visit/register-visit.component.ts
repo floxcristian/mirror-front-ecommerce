@@ -14,7 +14,6 @@ import { CartService } from '../../services/cart.service';
 import { Usuario } from '../../interfaces/login';
 import { rutValidator } from '../../../shared/utils/utilidades';
 import { Router } from '@angular/router';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthApiService } from '@core/services-v2/auth.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
@@ -45,7 +44,6 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     private clientService: ClientsService,
     private toastr: ToastrService,
     private fb: FormBuilder,
-    private localS: LocalStorageService,
     private router: Router,
     private cartService: CartService,
     // Services V2
@@ -143,7 +141,6 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
   }
 
   login() {
-    // const user: Usuario = this.localS.get('usuario');
     const user = this.sessionStorage.get();
 
     let userIdOld: any = null;
@@ -167,12 +164,11 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
         this.sessionStorage.set(data);
         this.authStateService.setSession(data);
         if (userIdOld) {
-          const dataPut = {
-            origen: userIdOld,
-            destino: data.email,
-          };
           this.cartService
-            .cartTransfer(dataPut)
+            .cartTransfer({
+              origen: userIdOld,
+              destino: data.email,
+            })
             .subscribe((res: ResponseApi) => {
               this.cartService.load();
             });
@@ -208,7 +204,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     }, 10);
   }
 
-  returnLogin() {
+  returnLogin(): void {
     this.returnLoginEvent.emit(true);
   }
 
