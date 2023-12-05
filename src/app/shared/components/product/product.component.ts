@@ -65,7 +65,9 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { IProductImage } from './image.interface';
 import { InventoryService } from '@core/services-v2/inventory.service';
+// Modals
 import { ModalScalePriceComponent } from '../modal-scale-price/modal-scale-price.component';
+import { IScalePriceItem } from './scale-price-item.interface';
 
 export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
 
@@ -147,7 +149,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   // Modals
   modalRefStock!: BsModalRef;
   // Others
-  preciosEscalas: any[] = [];
+  preciosEscalas: IScalePriceItem[] = [];
   @Input() stock!: boolean;
   @Input() origen!: string[];
   @Input() recommendedProducts!: Array<any>;
@@ -844,7 +846,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.preciosEscalas.unshift({
       desde: 0,
       hasta: 0,
-      precio: this.product?.priceInfo.price,
+      precio: this.product?.priceInfo.price || 0,
       marcado: true,
     });
     // }
