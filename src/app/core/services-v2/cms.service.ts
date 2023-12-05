@@ -9,6 +9,7 @@ import { ICategorieResponse } from '@core/models-v2/cms/categories-response.inte
 import { ICustomHomePage } from '@core/models-v2/cms/customHomePage-response.interface';
 import { IHomePageResponse } from '@core/models-v2/cms/homePage-response.interface';
 import { ISliderResponse } from '@core/models-v2/cms/slider-reponse.interface';
+import { ISpecialResponse } from '@core/models-v2/cms/special-reponse.interface';
 import { IValueBoxResponse } from '@core/models-v2/cms/valueBox-response.interface';
 import { IWorldResponse } from '@core/models-v2/cms/world-response.interface';
 // Environment
@@ -67,8 +68,8 @@ export class CmsService {
     documentId: string,
     branchCode: string,
     location: string
-  ) {
-    return this.http.get(`${API_CMS}/special`, {
+  ): Observable<ISpecialResponse> {
+    return this.http.get<ISpecialResponse>(`${API_CMS}/special`, {
       params: { special, documentId, branchCode, location },
     });
   }

@@ -22,8 +22,20 @@ import { LogisticsService } from '@shared/services/logistics.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { CmsService } from '@core/services-v2/cms.service';
+import {
+  IArticle,
+  IBanner,
+  IData,
+  ISpecial,
+} from '@core/models-v2/cms/special-reponse.interface';
 
 export type Layout = 'grid' | 'grid-with-features' | 'list';
+export interface ISection {
+  nombre: string;
+  productos: IArticle[];
+  p: number;
+}
 
 @Component({
   selector: 'app-product-slideshow-specials',
@@ -34,9 +46,9 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
   @Input() layout: Layout = 'grid';
   @Input() grid: 'grid-3-sidebar' | 'grid-4-full' | 'grid-4-full' =
     'grid-3-sidebar';
-  lstProductos: any;
-  especial: any;
-  banners: any;
+  lstProductos!: ISection[];
+  especial!: ISpecial[];
+  banners!: IBanner;
   producto_espacial: any = [];
   @Input() nombre: string | undefined = undefined;
   user!: ISession;
@@ -79,7 +91,8 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly authStateService: AuthStateServiceV2
+    private readonly authStateService: AuthStateServiceV2,
+    private readonly cmsService: CmsService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -142,7 +155,7 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     let rut = this.user.documentId;
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     const sucursal = tiendaSeleccionada?.codigo || '';
-    var especials = this.router.url.split('/').pop();
+    var especials = this.router.url.split('/').pop() || '';
     let localidad = '';
 
     //clean tracking vars
@@ -154,52 +167,45 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '');
 
-    const params = {
-      sucursal: sucursal,
-      rut: rut,
-      especial: especials,
-      localidad: localidad,
-    };
+    this.cmsService.getSpecial(especials, rut, sucursal, localidad).subscribe({
+      next: (res) => {
+        this.especial = res.specials;
+        this.banners = res.banners[0];
+        let data: IData[] = res.data;
+        let out: any = [];
+        let i = 0;
+        data.forEach((x: IData) => {
+          let seccion: ISection = {
+            nombre: x.title,
+            productos: x.articles,
+            p: i,
+          };
+          out.push(seccion);
+          i++;
+        });
+        this.lstProductos = out;
 
-    let respuesta: any = await this.productsService
-      .getEspeciales(params)
-      .toPromise();
-
-    const { data, especial, banners } = respuesta;
-
-    this.especial = especial;
-    this.banners = banners[0];
-    let out = [];
-    let i = 0;
-    for (const key in data) {
-      let seccion = {
-        nombre: key,
-        productos: data[key],
-        p: i,
-      };
-      out.push(seccion);
-      i++;
-    }
-    this.lstProductos = out;
-
-    if (!this.nombre) {
-      this.producto_espacial = this.lstProductos[0].productos;
-      this.nombre = this.lstProductos[0].nombre;
-    } else {
-      let index = this.lstProductos.findIndex((item: any) =>
-        item.nombre.toUpperCase().match(this.nombre || ''.toUpperCase())
-      );
-
-      if (index != -1) {
-        this.producto_espacial = this.lstProductos[index].productos;
-        this.nombre = this.lstProductos[index].nombre;
-        let division = Math.trunc(index / 3);
-
-        if (division >= this.p) {
-          this.p = division + 1;
+        if (!this.nombre) {
+          this.producto_espacial = this.lstProductos[0].productos;
+          this.nombre = this.lstProductos[0].nombre;
+        } else {
+          let index = this.lstProductos.findIndex((item: any) =>
+            item.nombre.toUpperCase().match(this.nombre || ''.toUpperCase())
+          );
+          if (index != -1) {
+            this.producto_espacial = this.lstProductos[index].productos;
+            this.nombre = this.lstProductos[index].nombre;
+            let division = Math.trunc(index / 3);
+            if (division >= this.p) {
+              this.p = division + 1;
+            }
+          }
         }
-      }
-    }
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   pageChanged(event: any) {

@@ -12,12 +12,8 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./page-specials.component.scss'],
 })
 export class PageSpecialsComponent implements OnInit {
-  products = products;
-  categories: Category[] = categories;
-  banners: Banner[] = [];
   nombre: string | undefined = undefined;
   innerWidth: number;
-  viewMode: 'grid' | 'grid-with-features' | 'list' = 'grid';
 
   constructor(
     private route: ActivatedRoute,

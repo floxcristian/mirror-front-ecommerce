@@ -2,7 +2,7 @@
   <app-scroll-top> </app-scroll-top>
   <ng-container *ngIf="banners">
     <a [href]="banners.url" [target]="banners.target">
-      <img [src]="banners.image_full" width="100%" [alt]="banners.alt" />
+      <img [src]="banners.imageFull" width="100%" [alt]="banners.alt" />
     </a>
   </ng-container>
   <div class="container h-100 my-2" id="top">
@@ -35,7 +35,7 @@
   <ng-container *ngIf="banners">
     <a [href]="banners.url" [target]="banners.target">
       <img
-        [src]="banners.image_mobile"
+        [src]="banners.imageMobile"
         width="100%"
         [alt]="banners.alt"
         style="margin-top: -15px"
