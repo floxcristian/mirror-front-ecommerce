@@ -237,7 +237,7 @@ export class PageProfileComponent implements OnDestroy, OnInit {
     });
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res) {
-        const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
+        const usuario = this.sessionService.getSession();
         const request = {
           codEmpleado: 0,
           codUsuario: 0,

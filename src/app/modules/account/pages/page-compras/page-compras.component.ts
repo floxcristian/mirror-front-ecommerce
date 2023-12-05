@@ -40,7 +40,7 @@ export class PageComprasComponent implements OnInit {
     this.loadData = true;
 
     this.data = [];
-    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
     let user: any = {
       rut: usuario.documentId,
     };

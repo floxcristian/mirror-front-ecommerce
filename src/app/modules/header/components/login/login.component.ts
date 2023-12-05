@@ -3,10 +3,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CartService } from '../../../../shared/services/cart.service';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { ClientsService } from '../../../../shared/services/clients.service';
-import { isVacio } from '../../../../shared/utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { AuthApiService } from '@core/services-v2/auth.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
@@ -61,7 +59,6 @@ export class LoginComponent implements OnInit {
   }
 
   entrar() {
-    //const user: Usuario = this.localStorage.get('usuario') as Usuario;
     const user = this.sessionStorage.get();
 
     let userIdOld: any = null;
@@ -124,19 +121,19 @@ export class LoginComponent implements OnInit {
             login_temp: false,
             preferences: { iva },
           };
-
           this.sessionStorage.set(data);
           this.invitadoStorage.remove();
           this.authStateService.setSession(data);
           this.verificaSession();
           if (userIdOld) {
-            const dataPut = {
-              origen: userIdOld,
-              destino: data.email,
-            };
-            this.cart.cartTransfer(dataPut).subscribe((res: ResponseApi) => {
-              this.cart.load();
-            });
+            this.cart
+              .cartTransfer({
+                origen: userIdOld,
+                destino: data.email,
+              })
+              .subscribe((res: ResponseApi) => {
+                this.cart.load();
+              });
           } else {
             this.cart.load();
           }

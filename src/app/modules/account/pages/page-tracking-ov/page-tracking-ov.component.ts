@@ -43,7 +43,7 @@ export class PageTrackingOvComponent implements OnInit {
 
   async resultado_busqueda() {
     this.loadData = true;
-    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
     let user: any = {
       rut: usuario.documentId,
     };

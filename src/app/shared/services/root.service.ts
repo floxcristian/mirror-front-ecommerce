@@ -83,25 +83,6 @@ export class RootService {
     return url.toString();
   }
 
-  /*
-  getDataSesionUsuario() {
-    const data: Usuario = this.localS.get('usuario') as any;
-
-    const id = uuidv4();
-
-    if (data) return data;
-
-    const dataTemp: Usuario = {
-      login_temp: true,
-      rut: '0',
-      _id: id,
-      email: id,
-      user_role: 'temp',
-    };
-    this.localS.set('usuario', dataTemp);
-    return dataTemp;
-  }*/
-
   async getPreferenciasCliente() {
     let preferencias: PreferenciasCliente = this.localS.get(
       'preferenciasCliente'

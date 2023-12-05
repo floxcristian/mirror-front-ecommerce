@@ -1,6 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Usuario } from '../../../../shared/interfaces/login';
-import { RootService } from '../../../../shared/services/root.service';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -40,7 +39,6 @@ export class PageUsuariosComponent implements OnInit {
   isValidRut!: boolean;
 
   constructor(
-    private root: RootService,
     private toastr: ToastrService,
     private clients: ClientsService,
     private modalService: BsModalService,
@@ -49,7 +47,7 @@ export class PageUsuariosComponent implements OnInit {
     // Services V2
     private readonly sessionService: SessionService
   ) {
-    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
     this.loadingData = true;
   }
 

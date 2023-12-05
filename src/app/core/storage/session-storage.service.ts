@@ -19,7 +19,7 @@ export class SessionStorageService {
     this.localStorageService.set(StorageKey.usuario, session);
   }
 
-  remove() {
+  remove(): void {
     this.localStorageService.remove(StorageKey.usuario);
   }
 }

@@ -641,7 +641,7 @@ export class CartService {
       return;
     }
     this.loadingCart = true;
-    const usuario = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario') as any;
+    const usuario = this.sessionStorage.get();
     if (!usuario) {
       return;
     }
@@ -1131,7 +1131,7 @@ export class CartService {
   }
 
   setSaveCart(objeto: any): Observable<any> {
-    const usuario = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario') as any;
+    const usuario = this.sessionStorage.get();
     if (usuario?.login_temp) {
       this.toast.warning('Debe iniciar sesion para guardar el carro');
       throw Error('Debe iniciar sesion para guardar el carro');

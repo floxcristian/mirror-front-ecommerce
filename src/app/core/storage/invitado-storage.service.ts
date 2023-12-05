@@ -10,6 +10,7 @@ import { IInvitado } from '@core/models-v2/storage/invitado.interface';
 })
 export class InvitadoStorageService {
   constructor(private readonly localStorageService: LocalStorageService) {}
+
   get(): IInvitado {
     return this.localStorageService.get(StorageKey.invitado);
   }

@@ -108,7 +108,7 @@ export class ClientsService {
   }
 
   async changePassword(data: any) {
-    const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
     const params: any = {
       correo: usuario.username,
       passActual: data.password,
@@ -117,6 +117,7 @@ export class ClientsService {
     const url = `${environment.apiCustomer}actualizarContrasenna`;
     return this.http.get(url, { params }).toPromise();
   }
+
   async ValidarCorreo(data: any) {
     let consulta = null;
     const endpoint = `${environment.apiCustomer}buscarCorreo`;

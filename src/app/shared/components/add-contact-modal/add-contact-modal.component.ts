@@ -8,11 +8,7 @@ import {
 } from '../../interfaces/cargoContacto';
 import { ResponseApi } from '../../interfaces/response-api';
 import { ClientsService } from '../../services/clients.service';
-import {
-  isVacio,
-  rutPersonaValidator,
-  rutValidator,
-} from '../../utils/utilidades';
+import { rutPersonaValidator, rutValidator } from '../../utils/utilidades';
 import { getDomainsToAutocomplete } from './domains-autocomplete';
 import { SessionService } from '@core/states-v2/session.service';
 
@@ -71,49 +67,44 @@ export class AddContactModalComponent implements OnInit {
     this.loadingForm = true;
     const data: any = { ...this.formContacto.value };
     const emailValidado = email.inputValue;
-    const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
 
-    if (!isVacio(usuario)) {
-      const request: any = {
-        rut: usuario.documentId,
-        contactRut: data.contactRut,
-        nombre: data.nombre,
-        apellido: data.apellido,
-        funcion: 'COM',
-        mail: emailValidado,
-        telefono: this.tipo_fono + data.telefono,
-        cargo: data.cargo,
-        codEmpleado: 0,
-        codUsuario: 0,
-        cuentaUsuario: usuario.username,
-        rutUsuario: usuario.documentId,
-        nombreUsuario: `${usuario.firstName} ${usuario.lastName}`,
-      };
+    const request: any = {
+      rut: usuario.documentId,
+      contactRut: data.contactRut,
+      nombre: data.nombre,
+      apellido: data.apellido,
+      funcion: 'COM',
+      mail: emailValidado,
+      telefono: this.tipo_fono + data.telefono,
+      cargo: data.cargo,
+      codEmpleado: 0,
+      codUsuario: 0,
+      cuentaUsuario: usuario.username,
+      rutUsuario: usuario.documentId,
+      nombreUsuario: `${usuario.firstName} ${usuario.lastName}`,
+    };
 
-      this.clientsService.nuevoContacto(request).subscribe(
-        (response: ResponseApi) => {
-          if (!response.error) {
-            this.toastr.success('Contacto creado correctamente.');
-            this.respuesta.emit(true);
-            this.modalAddContactRef.hide();
-          } else {
-            this.toastr.error(response.msg);
-            this.respuesta.emit(false);
-            this.modalAddContactRef.hide();
-          }
-          this.loadingForm = false;
-        },
-        (error) => {
-          this.toastr.error(error.error.msg);
+    this.clientsService.nuevoContacto(request).subscribe(
+      (response: ResponseApi) => {
+        if (!response.error) {
+          this.toastr.success('Contacto creado correctamente.');
+          this.respuesta.emit(true);
+          this.modalAddContactRef.hide();
+        } else {
+          this.toastr.error(response.msg);
           this.respuesta.emit(false);
-          this.ModalRef.hide();
-          this.loadingForm = false;
+          this.modalAddContactRef.hide();
         }
-      );
-    } else {
-      this.toastr.error('Ocurrió un error al obtener los datos de su sesión.');
-      this.loadingForm = false;
-    }
+        this.loadingForm = false;
+      },
+      (error) => {
+        this.toastr.error(error.error.msg);
+        this.respuesta.emit(false);
+        this.ModalRef.hide();
+        this.loadingForm = false;
+      }
+    );
   }
 
   Select_fono(tipo: any) {

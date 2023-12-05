@@ -41,6 +41,7 @@ export class SessionService {
       if (user.login_temp) {
         return false;
       } else {
+        // Porque borramos esto?
         this.invitadoStorage.remove();
         return true;
       }
