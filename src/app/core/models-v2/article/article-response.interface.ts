@@ -83,3 +83,74 @@ export type IArticleResponse = IArticle & {
   visible: number; // *
   lineBoss: ILineBoss; //*
 };
+
+export interface ISearchResponse {
+  articles: IArticleResponse[];
+  suggestions: ISuggestion[];
+  brands: IBrand[];
+  categories: ICategorySearch[];
+  filters: any[]; // need help
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  totalResult: number;
+  banners: any[];
+  levelFilter: number;
+  categoriesTree: ICategoriesTree[];
+}
+
+export interface ISuggestion {
+  suggestion: string;
+  html: string;
+}
+
+export interface IBrand {
+  brand: string;
+  count: number;
+}
+
+export interface ICategorySearch {
+  name: string;
+  slug: string;
+  url: string;
+  id: number;
+  level: number;
+  count: number;
+}
+
+export interface IBanner {
+  active: boolean;
+  title: string;
+  alt: string;
+  brand: string;
+  imageFull: string;
+  imageTablet: string;
+  imageMobile: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ICategoriesTree {
+  slug: string;
+  level: number;
+  count: number;
+  id: number;
+  parentId: any;
+  name: string;
+  children?: ICategoriesTree[];
+}
+
+//Elastic search
+export interface IElasticSearch {
+  word: string;
+  documentId: string;
+  branchCode: string;
+  location: string;
+  page: number;
+  pageSize: number;
+  showPrice: number;
+  category: string;
+  order: string;
+  brand: string;
+  filters: string;
+}

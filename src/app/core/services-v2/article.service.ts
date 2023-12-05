@@ -1,7 +1,10 @@
 // Angular
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
+import {
+  IArticleResponse,
+  ISearchResponse,
+} from '@core/models-v2/article/article-response.interface';
 // Environment
 import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
@@ -27,8 +30,9 @@ export class ArticleService {
     order?: string;
     brand?: string;
     filters?: string;
-  }) {
-    return this.http.get(`${API_ARTICLE}/search`, {
+    location?: string;
+  }): Observable<ISearchResponse> {
+    return this.http.get<ISearchResponse>(`${API_ARTICLE}/search`, {
       params,
     });
   }

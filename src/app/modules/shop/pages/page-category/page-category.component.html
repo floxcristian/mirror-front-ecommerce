@@ -3,7 +3,7 @@
     <div class="container" style="text-align: center">
       <a [href]="banners.url">
         <img
-          [src]="banners.image_full"
+          [src]="banners.imageFull"
           width="100%"
           style="max-height: 250px; margin-top: 15px"
           [alt]="banners.alt"
@@ -16,7 +16,7 @@
   <ng-container *ngIf="banners">
     <a [href]="banners.url">
       <img
-        [src]="banners.image_mobile"
+        [src]="banners.imageMobile"
         width="100%"
         [alt]="banners.alt"
         style="margin-top: 28px; max-height: 180px"
