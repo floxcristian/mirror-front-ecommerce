@@ -100,6 +100,7 @@ import { ButtonComponent } from './components/buttons-slideshow/components/butto
 import { ProductSlideshowSpecialsComponent } from '../pages/product-slideshow-specials/product-slideshow-specials.component';
 import { PipesModule } from './pipes/pipes.module';
 import { BlockHeaderComponent } from '../modules/blocks/components/block-header/block-header.component';
+import { ModalScalePriceComponent } from './components/modal-scale-price/modal-scale-price.component';
 
 const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
 const NGU_CAROUSEL_MODULES = [
@@ -180,6 +181,7 @@ const NGU_CAROUSEL_MODULES = [
     ButtonsSlideshowComponent,
     ButtonComponent,
     BlockHeaderComponent,
+    ModalScalePriceComponent,
   ],
   imports: [
     CommonModule,
