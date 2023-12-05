@@ -62,19 +62,10 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { SessionStorageService } from '@core/storage/session-storage.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { IProductImage } from './image.interface';
 import { InventoryService } from '@core/services-v2/inventory.service';
-
-/*
-interface ProductImage {
-  id: string;
-  url: string;
-  active: boolean;
-  video?: boolean;
-  urlThumbs?: string;
-}*/
+import { ModalScalePriceComponent } from '../modal-scale-price/modal-scale-price.component';
 
 export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
 
@@ -125,7 +116,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   // Promesas
   addButtonMovilPromise!: Subscription;
-  geoLocationServicePromise: Subscription;
+  geoLocationServicePromise!: Subscription;
 
   routerPromise: Subscription;
   photoSwipePromise!: Subscription;
@@ -139,7 +130,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   usuario: ISession;
   isB2B: boolean;
-  IVA = environment.IVA || 0.19;
+  IVA = environment.IVA;
   isVacio = isVacio;
 
   /* PROVISORIO */
@@ -153,13 +144,14 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   imageElements!: QueryList<ElementRef>;
   @ViewChild('modalStock', { read: TemplateRef, static: false })
   modalTemplateStock!: TemplateRef<any>;
-  @ViewChild('modalEscala', { static: false }) modalEscala!: TemplateRef<any>;
-  modalEscalaRef!: BsModalRef;
+  // Modals
   modalRefStock!: BsModalRef;
+  // Others
+  preciosEscalas: any[] = [];
   @Input() stock!: boolean;
   @Input() origen!: string[];
   @Input() recommendedProducts!: Array<any>;
-  preciosEscalas: any[] = [];
+
   @Output() comentarioGuardado: EventEmitter<boolean> = new EventEmitter();
   @Output() leerComentarios: EventEmitter<boolean> = new EventEmitter();
   @Input() set layout(value: Layout) {
@@ -300,17 +292,23 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     private readonly gtmService: GoogleTagManagerService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly sessionStorage: SessionStorageService,
     private readonly inventoryService: InventoryService
   ) {
+    this.isB2B = this.sessionService.isB2B();
     this.usuario = this.sessionService.getSession();
-    this.isB2B =
-      this.usuario.userRole === 'supervisor' ||
-      this.usuario.userRole === 'comprador';
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
-    // cambio de sucursal
+    this.onChangeStore();
+    this.routerPromise = this.route.data.subscribe(
+      (data) => (this.headerLayout = data['headerLayout'])
+    );
+    this.root.path = this.router
+      .createUrlTree(['./'], { relativeTo: route })
+      .toString();
+  }
+
+  onChangeStore(): void {
     this.geoLocationServicePromise =
       this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
         this.estado = true;
@@ -323,12 +321,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
           this.dataProduct
         );
       });
-    this.routerPromise = this.route.data.subscribe(
-      (data) => (this.headerLayout = data['headerLayout'])
-    );
-    this.root.path = this.router
-      .createUrlTree(['./'], { relativeTo: route })
-      .toString();
   }
 
   async ngOnInit() {
@@ -473,12 +465,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   async updateCart(cantidad: any) {
     this.quantity.setValue(cantidad);
-    const usuario = this.sessionStorage.get();
-    let rut: string | undefined = '0';
-
-    if (usuario) {
-      rut = usuario?.documentId;
-    }
+    const usuario = this.sessionService.getSession();
 
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
     this.comprobarStock(this.product!.sku, tiendaSeleccionada, this.product);
@@ -486,7 +473,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     const parametrosPrecios = {
       sku: this.product!.sku,
       sucursal: tiendaSeleccionada?.codigo,
-      rut,
+      rut: usuario.documentId,
       cantidad,
     };
 
@@ -506,13 +493,13 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       //     : datos['precio'].precio / (1 + this.IVA)
       //   : datos['precio'].precio;
       this.product!.priceInfo.commonPrice = !isVacio(usuario!.preferences.iva)
-        ? usuario?.preferences.iva
+        ? usuario.preferences.iva
           ? datos['precioComun']
           : datos['precioComun'] / (1 + this.IVA)
         : datos['precioComun'];
 
       this.product!.priceInfo.price = !isVacio(usuario?.preferences.iva)
-        ? usuario?.preferences.iva
+        ? usuario.preferences.iva
           ? datos['precio'].precio
           : datos['precio'].precio / (1 + this.IVA)
         : datos['precio'].precio;
@@ -839,7 +826,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  // Revisar **
+  // FIXME: ya no se debe llamar endpoint.
   async obtienePrecioEscala() {
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
 
@@ -863,9 +850,14 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     // }
   }
 
-  verPreciosEscala() {
-    this.modalEscalaRef = this.modalService.show(this.modalEscala, {
+  verPreciosEscala(): void {
+    // TODO: mostrar precios escala locales:
+    console.log('precios escalax: ');
+    this.modalService.show(ModalScalePriceComponent, {
       class: 'modal-dialog-centered',
+      initialState: {
+        scalePrices: this.preciosEscalas,
+      },
     });
   }
 

@@ -1,0 +1,58 @@
+<div class="modal-header">
+  <button type="button" class="btn-close" (click)="modalRef.hide()">
+    <i class="fas fa-times-circle" style="color: #00549d"></i>
+  </button>
+</div>
+<div class="modal-body" style="min-height: 140px">
+  <div
+    class="w-100 d-flex justify-content-center"
+    style="margin-bottom: -20px"
+  >
+    <img
+      src="../../../../assets/images/llevaMasPagaMenos/200x50_rectangular.jpg"
+      style="z-index: 3"
+    />
+  </div>
+  <div class="card text-white bg-implementos mb-3">
+    <div class="card-body">
+      <div class="text-center" style="margin-bottom: -10px; font-weight: bold">
+        Precios Escalas
+      </div>
+      <table>
+        <thead>
+          <tr style="background-color: #00549d !important">
+            <td class="text-center">Volumen</td>
+            <td class="text-center">Precio</td>
+          </tr>
+        </thead>
+
+        <tbody class="table_paga" *ngIf="scalePrices.length">
+          <ng-container *ngFor="let precio of scalePrices; let i = index">
+            <tr
+              *ngIf="i > 0"
+              style="color: #00549d"
+              [ngStyle]="{
+                'background-color': (i + 1) % 2 !== 0 ? '#ffff' : '#efefef'
+              }"
+            >
+              <td style="width: 50%; border-right: solid 2px; color: #00549d">
+                {{ precio.desde }} a {{ precio.hasta }} und.
+              </td>
+              <td
+                class="text-center"
+                style="width: 50%; border-left: solid 2px; color: #00549d"
+              >
+                {{
+                  (user.preferences.iva
+                    ? precio.precio
+                    : precio.precio / (1 + IVA)
+                  ) | currencyFormat
+                }}
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
