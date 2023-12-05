@@ -1,10 +1,12 @@
 // Angular
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ArticleComment } from '@core/models-v2/article/article-comment.interface';
 import {
   IArticleResponse,
   ISearchResponse,
 } from '@core/models-v2/article/article-response.interface';
+import { IReviewsResponse } from '@core/models-v2/article/review-response.interface';
 // Environment
 import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
@@ -170,5 +172,27 @@ export class ArticleService {
     return this.http.get(
       `${API_ARTICLE}/suggestion/article-compare-matrix?sku=${params.sku}&documentId=${params.documentId}&branchCode=${params.branchCode}`
     );
+  }
+
+  getResumenComentarios(sku: string) {
+    return this.http.get<IReviewsResponse>(`${API_ARTICLE}/${sku}/evaluation-summary`);
+  }
+
+
+  // FIXME: enviar el token de mejor manera
+  guardarComentarioArticulo(request: ArticleComment) {
+    const { calification, title, comment, recommended } = request;
+    const body = {
+      calification,
+      title,
+      comment,
+      recommended
+    };
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb3VyY2UiOiJlY29tbWVyY2UiLCJkb2N1bWVudElkIjoiMTc2NzkxMzMtMCIsInVzZXJuYW1lIjoiam9zZS5lc3Bpbm96YUBpbXBsZW1lbnRvcy5jbCIsInVzZXJSb2xlIjoiYjJjIiwiaWF0IjoxNzAxODA5NTYwLCJleHAiOjE3MzMzNjcxNjB9.03m-5pn-p8E_efk1LNWEeiP_7PUkG8Ih4cmjpwteW5A'
+    const headers = new HttpHeaders({
+    'Authorization': `Bearer ${token}`
+  });
+
+    return this.http.post(`${API_ARTICLE}/${request.sku}/evaluation`, body ,{ headers });
   }
 }

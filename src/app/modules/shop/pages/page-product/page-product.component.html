@@ -85,25 +85,26 @@
                       >
                         <img
                           class="img-fluid"
-                          [routerLink]="root.product(item.sku, item.nombre)"
+                          [routerLink]="root.product(item.sku, item.name)"
                           [src]="root.getUrlImagenMiniatura(item)"
-                          alt="{{ item.nombre }}"
+                          alt="{{ item.name }}"
                           style="width: 40%; cursor: pointer"
                         />
                         <div class="col-12 skuP">
                           {{ item.sku }}
                         </div>
+
                         <div
-                          *ngIf="item.stockTienda > 0 || item.stockEmpresa > 0"
+                          *ngIf="item.stockSummary.branchStock > 0 || item.stockSummary.companyStock > 0"
                           class="d-flex flex-column justify-content-center align-items-center"
                         >
                           <div
-                            *ngIf="item?.precioComun === item?.precio?.precio"
+                            *ngIf="item.priceInfo.commonPrice === item.priceInfo.price"
                             class="product-card__new-price font-weight-bold"
                             style="color: #000"
                           >
                             <span *ngIf="!preciosNeto"
-                              >{{ item?.precio?.precio | currencyFormat }}
+                              >{{ item?.priceInfo?.price | currencyFormat }}
                               <em
                                 ><span class="rounded-pill badge-implementos">
                                   c/iva</span
@@ -112,7 +113,7 @@
                             >
                             <span *ngIf="preciosNeto"
                               >{{
-                                item?.precio?.precio / (1 + IVA)
+                                item?.priceInfo?.price / (1 + IVA)
                                   | currencyFormat
                               }}
                               <em
@@ -125,11 +126,11 @@
                             >
                           </div>
                           <div
-                            *ngIf="item?.precioComun !== item?.precio?.precio"
+                            *ngIf="item.priceInfo.commonPrice !== item.priceInfo.price"
                             class="product-card__new-price text-danger font-weight-bold"
                           >
                             <span *ngIf="!preciosNeto"
-                              >{{ item?.precio?.precio | currencyFormat }}
+                              >{{ item?.priceInfo?.price | currencyFormat }}
                               <em
                                 ><span class="rounded-pill badge-implementos">
                                   c/iva</span
@@ -138,7 +139,7 @@
                             >
                             <span *ngIf="preciosNeto"
                               >{{
-                                item?.precio?.precio / (1 + IVA)
+                                item?.priceInfo?.price / (1 + IVA)
                                   | currencyFormat
                               }}
                               <em
@@ -151,58 +152,42 @@
                             >
                           </div>
                           <div
-                            *ngIf="item?.precioComun !== item?.precio?.precio"
+                            *ngIf="item.priceInfo.commonPrice !== item.priceInfo.price"
                             tooltip="Precio normal"
                             class="product-card__old-price text-end"
                           >
                             <span *ngIf="!preciosNeto"
-                              >{{ item?.precioComun | currencyFormat }}
+                              >{{ item.priceInfo.commonPrice | currencyFormat }}
                               <em> c/iva </em></span
                             >
                             <span *ngIf="preciosNeto"
                               >{{
-                                item?.precioComun / (1 + IVA) | currencyFormat
+                                item.priceInfo.commonPrice / (1 + IVA) | currencyFormat
                               }}
                               <em> neto </em></span
                             >
                           </div>
                         </div>
                         <div class="col-12 marcaP text-center">
-                          {{ item.marca }}
+                          {{ item.brand }}
                         </div>
                         <div
-                          *ngIf="item.stockTienda > 0 || item.stockEmpresa > 0"
+                          *ngIf="item.stockSummary.branchStock > 0 || item.stockSummary.companyStock > 0"
                           class="mb-2 d-flex flex-column justify-content-center align-items-center"
                         >
-                          <div class="row">
-                            <div class="col-12 text-center">
-                              <i
-                                class="fal fa-minus-circle fa-xl me-3"
-                                style="cursor: pointer; color: #005cb9"
-                                role="button"
-                                (click)="obtienePrecioxCantidad(item, '-')"
-                              ></i>
-                              <input
-                                type="number"
-                                size="4"
-                                style="width: 50px"
-                                class="text-center"
-                                [(ngModel)]="item.cantidad"
-                                (change)="obtienePrecioxCantidad(item)"
-                              />
-                              <i
-                                class="fal fa-plus-circle fa-xl ms-3"
-                                style="cursor: pointer; color: #005cb9"
-                                (click)="obtienePrecioxCantidad(item, '+')"
-                                role="button"
-                              ></i>
-                            </div>
+                        <div class="row">
+                          <div class="col-12 d-flex justify-content-center align-items-center">
+                              <i class="fal fa-minus-circle fa-xl me-3" style="cursor: pointer; color: #005cb9" role="button" (click)="obtienePrecioxCantidad(item, '-')"></i>
+                              <input type="number" size="4" style="width: 50px" class="text-center" [(ngModel)]="item.cantidad" (change)="obtienePrecioxCantidad(item)" />
+                              <i class="fal fa-plus-circle fa-xl ms-3" style="cursor: pointer; color: #005cb9" (click)="obtienePrecioxCantidad(item, '+')" role="button"></i>
                           </div>
+                        </div>
+
                         </div>
                         <div
                           class="col-12 marcaP text-center"
                           *ngIf="
-                            item.stockTienda === 0 && item.stockEmpresa === 0
+                            item.stockSummary.branchStock === 0 && item.stockSummary.companyStock === 0
                           "
                         >
                           <div class="no_stock">
@@ -218,9 +203,7 @@
                           class="mb-2 d-flex flex-column justify-content-center align-items-center"
                         >
                           <button
-                            *ngIf="
-                              item.stockTienda > 0 || item.stockEmpresa > 0
-                            "
+                          *ngIf="item.stockSummary.branchStock > 0 || item.stockSummary.companyStock > 0"
                             class="btn btn-sm btn-secondary"
                             (click)="agregarProductoMatriz(item)"
                           >
@@ -228,10 +211,10 @@
                           </button>
                           <button
                             *ngIf="
-                              item.stockTienda === 0 && item.stockEmpresa === 0
+                             item.stockSummary.branchStock=== 0 && item.stockSummary.companyStock === 0
                             "
                             class="btn btn-sm btn-secondary"
-                            [routerLink]="root.product(item.sku, item.nombre)"
+                            [routerLink]="root.product(item.sku, item.name)"
                           >
                             SOLICITAR
                           </button>
@@ -240,10 +223,10 @@
                     </tr>
                     <tr class="color-gris" *ngFor="let item of comparacion">
                       <td>
-                        <b>{{ item.nombre | capitalizeFirst }}</b>
+                        <b>{{ item.name | capitalizeFirst }}</b>
                       </td>
                       <td
-                        *ngFor="let dato of item.valores"
+                        *ngFor="let dato of item.value"
                         class="text-center"
                         [class.text-muted]="dato === 'N/A'"
                       >
@@ -495,25 +478,25 @@
                     >
                       <img
                         class="img-fluid"
-                        [routerLink]="root.product(item.sku, item.nombre)"
+                        [routerLink]="root.product(item.sku, item.name)"
                         [src]="root.getUrlImagenMiniatura(item)"
-                        alt="{{ item.nombre }}"
+                        alt="{{ item.name }}"
                         style="width: 40%; cursor: pointer"
                       />
                       <div class="col-12 skuP">
                         {{ item.sku }}
                       </div>
                       <div
-                        *ngIf="item.stockTienda > 0 || item.stockEmpresa > 0"
+                        *ngIf="item.stockSummary.branchStock > 0 || item.stockSummary.companyStock > 0"
                         class="d-flex flex-column justify-content-center align-items-center"
                       >
                         <div
-                          *ngIf="item?.precioComun === item?.precio?.precio"
+                          *ngIf="item.priceInfo.commonPrice === item.priceInfo.price"
                           class="product-card__new-price font-weight-bold"
                           style="color: #000"
                         >
                           <span *ngIf="!preciosNeto"
-                            >{{ item?.precio?.precio | currencyFormat }}
+                            >{{ item.priceInfo.price | currencyFormat }}
                             <em
                               ><span class="rounded-pill badge-implementos">
                                 c/iva</span
@@ -522,7 +505,7 @@
                           >
                           <span *ngIf="preciosNeto"
                             >{{
-                              item?.precio?.precio / (1 + IVA) | currencyFormat
+                              item.priceInfo.price / (1 + IVA) | currencyFormat
                             }}
                             <em
                               ><span class="rounded-pill badge-primary-custom">
@@ -532,11 +515,11 @@
                           >
                         </div>
                         <div
-                          *ngIf="item?.precioComun !== item?.precio?.precio"
+                          *ngIf="item.priceInfo.commonPrice === item.priceInfo.price"
                           class="product-card__new-price text-danger font-weight-bold"
                         >
                           <span *ngIf="!preciosNeto"
-                            >{{ item?.precio?.precio | currencyFormat }}
+                            >{{ item.priceInfo.price | currencyFormat }}
                             <em
                               ><span class="rounded-pill badge-implementos">
                                 c/iva</span
@@ -545,7 +528,7 @@
                           >
                           <span *ngIf="preciosNeto"
                             >{{
-                              item?.precio?.precio / (1 + IVA) | currencyFormat
+                              item.priceInfo.price / (1 + IVA) | currencyFormat
                             }}
                             <em
                               ><span class="rounded-pill badge-primary-custom">
@@ -555,58 +538,42 @@
                           >
                         </div>
                         <div
-                          *ngIf="item?.precioComun !== item?.precio?.precio"
+                          *ngIf="item.priceInfo.commonPrice !== item.priceInfo.price"
                           tooltip="Precio normal"
                           class="product-card__old-price text-end"
                         >
                           <span *ngIf="!preciosNeto"
-                            >{{ item?.precioComun | currencyFormat }}
+                            >{{ item.priceInfo.commonPrice | currencyFormat }}
                             <em> c/iva </em></span
                           >
                           <span *ngIf="preciosNeto"
                             >{{
-                              item?.precioComun / (1 + IVA) | currencyFormat
+                              item.priceInfo.commonPrice / (1 + IVA) | currencyFormat
                             }}
                             <em> neto </em></span
                           >
                         </div>
                       </div>
                       <div class="col-12 marcaP text-center">
-                        {{ item.marca }}
+                        {{ item.brand }}
                       </div>
                       <div
-                        *ngIf="item.stockTienda > 0 || item.stockEmpresa > 0"
+                        *ngIf="item.stockSummary.branchStock > 0 || item.stockSummary.companyStock > 0"
                         class="mb-2 d-flex flex-column justify-content-center align-items-center"
                       >
-                        <div class="row">
-                          <div class="col-12 text-center">
-                            <i
-                              class="fal fa-minus-circle fa-xl me-3"
-                              style="cursor: pointer; color: #005cb9"
-                              role="button"
-                              (click)="obtienePrecioxCantidad(item, '-')"
-                            ></i>
-                            <input
-                              type="number"
-                              size="4"
-                              style="width: 50px"
-                              class="text-center"
-                              [(ngModel)]="item.cantidad"
-                              (change)="obtienePrecioxCantidad(item)"
-                            />
-                            <i
-                              class="fal fa-plus-circle fa-xl ms-3"
-                              style="cursor: pointer; color: #005cb9"
-                              (click)="obtienePrecioxCantidad(item, '+')"
-                              role="button"
-                            ></i>
-                          </div>
+                      <div class="row">
+                        <div class="col-12 d-flex justify-content-center align-items-center">
+                            <i class="fal fa-minus-circle fa-xl me-3" style="cursor: pointer; color: #005cb9" role="button" (click)="obtienePrecioxCantidad(item, '-')"></i>
+                            <input type="number" size="4" style="width: 50px" class="text-center" [(ngModel)]="item.cantidad" (change)="obtienePrecioxCantidad(item)" />
+                            <i class="fal fa-plus-circle fa-xl ms-3" style="cursor: pointer; color: #005cb9" (click)="obtienePrecioxCantidad(item, '+')" role="button"></i>
                         </div>
+                      </div>
+
                       </div>
                       <div
                         class="col-12 marcaP text-center"
                         *ngIf="
-                          item.stockTienda === 0 && item.stockEmpresa === 0
+                          item.stockSummary.branchStock === 0  &&  item.stockSummary.companyStock   === 0
                         "
                       >
                         <div class="no_stock">
@@ -622,7 +589,7 @@
                         class="mb-2 d-flex flex-column justify-content-center align-items-center"
                       >
                         <button
-                          *ngIf="item.stockTienda > 0 || item.stockEmpresa > 0"
+                          *ngIf="item.stockSummary.branchStock > 0 || item.stockSummary.companyStock  > 0"
                           class="btn btn-sm btn-secondary"
                           (click)="agregarProductoMatriz(item)"
                         >
@@ -630,10 +597,10 @@
                         </button>
                         <button
                           *ngIf="
-                            item.stockTienda === 0 && item.stockEmpresa === 0
+                            item.stockSummary.branchStock === 0 && item.stockSummary.companyStock === 0
                           "
                           class="btn btn-sm btn-secondary"
-                          [routerLink]="root.product(item.sku, item.nombre)"
+                          [routerLink]="root.product(item.sku, item.name)"
                         >
                           SOLICITAR
                         </button>
@@ -642,14 +609,14 @@
                   </tr>
                   <tr class="mobile" *ngFor="let item of comparacion">
                     <td class="sticky">
-                      <b>{{ item.nombre | capitalizeFirst }}</b>
+                      <b>{{ item.name | capitalizeFirst }}</b>
                     </td>
                     <td
-                      *ngFor="let dato of item.valores"
+                      *ngFor="let dato of item.value"
                       class="text-center"
                       [class.text-muted]="dato === 'N/A'"
                     >
-                      {{ dato }}
+                  {{ dato }}
                     </td>
                   </tr>
                 </table>

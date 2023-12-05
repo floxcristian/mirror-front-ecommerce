@@ -486,7 +486,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
       this.comparacion = [];
       this.relatedProducts = resp[1];
       this.recommendedProducts = resp[2];
-      this.matrixProducts = resp[0].articles;
+      this.matrixProducts = resp[0];
       this.matriz = resp[3].articles;
       this.matriz.map((p) => (p.cantidad = 1));
       this.formateaComparacion(resp[3].comparison);
@@ -496,8 +496,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
     for (const element of comparacion) {
       const key = Object.keys(element);
       const obj = {
-        nombre: key[0],
-        valores: element[key[0]].map((x: any) => x.value),
+        name: key[0],
+        value: element[key[0]].map((x: any) => x.value),
       };
       this.comparacion.push(obj);
     }

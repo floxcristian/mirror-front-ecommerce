@@ -1,11 +1,12 @@
 <div class="modal-header">
-  <h5 class="modal-title pull-left">
-    <i class="fas fa-comment-dots me-2" style="color: #00549d"></i>
-    <span style="color: #0063b9">Tu opinión nos importa</span>
+  <h5 class="modal-title d-flex align-items-center">
+    <i class="fas fa-comment-dots me-2" style="color: #00549d; font-size: 1.5rem;"></i>
+    <span style="color: #0063b9;">Tu opinión nos importa</span>
   </h5>
-  <button type="button" class="btn-close" (click)="ModalRef.hide()">
-    <i class="fas fa-times-circle" style="color: #00549d"></i>
-  </button>
+  <button type="button" class="btn" (click)="ModalRef.hide()">
+    <i class="fas fa-times-circle" style="color: #00549d; font-size: 18px;"></i>
+</button>
+
 </div>
 <div class="modal-body">
   <div
@@ -20,9 +21,9 @@
       style="font-size: 15px"
     >
       <div>
-        <strong>{{ producto.nombre | titlecase }}</strong>
+        <strong>{{ producto.name | titlecase }}</strong>
       </div>
-      <div>{{ producto.descripcion | titlecase }}</div>
+      <div>{{ producto.description | titlecase }}</div>
     </div>
   </div>
 
