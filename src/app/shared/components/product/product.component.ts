@@ -1,3 +1,4 @@
+// Angular
 import {
   Component,
   ElementRef,
@@ -8,7 +9,6 @@ import {
   QueryList,
   ViewChild,
   ViewChildren,
-  TemplateRef,
   OnDestroy,
   SimpleChanges,
   ChangeDetectorRef,
@@ -18,19 +18,17 @@ import {
   HostListener,
 } from '@angular/core';
 import {
-  Product,
-  AtributosEspeciales,
-  ProductOrigen,
-} from '../../interfaces/product';
-import { CarouselComponent, SlidesOutputData } from 'ngx-owl-carousel-o';
-import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+// Libs
+import { CarouselComponent, SlidesOutputData } from 'ngx-owl-carousel-o';
+
 import { CartService } from '../../services/cart.service';
-import { CompareService } from '../../services/compare.service';
 import { isPlatformBrowser } from '@angular/common';
 import { OwlCarouselOConfig } from 'ngx-owl-carousel-o/lib/carousel/owl-carousel-o-config';
 import { PhotoSwipeService } from '../../services/photo-swipe.service';
@@ -40,14 +38,11 @@ import { Subscription } from 'rxjs';
 import { RootService } from '../../services/root.service';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { ProductsService } from '../../services/products.service';
 import { ResponseApi } from '../../../shared/interfaces/response-api';
 
-import { ActivatedRoute, Router } from '@angular/router';
 import { GeoLocationService } from '../../services/geo-location.service';
 import { GeoLocation } from '../../interfaces/geo-location';
 
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ArticuloFavorito, Lista } from '../../interfaces/articuloFavorito';
 import { ClientsService } from '../../services/clients.service';
 import {
@@ -57,7 +52,6 @@ import {
 import { isVacio } from '../../utils/utilidades';
 import { environment } from '@env/environment';
 import { NguCarousel, NguCarouselConfig } from '@ngu/carousel';
-import { AvisoStockComponent } from '../aviso-stock/aviso-stock.component';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { SessionService } from '@core/states-v2/session.service';
@@ -108,7 +102,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   showGallery = true;
   showGalleryTimeout!: number;
-  atributosEspeciales!: AtributosEspeciales[];
   imageFichaCargada = false;
   quality: any;
   disponibilidad = false;
@@ -123,7 +116,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   routerPromise: Subscription;
   photoSwipePromise!: Subscription;
   addcartPromise!: Subscription;
-  comparePromise!: Subscription;
   wishlistPromise!: Subscription;
 
   favorito = false;
@@ -146,15 +138,13 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   imageElements!: QueryList<ElementRef>;
   // Others
   preciosEscalas: IScalePriceItem[] = [];
+  @Output() comentarioGuardado: EventEmitter<boolean> = new EventEmitter();
+  @Output() leerComentarios: EventEmitter<boolean> = new EventEmitter();
   @Input() stock!: boolean;
   @Input() origen!: string[];
   @Input() recommendedProducts!: Array<any>;
-
-  @Output() comentarioGuardado: EventEmitter<boolean> = new EventEmitter();
-  @Output() leerComentarios: EventEmitter<boolean> = new EventEmitter();
   @Input() set layout(value: Layout) {
     this.dataLayout = value;
-
     if (isPlatformBrowser(this.platformId)) {
       // this dirty hack is needed to re-initialize the gallery after changing the layout
       clearTimeout(this.showGalleryTimeout);
@@ -164,12 +154,8 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       }, 0);
     }
   }
-  get layout(): Layout {
-    return this.dataLayout;
-  }
 
   @Input() set product(value: IArticleResponse | undefined) {
-    console.log('productx: ', value);
     if (typeof value === 'undefined') {
       return;
     }
@@ -217,20 +203,10 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.dataProduct.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     this.dataProduct.gimage =
       this.sanitizer.bypassSecurityTrustResourceUrl(gimage);
+  }
 
-    // filtramos los atributos
-    this.atributosEspeciales = [
-      {
-        texto: 'Garantia del producto',
-        icono: 'fas fa-book',
-        url: '#',
-      },
-      {
-        texto: 'Certificado del producto',
-        icono: 'far fa-file-pdf',
-        url: '#',
-      },
-    ];
+  get layout(): Layout {
+    return this.dataLayout;
   }
 
   get product() {
@@ -254,7 +230,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   addingToCart = false;
   addingToWishlist = false;
-  addingToCompare = false;
   disponibilidadSku: any;
   headerLayout!: string;
 
@@ -263,22 +238,18 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   tiendaActual: any;
   stockTiendaActual: any = 0;
   MODOS = { RETIRO_TIENDA: 'retiroTienda', DESPACHO: 'domicilio' };
-
   puntoQuiebre: number = 576;
   showMobile: boolean = false;
-
   formAvisoStock!: FormGroup;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private cart: CartService,
-    private compare: CompareService,
     private photoSwipe: PhotoSwipeService,
     private direction: DirectionService,
     public root: RootService,
     public toast: ToastrService,
     private modalService: BsModalService,
-    private productsService: ProductsService,
     public router: Router,
     public route: ActivatedRoute,
     public geoLocationService: GeoLocationService,
@@ -321,7 +292,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  async ngOnInit() {
+  ngOnInit(): void {
     console.log('product2x: ', this.product);
     this.isMobile();
     window.onresize = () => {
@@ -363,7 +334,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.routerPromise ? this.routerPromise.unsubscribe() : '';
     this.photoSwipePromise ? this.photoSwipePromise.unsubscribe() : '';
     this.addcartPromise ? this.addcartPromise.unsubscribe() : '';
-    this.comparePromise ? this.comparePromise.unsubscribe() : '';
     this.wishlistPromise ? this.wishlistPromise.unsubscribe() : '';
   }
 
@@ -441,7 +411,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * @author Cristobal Burgos 09-02-2021
    * @description Comprueba que el stock ingresado por el usuario sea menor , igual o mayor al stock disponible
    * para asi mostrar ir validando que pueda ingresar la cantidad seleccioanda a su carro o mostrar un mensaje y desactivar
    * los checks de conflictos de entrega
@@ -515,7 +484,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   // addToCart(): void {
-  //   const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+  //   const usuario = this.sessionService.getSession();
   //   if (!usuario) {
   //     this.toast.warning(
   //       'Debe iniciar sesion para poder comprar',
@@ -681,16 +650,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.cd.markForCheck();
   }
 
-  // addToCompare(): void {
-  //   if (!this.addingToCompare && this.product) {
-  //     this.addingToCompare = true;
-
-  //     this.comparePromise = this.compare
-  //       .add(this.product!)
-  //       .subscribe({ complete: () => (this.addingToCompare = false) });
-  //   }
-  // }
-
   //Listo
   openPhotoSwipe(event: MouseEvent, image: IProductImage): void {
     if (this.layout !== 'quickview') {
@@ -848,21 +807,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  //Revisar
-  OpenAvisoStock() {
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    this.modalService.show(AvisoStockComponent, {
-      backdrop: 'static',
-      keyboard: false,
-      initialState: {
-        sku: this.product?.sku,
-        producto: this.product,
-        sucursal: tiendaSeleccionada?.codigo,
-        usuario: this.usuario,
-      },
-    });
-  }
-
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.innerWidth = isPlatformBrowser(this.platformId)
@@ -888,14 +832,12 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  enviarWhatsapp() {
-    // let telefono = '56957897902'
-    let telefono = '56932633571';
-    let url = `https://api.whatsapp.com/send?phone=${telefono}&text=`;
+  enviarWhatsapp(): void {
+    const phoneNumber = '56932633571';
+    let url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=`;
     let mensaje = `Hola, necesito el siguiente producto ${
       this.product?.name
     } de SKU: ${this.product!.sku}. Para que me atienda un ejecutivo.`;
-    let url_final = url + mensaje;
-    window.open(url_final);
+    window.open(url + mensaje);
   }
 }

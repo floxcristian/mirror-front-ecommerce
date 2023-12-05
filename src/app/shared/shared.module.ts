@@ -92,7 +92,6 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
 import { ProductCardB2cFichaComponent } from './components/product-card-b2c-ficha/product-card-b2c-ficha.component';
 import { AddContactModalComponent } from './components/add-contact-modal/add-contact-modal.component';
 import { UpdateContactModalComponent } from './components/update-contact-modal/update-contact-modal.component';
-import { AvisoStockComponent } from './components/aviso-stock/aviso-stock.component';
 import { CountdownTimerModule } from './../../../projects/countdown-timer/src/lib/countdown-timer.module';
 import { ProductCardB2cCmsComponent } from './components/product-card-b2c-cms/product-card-b2c-cms.component';
 import { ButtonsSlideshowComponent } from './components/buttons-slideshow/buttons-slideshow.component';
@@ -128,7 +127,6 @@ const NGU_CAROUSEL_MODULES = [
     DisableControlDirective,
     RutCharsDirective,
     LazyImgDirective,
-    AvisoStockComponent,
     TitleCasePipe,
     AlertComponent,
     IconComponent,

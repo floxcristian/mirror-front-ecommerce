@@ -160,7 +160,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     this.cart.onAdding$.subscribe((product: ProductCart) => {
       this.productCard = product;
-      this.showAlertCart(true);
+      this.showAlertCart();
     });
 
     this.compare.onAdding$.subscribe((product) => {
@@ -208,14 +208,13 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   openModal(template: TemplateRef<any>): void {
-    this.modalRef = this.modalService.show(
-      template,
-      Object.assign({}, { class: 'modal-alert-cart-dialog' })
-    );
+    this.modalRef = this.modalService.show(template, {
+      class: 'modal-alert-cart-dialog',
+    });
   }
 
-  showAlertCart(status: boolean): void {
+  showAlertCart(): void {
     this.alert.hide();
-    this.alert.show(status);
+    this.alert.show();
   }
 }
