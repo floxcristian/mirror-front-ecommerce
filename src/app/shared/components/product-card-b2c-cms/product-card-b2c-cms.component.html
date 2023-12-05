@@ -39,9 +39,9 @@
       [ngbPopover]="popoverContent"
       #popover="ngbPopover"
       triggers="hover"
-      placement="bottom"
+      placement="bottom-left"
       container="body"
-      (mousehover)="verPreciosEscala(popover)"
+      (mouseenter)="verPreciosEscala(popover)"
     >
       <picture>
         <source
@@ -387,15 +387,14 @@
           </ng-container>
           <ng-container
             *ngIf="
-              productData.deliverySupply.deliveryIsToday !== null &&
+              productData.deliverySupply.deliveryIsToday == null ||
               !productData.deliverySupply.deliveryIsToday
             "
           >
             <div
               *ngIf="
-                productData.deliverySupply.deliveryDate &&
-                  productData.deliverySupply.deliveryDate == null;
-                else fechaEntregaDelivery
+                productData.deliverySupply.deliveryDate == null;
+                else fechaDelivery
               "
             >
               <i class="fas fa-shipping-fast me-2" style="color: grey"></i>
@@ -403,7 +402,7 @@
                 >No disponible</i
               >
             </div>
-            <ng-template #fechaEntregaDelivery>
+            <ng-template #fechaDelivery>
               <i class="fas fa-shipping-fast me-2"></i>
               <i
                 style="
@@ -421,24 +420,6 @@
               >
             </ng-template>
           </ng-container>
-          <!-- <ng-container
-            *ngIf="
-              productData.deliverySupply.deliveryIsToday !== undefined &&
-              !productData.deliverySupply.deliveryIsToday
-            "
-          >
-              <i class="fas fa-shipping-fast me-2"></i>
-              <i
-                style="
-                  color: black;
-                  font-weight: bold;
-                  font-style: normal;
-                  font-size: 12px;
-                "
-                >Llega
-                {{ productData.fechaEntrega | date : 'dd/MM' | uppercase }}</i
-              >
-          </ng-container> -->
         </div>
         <ng-container
           *ngIf="
