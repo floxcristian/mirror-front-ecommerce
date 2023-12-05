@@ -144,10 +144,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   featuredCarousel!: CarouselComponent;
   @ViewChildren('imageElement', { read: ElementRef })
   imageElements!: QueryList<ElementRef>;
-  @ViewChild('modalStock', { read: TemplateRef, static: false })
-  modalTemplateStock!: TemplateRef<any>;
-  // Modals
-  modalRefStock!: BsModalRef;
   // Others
   preciosEscalas: IScalePriceItem[] = [];
   @Input() stock!: boolean;
@@ -180,7 +176,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     /** PROVISORIO */
     this.isChevron = this.skusChevron.includes(value.sku);
     /***************/
-    this.getPopularProducts(value.sku);
+    this.getPopularProducts();
     this.verificarDisponibilidad(value);
     this.comprobarStock(value.sku, this.tiendaActual, value); // revisar
     this.quantity.setValue(1);
@@ -316,7 +312,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
         this.estado = true;
         this.tiendaActual = this.geoLocationService.getTiendaSeleccionada();
         this.Actualizar();
-        this.getPopularProducts(this.dataProduct.sku);
+        this.getPopularProducts();
         this.comprobarStock(
           this.dataProduct.sku,
           this.tiendaActual,
@@ -335,7 +331,8 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     if (this.layout !== 'quickview' && isPlatformBrowser(this.platformId)) {
       this.photoSwipePromise = this.photoSwipe.load().subscribe();
     }
-    if (!['supervisor', 'comprador'].includes(this.usuario.userRole || '')) {
+
+    if (!this.sessionService.isB2B()) {
       this.gtmService.pushTag({
         event: 'productView',
         pagePath: window.location.href,
@@ -411,20 +408,15 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.carouselItems = [...this.carouselItems, ...this.mainItems];
   }
 
-  getPopularProducts(sku: any) {
-    const params: any = {
-      sku,
-    };
-    const usuario = this.sessionService.getSession();
-    if (usuario.documentId) {
-      params['rut'] = usuario.documentId;
-    }
+  getPopularProducts() {
     this.estado = false;
   }
+
   //revisar **
   cargaPrecio(producto: any) {
     this.cart.cargarPrecioEnProducto(producto);
   }
+
   //Funcion nueva*
   verificarDisponibilidad(product: IArticleResponse) {
     if (
@@ -819,13 +811,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
     this.carouselItems = this.images;
     this.mainItems = [...this.carouselItems];
-  }
-
-  showStock() {
-    this.modalRefStock = this.modalService.show(
-      this.modalTemplateStock,
-      Object.assign({}, { class: 'modal-xl' })
-    );
   }
 
   // FIXME: ya no se debe llamar endpoint.
