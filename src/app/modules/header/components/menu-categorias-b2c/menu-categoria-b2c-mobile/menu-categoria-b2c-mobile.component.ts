@@ -9,15 +9,12 @@ import { CategoryService } from '../../../../../shared/services/category.service
 import { MenuCategoriasB2cService } from '../../../../../shared/services/menu-categorias-b2c.service';
 import { RootService } from '../../../../../shared/services/root.service';
 import { LogisticsService } from '../../../../../shared/services/logistics.service';
-import {
-  GeoLocation,
-  TiendaLocation,
-} from '../../../../../shared/interfaces/geo-location';
 import { CartService } from '../../../../../shared/services/cart.service';
-import { GeoLocationService } from '../../../../../shared/services/geo-location.service';
 import { DropdownDirective } from '../../../../../shared/directives/dropdown.directive';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { ITiendaLocation } from '@core/models-v2/geolocation.interface';
 @Component({
   selector: 'app-menu-categoria-b2c-mobile',
   templateUrl: './menu-categoria-b2c-mobile.component.html',
@@ -30,7 +27,7 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
   isOpen = false;
   templateTiendaModal!: TemplateRef<any>;
   modalRefTienda!: BsModalRef;
-  tiendaSeleccionada!: TiendaLocation | undefined;
+  tiendaSeleccionada!: ITiendaLocation;
   private categoriaDetalle: any;
   private arrayCategorias: NavigationLink[] = [];
   private segundoNivel: any;
@@ -97,9 +94,10 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
     private router: Router,
     public localS: LocalStorageService,
     private logisticsService: LogisticsService,
-    private geoLocationService: GeoLocationService,
     private cartService: CartService,
-    private root: RootService
+    private root: RootService,
+    // Services V2
+    private readonly geolocationService: GeolocationServiceV2
   ) {
     this.obtieneCategorias();
   }
@@ -108,17 +106,19 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
     this.menuCategorias.isOpen$
       .pipe(takeUntil(this.destroy$))
       .subscribe((isOpen) => (this.isOpen = isOpen));
-    // Tienda seleccionada
-    this.tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
 
-    this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
-      this.tiendaSeleccionada = r.tiendaSelecciona;
-      this.cartService.calc();
-      if (r.esNuevaUbicacion) {
-        setTimeout(() => {
-          if (this.menuTienda) this.menuTienda.open();
-        }, 700);
-      }
+    this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
+
+    this.geolocationService.location$.subscribe({
+      next: (res) => {
+        this.tiendaSeleccionada = res.tiendaSelecciona;
+        this.cartService.calc();
+        if (res.esNuevaUbicacion) {
+          setTimeout(() => {
+            if (this.menuTienda) this.menuTienda.open();
+          }, 700);
+        }
+      },
     });
   }
 

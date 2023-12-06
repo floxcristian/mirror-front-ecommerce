@@ -17,15 +17,12 @@ import { CartService } from '../../../../shared/services/cart.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
-import { GeoLocationService } from '../../../../shared/services/geo-location.service';
-import {
-  GeoLocation,
-  TiendaLocation,
-} from '../../../../shared/interfaces/geo-location';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { ITiendaLocation } from '@core/models-v2/geolocation.interface';
 
 @Component({
   selector: 'app-mobile-search',
@@ -67,7 +64,7 @@ export class MobileSearchComponent implements OnInit {
 
   sessionNotStarted = false;
   loadCart = false;
-  tiendaSeleccionada!: TiendaLocation | undefined;
+  tiendaSeleccionada!: ITiendaLocation;
   seleccionado = false;
   isFocusedInput = false;
   constructor(
@@ -79,10 +76,11 @@ export class MobileSearchComponent implements OnInit {
     public cart: CartService,
     public menuCategorias: MenuCategoriasB2cService,
     public localS: LocalStorageService,
-    private geoLocationService: GeoLocationService,
     private logisticsService: LogisticsService,
     private cartService: CartService,
-    private readonly gtmService: GoogleTagManagerService
+    private readonly gtmService: GoogleTagManagerService,
+    // Service V2
+    private readonly geolocationService: GeolocationServiceV2
   ) {}
 
   ngOnInit() {
@@ -100,16 +98,18 @@ export class MobileSearchComponent implements OnInit {
       });
 
     // Tienda seleccionada
-    this.tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
 
-    this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
-      this.tiendaSeleccionada = r.tiendaSelecciona;
-      this.cartService.calc();
-      if (r.esNuevaUbicacion) {
-        setTimeout(() => {
-          if (this.menuTienda) this.menuTienda.open();
-        }, 700);
-      }
+    this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    this.geolocationService.location$.subscribe({
+      next: (res) => {
+        this.tiendaSeleccionada = res.tiendaSelecciona;
+        this.cartService.calc();
+        if (res.esNuevaUbicacion) {
+          setTimeout(() => {
+            if (this.menuTienda) this.menuTienda.open();
+          }, 700);
+        }
+      },
     });
   }
 

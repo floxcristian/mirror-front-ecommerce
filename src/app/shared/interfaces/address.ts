@@ -46,6 +46,9 @@ export interface ShippingDateItem {
   fechas?: any[];
 }
 export interface ShippingStore {
+  // Usados
+
+  // No usados
   nombre: string;
   recid: string;
   direccion: string;

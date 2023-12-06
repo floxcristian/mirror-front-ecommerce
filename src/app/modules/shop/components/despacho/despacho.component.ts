@@ -9,7 +9,6 @@ import {
 // Libs
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 // Services
-import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { PromesaService } from '../../services/promesa.service';
 import { MpSimuladorHeaderFiltrosMagicos } from './mp-simulador-header.filtros-magicos';
 
@@ -43,7 +42,6 @@ export class DespachoComponent implements OnInit {
   constructor(
     private promesaService: PromesaService,
     private modalService: BsModalService,
-    private geoLocationService: GeoLocationService,
     private cd: ChangeDetectorRef
   ) {}
 
@@ -171,17 +169,7 @@ export class DespachoComponent implements OnInit {
     this.generateChangeGeneralData();
   }
 
-  cambiarTienda(tiendaTemporal: any) {
-    const tienda = tiendaTemporal;
-    const coord = {
-      lat: tiendaTemporal.lat,
-      lon: tiendaTemporal.lon,
-    };
-
-    return this.geoLocationService.cambiarTiendaCliente(coord, tienda);
-  }
-
-  Close() {
+  Close(): void {
     this.modalRef.hide();
     this.promesas = [];
   }

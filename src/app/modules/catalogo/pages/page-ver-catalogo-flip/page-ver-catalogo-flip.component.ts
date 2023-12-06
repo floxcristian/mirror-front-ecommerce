@@ -5,13 +5,13 @@ import { CatalogoService } from '../../../../shared/services/catalogo.service';
 import { PageFlip, SizeType } from 'page-flip';
 import { CartService } from '../../../../shared/services/cart.service';
 import { RootService } from '../../../../shared/services/root.service';
-import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { environment } from '@env/environment';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/states-v2/session.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 
 @Component({
   selector: 'app-page-ver-catalogo-flip',
@@ -49,7 +49,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   constructor(
     private localS: LocalStorageService,
     private catalogoService: CatalogoService,
-    private geoLocationService: GeoLocationService,
     private router: Router,
     private toast: ToastrService,
     public cart: CartService,
@@ -57,7 +56,8 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     private responsive: BreakpointObserver,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly geolocationService: GeolocationServiceV2
   ) {}
 
   getTags() {
@@ -151,10 +151,8 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   }
 
   async establecerPrecio() {
-    let user = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
-    let rut = user ? user.documentId : '0';
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const sucursal = tiendaSeleccionada?.codigo;
+    let user = this.sessionService.getSession();
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
     let params: any;
     // MEJORAR RENDIMIENTO
@@ -163,9 +161,17 @@ export class PageVerCatalogoFlipComponent implements OnInit {
 
     if (this.tipoCatalogo == 'Automatico') {
       console.log(this.rutCatalogo);
-      params = { sucursal: sucursal, rut: this.rutCatalogo, skus: this.skus };
+      params = {
+        sucursal: tiendaSeleccionada.codigo,
+        rut: this.rutCatalogo,
+        skus: this.skus,
+      };
     } else {
-      params = { sucursal: sucursal, rut: rut, skus: this.skus };
+      params = {
+        sucursal: tiendaSeleccionada.codigo,
+        rut: user.documentId,
+        skus: this.skus,
+      };
     }
     let respuesta: any[];
     if (!this.propuesta) {
@@ -196,13 +202,16 @@ export class PageVerCatalogoFlipComponent implements OnInit {
                   objA.productos.cyberMonday = precio.cyberMonday;
                 }
               } else {
-                objA.productos.rut = rut;
-                if (objA.productos.producto == precio.sku && rut != '0') {
+                objA.productos.rut = user.documentId;
+                if (
+                  objA.productos.producto == precio.sku &&
+                  user.documentId != '0'
+                ) {
                   objA.productos.precioEsp = precio.precioCliente;
                   objA.productos.precio = precio.precioMeson;
                 } else if (
                   objA.productos.producto == precio.sku &&
-                  rut == '0'
+                  user.documentId == '0'
                 ) {
                   objA.productos.precioEsp = precio.precioCliente;
                   objA.productos.precio = precio.precioMeson;
@@ -240,13 +249,16 @@ export class PageVerCatalogoFlipComponent implements OnInit {
                   objB.productos.cyberMonday = precio.cyberMonday;
                 }
               } else {
-                objB.productos.rut = rut;
-                if (objB.productos.producto == precio.sku && rut != '0') {
+                objB.productos.rut = user.documentId;
+                if (
+                  objB.productos.producto == precio.sku &&
+                  user.documentId != '0'
+                ) {
                   objB.productos.precioEsp = precio.precioCliente;
                   objB.productos.precio = precio.precioMeson;
                 } else if (
                   objB.productos.producto == precio.sku &&
-                  rut == '0'
+                  user.documentId == '0'
                 ) {
                   objB.productos.precioEsp = precio.precioCliente;
                   objB.productos.precio = precio.precioMeson;

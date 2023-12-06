@@ -12,7 +12,6 @@ import { Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { RootService } from '../../../../shared/services/root.service';
 import { ToastrService } from 'ngx-toastr';
-import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { Router } from '@angular/router';
 import { Banner } from '../../../../shared/interfaces/banner';
 import { HostListener } from '@angular/core';
@@ -26,10 +25,10 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { isPlatformBrowser } from '@angular/common';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { PreferenciasCliente } from '@shared/interfaces/preferenciasCliente';
-import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 
 interface Item {
   ProductCart: ProductCart;
@@ -100,16 +99,15 @@ export class PageCartComponent implements OnInit, OnDestroy {
     public cart: CartService,
     private toast: ToastrService,
     private localS: LocalStorageService,
-    private geoLocationService: GeoLocationService,
+
     private productoService: ProductsService,
     private direction: DirectionService, // @Inject(WINDOW) private window: Window
     private readonly gtmService: GoogleTagManagerService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService,
-    // Storage V2
-    private readonly sessionStorage: SessionStorageService,
-    private readonly invitadoStorage: InvitadoStorageService
+    private readonly invitadoStorage: InvitadoStorageService,
+    private readonly geolocationService: GeolocationServiceV2
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -237,13 +235,13 @@ export class PageCartComponent implements OnInit, OnDestroy {
   }
 
   getRecommendedProductsList() {
-    let tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     this.preferenciaCliente = this.localS.get('preferenciasCliente');
     let obj: any = {
       listaSku: [],
       rut: '',
       cantidad: 6,
-      sucursal: tiendaSeleccionada?.codigo,
+      sucursal: tiendaSeleccionada.codigo,
       localidad: '',
     };
 

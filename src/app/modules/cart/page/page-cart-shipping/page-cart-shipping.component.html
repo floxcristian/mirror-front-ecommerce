@@ -184,12 +184,12 @@
 
                 <div
                   class="mb-3 me-3 col-12 col-lg-12 mt-3"
-                  [hidden]="shippingStore.length == 0 ? true : false"
+                  [hidden]="!stores.length"
                 >
                   <ng-select
                     [clearable]="false"
                     [searchable]="true"
-                    [items]="shippingStore"
+                    [items]="stores"
                     bindLabel="direccionCompleta"
                     bindValue="recid"
                     class="form-control-select form-control-lg"
@@ -248,7 +248,7 @@
                 <app-loading-element
                   *ngIf="
                     loadingShippingStore ||
-                    (shippingStore.length === 0 && !TiendasCargadas)
+                    (!stores.length && !TiendasCargadas)
                   "
                   text="Cargando fechas"
                 >
@@ -996,7 +996,7 @@
                 <hr />
                 <app-page-cart-chilexpress
                   *ngIf="loadingSucursal"
-                  [shippingStore]="shippingStore"
+                  [shippingStore]="stores"
                   (chilexpress)="obtieneChilexpress(true, $event)"
                 ></app-page-cart-chilexpress>
                 <div class="row" style="margin-left: 0px; margin-right: 0px">

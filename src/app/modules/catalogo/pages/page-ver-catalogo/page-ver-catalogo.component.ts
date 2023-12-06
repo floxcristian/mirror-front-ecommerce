@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { CatalogoService } from '../../../../shared/services/catalogo.service';
-import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { isPlatformBrowser } from '@angular/common';
 import { CartService } from '../../../../shared/services/cart.service';
@@ -8,6 +7,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 
 @Component({
   selector: 'app-page-ver-catalogo',
@@ -32,13 +32,14 @@ export class PageVerCatalogoComponent implements OnInit {
     @Inject(PLATFORM_ID) private platformId: any,
     private localS: LocalStorageService,
     private catalogoService: CatalogoService,
-    private geoLocationService: GeoLocationService,
+
     public root: RootService,
     private router: Router,
     public cart: CartService,
     private toast: ToastrService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly geolocationService: GeolocationServiceV2
   ) {
     this.page = 0;
     this.onResize();
@@ -103,12 +104,15 @@ export class PageVerCatalogoComponent implements OnInit {
   }
 
   async establecerPrecio() {
-    let user = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
-    let rut = user ? user.documentId : '0';
+    let user = this.sessionService.getSession();
+    let rut = user.documentId;
 
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const sucursal = tiendaSeleccionada?.codigo;
-    const params: any = { sucursal: sucursal, rut: rut, skus: this.skus };
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    const params: any = {
+      sucursal: tiendaSeleccionada.codigo,
+      rut: user.documentId,
+      skus: this.skus,
+    };
 
     let respuesta: any[] = await this.catalogoService.establecerPrecios(
       params

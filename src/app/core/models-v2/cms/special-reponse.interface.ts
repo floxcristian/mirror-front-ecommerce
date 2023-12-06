@@ -45,7 +45,7 @@ export interface IArticle {
   name: string; // *
   brand: string; // *
   minimumPrice: number; // *
-  images: IImage[]; // *
+  images: IImage; // *
   priceInfo: IPriceInfo; // *
   deliverySupply: IDeliverySupply; // *
   stockSummary: IStockSummary; // *

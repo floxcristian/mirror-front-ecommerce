@@ -20,18 +20,13 @@ import {
 import { ProductsService } from '../../../../shared/services/products.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { Category } from '../../../../shared/interfaces/category';
-import { Usuario } from '../../../../shared/interfaces/login';
-import { ElasticSearch } from '../../../../shared/interfaces/search';
 import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { CartService } from '../../../../shared/services/cart.service';
-import { GeoLocationService } from '../../../../shared/services/geo-location.service';
-import { GeoLocation } from '../../../../shared/interfaces/geo-location';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { CanonicalService } from '../../../../shared/services/canonical.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
-import { Flota } from '../../../../shared/interfaces/flota';
 import { BuscadorService } from '../../../../shared/services/buscador.service';
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
@@ -41,6 +36,7 @@ import { SessionService } from '@core/states-v2/session.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { IElasticSearch } from '@core/models-v2/article/article-response.interface';
 import { ArticleService } from '@core/services-v2/article.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 
 @Component({
   selector: 'app-grid',
@@ -127,7 +123,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     private localS: LocalStorageService,
     private capitalize: CapitalizeFirstPipe,
     private cartService: CartService,
-    private geoLocationService: GeoLocationService,
     private logistic: LogisticsService,
     private titleService: Title,
     private seoService: SeoService,
@@ -137,7 +132,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     private readonly sessionStorage: SessionStorageService,
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
-    private readonly articleService: ArticleService
+    private readonly articleService: ArticleService,
+    private readonly geolocationService: GeolocationServiceV2
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -301,9 +297,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         }
 
         let parametros = {};
-        const tiendaSeleccionada =
-          this.geoLocationService.getTiendaSeleccionada();
-        const sucursal = tiendaSeleccionada?.codigo;
+        const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+        const sucursal = tiendaSeleccionada.codigo;
         if (this.usuario?.documentId === '0') {
           parametros = {
             category: category,
@@ -353,12 +348,12 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
             params['busqueda'] === 'todos' ? '' : params['busqueda'];
           let parametros = {};
           const tiendaSeleccionada =
-            this.geoLocationService.getTiendaSeleccionada();
+            this.geolocationService.getSelectedStore();
           if (this.usuario?.documentId === '0') {
             parametros = {
               category: '',
               word: this.textToSearch,
-              branchCode: tiendaSeleccionada?.codigo,
+              branchCode: tiendaSeleccionada.codigo,
               pageSize: this.productosPorPagina,
               documentId: this.usuario.documentId,
             };
@@ -437,11 +432,15 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     });
 
     // cuando cambiamos sucursal
-    this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
-      this.reinicaFiltros();
-      this.parametrosBusqueda.branchCode = r.tiendaSelecciona?.codigo || '';
-      this.cargarCatalogoProductos(this.parametrosBusqueda, '');
+    this.geolocationService.location$.subscribe({
+      next: (res) => {
+        this.reinicaFiltros();
+        this.parametrosBusqueda.branchCode =
+          res.tiendaSelecciona?.codigo || '';
+        this.cargarCatalogoProductos(this.parametrosBusqueda, '');
+      },
     });
+
     this.despachoCliente = this.logistic.direccionCliente$.subscribe((r) => {
       this.parametrosBusqueda.location = r.comuna
         ? r.comuna.normalize('NFD').replace(/[\u0300-\u036f]/g, '')

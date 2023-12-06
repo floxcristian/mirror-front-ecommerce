@@ -40,9 +40,6 @@ import { ToastrService } from 'ngx-toastr';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ResponseApi } from '../../../shared/interfaces/response-api';
 
-import { GeoLocationService } from '../../services/geo-location.service';
-import { GeoLocation } from '../../interfaces/geo-location';
-
 import { ArticuloFavorito, Lista } from '../../interfaces/articuloFavorito';
 import { ClientsService } from '../../services/clients.service';
 import {
@@ -65,6 +62,8 @@ import { InventoryService } from '@core/services-v2/inventory.service';
 // Modals
 import { ModalScalePriceComponent } from '../modal-scale-price/modal-scale-price.component';
 import { IScalePriceItem } from './scale-price-item.interface';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { ITiendaLocation } from '@core/models-v2/geolocation.interface';
 
 export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
 
@@ -202,7 +201,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   today = Date.now();
   stockMax = 0;
-  tiendaActual: any;
+  tiendaActual!: ITiendaLocation;
   MODOS = { RETIRO_TIENDA: 'retiroTienda', DESPACHO: 'domicilio' };
   puntoQuiebre: number = 576;
   showMobile: boolean = false;
@@ -218,7 +217,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     private modalService: BsModalService,
     public router: Router,
     public route: ActivatedRoute,
-    public geoLocationService: GeoLocationService,
     private localS: LocalStorageService,
     public sanitizer: DomSanitizer,
     private clientsService: ClientsService,
@@ -227,30 +225,32 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     private readonly gtmService: GoogleTagManagerService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly inventoryService: InventoryService
+    private readonly inventoryService: InventoryService,
+    private readonly geolocationService: GeolocationServiceV2
   ) {
     this.isB2B = this.sessionService.isB2B();
     this.usuario = this.sessionService.getSession();
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
-    this.onChangeStore();
-    this.routerPromise = this.route.data.subscribe(
-      (data) => (this.headerLayout = data['headerLayout'])
-    );
+    this.routerPromise = this.route.data.subscribe((data) => {
+      this.headerLayout = data['headerLayout'];
+    });
     this.root.path = this.router
       .createUrlTree(['./'], { relativeTo: route })
       .toString();
+    this.onChangeStore();
   }
 
   onChangeStore(): void {
     this.geoLocationServicePromise =
-      this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
-        console.log('localizacionObs(true)...');
-        this.estado = true;
-        this.tiendaActual = this.geoLocationService.getTiendaSeleccionada();
-        this.Actualizar();
-        this.getPopularProducts();
+      this.geolocationService.location$.subscribe({
+        next: () => {
+          this.estado = true;
+          this.tiendaActual = this.geolocationService.getSelectedStore();
+          this.Actualizar();
+          this.getPopularProducts();
+        },
       });
   }
 
@@ -260,7 +260,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     window.onresize = () => {
       this.isMobile();
     };
-    this.tiendaActual = this.geoLocationService.getTiendaSeleccionada();
+    this.tiendaActual = this.geolocationService.getSelectedStore();
     if (this.layout !== 'quickview' && isPlatformBrowser(this.platformId)) {
       this.photoSwipePromise = this.photoSwipe.load().subscribe();
     }
@@ -355,10 +355,10 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.quantity.setValue(cantidad);
     const usuario = this.sessionService.getSession();
 
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const parametrosPrecios = {
       sku: this.product!.sku,
-      sucursal: tiendaSeleccionada?.codigo,
+      sucursal: tiendaSeleccionada.codigo,
       rut: usuario.documentId,
       cantidad,
     };
@@ -452,10 +452,10 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   // FIXME: ya no se debe llamar endpoint.
   async obtienePrecioEscala() {
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
     const params = {
-      sucursal: tiendaSeleccionada?.codigo,
+      sucursal: tiendaSeleccionada.codigo,
       sku: this.product!.sku,
       rut: this.usuario.documentId,
     };
@@ -699,9 +699,9 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   // sku, images, attributes.
   private formatImageSlider(product: IArticleResponse): void {
     if (
-      !product.images.length ||
-      !product.images[0]['1000'].length ||
-      !product.images[0]['150'].length
+      !product.images ||
+      !product.images['1000'].length ||
+      !product.images['150'].length
     ) {
       const image: IProductImage = {
         id: `${product.sku}_0`,
@@ -710,8 +710,8 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       };
       this.images = [image];
     } else {
-      const image1000 = product.images[0]['1000'];
-      const image150 = product.images[0]['150'];
+      const image1000 = product.images['1000'];
+      const image150 = product.images['150'];
 
       this.images = image1000.map((item, index) => ({
         id: `${product.sku}_${index}`,

@@ -6,8 +6,7 @@ import { Observable } from 'rxjs';
 // Environment
 import { environment } from '@env/environment';
 // Services
-import { GeoLocationService } from './geo-location.service';
-import { RootService } from './root.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 // Interfaces
 import { ResponseApi } from '../interfaces/response-api';
 import { SessionService } from '@core/states-v2/session.service';
@@ -18,16 +17,15 @@ import { SessionService } from '@core/states-v2/session.service';
 export class ProductsService {
   constructor(
     private http: HttpClient,
-    private root: RootService,
-    private geoLocationService: GeoLocationService,
-    private readonly sessionService: SessionService
+    // Services V2
+    private readonly sessionService: SessionService,
+    private readonly geolocationService: GeolocationServiceV2
   ) {}
 
   buscarProductosElactic(texto: any) {
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const sucursal = tiendaSeleccionada?.codigo;
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    const sucursal = tiendaSeleccionada.codigo;
     const usuario = this.sessionService.getSession();
-    //this.root.getDataSesionUsuario();
 
     const params: any = {
       word: texto,

@@ -3,12 +3,10 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 // Rxjs
 import { Subscription } from 'rxjs';
 // Models
-import { GeoLocation } from '../../../../shared/interfaces/geo-location';
-import { Usuario } from '../../../../shared/interfaces/login';
+
 // Services
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { DirectionService } from '../../../../shared/services/direction.service';
-import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { ProductsService } from '../../../../shared/services/products.service';
 import { RootService } from '../../../../shared/services/root.service';
@@ -19,6 +17,9 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { CmsService } from '@core/services-v2/cms.service';
 import { IPage } from '@core/models-v2/cms/homePage-response.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { IGeolocation } from '@core/models-v2/geolocation.interface';
+import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 @Component({
   selector: 'app-page-home-template',
   templateUrl: './page-home-template.component.html',
@@ -41,19 +42,20 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     private productsService: ProductsService,
     private direction: DirectionService,
     private logisticsService: LogisticsService,
-    private geoLocationService: GeoLocationService,
     private localStorage: LocalStorageService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly csmService: CmsService,
-    private readonly authStateService: AuthStateServiceV2
+    private readonly authStateService: AuthStateServiceV2,
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly geolocationStorage: GeolocationStorageService
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.user = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
+    this.user = this.sessionService.getSession();
     this.cargarPage();
 
-    const geo: GeoLocation = this.localStorage.get('geolocalizacion');
+    const geo = this.geolocationStorage.get();
     if (geo) {
       this.root.getPreferenciasCliente().then((preferencias) => {
         this.preferenciasCliente = preferencias;
@@ -63,13 +65,13 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.geoLocationService.localizacionObs$.subscribe(
-      async (r: GeoLocation) => {
+    this.geolocationService.location$.subscribe({
+      next: () => {
         this.cargarPage();
-      }
-    );
+      },
+    });
 
-    this.authStateService.session$.subscribe((user) => {
+    this.authStateService.session$.subscribe(() => {
       this.root.getPreferenciasCliente().then((preferencias) => {
         this.preferenciasCliente = preferencias;
         this.cargarPage();
@@ -84,10 +86,8 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
 
   async cargarPage() {
     const rut = this.user.documentId;
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const sucursal = tiendaSeleccionada?.codigo
-      ? tiendaSeleccionada?.codigo
-      : 'SAN BRNRDO';
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    const sucursal = tiendaSeleccionada.codigo;
     const localidad = this.preferenciasCliente?.direccionDespacho
       ? this.preferenciasCliente.direccionDespacho.comuna
       : '';

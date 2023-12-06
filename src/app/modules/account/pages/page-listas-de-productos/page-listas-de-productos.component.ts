@@ -8,10 +8,8 @@ import {
   TipoModal,
 } from '../../../../shared/components/modal/modal.component';
 import { Lista } from '../../../../shared/interfaces/articuloFavorito';
-import { TiendaLocation } from '../../../../shared/interfaces/geo-location';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { ClientsService } from '../../../../shared/services/clients.service';
-import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { EditarListaProductosComponent } from '../../../../shared/components/editar-lista-productos/editar-lista-productos.component';
@@ -21,6 +19,8 @@ import { CartService } from '../../../../shared/services/cart.service';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { ITiendaLocation } from '@core/models-v2/geolocation.interface';
 
 @Component({
   selector: 'app-page-listas-de-productos',
@@ -30,7 +30,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 export class PageListasDeProductosComponent implements OnInit {
   innerWidth: number;
   usuario!: ISession;
-  tiendaSeleccionada!: TiendaLocation | undefined;
+  tiendaSeleccionada!: ITiendaLocation;
   origen!: string[];
   listas: any = [];
   seleccionada = 0;
@@ -43,10 +43,10 @@ export class PageListasDeProductosComponent implements OnInit {
     private toastr: ToastrService,
     private modalService: BsModalService,
     private cart: CartService,
-    private geoLocal: GeoLocationService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly geolocationService: GeolocationServiceV2
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -54,8 +54,8 @@ export class PageListasDeProductosComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.usuario = this.sessionService.getSession(); //this.rootService.getDataSesionUsuario();
-    this.tiendaSeleccionada = this.geoLocal.getTiendaSeleccionada();
+    this.usuario = this.sessionService.getSession();
+    this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
     this.getListas();
   }
 

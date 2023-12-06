@@ -9,10 +9,9 @@ import {
 import { DataTableDirective } from 'angular-datatables';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '@env/environment';
-import { GeoLocation } from '../../../../shared/interfaces/geo-location';
-import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { SessionService } from '@core/states-v2/session.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 class DataTablesResponse {
   data!: any[];
   draw!: number;
@@ -48,16 +47,18 @@ export class PageListaPreciosComponent implements OnInit {
   constructor(
     private httpClient: HttpClient,
     public root: RootService,
-    private geoLocationService: GeoLocationService,
     @Inject(PLATFORM_ID) private platformId: Object,
-    // Storage
-    private readonly sessionService: SessionService
+    // Services V2
+    private readonly sessionService: SessionService,
+    private readonly geolocationService: GeolocationServiceV2
   ) {
     this.innerWidth = window.innerWidth;
     // cambio de sucursal
-    this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
-      this.reDraw();
-      this.buscarPrecios();
+    this.geolocationService.location$.subscribe({
+      next: () => {
+        this.reDraw();
+        this.buscarPrecios();
+      },
     });
   }
 
@@ -97,11 +98,12 @@ export class PageListaPreciosComponent implements OnInit {
 
   async buscarPrecios() {
     this.showLoading = true;
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+
     const user = this.sessionService.getSession();
     let parametros: any = {
       rut: user.documentId,
-      sucursal: tiendaSeleccionada?.codigo,
+      sucursal: tiendaSeleccionada.codigo,
     };
 
     this.dtOptions = {
