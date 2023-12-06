@@ -1,11 +1,11 @@
 // Angular
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ArticleComment } from '@core/models-v2/article/article-comment.interface';
 import {
   IArticleResponse,
   ISearchResponse,
 } from '@core/models-v2/article/article-response.interface';
+import { IComment, ICommentResponse } from '@core/models-v2/article/comment.interface';
 import { IReviewsResponse } from '@core/models-v2/article/review-response.interface';
 // Environment
 import { environment } from '@env/environment';
@@ -180,7 +180,7 @@ export class ArticleService {
 
 
   // FIXME: enviar el token de mejor manera
-  guardarComentarioArticulo(request: ArticleComment) {
+  guardarComentarioArticulo(request: IComment) {
     const { calification, title, comment, recommended } = request;
     const body = {
       calification,
@@ -188,11 +188,26 @@ export class ArticleService {
       comment,
       recommended
     };
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb3VyY2UiOiJlY29tbWVyY2UiLCJkb2N1bWVudElkIjoiMTc2NzkxMzMtMCIsInVzZXJuYW1lIjoiam9zZS5lc3Bpbm96YUBpbXBsZW1lbnRvcy5jbCIsInVzZXJSb2xlIjoiYjJjIiwiaWF0IjoxNzAxODA5NTYwLCJleHAiOjE3MzMzNjcxNjB9.03m-5pn-p8E_efk1LNWEeiP_7PUkG8Ih4cmjpwteW5A'
-    const headers = new HttpHeaders({
-    'Authorization': `Bearer ${token}`
-  });
 
-    return this.http.post(`${API_ARTICLE}/${request.sku}/evaluation`, body ,{ headers });
+    let auth_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb3VyY2UiOiJlY29tbWVyY2UiLCJkb2N1bWVudElkIjoiMTUyMTMwODQtOCIsInVzZXJuYW1lIjoiY2xhdWRpby5tb250b3lhQGJpb3BjLmNsIiwidXNlclJvbGUiOiJzdXBlcnZpc29yIiwiaWF0IjoxNzAxODcyMzY5LCJleHAiOjE3MzM0Mjk5Njl9.9efvYK4FLveiqUIprbFNX38bOIDxeiyN1v5bZXPvUwY'
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${auth_token}`,
+      'accept': 'application/json'
+    });
+    const requestOptions = { headers: headers };
+
+
+
+    return this.http.post(`${API_ARTICLE}/${request.sku}/evaluation`, body ,requestOptions);
   }
+  getDetalleComentarios(sku: string, orden?: string): Observable<ICommentResponse> {
+    let url = `${API_ARTICLE}/${sku}/evaluation-detail`;
+    if (orden) {
+      url += `?orden=${orden}`;
+    }
+    return this.http.get<ICommentResponse>(url);
+  }
+
+
 }
