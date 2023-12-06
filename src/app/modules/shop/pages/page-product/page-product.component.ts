@@ -18,12 +18,9 @@ import { ProductsService } from '../../../../shared/services/products.service';
 import { ToastrService } from 'ngx-toastr';
 import { RootService } from '../../../../shared/services/root.service';
 import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
-import { Usuario } from '../../../../shared/interfaces/login';
-import { ResponseApi } from '../../../../shared/interfaces/response-api';
+
 import { SeoService } from '../../../../shared/services/seo.service';
 import { CartService } from '../../../../shared/services/cart.service';
-import { GeoLocationService } from '../../../../shared/services/geo-location.service';
-import { GeoLocation } from '../../../../shared/interfaces/geo-location';
 import { CanonicalService } from '../../../../shared/services/canonical.service';
 import { environment } from '@env/environment';
 import { BuscadorService } from '../../../../shared/services/buscador.service';
@@ -38,6 +35,8 @@ import { SessionService } from '@core/states-v2/session.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { ArticleService } from '@core/services-v2/article.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { ITiendaLocation } from '@core/models-v2/geolocation.interface';
 declare const $: any;
 declare let fbq: any;
 
@@ -125,7 +124,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
   showMobile: boolean = false;
   matriz: any[] = [];
   comparacion: any[] = [];
-  tiendaSeleccionada: any;
+  tiendaSeleccionada!: ITiendaLocation;
   IVA = environment.IVA || 0.19;
   addingToCart: boolean = false;
   addcartPromise!: Subscription;
@@ -143,7 +142,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private capitalize: CapitalizeFirstPipe,
     private seoService: SeoService,
     private cart: CartService,
-    private geoLocationService: GeoLocationService,
     private canonicalService: CanonicalService,
     private buscadorService: BuscadorService,
     private catalogoService: CatalogoService,
@@ -152,19 +150,23 @@ export class PageProductComponent implements OnInit, OnDestroy {
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
-    private readonly articleService: ArticleService
+    private readonly articleService: ArticleService,
+    private readonly geolocationService: GeolocationServiceV2
   ) {
-    this.tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+    this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
     this.preferenciaCliente = this.localS.get('preferenciasCliente');
     // cambio de sucursal
-    this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
-      if (this.product) {
-        this.tiendaSeleccionada = r.tiendaSelecciona;
-        this.cart.cargarPrecioEnProducto(this.product);
-        this.getMixProducts(this.product.sku);
-        // this.getMatrixProducts(this.product.sku);
-      }
+    this.geolocationService.location$.subscribe({
+      next: (res) => {
+        if (this.product) {
+          this.tiendaSeleccionada = res.tiendaSelecciona;
+          this.cart.cargarPrecioEnProducto(this.product);
+          this.getMixProducts(this.product.sku);
+          // this.getMatrixProducts(this.product.sku);
+        }
+      },
     });
+
     //cambio de dirección
     this.despachoCliente = this.logistic.direccionCliente$.subscribe((r) => {
       if (this.product) {
@@ -330,7 +332,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
   getDetailArticle(sku: string): void {
     const user = this.sessionService.getSession();
     console.log(' getDetailArticle user: ', user);
-    const selectedStore = this.geoLocationService.getTiendaSeleccionada();
+    const selectedStore = this.geolocationService.getSelectedStore();
 
     if (user && selectedStore) {
       const params = {
@@ -451,7 +453,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
   }
 
   getMixProducts(sku: any) {
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     let rut: string = '0';
     if (this.user) {
       rut = this.user.documentId || '0';

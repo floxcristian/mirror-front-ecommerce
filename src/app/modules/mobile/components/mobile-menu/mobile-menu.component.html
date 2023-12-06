@@ -14,7 +14,7 @@
           >
             <h6 class="mb-0">
               <i class="fas fa-map-marked-alt me-2 pt-1"></i
-              >{{ tiendaSeleccionada?.zona }}
+              >{{ tiendaSeleccionada.zona }}
             </h6>
           </button>
           <button
@@ -41,12 +41,12 @@
             <h6 class="mb-0" *ngIf="!isVacio(direccion)">
               <i class="fas fa-map-marked-alt me-2 pt-1"></i
               >{{
-                ((direccion?.calle + " " + direccion?.numero).length > 20
-                  ? (direccion?.calle + " " + direccion?.numero).substring(
+                ((direccion?.calle + ' ' + direccion?.numero).length > 20
+                  ? (direccion?.calle + ' ' + direccion?.numero).substring(
                       0,
                       20
-                    ) + "..."
-                  : direccion?.calle + " " + direccion?.numero
+                    ) + '...'
+                  : direccion?.calle + ' ' + direccion?.numero
                 ) | titlecase
               }}
             </h6>

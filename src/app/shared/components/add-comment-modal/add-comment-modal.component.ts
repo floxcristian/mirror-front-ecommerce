@@ -42,10 +42,10 @@ export class AddCommentModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (this.producto.images[0]['150'].length === 0) {
+    if (this.producto.images['150'].length === 0) {
       this.urlImg = '../../../assets/images/products/no-image-listado-2.jpg';
     } else {
-      this.urlImg = this.producto.images[0]['150'][0];
+      this.urlImg = this.producto.images['150'][0];
     }
 
     this.usuario = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
@@ -74,9 +74,7 @@ export class AddCommentModalComponent implements OnInit {
       username: this.usuario.username,
     };
 
-    this.articleService
-    .guardarComentarioArticulo(request)
-    .subscribe({
+    this.articleService.guardarComentarioArticulo(request).subscribe({
       next: (resp) => {
         if (resp) {
           this.event.emit(true);
@@ -86,9 +84,8 @@ export class AddCommentModalComponent implements OnInit {
       error: (err) => {
         console.error(err);
         this.toastrService.error('Ocurrió un error al guardar el comentario.');
-      }
+      },
     });
-
   }
 
   setValoracion(valoracion: number) {

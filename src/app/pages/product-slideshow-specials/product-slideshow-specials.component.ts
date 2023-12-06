@@ -10,10 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { RootService } from 'src/app/shared/services/root.service';
-import { Usuario } from 'src/app/shared/interfaces/login';
 import { DirectionService } from 'src/app/shared/services/direction.service';
-import { GeoLocation } from 'src/app/shared/interfaces/geo-location';
-import { GeoLocationService } from 'src/app/shared/services/geo-location.service';
 import { ProductsService } from 'src/app/shared/services/products.service';
 import { isPlatformBrowser } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -29,6 +26,9 @@ import {
   IData,
   ISpecial,
 } from '@core/models-v2/cms/special-reponse.interface';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { IGeolocation } from '@core/models-v2/geolocation.interface';
+import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 
 export type Layout = 'grid' | 'grid-with-features' | 'list';
 export interface ISection {
@@ -84,7 +84,6 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     public toast: ToastrService,
 
     private direction: DirectionService,
-    private geoLocationService: GeoLocationService,
     private localStorage: LocalStorageService,
     private router: Router,
     private logistic: LogisticsService,
@@ -92,7 +91,9 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
-    private readonly cmsService: CmsService
+    private readonly cmsService: CmsService,
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly geolocationStorage: GeolocationStorageService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -110,12 +111,15 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     let url: string = this.router.url;
     this.ruta = url.split('/');
     this.preferenciaCliente = this.localStorage.get('preferenciasCliente');
-    const geo: GeoLocation = await this.localStorage.get('geolocalizacion');
+    const geo = this.geolocationStorage.get();
     if (geo) {
       this.cargaEspeciales();
     }
-    this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
-      this.cargaEspeciales();
+
+    this.geolocationService.location$.subscribe({
+      next: (res) => {
+        this.cargaEspeciales();
+      },
     });
 
     // cuando se inicia sesion
@@ -153,8 +157,8 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
 
   async cargaEspeciales() {
     let rut = this.user.documentId;
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const sucursal = tiendaSeleccionada?.codigo || '';
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    const sucursal = tiendaSeleccionada.codigo;
     var especials = this.router.url.split('/').pop() || '';
     let localidad = '';
 

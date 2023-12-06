@@ -9,7 +9,6 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '@env/environment';
 // Services
 import { RootService } from './root.service';
-import { GeoLocationService } from './geo-location.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isVacio } from '../utils/utilidades';
 // Libs
@@ -23,6 +22,7 @@ import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -110,10 +110,10 @@ export class CartService {
     private localS: LocalStorageService,
     private toast: ToastrService,
     private datePipe: DatePipe,
-    private geoLocationService: GeoLocationService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly sessionStorage: SessionStorageService
+    private readonly sessionStorage: SessionStorageService,
+    private readonly geolocationService: GeolocationServiceV2
   ) {}
 
   add(
@@ -122,8 +122,8 @@ export class CartService {
     //options: { name: string; value: string }[] = []
   ): Observable<any> {
     // Sucursal
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const sucursal = tiendaSeleccionada?.codigo;
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    const sucursal = tiendaSeleccionada.codigo;
 
     this.cartSession = this.localS.get('carroCompraB2B') as any;
     let productoCarro;
@@ -191,8 +191,8 @@ export class CartService {
 
   addLista(products: Product[] | any[] | undefined): Observable<any> {
     // Sucursal
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const sucursal = tiendaSeleccionada?.codigo;
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    const sucursal = tiendaSeleccionada.codigo;
 
     this.cartSession = this.localS.get('carroCompraB2B') as any;
     let productoCarro;
@@ -352,8 +352,8 @@ export class CartService {
     if (!usuario.hasOwnProperty('documentId')) usuario.documentId = '0';
 
     // Sucursal
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const sucursal = tiendaSeleccionada?.codigo;
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    const sucursal = tiendaSeleccionada.codigo;
 
     this.http
       .get(
@@ -646,8 +646,8 @@ export class CartService {
       return;
     }
     // Sucursal
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const sucursal = tiendaSeleccionada?.codigo;
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    const sucursal = tiendaSeleccionada.codigo;
     const sucursalPrecio = codigo_tienda;
     this.http
       .get(
@@ -873,10 +873,9 @@ export class CartService {
 
   saveCart(productos: any) {
     // Sucursal
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const sucursal = tiendaSeleccionada?.codigo;
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    const sucursal = tiendaSeleccionada.codigo;
     const usuario = this.sessionService.getSession();
-    // this.root.getDataSesionUsuario();
 
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
     const data = {
@@ -921,8 +920,8 @@ export class CartService {
 
   updateShipping(despacho: any) {
     // Sucursal
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const sucursal = tiendaSeleccionada?.codigo;
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    const sucursal = tiendaSeleccionada.codigo;
     const carro: CartData = this.localS.get('carroCompraB2B') as any;
     const usuario: ISession = this.sessionService.getSession();
     // this.root.getDataSesionUsuario();
@@ -1019,7 +1018,7 @@ export class CartService {
     let rut = user && user.documentId;
 
     //obtiene la tienda seleccionada
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
     const parametrosPrecios = {
       sku: producto.sku,
@@ -1227,10 +1226,10 @@ export class CartService {
    * @return cartSession
    */
   cargar_carro() {
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada?.codigo;
     const usuario = this.sessionService.getSession();
-    // this.root.getDataSesionUsuario();
+
     let consulta = null;
     if (usuario.userRole != 'temp') {
       usuario.username = usuario.username ? usuario.username : usuario.email;

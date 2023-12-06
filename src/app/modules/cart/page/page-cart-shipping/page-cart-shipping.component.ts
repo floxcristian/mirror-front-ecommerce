@@ -32,9 +32,7 @@ import { Banner } from '../../../../shared/interfaces/banner';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 // Services
 import { CartService } from '../../../../shared/services/cart.service';
-import { RootService } from '../../../../shared/services/root.service';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
-import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 // Constants
 import { ShippingType } from '../../../../core/enums';
 import { ModalConfirmDatesComponent } from './components/modal-confirm-dates/modal-confirm-dates.component';
@@ -50,11 +48,14 @@ import {
   TipoIcon,
   TipoModal,
 } from '@shared/components/modal/modal.component';
-import { SessionStorageService } from '@core/storage/session-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
+import { IStore } from '@core/services-v2/geolocation/store.interface';
+import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 
 export let browserRefresh = false;
 declare let dataLayer: any;
@@ -111,7 +112,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   selectedShippingIdStore: any;
   tempShippingIdStore: any;
   shippingDaysStore: ShippingDateItem[] = [];
-  shippingStore: ShippingStore[] = [];
+  //shippingStore: ShippingStore[] = [];
   TiendasCargadas: boolean = false;
   loadingShippingStore = false;
   fecha = new Date();
@@ -143,39 +144,40 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   loadingCotizacion = false;
   direccionConfigurada!: PreferenciasCliente;
 
+  stores!: IStore[];
+
   constructor(
     public cart: CartService,
     private logistics: LogisticsService,
     private toast: ToastrService,
-    private root: RootService,
     private datePipe: DatePipe,
     private router: Router,
     private localS: LocalStorageService,
     private modalService: BsModalService,
-    private geoService: GeoLocationService,
-    private geoLocationService: GeoLocationService,
+
     private cd: ChangeDetectorRef,
     private readonly gtmService: GoogleTagManagerService,
     private clientsService: ClientsService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly sessionStorage: SessionStorageService,
     private readonly authStateService: AuthStateServiceV2,
-    private readonly invitadoStorage: InvitadoStorageService
+    private readonly invitadoStorage: InvitadoStorageService,
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly geolocationApiService: GeolocationApiService,
+    private readonly geolocationStorage: GeolocationStorageService
   ) {
     this.localS.set('recibe', {});
     this.innerWidth = window.innerWidth;
 
-    this.tienda_actual = this.localS.get('geolocalizacion');
+    this.tienda_actual = this.geolocationStorage.get();
   }
 
   async ngOnInit() {
     this.cartSession = this.localS.get('carroCompraB2B');
 
-    // this.invitado = this.localS.get('invitado');
     this.invitado = this.invitadoStorage.get();
-    this.tienda_actual = this.localS.get('geolocalizacion');
-    this.userSession = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.tienda_actual = this.geolocationStorage.get();
+    this.userSession = this.sessionService.getSession();
     this.contacto_notificaciones();
     this.obtieneDireccionesCliente();
     this.obtieneTiendas();
@@ -194,9 +196,9 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
 
     this.cart.shippingValidateProducts$.subscribe((r: ProductCart[]) => {
       this.productsValidate = r;
-      // this.invitado = this.localS.get('invitado');
+
       this.invitado = this.invitadoStorage.get();
-      this.userSession = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+      this.userSession = this.sessionService.getSession();
       this.grupoShippingCart.grupo = [];
     });
 
@@ -322,7 +324,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   async obtieneDespachos(removeShipping = true) {
     this.fechas = [];
 
-    const usuario = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
 
     const resultado = this.addresses.find(
@@ -410,14 +412,44 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     )
       data_usuario = this.userSession.email;
     else data_usuario = this.userSession.email;
-    if (usuarioRole == 'temp') data_usuario = this.userSession.email;
+    if (usuarioRole === 'temp') {
+      data_usuario = this.userSession.email;
+    }
 
+    this.geolocationApiService.getStores().subscribe({
+      next: (res) => {
+        this.stores = res;
+        this.TiendasCargadas = true;
+
+        const tiendaActual = this.stores.find((store) => {
+          const selectedStore = this.geolocationService.getSelectedStore();
+          const selectedStoreCode = selectedStore.codigo
+            .toUpperCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+          return store.code === selectedStoreCode;
+        });
+
+        if (tiendaActual) {
+          const tiendas = this.stores.filter(
+            (store) => store.id != tiendaActual.id
+          );
+          tiendas.unshift(tiendaActual);
+          this.stores = tiendas;
+          this.selectedShippingIdStore = tiendaActual.id;
+          this.tempShippingIdStore = this.selectedShippingIdStore;
+
+          this.obtieneRetiro(false);
+        }
+      },
+    });
+
+    /*
     this.logistics
       .obtieneDireccionesTiendaRetiro({ usuario: this.userSession.documentId })
       .subscribe(
         (r: ResponseApi) => {
           r.data.todos.map((item: ShippingStore) => {
-            //item.direccionCompleta = `${item.nombre} - ${item.direccion}`;
             item.direccionCompleta = `${item.nombre}`;
           });
           this.shippingStore = r.data.todos;
@@ -455,13 +487,14 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
             'Ha ocurrido un error en servicio al obtener las direcciones de la tiendas'
           );
         }
-      );
+      );*/
   }
 
   /**
    * Obtiene retiro en tienda.
    */
   async obtieneRetiro(removeShipping = true) {
+    console.log('obtieneRetiro...');
     this.loadingShippingStore = true;
 
     this.fechas = [];
@@ -471,12 +504,9 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
 
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
-    console.log('shippingStore: ', this.shippingStore);
-    const resultado = this.shippingStore.find(
-      (item) => item.recid == this.selectedShippingIdStore
+    const resultado = this.stores.find(
+      (item) => item.id == this.selectedShippingIdStore
     );
-    console.log('resultado: ', resultado);
-
     if (!resultado) return;
 
     this.tienda = resultado;
@@ -895,7 +925,6 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   // evento ejecutado cuando un invitado agrega una nueva direccion.
   async direccionVisita(direccion: any, removeShipping = true) {
     this.direccion = true;
-    // let invitado: any = this.localS.get('invitado');
     let invitado = this.invitadoStorage.get();
 
     invitado.calle = direccion.calle;
@@ -903,11 +932,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     invitado.comunaCompleta = direccion.comunaCompleta;
     invitado.numero = direccion.numero;
     invitado.depto = direccion.depto ? direccion.depto : 0;
-    // this.localS.remove('invitado');
     this.invitadoStorage.remove();
-    // this.localS.set('invitado', invitado);
     this.invitadoStorage.set(invitado);
-    // this.usuarioInv = this.localS.get('invitado');
     this.usuarioInv = this.invitadoStorage.get();
     this.loadingShipping = true;
     this.shippingSelected = null;
@@ -1079,8 +1105,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     } else {
       this.tituloDespacho = 'Retiro en';
       this.tituloRecibe = '';
-      direccion = this.shippingStore.find(
-        (tienda) => tienda.recid === this.selectedShippingIdStore
+      direccion = this.stores.find(
+        (tienda) => tienda.id === this.selectedShippingIdStore
       );
       if (direccion && direccion.nombre) {
         direccion = direccion.nombre;
@@ -1145,20 +1171,14 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   *@author
-   * @param {*} tiendaTemporal
-   * @returns
-   * @memberof PageCartShippingComponent
-   */
-  cambiarTienda(tiendaTemporal: any) {
-    const tienda = tiendaTemporal;
-    const coord = {
+  // FIXME: tipar eso..
+  cambiarTienda(tiendaTemporal: IStore): void {
+    this.geolocationService.setGeolocation({
       lat: tiendaTemporal.lat,
-      lon: tiendaTemporal.lon,
-    };
-
-    return this.geoLocationService.cambiarTiendaCliente(coord, tienda);
+      lon: tiendaTemporal.lng,
+      zona: tiendaTemporal.zone,
+      codigo: tiendaTemporal.code,
+    });
   }
 
   /**
@@ -1252,13 +1272,13 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
         destino: resultado.comuna,
       };
     } else {
-      let disponible: any = this.shippingStore.find(
-        (item) => item.recid == this.selectedShippingIdStore
+      let disponible = this.stores.find(
+        (item) => item.id == this.selectedShippingIdStore
       );
       params = {
         usuario: usuario.username,
         id: index,
-        sucursal: disponible.codigo,
+        sucursal: disponible?.code,
       };
     }
 

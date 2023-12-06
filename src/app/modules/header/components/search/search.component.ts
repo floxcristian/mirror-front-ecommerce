@@ -19,11 +19,6 @@ import { CartService } from '../../../../shared/services/cart.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
-import { GeoLocationService } from '../../../../shared/services/geo-location.service';
-import {
-  GeoLocation,
-  TiendaLocation,
-} from '../../../../shared/interfaces/geo-location';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
@@ -35,6 +30,8 @@ import { DireccionDespachoComponent } from '../search-vin-b2b/components/direcci
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { ITiendaLocation } from '@core/models-v2/geolocation.interface';
 
 @Component({
   selector: 'app-header-search',
@@ -76,7 +73,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
 
   sessionNotStarted = false;
   loadCart = false;
-  tiendaSeleccionada!: TiendaLocation | undefined;
+  tiendaSeleccionada!: ITiendaLocation;
   seleccionado = false;
   isFocusedInput = false;
 
@@ -95,13 +92,13 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     public cart: CartService,
     public menuCategorias: MenuCategoriasB2cService,
     public localS: LocalStorageService,
-    private geoLocationService: GeoLocationService,
     private logisticsService: LogisticsService,
     private cartService: CartService,
     private readonly gtmService: GoogleTagManagerService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly authStateService: AuthStateServiceV2
+    private readonly authStateService: AuthStateServiceV2,
+    private readonly geolocationService: GeolocationServiceV2
   ) {}
 
   ngOnInit() {
@@ -118,18 +115,21 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       });
 
-    // Tienda seleccionada
-    this.tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+    this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    console.log('tiendaSeleccionada: ', this.tiendaSeleccionada);
 
-    this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
-      this.tiendaSeleccionada = r.tiendaSelecciona;
-      this.cartService.calc();
-      if (r.esNuevaUbicacion) {
-        setTimeout(() => {
-          if (this.menuTienda) this.menuTienda.open();
-        }, 700);
-      }
+    this.geolocationService.location$.subscribe({
+      next: (res) => {
+        this.tiendaSeleccionada = res.tiendaSelecciona;
+        this.cartService.calc();
+        if (res.esNuevaUbicacion) {
+          setTimeout(() => {
+            if (this.menuTienda) this.menuTienda.open();
+          }, 700);
+        }
+      },
     });
+
     this.usuario = this.sessionService.getSession();
     if (this.usuario.documentId !== '0')
       this.root.getPreferenciasCliente().then((preferencias) => {

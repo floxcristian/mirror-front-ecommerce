@@ -8,17 +8,13 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductsService } from '../../services/products.service';
-// import { WINDOW } from '@ng-toolkit/universal';
-import { GeoLocationService } from '../../services/geo-location.service';
-import { GeoLocation } from '../../interfaces/geo-location';
-//import { LocalStorageService } from 'angular-2-local-storage';
+
 import { ToastrService } from 'ngx-toastr';
 import { RootService } from '../../services/root.service';
 import { DirectionService } from '../../services/direction.service';
 // import { OwlOptions } from 'ngx-owl-carousel-o';
-import { Usuario } from '../../interfaces/login';
 import { ClientsService } from '../../services/clients.service';
-import { ResponseApi } from '../../interfaces/response-api';
+
 import { Lista } from '../../interfaces/articuloFavorito';
 import { AgregarListaProductosMasivaModalComponent } from '../agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
 import { PreferenciasCliente } from '../../interfaces/preferenciasCliente';
@@ -32,6 +28,9 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { CmsService } from '@core/services-v2/cms.service';
 import { IData } from '@core/models-v2/cms/customHomePage-response.interface';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { IGeolocation } from '@core/models-v2/geolocation.interface';
+import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 
 @Component({
   selector: 'app-product-slideshow',
@@ -122,7 +121,6 @@ export class ProductSlideshowComponent
     // @Inject(WINDOW) private window: Window,
     public toast: ToastrService,
     private direction: DirectionService,
-    private geoLocationService: GeoLocationService,
     private localStorage: LocalStorageService,
     private router: Router,
     private clientsService: ClientsService,
@@ -131,7 +129,9 @@ export class ProductSlideshowComponent
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
-    private readonly cmsService: CmsService
+    private readonly cmsService: CmsService,
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly geolocationStorage: GeolocationStorageService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -142,28 +142,27 @@ export class ProductSlideshowComponent
 
   ngOnInit() {
     this.ruta = this.router.url === '/inicio' ? 'home' : this.router.url;
-    this.user = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
-    const role = this.user.userRole;
-    this.isB2B = role === 'supervisor' || role === 'comprador';
+    this.user = this.sessionService.getSession();
+    this.isB2B = this.sessionService.isB2B();
   }
 
   ngAfterViewInit() {
-    const geo: GeoLocation = this.localStorage.get('geolocalizacion');
-    if (geo != null && this.preferenciasCliente === undefined) {
+    const geo = this.geolocationStorage.get();
+    if (geo && this.preferenciasCliente === undefined) {
       this.root.getPreferenciasCliente().then((preferencias) => {
         this.preferenciasCliente = preferencias;
         this.cargarHome();
       });
     }
 
-    this.geoLocationService.localizacionObs$.subscribe(
-      async (r: GeoLocation) => {
+    this.geolocationService.location$.subscribe({
+      next: (res) => {
         this.root.getPreferenciasCliente().then((preferencias) => {
           this.preferenciasCliente = preferencias;
           this.cargarHome();
         });
-      }
-    );
+      },
+    });
 
     this.despachoCliente = this.logisticsService.direccionCliente$.subscribe(
       async (r) => {
@@ -216,8 +215,8 @@ export class ProductSlideshowComponent
   cargarHome() {
     this.cargando = true;
     const rut = this.user?.documentId || '0';
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    const sucursal = tiendaSeleccionada?.codigo || 'SAN BERNRDO';
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    const sucursal = tiendaSeleccionada.codigo;
     const localidad = !isVacio(this.preferenciasCliente.direccionDespacho)
       ? this.preferenciasCliente.direccionDespacho?.comuna
       : '';

@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { GeoLocationService } from '../../../../../shared/services/geo-location.service';
 declare const L: any;
 @Component({
   selector: 'app-mapa-fichas',

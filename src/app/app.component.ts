@@ -26,14 +26,13 @@ import { CompareService } from './shared/services/compare.service';
 import { WishlistService } from './shared/services/wishlist.service';
 import { CurrencyService } from './shared/services/currency.service';
 import { SeoService } from './shared/services/seo.service';
-import { GeoLocationService } from './shared/services/geo-location.service';
 // Models
 import { ProductCart } from './shared/interfaces/cart-item';
-import { GeoLocation } from './shared/interfaces/geo-location';
 // Components
 import { AlertCartMinComponent } from './shared/components/alert-cart-min/alert-cart-min.component';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 
 @Component({
   selector: 'app-root',
@@ -68,10 +67,11 @@ export class AppComponent implements AfterViewInit, OnInit {
     private currency: CurrencyService,
     private modalService: BsModalService,
     private seoService: SeoService,
-    private geoService: GeoLocationService,
+
     // Services V2
     private readonly sessionStorage: SessionStorageService,
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly geolocationService: GeolocationServiceV2
   ) {}
 
   setLastSession(): void {
@@ -178,7 +178,8 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.geoService.getGeoLocation();
+      this.geolocationService.getGeolocation();
+
       this.zone.runOutsideAngular(() => {
         setTimeout(() => {
           const preloader = document.querySelector('.site-preloader');
@@ -193,17 +194,21 @@ export class AppComponent implements AfterViewInit, OnInit {
         }, 300);
       });
 
-      this.geoService.localizacionObs$.subscribe((r: GeoLocation) => {
-        if (!this.isOmni) this.cart.load();
+      this.geolocationService.location$.subscribe({
+        next: () => {
+          if (!this.isOmni) this.cart.load();
+        },
       });
 
-      this.geoService.localizacionObsCarro$.subscribe((r: GeoLocation) => {
-        let tienda: any = r.tiendaSelecciona;
-        this.cart.tiendaPrecio = r.tiendaSelecciona;
-        this.cart.loadPrecio(tienda.codigo);
+      this.geolocationService.localizacionObsCarro$.subscribe({
+        next: (res) => {
+          let tienda: any = res.tiendaSelecciona;
+          this.cart.tiendaPrecio = res.tiendaSelecciona;
+          this.cart.loadPrecio(tienda.codigo);
+        },
       });
     } else {
-      this.geoService.datoPorDefecto();
+      this.geolocationService.setDefaultLocation();
     }
   }
 

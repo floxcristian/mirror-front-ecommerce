@@ -13,22 +13,16 @@ import { MobileMenuService } from '../../../../shared/services/mobile-menu.servi
 import { mobileMenu } from '../../../../../data/mobile-menu';
 import { MobileMenuItem } from '../../../../shared/interfaces/mobile-menu-item';
 import { environment } from '@env/environment';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { NavigationLink } from '../../../../shared/interfaces/navigation-link';
 import { CategoryApi } from '../../../../shared/interfaces/category-api';
 import { CategoryService } from '../../../../shared/services/category.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
-import {
-  TiendaLocation,
-  GeoLocation,
-} from '../../../../shared/interfaces/geo-location';
-import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { DireccionDespachoComponent } from '../../../header/components/search-vin-b2b/components/direccion-despacho/direccion-despacho.component';
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { ShippingAddress } from '../../../../shared/interfaces/address';
-import { ResponseApi } from '../../../../shared/interfaces/response-api';
+
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
@@ -38,6 +32,8 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { MenuService } from '@core/services-v2/menu/menu.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { ITiendaLocation } from '@core/models-v2/geolocation.interface';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -73,29 +69,27 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
   private categoriaDetalle: any;
   private arrayCategorias: NavigationLink[] = [];
   private segundoNivel: any;
-  tiendaSeleccionada!: TiendaLocation | undefined;
+  tiendaSeleccionada!: ITiendaLocation;
   constructor(
     public mobilemenu: MobileMenuService,
     private localS: LocalStorageService,
     private modalService: BsModalService,
     private categoriesService: CategoryService,
     private root: RootService,
-    private geoLocationService: GeoLocationService,
     private logisticsService: LogisticsService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly sessionStorage: SessionStorageService,
     private readonly authStateService: AuthStateServiceV2,
-    private readonly menuService: MenuService
+    private readonly menuService: MenuService,
+    private readonly geolocationService: GeolocationServiceV2
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
     this.obtieneCategorias();
-
-    const role = this.sessionService.getSession().userRole;
-    this.isB2B = role === 'supervisor' || role === 'comprador';
+    this.isB2B = this.sessionService.isB2B();
   }
 
   ngOnInit() {
@@ -104,15 +98,17 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
       .subscribe((isOpen) => (this.isOpen = isOpen));
     this.subscribeLogin();
     this.updateLink();
-    this.tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+    this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
-    this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
-      this.tiendaSeleccionada = r.tiendaSelecciona;
-      if (r.esNuevaUbicacion) {
-        setTimeout(() => {
-          if (this.menuTienda) this.menuTienda.open();
-        }, 700);
-      }
+    this.geolocationService.location$.subscribe({
+      next: (res) => {
+        this.tiendaSeleccionada = res.tiendaSelecciona;
+        if (res.esNuevaUbicacion) {
+          setTimeout(() => {
+            if (this.menuTienda) this.menuTienda.open();
+          }, 700);
+        }
+      },
     });
 
     this.root.getPreferenciasCliente().then((preferencias) => {
