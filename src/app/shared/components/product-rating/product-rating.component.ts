@@ -22,6 +22,8 @@ import {
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { SessionService } from '@core/states-v2/session.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
+import { ArticleService } from '@core/services-v2/article.service';
+import { ReviewSummary } from '@core/models-v2/article/review-response.interface';
 
 @Component({
   selector: 'app-product-rating',
@@ -29,8 +31,7 @@ import { IArticleResponse } from '@core/models-v2/article/article-response.inter
   styleUrls: ['./product-rating.component.scss'],
 })
 export class ProductRatingComponent implements OnChanges {
-  // @Input() producto!: IArticleResponse;
-  @Input() producto!: any;
+  @Input() producto!: IArticleResponse;
   @Output() comentarioGuardado: EventEmitter<boolean> = new EventEmitter();
   @Output() leerComentarios: EventEmitter<boolean> = new EventEmitter();
 
@@ -39,7 +40,7 @@ export class ProductRatingComponent implements OnChanges {
   anchoPintado = 0;
 
   total = 0;
-  resumen: ResumenComentario[] = [];
+  resumen: ReviewSummary[] = [];
 
   constructor(
     private modalService: BsModalService,
@@ -47,7 +48,8 @@ export class ProductRatingComponent implements OnChanges {
     private toastrService: ToastrService,
     public router: Router,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly articleService: ArticleService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -55,20 +57,20 @@ export class ProductRatingComponent implements OnChanges {
   }
 
   cargaResumen() {
-    this.catalogoService
+    this.articleService
       .getResumenComentarios(this.producto.sku)
-      .subscribe((resp: ResponseApi) => {
+      .subscribe((resp:any) => {
         if (!resp.error) {
           this.rating = 0;
-          this.total = resp.data.total;
-          this.resumen = resp.data.resumen;
+          this.total = resp.total;
+          this.resumen = resp.summary;
 
           this.resumen = this.resumen.map((c) => {
-            c.porcentaje =
-              this.total > 0 ? (c.cantidad * 100) / this.total : 0;
+            c. percentage =
+              this.total > 0 ? (c.quantity * 100) / this.total : 0;
             this.rating =
               this.total > 0
-                ? this.rating + (c.estrellas * c.cantidad) / this.total
+                ? this.rating + (c.stars * c.quantity) / this.total
                 : 0;
             return c;
           });

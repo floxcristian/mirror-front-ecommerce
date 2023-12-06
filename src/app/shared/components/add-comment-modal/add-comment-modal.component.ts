@@ -8,6 +8,9 @@ import { isVacio } from '../../utils/utilidades';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
+import { ArticleComment } from '@core/models-v2/article/article-comment.interface';
+import { ArticleService } from '@core/services-v2/article.service';
 
 @Component({
   selector: 'app-add-comment-modal',
@@ -15,7 +18,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
   styleUrls: ['./add-comment-modal.component.scss'],
 })
 export class AddCommentModalComponent implements OnInit {
-  @Input() producto!: Product;
+  @Input() producto!: IArticleResponse;
   usuario!: ISession;
   urlImg = '';
 
@@ -34,7 +37,8 @@ export class AddCommentModalComponent implements OnInit {
     private catalogoService: CatalogoService,
     private toastrService: ToastrService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly articleService: ArticleService
   ) {}
 
   ngOnInit() {
@@ -55,31 +59,36 @@ export class AddCommentModalComponent implements OnInit {
   }
 
   publicarComentario() {
-    const request: ComentarioArticulo = {
+    const request: ArticleComment = {
       sku: this.producto.sku,
-      calificacion: this.valoracion,
-      titulo: this.titulo,
-      comentario: this.comentario,
-      recomienda: isVacio(this.recomienda)
+      calification: this.valoracion,
+      title: this.titulo,
+      comment: this.comentario,
+      recommended: isVacio(this.recomienda)
         ? null
         : this.recomienda === 'SI'
         ? true
         : false,
-      nombre: this.nombre,
-      correo: this.correo,
+      name: this.nombre,
+      email: this.correo,
       username: this.usuario.username,
     };
 
-    this.catalogoService
-      .guardarComentarioArticulo(request)
-      .subscribe((resp: ResponseApi) => {
-        if (!resp.error) {
+    this.articleService
+    .guardarComentarioArticulo(request)
+    .subscribe({
+      next: (resp) => {
+        if (resp) {
           this.event.emit(true);
           this.ModalRef.hide();
-        } else {
-          this.toastrService.error(resp.msg);
         }
-      });
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastrService.error('Ocurrió un error al guardar el comentario.');
+      }
+    });
+
   }
 
   setValoracion(valoracion: number) {

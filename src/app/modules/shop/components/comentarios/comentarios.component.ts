@@ -18,6 +18,7 @@ import { CatalogoService } from '../../../..//shared/services/catalogo.service';
 import { calculaTiempo } from '../../../..//shared/utils/utilidades';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { SessionService } from '@core/states-v2/session.service';
+import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 
 @Component({
   selector: 'app-comentarios',
@@ -25,7 +26,7 @@ import { SessionService } from '@core/states-v2/session.service';
   styleUrls: ['./comentarios.component.scss'],
 })
 export class ComentariosComponent implements OnChanges {
-  @Input() producto!: Product | undefined;
+  @Input() producto!: IArticleResponse | undefined;
   rating = 0;
   starWidth = 25;
   anchoPintado = 0;

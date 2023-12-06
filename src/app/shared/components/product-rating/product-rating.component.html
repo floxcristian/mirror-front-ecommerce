@@ -21,7 +21,7 @@
           style="width: 100%"
         >
           <div class="d-flex align-items-center nowrap me-2">
-            <div>{{ item.estrellas }}</div>
+            <div>{{ item.stars }}</div>
             <div>
               <img
                 class="ms-1"
@@ -36,13 +36,13 @@
                 class="progress-bar"
                 style="background-color: #0d61bb"
                 role="progressbar"
-                [ngStyle]="{ 'width.%': item.porcentaje }"
+                [ngStyle]="{ 'width.%': item.percentage }"
                 aria-valuemin="0"
                 aria-valuemax="100"
               ></div>
             </div>
           </div>
-          <div class="ms-2">{{ item.cantidad }}</div>
+          <div class="ms-2">{{ item.quantity }}</div>
         </div>
         <div *ngIf="total > 0" class="text-center">
           <button

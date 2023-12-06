@@ -39,6 +39,8 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { IElasticSearch } from '@core/models-v2/article/article-response.interface';
+import { ArticleService } from '@core/services-v2/article.service';
 
 @Component({
   selector: 'app-grid',
@@ -74,7 +76,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   // Filtro
   categories: Category[] = [];
   productoCategoria!: Product;
-  parametrosBusqueda!: ElasticSearch;
+  // parametrosBusqueda!: ElasticSearch;
+  parametrosBusqueda!: IElasticSearch;
   textToSearch = '';
   levelCategories: ProductCategory[] = [];
   level = 0;
@@ -133,7 +136,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     // Storage
     private readonly sessionStorage: SessionStorageService,
     private readonly sessionService: SessionService,
-    private readonly authStateService: AuthStateServiceV2
+    private readonly authStateService: AuthStateServiceV2,
+    private readonly articleService: ArticleService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -186,7 +190,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         let banner_local: any = this.localS.get('bannersMarca');
         if (
           banner_local &&
-          banner_local.marca.toLowerCase() ===
+          banner_local.marca?.toLowerCase() ===
             this.marca_tienda.toLocaleLowerCase()
         )
           this.banners = banner_local;
@@ -302,22 +306,24 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         const sucursal = tiendaSeleccionada?.codigo;
         if (this.usuario?.documentId === '0') {
           parametros = {
-            categoria: category,
+            category: category,
             word: this.textToSearch,
-            sucursal: sucursal,
+            branchCode: sucursal,
             pageSize: this.productosPorPagina,
-            rut: this.usuario.documentId,
+            documentId: this.usuario.documentId,
           };
         } else {
           parametros = {
-            categoria: category,
+            category: category,
             word: this.textToSearch,
-            localidad: this.preferenciaCliente.direccionDespacho?.comuna
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, ''),
-            sucursal: sucursal,
+            ocation: this.preferenciaCliente.direccionDespacho?.comuna
+              ? this.preferenciaCliente.direccionDespacho?.comuna
+                  .normalize('NFD')
+                  .replace(/[\u0300-\u036f]/g, '')
+              : '',
+            branchCode: sucursal,
             pageSize: this.productosPorPagina,
-            rut: this.usuario?.documentId,
+            documentId: this.usuario?.documentId,
           };
         }
 
@@ -350,22 +356,24 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
             this.geoLocationService.getTiendaSeleccionada();
           if (this.usuario?.documentId === '0') {
             parametros = {
-              categoria: '',
+              category: '',
               word: this.textToSearch,
-              sucursal: tiendaSeleccionada?.codigo,
+              branchCode: tiendaSeleccionada?.codigo,
               pageSize: this.productosPorPagina,
-              rut: this.usuario.documentId,
+              documentId: this.usuario.documentId,
             };
           } else {
             parametros = {
-              categoria: '',
+              category: '',
               word: this.textToSearch,
-              localidad: this.preferenciaCliente.direccionDespacho?.comuna
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, ''),
+              location: this.preferenciaCliente.direccionDespacho?.comuna
+                ? this.preferenciaCliente.direccionDespacho?.comuna
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                : '',
               pageSize: this.productosPorPagina,
-              sucursal: tiendaSeleccionada?.codigo,
-              rut: this.usuario?.documentId,
+              branchCode: tiendaSeleccionada?.codigo,
+              documentId: this.usuario?.documentId,
             };
           }
           this.removableFilters = this.filterQuery;
@@ -421,7 +429,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     // cuando se inicia sesion
     this.authStateService.session$.subscribe((user) => {
       this.reinicaFiltros();
-      this.parametrosBusqueda.rut = user.documentId || '0';
+      this.parametrosBusqueda.documentId = user.documentId || '0';
       this.root.getPreferenciasCliente().then((preferencias) => {
         this.preferenciaCliente = preferencias;
         this.cargarCatalogoProductos(this.parametrosBusqueda, '');
@@ -431,13 +439,13 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     // cuando cambiamos sucursal
     this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
       this.reinicaFiltros();
-      this.parametrosBusqueda.sucursal = r.tiendaSelecciona?.codigo || '';
+      this.parametrosBusqueda.branchCode = r.tiendaSelecciona?.codigo || '';
       this.cargarCatalogoProductos(this.parametrosBusqueda, '');
     });
     this.despachoCliente = this.logistic.direccionCliente$.subscribe((r) => {
-      this.parametrosBusqueda.localidad = r.comuna
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
+      this.parametrosBusqueda.location = r.comuna
+        ? r.comuna.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        : '';
       this.preferenciaCliente.direccionDespacho = r;
       this.reinicaFiltros();
       this.cargarCatalogoProductos(this.parametrosBusqueda, '');
@@ -481,30 +489,32 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       parametros.word = texto;
       this.productosTemp = texto.split(' ');
     }
-    if (this.parametrosBusqueda.categoria !== '') {
-      const cat = this.root.replaceAll(
-        this.parametrosBusqueda.categoria,
-        /-/g
-      );
-      this.removableCategory.push({
-        value: this.parametrosBusqueda.categoria,
-        text: this.capitalize.transform(cat),
-      });
-      this.filtrosOculto = false;
-    }
+    // if (this.parametrosBusqueda.category !== '') {
+    //   const cat = this.root.replaceAll(
+    //     this.parametrosBusqueda?.category,
+    //     /-/g
+    //   );
+    //   this.removableCategory.push({
+    //     value: this.parametrosBusqueda.category,
+    //     text: this.capitalize.transform(cat),
+    //   });
+    //   this.filtrosOculto = false;
+    // }
 
     // verificamos si esta la session iniciada
     const user = this.sessionService.getSession();
     if (user) {
-      this.parametrosBusqueda.rut = user.documentId;
+      this.parametrosBusqueda.documentId = user.documentId;
       if (
         this.preferenciaCliente &&
         this.preferenciaCliente.direccionDespacho
       ) {
-        this.parametrosBusqueda.localidad =
-          this.preferenciaCliente.direccionDespacho.comuna
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '');
+        this.parametrosBusqueda.location = this.preferenciaCliente
+          .direccionDespacho.comuna
+          ? this.preferenciaCliente.direccionDespacho.comuna
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+          : '';
       }
     }
 
@@ -528,11 +538,19 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         this.SetProductos(r, texto, scroll);
       });
     } else {
-      this.productsService
-        .buscaListadoProducto(parametros)
-        .subscribe((r: any) => {
-          this.SetProductos(r, texto, scroll);
-        });
+      this.articleService.search(parametros).subscribe({
+        next: (res) => {
+          this.SetProductos(res, texto, scroll);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+      // this.productsService
+      //   .buscaListadoProducto(parametros)
+      //   .subscribe((r: any) => {
+      //     this.SetProductos(r, texto, scroll);
+      //   });
     }
   }
 
@@ -542,7 +560,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
 
     // this.isLoadingSlider = false;
     if (scroll) {
-      r.articulos.forEach((e: any) => {
+      r.articles.forEach((e: any) => {
         if (this.productosTemp.length > 0) {
           this.productosTemp.forEach((item) => {
             if (item == e.sku) this.products.push(e);
@@ -553,20 +571,40 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       });
     } else {
       this.products = [];
-      r.articulos.forEach((e: any) => {
+      r.articles.forEach((e: any) => {
         this.productosTemp.forEach((item) => {
           if (item == e.sku) this.products.push(e);
         });
       });
-      if (this.products.length == 0) this.products = r.articulos;
+      if (this.products.length == 0) this.products = r.articles;
     }
+    //Anterior
+    // if (scroll) {
+    //   r.articulos.forEach((e: any) => {
+    //     if (this.productosTemp.length > 0) {
+    //       this.productosTemp.forEach((item) => {
+    //         if (item == e.sku) this.products.push(e);
+    //       });
+    //     } else {
+    //       this.products.push(e);
+    //     }
+    //   });
+    // } else {
+    //   this.products = [];
+    //   r.articulos.forEach((e: any) => {
+    //     this.productosTemp.forEach((item) => {
+    //       if (item == e.sku) this.products.push(e);
+    //     });
+    //   });
+    //   if (this.products.length == 0) this.products = r.articulos;
+    // }
     if (this.products.length == 0) this.breadcrumbs = [];
     this.formatoPaginacion(r, texto);
     this.filters = [];
     // this.formatFiltersFlota();
-    this.formatCategories(r.categoriasTree, r.levelFilter);
+    this.formatCategories(r.categoriesTree, r.levelFilter);
     this.formatFilters(r.filtros);
-    this.agregarMatrizProducto(r.articulos);
+    // this.agregarMatrizProducto(r.articulos);  // de momento comentado
     if (r.banners && r.banners.length > 0) {
       this.banners = r.banners[0];
       this.localS.set('bannersMarca', r.banners[0]);
@@ -680,7 +718,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         : this.parametrosBusqueda.word;
     let collapsed = false;
     // console.log(this.parametrosBusqueda);
-    if (this.parametrosBusqueda.categoria !== '') {
+    if (this.parametrosBusqueda.category !== '') {
       collapsed = false;
     }
 
@@ -2584,7 +2622,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   }
 
   setSort(event: any) {
-    this.parametrosBusqueda.orden = event;
+    this.parametrosBusqueda.order = event;
     let parametros: any = this.parametrosBusqueda;
     this.cargarCatalogoProductos(parametros, this.textToSearch, false);
   }
