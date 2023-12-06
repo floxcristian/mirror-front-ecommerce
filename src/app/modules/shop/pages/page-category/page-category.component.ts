@@ -33,6 +33,12 @@ import {
   ISearchResponse,
 } from '@core/models-v2/article/article-response.interface';
 import { ArticleService } from '@core/services-v2/article.service';
+import {
+  IProductFilter,
+  IProductFilterCheckbox,
+} from '@core/models-v2/article/product-filter.interface';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { IGeolocation } from '@core/services-v2/geolocation/models/geolocation.interface';
 
 // export interface IFilterMedium{
 //   name:string;
@@ -426,7 +432,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     });
 
     // cuando cambiamos sucursal
-    this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
+    this.geolocationService.location$.subscribe((r: IGeolocation) => {
       this.reinicaFiltros();
       this.parametrosBusqueda.branchCode = r.tiendaSelecciona?.codigo || '';
       this.cargarCatalogoProductos(this.parametrosBusqueda, '');
@@ -580,7 +586,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       const user = this.sessionService.getSession();
       if (user) {
         const producto: IArticleResponse = productos[0];
-        let tienda = this.geoLocationService.getTiendaSeleccionada();
+        let tienda = this.geolocationService.getSelectedStore();
         let codigo = tienda ? tienda.codigo : 'SAN BRNRDO';
         let params = {
           sku: producto.sku,
@@ -801,11 +807,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   }*/
 
   private formatFilters(atr: IFilters[]) {
-    console.log('formatFilters: ', atr);
     const atributos = this.cleanFilters(atr);
 
     atributos?.map((r) => {
-      console.log('imprimiendo r', r);
       r.values = (r.values as string[]).sort((a, b) => a.localeCompare(b));
 
       let collapsed = true;
