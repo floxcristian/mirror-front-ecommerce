@@ -89,12 +89,12 @@ export interface ISearchResponse {
   suggestions: ISuggestion[];
   brands: IBrand[];
   categories: ICategorySearch[];
-  filters: any[]; // need help
+  filters: IFilters[];
   page: number;
   pageSize: number;
   totalPages: number;
   totalResult: number;
-  banners: any[];
+  banners: IBanner[];
   levelFilter: number;
   categoriesTree: ICategoriesTree[];
 }
@@ -135,9 +135,13 @@ export interface ICategoriesTree {
   level: number;
   count: number;
   id: number;
-  parentId: any;
+  parentId: number | null;
   name: string;
   children?: ICategoriesTree[];
+}
+
+export interface IFilters {
+  [index: string]: string[];
 }
 
 //Elastic search

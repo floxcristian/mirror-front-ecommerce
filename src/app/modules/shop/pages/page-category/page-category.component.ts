@@ -8,22 +8,10 @@ import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { Subscription } from 'rxjs';
 // Environment
 import { environment } from '@env/environment';
-import {
-  Product,
-  ProductCategory,
-} from '../../../../shared/interfaces/product';
-import {
-  ProductFilter,
-  ProductFilterCategory,
-  ProductFilterCheckbox,
-} from '../../../../shared/interfaces/product-filter';
+import { ProductFilterCategory } from '../../../../shared/interfaces/product-filter';
 import { ProductsService } from '../../../../shared/services/products.service';
 import { RootService } from '../../../../shared/services/root.service';
-import { Category } from '../../../../shared/interfaces/category';
-import { Usuario } from '../../../../shared/interfaces/login';
-import { ElasticSearch } from '../../../../shared/interfaces/search';
 import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
-import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { CartService } from '../../../../shared/services/cart.service';
 import { GeoLocationService } from '../../../../shared/services/geo-location.service';
 import { GeoLocation } from '../../../../shared/interfaces/geo-location';
@@ -31,7 +19,6 @@ import { SeoService } from '../../../../shared/services/seo.service';
 import { CanonicalService } from '../../../../shared/services/canonical.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
-import { Flota } from '../../../../shared/interfaces/flota';
 import { BuscadorService } from '../../../../shared/services/buscador.service';
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
@@ -39,19 +26,32 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
-import { IElasticSearch } from '@core/models-v2/article/article-response.interface';
+import {
+  IArticleResponse,
+  IBanner,
+  ICategoriesTree,
+  IElasticSearch,
+  IFilters,
+  ISearchResponse,
+} from '@core/models-v2/article/article-response.interface';
 import { ArticleService } from '@core/services-v2/article.service';
+import {
+  IProductFilter,
+  IProductFilterCheckbox,
+} from '@core/models-v2/article/product-filter.interface';
 
+// export interface IFilterMedium{
+//   name:string;
+//   values:any[];
+// }
 @Component({
   selector: 'app-grid',
   templateUrl: './page-category.component.html',
   styleUrls: ['./page-category.component.scss'],
 })
 export class PageCategoryComponent implements OnInit, OnDestroy {
-  products: Product[] = [];
-  ultimosProductos!: Product[];
-  filters: ProductFilter[] = [];
-  filterCategories: Category[] = [];
+  products: IArticleResponse[] = [];
+  filters: IProductFilter[] = [];
   filterQuery: any;
   filterQueryVehicle: any;
   removableFilters: any = [];
@@ -60,7 +60,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   columns: 3 | 4 | 5 = 3;
   viewMode: 'grid' | 'grid-with-features' | 'list' = 'grid';
   sidebarPosition: 'start' | 'end' = 'start'; // For LTR scripts "start" is "left" and "end" is "right"
-  filtroCatalogo: any;
   breadcrumbs: any[] = [];
   productosTemp = [];
   // Paginacion
@@ -74,12 +73,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   currentPage = 1;
 
   // Filtro
-  categories: Category[] = [];
-  productoCategoria!: Product;
-  // parametrosBusqueda!: ElasticSearch;
   parametrosBusqueda!: IElasticSearch;
   textToSearch = '';
-  levelCategories: ProductCategory[] = [];
+  levelCategories: ICategoriesTree[] = [];
   level = 0;
   // filtros vehiculo
   chassis: string[] = [];
@@ -116,7 +112,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   origen!: any[];
   usuario: ISession;
   preferenciaCliente!: PreferenciasCliente;
-  banners: any;
+  banners!: IBanner | null;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -439,7 +435,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     // cuando cambiamos sucursal
     this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
       this.reinicaFiltros();
-      this.parametrosBusqueda.branchCode = r.tiendaSelecciona?.codigo || '';
+      this.parametrosBusqueda.branchCode =
+        r.tiendaSelecciona?.codigo || 'SAN BRNRDO';
       this.cargarCatalogoProductos(this.parametrosBusqueda, '');
     });
     this.despachoCliente = this.logistic.direccionCliente$.subscribe((r) => {
@@ -453,7 +450,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   }
 
   private reinicaFiltros() {
-    this.filterCategories = [];
     this.filters = [];
   }
 
@@ -489,17 +485,17 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       parametros.word = texto;
       this.productosTemp = texto.split(' ');
     }
-    // if (this.parametrosBusqueda.category !== '') {
-    //   const cat = this.root.replaceAll(
-    //     this.parametrosBusqueda?.category,
-    //     /-/g
-    //   );
-    //   this.removableCategory.push({
-    //     value: this.parametrosBusqueda.category,
-    //     text: this.capitalize.transform(cat),
-    //   });
-    //   this.filtrosOculto = false;
-    // }
+    if (this.parametrosBusqueda.category !== '') {
+      const cat = this.root.replaceAll(
+        this.parametrosBusqueda?.category,
+        /-/g
+      );
+      this.removableCategory.push({
+        value: this.parametrosBusqueda.category,
+        text: this.capitalize.transform(cat),
+      });
+      this.filtrosOculto = false;
+    }
 
     // verificamos si esta la session iniciada
     const user = this.sessionService.getSession();
@@ -546,15 +542,10 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           console.log(err);
         },
       });
-      // this.productsService
-      //   .buscaListadoProducto(parametros)
-      //   .subscribe((r: any) => {
-      //     this.SetProductos(r, texto, scroll);
-      //   });
     }
   }
 
-  SetProductos(r: any, texto: any, scroll = false): void {
+  SetProductos(r: ISearchResponse, texto: string, scroll = false): void {
     this.cargandoCatalogo = false;
     this.cargandoProductos = false;
 
@@ -578,53 +569,52 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       });
       if (this.products.length == 0) this.products = r.articles;
     }
-    //Anterior
-    // if (scroll) {
-    //   r.articulos.forEach((e: any) => {
-    //     if (this.productosTemp.length > 0) {
-    //       this.productosTemp.forEach((item) => {
-    //         if (item == e.sku) this.products.push(e);
-    //       });
-    //     } else {
-    //       this.products.push(e);
-    //     }
-    //   });
-    // } else {
-    //   this.products = [];
-    //   r.articulos.forEach((e: any) => {
-    //     this.productosTemp.forEach((item) => {
-    //       if (item == e.sku) this.products.push(e);
-    //     });
-    //   });
-    //   if (this.products.length == 0) this.products = r.articulos;
-    // }
     if (this.products.length == 0) this.breadcrumbs = [];
     this.formatoPaginacion(r, texto);
     this.filters = [];
     // this.formatFiltersFlota();
     this.formatCategories(r.categoriesTree, r.levelFilter);
-    this.formatFilters(r.filtros);
-    // this.agregarMatrizProducto(r.articulos);  // de momento comentado
+    this.formatFilters(r.filters);
+    this.agregarMatrizProducto(r.articles);
     if (r.banners && r.banners.length > 0) {
       this.banners = r.banners[0];
       this.localS.set('bannersMarca', r.banners[0]);
     } else this.banners = null;
   }
 
-  private agregarMatrizProducto(productos: any) {
+  private agregarMatrizProducto(productos: IArticleResponse[]) {
     if (productos.length === 1) {
-      const producto: Product = productos[0];
-      this.productsService
-        .getMatrixProducts({ sku: producto.sku })
-        .subscribe((r: ResponseApi) => {
-          for (const item of r.data) {
-            this.products.push(item);
-          }
+      const user = this.sessionService.getSession();
+      if (user) {
+        const producto: IArticleResponse = productos[0];
+        let tienda = this.geoLocationService.getTiendaSeleccionada();
+        let codigo = tienda ? tienda.codigo : 'SAN BRNRDO';
+        let params = {
+          sku: producto.sku,
+          documentId: user.documentId,
+          branchCode: codigo,
+          location:
+            this.preferenciaCliente.direccionDespacho != null
+              ? this.preferenciaCliente.direccionDespacho.comuna
+                  .normalize('NFD')
+                  .replace(/[\u0300-\u036f]/g, '')
+              : '',
+        };
+        this.articleService.getArticleMatrix(params).subscribe({
+          next: (res) => {
+            for (const item of res) {
+              this.products.push(item);
+            }
+          },
+          error: (err) => {
+            console.log(err);
+          },
         });
+      }
     }
   }
 
-  private formatoPaginacion(r: any, texto: any) {
+  private formatoPaginacion(r: ISearchResponse, texto: any) {
     const pagina = r.page;
     this.PagDesde = pagina === 1 ? 1 : (pagina - 1) * r.pageSize + 1;
     this.PagHasta = pagina * r.pageSize;
@@ -643,75 +633,15 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           busqueda: texto,
           resultado: this.PagTotalRegistros,
         };
-        this.cartService.agregaBusqueda(parametro).subscribe((dat) => {});
+        this.cartService.agregaBusqueda(parametro).subscribe((dat) => {}); // no trae nada por lo general, preguntar
       }
     }
   }
 
-  addLevel(categories: ProductCategory[], level: any, catId: any) {
-    const arr: any[] = [];
-    categories.map((item, index) => {
-      if (item.level === level && catId === item.parent) {
-        arr.push(item);
-      }
-    });
-    return arr;
-  }
-
-  private proccesingLevel(categories: ProductCategory[]) {
-    // Guardamos las categorias nivel 1
-    categories.map((item, index) => {
-      if (item.level === 1) {
-        this.levelCategories.push(item);
-      }
-    });
-
-    // Guardamos las categorias nivel  2
-    this.levelCategories.map((item2, index2) => {
-      item2.categories = this.addLevel(categories, 2, item2.id);
-
-      // Guardamos las categorias nivel  3
-      item2.categories.map((item3, index3) => {
-        item3.categories = this.addLevel(categories, 3, item3.id);
-      });
-    });
-    // console.log(this.levelCategories);
-    return this.levelCategories;
-  }
-
-  private addChildren(
-    items: ProductCategory[] | any,
-    productoBuscado: any,
-    slugParents: any
+  private formatCategories(
+    categorias: ICategoriesTree[],
+    levelFilter: number
   ) {
-    items.map((item: any) => {
-      item.url = [
-        '/',
-        'inicio',
-        'productos',
-        productoBuscado,
-        'categoria',
-        slugParents,
-        item.slug,
-      ];
-      item.categories?.map((cat3: any) => {
-        cat3.url = [
-          '/',
-          'inicio',
-          'productos',
-          productoBuscado,
-          'categoria',
-          slugParents,
-          item.slug,
-          cat3.slug,
-        ];
-      });
-    });
-
-    return items;
-  }
-
-  private formatCategories(categorias: any, levelFilter: any) {
     const productoBuscado =
       this.parametrosBusqueda.word === ''
         ? 'todos'
@@ -731,7 +661,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       },
     };
     this.levelCategories = categorias;
-    // this.proccesingLevel(categorias);
     let queryParams = {};
     queryParams = this.armaQueryParams(queryParams);
     if (!isVacio(this.chassis)) {
@@ -878,11 +807,12 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.filters.push(filtro);
   }*/
 
-  private formatFilters(atr: any) {
+  private formatFilters(atr: IFilters[]) {
     console.log('formatFilters: ', atr);
     const atributos = this.cleanFilters(atr);
 
     atributos?.map((r) => {
+      console.log('imprimiendo r', r);
       r.values = (r.values as string[]).sort((a, b) => a.localeCompare(b));
 
       let collapsed = true;
@@ -899,8 +829,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       if (resultado) {
         collapsed = false;
       }
-
-      const filtro: ProductFilterCheckbox = {
+      const filtro: IProductFilterCheckbox = {
         name: r.name,
         type: 'checkbox',
         collapsed,
@@ -908,18 +837,15 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           items: [],
         },
       };
-
       r.values.map((value: string) => {
         let checked = false;
         // revisamos el valor para marcarlo
-
         if (resultado) {
           const valueFilter = this.filterQuery[resultado];
           if (valueFilter === value) {
             checked = true;
           }
         }
-
         filtro.options.items.push({
           label: value,
           checked,
@@ -927,19 +853,16 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           disabled: false,
         });
       });
-
       this.filters.push(filtro);
     });
   }
 
   // limpia los atributos que no son mostrables
-  cleanFilters(atributos: any) {
-    const atributos2 = [];
-
+  cleanFilters(atributos: IFilters[]) {
+    const atributos2: any[] = [];
     if (typeof atributos === 'undefined') {
       return;
     }
-
     for (const key in atributos) {
       if (atributos.hasOwnProperty(key)) {
         const exist = this.filtersIgnored.includes(key.trim());
@@ -954,7 +877,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         }
       }
     }
-
     return atributos2;
   }
 
