@@ -54,7 +54,7 @@ import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
-import { IStore } from '@core/services-v2/geolocation/store.interface';
+import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 
 export let browserRefresh = false;
@@ -84,7 +84,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   showNewAddress: boolean = false;
   showDetalleProductos: boolean = false;
   showresumen: boolean = false;
-  tienda: any;
+  tienda!: IStore;
   retiro = '';
   conflictoEntrega: boolean = false;
   //variables para el despachos
@@ -513,10 +513,11 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     this.cambiarTienda(this.tienda);
     this.localS.set('tiendaRetiro', resultado);
 
-    let disponible: any = resultado;
+    console.log();
+    let disponible = resultado;
     const data = {
       usuario: usuario.username,
-      destino: disponible.codigo + '|' + disponible.codRegion,
+      destino: disponible.code + '|' + disponible.regionCode,
       tipo: 'RC',
     };
 
@@ -1171,13 +1172,13 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     }
   }
 
-  // FIXME: tipar eso..
-  cambiarTienda(tiendaTemporal: IStore): void {
+  cambiarTienda(newStore: IStore): void {
+    console.log('cambiarTienda: ');
     this.geolocationService.setGeolocation({
-      lat: tiendaTemporal.lat,
-      lon: tiendaTemporal.lng,
-      zona: tiendaTemporal.zone,
-      codigo: tiendaTemporal.code,
+      lat: newStore.lat,
+      lon: newStore.lng,
+      zona: newStore.zone,
+      codigo: newStore.code,
     });
   }
 

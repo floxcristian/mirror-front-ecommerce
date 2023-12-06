@@ -20,7 +20,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ITiendaLocation } from '@core/models-v2/geolocation.interface';
+import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
 
 @Component({
   selector: 'app-page-listas-de-productos',

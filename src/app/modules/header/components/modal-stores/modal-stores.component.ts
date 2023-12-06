@@ -11,9 +11,9 @@ import {
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ITiendaLocation } from '@core/models-v2/geolocation.interface';
+import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
-import { IStore } from '@core/services-v2/geolocation/store.interface';
+import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 
 @Component({
   selector: 'app-modal-stores',

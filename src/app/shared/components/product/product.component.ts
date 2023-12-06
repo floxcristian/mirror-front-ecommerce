@@ -63,7 +63,7 @@ import { InventoryService } from '@core/services-v2/inventory.service';
 import { ModalScalePriceComponent } from '../modal-scale-price/modal-scale-price.component';
 import { IScalePriceItem } from './scale-price-item.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ITiendaLocation } from '@core/models-v2/geolocation.interface';
+import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
 
 export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
 

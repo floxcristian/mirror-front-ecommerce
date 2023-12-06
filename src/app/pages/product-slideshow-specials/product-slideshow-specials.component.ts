@@ -27,7 +27,7 @@ import {
   ISpecial,
 } from '@core/models-v2/cms/special-reponse.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { IGeolocation } from '@core/models-v2/geolocation.interface';
+import { IGeolocation } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 
 export type Layout = 'grid' | 'grid-with-features' | 'list';

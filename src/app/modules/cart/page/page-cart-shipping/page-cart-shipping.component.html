@@ -73,7 +73,7 @@
                 color: #0063b9 !important;
               "
             >
-              {{ tienda.direccion }}
+              {{ tienda.address }}
             </p>
             <ng-container *ngIf="select_grupos">
               <p
@@ -232,7 +232,7 @@
                     <div *ngIf="tienda" class="col-10" style="font-size: 14px">
                       <div class="row">
                         <div class="col-sm-6 mt-1">
-                          {{ tienda.direccion }}
+                          {{ tienda.address }}
                         </div>
                         <div
                           class="col-sm-6"
@@ -470,12 +470,13 @@
                       margin-top: 10px;
                     "
                   >
+                    <!-- FIXME: comentado temporalmente para compilar
                     <app-map
                       *ngIf="tienda && showMap"
-                      [infoWindowContent]="tienda.direccion"
+                      [infoWindowContent]="tienda.address"
                       [tienda]="tienda"
                     >
-                    </app-map>
+                    </app-map> -->
                   </div>
                 </div>
                 <br />

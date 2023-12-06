@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 // Environment
 import { environment } from '@env/environment';
 // Models
-import { IStore } from './store.interface';
+import { IStore } from './models/store.interface';
 
 const API_LOGISTIC = `${environment.apiEcommerce}/api/v1/logistic`;
 

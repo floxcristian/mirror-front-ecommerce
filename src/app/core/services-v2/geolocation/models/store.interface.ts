@@ -1,3 +1,6 @@
+/**
+ * Interfaz utilizada en la respuesta de dos endpoints.
+ */
 export interface IStore {
   id: string;
   code: string;
@@ -5,6 +8,8 @@ export interface IStore {
   lat: number;
   lng: number;
   city: string;
+  // Me puede servir...
+  default: boolean;
   /* IMPROV: estos otros parámetros no los usamos en el nuevo ecommerce */
   name: string;
   address: string;
@@ -13,7 +18,6 @@ export interface IStore {
   mapUrl: string;
   schedule: string;
   order: number;
-  default: boolean;
   regionCode: string;
   createdAt: Date;
   updatedAt: Date;

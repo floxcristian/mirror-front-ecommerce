@@ -29,7 +29,7 @@ import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { CmsService } from '@core/services-v2/cms.service';
 import { IData } from '@core/models-v2/cms/customHomePage-response.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { IGeolocation } from '@core/models-v2/geolocation.interface';
+import { IGeolocation } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 
 @Component({

@@ -199,14 +199,6 @@ export class AppComponent implements AfterViewInit, OnInit {
           if (!this.isOmni) this.cart.load();
         },
       });
-
-      this.geolocationService.localizacionObsCarro$.subscribe({
-        next: (res) => {
-          let tienda: any = res.tiendaSelecciona;
-          this.cart.tiendaPrecio = res.tiendaSelecciona;
-          this.cart.loadPrecio(tienda.codigo);
-        },
-      });
     } else {
       this.geolocationService.setDefaultLocation();
     }

@@ -33,7 +33,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { MenuService } from '@core/services-v2/menu/menu.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ITiendaLocation } from '@core/models-v2/geolocation.interface';
+import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
 
 @Component({
   selector: 'app-mobile-menu',
