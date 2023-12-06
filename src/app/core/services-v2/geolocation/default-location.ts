@@ -1,4 +1,4 @@
-import { IGeolocation } from '@core/models-v2/geolocation.interface';
+import { IGeolocation } from '@core/services-v2/geolocation/models/geolocation.interface';
 
 export const DEFAULT_LOCATION: IGeolocation = {
   esNuevaUbicacion: false,

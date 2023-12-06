@@ -22,7 +22,7 @@ import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categ
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ITiendaLocation } from '@core/models-v2/geolocation.interface';
+import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
 
 @Component({
   selector: 'app-mobile-search',

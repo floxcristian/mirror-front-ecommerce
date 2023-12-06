@@ -1,5 +1,4 @@
 // Angular
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 // Rxjs
 import { Observable, Subject } from 'rxjs';
@@ -7,7 +6,7 @@ import { Observable, Subject } from 'rxjs';
 import {
   IGeolocation,
   ITiendaLocation,
-} from '@core/models-v2/geolocation.interface';
+} from '@core/services-v2/geolocation/models/geolocation.interface';
 // Consts
 import { DEFAULT_LOCATION } from './default-location';
 // Services
@@ -22,10 +21,6 @@ export class GeolocationServiceV2 {
   readonly location$: Observable<IGeolocation> =
     this.locationSubject.asObservable();
   geolocation!: IGeolocation;
-
-  private localizacionCarroSubject: Subject<any> = new Subject();
-  readonly localizacionObsCarro$: Observable<any> =
-    this.localizacionCarroSubject.asObservable();
 
   constructor(
     private readonly geolocationApiService: GeolocationApiService,

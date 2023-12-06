@@ -3,11 +3,11 @@ export interface IGeolocation {
   obtenida: boolean; // *
   esNuevaUbicacion: boolean; // *
   esSeleccionaPorCliente: boolean; // *
-  actual: ICoordenadas; // *
+  actual: ICoordinates; // *
   tiendaSelecciona: ITiendaLocation; // | undefined;
 }
 
-export interface ICoordenadas {
+export interface ICoordinates {
   lat: number;
   lon: number;
 }

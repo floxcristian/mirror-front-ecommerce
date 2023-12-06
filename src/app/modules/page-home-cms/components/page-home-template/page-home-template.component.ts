@@ -18,7 +18,7 @@ import { CmsService } from '@core/services-v2/cms.service';
 import { IPage } from '@core/models-v2/cms/homePage-response.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { IGeolocation } from '@core/models-v2/geolocation.interface';
+import { IGeolocation } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 @Component({
   selector: 'app-page-home-template',

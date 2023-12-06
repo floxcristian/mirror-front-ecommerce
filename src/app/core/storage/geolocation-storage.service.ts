@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 // Models
 import { StorageKey } from './storage-keys.enum';
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
-import { IGeolocation } from '@core/models-v2/geolocation.interface';
+import { IGeolocation } from '@core/services-v2/geolocation/models/geolocation.interface';
 
 @Injectable({
   providedIn: 'root',
