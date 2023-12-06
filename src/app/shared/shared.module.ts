@@ -100,6 +100,7 @@ import { ProductSlideshowSpecialsComponent } from '../pages/product-slideshow-sp
 import { PipesModule } from './pipes/pipes.module';
 import { BlockHeaderComponent } from '../modules/blocks/components/block-header/block-header.component';
 import { ModalScalePriceComponent } from './components/modal-scale-price/modal-scale-price.component';
+import { RelativeTimePipe } from './pipes-v2/relative-time.pipe';
 
 const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
 const NGU_CAROUSEL_MODULES = [
@@ -180,6 +181,7 @@ const NGU_CAROUSEL_MODULES = [
     ButtonComponent,
     BlockHeaderComponent,
     ModalScalePriceComponent,
+    RelativeTimePipe,
   ],
   imports: [
     CommonModule,
@@ -264,6 +266,7 @@ const NGU_CAROUSEL_MODULES = [
     MenuCategoriaComponent,
     ...NGU_CAROUSEL_MODULES,
     BlockHeaderComponent,
+    RelativeTimePipe
   ],
   providers: [DecimalPipe, DatePipe],
 })

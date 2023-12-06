@@ -63,12 +63,12 @@
     </div>
 
     <div
-      class="d-flex flex-column flex-sm-row justify-content-between align-items-end"
+      class="d-flex flex-column flex-sm-row justify-content-between align-items-end overflow-auto" style="max-height: 150px; "
     >
-      <div class="d-flex flex-column py-2 resumen">
+      <div class="d-flex flex-column py-2 resumen "  >
         <div *ngFor="let item of resumen" class="d-flex">
           <div class="d-flex align-items-center nowrap me-2">
-            <div>{{ item.estrellas }}</div>
+            <div>{{ item.stars }}</div>
             <div>
               <img
                 class="ms-1"
@@ -83,14 +83,14 @@
                 class="progress-bar"
                 style="background-color: #0d61bb"
                 role="progressbar"
-                [ngStyle]="{ 'width.%': item.porcentaje }"
+                [ngStyle]="{ 'width.%': item.percentage }"
                 aria-valuemin="0"
                 aria-valuemax="100"
               ></div>
             </div>
           </div>
           <div class="ms-2 text-nowrap" style="width: 30px">
-            {{ item.cantidad }}
+            {{ item.quantity }}
           </div>
         </div>
       </div>
@@ -116,18 +116,18 @@
     <div class="d-flex flex-column mb-4" *ngFor="let item of comentarios">
       <div class="d-flex flex-column flex-sm-row">
         <div class="me-4">
-          <strong>{{ item.titulo | capitalizeFirst }}</strong>
+          <strong>{{ item.title | capitalizeFirst }}</strong>
         </div>
         <div class="me-4">
           <span class="starsDetalle">
             <span
               [ngStyle]="{
-                width: Math.max(0, Math.min(5, item.calificacion)) * 20 + 'px'
+                width: Math.max(0, Math.min(5, item.calification)) * 20 + 'px'
               }"
             ></span>
           </span>
         </div>
-        <div *ngIf="item.recomienda">
+        <div *ngIf="item.recommended">
           <small
             ><strong>Recomienda este producto</strong
             ><i class="fas fa-check-circle text-success mx-1"></i>Sí</small
@@ -136,12 +136,12 @@
       </div>
       <div class="mb-2">
         <small
-          ><span class="me-3">Por {{ item.nombre }}</span> Hace
-          {{ item.tiempo }} {{ item.unidadTiempo }}</small
+          ><span class="me-3">Por {{ item.name }}</span> Hace
+          {{ item.createdAt | relativeTime}} </small
         >
       </div>
       <div class="text-justify">
-        {{ item.comentario | capitalizeFirst }}
+        {{ item.comment | capitalizeFirst }}
       </div>
     </div>
   </div>

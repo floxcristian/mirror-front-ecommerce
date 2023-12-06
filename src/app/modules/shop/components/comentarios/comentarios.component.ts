@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { AddCommentModalComponent } from '../../../../shared/components/add-comment-modal/add-comment-modal.component';
 import {
@@ -9,16 +9,16 @@ import {
 } from '../../../../shared/components/modal/modal.component';
 import {
   ComentarioArticulo,
-  ResumenComentario,
 } from '../../../../shared/interfaces/comentariosArticulo';
-import { Product } from '../../../..//shared/interfaces/product';
 import { ResponseApi } from '../../../..//shared/interfaces/response-api';
 import { CatalogoService } from '../../../..//shared/services/catalogo.service';
-
-import { calculaTiempo } from '../../../..//shared/utils/utilidades';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { SessionService } from '@core/states-v2/session.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
+import { ArticleService } from '@core/services-v2/article.service';
+import { CommentSummary } from '@core/models-v2/article/article-comment.interface';
+import { IComment } from '@core/models-v2/article/comment.interface';
+
 
 @Component({
   selector: 'app-comentarios',
@@ -32,8 +32,8 @@ export class ComentariosComponent implements OnChanges {
   anchoPintado = 0;
 
   total = 0;
-  resumen: ResumenComentario[] = [];
-  comentarios: ComentarioArticulo[] = [];
+  resumen: CommentSummary[] = [];
+  comentarios: IComment[] = [];
   comentariosOriginal: ComentarioArticulo[] = [];
   slice = false;
   Math = Math;
@@ -45,36 +45,35 @@ export class ComentariosComponent implements OnChanges {
     private catalogoService: CatalogoService,
     private toastrService: ToastrService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly articleService: ArticleService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.cargaTodo();
+
   }
 
   cargaResumen() {
     if (this.producto) {
-      this.catalogoService
+      this.articleService
         .getResumenComentarios(this.producto.sku)
-        .subscribe((resp: ResponseApi) => {
-          if (!resp.error) {
+        .subscribe((resp) => { // Asegúrate de que esto coincida con la estructura de tu API
+          if (resp ) { // Asumiendo que la respuesta tiene una propiedad 'error'
             this.rating = 0;
-            this.total = resp.data.total;
-            this.resumen = resp.data.resumen;
+            this.total = resp.total;
+            this.resumen = resp.summary;
 
-            this.resumen = this.resumen.map((c) => {
-              c.porcentaje =
-                this.total > 0 ? (c.cantidad * 100) / this.total : 0;
-              this.rating =
-                this.total > 0
-                  ? this.rating + (c.estrellas * c.cantidad) / this.total
-                  : 0;
-              return c;
+            this.resumen = this.resumen.map((r: CommentSummary) => {
+              r.percentage =
+                this.total > 0 ? (r.quantity * 100) / this.total : 0;
+              this.rating +=
+                this.total > 0 ? (r.stars * r.quantity) / this.total : 0;
+              return r;
             });
+
             this.rating = Number(this.rating.toFixed(1));
-            this.pintaEstrellas(this.rating);
-          } else {
-            this.toastrService.error(resp.msg);
+            this.pintaEstrellas(this.rating); // Asegúrate de que esta función maneje correctamente el valor de 'this.rating'
           }
         });
     }
@@ -82,30 +81,26 @@ export class ComentariosComponent implements OnChanges {
 
   cargaDetalle() {
     if (this.producto) {
-      this.catalogoService
+      this.articleService
         .getDetalleComentarios(this.producto.sku, this.orden)
-        .subscribe((resp: ResponseApi) => {
-          if (!resp.error) {
-            this.comentarios = resp.data;
-            this.comentarios = this.comentarios.map((c) => {
-              const calculo: any = calculaTiempo(c.createdAt || '');
-
-              c.tiempo = calculo.tiempo;
-              c.unidadTiempo = calculo.unidad;
-
-              return c;
-            });
-            this.comentariosOriginal = JSON.parse(
-              JSON.stringify(this.comentarios)
-            );
-            this.slice = false;
-            this.sliceToggle();
-          } else {
-            this.toastrService.error(resp.msg);
+        .subscribe({
+          next: (resp) => {
+            console.log('getDetalles', resp.data);
+            if (resp.data && resp.data.length) {
+              this.comentarios = resp.data;
+              this.slice = false;
+              this.sliceToggle();
+            }
+          },
+          error: (error) => {
+            console.warn('Error al obtener comentarios', error);
           }
         });
     }
   }
+
+
+
 
   cargaTodo() {
     this.cargaResumen();
@@ -114,7 +109,6 @@ export class ComentariosComponent implements OnChanges {
 
   pintaEstrellas(rating: number) {
     const width = Math.max(0, Math.min(5, rating)) * this.starWidth;
-
     this.anchoPintado = width;
   }
 
@@ -151,9 +145,9 @@ export class ComentariosComponent implements OnChanges {
   sliceToggle() {
     this.slice = !this.slice;
     if (this.slice) {
-      this.comentarios = this.comentariosOriginal.slice(0, 4);
+      //this.comentarios = this.comentariosOriginal.slice(0, 4);
     } else {
-      this.comentarios = this.comentariosOriginal;
+     // this.comentarios = this.comentariosOriginal;
     }
   }
 }

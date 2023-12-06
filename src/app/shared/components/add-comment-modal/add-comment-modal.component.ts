@@ -9,7 +9,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
-import { ArticleComment } from '@core/models-v2/article/article-comment.interface';
 import { ArticleService } from '@core/services-v2/article.service';
 
 @Component({
@@ -59,22 +58,22 @@ export class AddCommentModalComponent implements OnInit {
   }
 
   publicarComentario() {
-    const request: ArticleComment = {
+    const request = {
       sku: this.producto.sku,
       calification: this.valoracion,
       title: this.titulo,
       comment: this.comentario,
-      recommended: isVacio(this.recomienda)
-        ? null
-        : this.recomienda === 'SI'
-        ? true
-        : false,
+      recommended: isVacio(this.recomienda) ? false : true,
       name: this.nombre,
       email: this.correo,
       username: this.usuario.username,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
-    this.articleService.guardarComentarioArticulo(request).subscribe({
+    this.articleService
+    .guardarComentarioArticulo(request)
+    .subscribe({
       next: (resp) => {
         if (resp) {
           this.event.emit(true);
@@ -84,8 +83,9 @@ export class AddCommentModalComponent implements OnInit {
       error: (err) => {
         console.error(err);
         this.toastrService.error('Ocurrió un error al guardar el comentario.');
-      },
+      }
     });
+
   }
 
   setValoracion(valoracion: number) {
