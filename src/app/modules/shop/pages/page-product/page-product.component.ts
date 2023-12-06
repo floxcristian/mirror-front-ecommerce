@@ -327,14 +327,14 @@ export class PageProductComponent implements OnInit, OnDestroy {
   }
   // TODO: confirmar nombre de la función
 
-  getDetailArticle(sku: string) {
+  getDetailArticle(sku: string): void {
     const user = this.sessionService.getSession();
     console.log(' getDetailArticle user: ', user);
     const selectedStore = this.geoLocationService.getTiendaSeleccionada();
 
     if (user && selectedStore) {
       const params = {
-        sku: sku,
+        sku,
         documentId: user.documentId,
         branchCode: selectedStore.codigo,
         location: selectedStore.comuna,
@@ -374,7 +374,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
   getDetailProduct(sku: any) {
     let params = null;
     const user = this.sessionService.getSession();
-    // const usuario = this.root.getDataSesionUsuario();
 
     if (user) {
       params = {

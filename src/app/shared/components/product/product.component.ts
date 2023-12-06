@@ -24,7 +24,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 // Libs
 import { CarouselComponent, SlidesOutputData } from 'ngx-owl-carousel-o';
 
@@ -56,7 +56,10 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
+import {
+  Attribute,
+  IArticleResponse,
+} from '@core/models-v2/article/article-response.interface';
 import { IProductImage } from './image.interface';
 import { InventoryService } from '@core/services-v2/inventory.service';
 // Modals
@@ -71,12 +74,13 @@ export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
   styleUrls: ['./product.component.scss'],
 })
 export class ProductComponent implements OnInit, OnChanges, OnDestroy {
+  @ViewChild('myCarousel', { static: false }) myCarousel!: NguCarousel<any>;
   //codigo de slide vertical
   slideNo = 0;
   withAnim = true;
   resetAnim = true;
   innerWidth: number;
-  @ViewChild('myCarousel', { static: false }) myCarousel!: NguCarousel<any>;
+
   carouselConfig: NguCarouselConfig = {
     grid: { xs: 1, sm: 1, md: 3, lg: 3, all: 0 },
     slide: 1,
@@ -93,26 +97,26 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     },
   };
 
-  carouselItems: any[any] = [1, 2, 3];
-  mainItems: any[] = [...this.carouselItems];
+  /**
+   * Items para la imagen activa.
+   */
+  images: IProductImage[] = [];
   cantidadFaltantePrecioEscala!: number;
 
-  private dataProduct!: IArticleResponse & { url?: SafeUrl; gimage?: SafeUrl };
+  private dataProduct!: IArticleResponse;
   private dataLayout: Layout = 'standard';
 
   showGallery = true;
   showGalleryTimeout!: number;
-  imageFichaCargada = false;
-  quality: any;
-  disponibilidad = false;
-  estado = true;
-  products: IArticleResponse[] = [];
-  videos!: any[];
 
-  // Promesas
+  quality: any;
+  isAvailable!: boolean;
+  estado = true; // isDesktop
+  products: IArticleResponse[] = [];
+
+  // Observables
   addButtonMovilPromise!: Subscription;
   geoLocationServicePromise!: Subscription;
-
   routerPromise: Subscription;
   photoSwipePromise!: Subscription;
   addcartPromise!: Subscription;
@@ -126,11 +130,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   isB2B: boolean;
   IVA = environment.IVA;
   isVacio = isVacio;
-
-  /* PROVISORIO */
-  skusChevron = ['CHVLMT0003', 'CHVLMT0001', 'CHVLMT0004'];
-  isChevron!: boolean;
-  /*****************/
 
   @ViewChild('featuredCarousel', { read: CarouselComponent, static: false })
   featuredCarousel!: CarouselComponent;
@@ -155,54 +154,25 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  @Input() set product(value: IArticleResponse | undefined) {
-    if (typeof value === 'undefined') {
-      return;
-    }
-    /** PROVISORIO */
-    this.isChevron = this.skusChevron.includes(value.sku);
-    /***************/
+  @Input() set product(value: IArticleResponse) {
+    if (!value) return;
+    // Eliminar?
     this.getPopularProducts();
-    this.verificarDisponibilidad(value);
-    this.comprobarStock(value.sku, this.tiendaActual, value); // revisar
+    this.setAvailability(value);
     this.quantity.setValue(1);
-    this.imageFichaCargada = false;
-    this.images = [];
-    this.videos = [];
 
-    if (value) {
-      this.dataProduct = value;
-      this.dataProduct.name = this.dataProduct.name.replace(/("|')/g, '');
-      this.formatImageSlider(value);
-    }
+    this.dataProduct = value;
+    // this.dataProduct.name = this.dataProduct.name.replace(/("|')/g, '');
+    this.formatImageSlider(value);
     this.quality = this.root.setQuality(value);
     this.root.limpiaAtributos(value);
 
-    for (const i in this.dataProduct.attributes) {
-      if (this.dataProduct.attributes[i].name == 'VIDEO') {
-        this.videos.push({
-          ...this.dataProduct.attributes[i],
-          thumb:
-            'https://i.ytimg.com/vi/' +
-            this.dataProduct.attributes[i].value.split('/embed')[1] +
-            '/1.jpg',
-        });
-      }
-    }
-
-    const url: string = this.root.product(
+    /*const url: string = this.root.product(
       this.dataProduct.sku,
       this.dataProduct.name,
       false
     );
-    const gimage: string =
-      'https://images.implementos.cl/img/watermarked/' +
-      this.dataProduct.sku +
-      '-watermarked.jpg';
-
-    this.dataProduct.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    this.dataProduct.gimage =
-      this.sanitizer.bypassSecurityTrustResourceUrl(gimage);
+    this.dataProduct.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);*/
   }
 
   get layout(): Layout {
@@ -212,9 +182,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   get product() {
     return this.dataProduct;
   }
-
-  images: IProductImage[] = [];
-  imagesThumbs: any[] = [];
 
   carouselOptions: Partial<OwlCarouselOConfig> = {
     autoplay: false,
@@ -236,7 +203,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   today = Date.now();
   stockMax = 0;
   tiendaActual: any;
-  stockTiendaActual: any = 0;
   MODOS = { RETIRO_TIENDA: 'retiroTienda', DESPACHO: 'domicilio' };
   puntoQuiebre: number = 576;
   showMobile: boolean = false;
@@ -280,15 +246,11 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   onChangeStore(): void {
     this.geoLocationServicePromise =
       this.geoLocationService.localizacionObs$.subscribe((r: GeoLocation) => {
+        console.log('localizacionObs(true)...');
         this.estado = true;
         this.tiendaActual = this.geoLocationService.getTiendaSeleccionada();
         this.Actualizar();
         this.getPopularProducts();
-        this.comprobarStock(
-          this.dataProduct.sku,
-          this.tiendaActual,
-          this.dataProduct
-        );
       });
   }
 
@@ -325,7 +287,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     // dejamos de observar la observable cuando nos salimos de la pagina del producto.
     this.addButtonMovilPromise ? this.addButtonMovilPromise.unsubscribe() : '';
     this.geoLocationServicePromise
@@ -374,11 +336,8 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     await this.obtienePrecioEscala();
   }
 
-  carouselTileLoad() {
-    this.carouselItems = [...this.carouselItems, ...this.mainItems];
-  }
-
-  getPopularProducts() {
+  getPopularProducts(): void {
+    console.log('getPopularProducts(false)...');
     this.estado = false;
   }
 
@@ -387,43 +346,9 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.cart.cargarPrecioEnProducto(producto);
   }
 
-  //Funcion nueva*
-  verificarDisponibilidad(product: IArticleResponse) {
-    if (
-      product.deliverySupply.pickupDate == null &&
-      product.deliverySupply.pickupDate == null
-    )
-      this.disponibilidad = false;
-    else this.disponibilidad = true;
-  }
-
-  setActiveImage(imageId: string): void {
-    this.images.forEach((itemImage) => {
-      itemImage.active = itemImage.id === imageId;
-    });
-  }
-
-  featuredCarouselTranslated(event: SlidesOutputData): void {
-    if (event.slides?.length) {
-      const activeImageId = event.slides[0].id;
-      this.setActiveImage(activeImageId);
-    }
-  }
-
-  /**
-   * @description Comprueba que el stock ingresado por el usuario sea menor , igual o mayor al stock disponible
-   * para asi mostrar ir validando que pueda ingresar la cantidad seleccioanda a su carro o mostrar un mensaje y desactivar
-   * los checks de conflictos de entrega
-   * DESPACHO -> se considera el CD que tenga más Stock
-   * RETIRO EN OTRAS TIENDAS -> se considera la tienda con mas stock excluyendo los CDs
-   * RETIRO EN LA TIENDA SELECCIONADA -> Se considera el stock de la tienda que tiene seleccionada en el nav.
-   * @param sku
-   * @param tienda
-   */
-  //Revisar ***
-  async comprobarStock(sku: any, tienda: any, product: any): Promise<void> {
-    this.stockTiendaActual = 0;
-    return;
+  setAvailability(product: IArticleResponse): void {
+    const { pickupDate, deliveryDate } = product.deliverySupply;
+    this.isAvailable = !pickupDate && !deliveryDate ? false : true;
   }
 
   async updateCart(cantidad: any) {
@@ -431,8 +356,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     const usuario = this.sessionService.getSession();
 
     const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-    this.comprobarStock(this.product!.sku, tiendaSeleccionada, this.product);
-
     const parametrosPrecios = {
       sku: this.product!.sku,
       sucursal: tiendaSeleccionada?.codigo,
@@ -527,7 +450,79 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   //   }
   // }
 
-  async addToWishlist() {
+  // FIXME: ya no se debe llamar endpoint.
+  async obtienePrecioEscala() {
+    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
+
+    const params = {
+      sucursal: tiendaSeleccionada?.codigo,
+      sku: this.product!.sku,
+      rut: this.usuario.documentId,
+    };
+    const resp: any = await this.cart.getPriceScale(params).toPromise();
+    this.preciosEscalas = resp.data.map((p: any) => {
+      return { ...p, marcado: false };
+    });
+
+    // if (!isVacio(this.product!.price)) {
+    this.preciosEscalas.unshift({
+      desde: 0,
+      hasta: 0,
+      precio: this.product?.priceInfo.price || 0,
+      marcado: true,
+    });
+    // }
+  }
+
+  verPreciosEscala(): void {
+    // TODO: mostrar precios escala locales:
+    console.log('precios escalax: ');
+    this.modalService.show(ModalScalePriceComponent, {
+      class: 'modal-dialog-centered',
+      initialState: {
+        scalePrices: this.preciosEscalas,
+      },
+    });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
+  }
+
+  enviarCorreo() {
+    if (this.formAvisoStock.valid) {
+      let valor_formulario = this.formAvisoStock.value;
+      valor_formulario.sku = this.product?.sku;
+      this.inventoryService.requestForStock(valor_formulario).subscribe({
+        next: () => {
+          this.toast.success(
+            'Mensaje enviado con éxito. Te contactaremos a la brevedad'
+          );
+        },
+        error: (err) => {
+          console.log(err);
+          this.toast.warning('No ha sido posible enviar el mensaje');
+        },
+      });
+    }
+  }
+
+  enviarWhatsapp(): void {
+    const phoneNumber = '56932633571';
+    let url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=`;
+    let mensaje = `Hola, necesito el siguiente producto ${
+      this.product?.name
+    } de SKU: ${this.product!.sku}. Para que me atienda un ejecutivo.`;
+    window.open(url + mensaje);
+  }
+
+  /*************************************************
+   * Métodos lista de favoritos.
+   *************************************************/
+  async addToWishlist(): Promise<void> {
     if (this.favorito) {
       // saca SKU de todas las listas en que existe
       const resp: ResponseApi = (await this.clientsService
@@ -626,8 +621,8 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       listasEnQueExiste: this.listasEnQueExiste,
     };
     const modal: BsModalRef = this.modalService.show(WishListModalComponent, {
-      initialState,
       class: 'modal-sm2 modal-dialog-centered',
+      initialState,
     });
     modal.content.event.subscribe((res: any) => {
       this.refreshListasEnQueExiste();
@@ -650,194 +645,94 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.cd.markForCheck();
   }
 
-  //Listo
+  /*************************************************
+   * Métodos para la galería de imágenes.
+   *************************************************/
+  private formatThumbVideo(attribute: Attribute): string {
+    const thumbImage = attribute.value.split('/embed')[1];
+    return `https://i.ytimg.com/vi${thumbImage}/1.jpg`;
+  }
+
+  setActiveImage(imageId: string): void {
+    this.images.forEach((itemImage) => {
+      itemImage.active = itemImage.id === imageId;
+    });
+  }
+
+  featuredCarouselTranslated(event: SlidesOutputData): void {
+    if (!event.slides?.length) return;
+    const activeImageId = event.slides[0].id;
+    this.setActiveImage(activeImageId);
+  }
+
   openPhotoSwipe(event: MouseEvent, image: IProductImage): void {
-    if (this.layout !== 'quickview') {
-      event.preventDefault();
+    if (this.layout === 'quickview') return;
+    event.preventDefault();
 
-      const images = this.images.map((eachImage) => {
-        return {
-          src: eachImage.url,
-          msrc: eachImage.url,
-          w: 700,
-          h: 700,
-        };
-      });
-      const options = {
-        getThumbBoundsFn: (index: any) => {
-          const imageElement =
-            this.imageElements.toArray()[index].nativeElement;
-          const pageYScroll =
-            window.pageYOffset || document.documentElement.scrollTop;
-          const rect = imageElement.getBoundingClientRect();
+    const options = {
+      getThumbBoundsFn: (index: any) => {
+        const imageElement = this.imageElements.toArray()[index].nativeElement;
+        const pageYScroll =
+          window.pageYOffset || document.documentElement.scrollTop;
+        const rect = imageElement.getBoundingClientRect();
 
-          return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };
-        },
-        index: this.images.indexOf(image),
-        bgOpacity: 0.9,
-        history: false,
-      };
-
-      this.photoSwipe.open(images, options).subscribe((galleryRef) => {
-        galleryRef.listen('beforeChange', () => {
-          this.featuredCarousel.to(
-            this.images[galleryRef.getCurrentIndex()].id
-          );
-        });
-      });
-    }
-  }
-
-  onLoadImage() {
-    this.imageFichaCargada = true;
-  }
-
-  //Listo
-  formatImageSlider(product: IArticleResponse) {
-    let index = 0;
-    let image1000 = null;
-    let image150 = null;
-    if (typeof product.images === 'undefined') {
-      return;
-    }
-    if (product.images.length <= 0) {
-      image1000 = '../../../assets/images/products/no-image-listado-2.jpg';
-      image150 = '../../../assets/images/products/no-image-listado-2.jpg';
-      const image: IProductImage = {
-        id: product.sku.toString() + '_' + index++,
-        url: this.root.returnUrlNoImagen(),
-        active: index === 1 ? true : false,
-      };
-
-      this.images.push(image);
-    } else {
-      if (
-        product.images[0]['1000'].length == 0 ||
-        product.images[0]['150'].length == 0
-      ) {
-        image1000 = '../../../assets/images/products/no-image-listado-2.jpg';
-        image150 = '../../../assets/images/products/no-image-listado-2.jpg';
-        const image: IProductImage = {
-          id: product.sku.toString() + '_' + index++,
-          url: this.root.returnUrlNoImagen(),
-          active: index === 1 ? true : false,
-        };
-
-        this.images.push(image);
-      } else {
-        image1000 = product.images[0]['1000'];
-        image150 = product.images[0]['150'];
-
-        this.images = [];
-        this.imagesThumbs = [];
-
-        let key = 0;
-        for (const item of image1000) {
-          const image: IProductImage = {
-            id: product.sku.toString() + '_' + index++,
-            url: item,
-            urlThumbs: image150[key],
-            active: index === 1 ? true : false,
-            video: false,
-          };
-
-          this.images.push(image);
-          key++;
-        }
-        let thumbVideo = '';
-        let urlVideo = '';
-        for (const i in product.attributes) {
-          if (product.attributes[i].name == 'VIDEO') {
-            (thumbVideo =
-              'https://i.ytimg.com/vi' +
-              product.attributes[i].value.split('/embed')[1] +
-              '/1.jpg'),
-              (urlVideo = product.attributes[i].value);
-
-            const image: IProductImage = {
-              id: product.sku.toString() + '_' + index++,
-              url: urlVideo,
-              urlThumbs: thumbVideo,
-              active: index === 1 ? true : false,
-              video: true,
-            };
-            this.images.push(image);
-            key++;
-          }
-        }
-      }
-    }
-
-    this.carouselItems = this.images;
-    this.mainItems = [...this.carouselItems];
-  }
-
-  // FIXME: ya no se debe llamar endpoint.
-  async obtienePrecioEscala() {
-    const tiendaSeleccionada = this.geoLocationService.getTiendaSeleccionada();
-
-    const params = {
-      sucursal: tiendaSeleccionada?.codigo,
-      sku: this.product!.sku,
-      rut: this.usuario.documentId,
-    };
-    const resp: any = await this.cart.getPriceScale(params).toPromise();
-    this.preciosEscalas = resp.data.map((p: any) => {
-      return { ...p, marcado: false };
-    });
-
-    // if (!isVacio(this.product!.price)) {
-    this.preciosEscalas.unshift({
-      desde: 0,
-      hasta: 0,
-      precio: this.product?.priceInfo.price || 0,
-      marcado: true,
-    });
-    // }
-  }
-
-  verPreciosEscala(): void {
-    // TODO: mostrar precios escala locales:
-    console.log('precios escalax: ');
-    this.modalService.show(ModalScalePriceComponent, {
-      class: 'modal-dialog-centered',
-      initialState: {
-        scalePrices: this.preciosEscalas,
+        return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };
       },
+      index: this.images.indexOf(image),
+      bgOpacity: 0.9,
+      history: false,
+    };
+
+    const images = this.images.map((eachImage) => ({
+      src: eachImage.url,
+      msrc: eachImage.url,
+      w: 700,
+      h: 700,
+    }));
+    this.photoSwipe.open(images, options).subscribe((galleryRef) => {
+      galleryRef.listen('beforeChange', () => {
+        this.featuredCarousel.to(this.images[galleryRef.getCurrentIndex()].id);
+      });
     });
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.innerWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-  }
+  // sku, images, attributes.
+  private formatImageSlider(product: IArticleResponse): void {
+    if (
+      !product.images.length ||
+      !product.images[0]['1000'].length ||
+      !product.images[0]['150'].length
+    ) {
+      const image: IProductImage = {
+        id: `${product.sku}_0`,
+        url: this.root.returnUrlNoImagen(),
+        active: true,
+      };
+      this.images = [image];
+    } else {
+      const image1000 = product.images[0]['1000'];
+      const image150 = product.images[0]['150'];
 
-  enviarCorreo() {
-    if (this.formAvisoStock.valid) {
-      let valor_formulario = this.formAvisoStock.value;
-      valor_formulario.sku = this.product?.sku;
-      this.inventoryService.requestForStock(valor_formulario).subscribe({
-        next: (res) => {
-          this.toast.success(
-            'Mensaje enviado con éxito. Te contactaremos a la brevedad'
-          );
-        },
-        error: (err) => {
-          console.log(err);
-          this.toast.warning('No ha sido posible enviar el mensaje');
-        },
-      });
+      this.images = image1000.map((item, index) => ({
+        id: `${product.sku}_${index}`,
+        url: item,
+        urlThumbs: image150[index],
+        active: index === 0,
+        video: false,
+      }));
+
+      // Formateando los thumbs de video.
+      const videos = product.attributes.filter(
+        (item) => item.name === 'VIDEO'
+      );
+      const videoImages = videos.map((item, index) => ({
+        id: `${product.sku}_${this.images.length + index}`,
+        url: item.value,
+        urlThumbs: this.formatThumbVideo(item),
+        active: index === 0,
+        video: true,
+      }));
+      this.images.push(...videoImages);
     }
-  }
-
-  enviarWhatsapp(): void {
-    const phoneNumber = '56932633571';
-    let url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=`;
-    let mensaje = `Hola, necesito el siguiente producto ${
-      this.product?.name
-    } de SKU: ${this.product!.sku}. Para que me atienda un ejecutivo.`;
-    window.open(url + mensaje);
   }
 }

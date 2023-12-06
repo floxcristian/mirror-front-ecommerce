@@ -112,7 +112,7 @@ export class RootService {
   }
 
   limpiaAtributos(product: IArticleResponse): void {
-    if (product.attributes == null) {
+    if (!product.attributes) {
       return;
     }
     const att = product.attributes.filter((val: any) => {

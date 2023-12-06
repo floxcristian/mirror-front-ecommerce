@@ -30,6 +30,7 @@
           (leerComentarios)="abrirTabEvaluacion()"
         ></app-product> -->
         <app-product
+          *ngIf="product"
           [product]="product"
           [origen]="origen"
           [layout]="layout"

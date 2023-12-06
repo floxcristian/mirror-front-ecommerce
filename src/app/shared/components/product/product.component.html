@@ -5,7 +5,6 @@
       <h5 class="mb-1 text-start">{{ product.name | capitalizeFirst }}</h5>
     </div>
 
-    <!-- <pre style="background-color: yellw">{{ carouselItems | json }} </pre> -->
     <!-- DESKTOP  TABLET  MOBILE -->
     <!-- Imagenes -->
     <div class="product__gallery mb-0 col-12 col-lg-6 ps-lg-0">
@@ -18,8 +17,7 @@
             <ngu-carousel
               #myCarousel
               [inputs]="carouselConfig"
-              [dataSource]="carouselItems"
-              (carouselLoad)="carouselTileLoad()"
+              [dataSource]="images"
               style="position: unset"
             >
               <div *nguCarouselDef="let item" class="item">
@@ -121,6 +119,7 @@
                   />
                 </picture>
               </div> -->
+              <!-- Start::muestra la marca sobre la imagen activa -->
               <div
                 style="
                   position: absolute;
@@ -146,6 +145,7 @@
                   />
                 </div>
               </div>
+              <!-- End::muestra la marca sobre la imagen activa -->
 
               <owl-carousel-o
                 (changed)="featuredCarouselTranslated($event)"
@@ -169,7 +169,6 @@
                         [src]="image.url"
                         [alt]="product.name"
                         class="lazyload"
-                        (load)="onLoadImage()"
                         (error)="root.errorLoadImage($event)"
                         #imageElement
                       />
@@ -449,7 +448,7 @@
                 <!-- BOTON PARA DESKTOP y TABLET -->
                 <div class="col-sm-7 d-none d-sm-block">
                   <button
-                    *ngIf="disponibilidad"
+                    *ngIf="isAvailable"
                     name="Agregar "
                     type="button "
                     class="btn btn-secondary btn-lg w-100 text-center btn-add-cart w-100"
@@ -462,7 +461,7 @@
                     <i class="fas fa-shopping-cart"></i> AGREGAR
                   </button>
                   <button
-                    *ngIf="!disponibilidad"
+                    *ngIf="!isAvailable"
                     disabled
                     name="Agregar "
                     type="button"
@@ -508,14 +507,16 @@
           <hr />
 
           <div class="row px-3 justify-content-end">
+            <!-- Start::opciones de entrega (desktop) -->
             <div class="col-12" style="margin-bottom: 10px">
               <app-despacho
-                *ngIf="tiendaActual && !estado"
+                *ngIf="tiendaActual"
                 [product]="product"
                 [tiendaActual]="tiendaActual"
                 [cantidad]="quantity.value"
               ></app-despacho>
             </div>
+            <!-- End::opciones de entrega (desktop) -->
 
             <!-- SOLO B2B -->
 
@@ -541,6 +542,7 @@
     </div>
 
     <!-- MOBILE -->
+    <pre> estado: {{ estado }}</pre>
     <!-- Información Ficha -->
     <div
       *ngIf="showMobile"
@@ -787,9 +789,12 @@
 
       <div class="clearfix"></div>
 
+      <h1>stock</h1>
+
       <div *ngIf="stock">
         <div class="product__sidebar col-12 p-0">
           <hr />
+          <!-- Start::opciones de despacho (mobile)-->
           <div class="row px-3">
             <div class="col-12">
               <app-despacho
@@ -800,6 +805,8 @@
               ></app-despacho>
             </div>
           </div>
+          <!-- End::opciones de despacho (mobile)-->
+
           <hr />
           <div>
             <div class="d-flex justify-content-center">
@@ -846,7 +853,7 @@
 
 <!-- botton add card en movile -->
 <app-addcart-button
-  [disponibilidad]="disponibilidad"
+  [disponibilidad]="isAvailable"
   (quantity)="updateCart($event)"
   class="d-block d-sm-none"
 ></app-addcart-button>

@@ -21,6 +21,7 @@ import { MpSimuladorHeaderFiltrosMagicos } from './mp-simulador-header.filtros-m
 export class DespachoComponent implements OnInit {
   @Input() product!: any;
   @Input() tiendaActual: any = [];
+  @Input() cantidad: number = 0;
 
   tiendaSeleccionada: any = [];
   stock: any = 0;
@@ -36,9 +37,8 @@ export class DespachoComponent implements OnInit {
   consulta: any = [];
   promesas: any = [];
   modo: string = this.MODOS.DESPACHO;
-
   stockMax: any = 0;
-  @Input() cantidad: any = 0;
+  localidad: any = [];
 
   constructor(
     private promesaService: PromesaService,
@@ -46,7 +46,7 @@ export class DespachoComponent implements OnInit {
     private geoLocationService: GeoLocationService,
     private cd: ChangeDetectorRef
   ) {}
-  localidad: any = [];
+
   async ngOnInit() {
     this.cd.detectChanges();
   }

@@ -16,7 +16,6 @@ export class DirectionService {
 
   set value(value: Direction) {
     this.direction = value;
-
     if (isPlatformBrowser(this.platformId)) {
       document.dir = this.direction;
     }
