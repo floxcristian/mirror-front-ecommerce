@@ -78,17 +78,18 @@
                 >
                   <div class="item">
                     <a
-                      (click)="texto = sugerencias[0].sugerencia"
+                      (click)="texto = sugerencias[0].suggestion"
                       class="px-0"
                       [routerLink]="[
                         '/',
                         'inicio',
                         'productos',
-                        sugerencias[0].sugerencia
+                        sugerencias[0].suggestion
                       ]"
                     >
                       <b style="font-size: 1.1rem; color: #094cac"
-                        >Quizás esta buscando {{ sugerencias[0].sugerencia }}</b
+                        >Quizás esta buscando
+                        {{ sugerencias[0].suggestion }}</b
                       >...
                     </a>
                   </div>
@@ -99,12 +100,12 @@
                 >
                   <div class="item">
                     <a
-                      (click)="texto = item.sugerencia"
+                      (click)="texto = item.suggestion"
                       [routerLink]="[
                         '/',
                         'inicio',
                         'productos',
-                        item.sugerencia
+                        item.suggestion
                       ]"
                     >
                       <span
@@ -119,7 +120,10 @@
                 </div>
               </div>
 
-              <div class="col-12 mt-2" style="border-bottom: 1px solid #094cac">
+              <div
+                class="col-12 mt-2"
+                style="border-bottom: 1px solid #094cac"
+              >
                 <div
                   class="fw-bold"
                   style="
@@ -137,12 +141,12 @@
                   <div class="item text-truncate">
                     <a
                       [routerLink]="'/inicio/productos/' + textToSearch"
-                      [queryParams]="{ filter_MARCA: item.marca }"
+                      [queryParams]="{ filter_MARCA: item.brand }"
                       (click)="modalRef.hide()"
                     >
                       <div class="row">
                         <div class="col-8">
-                          {{ item.marca | titlecase }}
+                          {{ item.brand | titlecase }}
                         </div>
                       </div>
                     </a>
@@ -175,7 +179,7 @@
                         class="ps-3"
                         style="color: #000"
                       />
-                      {{ item.nombre | titlecase }}
+                      {{ item.name | titlecase }}
                     </span>
                   </a>
                 </div>

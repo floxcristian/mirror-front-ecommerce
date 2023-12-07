@@ -42,9 +42,9 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
   modalRefVin!: BsModalRef;
   isFocusedInput: boolean = false;
   templateTiendaModal!: TemplateRef<any>;
-  texto: any = '';
+  texto: string = '';
   numeroVIN: any = '';
-  textToSearch: any = '';
+  textToSearch: string = '';
   categorias: any[] = [];
   marcas: any[] = [];
   sugerencias: any[] = [];
@@ -90,10 +90,6 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
-  }
-
-  reset() {
-    this.buscando = true;
   }
 
   buscar() {
@@ -165,20 +161,6 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  mostraModalBuscador() {
-    this.modalRef = this.modalService.show(this.template, {
-      class: 'modal-100 modal-buscador modal-new',
-    });
-    this.root.setModalRefBuscador(this.modalRef);
-    document.getElementById('searchMobileModal')?.focus();
-  }
-
-  mostraModalBuscadorVin() {
-    this.modalRefVin = this.modalService.show(this.templateVin, {
-      class: 'modal-buscadorVin-container modal-buscadorVin',
-    });
-  }
-
   Hidebar() {
     let url = null;
     if (this.router.url.split('?')[0] != undefined) {
@@ -198,18 +180,5 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
 
   estableceModalTienda(template: any) {
     this.templateTiendaModal = template;
-  }
-
-  async validarCuenta() {
-    this.localS.set('ruta', ['/', 'mi-cuenta', 'seguimiento']);
-    this.router.navigate(['/mi-cuenta', 'seguimiento']);
-  }
-
-  focusInput() {
-    this.isFocusedInput = true;
-  }
-
-  blurInput() {
-    this.isFocusedInput = false;
   }
 }
