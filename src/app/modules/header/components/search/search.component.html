@@ -99,18 +99,18 @@
                         menuSearch.toggle();
                         seleccionado = true;
                         blurInput();
-                        textToSearch = sugerencias[0].sugerencia
+                        textToSearch = sugerencias[0].suggestion
                       "
                       [routerLink]="[
                         '/',
                         'inicio',
                         'productos',
-                        sugerencias[0].sugerencia
+                        sugerencias[0].suggestion
                       ]"
                     >
                       <b class="text-uppercase" style="color: #094cac"
                         >Quizás esta buscando
-                        {{ sugerencias[0].sugerencia }}</b
+                        {{ sugerencias[0].suggestion }}</b
                       >...
                     </a>
                   </div>
@@ -125,13 +125,13 @@
                         menuSearch.toggle();
                         seleccionado = true;
                         blurInput();
-                        textToSearch = item.sugerencia
+                        textToSearch = item.suggestion
                       "
                       [routerLink]="[
                         '/',
                         'inicio',
                         'productos',
-                        item.sugerencia
+                        item.suggestion
                       ]"
                     >
                       <span
@@ -201,14 +201,14 @@
               <div class="item text-truncate">
                 <a
                   [routerLink]="'/inicio/productos/' + textToSearch"
-                  [queryParams]="{ filter_MARCA: item.marca }"
+                  [queryParams]="{ filter_MARCA: item.brand }"
                   (click)="
                     menuSearch.toggle(); blurInput(); seleccionado = false
                   "
                 >
                   <div class="row">
                     <div class="col-8">
-                      {{ item.marca | titlecase }}
+                      {{ item.brand | titlecase }}
                     </div>
                   </div>
                 </a>
@@ -248,40 +248,49 @@
                   </a>
                 </div>
                 <div style="color: #094cac">
-                  {{ item.marca | titlecase }}
+                  {{ item.brand | titlecase }}
                 </div>
                 <div class="nombre_producto">
-                  {{ item.nombre | titlecase }}
+                  {{ item.name | titlecase }}
                 </div>
                 <div style="font-size: 0.8rem; color: #b2b2b2">
                   SKU: {{ item.sku }}
                 </div>
                 <div class="row">
                   <div
-                    *ngIf="item?.precio?.precioComun == item?.precio?.precio"
+                    *ngIf="
+                      item?.priceInfo?.commonPrice ==
+                      item?.priceInfo?.customerPrice
+                    "
                     class="col-12 fw-bold"
                     style="color: #094cac; font-size: 1.4rem"
                   >
-                    {{ item?.precio?.precio | currencyFormat }}
+                    {{ item?.priceInfo?.customerPrice | currencyFormat }}
                     <em> c/iva </em>
                   </div>
 
                   <div
-                    *ngIf="item?.precio?.precioComun != item?.precio?.precio"
+                    *ngIf="
+                      item?.priceInfo?.commonPrice !=
+                      item?.priceInfo?.customerPrice
+                    "
                     class="text-danger fw-bold col-12"
                     style="font-size: 1.4rem"
                   >
-                    {{ item?.precio?.precio | currencyFormat }}
+                    {{ item?.priceInfo?.customerPrice | currencyFormat }}
                     <em> c/iva </em>
                   </div>
 
                   <div
-                    *ngIf="item?.precio?.precioComun != item?.precio?.precio"
+                    *ngIf="
+                      item?.priceInfo?.commonPrice !=
+                      item?.priceInfo?.customerPrice
+                    "
                     tooltip="Precio normal"
                     class="product-card__old-price col-12"
                     style="font-size: 1.3rem; line-height: 1rem"
                   >
-                    {{ item?.precio?.precioComun | currencyFormat }}
+                    {{ item?.priceInfo?.commonPrice | currencyFormat }}
                     <em> c/iva </em>
                     <br />
                   </div>

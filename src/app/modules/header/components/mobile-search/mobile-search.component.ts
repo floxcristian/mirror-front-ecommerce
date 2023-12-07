@@ -6,23 +6,30 @@ import {
   ElementRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { ProductsService } from '../../../../shared/services/products.service';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { RootService } from '../../../../shared/services/root.service';
 import { ToastrService } from 'ngx-toastr';
 
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CartService } from '../../../../shared/services/cart.service';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
-import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+import {
+  IArticleResponse,
+  IBrand,
+  ICategorySearch,
+  ISuggestion,
+} from '@core/models-v2/article/article-response.interface';
+import { ArticleService } from '@core/services-v2/article.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-mobile-search',
@@ -43,18 +50,14 @@ export class MobileSearchComponent implements OnInit {
 
   modalRef!: BsModalRef;
 
-  // Modal Tienda
-  templateTiendaModal!: TemplateRef<any>;
-  modalRefTienda!: BsModalRef;
-
-  texto = '';
-  textToSearch = '';
-  categorias: any[] = [];
-  marcas: any[] = [];
-  sugerencias: any[] = [];
-  productosEncontrados: any[] = [];
-  mostrarContenido = false;
-  mostrarCargando = false;
+  texto: string = '';
+  textToSearch: string = '';
+  categorias: ICategorySearch[] = [];
+  marcas: IBrand[] = [];
+  sugerencias: ISuggestion[] = [];
+  productosEncontrados: IArticleResponse[] = [];
+  mostrarContenido: boolean = false;
+  mostrarCargando: boolean = false;
   linkBusquedaProductos = '#';
   searchControl!: FormControl;
   private debounce = 100;
@@ -67,20 +70,23 @@ export class MobileSearchComponent implements OnInit {
   tiendaSeleccionada!: ITiendaLocation;
   seleccionado = false;
   isFocusedInput = false;
+  usuario!: ISession;
+  usuarioRef!: Subscription;
   constructor(
     private router: Router,
     private modalService: BsModalService,
-    private productsService: ProductsService,
     public root: RootService,
     private toastr: ToastrService,
     public cart: CartService,
     public menuCategorias: MenuCategoriasB2cService,
     public localS: LocalStorageService,
-    private logisticsService: LogisticsService,
     private cartService: CartService,
     private readonly gtmService: GoogleTagManagerService,
     // Service V2
-    private readonly geolocationService: GeolocationServiceV2
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly articleService: ArticleService,
+    private readonly sessionService: SessionService,
+    private readonly authStateService: AuthStateServiceV2
   ) {}
 
   ngOnInit() {
@@ -96,6 +102,13 @@ export class MobileSearchComponent implements OnInit {
           this.productosEncontrados = [];
         }
       });
+
+    //Usuario
+
+    this.usuario = this.sessionService.getSession();
+    this.usuarioRef = this.authStateService.session$.subscribe((user) => {
+      this.usuario = user;
+    });
 
     // Tienda seleccionada
 
@@ -124,12 +137,6 @@ export class MobileSearchComponent implements OnInit {
     this.buscando = true;
   }
 
-  onKeyPress(params: any) {
-    if (params.key === 'Backspace') {
-      this.back_key = false;
-    } else this.back_key = false;
-  }
-
   buscar() {
     this.gtmService.pushTag({
       event: 'search',
@@ -151,65 +158,55 @@ export class MobileSearchComponent implements OnInit {
     }, 500);
   }
 
-  buscarChasis() {
-    if (this.searchChasis.nativeElement.value.trim().length > 0) {
-      const textToSearch = this.searchChasis.nativeElement.value.trim();
-      this.router.navigate([`inicio/productos/todos`], {
-        queryParams: { chassis: textToSearch },
-      });
-    } else {
-      this.toastr.info('Debe ingresar un texto para buscar', 'Información');
-    }
-  }
-
   buscarSelect() {
     this.mostrarContenido = true;
     this.mostrarCargando = true;
     this.linkBusquedaProductos = this.textToSearch;
     if (!this.back_key && this.textToSearch.length > 3) {
       this.back_key = false;
-      this.productsService
-        .buscarProductosElactic(this.textToSearch)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(
-          (r: any) => {
-            if (!this.seleccionado) {
-              this.dropdown.open();
-            }
-
-            this.mostrarCargando = false;
-            this.categorias = r.categorias;
-            this.marcas = r.marcas;
-            this.productosEncontrados = r.articulos;
-            this.sugerencias = r.sugerencias;
-
-            if (this.productosEncontrados.length === 0) {
-              this.buscando = false;
-            }
-
-            this.categorias.map((item) => {
-              item.url = [
-                '/',
-                'inicio',
-                'productos',
-                this.textToSearch,
-                'categoria',
-                item.slug,
-              ];
-              if (typeof item.name === 'undefined') {
-                item.name = 'Sin categorias';
-              }
-            });
-
-            this.productosEncontrados.map((item) => {
-              item.url = ['/', 'inicio', 'productos', item.sku];
-            });
-          },
-          (error) => {
-            this.toastr.error('Error de conexión con el servidor de Elastic');
-            console.error('Error de conexión con el servidor de Elastic');
+      let params = {
+        word: this.textToSearch,
+        documentId: this.usuario.documentId || '0',
+        branchCode: this.tiendaSeleccionada.codigo,
+        showPrice: 1,
+      };
+      this.articleService.search(params).subscribe({
+        next: (res) => {
+          if (!this.seleccionado) {
+            this.dropdown.open();
           }
-        );
+          this.mostrarCargando = false;
+          this.categorias = res.categories;
+          this.marcas = res.brands;
+          this.productosEncontrados = res.articles;
+          this.sugerencias = res.suggestions;
+          if (this.productosEncontrados.length === 0) {
+            this.buscando = false;
+          }
+
+          this.categorias.map((item) => {
+            item.url = [
+              '/',
+              'inicio',
+              'productos',
+              this.textToSearch,
+              'categoria',
+              item.slug,
+            ];
+            if (typeof item.name === 'undefined') {
+              item.name = 'Sin categorias';
+            }
+          });
+
+          this.productosEncontrados.map((item) => {
+            item.url = ['/', 'inicio', 'productos', item.sku];
+          });
+        },
+        error: (err) => {
+          this.toastr.error('Error de conexión con el servidor de Elastic');
+          console.error('Error de conexión con el servidor de Elastic');
+        },
+      });
     }
   }
 
@@ -218,40 +215,6 @@ export class MobileSearchComponent implements OnInit {
       class: 'modal-xl modal-buscador',
     });
     this.root.setModalRefBuscador(this.modalRef);
-  }
-
-  // Mostrar client
-  abrirModalTiendas() {
-    this.modalRefTienda = this.modalService.show(this.templateTiendaModal);
-    this.logisticsService.obtenerTiendas().subscribe();
-  }
-
-  estableceModalTienda(template: any) {
-    this.templateTiendaModal = template;
-  }
-
-  clearbusquedaChasis() {
-    this.searchChasis.nativeElement.value = '';
-  }
-
-  focusSearchChasis() {
-    this.searchChasis.nativeElement.focus();
-  }
-
-  buscarGtag() {
-    this.gtmService.pushTag({
-      event: 'search',
-      busqueda: this.textToSearch,
-    });
-  }
-
-  async validarCuenta() {
-    this.localS.set('ruta', ['/', 'mi-cuenta', 'seguimiento']);
-    this.router.navigate(['/mi-cuenta', 'seguimiento']);
-  }
-
-  verificarCarro(template: any) {
-    template.toggle();
   }
 
   focusInput() {

@@ -306,12 +306,13 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
             branchCode: sucursal,
             pageSize: this.productosPorPagina,
             documentId: this.usuario.documentId,
+            showPrice: 1,
           };
         } else {
           parametros = {
             category: category,
             word: this.textToSearch,
-            ocation: this.preferenciaCliente.direccionDespacho?.comuna
+            location: this.preferenciaCliente.direccionDespacho?.comuna
               ? this.preferenciaCliente.direccionDespacho?.comuna
                   .normalize('NFD')
                   .replace(/[\u0300-\u036f]/g, '')
@@ -319,6 +320,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
             branchCode: sucursal,
             pageSize: this.productosPorPagina,
             documentId: this.usuario?.documentId,
+            showPrice: 1,
           };
         }
 
@@ -356,6 +358,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
               branchCode: tiendaSeleccionada.codigo,
               pageSize: this.productosPorPagina,
               documentId: this.usuario.documentId,
+              showPrice: 1,
             };
           } else {
             parametros = {
@@ -369,6 +372,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
               pageSize: this.productosPorPagina,
               branchCode: tiendaSeleccionada?.codigo,
               documentId: this.usuario?.documentId,
+              showPrice: 1,
             };
           }
           this.removableFilters = this.filterQuery;
