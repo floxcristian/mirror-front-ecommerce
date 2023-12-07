@@ -6,7 +6,7 @@ import {
   ElementRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { RootService } from '../../../../shared/services/root.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -74,6 +74,7 @@ export class MobileSearchComponent implements OnInit {
   usuarioRef!: Subscription;
   constructor(
     private router: Router,
+    private modalService: BsModalService,
     public root: RootService,
     private toastr: ToastrService,
     public cart: CartService,
@@ -207,6 +208,13 @@ export class MobileSearchComponent implements OnInit {
         },
       });
     }
+  }
+
+  mostraModalBuscador() {
+    this.modalRef = this.modalService.show(this.template, {
+      class: 'modal-xl modal-buscador',
+    });
+    this.root.setModalRefBuscador(this.modalRef);
   }
 
   focusInput() {

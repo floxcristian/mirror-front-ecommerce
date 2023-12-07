@@ -6,22 +6,17 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { ProductsService } from '../../../../shared/services/products.service';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import { RootService } from '../../../../shared/services/root.service';
-import { ToastrService } from 'ngx-toastr';
 
 import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CartService } from '../../../../shared/services/cart.service';
 import { Subject } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
 import { MobileMenuService } from '../../../../shared/services/mobile-menu.service';
 import { environment } from '@env/environment';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
-import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { GoogleTagManagerService } from 'angular-google-tag-manager';
 
 @Component({
   selector: 'app-mobile-header',
@@ -53,7 +48,6 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
   mostrarCargando = false;
   linkBusquedaProductos = '#';
   searchControl!: FormControl;
-  private debounce = 1000;
   buscando = true;
 
   mostrarResultados = false;
@@ -62,103 +56,16 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
     public menu: MobileMenuService,
     public menuCategorias: MenuCategoriasB2cService,
     private router: Router,
-    private modalService: BsModalService,
-    private productsService: ProductsService,
     public root: RootService,
-    private logisticsService: LogisticsService,
-    private toastr: ToastrService,
     public cart: CartService,
-    public localS: LocalStorageService,
-    private readonly gtmService: GoogleTagManagerService
+    public localS: LocalStorageService
   ) {}
 
-  ngOnInit() {
-    this.searchControl = new FormControl('');
-    this.searchControl.valueChanges
-      .pipe(debounceTime(this.debounce), distinctUntilChanged())
-      .subscribe((query) => {
-        if (query.trim() !== '') {
-          this.textToSearch = query;
-          this.buscarEnModal();
-        } else {
-          this.categorias = [];
-          this.productosEncontrados = [];
-        }
-      });
-  }
+  ngOnInit() {}
 
   ngOnDestroy() {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
-  }
-
-  buscar() {
-    this.gtmService.pushTag({
-      event: 'search',
-      busqueda: this.textToSearch,
-    });
-    this.router.navigate([`inicio/productos/${this.textToSearch}`]);
-    this.mostrarContenido = true;
-    this.mostrarCargando = true;
-    this.mostrarResultados = false;
-
-    setTimeout(() => {
-      this.dropdown.close();
-    }, 500);
-  }
-
-  buscarEnModal() {
-    this.mostrarContenido = true;
-    this.mostrarCargando = true;
-    this.linkBusquedaProductos = this.texto;
-    if (this.texto.length > 3) {
-      this.productsService.buscarProductosElactic(this.texto).subscribe(
-        (r: any) => {
-          this.mostrarCargando = false;
-          this.categorias = r.categorias;
-          this.marcas = r.marcas;
-          this.productosEncontrados = r.articulos;
-          this.sugerencias = r.sugerencias;
-
-          if (this.productosEncontrados.length === 0) {
-            this.buscando = false;
-          }
-
-          this.categorias.map((item: any) => {
-            item.url = [
-              '/',
-              'inicio',
-              'productos',
-              this.textToSearch,
-              'categoria',
-              item.slug,
-            ];
-            if (typeof item.name === 'undefined') {
-              item.name = 'Sin categorias';
-            }
-          });
-
-          this.productosEncontrados.map((item: any) => {
-            item.url = ['/', 'inicio', 'productos', 'ficha', item.sku];
-          });
-        },
-        (error) => {
-          this.toastr.error('Error de conexión con el servidor de Elastic');
-          console.error('Error de conexión con el servidor de Elastic');
-        }
-      );
-    }
-  }
-
-  buscarEnModalVin(event: any) {
-    if (this.numeroVIN.trim().length > 0) {
-      var textToSearch = this.numeroVIN.trim();
-      var data = `VIM__${textToSearch}`;
-
-      this.router.navigate([`inicio/productos/${data}`]);
-    } else {
-      this.toastr.info('Debe ingresar un texto para buscar', 'Información');
-    }
   }
 
   Hidebar() {
@@ -171,11 +78,6 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
     } else {
       return true;
     }
-  }
-
-  abrirModalTiendas() {
-    this.modalRefTienda = this.modalService.show(this.templateTiendaModal);
-    this.logisticsService.obtenerTiendas().subscribe();
   }
 
   estableceModalTienda(template: any) {
