@@ -32,6 +32,13 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+import {
+  IArticleResponse,
+  IBrand,
+  ICategorySearch,
+  ISuggestion,
+} from '@core/models-v2/article/article-response.interface';
+import { ArticleService } from '@core/services-v2/article.service';
 
 @Component({
   selector: 'app-header-search',
@@ -56,12 +63,12 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   templateTiendaModal!: TemplateRef<any>;
   modalRefTienda!: BsModalRef;
 
-  texto = '';
-  textToSearch = '';
-  categorias: any[] = [];
-  marcas: any[] = [];
-  sugerencias: any[] = [];
-  productosEncontrados: any[] = [];
+  texto: string = '';
+  textToSearch: string = '';
+  categorias: ICategorySearch[] = [];
+  marcas: IBrand[] = [];
+  sugerencias: ISuggestion[] = [];
+  productosEncontrados: IArticleResponse[] = [];
   mostrarContenido = false;
   mostrarCargando = false;
   linkBusquedaProductos = '#';
@@ -98,7 +105,8 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
-    private readonly geolocationService: GeolocationServiceV2
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly articleService: ArticleService
   ) {}
 
   ngOnInit() {
@@ -116,7 +124,6 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
       });
 
     this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    console.log('tiendaSeleccionada: ', this.tiendaSeleccionada);
 
     this.geolocationService.location$.subscribe({
       next: (res) => {
@@ -179,7 +186,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
       this.toastr.info('Debe ingresar un texto para buscar', 'Información');
       return;
     }
-    let search = this.textToSearch.replace('/', '%2F');
+    let search: string = this.textToSearch.replace('/', '%2F');
     this.router.navigateByUrl('inicio/productos/' + search);
     this.mostrarContenido = true;
     this.mostrarCargando = true;
@@ -190,73 +197,56 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     }, 500);
   }
 
-  buscarChasis() {
-    if (this.searchChasis.nativeElement.value.trim().length > 0) {
-      const textToSearch = this.searchChasis.nativeElement.value.trim();
-      this.router.navigate([`inicio/productos/todos`], {
-        queryParams: { chassis: textToSearch },
-      });
-    } else {
-      this.toastr.info('Debe ingresar un texto para buscar', 'Información');
-    }
-  }
-
   buscarSelect() {
     this.mostrarContenido = true;
     this.mostrarCargando = true;
     this.linkBusquedaProductos = this.textToSearch;
     if (!this.back_key && this.textToSearch.length > 3) {
       this.back_key = false;
-      this.productsService
-        .buscarProductosElactic(this.textToSearch)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(
-          (r: any) => {
-            if (!this.seleccionado) {
-              this.dropdown.open();
-            }
-
-            this.mostrarCargando = false;
-            this.categorias = r.categorias;
-            this.marcas = r.marcas;
-            this.productosEncontrados = r.articulos;
-            this.sugerencias = r.sugerencias;
-
-            if (this.productosEncontrados.length === 0) {
-              this.buscando = false;
-            }
-
-            this.categorias.map((item) => {
-              item.url = [
-                '/',
-                'inicio',
-                'productos',
-                this.textToSearch,
-                'categoria',
-                item.slug,
-              ];
-              if (typeof item.name === 'undefined') {
-                item.name = 'Sin categorias';
-              }
-            });
-
-            this.productosEncontrados.map((item) => {
-              item.url = ['/', 'inicio', 'productos', item.sku];
-            });
-          },
-          (error) => {
-            this.toastr.error('Error de conexión con el servidor de Elastic');
-            console.error('Error de conexión con el servidor de Elastic');
+      let params = {
+        word: this.textToSearch,
+        documentId: this.usuario.documentId || '0',
+        branchCode: this.tiendaSeleccionada.codigo,
+        showPrice: 1,
+      };
+      this.articleService.search(params).subscribe({
+        next: (res) => {
+          if (!this.seleccionado) {
+            this.dropdown.open();
           }
-        );
-    }
-  }
+          this.mostrarCargando = false;
+          this.categorias = res.categories;
+          this.marcas = res.brands;
+          this.productosEncontrados = res.articles;
+          this.sugerencias = res.suggestions;
+          if (this.productosEncontrados.length === 0) {
+            this.buscando = false;
+          }
 
-  mostraModalBuscador() {
-    this.modalRef = this.modalService.show(this.template, {
-      class: 'modal-xl modal-buscador',
-    });
-    this.root.setModalRefBuscador(this.modalRef);
+          this.categorias.map((item) => {
+            item.url = [
+              '/',
+              'inicio',
+              'productos',
+              this.textToSearch,
+              'categoria',
+              item.slug,
+            ];
+            if (typeof item.name === 'undefined') {
+              item.name = 'Sin categorias';
+            }
+          });
+
+          this.productosEncontrados.map((item) => {
+            item.url = ['/', 'inicio', 'productos', item.sku];
+          });
+        },
+        error: (err) => {
+          this.toastr.error('Error de conexión con el servidor de Elastic');
+          console.error('Error de conexión con el servidor de Elastic');
+        },
+      });
+    }
   }
 
   // Mostrar client
@@ -271,17 +261,6 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
 
   clearbusquedaChasis() {
     this.searchChasis.nativeElement.value = '';
-  }
-
-  focusSearchChasis() {
-    this.searchChasis.nativeElement.focus();
-  }
-
-  buscarGtag() {
-    this.gtmService.pushTag({
-      event: 'search',
-      busqueda: this.textToSearch,
-    });
   }
 
   async validarCuenta() {

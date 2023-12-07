@@ -82,6 +82,7 @@ export type IArticleResponse = IArticle & {
   tags: string[]; // *
   visible: number; // *
   lineBoss: ILineBoss; //*
+  url?: string[];
 };
 
 export interface ISearchResponse {
@@ -112,7 +113,7 @@ export interface IBrand {
 export interface ICategorySearch {
   name: string;
   slug: string;
-  url: string;
+  url: string | string[];
   id: number;
   level: number;
   count: number;
