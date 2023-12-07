@@ -23,7 +23,6 @@ import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import {
   ShippingAddress,
   ShippingService,
-  ShippingStore,
   ShippingDateItem,
 } from '../../../../shared/interfaces/address';
 import { Usuario } from '../../../../shared/interfaces/login';
@@ -51,11 +50,11 @@ import {
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
-import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
+import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 
 export let browserRefresh = false;
 declare let dataLayer: any;
@@ -144,7 +143,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   loadingCotizacion = false;
   direccionConfigurada!: PreferenciasCliente;
 
-  stores!: IStore[];
+  stores: IStore[] = [];
 
   constructor(
     public cart: CartService,
@@ -416,20 +415,18 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       data_usuario = this.userSession.email;
     }
 
-    this.geolocationApiService.getStores().subscribe({
-      next: (res) => {
-        this.stores = res;
+    this.geolocationService.stores$.subscribe({
+      next: (stores) => {
+        this.stores = stores;
         this.TiendasCargadas = true;
 
+        // Poner tienda seleccionada al comienzo de la lista.
+        const selectedStore = this.geolocationService.getSelectedStore();
         const tiendaActual = this.stores.find((store) => {
-          const selectedStore = this.geolocationService.getSelectedStore();
-          const selectedStoreCode = selectedStore.codigo
-            .toUpperCase()
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '');
-          return store.code === selectedStoreCode;
+          return store.code === selectedStore.codigo;
         });
 
+        // Hacer algo..
         if (tiendaActual) {
           const tiendas = this.stores.filter(
             (store) => store.id != tiendaActual.id
@@ -438,56 +435,10 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
           this.stores = tiendas;
           this.selectedShippingIdStore = tiendaActual.id;
           this.tempShippingIdStore = this.selectedShippingIdStore;
-
           this.obtieneRetiro(false);
         }
       },
     });
-
-    /*
-    this.logistics
-      .obtieneDireccionesTiendaRetiro({ usuario: this.userSession.documentId })
-      .subscribe(
-        (r: ResponseApi) => {
-          r.data.todos.map((item: ShippingStore) => {
-            item.direccionCompleta = `${item.nombre}`;
-          });
-          this.shippingStore = r.data.todos;
-
-          // seteamos que las tiendas ya fueron cargadas.
-          this.TiendasCargadas = true;
-
-          // Seleccionamos tienda actual y ademas lo colocamos en el primer lugar de la lista.
-          let tiendaActual = this.shippingStore.find((store) => {
-            const selectedStore = this.geoService.getTiendaSeleccionada();
-            return (
-              store.codigo.toUpperCase() ===
-              (selectedStore?.codigo || '')
-                .toUpperCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-            );
-          });
-
-          if (tiendaActual?.recid.length) {
-            var tiendas = this.shippingStore.filter(
-              (store) => store.recid != tiendaActual?.recid
-            );
-            tiendas.unshift(tiendaActual);
-
-            this.shippingStore = tiendas;
-            this.selectedShippingIdStore = tiendaActual.recid;
-            this.tempShippingIdStore = this.selectedShippingIdStore;
-
-            this.obtieneRetiro(false);
-          }
-        },
-        (e) => {
-          this.toast.error(
-            'Ha ocurrido un error en servicio al obtener las direcciones de la tiendas'
-          );
-        }
-      );*/
   }
 
   /**

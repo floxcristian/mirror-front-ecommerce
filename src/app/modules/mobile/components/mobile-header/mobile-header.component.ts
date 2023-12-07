@@ -22,6 +22,7 @@ import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categ
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
+import { ModalStoresComponent } from 'src/app/modules/header/components/modal-stores/modal-stores.component';
 
 @Component({
   selector: 'app-mobile-header',
@@ -37,11 +38,9 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
   @ViewChild('menuTienda', { static: false }) menuTienda!: DropdownDirective;
   destroy$: Subject<boolean> = new Subject<boolean>();
   logoSrc = environment.logoSrc;
-  modalRefTienda!: BsModalRef;
   modalRef!: BsModalRef;
   modalRefVin!: BsModalRef;
   isFocusedInput: boolean = false;
-  templateTiendaModal!: TemplateRef<any>;
   texto: any = '';
   numeroVIN: any = '';
   textToSearch: any = '';
@@ -192,12 +191,8 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
   }
 
   abrirModalTiendas() {
-    this.modalRefTienda = this.modalService.show(this.templateTiendaModal);
+    this.modalService.show(ModalStoresComponent);
     this.logisticsService.obtenerTiendas().subscribe();
-  }
-
-  estableceModalTienda(template: any) {
-    this.templateTiendaModal = template;
   }
 
   async validarCuenta() {

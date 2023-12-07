@@ -190,8 +190,8 @@
                     [clearable]="false"
                     [searchable]="true"
                     [items]="stores"
-                    bindLabel="direccionCompleta"
-                    bindValue="recid"
+                    bindLabel="name"
+                    bindValue="id"
                     class="form-control-select form-control-lg"
                     [(ngModel)]="selectedShippingIdStore"
                     placeholder="Seleccione una tienda"
@@ -205,12 +205,12 @@
                       let-index="index"
                     >
                       <p>
-                        <b>{{ item.direccionCompleta }}</b>
+                        <b>{{ item.name }}</b>
                       </p>
 
                       <p style="margin-top: -10px">
                         <span class="text-justify">
-                          <small>{{ item.direccion }}</small></span
+                          <small>{{ item.address }}</small></span
                         >
                       </p>
                     </ng-template>

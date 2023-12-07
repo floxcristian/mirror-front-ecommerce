@@ -12,7 +12,10 @@
           style="margin-top: 4.5px"
           (click)="menuCategorias.open(null, null)"
         >
-          <i class="fa-regular fa-bars hamburguesa" style="font-size: 17px"></i>
+          <i
+            class="fa-regular fa-bars hamburguesa"
+            style="font-size: 17px"
+          ></i>
         </button>
         <a class="mobile-header__logo me-auto" [routerLink]="['/', 'inicio']">
           <img
@@ -172,7 +175,8 @@
                       ]"
                     >
                       <b class="text-uppercase" style="font-size: 1.1rem"
-                        >Quizás esta buscando {{ sugerencias[0].sugerencia }}</b
+                        >Quizás esta buscando
+                        {{ sugerencias[0].sugerencia }}</b
                       >...
                     </a>
                   </div>
@@ -202,7 +206,10 @@
                   </div>
                 </div>
               </div>
-              <div class="col-12 mt-2" style="border-bottom: 1px solid #094cac">
+              <div
+                class="col-12 mt-2"
+                style="border-bottom: 1px solid #094cac"
+              >
                 <div
                   class="categories-list-search"
                   *ngIf="productosEncontrados.length > 0"
@@ -227,7 +234,10 @@
                   </div>
                 </div>
               </div>
-              <div class="col-12 mt-2" style="border-bottom: 1px solid #094cac">
+              <div
+                class="col-12 mt-2"
+                style="border-bottom: 1px solid #094cac"
+              >
                 <div
                   class="fw-bold text-uppercase"
                   style="
@@ -392,7 +402,3 @@
     </div>
   </div>
 </ng-template>
-<app-modal-stores
-  (template)="estableceModalTienda($event)"
-  [modalRef]="modalRefTienda"
-></app-modal-stores>

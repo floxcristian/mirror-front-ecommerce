@@ -1,7 +1,7 @@
 // Angular
 import { Injectable } from '@angular/core';
 // Rxjs
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 // Models
 import {
   IGeolocation,
@@ -12,6 +12,7 @@ import { DEFAULT_LOCATION } from './default-location';
 // Services
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 import { GeolocationApiService } from './geolocation-api.service';
+import { IStore } from './models/store.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,13 @@ export class GeolocationServiceV2 {
   private locationSubject: Subject<IGeolocation> = new Subject();
   readonly location$: Observable<IGeolocation> =
     this.locationSubject.asObservable();
+
+  private storesSubject: BehaviorSubject<IStore[]> = new BehaviorSubject<
+    IStore[]
+  >([]);
+  readonly stores$: Observable<IStore[]> = this.storesSubject.asObservable();
+
+  // FIXME: quitar dependencia de esta variable.
   geolocation!: IGeolocation;
 
   constructor(
@@ -32,7 +40,23 @@ export class GeolocationServiceV2 {
    * @returns
    */
   setDefaultLocation(): IGeolocation {
-    this.geolocation = DEFAULT_LOCATION;
+    const stores = this.storesSubject.value;
+    const defaultStore = stores.find((store) => store.default);
+    if (defaultStore) {
+      this.geolocation = {
+        esNuevaUbicacion: false,
+        obtenida: false,
+        esSeleccionaPorCliente: false,
+        actual: { lat: defaultStore.lat, lon: defaultStore.lng },
+        tiendaSelecciona: {
+          zona: defaultStore.zone,
+          codigo: defaultStore.code,
+        },
+      };
+    } else {
+      this.geolocation = DEFAULT_LOCATION;
+    }
+    console.log('1::::');
     this.geolocationStorage.set(this.geolocation);
     return this.geolocation;
   }
@@ -48,6 +72,7 @@ export class GeolocationServiceV2 {
     zona: string;
     codigo: string;
   }): void {
+    console.log('2::::');
     const { lat, lon, zona, codigo } = params;
     this.geolocation = {
       esNuevaUbicacion: false,
@@ -68,6 +93,7 @@ export class GeolocationServiceV2 {
    * @returns
    */
   getSelectedStore(): ITiendaLocation {
+    console.log('3::::');
     let geolocation = this.geolocationStorage.get();
     if (geolocation) {
       this.geolocation = geolocation;
@@ -78,7 +104,22 @@ export class GeolocationServiceV2 {
     }
   }
 
-  getGeolocation(): void {
+  /**
+   * Se llama solo una vez en el app.component.
+   */
+  initGeolocation(): void {
+    console.log('4::::');
+    console.log('initGeolocation...');
+    this.geolocationApiService.getStores().subscribe({
+      next: (stores) => {
+        this.storesSubject.next(stores);
+        let geolocation = this.geolocationStorage.get();
+        if (!geolocation) {
+          geolocation = this.setDefaultLocation();
+        }
+      },
+    });
+
     let geolocation = this.geolocationStorage.get();
     if (geolocation) {
       this.geolocation = geolocation;
@@ -98,6 +139,7 @@ export class GeolocationServiceV2 {
    * Establecer tienda más cercana.
    */
   private setNearestStore(): void {
+    console.log('5::::');
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;

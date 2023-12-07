@@ -1,18 +1,13 @@
-import {
-  Component,
-  OnInit,
-  ElementRef,
-  Input,
-  ViewChild,
-  EventEmitter,
-  AfterViewInit,
-  Output,
-} from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+// Angular
+import { Component, OnInit } from '@angular/core';
+// Rxjs
 import { Subscription } from 'rxjs';
+// Libs
+import { BsModalRef } from 'ngx-bootstrap/modal';
+// Services
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+// Models
 import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
-import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 
 @Component({
@@ -20,71 +15,44 @@ import { IStore } from '@core/services-v2/geolocation/models/store.interface';
   templateUrl: './modal-stores.component.html',
   styleUrls: ['./modal-stores.component.scss'],
 })
-export class ModalStoresComponent implements OnInit, AfterViewInit {
-  @ViewChild('modalTemplate', { static: false }) modalTemplate!: ElementRef;
-  @Input() modalRef!: BsModalRef;
-  @Output() template = new EventEmitter<any>();
-
+export class ModalStoresComponent implements OnInit {
   tiendas!: IStore[];
   tienda!: ITiendaLocation;
-  tiendaTemporal!: any;
+  tiendaTemporal: any = null;
   geoLocationServicePromise!: Subscription;
   subscriptions: Subscription[] = [];
-  i = 0;
 
   constructor(
     // Services V2
-    private readonly geolocationService: GeolocationServiceV2,
-    private readonly geolocationApiService: GeolocationApiService
+    public readonly modalRef: BsModalRef,
+    private readonly geolocationService: GeolocationServiceV2
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.tienda = this.geolocationService.getSelectedStore();
 
-    this.geolocationApiService.getStores().subscribe({
-      next: (res) => {
-        this.tiendas = res;
+    this.geolocationService.stores$.subscribe({
+      next: (stores) => {
+        this.tiendas = stores;
       },
     });
-    /*this.logisticsService.obtenerTiendas().subscribe((r: ResponseApi) => {
-      this.tiendas = r.data;
-    });*/
 
     this.geoLocationServicePromise =
       this.geolocationService.location$.subscribe({
         next: (res) => {
+          console.log('location$: ', res);
           this.tienda = this.geolocationService.getSelectedStore();
         },
       });
-
-    /*
-    this.geoLocationServicePromise =
-      this.geoLocationService.localizacionObs$.subscribe(
-        (r) => (this.tienda = this.geoLocationService.getTiendaSeleccionada())
-      );*/
   }
 
-  ngAfterViewInit(): void {
-    this.template.emit(this.modalTemplate);
-  }
-
-  ngOndestroy() {
+  ngOndestroy(): void {
     this.geoLocationServicePromise
       ? this.geoLocationServicePromise.unsubscribe()
       : '';
   }
 
-  estebleceTienda() {}
-
-  cambiarTienda() {
-    const tienda = this.tiendaTemporal;
-    const coord = {
-      lat: this.tiendaTemporal.lat,
-      lon: this.tiendaTemporal.lon,
-    };
-
-    console.log('cambiarTienda: ', this.tiendaTemporal);
-
+  cambiarTienda(): void {
     this.geolocationService.setGeolocation({
       lat: this.tiendaTemporal.lat || 0,
       lon: this.tiendaTemporal.lng || 0,
