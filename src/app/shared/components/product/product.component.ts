@@ -255,7 +255,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('product2x: ', this.product);
     this.isMobile();
     window.onresize = () => {
       this.isMobile();
@@ -337,7 +336,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   getPopularProducts(): void {
-    console.log('getPopularProducts(false)...');
     this.estado = false;
   }
 
@@ -476,7 +474,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   verPreciosEscala(): void {
     // TODO: mostrar precios escala locales:
-    console.log('precios escalax: ');
     this.modalService.show(ModalScalePriceComponent, {
       class: 'modal-dialog-centered',
       initialState: {

@@ -376,6 +376,7 @@
             <ng-container *ngIf="product.price">
               <div class="row">
                 <div class="col-md-12">
+                  <!-- // test -->
                   <span
                     *ngIf="product?.priceInfo?.documentId != ''"
                     tooltip="Precio con descuento cliente"
@@ -396,7 +397,7 @@
                   >
 
                   <span
-                    *ngIf="product.priceInfo.commonPrice != product.price"
+                    *ngIf="product.priceInfo.commonPrice != product.priceInfo.price"
                     tooltip="Precio normal"
                     class="product__old-price me-2"
                     [ngStyle]="{
@@ -406,14 +407,9 @@
                   >
 
                   <span class="text-civa">
-                    {{
-                      !isVacio(usuario.preferences.iva)
-                        ? usuario.preferences.iva
-                          ? 'c/iva'
-                          : 's/iva'
-                        : 'c/iva'
-                    }}</span
-                  >
+                    {{ usuario.preferences.iva ? 'c/iva' : 's/iva' }}
+                  </span>
+
                 </div>
               </div>
             </ng-container>
@@ -541,7 +537,6 @@
     </div>
 
     <!-- MOBILE -->
-    <pre> estado: {{ estado }}</pre>
     <!-- Información Ficha -->
     <div
       *ngIf="showMobile"
@@ -579,13 +574,9 @@
                   >
 
                   <span class="text-civa">
-                    {{
-                      !isVacio(usuario.preferences.iva)
-                        ? usuario.preferences.iva
-                          ? 'c/iva'
-                          : 's/iva'
-                        : 'c/iva'
-                    }}</span
+                    {{ usuario.preferences.iva ? 'c/iva' : 's/iva' }}
+                  </span>
+
                   >
                 </div>
               </div>
