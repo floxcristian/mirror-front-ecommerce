@@ -6,7 +6,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { RootService } from '../../../../shared/services/root.service';
 
 import { FormControl } from '@angular/forms';
@@ -17,6 +17,7 @@ import { MobileMenuService } from '../../../../shared/services/mobile-menu.servi
 import { environment } from '@env/environment';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { ModalStoresComponent } from 'src/app/modules/header/components/modal-stores/modal-stores.component';
 
 @Component({
   selector: 'app-mobile-header',
@@ -58,7 +59,8 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
     private router: Router,
     public root: RootService,
     public cart: CartService,
-    public localS: LocalStorageService
+    public localS: LocalStorageService,
+    private modalService: BsModalService
   ) {}
 
   ngOnInit() {}
@@ -79,8 +81,8 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
       return true;
     }
   }
-  estableceModalTienda(template: any) {
-    this.templateTiendaModal = template;
 
-  }
+  // abrirModalTiendas() {
+  //   this.modalService.show(ModalStoresComponent);
+  // }
 }

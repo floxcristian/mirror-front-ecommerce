@@ -47,7 +47,6 @@ export class MobileSearchComponent implements OnInit {
   dropdown!: DropdownDirective;
 
   destroy$: Subject<boolean> = new Subject<boolean>();
-
   modalRef!: BsModalRef;
 
   texto: string = '';
