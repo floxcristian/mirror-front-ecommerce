@@ -17,7 +17,13 @@
   ></app-loading-element>
   <div class="row mb-3">
     <div class="col-12">
-      <!-- <app-map (clearAdress)="clearAddress()" [tienda]="tienda" [autocompletado]="autocompletado" (setDireccion)="set_direccion($event)" (geolocalizacion)="geolocalizacion($event)"></app-map> -->
+      <app-map
+        (clearAdress)="clearAddress()"
+        [tienda]="tienda"
+        [autocompletado]="autocompletado"
+        (setDireccion)="set_direccion($event)"
+        (geolocalizacion)="geolocalizacion($event)"
+      ></app-map>
     </div>
   </div>
   <form (ngSubmit)="agregarDireccion()" [formGroup]="formDireccion">

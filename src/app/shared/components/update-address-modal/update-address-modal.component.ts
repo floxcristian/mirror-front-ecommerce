@@ -6,13 +6,15 @@ import {
   Validators,
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Direccion } from '../../interfaces/cliente';
-import { ResponseApi } from '../../interfaces/response-api';
-import { ClientsService } from '../../services/clients.service';
-import { LogisticsService } from '../../services/logistics.service';
 import { DireccionMap } from '../map/map.component';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { SessionService } from '@core/states-v2/session.service';
+import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
+import { CustomerAddressService } from '@core/services-v2/customer-address.service';
+import { AddressType } from '@core/enums/address-type.enum';
+import { IError } from '@core/models-v2/error/error.interface';
+import { LogisticService } from '@core/services-v2/logistic.service';
+import { ICity, ILocation } from '@core/models-v2/logistic/city.interface';
 
 @Component({
   selector: 'app-update-address-modal',
@@ -21,12 +23,12 @@ import { SessionService } from '@core/states-v2/session.service';
 })
 export class UpdateAddressModalComponent implements OnInit {
   @Input() modalUpdateAddressRef!: BsModalRef;
-  @Input() direccion!: Direccion;
+  @Input() direccion!: ICustomerAddress;
   @Output() respuesta = new EventEmitter<boolean>();
 
   comunas!: any[];
-  coleccionComuna!: any[];
-  localidades!: any[];
+  coleccionComuna!: ICity[];
+  localidades!: ILocation[];
   address!: DireccionMap | null;
   formDireccion!: FormGroup;
   autocompletado = true;
@@ -34,39 +36,39 @@ export class UpdateAddressModalComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private logisticsService: LogisticsService,
-    private clientsService: ClientsService,
     private toastr: ToastrService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly customerAddressService: CustomerAddressService,
+    private readonly logisticService: LogisticService
   ) {}
 
   ngOnInit(): void {
     this.loadComunas();
 
-    const { calle, numero, comuna, localidad } = this.direccion;
-    const comunaArr = comuna.split('@');
+    const { street, number, city, location } = this.direccion;
+    const comunaArr = city.split('@');
 
     this.address = {
-      direccion: `${calle} ${numero}`,
-      zona: `${comunaArr[0]} ${localidad}`,
+      direccion: `${street} ${number}`,
+      zona: `${comunaArr[0]} ${location}`,
     };
 
     this.formDireccion = this.fb.group({
-      calle: new FormControl(this.direccion.calle, {
+      calle: new FormControl(this.direccion.street, {
         validators: [Validators.required],
       }),
-      depto: new FormControl(this.direccion.deptocasa),
-      numero: new FormControl(this.direccion.numero, {
+      depto: new FormControl(this.direccion.departmentHouse),
+      numero: new FormControl(this.direccion.number, {
         validators: [Validators.required],
       }),
       comuna: new FormControl(null, {
         validators: [Validators.required],
       }),
-      localizacion: new FormControl(this.direccion.localidad),
+      localizacion: new FormControl(this.direccion.location),
       latitud: new FormControl(this.direccion.lat),
       longitud: new FormControl(this.direccion.lng),
-      referencia: new FormControl(this.direccion.referencia),
+      referencia: new FormControl(this.direccion.reference),
     });
   }
 
@@ -142,11 +144,11 @@ export class UpdateAddressModalComponent implements OnInit {
       nombre = this.quitarAcentos(nombre);
 
       const result = this.localidades.find(
-        (data) => this.quitarAcentos(data.localidad) === nombre
+        (data) => this.quitarAcentos(data.location) === nombre
       );
 
-      if (result && result.localidad) {
-        this.formDireccion.controls['localizacion'].setValue(result.localidad);
+      if (result && result.location) {
+        this.formDireccion.controls['localizacion'].setValue(result.location);
       }
     }
   }
@@ -195,41 +197,34 @@ export class UpdateAddressModalComponent implements OnInit {
     const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
 
     const direccion: any = {
-      recid: this.direccion.recid,
-      rut: usuario.documentId,
-      tipo: 'DES',
+      addressId: this.direccion.id,
+      documentId: usuario.documentId,
+      addressType: AddressType.DELIVERY,
       region: comunaArr[2],
-      comuna: comunaArr[0],
-      numero: numero.toString(),
-      provincia: comunaArr[1],
-      direccion: calle,
-      localidad: localizacion,
-      latitud: latitud.toString(),
-      longitud: longitud.toString(),
-      deptoCasa: depto,
-      referencia,
-      codPostal: '0',
-      codEmpleado: 0,
-      codUsuario: 0,
-      cuentaUsuario: usuario.username,
-      rutUsuario: usuario.documentId,
-      nombreUsuario: `${usuario.firstName} ${usuario.lastName}`,
+      city: comunaArr[0],
+      number: numero.toString(),
+      province: comunaArr[1],
+      street: calle,
+      location: localizacion,
+      latitude: latitud,
+      longitude: longitud,
+      departmentOrHouse: depto,
+      reference: referencia,
     };
 
-    const resultado: ResponseApi = (await this.clientsService
-      .actualizaDireccion(direccion)
-      .toPromise()) as ResponseApi;
-
-    if (resultado.error) {
-      this.toastr.error('Ocurrió un error al actualizar la dirección');
-      this.respuesta.emit(false);
-      this.modalUpdateAddressRef.hide();
-    } else {
-      this.toastr.success('Se actualizó la dirección correctamente');
-      this.respuesta.emit(true);
-      this.modalUpdateAddressRef.hide();
-    }
-    this.loadingForm = false;
+    this.customerAddressService.updateAddress(direccion).subscribe({
+      next: (_) => {
+        this.toastr.success('Se actualizó la dirección correctamente');
+        this.respuesta.emit(true);
+        this.modalUpdateAddressRef.hide();
+        this.loadingForm = false;
+      },
+      error: (err: IError) => {
+        this.toastr.error('Ocurrió un error al actualizar la dirección');
+        this.respuesta.emit(false);
+        this.modalUpdateAddressRef.hide();
+      },
+    });
   }
 
   cargarDireccion() {
@@ -247,17 +242,17 @@ export class UpdateAddressModalComponent implements OnInit {
   }
 
   loadComunas() {
-    this.logisticsService.obtieneComunas().subscribe(
-      (r: any) => {
-        this.coleccionComuna = r.data;
-        this.comunas = r.data.map((record: any) => {
+    this.logisticService.getCities().subscribe(
+      (data) => {
+        this.coleccionComuna = data;
+        this.comunas = data.map((record) => {
           const v =
-            record.comuna + '@' + record.provincia + '@' + record.region;
-          return { id: v, value: record.comuna };
+            record.city + '@' + record.provinceCode + '@' + record.regionCode;
+          return { id: v, value: record.city };
         });
 
         const comuna = this.comunas.find(
-          (c) => c.value === this.direccion.comuna
+          (c) => c.value === this.direccion.city
         );
         if (comuna) {
           this.formDireccion.controls['comuna'].setValue(comuna.id);
@@ -273,10 +268,10 @@ export class UpdateAddressModalComponent implements OnInit {
     const localidades: any[] = [];
     const comunaArr = event.id.split('@');
     const comunas = this.coleccionComuna.filter(
-      (comuna) => comuna.comuna == comunaArr[0]
+      (comuna) => comuna.city == comunaArr[0]
     );
     comunas.map((comuna) =>
-      comuna.localidades.map((localidad: any) => localidades.push(localidad))
+      comuna.localities.map((localidad: any) => localidades.push(localidad))
     );
     this.localidades = localidades;
   }

@@ -2,15 +2,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import {
-  CargoContacto,
-  CargosContactoResponse,
-} from '../../interfaces/cargoContacto';
-import { ResponseApi } from '../../interfaces/response-api';
-import { ClientsService } from '../../services/clients.service';
 import { rutPersonaValidator, rutValidator } from '../../utils/utilidades';
 import { getDomainsToAutocomplete } from './domains-autocomplete';
-import { SessionService } from '@core/states-v2/session.service';
+import { CustomerContactService } from '@core/services-v2/customer-contact.service';
+import { IContactPosition } from '@core/models-v2/customer/contact-position.interface';
+import { IError } from '@core/models-v2/error/error.interface';
 
 @Component({
   selector: 'app-add-contact-modal',
@@ -23,7 +19,7 @@ export class AddContactModalComponent implements OnInit {
 
   formContacto!: FormGroup;
   domains: any[] = [];
-  cargos: CargoContacto[] = [];
+  cargos: IContactPosition[] = [];
   tipo_fono = '+569';
   loadingForm = false;
 
@@ -31,9 +27,8 @@ export class AddContactModalComponent implements OnInit {
     public ModalRef: BsModalRef,
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private clientsService: ClientsService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly customerContactService: CustomerContactService
   ) {}
 
   ngOnInit(): void {
@@ -54,57 +49,39 @@ export class AddContactModalComponent implements OnInit {
   }
 
   getCargos() {
-    this.clientsService
-      .getCargosContacto()
-      .subscribe((response: CargosContactoResponse) => {
-        if (!response.error) {
-          this.cargos = response.data;
-        }
-      });
+    this.customerContactService.getPositions().subscribe((response) => {
+      this.cargos = response;
+    });
   }
 
   registrarContacto(email: any) {
     this.loadingForm = true;
     const data: any = { ...this.formContacto.value };
     const emailValidado = email.inputValue;
-    const usuario = this.sessionService.getSession();
 
     const request: any = {
-      rut: usuario.documentId,
-      contactRut: data.contactRut,
-      nombre: data.nombre,
-      apellido: data.apellido,
-      funcion: 'COM',
-      mail: emailValidado,
-      telefono: this.tipo_fono + data.telefono,
-      cargo: data.cargo,
-      codEmpleado: 0,
-      codUsuario: 0,
-      cuentaUsuario: usuario.username,
-      rutUsuario: usuario.documentId,
-      nombreUsuario: `${usuario.firstName} ${usuario.lastName}`,
+      documentId: data.contactRut,
+      name: data.nombre,
+      lastName: data.apellido,
+      email: emailValidado,
+      phone: this.tipo_fono + data.telefono,
+      position: data.cargo,
     };
 
-    this.clientsService.nuevoContacto(request).subscribe(
-      (response: ResponseApi) => {
-        if (!response.error) {
-          this.toastr.success('Contacto creado correctamente.');
-          this.respuesta.emit(true);
-          this.modalAddContactRef.hide();
-        } else {
-          this.toastr.error(response.msg);
-          this.respuesta.emit(false);
-          this.modalAddContactRef.hide();
-        }
+    this.customerContactService.createContact(request).subscribe({
+      next: (_) => {
+        this.toastr.success('Contacto creado correctamente.');
+        this.respuesta.emit(true);
+        this.modalAddContactRef.hide();
         this.loadingForm = false;
       },
-      (error) => {
-        this.toastr.error(error.error.msg);
+      error: (err: IError) => {
+        this.toastr.error(err.message);
         this.respuesta.emit(false);
-        this.ModalRef.hide();
+        this.modalAddContactRef.hide();
         this.loadingForm = false;
-      }
-    );
+      },
+    });
   }
 
   Select_fono(tipo: any) {

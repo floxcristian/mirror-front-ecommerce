@@ -23,11 +23,15 @@ export interface ITokenResponse {
 
 export type IUserRole =
   | 'superadmin'
-  | 'supervisor'
   | 'comprador'
   | 'cms'
   | 'compradorb2c'
-  | 'temp';
+  | 'temp'
+  // Ecommerce corporativo V2
+  | 'supervisor'
+  | 'b2c'
+  | 'buyer'
+  | 'b2b_request';
 
 export interface IUserEssentials {
   documentId: string;

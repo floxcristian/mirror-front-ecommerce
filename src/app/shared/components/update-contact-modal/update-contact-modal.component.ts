@@ -8,13 +8,6 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import {
-  CargoContacto,
-  CargosContactoResponse,
-} from '../../interfaces/cargoContacto';
-import { Contacto } from '../../interfaces/cliente';
-import { ResponseApi } from '../../interfaces/response-api';
-import { ClientsService } from '../../services/clients.service';
 import { getDomainsToAutocomplete } from './domains-autocomplete';
 import {
   isVacio,
@@ -24,6 +17,10 @@ import {
 import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete/angular-email-autocomplete.component';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { SessionService } from '@core/states-v2/session.service';
+import { ICustomerContact } from '@core/models-v2/customer/customer.interface';
+import { CustomerContactService } from '@core/services-v2/customer-contact.service';
+import { IContactPosition } from '@core/models-v2/customer/contact-position.interface';
+import { IError } from '@core/models-v2/error/error.interface';
 
 @Component({
   selector: 'app-update-contact-modal',
@@ -32,23 +29,23 @@ import { SessionService } from '@core/states-v2/session.service';
 })
 export class UpdateContactModalComponent implements OnInit {
   @Input() modalUpdateContactRef!: BsModalRef;
-  @Input() contacto!: Contacto;
+  @Input() contacto!: ICustomerContact;
   @Output() respuesta = new EventEmitter<boolean>();
   @ViewChild('emailValidate', { static: true })
   email!: AngularEmailAutocompleteComponent;
 
   formContacto!: FormGroup;
   domains: any[] = [];
-  cargos: CargoContacto[] = [];
+  cargos: IContactPosition[] = [];
   tipo_fono = '+569';
   loadingForm = false;
 
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private clientsService: ClientsService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly customerContactService: CustomerContactService
   ) {}
 
   ngOnInit(): void {
@@ -59,11 +56,11 @@ export class UpdateContactModalComponent implements OnInit {
 
   formDefault() {
     let largo = 8;
-    if (this.contacto.telefono === undefined) {
-      this.contacto.telefono = '';
+    if (this.contacto.phone === undefined) {
+      this.contacto.phone = '';
       this.tipo_fono = '+569';
     } else {
-      if (this.contacto.telefono.slice(0, 4) === '+569') {
+      if (this.contacto.phone.slice(0, 4) === '+569') {
         largo = 8;
         this.tipo_fono = '+569';
       } else {
@@ -74,36 +71,30 @@ export class UpdateContactModalComponent implements OnInit {
 
     this.formContacto = this.fb.group({
       contactRut: [
-        this.contacto.contactRut,
+        this.contacto.documentId,
         [Validators.required, rutValidator, rutPersonaValidator],
       ],
-      nombre: [this.contacto.nombre, Validators.required],
-      apellido: [this.contacto.apellido, Validators.required],
+      nombre: [this.contacto.name, Validators.required],
+      apellido: [this.contacto.lastName, Validators.required],
       telefono: [
-        this.contacto.telefono === '0'
-          ? ''
-          : this.contacto.telefono.slice(-largo),
+        this.contacto.phone === '0' ? '' : this.contacto.phone.slice(-largo),
       ],
       cargo: [, Validators.required],
     });
     this.email.inputValue =
-      this.contacto.correo === '0' ? '' : this.contacto.correo || '';
-    this.email.correoValido = this.contacto.correo === '0' ? false : true;
-    if (this.contacto.contactRut && this.contacto.contactRut !== '') {
+      this.contacto.email === '0' ? '' : this.contacto.email || '';
+    this.email.correoValido = this.contacto.email === '0' ? false : true;
+    if (this.contacto.documentId && this.contacto.documentId !== '') {
       this.formContacto.get('contactRut')?.disable();
     }
     this.Select_fono(this.tipo_fono);
   }
 
   getCargos() {
-    this.clientsService
-      .getCargosContacto()
-      .subscribe((response: CargosContactoResponse) => {
-        if (!response.error) {
-          this.cargos = response.data;
-          this.formContacto.controls['cargo'].setValue(this.contacto.cargo);
-        }
-      });
+    this.customerContactService.getPositions().subscribe((response) => {
+      this.cargos = response;
+      this.formContacto.controls['cargo'].setValue(this.contacto.position);
+    });
   }
 
   actualizarContacto(email: any) {
@@ -115,49 +106,34 @@ export class UpdateContactModalComponent implements OnInit {
     if (data.telefono !== '' || emailValidado !== '') {
       if (!isVacio(usuario)) {
         const request: any = {
-          contactoId: this.contacto.contactoId,
-          rut: usuario.documentId,
-
-          nombre: data.nombre,
-          apellido: data.apellido,
-          funcion: 'COM',
-          mail: emailValidado,
-          telefono: this.tipo_fono + data.telefono,
-          cargo: data.cargo,
-
-          codEmpleado: 0,
-          codUsuario: 0,
-          cuentaUsuario: usuario.username,
-          rutUsuario: usuario.documentId,
-          nombreUsuario: `${usuario.firstName} ${usuario.lastName}`,
+          documentId: data.contactRut,
+          name: data.nombre,
+          lastName: data.apellido,
+          email: emailValidado,
+          phone: this.tipo_fono + data.telefono,
+          position: data.cargo,
         };
 
         if (this.formContacto.get('contactRut')?.status !== 'DISABLED') {
           request.contactRut = data.contactRut;
         } else {
-          request.contactRut = this.contacto.contactRut;
+          request.contactRut = this.contacto.documentId;
         }
 
-        this.clientsService.actualizaContacto(request).subscribe(
-          (response: ResponseApi) => {
-            if (!response.error) {
-              this.toastr.success('Contacto actualizado correctamente.');
-              this.respuesta.emit(true);
-              this.modalUpdateContactRef.hide();
-            } else {
-              this.toastr.error(response.msg);
-              this.respuesta.emit(false);
-              this.modalUpdateContactRef.hide();
-            }
+        this.customerContactService.updateContact(request).subscribe({
+          next: (res) => {
+            this.toastr.success('Contacto actualizado correctamente.');
+            this.respuesta.emit(true);
+            this.modalUpdateContactRef.hide();
             this.loadingForm = false;
           },
-          (error) => {
-            this.toastr.error(error.error.msg);
+          error: (err: IError) => {
+            this.toastr.error(err.message);
             this.respuesta.emit(false);
             this.modalUpdateContactRef.hide();
             this.loadingForm = false;
-          }
-        );
+          },
+        });
       } else {
         this.toastr.error(
           'Ocurrió un error al obtener los datos de su sesión.'
