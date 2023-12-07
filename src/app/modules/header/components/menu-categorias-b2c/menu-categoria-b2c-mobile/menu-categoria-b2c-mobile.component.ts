@@ -15,6 +15,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { ModalStoresComponent } from '../../modal-stores/modal-stores.component';
 @Component({
   selector: 'app-menu-categoria-b2c-mobile',
   templateUrl: './menu-categoria-b2c-mobile.component.html',
@@ -25,8 +26,6 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
   items: NavigationLink[] = [];
   items_oficial: any[] = [];
   isOpen = false;
-  templateTiendaModal!: TemplateRef<any>;
-  modalRefTienda!: BsModalRef;
   tiendaSeleccionada!: ITiendaLocation;
   private categoriaDetalle: any;
   private arrayCategorias: NavigationLink[] = [];
@@ -214,7 +213,7 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
 
   // Mostrar client
   abrirModalTiendas() {
-    this.modalRefTienda = this.modalService.show(this.templateTiendaModal);
+    this.modalService.show(ModalStoresComponent);
     this.logisticsService.obtenerTiendas().subscribe();
   }
 
@@ -224,9 +223,6 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
     this.router.navigate(['/mi-cuenta', 'seguimiento']);
   }
 
-  estableceModalTienda(template: any) {
-    this.templateTiendaModal = template;
-  }
   //datos tienda oficial
   formatCategories2(data: CategoryApi[]) {
     for (const primeraCategoria of data) {

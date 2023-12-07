@@ -34,6 +34,7 @@ import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { MenuService } from '@core/services-v2/menu/menu.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { ModalStoresComponent } from 'src/app/modules/header/components/modal-stores/modal-stores.component';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -48,10 +49,6 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
   @ViewChild(DropdownDirective, { static: false })
   dropdown!: DropdownDirective;
   modalLoginRef!: BsModalRef;
-
-  // Modal Tienda
-  templateTiendaModal!: TemplateRef<any>;
-  modalRefTienda!: BsModalRef;
 
   isOpen = false;
   // accountLinks: MobileMenuItem[] = [];
@@ -298,11 +295,7 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
   }
 
   abrirModalTiendas() {
-    this.modalRefTienda = this.modalService.show(this.templateTiendaModal);
-  }
-
-  estableceModalTienda(template: any) {
-    this.templateTiendaModal = template;
+    this.modalService.show(ModalStoresComponent);
   }
 
   modificarDireccionDespacho() {

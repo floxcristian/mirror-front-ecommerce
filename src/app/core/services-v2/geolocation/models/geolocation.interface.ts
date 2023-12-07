@@ -1,4 +1,15 @@
-// Revisar
+/*************************************************
+ * V2
+ *************************************************/
+export interface ISelectedStore {
+  latitude: number;
+  longitude: number;
+}
+
+/*************************************************
+ * V1
+ *************************************************/
+
 export interface IGeolocation {
   obtenida: boolean; // *
   esNuevaUbicacion: boolean; // *

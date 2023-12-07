@@ -39,6 +39,7 @@ import {
   ISuggestion,
 } from '@core/models-v2/article/article-response.interface';
 import { ArticleService } from '@core/services-v2/article.service';
+import { ModalStoresComponent } from '../modal-stores/modal-stores.component';
 
 @Component({
   selector: 'app-header-search',
@@ -61,7 +62,6 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Modal Tienda
   templateTiendaModal!: TemplateRef<any>;
-  modalRefTienda!: BsModalRef;
 
   texto: string = '';
   textToSearch: string = '';
@@ -250,13 +250,10 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // Mostrar client
-  abrirModalTiendas() {
-    this.modalRefTienda = this.modalService.show(this.templateTiendaModal);
+  abrirModalTiendas(): void {
+    this.modalService.show(ModalStoresComponent);
+    // FIXME:...
     this.logisticsService.obtenerTiendas().subscribe();
-  }
-
-  estableceModalTienda(template: any) {
-    this.templateTiendaModal = template;
   }
 
   clearbusquedaChasis() {

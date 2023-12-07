@@ -178,7 +178,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.geolocationService.getGeolocation();
+      this.geolocationService.initGeolocation();
 
       this.zone.runOutsideAngular(() => {
         setTimeout(() => {

@@ -32,12 +32,12 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
   @ViewChild('menuTienda', { static: false }) menuTienda!: DropdownDirective;
   destroy$: Subject<boolean> = new Subject<boolean>();
   logoSrc = environment.logoSrc;
-  modalRefTienda!: BsModalRef;
   modalRef!: BsModalRef;
   modalRefVin!: BsModalRef;
   isFocusedInput: boolean = false;
   templateTiendaModal!: TemplateRef<any>;
   texto: string = '';
+
   numeroVIN: any = '';
   textToSearch: string = '';
   categorias: any[] = [];
@@ -79,8 +79,8 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
       return true;
     }
   }
-
   estableceModalTienda(template: any) {
     this.templateTiendaModal = template;
+
   }
 }
