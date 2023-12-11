@@ -106,7 +106,9 @@ export class UpdateContactModalComponent implements OnInit {
     if (data.telefono !== '' || emailValidado !== '') {
       if (!isVacio(usuario)) {
         const request: any = {
+          customerDocumentId: usuario.documentId,
           documentId: data.contactRut,
+          contactId: this.contacto.id,
           name: data.nombre,
           lastName: data.apellido,
           email: emailValidado,
@@ -115,9 +117,9 @@ export class UpdateContactModalComponent implements OnInit {
         };
 
         if (this.formContacto.get('contactRut')?.status !== 'DISABLED') {
-          request.contactRut = data.contactRut;
+          request.documentId = data.contactRut;
         } else {
-          request.contactRut = this.contacto.documentId;
+          request.documentId = this.contacto.documentId;
         }
 
         this.customerContactService.updateContact(request).subscribe({

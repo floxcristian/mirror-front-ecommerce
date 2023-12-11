@@ -7,6 +7,8 @@ import { getDomainsToAutocomplete } from './domains-autocomplete';
 import { CustomerContactService } from '@core/services-v2/customer-contact.service';
 import { IContactPosition } from '@core/models-v2/customer/contact-position.interface';
 import { IError } from '@core/models-v2/error/error.interface';
+import { SessionService } from '@core/states-v2/session.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-add-contact-modal',
@@ -22,16 +24,20 @@ export class AddContactModalComponent implements OnInit {
   cargos: IContactPosition[] = [];
   tipo_fono = '+569';
   loadingForm = false;
+  usuario!: ISession;
 
   constructor(
     public ModalRef: BsModalRef,
     private fb: FormBuilder,
     private toastr: ToastrService,
+    // Storage
+    private readonly sessionService: SessionService,
     // Services V2
     private readonly customerContactService: CustomerContactService
   ) {}
 
   ngOnInit(): void {
+    this.usuario = this.sessionService.getSession();
     this.domains = getDomainsToAutocomplete();
     this.getCargos();
     this.formDefault();
@@ -60,6 +66,7 @@ export class AddContactModalComponent implements OnInit {
     const emailValidado = email.inputValue;
 
     const request: any = {
+      customerDocumentId: this.usuario.documentId,
       documentId: data.contactRut,
       name: data.nombre,
       lastName: data.apellido,

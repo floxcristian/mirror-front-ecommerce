@@ -28,6 +28,7 @@ export class CustomerContactService {
   }
 
   createContact(params: {
+    customerDocumentId: string;
     documentId: string;
     name: string;
     lastName: string;
@@ -35,8 +36,16 @@ export class CustomerContactService {
     phone: string;
     email: string;
   }) {
-    const { documentId, name, lastName, position, phone, email } = params;
-    return this.http.put(`${API_CUSTOMER}/${documentId}/contact`, {
+    const {
+      customerDocumentId,
+      documentId,
+      name,
+      lastName,
+      position,
+      phone,
+      email,
+    } = params;
+    return this.http.post(`${API_CUSTOMER}/${customerDocumentId}/contact`, {
       documentId,
       name,
       lastName,
@@ -47,6 +56,7 @@ export class CustomerContactService {
   }
 
   updateContact(params: {
+    customerDocumentId: string;
     documentId: string;
     contactId: string;
     name: string;
@@ -55,10 +65,18 @@ export class CustomerContactService {
     phone: string;
     email: string;
   }) {
-    const { documentId, contactId, name, lastName, position, phone, email } =
-      params;
+    const {
+      customerDocumentId,
+      documentId,
+      contactId,
+      name,
+      lastName,
+      position,
+      phone,
+      email,
+    } = params;
     return this.http.put(
-      `${API_CUSTOMER}/${documentId}/contact/${contactId}`,
+      `${API_CUSTOMER}/${customerDocumentId}/contact/${contactId}`,
       {
         documentId,
         name,
@@ -70,9 +88,9 @@ export class CustomerContactService {
     );
   }
 
-  deleteContact(documentId: string, contactId: string) {
+  deleteContact(customerDocumentId: string, contactId: string) {
     return this.http.delete(
-      `${API_CUSTOMER}/${documentId}/contact/${contactId}`
+      `${API_CUSTOMER}/${customerDocumentId}/contact/${contactId}`
     );
   }
 }

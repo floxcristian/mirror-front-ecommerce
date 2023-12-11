@@ -51,7 +51,7 @@ export class PageProfileComponent implements OnDestroy, OnInit {
   dataClient!: ICustomer;
   addresses!: ICustomerAddress[];
   contacts!: ICustomerContact[];
-  direccionDespacho!: ShippingAddress | null | undefined;
+  direccionDespacho!: ICustomerAddress | null | undefined;
 
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
@@ -281,7 +281,7 @@ export class PageProfileComponent implements OnDestroy, OnInit {
   }
 
   esEmpresa(): boolean {
-    return esEmpresa(this.usuario);
+    return esEmpresa(this.dataUser);
   }
 
   modificarDireccionDespacho() {

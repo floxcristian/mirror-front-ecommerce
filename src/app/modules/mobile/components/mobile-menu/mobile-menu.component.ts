@@ -34,6 +34,7 @@ import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { MenuService } from '@core/services-v2/menu/menu.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -60,7 +61,7 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
   logoSrc = environment.logoSrcWhite;
   usuario!: ISession | null;
   isB2B: boolean;
-  direccion!: ShippingAddress | undefined | null;
+  direccion!: ICustomerAddress | undefined | null;
   isVacio = isVacio;
   innerWidth: number;
   despachoCliente!: Subscription;

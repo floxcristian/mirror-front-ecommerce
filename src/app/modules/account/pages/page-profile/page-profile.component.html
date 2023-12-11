@@ -131,7 +131,7 @@
           <div class="col-7 d-flex align-items-center">
             <div class="text-start">
               {{
-                direccionDespacho?.calle + ' ' + direccionDespacho?.numero
+                direccionDespacho?.street + ' ' + direccionDespacho?.number
                   | capitalizeFirst
               }}
             </div>
@@ -291,7 +291,9 @@
     </div>
   </div>
 
-  <ng-container *ngIf="usuario.userRole != 'compradorb2c'">
+  <ng-container
+    *ngIf="usuario.userRole != 'compradorb2c' && usuario.userRole != 'b2c'"
+  >
     <div class="col-lg-12 mb-3" *ngIf="esEmpresa()">
       <div class="card">
         <div class="card-body card-body-min-height-loading">
