@@ -23,7 +23,6 @@ import { LogisticsService } from '../../../../shared/services/logistics.service'
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
-import { ShippingAddress } from '../../../../shared/interfaces/address';
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { DireccionDespachoComponent } from '../search-vin-b2b/components/direccion-despacho/direccion-despacho.component';
@@ -32,6 +31,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 
 @Component({
   selector: 'app-header-search',
@@ -77,7 +77,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   seleccionado = false;
   isFocusedInput = false;
 
-  direccion!: ShippingAddress | any;
+  direccion!: ICustomerAddress | any;
   despachoClienteRef!: Subscription;
   isVacio = isVacio;
   usuario!: ISession;
