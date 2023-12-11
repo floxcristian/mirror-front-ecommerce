@@ -312,8 +312,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           parametros = {
             category: category,
             word: this.textToSearch,
-            location: this.preferenciaCliente.direccionDespacho?.comuna
-              ? this.preferenciaCliente.direccionDespacho?.comuna
+            ocation: this.preferenciaCliente.direccionDespacho?.city
+              ? this.preferenciaCliente.direccionDespacho?.city
                   .normalize('NFD')
                   .replace(/[\u0300-\u036f]/g, '')
               : '',
@@ -364,8 +364,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
             parametros = {
               category: '',
               word: this.textToSearch,
-              location: this.preferenciaCliente.direccionDespacho?.comuna
-                ? this.preferenciaCliente.direccionDespacho?.comuna
+              location: this.preferenciaCliente.direccionDespacho?.city
+                ? this.preferenciaCliente.direccionDespacho?.city
                     .normalize('NFD')
                     .replace(/[\u0300-\u036f]/g, '')
                 : '',
@@ -443,7 +443,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     });
 
     this.despachoCliente = this.logistic.direccionCliente$.subscribe((r) => {
-      this.parametrosBusqueda.location = r.comuna
+      this.parametrosBusqueda.location = r.city
         ? r.comuna.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
         : '';
       this.preferenciaCliente.direccionDespacho = r;
@@ -509,8 +509,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         this.preferenciaCliente.direccionDespacho
       ) {
         this.parametrosBusqueda.location = this.preferenciaCliente
-          .direccionDespacho.comuna
-          ? this.preferenciaCliente.direccionDespacho.comuna
+          .direccionDespacho.city
+          ? this.preferenciaCliente.direccionDespacho.city
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
           : '';
@@ -598,7 +598,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           branchCode: codigo,
           location:
             this.preferenciaCliente.direccionDespacho != null
-              ? this.preferenciaCliente.direccionDespacho.comuna
+              ? this.preferenciaCliente.direccionDespacho.city
                   .normalize('NFD')
                   .replace(/[\u0300-\u036f]/g, '')
               : '',

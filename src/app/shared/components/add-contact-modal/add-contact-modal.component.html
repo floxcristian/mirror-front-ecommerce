@@ -13,7 +13,7 @@
 <div class="modal-body">
   <app-loading-element
     *ngIf="loadingForm"
-    [text]="'Registrando Dirección'"
+    [text]="'Registrando Contacto'"
   ></app-loading-element>
   <form [formGroup]="formContacto">
     <div class="row">
@@ -45,8 +45,8 @@
             [clearable]="false"
             [searchable]="true"
             [items]="cargos"
-            bindLabel="titleid"
-            bindValue="titleid"
+            bindLabel="titleId"
+            bindValue="titleId"
             formControlName="cargo"
             class="form-control-select"
             placeholder="Cargo *"

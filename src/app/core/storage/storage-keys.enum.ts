@@ -24,4 +24,5 @@ export enum StorageKey {
   favoritos = 'favoritos',
   wishlistItems = 'wishlistItems',
   utm_campaign = 'utm_campaign',
+  tokens = '_t',
 }

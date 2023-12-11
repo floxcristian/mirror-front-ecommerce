@@ -6,13 +6,13 @@ import { Router } from '@angular/router';
 import { SlugifyPipe } from '../pipes/slugify.pipe';
 // Services
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { LogisticsService } from './logistics.service';
 // Interfaces
-import { Product } from '../interfaces/product';
 import { PreferenciasCliente } from '../interfaces/preferenciasCliente';
 import { isVacio } from '../utils/utilidades';
 import { SessionService } from '@core/states-v2/session.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
+import { CustomerAddressService } from '@core/services-v2/customer-address.service';
+import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -28,9 +28,9 @@ export class RootService {
     public decimal: DecimalPipe,
     private localS: LocalStorageService,
     private router: Router,
-    private logisticsService: LogisticsService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly customerAddressService: CustomerAddressService
   ) {
     this.setDataTableBasic();
   }
@@ -96,11 +96,11 @@ export class RootService {
     }
     if (isVacio(preferencias.direccionDespacho)) {
       const usuario = this.sessionService.getSession(); //this.getDataSesionUsuario();
-      const resp: any = await this.logisticsService
-        .obtieneDireccionesCliente(usuario.documentId)
-        .toPromise();
-      if (resp.data.length > 0) {
-        preferencias.direccionDespacho = resp.data[0];
+      const resp = (await this.customerAddressService
+        .getDeliveryAddresses(usuario.documentId)
+        .toPromise()) as ICustomerAddress[];
+      if (resp.length > 0) {
+        preferencias.direccionDespacho = resp[0];
       }
     }
     this.localS.set('preferenciasCliente', preferencias);

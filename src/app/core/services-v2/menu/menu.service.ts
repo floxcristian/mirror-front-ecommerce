@@ -123,7 +123,7 @@ export class MenuService {
         MenuItem.TRACKING_ITEM_MENU(),
         MenuItem.LOGOUT_ITEM_MENU(),
       ];
-    } else if (profile === 'comprador') {
+    } else if (profile === 'comprador' || profile === 'buyer') {
       menuItems = [
         MenuItem.OVERVIEW_ITEM_MENU(),
         MenuItem.PROFILE_ITEM_MENU(),
@@ -188,7 +188,7 @@ export class MenuService {
       ];
     } else if (profile === 'cms') {
       menuItems = [MenuItem.LOGOUT_ITEM_MENU()];
-    } else if (profile === 'compradorb2c') {
+    } else if (profile === 'compradorb2c' || profile === 'b2c') {
       menuItems = [
         MenuItem.OVERVIEW_ITEM_MENU(),
         MenuItem.PROFILE_ITEM_MENU(),

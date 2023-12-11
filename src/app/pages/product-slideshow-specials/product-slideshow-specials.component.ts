@@ -167,7 +167,7 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     if ((look || 0) > -1) especials = especials?.substr(0, look);
 
     if (this.preferenciaCliente && this.preferenciaCliente.direccionDespacho)
-      localidad = this.preferenciaCliente.direccionDespacho.comuna
+      localidad = this.preferenciaCliente.direccionDespacho.city
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '');
 

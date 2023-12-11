@@ -254,7 +254,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
       obj.rut = this.user.documentId;
     }
     if (this.preferenciaCliente && this.preferenciaCliente.direccionDespacho)
-      obj.localidad = this.preferenciaCliente.direccionDespacho.comuna
+      obj.localidad = this.preferenciaCliente.direccionDespacho.city
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '');
     this.productoService.getRecommendedProductsList(obj).subscribe(

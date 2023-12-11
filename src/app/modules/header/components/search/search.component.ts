@@ -23,7 +23,6 @@ import { LogisticsService } from '../../../../shared/services/logistics.service'
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
-import { ShippingAddress } from '../../../../shared/interfaces/address';
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { DireccionDespachoComponent } from '../search-vin-b2b/components/direccion-despacho/direccion-despacho.component';
@@ -40,6 +39,7 @@ import {
 } from '@core/models-v2/article/article-response.interface';
 import { ArticleService } from '@core/services-v2/article.service';
 import { ModalStoresComponent } from '../modal-stores/modal-stores.component';
+import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 
 @Component({
   selector: 'app-header-search',
@@ -84,7 +84,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   seleccionado = false;
   isFocusedInput = false;
 
-  direccion!: ShippingAddress | any;
+  direccion!: ICustomerAddress | any;
   despachoClienteRef!: Subscription;
   isVacio = isVacio;
   usuario!: ISession;

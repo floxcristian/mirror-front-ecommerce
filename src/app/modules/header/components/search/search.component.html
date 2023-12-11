@@ -354,10 +354,10 @@
             style="margin-top: -4px"
           >
             {{
-              ((direccion.calle + ' ' + direccion.numero).length > 10
-                ? (direccion.calle + ' ' + direccion.numero).substring(0, 8) +
+              ((direccion.street + ' ' + direccion.number).length > 10
+                ? (direccion.street + ' ' + direccion.number).substring(0, 8) +
                   '...'
-                : direccion.calle + ' ' + direccion.numero
+                : direccion.street + ' ' + direccion.number
               ) | titlecase
             }}
           </span>

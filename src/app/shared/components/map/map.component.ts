@@ -11,6 +11,7 @@ import {
   NgZone,
 } from '@angular/core';
 import { GoogleMap, MapGeocoder } from '@angular/google-maps';
+import { environment } from '@env/environment';
 
 export interface DireccionMap {
   direccion: string;
@@ -47,6 +48,8 @@ export class MapComponent implements OnInit, OnChanges {
   @Output() public setDireccion = new EventEmitter<any>();
   @ViewChild(GoogleMap, { static: false }) map!: GoogleMap;
 
+  autocomplete!: google.maps.places.Autocomplete;
+
   constructor(
     private ref: ChangeDetectorRef,
     private ngZone: NgZone,
@@ -67,17 +70,20 @@ export class MapComponent implements OnInit, OnChanges {
         lat: -36.79975467819392,
         lng: -71.49897587245773,
       });
-      let autocomplete = new google.maps.places.Autocomplete(
+
+      const country = environment.country;
+      this.autocomplete = new google.maps.places.Autocomplete(
         this.searchElementRef.nativeElement,
         {
           types: ['address'],
-          componentRestrictions: { country: 'cl' },
+          componentRestrictions: { country: country },
         }
       );
-      autocomplete.setFields(['address_component', 'geometry']);
-      autocomplete.addListener('place_changed', () => {
+      this.autocomplete.setFields(['address_component', 'geometry']);
+      this.autocomplete.addListener('place_changed', () => {
         this.ngZone.run(() => {
-          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+          let place: google.maps.places.PlaceResult =
+            this.autocomplete.getPlace();
           if (place.geometry === undefined || place.geometry === null) return;
           this.setDireccion.emit([
             place.address_components,
@@ -96,6 +102,7 @@ export class MapComponent implements OnInit, OnChanges {
       });
     }
   }
+
   async ngOnChanges() {
     if (this.tienda && this.tienda.direccion != '') {
       this.geocoder

@@ -2,8 +2,10 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { ClientsService } from '../../services/clients.service';
 import { PasswordValidator } from '../../validations/password';
+import { CustomerService } from '@core/services-v2/customer.service';
+import { IError } from '@core/models-v2/error/error.interface';
+import { SessionStorageService } from '@core/storage/session-storage.service';
 
 @Component({
   selector: 'app-password-modal',
@@ -25,7 +27,9 @@ export class PasswordModalComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private clientsService: ClientsService
+    // Services V2
+    private readonly sessionStorage: SessionStorageService,
+    private readonly customerService: CustomerService
   ) {
     this.formPassword = this.fb.group(
       {
@@ -40,16 +44,27 @@ export class PasswordModalComponent implements OnInit {
   }
 
   ngOnInit() {}
+
   async cambiarPassword() {
     let data = this.formPassword.value;
 
-    let resp: any = await this.clientsService.changePassword(data);
-    if (!resp.error) {
-      this.modalPasswordRef.hide();
-      this.toastr.success(resp.msg);
-    } else {
-      this.toastr.error(resp.msg);
-    }
+    const user = this.sessionStorage.get();
+    const request = {
+      documentId: user?.documentId ?? '',
+      username: user?.username ?? '',
+      currentPassword: data.password,
+      newPassword: data.pwd,
+    };
+
+    this.customerService.updatePassword(request).subscribe({
+      next: (_) => {
+        this.modalPasswordRef.hide();
+        this.toastr.success('Contraseña actualizada con éxito');
+      },
+      error: (err: IError) => {
+        this.toastr.error(err.message);
+      },
+    });
   }
 
   cambiarEstado(input: any) {
