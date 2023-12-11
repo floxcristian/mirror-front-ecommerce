@@ -312,7 +312,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           parametros = {
             category: category,
             word: this.textToSearch,
-            ocation: this.preferenciaCliente.direccionDespacho?.city
+            location: this.preferenciaCliente.direccionDespacho?.city
               ? this.preferenciaCliente.direccionDespacho?.city
                   .normalize('NFD')
                   .replace(/[\u0300-\u036f]/g, '')
