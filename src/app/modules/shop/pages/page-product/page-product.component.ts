@@ -299,7 +299,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
       };
 
       if (this.preferenciaCliente.direccionDespacho !== null)
-        params.location = this.preferenciaCliente.direccionDespacho.comuna
+        params.location = this.preferenciaCliente.direccionDespacho.location
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '');
 

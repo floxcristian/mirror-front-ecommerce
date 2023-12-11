@@ -183,7 +183,6 @@ export class ArticleService {
     );
   }
 
-  // FIXME: enviar el token de mejor manera
   guardarComentarioArticulo(request: IComment) {
     const { calification, title, comment, recommended } = request;
     const body = {
@@ -192,21 +191,7 @@ export class ArticleService {
       comment,
       recommended,
     };
-
-    let auth_token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb3VyY2UiOiJlY29tbWVyY2UiLCJkb2N1bWVudElkIjoiMTUyMTMwODQtOCIsInVzZXJuYW1lIjoiY2xhdWRpby5tb250b3lhQGJpb3BjLmNsIiwidXNlclJvbGUiOiJzdXBlcnZpc29yIiwiaWF0IjoxNzAxODcyMzY5LCJleHAiOjE3MzM0Mjk5Njl9.9efvYK4FLveiqUIprbFNX38bOIDxeiyN1v5bZXPvUwY';
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${auth_token}`,
-      accept: 'application/json',
-    });
-    const requestOptions = { headers: headers };
-
-    return this.http.post(
-      `${API_ARTICLE}/${request.sku}/evaluation`,
-      body,
-      requestOptions
-    );
+    return this.http.post(`${API_ARTICLE}/${request.sku}/evaluation`,body);
   }
   getDetalleComentarios(
     sku: string,
