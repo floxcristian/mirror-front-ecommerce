@@ -101,7 +101,7 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada.code;
     const localidad = this.preferenciasCliente?.direccionDespacho
-      ? this.preferenciasCliente.direccionDespacho.comuna
+      ? this.preferenciasCliente.direccionDespacho.city
       : '';
     this.csmService.getHomePage(rut, sucursal, localidad).subscribe({
       next: (res) => {

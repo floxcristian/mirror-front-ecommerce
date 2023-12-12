@@ -7,9 +7,11 @@ import {
 } from '@angular/forms';
 import { LogisticsService } from '../../services/logistics.service';
 import { ToastrService } from 'ngx-toastr';
-import { ClientsService } from '../../services/clients.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { SessionService } from '@core/states-v2/session.service';
+import { CustomerAddressService } from '@core/services-v2/customer-address.service';
+import { IError } from '@core/models-v2/error/error.interface';
+import { AddressType } from '@core/enums/address-type.enum';
 
 @Component({
   selector: 'app-address-modal',
@@ -33,9 +35,9 @@ export class AddressModalComponent implements OnInit {
     private fb: FormBuilder,
     private logisticsService: LogisticsService,
     private toastr: ToastrService,
-    private clientsService: ClientsService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly customerAddressService: CustomerAddressService
   ) {
     this.formDireccion = this.fb.group({
       calle: new FormControl(
@@ -177,39 +179,33 @@ export class AddressModalComponent implements OnInit {
     const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
 
     const direccion = {
-      rut: usuario.documentId,
-      tipo: 'DES',
+      documentId: usuario.documentId,
+      addressType: AddressType.DELIVERY,
       region: comunaArr[2],
-      comuna: comunaArr[0],
-      numero: numero.toString(),
-      provincia: comunaArr[1],
-      direccion: calle,
-      localidad: localizacion,
-      latitud: latitud.toString(),
-      longitud: longitud.toString(),
-      deptoCasa: depto,
-      referencia,
-      codPostal: '0',
-      codEmpleado: 0,
-      codUsuario: 0,
-      cuentaUsuario: usuario.username,
-      rutUsuario: usuario.documentId,
-      nombreUsuario: `${usuario.firstName} ${usuario.lastName}`,
+      city: comunaArr[0],
+      number: numero.toString(),
+      province: comunaArr[1],
+      street: calle,
+      location: localizacion,
+      latitude: latitud,
+      longitude: longitud,
+      departmentOrHouse: depto,
+      reference: referencia,
     };
 
-    const resultado = await this.clientsService
-      .addAdreess(direccion)
-      .toPromise();
-
-    if (resultado?.error) {
-      this.toastr.error('No se logro agregar la direccion');
-      this.respuesta.emit(false);
-    } else {
-      this.toastr.success('Se agrego con exito la dirección');
-      this.respuesta.emit(true);
-      this.modalAddressRef.hide();
-    }
-    this.loadingForm = false;
+    this.customerAddressService.createAddress(direccion).subscribe({
+      next: (_) => {
+        this.toastr.success('Se agrego con exito la dirección');
+        this.respuesta.emit(true);
+        this.modalAddressRef.hide();
+        this.loadingForm = false;
+      },
+      error: (err: IError) => {
+        this.toastr.error('No se logro agregar la direccion');
+        this.respuesta.emit(false);
+        this.loadingForm = false;
+      },
+    });
   }
 
   cargarDireccion() {

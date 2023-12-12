@@ -37,6 +37,7 @@ import { ArticleService } from '@core/services-v2/article.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 declare const $: any;
 declare let fbq: any;
 
@@ -48,7 +49,7 @@ declare let fbq: any;
 export class PageProductComponent implements OnInit, OnDestroy {
   //TODO: FINAL
   categories = categories;
-  product!: Product | undefined | any;
+  product!: IArticleResponse | undefined | any;
   recommendedProducts: IArticleResponse[] = [];
   matrixProducts: IArticleResponse[] = [];
   relatedProducts: IArticleResponse[] = [];
@@ -136,7 +137,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
     @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
     private router: Router,
-    private productoService: ProductsService,
     private toastr: ToastrService,
     public root: RootService,
     private capitalize: CapitalizeFirstPipe,
@@ -227,8 +227,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
         const sku = params.id.split('-').reverse()[0];
         // this.getDetailProduct(sku);
-        console.log('PRODUCTS: ', this.product);
-
         this.getDetailArticle(sku);
         this.getMixProducts(sku);
         // this.getMatrixProducts(sku);
@@ -260,80 +258,42 @@ export class PageProductComponent implements OnInit, OnDestroy {
     this.showMobile = window.innerWidth < this.puntoQuiebre;
   }
 
-  setBreadcrumbs(product: any) {
+  setBreadcrumbs(product: IArticle) {
     this.breadcrumbs = [];
     this.breadcrumbs.push({ label: 'Inicio', url: ['/', 'inicio'] });
-    if (this.paramsCategory.firstCategory !== '') {
-      const cat = this.root.replaceAll(
-        this.paramsCategory.firstCategory,
-        /-/g
-      );
-      // tslint:disable-next-line: max-line-length
-      this.breadcrumbs.push({
-        label: this.capitalize.transform(cat),
-        url: [
-          '/',
-          'inicio',
-          'productos',
-          'todos',
-          'categoria',
-          this.paramsCategory.firstCategory,
-        ],
-      });
-    }
 
-    if (this.paramsCategory.secondCategory !== '') {
-      const cat = this.root.replaceAll(
-        this.paramsCategory.secondCategory,
-        /-/g
-      );
-      // tslint:disable-next-line: max-line-length
-      this.breadcrumbs.push({
-        label: this.capitalize.transform(cat),
-        url: [
-          '/',
-          'inicio',
-          'productos',
-          'todos',
-          'categoria',
-          this.paramsCategory.firstCategory,
-          this.paramsCategory.secondCategory,
-        ],
-      });
-    }
-
-    if (this.paramsCategory.thirdCategory !== '') {
-      const cat = this.root.replaceAll(
-        this.paramsCategory.thirdCategory,
-        /-/g
-      );
-      // tslint:disable-next-line: max-line-length
-      this.breadcrumbs.push({
-        label: this.capitalize.transform(cat),
-        url: [
-          '/',
-          'inicio',
-          'productos',
-          'todos',
-          'categoria',
-          this.paramsCategory.firstCategory,
-          this.paramsCategory.secondCategory,
-          this.paramsCategory.thirdCategory,
-        ],
-      });
-    }
-
+    // Funcion auxiliar para agregar categorias al breadcrumb
+    const addCategory = (category: string, path: string[]) => {
+      if (category !== '') {
+        const cat = this.root.replaceAll(category, /-/g);
+        this.breadcrumbs.push({
+          label: this.capitalize.transform(cat),
+          url: ['/', 'inicio', 'productos', 'todos', 'categoria', ...path],
+        });
+      }
+    };
+    addCategory(this.paramsCategory.firstCategory, [
+      this.paramsCategory.firstCategory,
+    ]);
+    addCategory(this.paramsCategory.secondCategory, [
+      this.paramsCategory.firstCategory,
+      this.paramsCategory.secondCategory,
+    ]);
+    addCategory(this.paramsCategory.thirdCategory, [
+      this.paramsCategory.firstCategory,
+      this.paramsCategory.secondCategory,
+      this.paramsCategory.thirdCategory,
+    ]);
     this.breadcrumbs.push({
-      label: this.capitalize.transform(product.nombre),
+      label: this.capitalize.transform(product.name),
       url: '',
     });
   }
+
   // TODO: confirmar nombre de la función
 
   getDetailArticle(sku: string): void {
     const user = this.sessionService.getSession();
-    console.log(' getDetailArticle user: ', user);
-    console.log('getSelectedStore desde PageProductComponent 2');
     const selectedStore = this.geolocationService.getSelectedStore();
 
     if (user && selectedStore) {
@@ -345,14 +305,13 @@ export class PageProductComponent implements OnInit, OnDestroy {
       };
 
       if (this.preferenciaCliente.direccionDespacho !== null)
-        params.location = this.preferenciaCliente.direccionDespacho.comuna
+        params.location = this.preferenciaCliente.direccionDespacho.location
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '');
 
       this.articleService
         .getArticleDataSheet(params)
         .subscribe((response: any) => {
-          console.log('getDetailArticle: ', response);
           if (response) {
             response.chassis = response.chassis || '';
             const product = response;
@@ -362,6 +321,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
               : (this.stock = false);
             // TODO: probar funcion por funcion para ver si funciona
             this.setMeta(this.product);
+            console.log('llego');
+
             this.setBreadcrumbs(this.product);
             // this.productFacebook(this.product);
           } else {
@@ -375,54 +336,24 @@ export class PageProductComponent implements OnInit, OnDestroy {
     }
   }
 
-  getDetailProduct(sku: any) {
-    let params = null;
-    const user = this.sessionService.getSession();
-
-    if (user) {
-      params = {
-        rut: user.documentId,
-      };
-    }
-
-    this.productoService.obtieneDetalleProducto(sku, params).subscribe(
-      (r: any) => {
-        // r.data.chassis == null || r.data.chassis == undefined
-        //   ? (r.data.chassis = '')
-        //   : r.data.chassis;
-        // const producto: any = r.data;
-        // delete producto?.precio;
-
-        // this.product = { ...producto };
-        console.log('getDetailProduct: ', r.data);
-
-        // this.cart.cargarPrecioEnProducto(this.product);
-        // this.setMeta(this.product);
-        // this.setBreadcrumbs(this.product);
-        // this.productFacebook(this.product);
-      },
-      (error) => {
-        this.toastr.error('Error de conexión, para obtener los articulos');
-      }
-    );
-  }
-
-  setMeta(product: Product) {
-    const slug = this.root.product(product.sku, product.nombre);
+  setMeta(product: IArticle) {
+    const slug = this.root.product(product.sku, product.name);
     const imagen =
-      typeof product.images === 'undefined' || product.images.length == 0
-        ? this.root.returnUrlNoImagen()
-        : product.images[0]['250'][0];
+      product.images &&
+      product.images['250'] &&
+      product.images['250'].length > 0
+        ? product.images['250'][0]
+        : this.root.returnUrlNoImagen();
 
-    const nombre = this.root.limpiarNombres(product.nombre);
-    const descripcion = this.root.limpiarNombres(product.descripcion);
+    const nombre = this.root.limpiarNombres(product.name);
+    const descripcion = this.root.limpiarNombres(product.description);
     const descripcionFull = `${nombre} - ${descripcion}`;
 
     const meta = {
       title: this.capitalize.transform(nombre),
       description: this.capitalize.transform(descripcionFull),
       image: imagen,
-      imageAlt: 'La imagen contiene nuestro producto: ' + product.descripcion,
+      imageAlt: 'La imagen contiene nuestro producto: ' + product.description,
       imageType: 'image/jpeg',
       type: 'product',
       keywords: descripcionFull,
@@ -597,7 +528,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
       );
       return;
     }
-    console.log('producto a agregar: ', producto);
     if (!this.addingToCart && producto && producto.cantidad > 0) {
       if (this.product) {
         this.product.origen = {} as ProductOrigen;

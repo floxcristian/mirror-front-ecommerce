@@ -7,7 +7,6 @@ import {
   Validators,
 } from '@angular/forms';
 // Services
-import { ClientsService } from '../../services/clients.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { isVacio } from '../../utils/utilidades';
@@ -16,6 +15,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 // Libs
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
+import { CustomerService } from '@core/services-v2/customer.service';
 
 @Component({
   selector: 'app-edit-profile-modal',
@@ -31,10 +31,10 @@ export class EditProfileModalComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private clientsService: ClientsService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly sessionStorage: SessionStorageService
+    private readonly sessionStorage: SessionStorageService,
+    private readonly customerService: CustomerService
   ) {
     this.formPerfil = this.fb.group({
       nombre: new FormControl(null, {
@@ -61,6 +61,10 @@ export class EditProfileModalComponent implements OnInit {
   ngOnInit() {}
 
   cargarDatos() {
+    console.log('formPerfil');
+    console.log(this.formPerfil.value);
+    console.log('user');
+    console.log(this.user);
     this.formPerfil.setValue({
       nombre: !isVacio(this.user.firstName) ? this.user.firstName : '',
       apellido: !isVacio(this.user.lastName) ? this.user.lastName : '',
@@ -69,35 +73,41 @@ export class EditProfileModalComponent implements OnInit {
     });
   }
 
-  actualizaLocalStorage({ nombre, apellido, telefono, correo }: any) {
+  actualizaLocalStorage(params: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+  }) {
     const user = this.sessionService.getSession();
-    user.firstName = nombre;
-    user.lastName = apellido;
-    user.phone = telefono;
-    user.email = correo;
+    user.firstName = params.firstName;
+    user.lastName = params.lastName;
+    user.phone = params.phone;
+    user.email = params.email;
     this.sessionStorage.set(user);
   }
 
   async editarPerfil() {
     const { nombre, apellido, telefono, correo } = this.formPerfil.value;
     const parametros = {
-      rut: this.user.documentId,
-      nombre,
-      apellido,
-      telefono,
-      correo,
+      documentId: this.user.documentId,
+      firstName: nombre,
+      lastName: apellido,
+      phone: telefono,
+      email: correo,
     };
 
-    const resultado: any = await this.clientsService.updateProfile(parametros);
-
-    if (resultado.error) {
-      this.toastr.error('No se logro actualizar el perfil');
-      this.respuesta.emit(false);
-    } else {
-      this.toastr.success('Se actualizo con exito los datos');
-      this.actualizaLocalStorage(parametros);
-      this.respuesta.emit(true);
-      this.modalEditRef.hide();
-    }
+    this.customerService.updateProfile(parametros).subscribe({
+      next: (_) => {
+        this.toastr.success('Se actualizo con exito los datos');
+        this.actualizaLocalStorage(parametros);
+        this.respuesta.emit(true);
+        this.modalEditRef.hide();
+      },
+      error: (_) => {
+        this.toastr.error('No se logro actualizar el perfil');
+        this.respuesta.emit(false);
+      },
+    });
   }
 }

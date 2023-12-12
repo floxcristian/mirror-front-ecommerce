@@ -91,3 +91,9 @@ button:not(:disabled) {
   background-color: #0063b9;
   border-color: #0063b9;
 }
+
+.modal-header {
+  .btn {
+    padding: 0 !important;
+  }
+}

@@ -218,7 +218,7 @@ export class ProductSlideshowComponent
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada.code;
     const localidad = !isVacio(this.preferenciasCliente.direccionDespacho)
-      ? this.preferenciasCliente.direccionDespacho?.comuna
+      ? this.preferenciasCliente.direccionDespacho?.city
       : '';
     let localidad_limpia =
       localidad?.normalize('NFD').replace(/[\u0300-\u036f]/g, '') || '';

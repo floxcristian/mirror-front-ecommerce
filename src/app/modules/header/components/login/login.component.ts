@@ -11,6 +11,7 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
 
 @Component({
   selector: 'app-header-login',
@@ -40,6 +41,7 @@ export class LoginComponent implements OnInit {
     private readonly authService: AuthApiService,
     private readonly authStateService: AuthStateServiceV2,
     private readonly sessionStorage: SessionStorageService,
+    private readonly sessionTokenStorage: SessionTokenStorageService,
     private readonly invitadoStorage: InvitadoStorageService
   ) {
     this.form = this.fb.group({
@@ -97,7 +99,9 @@ export class LoginComponent implements OnInit {
               ) {
                 (resp?.length || 0) > 0
                   ? this.router.navigate(['/carro-compra', 'resumen'])
-                  : ['supervisor', 'comprador'].includes(res.user.userRole)
+                  : ['supervisor', 'comprador', 'buyer'].includes(
+                      res.user.userRole
+                    )
                   ? this.router.navigate(['/inicio']).then(() => {
                       window.location.reload();
                     })
@@ -122,6 +126,7 @@ export class LoginComponent implements OnInit {
             preferences: { iva },
           };
           this.sessionStorage.set(data);
+          this.sessionTokenStorage.set(res.token);
           this.invitadoStorage.remove();
           this.authStateService.setSession(data);
           this.verificaSession();

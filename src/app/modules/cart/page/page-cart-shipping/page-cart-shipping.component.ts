@@ -1436,8 +1436,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
         if (!respuesta.error) {
           this.toast.success('Dirección eliminada exitosamente.');
           if (
-            this.direccionConfigurada.direccionDespacho?.recid ===
-            direccion.recid
+            this.direccionConfigurada.direccionDespacho?.id === direccion.recid
           )
             this.cambioDireccionPreferenciaCliente(direccion.recid);
           this.respuesta(true);

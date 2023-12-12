@@ -21,16 +21,18 @@
       <div class="card-body card-body-min-height-loading">
         <app-loading-element
           [text]="'Cargando información cliente'"
-          *ngIf="loadingClient"
+          *ngIf="loadingClient || !dataClient; else datosCliente"
         >
         </app-loading-element>
 
-        <div class="img-enterprise"></div>
-        <div>
-          <span class="title2">Nombre / Razón Social</span
-          >{{ dataClient.nombre }}
-        </div>
-        <div><span class="title2">Rut</span>{{ dataClient.rut }}</div>
+        <ng-template #datosCliente>
+          <div class="img-enterprise"></div>
+          <div>
+            <span class="title2">Nombre / Razón Social</span
+            >{{ dataClient.name }}
+          </div>
+          <div><span class="title2">Rut</span>{{ dataClient.documentId }}</div>
+        </ng-template>
       </div>
     </div>
   </div>
@@ -129,7 +131,7 @@
           <div class="col-7 d-flex align-items-center">
             <div class="text-start">
               {{
-                direccionDespacho?.calle + ' ' + direccionDespacho?.numero
+                direccionDespacho?.street + ' ' + direccionDespacho?.number
                   | capitalizeFirst
               }}
             </div>
@@ -183,37 +185,37 @@
             <table>
               <tr>
                 <th class="fw-bold titilo-w">Tipo</th>
-                <td class="text-start">{{ item.tipo }}</td>
+                <td class="text-start">{{ item.type }}</td>
               </tr>
               <tr>
                 <th class="fw-bold titilo-w">Comuna</th>
-                <td class="text-start">{{ item.comuna }}</td>
+                <td class="text-start">{{ item.city }}</td>
               </tr>
               <tr>
                 <th class="fw-bold titilo-w">Localidad</th>
-                <td class="text-start">{{ item.localidad }}</td>
+                <td class="text-start">{{ item.location }}</td>
               </tr>
               <tr>
                 <th class="fw-bold titilo-w">Calle</th>
-                <td class="text-start">{{ item.calle }}</td>
+                <td class="text-start">{{ item.street }}</td>
               </tr>
               <tr>
                 <th class="fw-bold titilo-w">Número</th>
-                <td class="text-start">{{ item.numero }}</td>
+                <td class="text-start">{{ item.number }}</td>
               </tr>
               <tr>
                 <th class="fw-bold titilo-w">Depto.</th>
-                <td class="text-start">{{ item.deptocasa }}</td>
+                <td class="text-start">{{ item.departmentHouse }}</td>
               </tr>
               <tr>
                 <th class="fw-bold titilo-w">Referencia</th>
-                <td class="text-start">{{ item.referencia }}</td>
+                <td class="text-start">{{ item.reference }}</td>
               </tr>
               <tr>
                 <th class="fw-bold titilo-w">Acciones</th>
                 <td class="text-start">
                   <button
-                    *ngIf="item.tipo === 'Despacho'"
+                    *ngIf="item.typeCode === ADDRESS_TYPE.DELIVERY"
                     class="btn btn-sm btn-link p-0 me-3"
                     tooltip="Actualizar dirección"
                     placement="top"
@@ -223,7 +225,7 @@
                     <i class="fas fa-edit fa-lg me-1"></i> Editar
                   </button>
                   <button
-                    *ngIf="item.tipo === 'Despacho'"
+                    *ngIf="item.typeCode === ADDRESS_TYPE.DELIVERY"
                     class="btn btn-sm btn-link text-danger p-0"
                     tooltip="Eliminar dirección"
                     placement="top"
@@ -253,15 +255,15 @@
             </thead>
             <tbody>
               <tr *ngFor="let item of addresses">
-                <td>{{ item.tipo }}</td>
-                <td>{{ item.comuna }}</td>
-                <td>{{ item.calle }}</td>
-                <td>{{ item.numero }}</td>
-                <td>{{ item.deptocasa }}</td>
-                <td>{{ item.referencia }}</td>
+                <td>{{ item.type }}</td>
+                <td>{{ item.city }}</td>
+                <td>{{ item.street }}</td>
+                <td>{{ item.number }}</td>
+                <td>{{ item.departmentHouse }}</td>
+                <td>{{ item.reference }}</td>
                 <td>
                   <button
-                    *ngIf="item.tipo === 'Despacho'"
+                    *ngIf="item.typeCode === ADDRESS_TYPE.DELIVERY"
                     class="btn btn-sm btn-link p-0 me-3"
                     tooltip="Actualizar dirección"
                     placement="top"
@@ -271,7 +273,7 @@
                     <i class="fas fa-edit fa-lg"></i>
                   </button>
                   <button
-                    *ngIf="item.tipo === 'Despacho'"
+                    *ngIf="item.typeCode === ADDRESS_TYPE.DELIVERY"
                     class="btn btn-sm btn-link p-0"
                     tooltip="Eliminar dirección"
                     placement="top"
@@ -289,7 +291,9 @@
     </div>
   </div>
 
-  <ng-container *ngIf="usuario.userRole != 'compradorb2c'">
+  <ng-container
+    *ngIf="usuario.userRole != 'compradorb2c' && usuario.userRole != 'b2c'"
+  >
     <div class="col-lg-12 mb-3" *ngIf="esEmpresa()">
       <div class="card">
         <div class="card-body card-body-min-height-loading">
@@ -326,56 +330,56 @@
               <table>
                 <tr>
                   <th class="fw-bold titilo-w">Rut</th>
-                  <td class="text-start">{{ item.contactRut }}</td>
+                  <td class="text-start">{{ item.documentId }}</td>
                 </tr>
                 <tr>
                   <th class="fw-bold titilo-w">Nombre</th>
                   <td class="text-start">
-                    {{ item.nombre }} {{ item.apellido }}
+                    {{ item.name }} {{ item.lastName }}
                   </td>
                 </tr>
                 <tr>
                   <th class="fw-bold titilo-w">Cargo</th>
-                  <td class="text-start">{{ item.cargo }}</td>
+                  <td class="text-start">{{ item.position }}</td>
                 </tr>
                 <tr>
                   <th class="fw-bold titilo-w">Telefono</th>
                   <td class="text-start">
                     <a
-                      *ngIf="item.telefono != '0'"
+                      *ngIf="item.phone != '0'"
                       [href]="
-                        'https://api.whatsapp.com/send?phone=' + item.telefono
+                        'https://api.whatsapp.com/send?phone=' + item.phone
                       "
                       target="_blank"
                     >
-                      {{ item.telefono }}
+                      {{ item.phone }}
                     </a>
-                    <span *ngIf="item.telefono == '0'">S/T</span>
+                    <span *ngIf="item.phone == '0'">S/T</span>
                   </td>
                 </tr>
                 <tr>
                   <th class="fw-bold titilo-w">Email</th>
                   <td class="text-start">
                     <a
-                      *ngIf="item.correo != '0'"
-                      [href]="'mailto:' + item.correo"
+                      *ngIf="item.email != '0'"
+                      [href]="'mailto:' + item.email"
                     >
-                      {{ item.correo }}
+                      {{ item.email }}
                     </a>
-                    <span *ngIf="item.correo == '0'">S/E</span>
+                    <span *ngIf="item.email == '0'">S/E</span>
                   </td>
                 </tr>
                 <tr>
                   <th class="fw-bold titilo-w">Tipo</th>
                   <td class="text-start">
-                    <a href="javascript:"> {{ item.contactoDe }}</a>
+                    <a href="javascript:"> {{ item.contactType }}</a>
                   </td>
                 </tr>
                 <tr>
                   <th class="fw-bold titilo-w">Acciones</th>
                   <td class="text-start">
                     <button
-                      *ngIf="item.contactoDe === 'COM'"
+                      *ngIf="item.contactType === 'COM'"
                       class="btn btn-sm btn-link p-0 me-3"
                       tooltip="Actualizar contacto"
                       placement="top"
@@ -385,7 +389,7 @@
                       <i class="fas fa-edit fa-lg me-1"></i> Editar
                     </button>
                     <button
-                      *ngIf="item.contactoDe === 'COM'"
+                      *ngIf="item.contactType === 'COM'"
                       class="btn btn-sm btn-link text-danger p-0"
                       tooltip="Eliminar contacto"
                       placement="top"
@@ -419,34 +423,34 @@
               </thead>
               <tbody>
                 <tr *ngFor="let item of contacts">
-                  <td class="text-nowrap">{{ item.contactRut }}</td>
-                  <td>{{ item.nombre }} {{ item.apellido }}</td>
-                  <td>{{ item.cargo }}</td>
+                  <td class="text-nowrap">{{ item.documentId }}</td>
+                  <td>{{ item.name }} {{ item.lastName }}</td>
+                  <td>{{ item.position }}</td>
                   <td>
                     <a
-                      *ngIf="item.telefono != '0'"
+                      *ngIf="item.phone != '0'"
                       [href]="
-                        'https://api.whatsapp.com/send?phone=' + item.telefono
+                        'https://api.whatsapp.com/send?phone=' + item.phone
                       "
                       target="_blank"
                     >
-                      {{ item.telefono }}
+                      {{ item.phone }}
                     </a>
-                    <span *ngIf="item.telefono == '0'">S/T</span>
+                    <span *ngIf="item.phone == '0'">S/T</span>
                   </td>
                   <td>
                     <a
-                      *ngIf="item.correo != '0'"
-                      [href]="'mailto:' + item.correo"
+                      *ngIf="item.email != '0'"
+                      [href]="'mailto:' + item.email"
                     >
-                      {{ item.correo }}
+                      {{ item.email }}
                     </a>
-                    <span *ngIf="item.correo == '0'">S/E</span>
+                    <span *ngIf="item.email == '0'">S/E</span>
                   </td>
-                  <td>{{ item.contactoDe }}</td>
+                  <td>{{ item.contactType }}</td>
                   <td>
                     <button
-                      *ngIf="item.contactoDe === 'COM'"
+                      *ngIf="item.contactType === 'COM'"
                       class="btn btn-sm btn-link p-0 me-3"
                       tooltip="Actualizar contacto"
                       placement="top"
@@ -456,7 +460,7 @@
                       <i class="fas fa-edit fa-lg"></i>
                     </button>
                     <button
-                      *ngIf="item.contactoDe === 'COM'"
+                      *ngIf="item.contactType === 'COM'"
                       class="btn btn-sm btn-link p-0"
                       tooltip="Eliminar contacto"
                       placement="top"

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 // Interceptors
-import { BasicAuthInterceptor } from './interceptors/basic-auth.interceptor';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [],
@@ -11,7 +11,7 @@ import { BasicAuthInterceptor } from './interceptors/basic-auth.interceptor';
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: BasicAuthInterceptor,
+      useClass: AuthInterceptor,
       multi: true,
     },
   ],

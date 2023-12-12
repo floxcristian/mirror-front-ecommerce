@@ -1,3 +1,4 @@
+import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
 import * as moment from 'moment';
 
 export interface Login {
@@ -52,6 +53,10 @@ export interface Usuario {
  * Para usuarios empresa el giro es un string de dígitos,
  * Para usuarios persona, el giro es null.
  */
-export function esEmpresa(usuario: Usuario): boolean {
-  return typeof usuario.giro !== 'undefined' && usuario.giro !== null;
+export function esEmpresa(usuario: IEcommerceUser): boolean {
+  return (
+    Boolean(usuario) &&
+    typeof usuario.businessLine !== 'undefined' &&
+    usuario.businessLine !== null
+  );
 }

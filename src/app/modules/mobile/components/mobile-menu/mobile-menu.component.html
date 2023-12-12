@@ -41,12 +41,12 @@
             <h6 class="mb-0" *ngIf="!isVacio(direccion)">
               <i class="fas fa-map-marked-alt me-2 pt-1"></i
               >{{
-                ((direccion?.calle + ' ' + direccion?.numero).length > 20
-                  ? (direccion?.calle + ' ' + direccion?.numero).substring(
+                ((direccion?.street + ' ' + direccion?.number).length > 20
+                  ? (direccion?.street + ' ' + direccion?.number).substring(
                       0,
                       20
                     ) + '...'
-                  : direccion?.calle + ' ' + direccion?.numero
+                  : direccion?.street + ' ' + direccion?.number
                 ) | titlecase
               }}
             </h6>

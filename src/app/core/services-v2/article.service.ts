@@ -5,7 +5,10 @@ import {
   IArticleResponse,
   ISearchResponse,
 } from '@core/models-v2/article/article-response.interface';
-import { IComment, ICommentResponse } from '@core/models-v2/article/comment.interface';
+import {
+  IComment,
+  ICommentResponse,
+} from '@core/models-v2/article/comment.interface';
 import { IReviewsResponse } from '@core/models-v2/article/review-response.interface';
 // Environment
 import { environment } from '@env/environment';
@@ -22,9 +25,9 @@ export class ArticleService {
    * SEARCH
    **********************************************/
   search(params: {
-    page: number;
-    pageSize: number;
-    showPrice: number;
+    page?: number;
+    pageSize?: number;
+    showPrice?: number;
     word?: string;
     documentId?: string;
     branchCode?: string;
@@ -175,39 +178,29 @@ export class ArticleService {
   }
 
   getResumenComentarios(sku: string) {
-    return this.http.get<IReviewsResponse>(`${API_ARTICLE}/${sku}/evaluation-summary`);
+    return this.http.get<IReviewsResponse>(
+      `${API_ARTICLE}/${sku}/evaluation-summary`
+    );
   }
 
-
-  // FIXME: enviar el token de mejor manera
   guardarComentarioArticulo(request: IComment) {
     const { calification, title, comment, recommended } = request;
     const body = {
       calification,
       title,
       comment,
-      recommended
+      recommended,
     };
-
-    let auth_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb3VyY2UiOiJlY29tbWVyY2UiLCJkb2N1bWVudElkIjoiMTUyMTMwODQtOCIsInVzZXJuYW1lIjoiY2xhdWRpby5tb250b3lhQGJpb3BjLmNsIiwidXNlclJvbGUiOiJzdXBlcnZpc29yIiwiaWF0IjoxNzAxODcyMzY5LCJleHAiOjE3MzM0Mjk5Njl9.9efvYK4FLveiqUIprbFNX38bOIDxeiyN1v5bZXPvUwY'
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${auth_token}`,
-      'accept': 'application/json'
-    });
-    const requestOptions = { headers: headers };
-
-
-
-    return this.http.post(`${API_ARTICLE}/${request.sku}/evaluation`, body ,requestOptions);
+    return this.http.post(`${API_ARTICLE}/${request.sku}/evaluation`, body);
   }
-  getDetalleComentarios(sku: string, orden?: string): Observable<ICommentResponse> {
+  getDetalleComentarios(
+    sku: string,
+    orden?: string
+  ): Observable<ICommentResponse> {
     let url = `${API_ARTICLE}/${sku}/evaluation-detail`;
     if (orden) {
       url += `?orden=${orden}`;
     }
     return this.http.get<ICommentResponse>(url);
   }
-
-
 }
