@@ -28,19 +28,13 @@ import { GeolocationStorageService } from '@core/storage/geolocation-storage.ser
 export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
   preferenciasCliente!: PreferenciasCliente;
   user!: ISession;
-  despachoCliente!: Subscription;
 
   //declarando la variable para ver los tipos
-  carga = true;
-  carga_producto_home = true;
-  carga_listo_especial = true;
+  carga: boolean = true;
   pageHome: IPage[] = [];
 
   constructor(
-    private pageHomeService: PageHomeService,
     private root: RootService,
-    private productsService: ProductsService,
-    private direction: DirectionService,
     private logisticsService: LogisticsService,
     // Services V2
     private readonly sessionService: SessionService,
@@ -58,11 +52,14 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
           this.user = this.sessionService.getSession();
           const geo = this.geolocationStorage.get();
           if (geo) {
-            this.root.getPreferenciasCliente().then((preferencias) => {
-              this.preferenciasCliente = preferencias;
-              console.log('cargarPage 1');
+            if (this.user.documentId !== '0') {
+              this.root.getPreferenciasCliente().then((preferencias) => {
+                this.preferenciasCliente = preferencias;
+                this.cargarPage();
+              });
+            } else {
               this.cargarPage();
-            });
+            }
           } else {
             console.log('cargarPage 2');
             this.cargarPage();
@@ -96,6 +93,7 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
   }
 
   async cargarPage() {
+    this.carga = true;
     const rut = this.user.documentId;
     console.log('getSelectedStore desde PageHomeTemplateComponent');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();

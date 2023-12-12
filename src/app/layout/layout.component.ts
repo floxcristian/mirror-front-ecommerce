@@ -20,7 +20,6 @@ export class LayoutComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly localS: LocalStorageService,
-    private categoriesService: CategoryService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService
@@ -30,7 +29,6 @@ export class LayoutComponent implements OnInit {
     this.scrollTop();
     this.checkIsB2b();
     this.getQueryParams();
-    this.categoriesService.obtieneCategoriasHeader().subscribe((r) => {});
   }
 
   /**

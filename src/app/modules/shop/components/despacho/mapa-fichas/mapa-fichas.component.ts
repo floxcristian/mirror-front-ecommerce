@@ -1,13 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { environment } from '@env/environment';
 declare const L: any;
+
 @Component({
   selector: 'app-mapa-fichas',
   templateUrl: './mapa-fichas.component.html',
   styleUrls: ['./mapa-fichas.component.scss'],
 })
 export class MapaFichasComponent implements OnInit {
+  accessToken = environment.tokenMapbox;
   map: any;
   Layer: any;
   index = 0;
@@ -18,7 +21,6 @@ export class MapaFichasComponent implements OnInit {
   constructor() {}
   async ngOnInit() {
     await this.tiendaSeleccionada;
-
     fromEvent(window, 'resize')
       .pipe(debounceTime(200))
       .subscribe((event) => {});
@@ -30,22 +32,19 @@ export class MapaFichasComponent implements OnInit {
 
   private initMap(): void {
     window.dispatchEvent(new Event('resize'));
-    const accessToken =
-      'pk.eyJ1Ijoic3VwZXJzYngwMCIsImEiOiJjaWpsZ3FsN3QwMDIydGhtNTh4aGhubG5xIn0.i2J0k0mBZhIi7W-bsPTJiQ';
     const map = L.map('map').setView([51.505, -0.09], 13);
 
     L.tileLayer(
       'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' +
-        accessToken,
+        this.accessToken,
       {
         maxZoom: 18,
-        id: 'mapbox/streets-v11',
+        id: 'mapbox/streets-v12',
         tileSize: 512,
         zoomOffset: -1,
-        accessToken,
+        accessToken: this.accessToken,
       }
     ).addTo(map);
-
     this.map = map;
     this.getpointer();
   }
@@ -74,12 +73,9 @@ export class MapaFichasComponent implements OnInit {
     }
 
     const geoJson = { type: 'FeatureCollection', features: jsonFeatures };
-
     this.Layer = L.geoJson(geoJson);
-
     this.map.addLayer(this.Layer);
     this.map.fitBounds(this.Layer.getBounds());
-
     this.Layer.on('click', (e: any) => {});
   }
 

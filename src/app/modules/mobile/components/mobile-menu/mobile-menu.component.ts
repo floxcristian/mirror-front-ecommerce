@@ -109,7 +109,6 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
         }
       },
     });
-
     this.root.getPreferenciasCliente().then((preferencias) => {
       this.direccion = preferencias.direccionDespacho;
     });

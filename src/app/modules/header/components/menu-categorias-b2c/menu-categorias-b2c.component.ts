@@ -7,7 +7,12 @@ import { CategoryService } from '../../../../shared/services/category.service';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { CmsService } from '@core/services-v2/cms.service';
-import { IChildren } from '@core/models-v2/cms/categories-response.interface';
+import {
+  ICategoryDetail,
+  IChildren,
+  ISecondLvl,
+  IThirdLvl,
+} from '@core/models-v2/cms/categories-response.interface';
 
 @Component({
   selector: 'app-menu-categorias-b2c',
@@ -17,16 +22,16 @@ import { IChildren } from '@core/models-v2/cms/categories-response.interface';
 export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject();
   items: NavigationLink[] = [];
-  items_oficial: any[] = [];
+  items_oficial: NavigationLink[] = [];
   isOpen = false;
 
-  private categoriaDetalle: any;
+  private categoriaDetalle!: ICategoryDetail;
   private arrayCategorias: NavigationLink[] = [];
-  private segundoNivel: any;
-  private categoriaDetalleOficial: any;
+  private segundoNivel!: ISecondLvl;
+  private categoriaDetalleOficial!: ICategoryDetail;
   private arrayCategoriasOficial: NavigationLink[] = [];
-  private segundoNivelOficial: any;
-  categorias_oficial: any[] = [
+  private segundoNivelOficial!: ISecondLvl;
+  categorias_oficial: IChildren[] = [
     {
       title: 'TIENDAS OFICIALES',
       id: 1000,
@@ -81,7 +86,6 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
 
   constructor(
     public menuCategorias: MenuCategoriasB2cService,
-    private categoriesService: CategoryService,
     private root: RootService,
     //Services V2
     private readonly cmsService: CmsService
@@ -101,27 +105,20 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
   }
 
   obtieneCategorias() {
-    // this.cmsService.getCategories().subscribe({
-    //   next:(res)=>{
-    //     const categorias: IChildren[] = res.data;
-    //     this.sortCategories(categorias);
-    //     this.formatCategories(categorias);
-    //     this.formatCategories2(this.categorias_oficial);
-    //   },
-    //   error:(err)=>{
-    //     console.log(err)
-    //   }
-    // })
-    this.categoriesService.$categoriasHeader.subscribe((r) => {
-      console.log('categorias', r);
-      const categorias: CategoryApi[] = r.data;
-      this.sortCategories(categorias);
-      this.formatCategories(categorias);
-      this.formatCategories2(this.categorias_oficial);
+    this.cmsService.getCategories().subscribe({
+      next: (res) => {
+        const categorias: IChildren[] = res.data;
+        this.sortCategories(categorias);
+        this.formatCategories(categorias);
+        this.formatCategories2(this.categorias_oficial);
+      },
+      error: (err) => {
+        console.log(err);
+      },
     });
   }
 
-  formatCategories(data: any[]) {
+  formatCategories(data: IChildren[]) {
     for (const primeraCategoria of data) {
       this.categoriaDetalle = {
         url: [
@@ -150,14 +147,14 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
                 this.root.replaceSlash(primeraCategoria.url),
                 this.root.replaceSlash(segundaCategoria.url),
               ],
-              items: '',
+              items: [],
             },
           ],
         };
 
-        const tercerNivel = [];
+        const tercerNivel: IThirdLvl[] = [];
         for (const terceraCategoria of segundaCategoria.children || []) {
-          const dataLineas = {
+          const dataLineas: IThirdLvl = {
             label: `${terceraCategoria.title}`,
             url: [
               '/',
@@ -181,9 +178,9 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
     this.items = this.arrayCategorias;
   }
 
-  private sortCategories(items: any[]) {
+  private sortCategories(items: IChildren[]) {
     for (const item of items) {
-      const segundaCategoria: any[] = item.children;
+      const segundaCategoria: IChildren[] = item.children;
 
       segundaCategoria.sort((a, b) => {
         if (a.children.length < b.children.length) {
@@ -197,7 +194,7 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
     }
   }
   //datos tienda oficial
-  formatCategories2(data: CategoryApi[]) {
+  formatCategories2(data: IChildren[]) {
     for (const primeraCategoria of data) {
       this.categoriaDetalleOficial = {
         url: ['/', 'inicio', 'productos'],
@@ -216,11 +213,11 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
                 'productos',
                 this.root.replaceSlash(segundaCategoria.url),
               ],
-              items: '',
+              items: [],
             },
           ],
         };
-        const tercerNivel: any[] = [];
+        const tercerNivel: IThirdLvl[] = [];
         this.segundoNivelOficial.items[0].items = tercerNivel;
         this.categoriaDetalleOficial.menu.push(
           this.segundoNivelOficial.items[0]

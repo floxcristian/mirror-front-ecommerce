@@ -326,7 +326,12 @@
     </ul> -->
   </div>
   <!-- Momentaneo para ver "llega y retiro" -->
-  <ng-container *ngIf="productData.deliverySupply.pickupIsToday !== null">
+  <ng-container
+    *ngIf="
+      productData.deliverySupply.deliveryLocation !== null &&
+      productData.deliverySupply.pickupLocation !== null
+    "
+  >
     <div
       class="product-card__info flex-column mt-1"
       style="padding-bottom: 4px"
