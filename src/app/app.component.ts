@@ -12,12 +12,10 @@ import {
   NgZone,
   OnInit,
   PLATFORM_ID,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 // Libs
 import { ToastrService } from 'ngx-toastr';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import * as moment from 'moment';
 import * as $ from 'jquery';
 // Services
@@ -26,13 +24,13 @@ import { CompareService } from './shared/services/compare.service';
 import { WishlistService } from './shared/services/wishlist.service';
 import { CurrencyService } from './shared/services/currency.service';
 import { SeoService } from './shared/services/seo.service';
+import { SessionStorageService } from '@core/storage/session-storage.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 // Models
 import { ProductCart } from './shared/interfaces/cart-item';
 // Components
 import { AlertCartMinComponent } from './shared/components/alert-cart-min/alert-cart-min.component';
-import { SessionStorageService } from '@core/storage/session-storage.service';
-import { SessionService } from '@core/states-v2/session.service';
-import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 
 @Component({
   selector: 'app-root',
@@ -40,15 +38,12 @@ import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements AfterViewInit, OnInit {
-  @ViewChild('alertCartModal', { read: TemplateRef, static: false })
-  template!: TemplateRef<any>;
   @ViewChild(AlertCartMinComponent, {
     read: AlertCartMinComponent,
     static: false,
   })
   alert!: AlertCartMinComponent;
 
-  modalRef!: BsModalRef;
   productCard!: ProductCart;
   s: any;
   node: any;
@@ -65,7 +60,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     private zone: NgZone,
     private scroller: ViewportScroller,
     private currency: CurrencyService,
-    private modalService: BsModalService,
     private seoService: SeoService,
     // Services V2
     private readonly sessionStorage: SessionStorageService,
@@ -207,17 +201,11 @@ export class AppComponent implements AfterViewInit, OnInit {
         },
       });
     } else {
+      // Esto se carga en el movil.
       // FIXME: tiene dependencia de stores que no se cargan en este caso.
-      // En que momento pasa por aquí?
       console.log('setDefaultLocation desde app.component.ts');
       this.geolocationService.setDefaultLocation();
     }
-  }
-
-  openModal(template: TemplateRef<any>): void {
-    this.modalRef = this.modalService.show(template, {
-      class: 'modal-alert-cart-dialog',
-    });
   }
 
   showAlertCart(): void {

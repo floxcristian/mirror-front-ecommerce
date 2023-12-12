@@ -54,7 +54,6 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
 import { ProductsViewComponent } from '../modules/shop/components/products-view/products-view.component';
 //import { ProductSliderComponent } from './components/product-slider/product-slider.component';
 //import { FiltersProductsComponent } from './components/filters-products/filters-products.component';
-import { AlertCartComponent } from './components/alert-cart/alert-cart.component';
 import { AlertCartMinComponent } from './components/alert-cart-min/alert-cart-min.component';
 //import { ViewPdfComponent } from './components/view-pdf/view-pdf.component';
 import { ProductSlideshowComponent } from './components/product-slideshow/product-slideshow.component';
@@ -139,7 +138,6 @@ const NGU_CAROUSEL_MODULES = [
     LoadingElementComponent,
     // ProductSliderComponent,
     // FiltersProductsComponent,
-    AlertCartComponent,
     AlertCartMinComponent,
     // ViewPdfComponent,
     MapComponent,
@@ -233,7 +231,6 @@ const NGU_CAROUSEL_MODULES = [
     LoadingElementComponent,
     // ProductSliderComponent,
     // FiltersProductsComponent,
-    AlertCartComponent,
     AlertCartMinComponent,
     // ProductFeatureSpecialComponent,
     MapComponent,
@@ -266,7 +263,7 @@ const NGU_CAROUSEL_MODULES = [
     MenuCategoriaComponent,
     ...NGU_CAROUSEL_MODULES,
     BlockHeaderComponent,
-    RelativeTimePipe
+    RelativeTimePipe,
   ],
   providers: [DecimalPipe, DatePipe],
 })

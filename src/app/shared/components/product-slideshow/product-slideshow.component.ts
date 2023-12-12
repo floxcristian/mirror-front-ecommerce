@@ -1,3 +1,4 @@
+// Angular
 import {
   Component,
   OnInit,
@@ -7,29 +8,28 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProductsService } from '../../services/products.service';
-
+import { isPlatformBrowser } from '@angular/common';
+// Libs
 import { ToastrService } from 'ngx-toastr';
+// Rxjs
+import { Subscription } from 'rxjs';
+// Services
+import { ProductsService } from '../../services/products.service';
 import { RootService } from '../../services/root.service';
 import { DirectionService } from '../../services/direction.service';
-// import { OwlOptions } from 'ngx-owl-carousel-o';
 import { ClientsService } from '../../services/clients.service';
-
-import { Lista } from '../../interfaces/articuloFavorito';
-import { AgregarListaProductosMasivaModalComponent } from '../agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
-import { PreferenciasCliente } from '../../interfaces/preferenciasCliente';
-import { Subscription } from 'rxjs';
 import { LogisticsService } from '../../services/logistics.service';
 import { isVacio } from '../../utils/utilidades';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/states-v2/session.service';
-import { ISession } from '@core/models-v2/auth/session.interface';
-import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { CmsService } from '@core/services-v2/cms.service';
-import { IData } from '@core/models-v2/cms/customHomePage-response.interface';
+import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
+// Models
+import { PreferenciasCliente } from '../../interfaces/preferenciasCliente';
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { IData } from '@core/models-v2/cms/customHomePage-response.interface';
 
 @Component({
   selector: 'app-product-slideshow',
@@ -78,7 +78,6 @@ export class ProductSlideshowComponent
     // @Inject(WINDOW) private window: Window,
     public toast: ToastrService,
     private direction: DirectionService,
-    private localStorage: LocalStorageService,
     private router: Router,
     private clientsService: ClientsService,
     private logisticsService: LogisticsService,
