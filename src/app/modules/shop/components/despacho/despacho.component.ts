@@ -11,6 +11,8 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 // Services
 import { PromesaService } from '../../services/promesa.service';
 import { MpSimuladorHeaderFiltrosMagicos } from './mp-simulador-header.filtros-magicos';
+import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
+
 
 @Component({
   selector: 'app-despacho',
@@ -18,7 +20,7 @@ import { MpSimuladorHeaderFiltrosMagicos } from './mp-simulador-header.filtros-m
   styleUrls: ['./despacho.component.scss'],
 })
 export class DespachoComponent implements OnInit {
-  @Input() product!: any;
+  @Input() product!: IArticle;
   @Input() tiendaActual: any = [];
   @Input() cantidad: number = 0;
 
@@ -46,7 +48,7 @@ export class DespachoComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.cd.detectChanges();
+        this.cd.detectChanges();
   }
 
   async generateChangeGeneralData() {
@@ -62,11 +64,12 @@ export class DespachoComponent implements OnInit {
 
       let productos = [
         {
+
           sku: this.product.sku,
-          image: this.product.images['0']['150']['0'],
-          nombre: this.product.nombre,
+          image: this.product.images['150'],
+          nombre: this.product.name,
           cantidad: this.cantidad,
-          peso: this.product.peso,
+          // peso: this.product.peso,
           esVentaVerde: false,
           proveedor: null,
         },
@@ -146,10 +149,10 @@ export class DespachoComponent implements OnInit {
     let productos = [
       {
         sku: this.product.sku,
-        image: this.product.images['0']['150']['0'],
-        nombre: this.product.nombre,
+        image: this.product.images['150'],
+        nombre: this.product.name,
         cantidad: this.cantidad,
-        peso: this.product.peso,
+        // peso: this.product.peso,
         esVentaVerde: false,
         proveedor: null,
       },
