@@ -7,7 +7,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 // Services
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 // Models
-import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 
 @Component({
@@ -17,7 +17,7 @@ import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 })
 export class ModalStoresComponent implements OnInit {
   tiendas!: IStore[];
-  tienda!: ITiendaLocation;
+  tienda!: ISelectedStore;
   tiendaTemporal: any = null;
   geoLocationServicePromise!: Subscription;
   subscriptions: Subscription[] = [];
@@ -29,6 +29,7 @@ export class ModalStoresComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('getSelectedStore desde ModalStoresComponent');
     this.tienda = this.geolocationService.getSelectedStore();
 
     this.geolocationService.stores$.subscribe({
@@ -38,9 +39,10 @@ export class ModalStoresComponent implements OnInit {
     });
 
     this.geoLocationServicePromise =
-      this.geolocationService.location$.subscribe({
+      this.geolocationService.selectedStore$.subscribe({
         next: (res) => {
-          console.log('location$: ', res);
+          console.log('selectedStore$: ', res);
+          console.log('getSelectedStore desde ModalStoresComponent 2');
           this.tienda = this.geolocationService.getSelectedStore();
         },
       });
@@ -53,13 +55,12 @@ export class ModalStoresComponent implements OnInit {
   }
 
   cambiarTienda(): void {
-    this.geolocationService.setGeolocation({
-      lat: this.tiendaTemporal.lat || 0,
-      lon: this.tiendaTemporal.lng || 0,
-      zona: this.tiendaTemporal.zone,
-      codigo: this.tiendaTemporal.code,
-    });
+    this.geolocationService.setSelectedStore(
+      this.tiendaTemporal.zone,
+      this.tiendaTemporal.code
+    );
 
+    console.log('getSelectedStore desde ModalStoresComponent 3');
     this.tienda = this.geolocationService.getSelectedStore();
     this.modalRef.hide();
   }

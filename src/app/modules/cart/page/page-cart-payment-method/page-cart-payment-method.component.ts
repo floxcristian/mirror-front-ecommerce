@@ -1,12 +1,11 @@
+// Angular
 import {
   Component,
   OnInit,
   OnDestroy,
   ViewChild,
   ElementRef,
-  AfterViewInit,
   EventEmitter,
-  TemplateRef,
   PLATFORM_ID,
   Inject,
 } from '@angular/core';
@@ -451,7 +450,6 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   obtieneDireccionCliente() {
-    // const usuario = this.root.getDataSesionUsuario();
     const user = this.sessionService.getSession();
     this.logistics.obtieneDireccionesCliente(user.documentId).subscribe(
       (r: ResponseApi) => {
@@ -491,12 +489,9 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   async setMethodPayment() {
     this.paymentMethods = await this.paymentService.getMetodosPago();
     //if(this.userSession.username!='claudio.montoya@biopc.cl') this.paymentMethods.pop();
-    if (
-      this.userSession?.userRole === 'comprador' ||
-      this.userSession?.userRole === 'supervisor'
-    ) {
+    if (this.sessionService.isB2B()) {
       const respBloqueo: any = await this.clientsService
-        .getBloqueo(this.userSession.documentId ?? '')
+        .getBloqueo(this.userSession.documentId)
         .toPromise();
       if (respBloqueo.error) {
         this.getBloqueoError = true;

@@ -33,7 +33,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { MenuService } from '@core/services-v2/menu/menu.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { ModalStoresComponent } from 'src/app/modules/header/components/modal-stores/modal-stores.component';
 
 @Component({
@@ -66,7 +66,7 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
   private categoriaDetalle: any;
   private arrayCategorias: NavigationLink[] = [];
   private segundoNivel: any;
-  tiendaSeleccionada!: ITiendaLocation;
+  tiendaSeleccionada!: ISelectedStore;
   constructor(
     public mobilemenu: MobileMenuService,
     private localS: LocalStorageService,
@@ -95,12 +95,13 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
       .subscribe((isOpen) => (this.isOpen = isOpen));
     this.subscribeLogin();
     this.updateLink();
+    console.log('getSelectedStore desde MobileMenuComponent');
     this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
-    this.geolocationService.location$.subscribe({
+    this.geolocationService.selectedStore$.subscribe({
       next: (res) => {
-        this.tiendaSeleccionada = res.tiendaSelecciona;
-        if (res.esNuevaUbicacion) {
+        this.tiendaSeleccionada = res;
+        if (res.isChangeToNearestStore) {
           setTimeout(() => {
             if (this.menuTienda) this.menuTienda.open();
           }, 700);

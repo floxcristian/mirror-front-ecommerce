@@ -421,9 +421,10 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
         this.TiendasCargadas = true;
 
         // Poner tienda seleccionada al comienzo de la lista.
+        console.log('getSelectedStore desde PageCartShippingComponent');
         const selectedStore = this.geolocationService.getSelectedStore();
         const tiendaActual = this.stores.find((store) => {
-          return store.code === selectedStore.codigo;
+          return store.code === selectedStore.code /*selectedStore.codigo*/;
         });
 
         // Hacer algo..
@@ -1125,12 +1126,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
 
   cambiarTienda(newStore: IStore): void {
     console.log('cambiarTienda: ');
-    this.geolocationService.setGeolocation({
-      lat: newStore.lat,
-      lon: newStore.lng,
-      zona: newStore.zone,
-      codigo: newStore.code,
-    });
+    this.geolocationService.setSelectedStore(newStore.zone, newStore.code);
   }
 
   /**

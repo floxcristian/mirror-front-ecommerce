@@ -67,7 +67,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     private currency: CurrencyService,
     private modalService: BsModalService,
     private seoService: SeoService,
-
     // Services V2
     private readonly sessionStorage: SessionStorageService,
     private readonly sessionService: SessionService,
@@ -100,7 +99,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     this.deleteLastSession();
     if (isPlatformBrowser(this.platformId)) {
-      window.onbeforeunload = (event) => {
+      window.onbeforeunload = () => {
         this.setLastSession();
       };
     }
@@ -178,6 +177,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
+      console.log('entro A');
       this.geolocationService.initGeolocation();
 
       this.zone.runOutsideAngular(() => {
@@ -194,12 +194,22 @@ export class AppComponent implements AfterViewInit, OnInit {
         }, 300);
       });
 
-      this.geolocationService.location$.subscribe({
+      this.geolocationService.selectedStore$.subscribe({
         next: () => {
-          if (!this.isOmni) this.cart.load();
+          // si es que la tienda seleccionada no cambia no se carga el carro.
+          console.log(
+            'selectedStore$ desde [AppComponent]===================='
+          );
+          if (!this.isOmni) {
+            console.log('hago cart load 1');
+            this.cart.load();
+          }
         },
       });
     } else {
+      // FIXME: tiene dependencia de stores que no se cargan en este caso.
+      // En que momento pasa por aquí?
+      console.log('setDefaultLocation desde app.component.ts');
       this.geolocationService.setDefaultLocation();
     }
   }

@@ -227,6 +227,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
     };
 
     let respuesta: any = await this.cart.setSaveCart(objeto).toPromise();
+    console.log('cart load desde PageCartComponent');
     this.cart.load();
     if (!respuesta.error) {
       this.toast.success('Carro guardado exitosamente');
@@ -235,13 +236,14 @@ export class PageCartComponent implements OnInit, OnDestroy {
   }
 
   getRecommendedProductsList() {
+    console.log('getSelectedStore desde getRecommendedProductsList');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     this.preferenciaCliente = this.localS.get('preferenciasCliente');
     let obj: any = {
       listaSku: [],
       rut: '',
       cantidad: 6,
-      sucursal: tiendaSeleccionada.codigo,
+      sucursal: tiendaSeleccionada.code,
       localidad: '',
     };
 

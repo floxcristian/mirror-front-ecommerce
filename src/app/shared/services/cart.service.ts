@@ -68,7 +68,7 @@ export class CartService {
 
   private shipping: any = [];
   private discount: CartTotal | null = null;
-  loadingCart = false;
+  isLoadingCart!: boolean;
 
   get items(): ReadonlyArray<ProductCart> | undefined {
     return this.data.productos;
@@ -122,8 +122,9 @@ export class CartService {
     //options: { name: string; value: string }[] = []
   ): Observable<any> {
     // Sucursal
+    console.log('getSelectedStore desde add');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.codigo;
+    const sucursal = tiendaSeleccionada.code;
 
     this.cartSession = this.localS.get('carroCompraB2B') as any;
     let productoCarro;
@@ -191,8 +192,9 @@ export class CartService {
 
   addLista(products: Product[] | any[] | undefined): Observable<any> {
     // Sucursal
+    console.log('getSelectedStore desde addLista');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.codigo;
+    const sucursal = tiendaSeleccionada.code;
 
     this.cartSession = this.localS.get('carroCompraB2B') as any;
     let productoCarro;
@@ -338,11 +340,10 @@ export class CartService {
   }
 
   load(): void {
-    if (this.loadingCart) {
-      return;
-    }
-    this.loadingCart = true;
+    console.log('load................................');
+    if (this.isLoadingCart) return;
 
+    this.isLoadingCart = true;
     const usuario = this.sessionStorage.get();
     if (!usuario) {
       return;
@@ -352,8 +353,9 @@ export class CartService {
     if (!usuario.hasOwnProperty('documentId')) usuario.documentId = '0';
 
     // Sucursal
+    console.log('getSelectedStore desde load');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.codigo;
+    const sucursal = tiendaSeleccionada.code;
 
     this.http
       .get(
@@ -362,7 +364,7 @@ export class CartService {
       )
       .pipe(
         map((r: any) => {
-          this.loadingCart = false;
+          this.isLoadingCart = false;
 
           this.CartData = r.data;
           this.cartTempData = r.data;
@@ -502,17 +504,16 @@ export class CartService {
   }
 
   async loadOmni(id: any) {
-    this.loadingCart = false;
+    this.isLoadingCart = false;
 
-    if (this.loadingCart) {
-      return;
-    }
-    this.loadingCart = true;
+    if (this.isLoadingCart) return;
+
+    this.isLoadingCart = true;
 
     let r: any = await this.http
       .get(environment.apiShoppingCart + `omni?id=${id}`)
       .toPromise();
-    this.loadingCart = false;
+    this.isLoadingCart = false;
 
     this.CartData = r.data;
     this.cartTempData = r.data;
@@ -637,17 +638,18 @@ export class CartService {
   }
 
   loadPrecio(codigo_tienda: any): void {
-    if (this.loadingCart) {
+    if (this.isLoadingCart) {
       return;
     }
-    this.loadingCart = true;
+    this.isLoadingCart = true;
     const usuario = this.sessionStorage.get();
     if (!usuario) {
       return;
     }
     // Sucursal
+    console.log('getSelectedStore desde loadPrecio');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.codigo;
+    const sucursal = tiendaSeleccionada.code;
     const sucursalPrecio = codigo_tienda;
     this.http
       .get(
@@ -656,7 +658,7 @@ export class CartService {
       )
       .pipe(
         map((r: any) => {
-          this.loadingCart = false;
+          this.isLoadingCart = false;
 
           this.CartData = r.data;
           this.cartTempData = r.data;
@@ -873,8 +875,9 @@ export class CartService {
 
   saveCart(productos: any) {
     // Sucursal
+    console.log('getSelectedStore desde saveCart');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.codigo;
+    const sucursal = tiendaSeleccionada.code;
     const usuario = this.sessionService.getSession();
 
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
@@ -920,8 +923,10 @@ export class CartService {
 
   updateShipping(despacho: any) {
     // Sucursal
+    console.log('getSelectedStore desde updateShipping');
+
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.codigo;
+    const sucursal = tiendaSeleccionada.code;
     const carro: CartData = this.localS.get('carroCompraB2B') as any;
     const usuario: ISession = this.sessionService.getSession();
     // this.root.getDataSesionUsuario();
@@ -1018,11 +1023,12 @@ export class CartService {
     let rut = user && user.documentId;
 
     //obtiene la tienda seleccionada
+    console.log('getSelectedStore desde cargarPrecioEnProducto');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
     const parametrosPrecios = {
       sku: producto.sku,
-      sucursal: tiendaSeleccionada?.codigo,
+      sucursal: tiendaSeleccionada?.code,
       rut: rut,
     };
 
@@ -1226,8 +1232,9 @@ export class CartService {
    * @return cartSession
    */
   cargar_carro() {
+    console.log('getSelectedStore desde cargar_carro');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada?.codigo;
+    const sucursal = tiendaSeleccionada?.code;
     const usuario = this.sessionService.getSession();
 
     let consulta = null;

@@ -54,8 +54,11 @@ export class PageListaPreciosComponent implements OnInit {
   ) {
     this.innerWidth = window.innerWidth;
     // cambio de sucursal
-    this.geolocationService.location$.subscribe({
+    this.geolocationService.selectedStore$.subscribe({
       next: () => {
+        console.log(
+          'selectedStore$ desde [PageListaPreciosComponent]===================='
+        );
         this.reDraw();
         this.buscarPrecios();
       },
@@ -98,12 +101,13 @@ export class PageListaPreciosComponent implements OnInit {
 
   async buscarPrecios() {
     this.showLoading = true;
+    console.log('getSelectedStore desde buscarPrecios');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
     const user = this.sessionService.getSession();
     let parametros: any = {
       rut: user.documentId,
-      sucursal: tiendaSeleccionada.codigo,
+      sucursal: tiendaSeleccionada.code,
     };
 
     this.dtOptions = {

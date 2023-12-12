@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 // Models
 import { StorageKey } from './storage-keys.enum';
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
-import { IGeolocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -11,11 +11,11 @@ import { IGeolocation } from '@core/services-v2/geolocation/models/geolocation.i
 export class GeolocationStorageService {
   constructor(private readonly localStorageService: LocalStorageService) {}
 
-  get(): IGeolocation | null {
+  get(): ISelectedStore | null {
     return this.localStorageService.get(StorageKey.geolocalizacion) || null;
   }
 
-  set(session: IGeolocation): void {
+  set(session: ISelectedStore): void {
     this.localStorageService.set(StorageKey.geolocalizacion, session);
   }
 }

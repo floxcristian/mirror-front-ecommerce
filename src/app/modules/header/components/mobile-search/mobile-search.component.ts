@@ -22,7 +22,6 @@ import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categ
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
 
 @Component({
   selector: 'app-mobile-search',
@@ -64,7 +63,6 @@ export class MobileSearchComponent implements OnInit {
 
   sessionNotStarted = false;
   loadCart = false;
-  tiendaSeleccionada!: ITiendaLocation;
   seleccionado = false;
   isFocusedInput = false;
   constructor(
@@ -99,12 +97,10 @@ export class MobileSearchComponent implements OnInit {
 
     // Tienda seleccionada
 
-    this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    this.geolocationService.location$.subscribe({
+    this.geolocationService.selectedStore$.subscribe({
       next: (res) => {
-        this.tiendaSeleccionada = res.tiendaSelecciona;
         this.cartService.calc();
-        if (res.esNuevaUbicacion) {
+        if (res.isChangeToNearestStore) {
           setTimeout(() => {
             if (this.menuTienda) this.menuTienda.open();
           }, 700);
@@ -112,8 +108,6 @@ export class MobileSearchComponent implements OnInit {
       },
     });
   }
-
-  ngAfterViewInit() {}
 
   ngOnDestroy() {
     this.destroy$.next(true);
@@ -220,7 +214,6 @@ export class MobileSearchComponent implements OnInit {
     this.root.setModalRefBuscador(this.modalRef);
   }
 
-  // Mostrar client
   abrirModalTiendas() {
     this.modalRefTienda = this.modalService.show(this.templateTiendaModal);
     this.logisticsService.obtenerTiendas().subscribe();

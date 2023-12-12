@@ -38,7 +38,7 @@ import {
   IProductFilterCheckbox,
 } from '@core/models-v2/article/product-filter.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { IGeolocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 
 // export interface IFilterMedium{
 //   name:string;
@@ -297,8 +297,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         }
 
         let parametros = {};
+        console.log('getSelectedStore desde PageCategoryComponent 1');
         const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-        const sucursal = tiendaSeleccionada.codigo;
+        const sucursal = tiendaSeleccionada.code;
         if (this.usuario?.documentId === '0') {
           parametros = {
             category: category,
@@ -347,13 +348,14 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           this.textToSearch =
             params['busqueda'] === 'todos' ? '' : params['busqueda'];
           let parametros = {};
+          console.log('getSelectedStore desde PageCategoryComponent 2');
           const tiendaSeleccionada =
             this.geolocationService.getSelectedStore();
           if (this.usuario?.documentId === '0') {
             parametros = {
               category: '',
               word: this.textToSearch,
-              branchCode: tiendaSeleccionada.codigo,
+              branchCode: tiendaSeleccionada.code,
               pageSize: this.productosPorPagina,
               documentId: this.usuario.documentId,
             };
@@ -367,7 +369,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
                     .replace(/[\u0300-\u036f]/g, '')
                 : '',
               pageSize: this.productosPorPagina,
-              branchCode: tiendaSeleccionada?.codigo,
+              branchCode: tiendaSeleccionada?.code,
               documentId: this.usuario?.documentId,
             };
           }
@@ -432,9 +434,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     });
 
     // cuando cambiamos sucursal
-    this.geolocationService.location$.subscribe((r: IGeolocation) => {
+    this.geolocationService.selectedStore$.subscribe((r) => {
       this.reinicaFiltros();
-      this.parametrosBusqueda.branchCode = r.tiendaSelecciona?.codigo || '';
+      this.parametrosBusqueda.branchCode = r.code || '';
       this.cargarCatalogoProductos(this.parametrosBusqueda, '');
     });
 
@@ -586,8 +588,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       const user = this.sessionService.getSession();
       if (user) {
         const producto: IArticleResponse = productos[0];
+        console.log('getSelectedStore desde PageCategoryComponent 3');
         let tienda = this.geolocationService.getSelectedStore();
-        let codigo = tienda ? tienda.codigo : 'SAN BRNRDO';
+        let codigo = tienda.code || '';
         let params = {
           sku: producto.sku,
           documentId: user.documentId,

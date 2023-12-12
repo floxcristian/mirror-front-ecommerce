@@ -20,7 +20,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 
 @Component({
   selector: 'app-page-listas-de-productos',
@@ -30,7 +30,7 @@ import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocatio
 export class PageListasDeProductosComponent implements OnInit {
   innerWidth: number;
   usuario!: ISession;
-  tiendaSeleccionada!: ITiendaLocation;
+  tiendaSeleccionada!: ISelectedStore;
   origen!: string[];
   listas: any = [];
   seleccionada = 0;
@@ -55,6 +55,7 @@ export class PageListasDeProductosComponent implements OnInit {
 
   ngOnInit() {
     this.usuario = this.sessionService.getSession();
+    console.log('getSelectedStore desde PageListasDeProductosComponent');
     this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
     this.getListas();
   }
@@ -90,13 +91,17 @@ export class PageListasDeProductosComponent implements OnInit {
   getPrecio(precios: any[]): number {
     let precio = precios.find(
       (p) =>
-        p.sucursal === this.tiendaSeleccionada?.codigo &&
+        p.sucursal ===
+          this.tiendaSeleccionada.code /*this.tiendaSeleccionada?.codigo*/ &&
         p.rut === this.usuario.documentId
     );
 
     if (isVacio(precio)) {
       precio = precios.find(
-        (p) => p.sucursal === this.tiendaSeleccionada?.codigo && p.rut === '0'
+        (p) =>
+          p.sucursal ===
+            this.tiendaSeleccionada.code /*this.tiendaSeleccionada?.*/ &&
+          p.rut === '0'
       );
     }
 

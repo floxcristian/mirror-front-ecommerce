@@ -59,6 +59,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     // Services V2
     private readonly sessionService: SessionService
   ) {
+    console.log('cart load desde PageCartOvSuccessComponent 1');
     this.cart.load();
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -81,6 +82,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.gclid = this.localS.get('gclid');
+    console.log('cart load desde PageCartOvSuccessComponent 2');
     this.cart.load();
   }
 

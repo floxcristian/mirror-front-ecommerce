@@ -1,7 +1,7 @@
 // Angular
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 // Rxjs
-import { Subscription } from 'rxjs';
+import { Subscription, first } from 'rxjs';
 // Models
 
 // Services
@@ -18,7 +18,7 @@ import { CmsService } from '@core/services-v2/cms.service';
 import { IPage } from '@core/models-v2/cms/homePage-response.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { IGeolocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 @Component({
   selector: 'app-page-home-template',
@@ -42,7 +42,6 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     private productsService: ProductsService,
     private direction: DirectionService,
     private logisticsService: LogisticsService,
-    private localStorage: LocalStorageService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly csmService: CmsService,
@@ -52,21 +51,31 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.user = this.sessionService.getSession();
-    this.cargarPage();
-
-    const geo = this.geolocationStorage.get();
-    if (geo) {
-      this.root.getPreferenciasCliente().then((preferencias) => {
-        this.preferenciasCliente = preferencias;
-        this.cargarPage();
+    this.geolocationService.stores$
+      .pipe(first((stores) => stores.length > 0))
+      .subscribe({
+        next: () => {
+          this.user = this.sessionService.getSession();
+          const geo = this.geolocationStorage.get();
+          if (geo) {
+            this.root.getPreferenciasCliente().then((preferencias) => {
+              this.preferenciasCliente = preferencias;
+              console.log('cargarPage 1');
+              this.cargarPage();
+            });
+          } else {
+            console.log('cargarPage 2');
+            this.cargarPage();
+          }
+        },
       });
-    }
   }
 
   ngAfterViewInit(): void {
-    this.geolocationService.location$.subscribe({
-      next: () => {
+    this.geolocationService.selectedStore$.subscribe({
+      next: (location) => {
+        console.log('location: ', location);
+        console.log('cargarPage 3');
         this.cargarPage();
       },
     });
@@ -74,20 +83,23 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     this.authStateService.session$.subscribe(() => {
       this.root.getPreferenciasCliente().then((preferencias) => {
         this.preferenciasCliente = preferencias;
+        console.log('cargarPage 4');
         this.cargarPage();
       });
     });
 
     this.logisticsService.direccionCliente$.subscribe((r) => {
       this.preferenciasCliente.direccionDespacho = r;
+      console.log('cargarPage 5');
       this.cargarPage();
     });
   }
 
   async cargarPage() {
     const rut = this.user.documentId;
+    console.log('getSelectedStore desde PageHomeTemplateComponent');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.codigo;
+    const sucursal = tiendaSeleccionada.code;
     const localidad = this.preferenciasCliente?.direccionDespacho
       ? this.preferenciasCliente.direccionDespacho.comuna
       : '';

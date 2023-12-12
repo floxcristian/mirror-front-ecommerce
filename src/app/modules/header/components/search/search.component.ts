@@ -14,7 +14,7 @@ import { RootService } from '../../../../shared/services/root.service';
 import { ToastrService } from 'ngx-toastr';
 
 import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, first } from 'rxjs/operators';
 import { CartService } from '../../../../shared/services/cart.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
@@ -31,7 +31,7 @@ import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { ModalStoresComponent } from '../modal-stores/modal-stores.component';
 
 @Component({
@@ -39,7 +39,7 @@ import { ModalStoresComponent } from '../modal-stores/modal-stores.component';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
 })
-export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
+export class SearchComponent implements OnInit, OnDestroy {
   @ViewChild('modalSearch', { read: TemplateRef, static: false })
   template!: TemplateRef<any>;
   @ViewChild('menuSearch', { static: false }) listSearch!: ElementRef;
@@ -52,9 +52,6 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   modalRef!: BsModalRef;
-
-  // Modal Tienda
-  templateTiendaModal!: TemplateRef<any>;
 
   texto = '';
   textToSearch = '';
@@ -73,7 +70,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
 
   sessionNotStarted = false;
   loadCart = false;
-  tiendaSeleccionada!: ITiendaLocation;
+  tiendaSeleccionada!: ISelectedStore;
   seleccionado = false;
   isFocusedInput = false;
 
@@ -82,6 +79,8 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   isVacio = isVacio;
   usuario!: ISession;
   usuarioRef!: Subscription;
+
+  areLoadedStores!: boolean;
 
   constructor(
     private router: Router,
@@ -101,12 +100,12 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly geolocationService: GeolocationServiceV2
   ) {}
 
-  ngOnInit() {
+  onChangeSearchInput(): void {
     this.searchControl = new FormControl('');
     this.searchControl.valueChanges
       .pipe(debounceTime(this.debounce), distinctUntilChanged())
       .subscribe((query) => {
-        if (query.trim() !== '') {
+        if (query.trim()) {
           this.textToSearch = query;
           this.buscarSelect();
         } else {
@@ -114,21 +113,43 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
           this.productosEncontrados = [];
         }
       });
+  }
 
-    this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    console.log('tiendaSeleccionada: ', this.tiendaSeleccionada);
+  onLoadStores(): void {}
 
-    this.geolocationService.location$.subscribe({
-      next: (res) => {
-        this.tiendaSeleccionada = res.tiendaSelecciona;
+  // Analizar esto..
+  onChangeStore(): void {
+    this.geolocationService.selectedStore$.subscribe({
+      next: (selectedStore) => {
+        console.log('tiendaSeleccionada 2');
+        this.tiendaSeleccionada = selectedStore;
         this.cartService.calc();
-        if (res.esNuevaUbicacion) {
+        if (selectedStore.isChangeToNearestStore) {
           setTimeout(() => {
             if (this.menuTienda) this.menuTienda.open();
           }, 700);
         }
       },
     });
+  }
+
+  ngOnInit(): void {
+    this.onChangeSearchInput();
+
+    this.geolocationService.stores$
+      .pipe(first((stores) => stores.length > 0))
+      .subscribe({
+        next: (stores) => {
+          //console.log('stores desde el search component: ', stores);
+          this.areLoadedStores = true;
+          console.log('tiendaSeleccionada 1');
+          // Obtengo tienda seleccionada,
+          // como aun espera a que acepte... se hace un setdefault
+          this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
+          //console.log('tiendaSeleccionada: ', this.tiendaSeleccionada);
+          this.onChangeStore();
+        },
+      });
 
     this.usuario = this.sessionService.getSession();
     if (this.usuario.documentId !== '0')
@@ -149,8 +170,6 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
         this.direccion = r;
       });
   }
-
-  ngAfterViewInit() {}
 
   ngOnDestroy() {
     this.destroy$.next(true);

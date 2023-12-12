@@ -36,7 +36,7 @@ import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { ArticleService } from '@core/services-v2/article.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 declare const $: any;
 declare let fbq: any;
 
@@ -124,7 +124,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
   showMobile: boolean = false;
   matriz: any[] = [];
   comparacion: any[] = [];
-  tiendaSeleccionada!: ITiendaLocation;
+  tiendaSeleccionada!: ISelectedStore;
   IVA = environment.IVA || 0.19;
   addingToCart: boolean = false;
   addcartPromise!: Subscription;
@@ -153,13 +153,14 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private readonly articleService: ArticleService,
     private readonly geolocationService: GeolocationServiceV2
   ) {
+    console.log('getSelectedStore desde PageProductComponent 1');
     this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
     this.preferenciaCliente = this.localS.get('preferenciasCliente');
     // cambio de sucursal
-    this.geolocationService.location$.subscribe({
+    this.geolocationService.selectedStore$.subscribe({
       next: (res) => {
         if (this.product) {
-          this.tiendaSeleccionada = res.tiendaSelecciona;
+          this.tiendaSeleccionada = res;
           this.cart.cargarPrecioEnProducto(this.product);
           this.getMixProducts(this.product.sku);
           // this.getMatrixProducts(this.product.sku);
@@ -332,14 +333,15 @@ export class PageProductComponent implements OnInit, OnDestroy {
   getDetailArticle(sku: string): void {
     const user = this.sessionService.getSession();
     console.log(' getDetailArticle user: ', user);
+    console.log('getSelectedStore desde PageProductComponent 2');
     const selectedStore = this.geolocationService.getSelectedStore();
 
     if (user && selectedStore) {
-      const params = {
+      const params: any = {
         sku,
         documentId: user.documentId,
-        branchCode: selectedStore.codigo,
-        location: selectedStore.comuna,
+        branchCode: selectedStore.code,
+        // location: selectedStore.comuna,
       };
 
       if (this.preferenciaCliente.direccionDespacho !== null)
@@ -453,6 +455,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
   }
 
   getMixProducts(sku: any) {
+    console.log('getSelectedStore desde PageProductComponent 3');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     let rut: string = '0';
     if (this.user) {
@@ -461,7 +464,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     const obj4 = {
       sku: sku,
       documentId: this.user.documentId || '0',
-      branchCode: tiendaSeleccionada?.codigo || 'SAN BRNRDO',
+      branchCode: tiendaSeleccionada?.code || 'SAN BRNRDO',
       location: this.preferenciaCliente.direccionDespacho?.comuna
         ? this.preferenciaCliente.direccionDespacho.comuna
             .normalize('NFD')
@@ -565,7 +568,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     }
     const parametrosPrecios = {
       sku: producto.sku,
-      sucursal: this.tiendaSeleccionada.codigo,
+      sucursal: this.tiendaSeleccionada.code,
       rut,
       cantidad: producto.cantidad,
     };

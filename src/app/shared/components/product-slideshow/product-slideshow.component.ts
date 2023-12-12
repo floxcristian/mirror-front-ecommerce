@@ -29,7 +29,6 @@ import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { CmsService } from '@core/services-v2/cms.service';
 import { IData } from '@core/models-v2/cms/customHomePage-response.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { IGeolocation } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 
 @Component({
@@ -155,8 +154,8 @@ export class ProductSlideshowComponent
       });
     }
 
-    this.geolocationService.location$.subscribe({
-      next: (res) => {
+    this.geolocationService.selectedStore$.subscribe({
+      next: () => {
         this.root.getPreferenciasCliente().then((preferencias) => {
           this.preferenciasCliente = preferencias;
           this.cargarHome();
@@ -215,8 +214,9 @@ export class ProductSlideshowComponent
   cargarHome() {
     this.cargando = true;
     const rut = this.user?.documentId || '0';
+    console.log('getSelectedStore desde ProductSlideshowComponent');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.codigo;
+    const sucursal = tiendaSeleccionada.code;
     const localidad = !isVacio(this.preferenciasCliente.direccionDespacho)
       ? this.preferenciasCliente.direccionDespacho?.comuna
       : '';

@@ -3,32 +3,28 @@ import { Injectable } from '@angular/core';
 // Rxjs
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 // Models
-import {
-  IGeolocation,
-  ITiendaLocation,
-} from '@core/services-v2/geolocation/models/geolocation.interface';
-// Consts
-import { DEFAULT_LOCATION } from './default-location';
+import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { IStore } from './models/store.interface';
 // Services
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 import { GeolocationApiService } from './geolocation-api.service';
-import { IStore } from './models/store.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GeolocationServiceV2 {
-  private locationSubject: Subject<IGeolocation> = new Subject();
-  readonly location$: Observable<IGeolocation> =
-    this.locationSubject.asObservable();
+  private selectedStoreSubject: Subject<ISelectedStore> = new Subject();
+  readonly selectedStore$: Observable<ISelectedStore> =
+    this.selectedStoreSubject.asObservable();
 
+  // Necesito que sea `BehaviorSubject` para poder obtener el valor actual, ya que este mantiene el último valor emitido.
   private storesSubject: BehaviorSubject<IStore[]> = new BehaviorSubject<
     IStore[]
   >([]);
   readonly stores$: Observable<IStore[]> = this.storesSubject.asObservable();
 
   // FIXME: quitar dependencia de esta variable.
-  geolocation!: IGeolocation;
+  geolocation!: ISelectedStore;
 
   constructor(
     private readonly geolocationApiService: GeolocationApiService,
@@ -36,147 +32,184 @@ export class GeolocationServiceV2 {
   ) {}
 
   /**
-   * Establecer tienda por defecto.
-   * @returns
-   */
-  setDefaultLocation(): IGeolocation {
-    const stores = this.storesSubject.value;
-    const defaultStore = stores.find((store) => store.default);
-    if (defaultStore) {
-      this.geolocation = {
-        esNuevaUbicacion: false,
-        obtenida: false,
-        esSeleccionaPorCliente: false,
-        actual: { lat: defaultStore.lat, lon: defaultStore.lng },
-        tiendaSelecciona: {
-          zona: defaultStore.zone,
-          codigo: defaultStore.code,
-        },
-      };
-    } else {
-      this.geolocation = DEFAULT_LOCATION;
-    }
-    console.log('1::::');
-    this.geolocationStorage.set(this.geolocation);
-    return this.geolocation;
-  }
-
-  // FIXME: verificar esto.
-  /**
    * Establecer tienda.
    * @param params
    */
-  setGeolocation(params: {
-    lat: number;
-    lon: number;
-    zona: string;
-    codigo: string;
-  }): void {
-    console.log('2::::');
-    const { lat, lon, zona, codigo } = params;
+  setSelectedStore(zone: string, code: string): void {
     this.geolocation = {
-      esNuevaUbicacion: false,
-      obtenida: false,
-      esSeleccionaPorCliente: true,
-      actual: { lat, lon },
-      tiendaSelecciona: {
-        zona,
-        codigo,
-      },
+      zone,
+      code,
+      isChangeToNearestStore: false,
+      isSelectedByClient: true,
     };
     this.geolocationStorage.set(this.geolocation);
-    this.locationSubject.next(this.geolocation);
+    console.log('[selectedStoreSubject.next] desde [setSelectedStore].');
+    this.selectedStoreSubject.next(this.geolocation);
   }
 
   /**
    * Obtener tienda seleccionada.
    * @returns
    */
-  getSelectedStore(): ITiendaLocation {
-    console.log('3::::');
+  getSelectedStore(): ISelectedStore {
+    //console.log('[getSelectedStore]');
     let geolocation = this.geolocationStorage.get();
+    console.log('--geolocation');
     if (geolocation) {
+      console.log('--1');
       this.geolocation = geolocation;
-      return this.geolocation.tiendaSelecciona;
+      return this.geolocation; //.tiendaSelecciona;
     } else {
+      console.log('setDefaultLocation desde getSelectedStore');
       geolocation = this.setDefaultLocation();
-      return geolocation.tiendaSelecciona;
+      console.log('--2: ', geolocation);
+      return geolocation; //.tiendaSelecciona;
     }
+  }
+
+  /**
+   * Establecer tienda por defecto.
+   * En storage y variable global (se debe quitar esta última).
+   * @returns
+   */
+  setDefaultLocation(): ISelectedStore {
+    console.log('setDefaultLocation...');
+    const stores = this.storesSubject.value;
+    const defaultStore = stores.find((store) => store.default);
+    // FIXME: corregir el tipo...
+    if (defaultStore) {
+      this.geolocation = {
+        isChangeToNearestStore: false,
+        isSelectedByClient: false,
+        zone: defaultStore.zone,
+        code: defaultStore.code,
+      };
+    } else {
+      const firstLocation = stores[0];
+      console.log('firstLocation: ', firstLocation);
+      this.geolocation = {
+        isChangeToNearestStore: false,
+        isSelectedByClient: false,
+        zone: firstLocation.zone,
+        code: firstLocation.code,
+      };
+    }
+
+    this.geolocationStorage.set(this.geolocation);
+    return this.geolocation;
   }
 
   /**
    * Se llama solo una vez en el app.component.
    */
   initGeolocation(): void {
-    console.log('4::::');
     console.log('initGeolocation...');
     this.geolocationApiService.getStores().subscribe({
       next: (stores) => {
         this.storesSubject.next(stores);
         let geolocation = this.geolocationStorage.get();
+
+        // FIXME: esto debe ir después de intentar setear la tienda más cercana.
+
         if (!geolocation) {
+          console.log('setDefaultLocation desde initGeolocation...');
           geolocation = this.setDefaultLocation();
+        }
+        // Si el navegador soporta geolocalización automática y la tienda no fue seleccionada por el cliente.
+        if (navigator.geolocation && !geolocation.isSelectedByClient) {
+          this.setNearestStore();
+        } else {
+          console.log('[selectedStoreSubject.next] desde [initGeolocation].');
+          this.selectedStoreSubject.next(this.geolocation);
         }
       },
     });
-
+    /*
     let geolocation = this.geolocationStorage.get();
     if (geolocation) {
       this.geolocation = geolocation;
     } else {
       geolocation = this.setDefaultLocation();
-    }
-
-    if (navigator.geolocation && !geolocation.esSeleccionaPorCliente) {
-      this.setNearestStore();
-    } else {
-      console.warn('El navegador no soporta la ubicación automática.');
-      this.locationSubject.next(this.geolocation);
-    }
+    }*/
   }
+
+  secondCallbackTimer!: ReturnType<typeof setTimeout>;
 
   /**
    * Establecer tienda más cercana.
    */
   private setNearestStore(): void {
-    console.log('5::::');
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
+    let isFirstCallback = true;
+    console.log('[setNearestStore]===================');
 
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords }) => {
+        if (isFirstCallback) {
+          isFirstCallback = false;
+          const hasSecondCallback = await this.hasSecondCallback();
+          if (hasSecondCallback) return;
+        } else {
+          clearTimeout(this.secondCallbackTimer);
+        }
+
+        const { latitude, longitude } = coords;
         this.geolocationApiService
           .getNearestStore(latitude, longitude)
           .subscribe({
             next: (res) => {
-              this.geolocation.esNuevaUbicacion =
-                this.geolocation.tiendaSelecciona.codigo === res.code;
-              this.geolocation.obtenida = true;
-              this.geolocation.esSeleccionaPorCliente = false;
-              this.geolocation.tiendaSelecciona = {
-                _id: res.id,
-                zona: res.zone,
-                codigo: res.code,
-                lat: res.lat,
-                lon: res.lng,
-                comuna: res.city,
+              this.geolocation = {
+                isSelectedByClient: false,
+                isChangeToNearestStore: this.geolocation.code !== res.code,
+                zone: res.zone,
+                code: res.code,
               };
               this.geolocationStorage.set(this.geolocation);
-              this.locationSubject.next(this.geolocation);
+              console.log(
+                '[selectedStoreSubject.next] desde [setNearestStore].'
+              );
+              this.selectedStoreSubject.next(this.geolocation);
             },
             error: () => {
               console.warn(
                 'No se ha podido establecer la tienda más cercana.'
               );
-              this.locationSubject.next(this.geolocation);
+              console.log(
+                '[selectedStoreSubject.next] desde [setNearestStore(error)].'
+              );
+              this.selectedStoreSubject.next(this.geolocation);
             },
           });
       },
-      () => {
-        console.warn(
-          'No se ha podido obtener su ubicación. Puede cambiar manualmente la tienda.'
+      async (err) => {
+        console.log('err============================');
+        if (isFirstCallback) {
+          isFirstCallback = false;
+          const hasSecondCallback = await this.hasSecondCallback();
+          if (hasSecondCallback) return;
+        } else {
+          clearTimeout(this.secondCallbackTimer);
+        }
+        console.error(err);
+        console.log(
+          '[selectedStoreSubject.next] desde [setNearestStore(failed)].'
         );
-        this.locationSubject.next(this.geolocation);
+        this.selectedStoreSubject.next(this.geolocation);
       }
     );
+  }
+
+  /**
+   * Espera un segundo callback para el `navigator.geolocation.getCurrentPosition`.
+   * @returns
+   */
+  private hasSecondCallback(): Promise<boolean> {
+    const timeout = 500;
+    return new Promise(async (resolve) => {
+      this.secondCallbackTimer = setTimeout(() => resolve(false), timeout);
+      await new Promise(async (innerResolve) => {
+        setTimeout(() => innerResolve(null), timeout);
+      });
+      resolve(true);
+    });
   }
 }

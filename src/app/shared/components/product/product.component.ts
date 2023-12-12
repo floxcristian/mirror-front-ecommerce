@@ -63,7 +63,7 @@ import { InventoryService } from '@core/services-v2/inventory.service';
 import { ModalScalePriceComponent } from '../modal-scale-price/modal-scale-price.component';
 import { IScalePriceItem } from './scale-price-item.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 
 export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
 
@@ -201,7 +201,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   today = Date.now();
   stockMax = 0;
-  tiendaActual!: ITiendaLocation;
+  tiendaActual!: ISelectedStore;
   MODOS = { RETIRO_TIENDA: 'retiroTienda', DESPACHO: 'domicilio' };
   puntoQuiebre: number = 576;
   showMobile: boolean = false;
@@ -244,9 +244,10 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   onChangeStore(): void {
     this.geoLocationServicePromise =
-      this.geolocationService.location$.subscribe({
+      this.geolocationService.selectedStore$.subscribe({
         next: () => {
           this.estado = true;
+          console.log('getSelectedStore desde ProductComponent 1');
           this.tiendaActual = this.geolocationService.getSelectedStore();
           this.Actualizar();
           this.getPopularProducts();
@@ -260,6 +261,8 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     window.onresize = () => {
       this.isMobile();
     };
+
+    console.log('getSelectedStore desde ProductComponent 2');
     this.tiendaActual = this.geolocationService.getSelectedStore();
     if (this.layout !== 'quickview' && isPlatformBrowser(this.platformId)) {
       this.photoSwipePromise = this.photoSwipe.load().subscribe();
@@ -355,10 +358,11 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.quantity.setValue(cantidad);
     const usuario = this.sessionService.getSession();
 
+    console.log('getSelectedStore desde ProductComponent 3');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const parametrosPrecios = {
       sku: this.product!.sku,
-      sucursal: tiendaSeleccionada.codigo,
+      sucursal: tiendaSeleccionada.code,
       rut: usuario.documentId,
       cantidad,
     };
@@ -452,10 +456,11 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   // FIXME: ya no se debe llamar endpoint.
   async obtienePrecioEscala() {
+    console.log('getSelectedStore desde ProductComponent 4');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
     const params = {
-      sucursal: tiendaSeleccionada.codigo,
+      sucursal: tiendaSeleccionada.code,
       sku: this.product!.sku,
       rut: this.usuario.documentId,
     };

@@ -23,8 +23,9 @@ export class ProductsService {
   ) {}
 
   buscarProductosElactic(texto: any) {
+    console.log('getSelectedStore desde buscarProductosElactic');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.codigo;
+    const sucursal = tiendaSeleccionada.code;
     const usuario = this.sessionService.getSession();
 
     const params: any = {

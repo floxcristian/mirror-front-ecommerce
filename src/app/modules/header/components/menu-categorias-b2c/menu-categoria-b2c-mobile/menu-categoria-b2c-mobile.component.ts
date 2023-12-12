@@ -11,10 +11,10 @@ import { RootService } from '../../../../../shared/services/root.service';
 import { LogisticsService } from '../../../../../shared/services/logistics.service';
 import { CartService } from '../../../../../shared/services/cart.service';
 import { DropdownDirective } from '../../../../../shared/directives/dropdown.directive';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ITiendaLocation } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { ModalStoresComponent } from '../../modal-stores/modal-stores.component';
 @Component({
   selector: 'app-menu-categoria-b2c-mobile',
@@ -26,7 +26,7 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
   items: NavigationLink[] = [];
   items_oficial: any[] = [];
   isOpen = false;
-  tiendaSeleccionada!: ITiendaLocation;
+  tiendaSeleccionada!: ISelectedStore;
   private categoriaDetalle: any;
   private arrayCategorias: NavigationLink[] = [];
   private segundoNivel: any;
@@ -106,13 +106,17 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((isOpen) => (this.isOpen = isOpen));
 
+    console.log('getSelectedStore desde MenuCategoriaB2cMobileComponent');
     this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
-    this.geolocationService.location$.subscribe({
+    this.geolocationService.selectedStore$.subscribe({
       next: (res) => {
-        this.tiendaSeleccionada = res.tiendaSelecciona;
+        console.log(
+          'selectedStore$ desde [MenuCategoriaB2cMobileComponent]===================='
+        );
+        this.tiendaSeleccionada = res;
         this.cartService.calc();
-        if (res.esNuevaUbicacion) {
+        if (res.isChangeToNearestStore) {
           setTimeout(() => {
             if (this.menuTienda) this.menuTienda.open();
           }, 700);

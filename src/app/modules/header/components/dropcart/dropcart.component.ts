@@ -1,15 +1,22 @@
+// Angular
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+// Env
+import { environment } from '@env/environment';
+// Rxjs
+import { Subject } from 'rxjs';
+import { takeUntil, map, first } from 'rxjs/operators';
+// Libs
+import { ToastrService } from 'ngx-toastr';
+// Models
+import { ISession } from '@core/models-v2/auth/session.interface';
+// Services
+import { SessionService } from '@core/states-v2/session.service';
 import { CartService } from '../../../../shared/services/cart.service';
 import { ProductCart } from '../../../../shared/interfaces/cart-item';
 import { RootService } from '../../../../shared/services/root.service';
-import { Subject } from 'rxjs';
-import { FormControl, Validators } from '@angular/forms';
-import { takeUntil, map } from 'rxjs/operators';
-import { ToastrService } from 'ngx-toastr';
-import { environment } from '@env/environment';
 import { isVacio } from '../../../../shared/utils/utilidades';
-import { SessionService } from '@core/states-v2/session.service';
-import { ISession } from '@core/models-v2/auth/session.interface';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 
 interface Item {
   ProductCart: ProductCart;
@@ -33,7 +40,7 @@ export class DropcartComponent implements OnInit, OnDestroy {
   saveTimer: any;
   saveTimerLocalCart: any;
   usuario!: ISession;
-  IVA = environment.IVA || 0.19;
+  IVA = environment.IVA;
   isVacio = isVacio;
 
   products: ProductCart[] = [];
@@ -43,14 +50,23 @@ export class DropcartComponent implements OnInit, OnDestroy {
     public root: RootService,
     private toast: ToastrService,
     // Services V2
-    private readonly sessionService: SessionService
-  ) {
-    this.cart.load();
+    private readonly sessionService: SessionService,
+    private readonly geolocationService: GeolocationServiceV2
+  ) {}
+
+  onStoresLoaded(): void {
+    this.geolocationService.stores$
+      .pipe(first((stores) => stores.length > 0))
+      .subscribe({
+        next: () => {
+          this.cart.load();
+        },
+      });
   }
 
   ngOnInit(): void {
-    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
-
+    this.onStoresLoaded();
+    this.usuario = this.sessionService.getSession();
     this.cart.items$
       .pipe(
         takeUntil(this.destroy$),

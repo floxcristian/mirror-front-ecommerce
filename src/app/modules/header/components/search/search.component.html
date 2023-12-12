@@ -29,6 +29,7 @@
         (keyup.enter)="buscar(); menuSearch.toggle(); blurInput()"
         [formControl]="searchControl"
         class="search__input"
+        [disabled]="!areLoadedStores"
         name="search"
         placeholder="¿Qué buscas?"
         aria-label="Site search"
@@ -368,10 +369,10 @@
           <img
             src="../../../../../assets/svg/24.svg"
             style="width: 40px; height: 40px; margin-top: -12px"
-            [alt]="tiendaSeleccionada.zona"
           />
-          <!-- FIXME: debe salir el titulo. -->
-          <span class="icon-title mt-1"> {{ tiendaSeleccionada.zona }}</span>
+          <span class="icon-title mt-1">
+            {{ tiendaSeleccionada ? tiendaSeleccionada.zone : '' }}</span
+          >
         </span>
 
         <div class="indicator__dropdown indicator__dropdown-tienda">
@@ -476,9 +477,3 @@
     </div>
   </div>
 </div>
-
-<!--
-<app-modal-stores
-  (template)="estableceModalTienda($event)"
-  [modalRef]="modalRefTienda"
-></app-modal-stores> -->

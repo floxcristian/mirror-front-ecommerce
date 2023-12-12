@@ -107,9 +107,10 @@ export class PageVerCatalogoComponent implements OnInit {
     let user = this.sessionService.getSession();
     let rut = user.documentId;
 
+    console.log('getSelectedStore desde PageVerCatalogoComponent');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const params: any = {
-      sucursal: tiendaSeleccionada.codigo,
+      sucursal: tiendaSeleccionada.code,
       rut: user.documentId,
       skus: this.skus,
     };

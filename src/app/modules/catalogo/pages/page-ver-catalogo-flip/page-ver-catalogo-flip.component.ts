@@ -152,6 +152,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
 
   async establecerPrecio() {
     let user = this.sessionService.getSession();
+    console.log('getSelectedStore desde PageVerCatalogoFlipComponent');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
     let params: any;
@@ -162,13 +163,13 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     if (this.tipoCatalogo == 'Automatico') {
       console.log(this.rutCatalogo);
       params = {
-        sucursal: tiendaSeleccionada.codigo,
+        sucursal: tiendaSeleccionada.code,
         rut: this.rutCatalogo,
         skus: this.skus,
       };
     } else {
       params = {
-        sucursal: tiendaSeleccionada.codigo,
+        sucursal: tiendaSeleccionada.code,
         rut: user.documentId,
         skus: this.skus,
       };
