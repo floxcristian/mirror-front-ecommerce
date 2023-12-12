@@ -15,13 +15,6 @@ import { BlocksModule } from '../blocks/blocks.module';
 // Components
 import { AccountComponent } from './components/account/account.component';
 
-// FIXME: revisar
-import { DepartmentsComponent } from './components/departments/departments.component';
-// FIXME: No tiene logica...
-import { MegamenuComponent } from './components/megamenu/megamenu.component';
-// FIXME: No se invoca
-import { LinksComponent } from './components/links/links.component';
-
 import { DropcartComponent } from './components/dropcart/dropcart.component';
 import { HeaderComponent } from './header.component';
 import { MenuComponent } from './components/menu/menu.component';
@@ -40,11 +33,8 @@ import { DireccionDespachoComponent } from './components/search-vin-b2b/componen
 @NgModule({
   declarations: [
     // components
-    DepartmentsComponent,
     DropcartComponent,
     HeaderComponent,
-    LinksComponent,
-    MegamenuComponent,
     MenuComponent,
     SearchComponent,
     TopbarComponent,
@@ -76,7 +66,6 @@ import { DireccionDespachoComponent } from './components/search-vin-b2b/componen
     // components
     HeaderComponent,
     MenuComponent,
-    MegamenuComponent,
     ModalStoresComponent,
     MobileSearchComponent,
     TopbarComponent,
