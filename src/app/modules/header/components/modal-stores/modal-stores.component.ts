@@ -55,10 +55,11 @@ export class ModalStoresComponent implements OnInit {
   }
 
   cambiarTienda(): void {
-    this.geolocationService.setSelectedStore(
-      this.tiendaTemporal.zone,
-      this.tiendaTemporal.code
-    );
+    this.geolocationService.setSelectedStore({
+      zone: this.tiendaTemporal.zone,
+      code: this.tiendaTemporal.code,
+      city: this.tiendaTemporal.city,
+    });
 
     console.log('getSelectedStore desde ModalStoresComponent 3');
     this.tienda = this.geolocationService.getSelectedStore();

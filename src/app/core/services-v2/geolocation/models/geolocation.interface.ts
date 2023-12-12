@@ -3,4 +3,5 @@ export interface ISelectedStore {
   isSelectedByClient: boolean;
   zone: string;
   code: string;
+  city: string;
 }

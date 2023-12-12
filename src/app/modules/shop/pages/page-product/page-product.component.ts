@@ -301,11 +301,14 @@ export class PageProductComponent implements OnInit, OnDestroy {
         sku,
         documentId: user.documentId,
         branchCode: selectedStore.code,
-        // location: selectedStore.comuna,
+        location: selectedStore.city,
       };
 
-      if (this.preferenciaCliente.direccionDespacho !== null)
-        params.location = this.preferenciaCliente.direccionDespacho.location
+      if (
+        this.preferenciaCliente &&
+        this.preferenciaCliente?.direccionDespacho !== null
+      )
+        params.location = this.preferenciaCliente?.direccionDespacho?.location
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '');
 
@@ -396,10 +399,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
       sku: sku,
       documentId: this.user.documentId || '0',
       branchCode: tiendaSeleccionada?.code || 'SAN BRNRDO',
-      location: this.preferenciaCliente.direccionDespacho?.comuna
-        ? this.preferenciaCliente.direccionDespacho.comuna
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
+      location: this.preferenciaCliente?.direccionDespacho
+        ? this.preferenciaCliente.direccionDespacho.location
         : '',
     };
     forkJoin([

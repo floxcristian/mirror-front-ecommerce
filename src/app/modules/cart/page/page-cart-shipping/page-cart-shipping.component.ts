@@ -1126,7 +1126,11 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
 
   cambiarTienda(newStore: IStore): void {
     console.log('cambiarTienda: ');
-    this.geolocationService.setSelectedStore(newStore.zone, newStore.code);
+    this.geolocationService.setSelectedStore({
+      zone: newStore.zone,
+      code: newStore.code,
+      city: newStore.city,
+    });
   }
 
   /**

@@ -160,7 +160,7 @@ export class ProductSlideshowComponent
     console.log('getSelectedStore desde ProductSlideshowComponent');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada.code;
-    const localidad = !isVacio(this.preferenciasCliente.direccionDespacho)
+    const localidad = !isVacio(this.preferenciasCliente?.direccionDespacho)
       ? this.preferenciasCliente.direccionDespacho?.city
       : '';
     let localidad_limpia =

@@ -35,10 +35,16 @@ export class GeolocationServiceV2 {
    * Establecer tienda.
    * @param params
    */
-  setSelectedStore(zone: string, code: string): void {
+  setSelectedStore(params: {
+    zone: string;
+    code: string;
+    city: string;
+  }): void {
+    const { zone, code, city } = params;
     this.geolocation = {
       zone,
       code,
+      city,
       isChangeToNearestStore: false,
       isSelectedByClient: true,
     };
@@ -83,6 +89,7 @@ export class GeolocationServiceV2 {
         isSelectedByClient: false,
         zone: defaultStore.zone,
         code: defaultStore.code,
+        city: defaultStore.city,
       };
     } else {
       const firstLocation = stores[0];
@@ -92,6 +99,7 @@ export class GeolocationServiceV2 {
         isSelectedByClient: false,
         zone: firstLocation.zone,
         code: firstLocation.code,
+        city: firstLocation.city,
       };
     }
 
@@ -162,6 +170,7 @@ export class GeolocationServiceV2 {
                 isChangeToNearestStore: this.geolocation.code !== res.code,
                 zone: res.zone,
                 code: res.code,
+                city: res.city,
               };
               this.geolocationStorage.set(this.geolocation);
               console.log(
