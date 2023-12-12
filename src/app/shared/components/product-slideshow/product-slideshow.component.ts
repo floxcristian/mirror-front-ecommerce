@@ -42,7 +42,7 @@ export class ProductSlideshowComponent
 {
   user!: ISession | null;
   isB2B!: boolean;
-  cargando: boolean = true;
+  cargando: boolean = false;
   lstProductos: IData[] = [];
   relleno: any[] = [1, 2, 3, 4, 5];
   ruta: string = '';
@@ -72,48 +72,6 @@ export class ProductSlideshowComponent
     },
     rtl: this.direction.isRTL(),
   };
-
-  // carouselOptionsB2B = {
-  //   items: 5,
-  //   nav: true,
-  //   navText: [
-  //     `<div class="m-arrow__container" ><i class="fa-regular fa-chevron-left"></i></div>`,
-  //     `<div class="m-arrow__container"><i class="fa-regular fa-chevron-right"></i></div>`,
-  //   ],
-  //   dots: true,
-  //   slideBy: 'page',
-  //   responsiveClass: true,
-  //   responsive: {
-  //     1100: { items: 5 },
-  //     920: { items: 5 },
-  //     768: { items: 3 },
-  //     680: { items: 3 },
-  //     500: { items: 3 },
-  //     0: { items: 2 },
-  //   },
-  //   rtl: this.direction.isRTL(),
-  // };
-
-  // carouselOptionsB2BLista = {
-  //   items: 5,
-  //   nav: true,
-  //   navText: [
-  //     `<i class="fas fa-angle-left fa-1x" style="color: #000;"></i>`,
-  //     `<i class="fas fa-angle-right fa-1x" style="color: #000;"></i>`,
-  //   ],
-  //   dots: true,
-  //   slideBy: 'page',
-  //   // loop: true,
-  //   responsive: {
-  //     1366: { items: 5 },
-  //     1100: { items: 4 },
-  //     920: { items: 4 },
-  //     680: { items: 2 },
-  //     500: { items: 1 },
-  //     0: { items: 1 },
-  //   },
-  //   rtl: this.direction.isRTL(),
-  // };
 
   constructor(
     private root: RootService,
@@ -148,7 +106,7 @@ export class ProductSlideshowComponent
 
   ngAfterViewInit() {
     const geo = this.geolocationStorage.get();
-    if (geo && this.preferenciasCliente === undefined) {
+    if (geo && this.user?.documentId !== '0') {
       this.root.getPreferenciasCliente().then((preferencias) => {
         this.preferenciasCliente = preferencias;
         this.cargarHome();
@@ -157,10 +115,14 @@ export class ProductSlideshowComponent
 
     this.geolocationService.location$.subscribe({
       next: (res) => {
-        this.root.getPreferenciasCliente().then((preferencias) => {
-          this.preferenciasCliente = preferencias;
+        if (this.user?.documentId !== '0') {
+          this.root.getPreferenciasCliente().then((preferencias) => {
+            this.preferenciasCliente = preferencias;
+            this.cargarHome();
+          });
+        } else {
           this.cargarHome();
-        });
+        }
       },
     });
 
@@ -193,32 +155,13 @@ export class ProductSlideshowComponent
     this.innerWidth = event.target.innerWidth;
   }
 
-  // getCantSlides(tipo: string = '') {
-  //   if (this.innerWidth > 1366) {
-  //     return 5;
-  //   }
-  //   if (this.innerWidth > 1100) {
-  //     return tipo === 'lista' ? 4 : 5;
-  //   }
-  //   if (this.innerWidth > 920) {
-  //     return tipo === 'lista' ? 2 : 3;
-  //   }
-  //   if (this.innerWidth > 680) {
-  //     return tipo === 'lista' ? 1 : 2;
-  //   }
-  //   if (this.innerWidth > 500) {
-  //     return tipo === 'lista' ? 1 : 2;
-  //   }
-  //   return 1;
-  // }
-
   cargarHome() {
     this.cargando = true;
     const rut = this.user?.documentId || '0';
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada.codigo;
-    const localidad = !isVacio(this.preferenciasCliente.direccionDespacho)
-      ? this.preferenciasCliente.direccionDespacho?.city
+    const localidad = !isVacio(this.preferenciasCliente?.direccionDespacho)
+      ? this.preferenciasCliente?.direccionDespacho?.city
       : '';
     let localidad_limpia =
       localidad?.normalize('NFD').replace(/[\u0300-\u036f]/g, '') || '';
@@ -236,33 +179,9 @@ export class ProductSlideshowComponent
             console.log(err);
           },
         });
-      // this.productsService.getHomePageB2c(params).subscribe((r: any) => {
-      //   this.url = r.urls;
-      //   this.lstProductos = r.data;
-      //   this.cargando = false;
-      // });
     } else {
       this.cargando = false;
     }
-    // if (this.user?.documentId !== '0' && !this.isB2B) {
-    //   this.url = [];
-    //   this.lstProductos = [];
-    //   this.productsService.getHomePageB2c(params).subscribe((r: any) => {
-    //     this.url = r.urls;
-    //     this.lstProductos = r.data;
-    //     this.cargando = false;
-    //   });
-    // } else if (this.user?.documentId !== '0' && this.isB2B) {
-    //   this.url = [];
-    //   this.lstProductos = [];
-    //   this.productsService.getHomePageB2b(params).subscribe((r: any) => {
-    //     this.lstProductos = this.quitarElementos(r.data);
-    //     this.url = r.urls;
-    //     this.cargando = false;
-    //   });
-    // } else {
-    //   this.cargando = false;
-    // }
   }
 
   quitarElementos(data: any) {
@@ -274,36 +193,10 @@ export class ProductSlideshowComponent
     return lst_limpios;
   }
 
-  // cargarListas() {
-  //   this.listas = [];
-  //   this.clientsService
-  //     .getListaArticulosFavoritos(this.user?.documentId || '')
-  //     .subscribe((resp: ResponseApi) => {
-  //       if (resp.data.length > 0) {
-  //         if (resp.data[0].listas.length > 0) {
-  //           this.listas = resp.data[0].listas;
-  //           const detalleSkus = resp.data[0].detalleSkus;
-  //           this.listas = this.listas.map((list) => {
-  //             const products: any[] = [];
-  //             list.skus.forEach((p) => {
-  //               const detalle = detalleSkus.find((dp: any) => dp.sku === p);
-  //               products.push(detalle);
-  //             });
-  //             list.detalleSkus = products;
-  //             return list;
-  //           });
-  //         }
-  //       }
-  //     });
-  // }
-
   delay(ms: any) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  // getLink(texto: any) {
-  //   return texto.trim().replace(/ /g, '-');
-  // }
   over(event: any) {
     let el: any = event.target.parentNode;
     let clase: any = el.classList;

@@ -1,9 +1,5 @@
 // Angular
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-// Rxjs
-import { Subscription } from 'rxjs';
-// Models
-
 // Services
 import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { DirectionService } from '../../../../shared/services/direction.service';
@@ -18,7 +14,6 @@ import { CmsService } from '@core/services-v2/cms.service';
 import { IPage } from '@core/models-v2/cms/homePage-response.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { IGeolocation } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 @Component({
   selector: 'app-page-home-template',
@@ -28,21 +23,14 @@ import { GeolocationStorageService } from '@core/storage/geolocation-storage.ser
 export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
   preferenciasCliente!: PreferenciasCliente;
   user!: ISession;
-  despachoCliente!: Subscription;
 
   //declarando la variable para ver los tipos
-  carga = true;
-  carga_producto_home = true;
-  carga_listo_especial = true;
+  carga: boolean = true;
   pageHome: IPage[] = [];
 
   constructor(
-    private pageHomeService: PageHomeService,
     private root: RootService,
-    private productsService: ProductsService,
-    private direction: DirectionService,
     private logisticsService: LogisticsService,
-    private localStorage: LocalStorageService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly csmService: CmsService,
@@ -53,14 +41,20 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
 
   async ngOnInit(): Promise<void> {
     this.user = this.sessionService.getSession();
-    this.cargarPage();
+    // this.cargarPage();
 
     const geo = this.geolocationStorage.get();
     if (geo) {
-      this.root.getPreferenciasCliente().then((preferencias) => {
-        this.preferenciasCliente = preferencias;
+      if (this.user.documentId !== '0') {
+        this.root.getPreferenciasCliente().then((preferencias) => {
+          this.preferenciasCliente = preferencias;
+          this.cargarPage();
+        });
+      } else {
         this.cargarPage();
-      });
+      }
+    } else {
+      this.cargarPage();
     }
   }
 
@@ -85,6 +79,7 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
   }
 
   async cargarPage() {
+    this.carga = true;
     const rut = this.user.documentId;
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada.codigo;
