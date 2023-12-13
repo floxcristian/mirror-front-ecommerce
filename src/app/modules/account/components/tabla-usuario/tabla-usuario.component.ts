@@ -5,6 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { UsersService } from '../../service/users.service';
 import { environment } from '@env/environment';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { SubAccountService } from '@core/services-v2/sub-account.service';
+import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
 
 class DataTablesResponse {
   data!: any[];
@@ -24,12 +26,14 @@ export class TablaUsuarioComponent implements OnInit {
   @Input() userSession!: ISession;
   dtOptions: DataTables.Settings = {};
   loadingData = false;
-  users: any = [];
+  users: IEcommerceUser[] = [];
   editUser = false;
   constructor(
     private httpClient: HttpClient,
     private toastr: ToastrService,
-    private userService: UsersService
+    private userService: UsersService,
+    // Services V2
+    private readonly subAccountService: SubAccountService
   ) {}
 
   ngOnInit() {
@@ -64,45 +68,36 @@ export class TablaUsuarioComponent implements OnInit {
         user.data_order = dataTablesParameters.order[0].dir;
         this.users = [];
         let params = Object.assign(dataTablesParameters, user);
-        let url = environment.apiCustomer + `getusuario`;
-        let username: String = 'services';
-        let password: String = '0.=j3D2ss1.w29-';
-        let authdata = window.btoa(username + ':' + password);
-        let head = {
-          Authorization: `Basic ${authdata}`,
-          'Access-Control-Allow-Headers':
-            'Authorization, Access-Control-Allow-Headers',
-        };
-        let headers = new HttpHeaders(head);
-        this.httpClient
-          .post<DataTablesResponse>(url, params, { headers: headers })
-          .subscribe(
-            (resp: any) => {
+
+        this.subAccountService
+          .getSubAccounts({ documentId: user.rut })
+          .subscribe({
+            next: (resp) => {
               this.users = resp.data;
 
               this.loadingData = false;
 
               callback({
-                recordsTotal: resp.largo[0].count,
-                recordsFiltered: resp.largo[0].count,
+                recordsTotal: resp.total,
+                recordsFiltered: resp.total,
                 data: [],
               });
             },
-            (error) => {
-              console.log(error);
+            error: (err) => {
+              console.log(err);
               this.toastr.error('Error de conexión, para obtener usuarios');
               this.loadingData = false;
-            }
-          );
+            },
+          });
       },
       columns: [
         { title: 'Usuario', data: 'username', width: '10%' },
-        { title: 'Nombre', data: 'first_name', width: '10%' },
-        { title: 'Apellido', data: 'last_name', width: '10%' },
+        { title: 'Nombre', data: 'firstName', width: '10%' },
+        { title: 'Apellido', data: 'lastName', width: '10%' },
         { title: 'Telefono', data: 'phone', width: '10%' },
         { title: 'Email', data: 'email', width: '10%' },
-        { title: 'Rol', data: 'user_role', width: '10%' },
-        { title: 'Activo', data: '_id', width: '10%' },
+        { title: 'Rol', data: 'userRole', width: '10%' },
+        { title: 'Activo', data: 'active', width: '10%' },
         { title: 'Acciones', data: '_id', width: '10%' },
       ],
     };
