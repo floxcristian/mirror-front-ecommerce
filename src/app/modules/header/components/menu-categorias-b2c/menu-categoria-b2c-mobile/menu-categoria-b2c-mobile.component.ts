@@ -3,9 +3,7 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CategoryApi } from '../../../../../shared/interfaces/category-api';
 import { NavigationLink } from '../../../../../shared/interfaces/navigation-link';
-import { CategoryService } from '../../../../../shared/services/category.service';
 import { MenuCategoriasB2cService } from '../../../../../shared/services/menu-categorias-b2c.service';
 import { RootService } from '../../../../../shared/services/root.service';
 import { LogisticsService } from '../../../../../shared/services/logistics.service';
@@ -16,6 +14,8 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { ModalStoresComponent } from '../../modal-stores/modal-stores.component';
+import { ICategoryDetail, IChildren, ISecondLvl, IThirdLvl } from '@core/models-v2/cms/categories-response.interface';
+import { CmsService } from '@core/services-v2/cms.service';
 @Component({
   selector: 'app-menu-categoria-b2c-mobile',
   templateUrl: './menu-categoria-b2c-mobile.component.html',
@@ -24,16 +24,16 @@ import { ModalStoresComponent } from '../../modal-stores/modal-stores.component'
 export class MenuCategoriaB2cMobileComponent implements OnInit {
   private destroy$: Subject<any> = new Subject();
   items: NavigationLink[] = [];
-  items_oficial: any[] = [];
+  items_oficial: NavigationLink[] = [];
   isOpen = false;
   tiendaSeleccionada!: ISelectedStore;
-  private categoriaDetalle: any;
+  private categoriaDetalle!: ICategoryDetail;
   private arrayCategorias: NavigationLink[] = [];
-  private segundoNivel: any;
-  private categoriaDetalleOficial: any;
+  private segundoNivel!: ISecondLvl;
+  private categoriaDetalleOficial!: ICategoryDetail;
   private arrayCategoriasOficial: NavigationLink[] = [];
-  private segundoNivelOficial: any;
-  categorias_oficial: any[] = [
+  private segundoNivelOficial!: ISecondLvl;
+  categorias_oficial: IChildren[] = [
     {
       title: 'TIENDAS OFICIALES',
       id: 1000,
@@ -88,7 +88,6 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
   @ViewChild('menuTienda', { static: false }) menuTienda!: DropdownDirective;
   constructor(
     public menuCategorias: MenuCategoriasB2cService,
-    private categoriesService: CategoryService,
     private modalService: BsModalService,
     private router: Router,
     public localS: LocalStorageService,
@@ -96,7 +95,8 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
     private cartService: CartService,
     private root: RootService,
     // Services V2
-    private readonly geolocationService: GeolocationServiceV2
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly cmsService: CmsService
   ) {
     this.obtieneCategorias();
   }
@@ -131,15 +131,20 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
   }
 
   obtieneCategorias() {
-    this.categoriesService.$categoriasHeader.subscribe((r) => {
-      const categorias: CategoryApi[] = r.data;
-      this.sortCategories(categorias);
-      this.formatCategories(categorias);
-      this.formatCategories2(this.categorias_oficial);
+    this.cmsService.getCategories().subscribe({
+      next: (res) => {
+        const categorias: IChildren[] = res.data;
+        this.sortCategories(categorias);
+        this.formatCategories(categorias);
+        this.formatCategories2(this.categorias_oficial);
+      },
+      error: (err) => {
+        console.log(err);
+      },
     });
   }
 
-  formatCategories(data: CategoryApi[]) {
+  formatCategories(data: IChildren[]) {
     for (const primeraCategoria of data) {
       this.categoriaDetalle = {
         url: [
@@ -168,14 +173,14 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
                 this.root.replaceSlash(primeraCategoria.url),
                 this.root.replaceSlash(segundaCategoria.url),
               ],
-              items: '',
+              items: [],
             },
           ],
         };
 
-        const tercerNivel = [];
+        const tercerNivel:IThirdLvl[] = [];
         for (const terceraCategoria of segundaCategoria.children || []) {
-          const dataLineas = {
+          const dataLineas:IThirdLvl = {
             label: `${terceraCategoria.title}`,
             url: [
               '/',
@@ -199,9 +204,9 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
     this.items = this.arrayCategorias;
   }
 
-  private sortCategories(items: any) {
+  private sortCategories(items: IChildren[]) {
     for (const item of items) {
-      const segundaCategoria: any[] = item.children;
+      const segundaCategoria: IChildren[] = item.children;
 
       segundaCategoria.sort((a, b) => {
         if (a.children.length < b.children.length) {
@@ -228,7 +233,7 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
   }
 
   //datos tienda oficial
-  formatCategories2(data: CategoryApi[]) {
+  formatCategories2(data: IChildren[]) {
     for (const primeraCategoria of data) {
       this.categoriaDetalleOficial = {
         url: ['/', 'inicio', 'productos'],
@@ -247,11 +252,11 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
                 'productos',
                 this.root.replaceSlash(segundaCategoria.url),
               ],
-              items: '',
+              items: [],
             },
           ],
         };
-        const tercerNivel: any[] = [];
+        const tercerNivel: IThirdLvl[] = [];
         this.segundoNivelOficial.items[0].items = tercerNivel;
         this.categoriaDetalleOficial.menu.push(
           this.segundoNivelOficial.items[0]

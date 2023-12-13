@@ -1,9 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CategoryApi } from '../../../../shared/interfaces/category-api';
 import { NavigationLink } from '../../../../shared/interfaces/navigation-link';
-import { CategoryService } from '../../../../shared/services/category.service';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { CmsService } from '@core/services-v2/cms.service';

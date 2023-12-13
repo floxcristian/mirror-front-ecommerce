@@ -1,50 +1,3 @@
-.bg-primary {
-  background-color: #0063b9 !important;
-  color: white !important;
-}
-
-.botonSeccion {
-  cursor: pointer;
-}
-@media (max-width: 800px) and (min-width: 300px) {
-  .divSlider {
-    margin-top: -15px;
-  }
-}
-.botonSeccion :hover {
-  background-color: #009579 !important;
-  cursor: pointer;
-}
-
-.odd {
-  padding-left: 0px !important;
-}
-
-.even {
-  padding-right: 0px !important;
-}
-
-@media screen and (max-width: 425px) {
-  .listado {
-    position: relative;
-    bottom: 75px;
-    left: -10px;
-  }
-}
-
-@media screen and (max-width: 375px) {
-  .listado {
-    left: 285px;
-    bottom: 98px;
-  }
-}
-
-@media screen and (max-width: 320px) {
-  .listado {
-    left: 230px;
-  }
-}
-
 .card_especiales {
   cursor: pointer;
   border: 1px solid #0063b9;
@@ -71,6 +24,10 @@
   cursor: pointer !important;
 }
 
+::ng-deep.ngx-pagination  {
+  text-align: center;
+}
+
 .w-80 {
   width: 80% !important;
 }
@@ -79,12 +36,4 @@
   border: none;
   box-shadow: 0 4px 6px 0 rgb(0 0 0 / 50%);
   border-radius: 19px;
-}
-
-h1:first-letter {
-  text-transform: uppercase;
-}
-
-h1 {
-  text-transform: lowercase;
 }

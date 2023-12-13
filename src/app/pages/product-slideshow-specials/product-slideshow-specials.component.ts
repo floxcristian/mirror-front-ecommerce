@@ -10,8 +10,6 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { RootService } from 'src/app/shared/services/root.service';
-import { DirectionService } from 'src/app/shared/services/direction.service';
-import { ProductsService } from 'src/app/shared/services/products.service';
 import { isPlatformBrowser } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { PreferenciasCliente } from '@shared/interfaces/preferenciasCliente';
@@ -48,41 +46,21 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
   lstProductos!: ISection[];
   especial!: ISpecial[];
   banners!: IBanner;
-  producto_espacial: any = [];
+  producto_espacial: IArticle[] = [];
   @Input() nombre: string | undefined = undefined;
   user!: ISession;
   isB2B!: boolean;
   cantItem: number = 4;
   innerWidth: number;
   ruta!: any[];
-  carouselOptions = {
-    items: 5,
-    nav: false,
-    dots: true,
-    loop: true,
-    autoplay: true,
-    autoplayTimeout: 2000,
-    responsive: {
-      1100: { items: 5 },
-      920: { items: 5 },
-      680: { items: 3 },
-      500: { items: 2 },
-      0: { items: 2 },
-    },
-    rtl: this.direction.isRTL(),
-  };
   config: any;
-  collection = { count: 60, data: [] };
   p: number = 1;
   preferenciaCliente!: PreferenciasCliente;
   despachoCliente!: Subscription;
 
   constructor(
     private root: RootService,
-    private productsService: ProductsService,
     public toast: ToastrService,
-
-    private direction: DirectionService,
     private localStorage: LocalStorageService,
     private router: Router,
     private logistic: LogisticsService,
@@ -155,23 +133,21 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
   }
 
   async cargaEspeciales() {
-    let rut = this.user.documentId;
+    let documentId = this.user.documentId;
     console.log('getSelectedStore desde ProductSlideshowSpecialsComponent');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada.code;
     var especials = this.router.url.split('/').pop() || '';
-    let localidad = '';
+    let location = '';
 
     //clean tracking vars
     var look = especials?.indexOf('?');
     if ((look || 0) > -1) especials = especials?.substr(0, look);
 
     if (this.preferenciaCliente && this.preferenciaCliente.direccionDespacho)
-      localidad = this.preferenciaCliente.direccionDespacho.city
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
+    location = this.preferenciaCliente.direccionDespacho.city
 
-    this.cmsService.getSpecial(especials, rut, sucursal, localidad).subscribe({
+    this.cmsService.getSpecial(especials, documentId, sucursal, location).subscribe({
       next: (res) => {
         this.especial = res.specials;
         this.banners = res.banners[0];
@@ -218,14 +194,5 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
 
     this.producto_espacial = this.lstProductos[index].productos;
     this.nombre = this.lstProductos[index].nombre;
-  }
-
-  setLayout(value: Layout): void {
-    this.layout = value;
-    if (value === 'grid-with-features') {
-      this.grid = 'grid-4-full';
-    } else {
-      this.grid = 'grid-4-full';
-    }
   }
 }
