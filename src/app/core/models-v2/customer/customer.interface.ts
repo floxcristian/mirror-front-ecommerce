@@ -59,3 +59,9 @@ export interface ICustomerCostCenter {
   code: string;
   name: string;
 }
+
+export interface ICustomerCredit {
+  assigned: number;
+  used: number;
+  balance: number;
+}

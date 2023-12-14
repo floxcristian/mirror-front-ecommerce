@@ -18,7 +18,8 @@ $local-square-root-of-two: 1.414213;
   opacity: 1;
 }
 .tooltip-inner {
-  background: $tooltip-color;
+  // background: $tooltip-color;
+  background: #0063b9;
   color: $tooltip-font-color;
   border-radius: 1.5px;
   position: relative;
@@ -33,7 +34,8 @@ $local-square-root-of-two: 1.414213;
     height: $local-arrow-size;
     border-radius: 1px;
     border: none;
-    background: $tooltip-color;
+    // background: $tooltip-color;
+    background: #0063b9;
     transform: rotateZ(45deg)
       scale(
         math.div(
