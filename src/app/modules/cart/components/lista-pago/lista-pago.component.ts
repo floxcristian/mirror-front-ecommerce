@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { PaymentMethodService } from '@core/services-v2/payment-method.service';
-import { PaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
+import { IPaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
 import { SessionService } from '@core/states-v2/session.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./lista-pago.component.scss'],
 })
 export class ListaPagoComponent implements OnInit {
-  paymentMethods: PaymentMethod[] = [];
+  paymentMethods: IPaymentMethod[] = [];
   paymentMethodActive: any = null;
   @Input() omni = false;
   @Output() payment: EventEmitter<any> = new EventEmitter();
@@ -51,7 +51,7 @@ export class ListaPagoComponent implements OnInit {
     }
   }
 
-  activepaymentMethod(item: PaymentMethod) {
+  activepaymentMethod(item: IPaymentMethod) {
     this.paymentMethodActive = item.code;
     this.payment.emit(item);
   }

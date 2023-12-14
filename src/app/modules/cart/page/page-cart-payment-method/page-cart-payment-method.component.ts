@@ -59,7 +59,12 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 import { PaymentMethodService } from '@core/services-v2/payment-method.service';
-import { PaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
+import { IPaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
+import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
+import { IStore } from '@core/services-v2/geolocation/models/store.interface';
+import { UserRoleType } from '@core/enums/user-role-type.enum';
+import { IKhipuBank } from '@core/models-v2/payment-method/khipu-bank.interface';
 
 declare const $: any;
 export interface Archivo {
@@ -90,7 +95,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   uploadedFiles!: File;
   documentType = 'factura';
   totalCarro = 0;
-  paymentMethods: PaymentMethod[] = [];
+  paymentMethods: IPaymentMethod[] = [];
   paymentMethodActive: string | null = null;
   bloqueoCliente: any;
   clienteBloqueado = false;
@@ -120,7 +125,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   addresses: ShippingAddress[] = [];
   direccionDespacho: ShippingAddress;
   shippingType = '';
-  tiendaRetiro!: ShippingStore;
+  tiendaRetiro?: IStore = undefined;
   pagoKhipu = null;
   esBoleta: boolean = false;
   showresumen: boolean = false;
@@ -145,6 +150,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   cargandoGiros!: boolean;
   giros$!: Observable<any[]>;
 
+  userRoleType = UserRoleType;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -165,6 +172,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private readonly toastr: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
+    private readonly geolocationApiService: GeolocationApiService,
     private readonly paymentMethodService: PaymentMethodService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
@@ -256,7 +264,10 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
    */
   checkIsB2b(): boolean {
     const user = this.sessionService.getSession();
-    return ['supervisor', 'comprador'].includes(user.userRole);
+    return (
+      user.userRole === UserRoleType.SUPERVISOR ||
+      user.userRole === UserRoleType.BUYER
+    );
   }
 
   async ngOnInit() {
@@ -350,7 +361,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     switch (this.cartSession.despacho?.tipo) {
       case 'TIENDA': //RETIRO EN TIENDA
         //se revisa si existe la informacion en el localstor  age desde el paso anterior
-        this.tiendaRetiro = this.localS.get('tiendaRetiro');
+        this.tiendaRetiro = this.localS.get(StorageKey.tiendaRetiro);
 
         if (!this.tiendaRetiro) {
           //si no se encontró, se obtiene llamando a la api
@@ -387,8 +398,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       this.paymentKhipu(r);
     });
     if (
-      this.userSession?.userRole !== 'supervisor' &&
-      this.userSession?.userRole !== 'comprador'
+      this.userSession?.userRole !== UserRoleType.SUPERVISOR &&
+      this.userSession?.userRole !== UserRoleType.BUYER
     ) {
       this.gtmService.pushTag({
         event: 'payment',
@@ -431,25 +442,22 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   obtieneTiendaSegunRecid(recid: any) {
-    this.logistics
-      .obtieneDireccionesTiendaRetiro({
-        usuario: this.userSession?.documentId,
-      })
-      .subscribe(
-        (r: ResponseApi) => {
-          this.tiendaRetiro = r.data.filter(
-            (x: ShippingStore) => x.recid.toString() == recid.toString()
-          )[0];
-          if (this.tiendaRetiro) {
-            this.localS.set('tiendaRetiro', this.tiendaRetiro);
-          }
-        },
-        (e) => {
-          this.toast.error(
-            'Ha ocurrido un error en servicio al obtener las direccion de la tienda'
-          );
+    this.geolocationApiService.getStores().subscribe({
+      next: (data) => {
+        this.tiendaRetiro = data.find(
+          (x) => x.id.toString() === recid.toString()
+        );
+        if (this.tiendaRetiro) {
+          this.localS.set(StorageKey.tiendaRetiro, this.tiendaRetiro);
         }
-      );
+      },
+      error: (err) => {
+        console.log(err);
+        this.toast.error(
+          'Ha ocurrido un error en servicio al obtener las direccion de la tienda'
+        );
+      },
+    });
   }
 
   obtieneDireccionCliente() {
@@ -617,7 +625,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         };
 
         this.cart.load();
-        if (this.userSession?.userRole === 'supervisor') {
+        if (this.userSession?.userRole === UserRoleType.SUPERVISOR) {
           await this.cart.confirmarOV(this.cartSession._id).toPromise();
           this.router.navigate(
             ['/', 'carro-compra', 'gracias-por-tu-compra'],
@@ -721,7 +729,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
    * Seleccionar pago.
    * @param item
    */
-  activepaymentMethod(item: PaymentMethod) {
+  activepaymentMethod(item: IPaymentMethod) {
     if (item.code === 'OC') {
       this.selectedDocument = 'FEL';
     }
@@ -837,7 +845,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
           // let userCambio: any = this.root.getDataSesionUsuario();
           //userCambio._id = user.email;
           userCambio.email = user.email;
-          userCambio.userRole = 'compradorb2c';
+          userCambio.userRole = UserRoleType.B2C;
           userCambio.documentId = user.rut;
           userCambio.login_temp = true;
           userCambio.firstName = this.formVisita.value.nombre || '';
@@ -992,24 +1000,12 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
       if (await this.validarStockActual()) return;
       await this.verificar_carro();
-      let params: PaymentParams = {
-        buy_order: this.cartSession._id || '',
-        session_id: this.cartSession._id || '',
-        amount: this.totalCarro,
-        return_url: `${environment.apiImplementosPagos}transbank/confirmarTransaccion`,
-      };
       await this.updateCartAndUserTurn();
       await this.prepararCarroPrePago();
 
-      let consulta: any = await this.paymentService.createTransBankTransaccion(
-        params
-      );
-      if (consulta) {
-        this.transBankToken = consulta;
-        setTimeout(() => {
-          $('#transBankForm').submit();
-        }, 10);
-      }
+      this.paymentMethodService.redirectToWebpayTransaction({
+        shoppingCartId: this.cartSession._id!.toString(),
+      });
     } catch (err) {
       this.toast.error('Ha ocurrido un error al gestionar el pago.');
       this.btnWebpayPost = false;
@@ -1029,13 +1025,12 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
       if (await this.validarStockActual()) return;
       await this.verificar_carro();
-      const successUrl = environment.urlPaymentVoucher;
-      const canceledUrl = environment.urlPaymentCanceled;
-      const documento = this.cartSession._id;
-      const url = `${environment.urlMercadoPago}?documento=${documento}&success=${successUrl}&pending=${canceledUrl}&failure=${canceledUrl}`;
       await this.updateCartAndUserTurn();
       await this.prepararCarroPrePago();
-      window.location.href = url + '&nocache=' + new Date().getTime();
+
+      this.paymentMethodService.redirectToMercadoPagoTransaction({
+        shoppingCartId: this.cartSession._id!.toString(),
+      });
     } catch (err) {
       this.toast.error('Ha ocurrido un error al gestionar el pago.');
       this.btnWebpayPost = false;
@@ -1045,7 +1040,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   /**
    * Continuar pago con Khipu.
    */
-  async paymentKhipu(banco: any) {
+  async paymentKhipu(banco?: IKhipuBank) {
     try {
       this.localS.set('Metodo', 'KHIP');
       this.localS.set('id_carro', this.cartSession._id);
@@ -1058,36 +1053,13 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       await this.verificar_carro();
       await this.updateCartAndUserTurn();
       await this.prepararCarroPrePago();
-      const successUrl = environment.urlPaymentVoucher;
-      const canceledUrl = environment.urlPaymentCanceled;
-      const documento = this.cartSession._id;
-      let params = {};
-      if (!this.invitado) {
-        params = {
-          successUrl: successUrl,
-          canceledUrl: canceledUrl,
-          id_carro: documento,
-          usuario_email: this.userSession.username,
-          usuario_name:
-            this.userSession.firstName + ' ' + this.userSession.lastName,
-          bank: banco,
-        };
-      } else {
-        params = {
-          successUrl: successUrl,
-          canceledUrl: canceledUrl,
-          id_carro: documento,
-          usuario_email: this.invitado.email,
-          usuario_name:
-            this.invitado.first_name + ' ' + this.invitado.last_name,
-          bank: banco,
-        };
-      }
 
-      let consulta: any = await this.paymentService.createTransKhipu(params);
-
-      window.location.href = consulta.simplified_transfer_url;
       this.loadkhipu = false;
+      this.paymentMethodService.redirectToKhipuTransaction({
+        shoppingCartId: this.cartSession._id!.toString(),
+        bankId: banco ? banco.bankId : '',
+        bankName: banco ? banco.name : '',
+      });
     } catch (err) {
       this.toast.error('Ha ocurrido un error al gestionar el pago.');
       this.loadkhipu = false;
