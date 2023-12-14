@@ -27,7 +27,6 @@ import { RootService } from '../../../../shared/services/root.service';
 import { ToastrService } from 'ngx-toastr';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import {
-  PaymentMethod,
   PaymentParams,
   TransBankToken,
 } from '../../../../shared/interfaces/payment-method';
@@ -59,6 +58,8 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
+import { PaymentMethodService } from '@core/services-v2/payment-method.service';
+import { PaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
 
 declare const $: any;
 export interface Archivo {
@@ -161,8 +162,10 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     // Storage
     private readonly sessionStorage: SessionStorageService,
     private readonly invitadoStorage: InvitadoStorageService,
+    private readonly toastr: ToastrService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly paymentMethodService: PaymentMethodService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -487,31 +490,18 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   async setMethodPayment() {
-    this.paymentMethods = await this.paymentService.getMetodosPago();
-    //if(this.userSession.username!='claudio.montoya@biopc.cl') this.paymentMethods.pop();
-    if (this.sessionService.isB2B()) {
-      const respBloqueo: any = await this.clientsService
-        .getBloqueo(this.userSession.documentId)
-        .toPromise();
-      if (respBloqueo.error) {
-        this.getBloqueoError = true;
-      } else {
-        this.bloqueoCliente = respBloqueo.data;
-        if (this.bloqueoCliente.estado === 'NO') {
-          this.paymentMethods.push({
-            name: 'Línea de crédito',
-            iconClass: '',
-            cod: 'ordenCompra',
-          });
-        } else {
-          this.clienteBloqueado = true;
-        }
-      }
-    }
-
-    if (this.paymentMethods.length == 1) {
-      this.activepaymentMethod(this.paymentMethods[0]);
-    }
+    const username = this.sessionService.getSession().username ?? '';
+    this.paymentMethodService.getPaymentMethods({ username }).subscribe({
+      next: (data) => {
+        this.paymentMethods = data;
+        if (this.paymentMethods.length > 0)
+          this.activepaymentMethod(this.paymentMethods[0]);
+      },
+      error: (err) => {
+        console.log(err);
+        this.toastr.error('No se pudo cargar los métodos de pago');
+      },
+    });
   }
 
   formOV() {
@@ -732,10 +722,10 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
    * @param item
    */
   activepaymentMethod(item: PaymentMethod) {
-    if (item.cod === 'ordenCompra') {
+    if (item.code === 'OC') {
       this.selectedDocument = 'FEL';
     }
-    this.paymentMethodActive = item.cod;
+    this.paymentMethodActive = item.code;
     let active_khipu = false;
 
     if (!this.invitado) {
@@ -750,7 +740,10 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       invitado.rut = this.getValidRutFormat(this.formVisita.value.rut);
       invitado.carro_id = this.cartSession._id || '';
       invitado.tipoEnvio =
-        this.cartSession.despacho?.codTipo === 'VEN- DPCLI' ? 'DES' : 'RC';
+        this.cartSession.despacho?.codTipo === 'VEN- DPCLI' ||
+        this.cartSession.despacho?.codTipo === 'delivery'
+          ? 'DES'
+          : 'RC';
       // this.localS.remove('invitado');
       this.invitadoStorage.remove();
       // this.localS.set('invitado', invitado);

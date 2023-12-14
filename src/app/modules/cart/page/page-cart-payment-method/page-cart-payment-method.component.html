@@ -693,7 +693,7 @@
                       id="pagos_weypaid"
                       class="block-payment"
                       [ngClass]="{
-                        active: this.paymentMethodActive == item.cod
+                        active: this.paymentMethodActive == item.code
                       }"
                       (click)="activepaymentMethod(item)"
                     >
@@ -707,7 +707,7 @@
                             style="font-size: 20px"
                             [ngStyle]="{
                               color:
-                                paymentMethodActive === item.cod
+                                paymentMethodActive === item.code
                                   ? '#118565'
                                   : '#D1D1D1'
                             }"
@@ -739,7 +739,7 @@
                     <div
                       class="block-payment"
                       [ngClass]="{
-                        active: this.paymentMethodActive == item.cod
+                        active: this.paymentMethodActive == item.code
                       }"
                       (click)="activepaymentMethod(item)"
                     >
@@ -753,7 +753,7 @@
                             style="font-size: 20px"
                             [ngStyle]="{
                               color:
-                                paymentMethodActive === item.cod
+                                paymentMethodActive === item.code
                                   ? '#118565'
                                   : '#D1D1D1'
                             }"
@@ -766,13 +766,13 @@
                       <div class="col-sm-10">
                         <span>
                           <i
-                            *ngIf="item.iconClass"
-                            [class]="item.iconClass"
+                            *ngIf="item.iconImage"
+                            [class]="item.iconImage"
                           ></i>
                           <img
                             *ngIf="item.iconImage"
                             [src]="item.iconImage"
-                            [alt]="item.cod"
+                            [alt]="item.code"
                             class="methodPaymentLogo"
                           />
                           <label *ngIf="!item.iconImage">{{
@@ -1232,7 +1232,7 @@
                           id="pagos_weypaid"
                           class="block-payment"
                           [ngClass]="{
-                            active: this.paymentMethodActive == item.cod
+                            active: this.paymentMethodActive == item.code
                           }"
                           (click)="activepaymentMethod(item)"
                         >
@@ -1247,7 +1247,7 @@
                                   style="font-size: 20px"
                                   [ngStyle]="{
                                     color:
-                                      paymentMethodActive === item.cod
+                                      paymentMethodActive === item.code
                                         ? '#118565'
                                         : '#D1D1D1'
                                   }"
@@ -1259,7 +1259,7 @@
                             <span>
                               <img
                                 *ngIf="item.iconImage"
-                                [alt]="item.cod"
+                                [alt]="item.code"
                                 [src]="item.iconImage"
                                 class="lazyload methodPaymentLogo"
                               />
@@ -1284,7 +1284,7 @@
                           id="pagos_weypaid"
                           class="block-payment"
                           [ngClass]="{
-                            active: this.paymentMethodActive == item.cod
+                            active: this.paymentMethodActive == item.code
                           }"
                           (click)="activepaymentMethod(item)"
                         >
@@ -1297,7 +1297,7 @@
                                 style="font-size: 20px"
                                 [ngStyle]="{
                                   color:
-                                    paymentMethodActive === item.cod
+                                    paymentMethodActive === item.code
                                       ? '#118565'
                                       : '#D1D1D1'
                                 }"
@@ -1310,7 +1310,7 @@
                               <img
                                 *ngIf="item.iconImage"
                                 [src]="item.iconImage"
-                                [alt]="item.cod"
+                                [alt]="item.code"
                                 class="methodPaymentLogo"
                               />
                               <label *ngIf="!item.iconImage">{{

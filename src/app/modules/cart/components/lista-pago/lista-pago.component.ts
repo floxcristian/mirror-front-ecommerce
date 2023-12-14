@@ -1,5 +1,8 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { PaymentService } from '../../../../shared/services/payment.service';
+import { PaymentMethodService } from '@core/services-v2/payment-method.service';
+import { PaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
+import { SessionService } from '@core/states-v2/session.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-lista-pago',
@@ -7,27 +10,49 @@ import { PaymentService } from '../../../../shared/services/payment.service';
   styleUrls: ['./lista-pago.component.scss'],
 })
 export class ListaPagoComponent implements OnInit {
-  paymentMethods: any = [];
+  paymentMethods: PaymentMethod[] = [];
   paymentMethodActive: any = null;
   @Input() omni = false;
   @Output() payment: EventEmitter<any> = new EventEmitter();
 
-  constructor(private paymentService: PaymentService) {}
+  constructor(
+    private readonly toastr: ToastrService,
+    // Services V2
+    private readonly sessionService: SessionService,
+    private readonly paymentMethodService: PaymentMethodService
+  ) {}
 
   async ngOnInit() {
-    let pago: any;
+    const username = this.sessionService.getSession().username ?? '';
     if (this.omni) {
-      pago = await this.paymentService.getMetodosPagoOmni();
+      this.paymentMethodService.getPaymentMethods({ username }).subscribe({
+        next: (data) => {
+          this.paymentMethods = data;
+          if (this.paymentMethods.length > 0)
+            this.activepaymentMethod(this.paymentMethods[0]);
+        },
+        error: (err) => {
+          console.log(err);
+          this.toastr.error('No se pudo cargar los métodos de pago');
+        },
+      });
     } else {
-      pago = await this.paymentService.getMetodosPago();
+      this.paymentMethodService.getPaymentMethods({ username }).subscribe({
+        next: (data) => {
+          this.paymentMethods = data;
+          if (this.paymentMethods.length > 0)
+            this.activepaymentMethod(this.paymentMethods[0]);
+        },
+        error: (err) => {
+          console.log(err);
+          this.toastr.error('No se pudo cargar los métodos de pago');
+        },
+      });
     }
-    this.paymentMethods = pago;
-    if (this.paymentMethods.length > 0)
-      this.activepaymentMethod(this.paymentMethods[0]);
   }
 
-  activepaymentMethod(item: any) {
-    this.paymentMethodActive = item.cod;
+  activepaymentMethod(item: PaymentMethod) {
+    this.paymentMethodActive = item.code;
     this.payment.emit(item);
   }
 }
