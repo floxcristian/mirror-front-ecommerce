@@ -1,17 +1,15 @@
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
-import { ClientsService } from '../../../../shared/services/clients.service';
 import { ToastrService } from 'ngx-toastr';
-import { RootService } from '../../../../shared/services/root.service';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { Data } from '../../../../shared/components/card-dashboard-no-chart/card-dashboard-no-chart.component';
-import { GraficoVentaValorada } from '../../../../shared/interfaces/graficoVentaValorada';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { Context } from 'chartjs-plugin-datalabels';
 import { isVacio } from '../../../../shared/utils/utilidades';
-import { GraficoVentasPorUen } from '../../../../shared/interfaces/graficoVentaPorUen';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { CustomerSaleService } from '@core/services-v2/customer-sale.service';
+import { ISalesBySbu, ISalesMonth } from '@core/models-v2/customer/customer-sale.interface';
+import { CustomerService } from '@core/services-v2/customer.service';
 
 @Component({
   selector: 'app-page-dashboard',
@@ -28,12 +26,6 @@ export class PageDashboardComponent {
 
   miCredito!: Data[];
   misFacturas!: Data[];
-
-  chartOptions = {
-    cutoutPercentage: 30,
-    rotation: 1 * Math.PI,
-    circumference: 1 * Math.PI,
-  };
   innerWidth: number;
   anio = new Date().getFullYear();
   mes = new Date().getMonth() + 1;
@@ -50,17 +42,18 @@ export class PageDashboardComponent {
   isB2B: boolean = false;
 
   constructor(
-    private clientService: ClientsService,
     private toastr: ToastrService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly customerSaleService:CustomerSaleService,
+    private readonly customerService:CustomerService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
 
-    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
     if (['supervisor', 'comprador'].includes(this.usuario.userRole))
       this.isB2B = true;
     this.loadChart();
@@ -68,75 +61,63 @@ export class PageDashboardComponent {
 
   loadChart() {
     const rut = this.usuario.documentId;
-    this.clientService
-      .graficoVentaValorada({
-        rutCliente: rut,
-        anio: this.anio,
-      })
-      .subscribe(
-        (resp: any) => {
-          const data: GraficoVentaValorada[] = resp.data;
+    this.customerSaleService.getLastwoYearsSalesByMonth(this.anio).subscribe({
+      next:(res)=>{
+        const data: ISalesMonth[] = res.data;
+        const ventaActual = data.find((m) => {
+          return m.year === this.anio && m.month === this.mes;
+        });
 
-          const ventaActual = data.find((m) => {
-            return m._id.anio === this.anio && m._id.mes === this.mes;
-          });
+        const hoy = new Date();
+        hoy.setMonth(hoy.getMonth() - 1);
+        const anioAnterior = hoy.getFullYear();
+        const mesAnterior = hoy.getMonth() + 1;
+        const ventaAnterior = data.find(
+          (m) => m.year === anioAnterior && m.month === mesAnterior
+        );
+        this.ventaMes = !isVacio(ventaActual)
+          ? ventaActual?.total
+          : 0;
+        const ventaMesAnterior = !isVacio(ventaAnterior)
+          ? ventaAnterior?.total
+          : 0;
 
-          const hoy = new Date();
-          hoy.setMonth(hoy.getMonth() - 1);
-          const anioAnterior = hoy.getFullYear();
-          const mesAnterior = hoy.getMonth() + 1;
-          const ventaAnterior = data.find(
-            (m) => m._id.anio === anioAnterior && m._id.mes === mesAnterior
-          );
+        const porcentaje = Math.round(
+          ventaMesAnterior !== 0
+            ? (this.ventaMes * 100) / (ventaMesAnterior || 0)
+            : 0
+        );
 
-          this.ventaMes = !isVacio(ventaActual)
-            ? ventaActual?.total.$numberDecimal
-            : 0;
-          const ventaMesAnterior = !isVacio(ventaAnterior)
-            ? ventaAnterior?.total.$numberDecimal
-            : 0;
+        this.detalleVenta = {
+          text: 'Desde el mes pasado',
+          value: porcentaje - 100,
+          icon:
+            porcentaje - 100 >= 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down',
+          textClass: porcentaje - 100 >= 0 ? 'text-success' : 'text-danger',
+        };
+        this.cargaDatosVentaValorada(data);
+      },
+      error:(err)=>{
+        console.log(err);
+        this.lineEstado = this.ESTADO.ERROR;
+      }
+    })
 
-          const porcentaje = Math.round(
-            ventaMesAnterior !== 0
-              ? (this.ventaMes * 100) / (ventaMesAnterior || 0)
-              : 0
-          );
-
-          this.detalleVenta = {
-            text: 'Desde el mes pasado',
-            value: porcentaje - 100,
-            icon:
-              porcentaje - 100 >= 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down',
-            textClass: porcentaje - 100 >= 0 ? 'text-success' : 'text-danger',
-          };
-          this.cargaDatosVentaValorada(data);
-        },
-        (error: any) => {
-          console.log(error);
-          this.lineEstado = this.ESTADO.ERROR;
-        }
-      );
-
-    this.clientService
-      .graficoVentasPorUen({ anio: this.anio, mes: this.mes, rutCliente: rut })
-      .subscribe(
-        (resp: any) => {
-          const data: GraficoVentasPorUen[] = resp.data;
-
-          this.barChartLabels = data.map((r) => r._id);
-
-          this.cargaDatosVentaPorUen(data);
-        },
-        (error: any) => {
-          console.log(error);
-          this.barEstado = this.ESTADO.ERROR;
-        }
-      );
-
-    this.clientService.buscarSaldo(rut).subscribe(
-      (r: any) => {
-        const utilizado = r.utilizado;
-        const asignado = r.credito;
+    this.customerSaleService.getOneMonthSalesGroupedBySbu(this.anio,this.mes).subscribe({
+      next:(res)=>{
+        const data: ISalesBySbu[] = res.data;
+        this.barChartLabels = data.map((r) => r.name);
+        this.cargaDatosVentaPorUen(data);
+      },
+      error:(err)=>{
+        console.log(err);
+        this.barEstado = this.ESTADO.ERROR;
+      }
+    })
+    this.customerService.getCustomerCredit(rut).subscribe({
+      next:(res)=>{
+        const utilizado = res.used;
+        const asignado = res.assigned;
         const pUtilizado =
           asignado !== 0 ? Math.round((utilizado * 100) / asignado) : 0;
         const pSaldo = pUtilizado !== 0 ? Math.round(100 - pUtilizado) : 0;
@@ -158,19 +139,17 @@ export class PageDashboardComponent {
           },
         ];
       },
-      (error) => {
-        console.log(error);
-        this.toastr.error(
-          'Error de comunicación para obtener pendientes de entrega'
-        );
+      error:(err)=>{
+        console.log(err);
+        this.toastr.error('Error de comunicación para obtener pendientes de entrega');
       }
-    );
+    })
 
-    this.clientService.buscarFacturas(rut).subscribe(
-      (r: any) => {
-        const porVencer = r.deudaPorVencer;
-        const vencido = r.deudaVencida;
-        const totalDeuda = r.deudaVencida + r.deudaPorVencer;
+    this.customerSaleService.getCustomerSalesDebt().subscribe({
+      next:(res)=>{
+        const porVencer = res.totalOverdueAmount;
+        const vencido = res.totalDueAmount;
+        const totalDeuda = res.totalDueAmount + res.totalOverdueAmount;
         const pVencido =
           totalDeuda !== 0 ? Math.round((vencido * 100) / totalDeuda) : 0;
         const pPorVencer = Math.round(100 - pVencido);
@@ -192,42 +171,41 @@ export class PageDashboardComponent {
           },
         ];
       },
-      (error) => {
-        console.log(error);
-        this.toastr.error(
-          'Error de comunicación para obtener pendientes de entrega'
-        );
+      error:(err)=>{
+        console.log(err);
+        this.toastr.error('Error de comunicación para obtener pendientes de entrega');
       }
-    );
+    })
+
   }
 
-  cargaDatosVentaValorada(data: GraficoVentaValorada[]) {
+  cargaDatosVentaValorada(data: ISalesMonth[]) {
     const anioConsultado = [];
     const anioAnterior = [];
     let max = 0;
 
     for (let i = 1; i < 13; i++) {
       const datoConsultado = data.find(
-        (r) => r._id.anio === this.anio && r._id.mes === i
+        (r) => r.year === this.anio && r.month === i
       );
       if (datoConsultado) {
         max =
-          datoConsultado.total.$numberDecimal > max
-            ? Math.trunc(datoConsultado.total.$numberDecimal)
+          datoConsultado.total > max
+            ? Math.trunc(datoConsultado.total)
             : max;
-        anioConsultado.push(datoConsultado.total.$numberDecimal);
+        anioConsultado.push(datoConsultado.total);
       } else {
         anioConsultado.push(null);
       }
       const datoAnterior = data.find(
-        (r) => r._id.anio === this.anio - 1 && r._id.mes === i
+        (r) => r.year === this.anio - 1 && r.month === i
       );
       if (datoAnterior) {
         max =
-          datoAnterior.total.$numberDecimal > max
-            ? Math.trunc(datoAnterior.total.$numberDecimal)
+          datoAnterior.total > max
+            ? Math.trunc(datoAnterior.total)
             : max;
-        anioAnterior.push(datoAnterior.total.$numberDecimal);
+        anioAnterior.push(datoAnterior.total);
       } else {
         anioAnterior.push(null);
       }
@@ -328,7 +306,6 @@ export class PageDashboardComponent {
           formatter: Math.round,
         },
       },
-      // aspectRatio: 2,
       scales: {
         x: {
           title: {
@@ -354,13 +331,13 @@ export class PageDashboardComponent {
     this.lineEstado = this.ESTADO.OK;
   }
 
-  cargaDatosVentaPorUen(data: GraficoVentasPorUen[]) {
+  cargaDatosVentaPorUen(data: ISalesBySbu[]) {
     let max = 0;
 
     data.forEach((e) => {
       max =
-        e.total.$numberDecimal > max
-          ? Math.trunc(e.total.$numberDecimal)
+        e.total > max
+          ? Math.trunc(e.total)
           : max;
     });
 
@@ -368,7 +345,7 @@ export class PageDashboardComponent {
       labels: this.barChartLabels,
       datasets: [
         {
-          data: data.map((r) => r.total.$numberDecimal),
+          data: data.map((r) => r.total),
           datalabels: {
             formatter: (value: any, context: any) => {
               if (value >= 1000000) {

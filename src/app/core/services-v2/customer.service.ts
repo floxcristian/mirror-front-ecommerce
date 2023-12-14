@@ -2,6 +2,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ILoginResponse } from '@core/models-v2/auth/login-response.interface';
+import { ICustomerCredit } from '@core/models-v2/customer/customer.interface';
 // Environment
 import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
@@ -101,4 +102,8 @@ export class CustomerService {
   /**********************************************
    * CUSTOMER
    **********************************************/
+
+  getCustomerCredit(documentId:string):Observable<ICustomerCredit>{
+    return this.http.get<ICustomerCredit>(`${API_CUSTOMER}/${documentId}/credit`)
+  }
 }
