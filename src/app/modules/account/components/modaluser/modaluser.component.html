@@ -50,23 +50,23 @@
         Debe Ingresar Nombre de Usuario
       </p>
       <div class="mb-3">
-        <label for="first_name">Nombres:</label>
+        <label for="firstName">Nombres:</label>
         <input
           type="text"
           class="form-control"
-          id="first_name"
-          formControlName="first_name"
+          id="firstName"
+          formControlName="firstName"
           placeholder="Ingrese Nombres"
         />
       </div>
 
       <div class="mb-3">
-        <label for="last_name">Apellidos:</label>
+        <label for="lastName">Apellidos:</label>
         <input
           type="text"
           class="form-control"
-          id="last_name"
-          formControlName="last_name"
+          id="lastName"
+          formControlName="lastName"
           placeholder="Ingrese Apellidos"
         />
       </div>
@@ -131,20 +131,20 @@
         Debe Ingresar Contacto
       </p>
       <div class="mb-3">
-        <label for="user_role">ROL</label>
+        <label for="userRole">ROL</label>
         <select
-          name="user_role"
+          name="userRole"
           class="form-control"
-          id="user_role"
-          formControlName="user_role"
+          id="userRole"
+          formControlName="userRole"
         >
-          <option value="comprador">Comprador</option>
+          <option value="buyer">Comprador</option>
         </select>
       </div>
       <p
         *ngIf="
-          formUsuario.controls['user_role'].invalid &&
-          formUsuario.controls['user_role'].touched
+          formUsuario.controls['userRole'].invalid &&
+          formUsuario.controls['userRole'].touched
         "
         class="text-error-form-2"
       >
@@ -225,23 +225,23 @@
         Debe Ingresar Nombre de Usuario
       </p>
       <div class="mb-3">
-        <label for="first_name">Nombres:</label>
+        <label for="firstName">Nombres:</label>
         <input
           type="text"
           class="form-control"
-          id="first_name"
-          formControlName="first_name"
+          id="firstName"
+          formControlName="firstName"
           placeholder="Ingrese Nombres"
         />
       </div>
 
       <div class="mb-3">
-        <label for="last_name">Apellidos:</label>
+        <label for="lastName">Apellidos:</label>
         <input
           type="text"
           class="form-control"
-          id="last_name"
-          formControlName="last_name"
+          id="lastName"
+          formControlName="lastName"
           placeholder="Ingrese Apellidos"
         />
       </div>
@@ -298,14 +298,14 @@
       </div>
 
       <div class="mb-3">
-        <label for="user_role">ROL</label>
+        <label for="userRole">ROL</label>
         <select
-          name="user_role"
+          name="userRole"
           class="form-control"
-          id="user_role"
-          formControlName="user_role"
+          id="userRole"
+          formControlName="userRole"
         >
-          <option value="comprador">Comprador</option>
+          <option value="buyer">Comprador</option>
         </select>
       </div>
 
@@ -361,8 +361,8 @@
           <tr>
             <th scope="row">Nombre</th>
             <td>
-              {{ users.first_name | titlecase }}
-              {{ users.last_name | titlecase }}
+              {{ users.firstName | titlecase }}
+              {{ users.lastName | titlecase }}
             </td>
           </tr>
 
