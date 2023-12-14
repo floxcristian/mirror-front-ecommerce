@@ -23,7 +23,6 @@ import {
   Validators,
   FormControl,
 } from '@angular/forms';
-import { RootService } from '../../../../shared/services/root.service';
 import { ToastrService } from 'ngx-toastr';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import {
@@ -59,6 +58,8 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
+import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 
 declare const $: any;
 export interface Archivo {
@@ -117,7 +118,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   isCollapsedDespacho: boolean = false;
   addresses: ShippingAddress[] = [];
-  direccionDespacho: ShippingAddress;
+  direccionDespacho!: ICustomerAddress; //ShippingAddress;
   shippingType = '';
   tiendaRetiro!: ShippingStore;
   pagoKhipu = null;
@@ -151,18 +152,17 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private localS: LocalStorageService,
     private fb: FormBuilder,
     private modalService: BsModalService,
-    private root: RootService,
     private toast: ToastrService,
     private paymentService: PaymentService,
     private logistics: LogisticsService,
     private clientsService: ClientsService,
     private readonly gtmService: GoogleTagManagerService,
     @Inject(PLATFORM_ID) private platformId: Object,
-    // Storage
+    // Services V2
     private readonly sessionStorage: SessionStorageService,
     private readonly invitadoStorage: InvitadoStorageService,
-    // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly customerAddressApiService: CustomerAddressApiService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -181,7 +181,6 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
     this.recibe = this.localS.get('recibe');
     this.cartSession = this.localS.get('carroCompraB2B');
-    this.direccionDespacho = <ShippingAddress>{};
   }
 
   ngDoCheck() {
@@ -365,9 +364,9 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         }
         if (this.invitado) {
           //si es usuario invitado, se obtiene la direccion
-          this.direccionDespacho.calle = this.invitado['calle'] ?? '';
-          this.direccionDespacho.comuna = this.invitado['comuna'] ?? '';
-          this.direccionDespacho.numero = this.invitado['numero'] ?? '';
+          this.direccionDespacho.street = this.invitado['calle'] ?? '';
+          this.direccionDespacho.city = this.invitado['comuna'] ?? '';
+          this.direccionDespacho.number = this.invitado['numero'] ?? '';
           break;
         }
         break;
@@ -450,30 +449,25 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   obtieneDireccionCliente() {
-    const user = this.sessionService.getSession();
-    this.logistics.obtieneDireccionesCliente(user.documentId).subscribe(
-      (r: ResponseApi) => {
-        if (r.error === false) {
-          for (let dir of r.data) {
-            if (
-              dir.recid.toString() ===
-              (this.cartSession.despacho?.recidDireccion
-                ? this.cartSession.despacho.recidDireccion.toString()
-                : '')
-            ) {
-              this.direccionDespacho = dir;
-
-              break;
-            }
-          }
+    if (!this.cartSession.despacho?.recidDireccion) return;
+    const currentCartDeliveryAddress =
+      this.cartSession.despacho.recidDireccion.toString();
+    const { documentId } = this.sessionService.getSession();
+    this.customerAddressApiService.getDeliveryAddresses(documentId).subscribe({
+      next: (addresses) => {
+        const cartDeliveryAddress = addresses.find(
+          (address) => address.id === currentCartDeliveryAddress
+        );
+        if (cartDeliveryAddress) {
+          this.direccionDespacho = cartDeliveryAddress;
         }
       },
-      (e) => {
+      error: () => {
         this.toast.error(
           'Ha ocurrido un error en servicio al obtener las direcciones'
         );
-      }
-    );
+      },
+    });
   }
 
   ngOnDestroy() {

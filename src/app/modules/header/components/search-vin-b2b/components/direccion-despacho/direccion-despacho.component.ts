@@ -1,12 +1,14 @@
+// Angular
 import { Component, EventEmitter, OnInit } from '@angular/core';
-import { ShippingAddress } from '../../../../../../shared/interfaces/address';
-import { PreferenciasCliente } from '../../../../../../shared/interfaces/preferenciasCliente';
-import { LogisticsService } from '../../../../../../shared/services/logistics.service';
+// Libs
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { SessionService } from '@core/states-v2/session.service';
-import { CustomerAddressService } from '@core/services-v2/customer-address.service';
+// Models
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
+// Services
+import { LogisticsService } from '../../../../../../shared/services/logistics.service';
+import { SessionService } from '@core/states-v2/session.service';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
+import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 
 @Component({
   selector: 'app-direccion-despacho',
@@ -22,35 +24,34 @@ export class DireccionDespachoComponent implements OnInit {
   constructor(
     public ModalRef: BsModalRef,
     private logisticsService: LogisticsService,
-    private localS: LocalStorageService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly customerAddressService: CustomerAddressService
+    private readonly customerAddressService: CustomerAddressApiService,
+    private readonly customerPreferenceStorage: CustomerPreferencesStorageService
   ) {}
 
-  async ngOnInit() {
-    const usuario = this.sessionService.getSession(); //this.rootService.getDataSesionUsuario();
-    const resp = (await this.customerAddressService
-      .getDeliveryAddresses(usuario.documentId)
-      .toPromise()) as ICustomerAddress[];
-
-    const direccionConfigurada: PreferenciasCliente = this.localS.get(
-      'preferenciasCliente'
-    ) as any;
-    this.direcciones = resp;
-    this.direccionSeleccionada =
-      this.direcciones.find(
-        (r) => r.id === direccionConfigurada.direccionDespacho?.id
-      ) || null;
+  ngOnInit(): void {
+    const { documentId } = this.sessionService.getSession();
+    this.customerAddressService.getDeliveryAddresses(documentId).subscribe({
+      next: (addresses) => {
+        this.direcciones = addresses;
+        const direccionConfigurada = this.customerPreferenceStorage.get();
+        this.direccionSeleccionada =
+          this.direcciones.find(
+            (address) =>
+              address.id === direccionConfigurada.deliveryAddress?.id
+          ) || null;
+      },
+    });
   }
 
-  guardar() {
+  guardar(): void {
     this.event.emit(this.direccionSeleccionada);
     this.ModalRef.hide();
     this.logisticsService.guardarDireccionCliente(this.direccionSeleccionada);
   }
 
-  seleccionaDireccion(direccion: ICustomerAddress) {
+  seleccionaDireccion(direccion: ICustomerAddress): void {
     this.direccionSeleccionada = direccion;
   }
 }

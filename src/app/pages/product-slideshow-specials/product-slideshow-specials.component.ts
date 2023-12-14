@@ -11,10 +11,8 @@ import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { RootService } from 'src/app/shared/services/root.service';
 import { DirectionService } from 'src/app/shared/services/direction.service';
-import { ProductsService } from 'src/app/shared/services/products.service';
 import { isPlatformBrowser } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { PreferenciasCliente } from '@shared/interfaces/preferenciasCliente';
 import { LogisticsService } from '@shared/services/logistics.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
@@ -28,6 +26,9 @@ import {
 } from '@core/models-v2/cms/special-reponse.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
+import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
+import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
+import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 
 export type Layout = 'grid' | 'grid-with-features' | 'list';
 export interface ISection {
@@ -74,12 +75,11 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
   config: any;
   collection = { count: 60, data: [] };
   p: number = 1;
-  preferenciaCliente!: PreferenciasCliente;
+  preferenciaCliente!: ICustomerPreference;
   despachoCliente!: Subscription;
 
   constructor(
     private root: RootService,
-    private productsService: ProductsService,
     public toast: ToastrService,
 
     private direction: DirectionService,
@@ -92,7 +92,9 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     private readonly authStateService: AuthStateServiceV2,
     private readonly cmsService: CmsService,
     private readonly geolocationService: GeolocationServiceV2,
-    private readonly geolocationStorage: GeolocationStorageService
+    private readonly geolocationStorage: GeolocationStorageService,
+    private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
+    private readonly customerPreferenceService: CustomerPreferenceService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -103,13 +105,13 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
   sidebarPosition: 'start' | 'end' = 'start';
 
   async ngOnInit() {
-    this.user = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
+    this.user = this.sessionService.getSession();
     const role = this.user.userRole;
     this.isB2B = role === 'supervisor' || role === 'comprador';
 
     let url: string = this.router.url;
     this.ruta = url.split('/');
-    this.preferenciaCliente = this.localStorage.get('preferenciasCliente');
+    this.preferenciaCliente = this.customerPreferenceStorage.get();
     const geo = this.geolocationStorage.get();
     if (geo) {
       this.cargaEspeciales();
@@ -122,16 +124,18 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     });
 
     // cuando se inicia sesion
-    this.authStateService.session$.subscribe((user) => {
-      this.root.getPreferenciasCliente().then((preferencias) => {
-        this.preferenciaCliente = preferencias;
-        this.cargaEspeciales();
+    this.authStateService.session$.subscribe(() => {
+      this.customerPreferenceService.getCustomerPreferences().subscribe({
+        next: (preferences) => {
+          this.preferenciaCliente = preferences;
+          this.cargaEspeciales();
+        },
       });
     });
 
     //Cuando se cambia de dirección despacho
     this.despachoCliente = this.logistic.direccionCliente$.subscribe((r) => {
-      this.preferenciaCliente.direccionDespacho = r;
+      this.preferenciaCliente.deliveryAddress = r;
       this.cargaEspeciales();
     });
   }
@@ -166,8 +170,8 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     var look = especials?.indexOf('?');
     if ((look || 0) > -1) especials = especials?.substr(0, look);
 
-    if (this.preferenciaCliente && this.preferenciaCliente.direccionDespacho)
-      localidad = this.preferenciaCliente.direccionDespacho.city
+    if (this.preferenciaCliente && this.preferenciaCliente.deliveryAddress)
+      localidad = this.preferenciaCliente.deliveryAddress.city
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '');
 

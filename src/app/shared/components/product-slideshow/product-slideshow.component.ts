@@ -21,15 +21,15 @@ import { ClientsService } from '../../services/clients.service';
 import { LogisticsService } from '../../services/logistics.service';
 import { isVacio } from '../../utils/utilidades';
 import { SessionService } from '@core/states-v2/session.service';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { CmsService } from '@core/services-v2/cms.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 // Models
-import { PreferenciasCliente } from '../../interfaces/preferenciasCliente';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IData } from '@core/models-v2/cms/customHomePage-response.interface';
+import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
+import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 
 @Component({
   selector: 'app-product-slideshow',
@@ -45,7 +45,7 @@ export class ProductSlideshowComponent
   lstProductos: IData[] = [];
   relleno: any[] = [1, 2, 3, 4, 5];
   ruta: string = '';
-  preferenciasCliente!: PreferenciasCliente;
+  preferenciasCliente!: ICustomerPreference;
   despachoCliente!: Subscription;
   layout = 'grid-lg';
   window = window;
@@ -87,7 +87,8 @@ export class ProductSlideshowComponent
     private readonly authStateService: AuthStateServiceV2,
     private readonly cmsService: CmsService,
     private readonly geolocationService: GeolocationServiceV2,
-    private readonly geolocationStorage: GeolocationStorageService
+    private readonly geolocationStorage: GeolocationStorageService,
+    private readonly customerPreferenceService: CustomerPreferenceService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -105,18 +106,22 @@ export class ProductSlideshowComponent
   ngAfterViewInit() {
     const geo = this.geolocationStorage.get();
     if (geo && this.user?.documentId !== '0') {
-      this.root.getPreferenciasCliente().then((preferencias) => {
-        this.preferenciasCliente = preferencias;
-        this.cargarHome();
+      this.customerPreferenceService.getCustomerPreferences().subscribe({
+        next: (preferences) => {
+          this.preferenciasCliente = preferences;
+          this.cargarHome();
+        },
       });
     }
 
     this.geolocationService.selectedStore$.subscribe({
       next: () => {
         if (this.user?.documentId !== '0') {
-          this.root.getPreferenciasCliente().then((preferencias) => {
-            this.preferenciasCliente = preferencias;
-            this.cargarHome();
+          this.customerPreferenceService.getCustomerPreferences().subscribe({
+            next: (preferences) => {
+              this.preferenciasCliente = preferences;
+              this.cargarHome();
+            },
           });
         } else {
           this.cargarHome();
@@ -125,10 +130,12 @@ export class ProductSlideshowComponent
     });
 
     this.despachoCliente = this.logisticsService.direccionCliente$.subscribe(
-      async (r) => {
-        this.root.getPreferenciasCliente().then((preferencias) => {
-          this.preferenciasCliente = preferencias;
-          this.cargarHome();
+      async () => {
+        this.customerPreferenceService.getCustomerPreferences().subscribe({
+          next: (preferences) => {
+            this.preferenciasCliente = preferences;
+            this.cargarHome();
+          },
         });
       }
     );
@@ -136,9 +143,11 @@ export class ProductSlideshowComponent
     // cuando se inicia sesion
     this.authStateService.session$.subscribe((user) => {
       this.user = user;
-      this.root.getPreferenciasCliente().then((preferencias) => {
-        this.preferenciasCliente = preferencias;
-        this.cargarHome();
+      this.customerPreferenceService.getCustomerPreferences().subscribe({
+        next: (preferences) => {
+          this.preferenciasCliente = preferences;
+          this.cargarHome();
+        },
       });
     });
   }
@@ -159,8 +168,8 @@ export class ProductSlideshowComponent
     console.log('getSelectedStore desde ProductSlideshowComponent');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada.code;
-    const localidad = !isVacio(this.preferenciasCliente?.direccionDespacho)
-      ? this.preferenciasCliente.direccionDespacho?.city
+    const localidad = !isVacio(this.preferenciasCliente?.deliveryAddress)
+      ? this.preferenciasCliente.deliveryAddress?.city
       : '';
     let localidad_limpia =
       localidad?.normalize('NFD').replace(/[\u0300-\u036f]/g, '') || '';

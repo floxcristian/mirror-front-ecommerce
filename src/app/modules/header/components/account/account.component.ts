@@ -1,10 +1,13 @@
+// Angular
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { RootService } from './../../../../shared/services/root.service';
+// Models
+import { ISession } from '@core/models-v2/auth/session.interface';
+// Services
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
-import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { MenuService } from '@core/services-v2/menu/menu.service';
+import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 
 @Component({
   selector: 'app-account',
@@ -34,20 +37,20 @@ export class AccountComponent implements OnInit {
 
   constructor(
     public localS: LocalStorageService,
-    private root: RootService,
     private cd: ChangeDetectorRef,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
-    private readonly menuService: MenuService
+    private readonly menuService: MenuService,
+    private readonly customerPreferenceService: CustomerPreferenceService
   ) {}
 
   ngOnInit() {
     this.usuario = this.sessionService.getSession();
-    if (this.usuario.documentId !== '0') this.root.getPreferenciasCliente();
-    this.isB2B =
-      this.usuario.userRole === 'supervisor' ||
-      this.usuario.userRole === 'comprador';
+    if (this.usuario.documentId !== '0') {
+      this.fetchCustomerPreferences();
+    }
+    this.isB2B = this.sessionService.isB2B();
 
     this.authStateService.session$.subscribe((user) => {
       this.usuario = user;
@@ -60,7 +63,7 @@ export class AccountComponent implements OnInit {
           (l) => !this.linksOcultosB2B.includes(l.label)
         );
       }
-      this.root.getPreferenciasCliente();
+      this.fetchCustomerPreferences();
     });
 
     if (this.usuario) {
@@ -80,5 +83,11 @@ export class AccountComponent implements OnInit {
 
   cerrarBienvenida() {
     this.mostrarBienvenida = false;
+  }
+
+  private fetchCustomerPreferences(): void {
+    this.customerPreferenceService.getCustomerPreferences().subscribe({
+      next: (preferences) => {},
+    });
   }
 }

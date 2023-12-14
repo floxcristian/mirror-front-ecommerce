@@ -517,8 +517,7 @@
                       <div
                         class="cart-address-container"
                         *ngIf="
-                          direccion.recid === selectedShippingId ||
-                          showAllAddress
+                          direccion.id === selectedShippingId || showAllAddress
                         "
                         [ngClass]="showAllAddress ? 'mb-4' : ''"
                       >
@@ -530,7 +529,7 @@
                               class="fa-solid fa-location-dot"
                               style="margin-right: 10px; font-size: 20px"
                             ></i>
-                            {{ direccion.direccionCompleta }}
+                            {{ direccion.fullAddress }}
                           </div>
                           <div
                             class="col-12 col-sm-6 d-flex flex-sm-row-reverse"
@@ -575,7 +574,7 @@
                             </button>
                             <button
                               type="button"
-                              (click)="changeAddress(direccion.recid)"
+                              (click)="changeAddress(direccion.id)"
                               style="text-decoration: none; color: #0063b9"
                               class="btn btn-link"
                             >

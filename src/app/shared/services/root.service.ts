@@ -7,11 +7,10 @@ import { SlugifyPipe } from '../pipes/slugify.pipe';
 // Services
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 // Interfaces
-import { PreferenciasCliente } from '../interfaces/preferenciasCliente';
 import { isVacio } from '../utils/utilidades';
 import { SessionService } from '@core/states-v2/session.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
-import { CustomerAddressService } from '@core/services-v2/customer-address.service';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 
 @Injectable({
@@ -30,7 +29,7 @@ export class RootService {
     private router: Router,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly customerAddressService: CustomerAddressService
+    private readonly customerAddressService: CustomerAddressApiService
   ) {
     this.setDataTableBasic();
   }
@@ -81,30 +80,6 @@ export class RootService {
 
     const url = this.router.createUrlTree(this.urlProduct);
     return url.toString();
-  }
-
-  async getPreferenciasCliente() {
-    let preferencias: PreferenciasCliente = this.localS.get(
-      'preferenciasCliente'
-    ) as any;
-    if (isVacio(preferencias)) {
-      preferencias = {
-        direccionDespacho: null,
-        centroCosto: null,
-        numeroSolicitud: null,
-      };
-    }
-    if (isVacio(preferencias.direccionDespacho)) {
-      const usuario = this.sessionService.getSession(); //this.getDataSesionUsuario();
-      const resp = (await this.customerAddressService
-        .getDeliveryAddresses(usuario.documentId)
-        .toPromise()) as ICustomerAddress[];
-      if (resp.length > 0) {
-        preferencias.direccionDespacho = resp[0];
-      }
-    }
-    this.localS.set('preferenciasCliente', preferencias);
-    return preferencias;
   }
 
   url(url: string): string {

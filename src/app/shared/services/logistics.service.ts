@@ -23,12 +23,6 @@ export class LogisticsService {
 
   constructor(private http: HttpClient) {}
 
-  obtieneDireccionesCliente(clienteRut: any): Observable<ResponseApi> {
-    return this.http.get<ResponseApi>(
-      this.urlApi + `direccionescliente?rut=${clienteRut}&tipo=2`
-    );
-  }
-
   obtienRetiro(data: any) {
     return this.http.post(environment.apiLogistic + `retirocarro`, data);
   }

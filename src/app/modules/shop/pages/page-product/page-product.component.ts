@@ -7,14 +7,9 @@ import {
   HostListener,
 } from '@angular/core';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-import {
-  Product,
-  ProductOrigen,
-  ProductPrecio,
-} from '../../../../shared/interfaces/product';
+import { Product, ProductOrigen } from '../../../../shared/interfaces/product';
 import { ActivatedRoute, Router } from '@angular/router';
 import { categories } from '../../../../../data/shop-widget-categories';
-import { ProductsService } from '../../../../shared/services/products.service';
 import { ToastrService } from 'ngx-toastr';
 import { RootService } from '../../../../shared/services/root.service';
 import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
@@ -25,8 +20,6 @@ import { CanonicalService } from '../../../../shared/services/canonical.service'
 import { environment } from '@env/environment';
 import { BuscadorService } from '../../../../shared/services/buscador.service';
 import { Subscription, forkJoin } from 'rxjs';
-import { randomElements } from '../../../../shared/utils/utilidades';
-import { CatalogoService } from '../../../../shared/services/catalogo.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
@@ -38,6 +31,9 @@ import { IArticleResponse } from '@core/models-v2/article/article-response.inter
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
+import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
+import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
+import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 declare const $: any;
 declare let fbq: any;
 
@@ -130,7 +126,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
   addingToCart: boolean = false;
   addcartPromise!: Subscription;
   despachoCliente!: Subscription;
-  preferenciaCliente: any;
+  preferenciaCliente!: ICustomerPreference;
   preciosNeto: boolean = false;
 
   constructor(
@@ -144,18 +140,19 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private cart: CartService,
     private canonicalService: CanonicalService,
     private buscadorService: BuscadorService,
-    private catalogoService: CatalogoService,
     private logistic: LogisticsService,
     private localS: LocalStorageService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
     private readonly articleService: ArticleService,
-    private readonly geolocationService: GeolocationServiceV2
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
+    private readonly customerPreferenceService: CustomerPreferenceService
   ) {
     console.log('getSelectedStore desde PageProductComponent 1');
     this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    this.preferenciaCliente = this.localS.get('preferenciasCliente');
+    this.preferenciaCliente = this.customerPreferenceStorage.get();
     // cambio de sucursal
     this.geolocationService.selectedStore$.subscribe({
       next: (res) => {
@@ -171,20 +168,22 @@ export class PageProductComponent implements OnInit, OnDestroy {
     //cambio de dirección
     this.despachoCliente = this.logistic.direccionCliente$.subscribe((r) => {
       if (this.product) {
-        this.preferenciaCliente.direccionDespacho = r;
+        this.preferenciaCliente.deliveryAddress = r;
         this.cart.cargarPrecioEnProducto(this.product);
         this.getMixProducts(this.product.sku);
       }
     });
 
-    this.authStateService.session$.subscribe((user) => {
+    this.authStateService.session$.subscribe(() => {
       this.user = this.sessionService.getSession();
-      this.root.getPreferenciasCliente().then((preferencias) => {
-        if (this.product) {
-          this.preferenciaCliente = preferencias;
+      this.customerPreferenceService.getCustomerPreferences().subscribe({
+        next: (preferences) => {
+          if (!this.product) return;
+
+          this.preferenciaCliente = preferences;
           this.cart.cargarPrecioEnProducto(this.product);
           this.getMixProducts(this.product.sku);
-        }
+        },
       });
     });
 
@@ -192,11 +191,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
       ? window.innerWidth
       : 900;
 
-    //this.user = this.root.getDataSesionUsuario();
     this.user = this.sessionService.getSession();
-    this.isB2B = ['supervisor', 'comprador'].includes(
-      this.user?.userRole || ''
-    );
+    this.isB2B = this.sessionService.isB2B();
 
     this.route.data.subscribe((data: any) => {
       this.layout = 'layout' in data ? data.layout : this.layout;
@@ -306,9 +302,9 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
       if (
         this.preferenciaCliente &&
-        this.preferenciaCliente?.direccionDespacho !== null
+        this.preferenciaCliente?.deliveryAddress !== null
       )
-        params.location = this.preferenciaCliente?.direccionDespacho?.location
+        params.location = this.preferenciaCliente?.deliveryAddress?.location
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '');
 
@@ -399,8 +395,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
       sku: sku,
       documentId: this.user.documentId || '0',
       branchCode: tiendaSeleccionada?.code || 'SAN BRNRDO',
-      location: this.preferenciaCliente?.direccionDespacho
-        ? this.preferenciaCliente.direccionDespacho.location
+      location: this.preferenciaCliente?.deliveryAddress
+        ? this.preferenciaCliente.deliveryAddress.location
         : '',
     };
     forkJoin([

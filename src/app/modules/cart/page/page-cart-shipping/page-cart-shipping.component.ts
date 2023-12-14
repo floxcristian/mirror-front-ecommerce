@@ -2,7 +2,6 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
   ViewChild,
   ChangeDetectorRef,
 } from '@angular/core';
@@ -19,9 +18,9 @@ import {
   CartTotal,
   CartData,
 } from '../../../../shared/interfaces/cart-item';
+import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import {
-  ShippingAddress,
   ShippingService,
   ShippingDateItem,
 } from '../../../../shared/interfaces/address';
@@ -39,7 +38,6 @@ import { map, takeUntil } from 'rxjs/operators';
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
-import { PreferenciasCliente } from '@shared/interfaces/preferenciasCliente';
 import { ClientsService } from '@shared/services/clients.service';
 import {
   DataModal,
@@ -55,6 +53,9 @@ import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
+import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
 
 export let browserRefresh = false;
 declare let dataLayer: any;
@@ -64,7 +65,7 @@ declare let dataLayer: any;
   styleUrls: ['./page-cart-shipping.component.scss'],
   providers: [DatePipe],
 })
-export class PageCartShippingComponent implements OnInit, OnDestroy {
+export class PageCartShippingComponent implements OnInit {
   productCart!: ProductCart[];
   @ViewChild('tabsShipping', { static: false }) tabsShipping!: TabsetComponent;
 
@@ -111,7 +112,6 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   selectedShippingIdStore: any;
   tempShippingIdStore: any;
   shippingDaysStore: ShippingDateItem[] = [];
-  //shippingStore: ShippingStore[] = [];
   TiendasCargadas: boolean = false;
   loadingShippingStore = false;
   fecha = new Date();
@@ -120,7 +120,10 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   grupoShippingActive: number | null = 0;
   selectedShippingId: any;
   selectedStoreItem = {};
-  addresses: ShippingAddress[] = [];
+  addresses: (ICustomerAddress & {
+    fullAddress: string;
+    isDefault: boolean;
+  })[] = [];
   shippingDays: ShippingDateItem[] = [];
 
   loadingShipping = false;
@@ -141,7 +144,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   grupoShippingCart: any = {};
   documentType = 'factura';
   loadingCotizacion = false;
-  direccionConfigurada!: PreferenciasCliente;
+  direccionConfigurada!: ICustomerPreference;
 
   stores: IStore[] = [];
 
@@ -163,7 +166,9 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     private readonly invitadoStorage: InvitadoStorageService,
     private readonly geolocationService: GeolocationServiceV2,
     private readonly geolocationApiService: GeolocationApiService,
-    private readonly geolocationStorage: GeolocationStorageService
+    private readonly geolocationStorage: GeolocationStorageService,
+    private readonly customerPreferencesStorage: CustomerPreferencesStorageService,
+    private readonly customerAddressApiService: CustomerAddressApiService
   ) {
     this.localS.set('recibe', {});
     this.innerWidth = window.innerWidth;
@@ -180,7 +185,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     this.contacto_notificaciones();
     this.obtieneDireccionesCliente();
     this.obtieneTiendas();
-    this.direccionConfigurada = this.localS.get('preferenciasCliente');
+    this.direccionConfigurada = this.customerPreferencesStorage.get();
     this.isLogin = this.sessionService.isLoggedIn();
 
     if (!this.HideResumen()) {
@@ -233,62 +238,38 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     this.cd.detectChanges();
   }
 
-  ngOnDestroy() {}
-
   async obtieneDireccionesCliente(isDelete: boolean = false) {
     this.loadingShippingAll = true;
-    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
-    this.logistics.obtieneDireccionesCliente(usuario.documentId).subscribe(
-      (r: ResponseApi) => {
+    const { documentId } = this.sessionService.getSession();
+    // FIXME:
+    this.customerAddressApiService.getDeliveryAddresses(documentId).subscribe({
+      next: (addresses) => {
         this.loadingShippingAll = false;
-
-        if (r.error === false) {
-          if (!isDelete) {
-            this.selectedShippingId = String(
-              Math.max.apply(
-                Math,
-                r.data.map((o: any) => o.recid)
-              )
-            );
-          }
-          this.selectedShippingId = String(
-            Math.max.apply(
-              Math,
-              r.data.map((o: any) => o.recid)
-            )
-          );
-
-          r.data.map((item: ShippingAddress) => {
-            if (item.recid === this.selectedShippingId) {
-              item.default = true;
-            }
-            if (item.deptocasa?.length) {
-              item.direccionCompleta =
-                item.calle +
-                ' ' +
-                item.numero +
-                ', depto/casa: ' +
-                item.deptocasa +
-                ', ' +
-                item.comuna;
-            } else {
-              item.direccionCompleta =
-                item.calle + ' ' + item.numero + ', ' + item.comuna;
-            }
-          });
-
-          this.addresses = r.data;
-          if (this.shippingType === 'despacho') this.obtieneDespachos();
-
-          this.showNewAddress = false;
+        if (!isDelete) {
+          // Obtener última dirección (id más alto).
+          const addressIds = addresses.map((address) => Number(address.id));
+          this.selectedShippingId = String(Math.max(...addressIds));
         }
+
+        this.addresses = addresses.map((address) => {
+          const isDefault = address.id === this.selectedShippingId;
+          // Formatear dirección.
+          const startAddress = `${address.street} ${address.number},`;
+          const fullAddress = address.departmentHouse
+            ? `${startAddress} depto/casa: ${address.departmentHouse}, ${address.city}`
+            : `${startAddress} ${address.city}`;
+          return { ...address, fullAddress, isDefault };
+        });
+        if (this.shippingType === 'despacho') this.obtieneDespachos();
+
+        this.showNewAddress = false;
       },
-      (e) => {
+      error: () => {
         this.toast.error(
           'Ha ocurrido un error en servicio al obtener las direcciones'
         );
-      }
-    );
+      },
+    });
   }
 
   /**
@@ -297,8 +278,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   async contacto_notificaciones() {
     let data: any = {};
 
-    this.userSession = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
-    // this.invitado = this.localS.get('invitado');
+    this.userSession = this.sessionService.getSession();
     this.invitado = this.invitadoStorage.get();
     if (this.userSession.userRole != 'temp') {
       data.id = this.cartSession._id;
@@ -327,7 +307,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
 
     const resultado = this.addresses.find(
-      (item) => item.recid == this.selectedShippingId
+      (address) => address.id == this.selectedShippingId
     );
 
     if (resultado) {
@@ -335,9 +315,9 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       const data = {
         usuario: usuario.username,
         destino:
-          resultado.comuna.normalize('NFD').replace(/[\u0300-\u036f]/g, '') +
+          resultado.city.normalize('NFD').replace(/[\u0300-\u036f]/g, '') +
           '|' +
-          resultado.codRegion,
+          resultado.regionCode,
         tipo: 'DES',
       };
 
@@ -451,9 +431,8 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
 
     this.fechas = [];
 
-    // let idStore: any = this.selectedShippingIdStore;
     this.selectedShippingId = this.selectedShippingIdStore;
-    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
 
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
     const resultado = this.stores.find(
@@ -618,14 +597,10 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       this.obj_fecha[pos] = item;
     }
     if (this.invitado) {
-      // invitado = this.localS.get('invitado');
-
       invitado = this.invitadoStorage.get();
       this.recibeYoname = this.getFullName(invitado);
       this.recidDireccion = 0;
-      // this.localS.set('invitado', invitado);
       this.invitadoStorage.set(invitado);
-      // this.usuarioInv = this.localS.get('invitado');
       this.usuarioInv = this.invitadoStorage.get();
     }
 
@@ -774,7 +749,6 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   // Evento activado cuando se un usuario logeado agrega o cancela la accion de agregar una nueva direccion.
   respuesta(event: any, isDelete: boolean = false) {
     if (event) {
-      // this.obtieneDireccionesCliente();
       this.shippingSelected = null;
       if (isDelete) {
         this.obtieneDireccionesCliente(true);
@@ -1030,7 +1004,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       this.tituloRecibe = 'Persona que recibe';
       if (this.isLogin) {
         direccion = this.addresses.find(
-          (direccion) => direccion.recid === this.selectedShippingId
+          (direccion) => direccion.id === this.selectedShippingId
         );
 
         if (direccion !== undefined) {
@@ -1113,15 +1087,13 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     this.onSelect(null, 'retiro');
   }
 
-  setDefaultAddress() {
-    if (this.selectedShippingId == null) {
-      this.selectedShippingId = String(
-        Math.max.apply(
-          Math,
-          this.addresses.map((o) => o.recid)
-        )
-      );
-    }
+  /***
+   * Establecer dirección de despacho por defecto, siendo seleccionada la que tenga el id más alto (última añadida).
+   */
+  setDefaultAddress(): void {
+    if (this.selectedShippingId) return;
+    const addressIds = this.addresses.map((address) => Number(address.id));
+    this.selectedShippingId = String(Math.max(...addressIds));
   }
 
   cambiarTienda(newStore: IStore): void {
@@ -1169,8 +1141,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @author Sebastian Aracena  \2021-04-15\
-   * @desc funcion utilizada para verificar si la fecha de la semana
+   * Verificar si la fecha de la semana...
    * @params item de grupo
    * @return
    */
@@ -1203,8 +1174,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @author Sebastian Aracena  \2021-04-15\
-   * @desc funcion utilizada para verificar si la fecha de la semana
+   * @desc Verificar si la fecha de la semana...
    * @params item de grupo
    * @return
    */
@@ -1212,14 +1182,14 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     this.loadingShipping = true;
     this.loadingResumen = true;
     const resultado: any = this.addresses.find(
-      (item) => item.recid == this.selectedShippingId
+      (address) => address.id == this.selectedShippingId
     );
 
-    const usuario = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
+    const { username } = this.sessionService.getSession();
     let params = {};
     if (this.shippingType === ShippingType.DESPACHO) {
       params = {
-        usuario: usuario.username,
+        usuario: username,
         id: index,
         destino: resultado.comuna,
       };
@@ -1228,7 +1198,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
         (item) => item.id == this.selectedShippingIdStore
       );
       params = {
-        usuario: usuario.username,
+        usuario: username,
         id: index,
         sucursal: disponible?.code,
       };
@@ -1252,7 +1222,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
 
     const resultado = this.addresses.find(
-      (item) => item.recid == this.selectedShippingId
+      (address) => address.id == this.selectedShippingId
     );
 
     if (resultado) {
@@ -1440,7 +1410,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
         if (!respuesta.error) {
           this.toast.success('Dirección eliminada exitosamente.');
           if (
-            this.direccionConfigurada.direccionDespacho?.id === direccion.recid
+            this.direccionConfigurada.deliveryAddress?.id === direccion.recid
           )
             this.cambioDireccionPreferenciaCliente(direccion.recid);
           this.respuesta(true);
@@ -1451,11 +1421,18 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     });
   }
 
-  //Se activa si se elimina la dirección preferencia del cliente
-  cambioDireccionPreferenciaCliente(recid: any) {
-    let nueva_preferencia = this.addresses.find((x) => x.recid != recid);
+  /**
+   * Se activa si se elimina la dirección preferencia del cliente.
+   * @param recid
+   */
+  cambioDireccionPreferenciaCliente(addressId: any) {
+    let nueva_preferencia =
+      this.addresses.find((address) => address.id !== addressId) || null;
     console.log('nueva', nueva_preferencia);
     // this.logistics.guardarDireccionCliente(nueva_preferencia);
-    this.localS.set('preferenciasCliente', nueva_preferencia);
+    /*this.customerPreferencesStorage.set({
+      deliveryAddress: nueva_preferencia,
+    });*/
+    //this.localS.set('preferenciasCliente', nueva_preferencia);
   }
 }

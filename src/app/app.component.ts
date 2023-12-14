@@ -67,14 +67,14 @@ export class AppComponent implements AfterViewInit, OnInit {
     private readonly geolocationService: GeolocationServiceV2
   ) {}
 
-  setLastSession(): void {
+  private setLastSession(): void {
     if (!this.sessionService.isB2B()) return;
     const user = this.sessionService.getSession();
     user.ultimoCierre = moment();
     this.sessionStorage.set(user);
   }
 
-  deleteLastSession(): void {
+  private deleteLastSession(): void {
     if (!this.sessionService.isB2B()) return;
     const user = this.sessionService.getSession();
     delete user.ultimoCierre;
@@ -169,9 +169,19 @@ export class AppComponent implements AfterViewInit, OnInit {
     });
   }
 
+  private onChangeStore(): void {
+    if (this.isOmni) return;
+    this.geolocationService.selectedStore$.subscribe({
+      next: () => {
+        // si es que la tienda seleccionada no cambia no se carga el carro.
+        console.log('selectedStore$ desde [AppComponent]====================');
+        this.cart.load();
+      },
+    });
+  }
+
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      console.log('entro A');
       this.geolocationService.initGeolocation();
 
       this.zone.runOutsideAngular(() => {
@@ -188,18 +198,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         }, 300);
       });
 
-      this.geolocationService.selectedStore$.subscribe({
-        next: () => {
-          // si es que la tienda seleccionada no cambia no se carga el carro.
-          console.log(
-            'selectedStore$ desde [AppComponent]===================='
-          );
-          if (!this.isOmni) {
-            console.log('hago cart load 1');
-            this.cart.load();
-          }
-        },
-      });
+      this.onChangeStore();
     } else {
       // Esto se carga en el movil.
       // FIXME: tiene dependencia de stores que no se cargan en este caso.
@@ -208,7 +207,10 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
   }
 
-  showAlertCart(): void {
+  /**
+   * Muestra una alerta indicando que se añadió un nuevo producto al carro.
+   */
+  private showAlertCart(): void {
     this.alert.hide();
     this.alert.show();
   }

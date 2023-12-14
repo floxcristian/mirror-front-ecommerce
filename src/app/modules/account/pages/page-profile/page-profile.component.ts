@@ -12,9 +12,7 @@ import { esEmpresa } from '../../../../shared/interfaces/login';
 import { Subject } from 'rxjs';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { ToastrService } from 'ngx-toastr';
-import { ShippingAddress } from '../../../../shared/interfaces/address';
 import { DireccionDespachoComponent } from '../../../../modules/header/components/search-vin-b2b/components/direccion-despacho/direccion-despacho.component';
-import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import {
   DataModal,
   ModalComponent,
@@ -35,10 +33,12 @@ import {
   ICustomerContact,
 } from '@core/models-v2/customer/customer.interface';
 import { CustomerContactService } from '@core/services-v2/customer-contact.service';
-import { CustomerAddressService } from '@core/services-v2/customer-address.service';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
 import { IError } from '@core/models-v2/error/error.interface';
-import { CustomerPreferenceService } from '@core/services-v2/customer-preference.service';
+import { CustomerPreferenceApiService } from '@core/services-v2/customer-preference/customer-preference-api.service';
 import { AddressType } from '@core/enums/address-type.enum';
+import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
+import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 
 @Component({
   selector: 'app-page-profile',
@@ -94,10 +94,12 @@ export class PageProfileComponent implements OnDestroy, OnInit {
     // Services V2
     private readonly authService: AuthApiService,
     private readonly customerContactService: CustomerContactService,
-    private readonly customerAddressService: CustomerAddressService,
+    private readonly customerAddressService: CustomerAddressApiService,
+    private readonly customerPreferenceApiService: CustomerPreferenceApiService,
+    private readonly customerPreferencesStorage: CustomerPreferencesStorageService,
     private readonly customerPreferenceService: CustomerPreferenceService
   ) {
-    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
@@ -105,11 +107,16 @@ export class PageProfileComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.getDataClient();
     this.dtOptions = this.root.simpleDtOptions;
-    this.root
+    this.customerPreferenceService
+      .getCustomerPreferences()
+      .subscribe((preferences) => {
+        this.direccionDespacho = preferences.deliveryAddress;
+      });
+    /*this.root
       .getPreferenciasCliente()
       .then((preferencias: PreferenciasCliente) => {
         this.direccionDespacho = preferencias.direccionDespacho;
-      });
+      });*/
   }
 
   getDataClient() {
@@ -134,19 +141,17 @@ export class PageProfileComponent implements OnDestroy, OnInit {
   }
 
   async actualizaIVA() {
-    const parametros = {
-      iva: isVacio(this.usuario.preferences.iva)
-        ? false
-        : !this.usuario.preferences.iva,
-    };
+    const iva = isVacio(this.usuario.preferences.iva)
+      ? false
+      : !this.usuario.preferences.iva;
 
-    this.customerPreferenceService.updatePreferenceIva(parametros).subscribe({
-      next: (_) => {
+    this.customerPreferenceApiService.updatePreferenceIva(iva).subscribe({
+      next: () => {
         this.toastr.success('Se actualizo con exito la configuración del IVA');
-        this.actualizaLocalStorage(parametros.iva);
+        this.actualizaLocalStorage(iva);
         this.usuario = this.sessionService.getSession();
       },
-      error: (_) => {
+      error: () => {
         this.toastr.error('No se logro actualizar la configuración del IVA');
       },
     });
@@ -292,11 +297,14 @@ export class PageProfileComponent implements OnDestroy, OnInit {
       const direccionDespacho = res;
 
       this.direccionDespacho = direccionDespacho;
-      const preferencias: PreferenciasCliente = this.localS.get(
+      const preferences = this.customerPreferencesStorage.get();
+      preferences.deliveryAddress = direccionDespacho;
+      this.customerPreferencesStorage.set(preferences);
+      /*const preferencias: PreferenciasCliente = this.localS.get(
         'preferenciasCliente'
       );
       preferencias.direccionDespacho = direccionDespacho;
-      this.localS.set('preferenciasCliente', preferencias);
+      this.localS.set('preferenciasCliente', preferencias);*/
     });
   }
 }

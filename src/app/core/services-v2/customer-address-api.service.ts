@@ -1,20 +1,24 @@
 // Angular
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AddressType } from '@core/enums/address-type.enum';
-import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
+// Rxjs
+import { Observable } from 'rxjs';
 // Environment
 import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
+// Models
+import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
+// Constants
+import { AddressType } from '@core/enums/address-type.enum';
 
 const API_CUSTOMER = `${environment.apiEcommerce}/api/v1/customer`;
 
 @Injectable({
   providedIn: 'root',
 })
-export class CustomerAddressService {
+export class CustomerAddressApiService {
   constructor(private http: HttpClient) {}
 
+  /*
   getAddresses(
     documentId: string,
     type: number
@@ -22,19 +26,22 @@ export class CustomerAddressService {
     return this.http.get<ICustomerAddress[]>(
       `${API_CUSTOMER}/${documentId}/addresses?type=${type}`
     );
-  }
+  }*/
 
+  /*
   getInvoiceAddresses(documentId: string): Observable<ICustomerAddress[]> {
     const type = AddressType.INVOICE;
     return this.http.get<ICustomerAddress[]>(
       `${API_CUSTOMER}/${documentId}/addresses?type=${type}`
     );
-  }
+  }*/
 
   getDeliveryAddresses(documentId: string): Observable<ICustomerAddress[]> {
-    const type = AddressType.DELIVERY;
     return this.http.get<ICustomerAddress[]>(
-      `${API_CUSTOMER}/${documentId}/addresses?type=${type}`
+      `${API_CUSTOMER}/${documentId}/addresses`,
+      {
+        params: { type: AddressType.DELIVERY },
+      }
     );
   }
 

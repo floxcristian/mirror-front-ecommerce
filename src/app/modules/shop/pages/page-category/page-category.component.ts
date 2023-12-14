@@ -18,7 +18,6 @@ import { CanonicalService } from '../../../../shared/services/canonical.service'
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { BuscadorService } from '../../../../shared/services/buscador.service';
-import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
@@ -38,7 +37,9 @@ import {
   IProductFilterCheckbox,
 } from '@core/models-v2/article/product-filter.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
+import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
+import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 
 // export interface IFilterMedium{
 //   name:string;
@@ -111,7 +112,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
 
   origen!: any[];
   usuario: ISession;
-  preferenciaCliente!: PreferenciasCliente;
+  preferenciaCliente!: ICustomerPreference;
   banners!: IBanner | null;
 
   constructor(
@@ -128,12 +129,14 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     private seoService: SeoService,
     private canonicalService: CanonicalService,
     private buscadorService: BuscadorService,
-    // Storage
+    // Services V2
     private readonly sessionStorage: SessionStorageService,
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
     private readonly articleService: ArticleService,
-    private readonly geolocationService: GeolocationServiceV2
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
+    private readonly customerPreferenceService: CustomerPreferenceService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -145,7 +148,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     }
 
     this.usuario = this.sessionService.getSession();
-    this.preferenciaCliente = this.localS.get('preferenciasCliente');
+    this.preferenciaCliente = this.customerPreferenceStorage.get();
   }
 
   ngOnDestroy(): void {
@@ -313,8 +316,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           parametros = {
             category: category,
             word: this.textToSearch,
-            location: this.preferenciaCliente.direccionDespacho?.city
-              ? this.preferenciaCliente.direccionDespacho?.city
+            location: this.preferenciaCliente.deliveryAddress?.city
+              ? this.preferenciaCliente.deliveryAddress?.city
                   .normalize('NFD')
                   .replace(/[\u0300-\u036f]/g, '')
               : '',
@@ -366,8 +369,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
             parametros = {
               category: '',
               word: this.textToSearch,
-              location: this.preferenciaCliente.direccionDespacho?.city
-                ? this.preferenciaCliente.direccionDespacho?.city
+              location: this.preferenciaCliente.deliveryAddress?.city
+                ? this.preferenciaCliente.deliveryAddress?.city
                     .normalize('NFD')
                     .replace(/[\u0300-\u036f]/g, '')
                 : '',
@@ -431,9 +434,11 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.authStateService.session$.subscribe((user) => {
       this.reinicaFiltros();
       this.parametrosBusqueda.documentId = user.documentId || '0';
-      this.root.getPreferenciasCliente().then((preferencias) => {
-        this.preferenciaCliente = preferencias;
-        this.cargarCatalogoProductos(this.parametrosBusqueda, '');
+      this.customerPreferenceService.getCustomerPreferences().subscribe({
+        next: (preferences) => {
+          this.preferenciaCliente = preferences;
+          this.cargarCatalogoProductos(this.parametrosBusqueda, '');
+        },
       });
     });
 
@@ -448,7 +453,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       this.parametrosBusqueda.location = r.city
         ? r.comuna.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
         : '';
-      this.preferenciaCliente.direccionDespacho = r;
+      this.preferenciaCliente.deliveryAddress = r;
       this.reinicaFiltros();
       this.cargarCatalogoProductos(this.parametrosBusqueda, '');
     });
@@ -506,13 +511,10 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     const user = this.sessionService.getSession();
     if (user) {
       this.parametrosBusqueda.documentId = user.documentId;
-      if (
-        this.preferenciaCliente &&
-        this.preferenciaCliente.direccionDespacho
-      ) {
+      if (this.preferenciaCliente && this.preferenciaCliente.deliveryAddress) {
         this.parametrosBusqueda.location = this.preferenciaCliente
-          .direccionDespacho.city
-          ? this.preferenciaCliente.direccionDespacho.city
+          .deliveryAddress.city
+          ? this.preferenciaCliente.deliveryAddress.city
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
           : '';
@@ -600,8 +602,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           documentId: user.documentId,
           branchCode: codigo,
           location:
-            this.preferenciaCliente.direccionDespacho != null
-              ? this.preferenciaCliente.direccionDespacho.city
+            this.preferenciaCliente.deliveryAddress != null
+              ? this.preferenciaCliente.deliveryAddress.city
                   .normalize('NFD')
                   .replace(/[\u0300-\u036f]/g, '')
               : '',

@@ -9,7 +9,7 @@ import { LogisticsService } from '../../services/logistics.service';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { SessionService } from '@core/states-v2/session.service';
-import { CustomerAddressService } from '@core/services-v2/customer-address.service';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
 import { IError } from '@core/models-v2/error/error.interface';
 import { AddressType } from '@core/enums/address-type.enum';
 
@@ -37,7 +37,7 @@ export class AddressModalComponent implements OnInit {
     private toastr: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly customerAddressService: CustomerAddressService
+    private readonly customerAddressService: CustomerAddressApiService
   ) {
     this.formDireccion = this.fb.group({
       calle: new FormControl(

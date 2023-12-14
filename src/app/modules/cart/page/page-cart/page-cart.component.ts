@@ -24,11 +24,12 @@ import { isVacio } from '../../../../shared/utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
-import { PreferenciasCliente } from '@shared/interfaces/preferenciasCliente';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
+import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 
 interface Item {
   ProductCart: ProductCart;
@@ -91,7 +92,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
       0: { items: 5, nav: false, mergeFit: true },
     },
   };
-  preferenciaCliente!: PreferenciasCliente;
+  preferenciaCliente!: ICustomerPreference; //PreferenciasCliente;
 
   constructor(
     private router: Router,
@@ -107,12 +108,14 @@ export class PageCartComponent implements OnInit, OnDestroy {
     // Services V2
     private readonly sessionService: SessionService,
     private readonly invitadoStorage: InvitadoStorageService,
-    private readonly geolocationService: GeolocationServiceV2
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly customerPreferencesStorage: CustomerPreferencesStorageService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
-    this.preferenciaCliente = this.localS.get('preferenciasCliente');
+    //this.preferenciaCliente = this.localS.get('preferenciasCliente');
+    this.preferenciaCliente = this.customerPreferencesStorage.get();
   }
 
   ngOnInit(): void {
@@ -238,6 +241,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
   getRecommendedProductsList() {
     console.log('getSelectedStore desde getRecommendedProductsList');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    // this.preferenciaCliente = this.customerPreferencesStorage.get();
     this.preferenciaCliente = this.localS.get('preferenciasCliente');
     let obj: any = {
       listaSku: [],
@@ -255,8 +259,8 @@ export class PageCartComponent implements OnInit, OnDestroy {
     if (this.user) {
       obj.rut = this.user.documentId;
     }
-    if (this.preferenciaCliente && this.preferenciaCliente.direccionDespacho)
-      obj.localidad = this.preferenciaCliente.direccionDespacho.city
+    if (this.preferenciaCliente && this.preferenciaCliente.deliveryAddress)
+      obj.localidad = this.preferenciaCliente.deliveryAddress.city
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '');
     this.productoService.getRecommendedProductsList(obj).subscribe(

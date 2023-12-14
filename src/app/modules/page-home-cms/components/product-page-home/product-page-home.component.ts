@@ -8,7 +8,6 @@ import {
   PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
-import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { Subscription } from 'rxjs';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { Router } from '@angular/router';
@@ -21,7 +20,6 @@ import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import {
   IElement1,
-  IElement2,
   IPageData,
 } from '@core/models-v2/cms/homePage-response.interface';
 
@@ -42,7 +40,6 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
   user!: ISession;
   id!: string;
   layout = 'grid-lg';
-  preferenciasCliente!: PreferenciasCliente;
   despachoCliente!: Subscription;
 
   ruta: string = '';

@@ -17,6 +17,7 @@
   </div>
 
   <div class="search__form col p-0 me-5">
+    <!-- FIXME: usar reactive forms -->
     <div
       class="indicator indicator--trigger--click position-relative dropdown-search col p-0"
       appDropdown="indicator--opened"
@@ -65,9 +66,7 @@
       <div class="indicator__dropdown">
         <div
           *ngIf="
-            productosEncontrados.length == 0 &&
-            textToSearch.length > 0 &&
-            buscando == false
+            !productosEncontrados.length && textToSearch.length && !buscando
           "
           class="products-list-search"
         >
@@ -332,7 +331,7 @@
   <div class="col-header-2">
     <div class="nav-panel__indicators d-flex align-items-center">
       <div
-        *ngIf="usuario?.documentId != '0'"
+        *ngIf="session?.documentId != '0'"
         class="indicator position-relative indicator--trigger--click"
         (click)="modificarDireccionDespacho()"
       >
@@ -380,7 +379,7 @@
             style="width: 40px; height: 40px; margin-top: -12px"
           />
           <span class="icon-title mt-1">
-            {{ tiendaSeleccionada ? tiendaSeleccionada.zone : '' }}</span
+            {{ selectedStore ? selectedStore.zone : '' }}</span
           >
         </span>
 
@@ -409,9 +408,8 @@
             <div class="d-flex">
               <div class="col-6">
                 <button
-                  name="abrirModalTiendas"
                   class="btn btn-border-primary btn-lg text-center w-100"
-                  (click)="abrirModalTiendas()"
+                  (click)="showStores()"
                 >
                   Cambiar
                 </button>

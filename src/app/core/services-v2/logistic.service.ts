@@ -1,11 +1,12 @@
 // Angular
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
-import { ICity } from '@core/models-v2/logistic/city.interface';
+// Rxjs
+import { Observable } from 'rxjs';
 // Environment
 import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
+// Models
+import { ICity } from '@core/models-v2/logistic/city.interface';
 
 const API_LOGISTIC = `${environment.apiEcommerce}/api/v1/logistic`;
 

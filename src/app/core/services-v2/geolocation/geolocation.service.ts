@@ -25,6 +25,7 @@ export class GeolocationServiceV2 {
 
   // FIXME: quitar dependencia de esta variable.
   geolocation!: ISelectedStore;
+  secondCallbackTimer!: ReturnType<typeof setTimeout>;
 
   constructor(
     private readonly geolocationApiService: GeolocationApiService,
@@ -117,8 +118,6 @@ export class GeolocationServiceV2 {
         this.storesSubject.next(stores);
         let geolocation = this.geolocationStorage.get();
 
-        // FIXME: esto debe ir después de intentar setear la tienda más cercana.
-
         if (!geolocation) {
           console.log('setDefaultLocation desde initGeolocation...');
           geolocation = this.setDefaultLocation();
@@ -132,16 +131,7 @@ export class GeolocationServiceV2 {
         }
       },
     });
-    /*
-    let geolocation = this.geolocationStorage.get();
-    if (geolocation) {
-      this.geolocation = geolocation;
-    } else {
-      geolocation = this.setDefaultLocation();
-    }*/
   }
-
-  secondCallbackTimer!: ReturnType<typeof setTimeout>;
 
   /**
    * Establecer tienda más cercana.
@@ -215,9 +205,9 @@ export class GeolocationServiceV2 {
     const timeout = 500;
     return new Promise(async (resolve) => {
       this.secondCallbackTimer = setTimeout(() => resolve(false), timeout);
-      await new Promise(async (innerResolve) => {
-        setTimeout(() => innerResolve(null), timeout);
-      });
+      await new Promise(async (innerResolve) =>
+        setTimeout(() => innerResolve(null), timeout)
+      );
       resolve(true);
     });
   }

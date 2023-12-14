@@ -21,22 +21,22 @@ export interface ICustomerPhone {
 }
 
 export interface ICustomerAddress {
-  street: string;
-  id: string;
-  number: string;
-  city: string;
   address: string;
-  type: string;
-  typeCode: number;
-  location: string;
+  city: string;
+  country: string;
+  departmentHouse: string;
+  id: string;
   lat: string;
   lng: string;
-  departmentHouse: string;
-  reference: string;
-  country: string;
-  region: string;
-  regionCode: string;
+  location: string;
+  number: string;
   province: string;
+  reference: string;
+  region: string;
+  street: string;
+  type: string;
+  typeCode: number;
+  regionCode?: string;
 }
 
 export interface ICustomerBusinessLine {

@@ -20,8 +20,6 @@ import { CategoryService } from '../../../../shared/services/category.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
 import { DireccionDespachoComponent } from '../../../header/components/search-vin-b2b/components/direccion-despacho/direccion-despacho.component';
-import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
-import { ShippingAddress } from '../../../../shared/interfaces/address';
 
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
@@ -36,6 +34,8 @@ import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { ModalStoresComponent } from 'src/app/modules/header/components/modal-stores/modal-stores.component';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
+import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
+import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -81,7 +81,9 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
     private readonly sessionStorage: SessionStorageService,
     private readonly authStateService: AuthStateServiceV2,
     private readonly menuService: MenuService,
-    private readonly geolocationService: GeolocationServiceV2
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly customerPreferenceService: CustomerPreferenceService,
+    private readonly customerPreferenceStorage: CustomerPreferencesStorageService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -109,8 +111,10 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
         }
       },
     });
-    this.root.getPreferenciasCliente().then((preferencias) => {
-      this.direccion = preferencias.direccionDespacho;
+    this.customerPreferenceService.getCustomerPreferences().subscribe({
+      next: (preferences) => {
+        this.direccion = preferences.deliveryAddress;
+      },
     });
 
     this.despachoCliente = this.logisticsService.direccionCliente$.subscribe(
@@ -307,13 +311,9 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
       const direccionDespacho = res;
 
       this.direccion = direccionDespacho;
-      const preferencias: PreferenciasCliente = this.localS.get(
-        'preferenciasCliente'
-      ) as any;
-      preferencias.direccionDespacho = direccionDespacho;
-      this.localS.set('preferenciasCliente', preferencias);
-
-      /* GUARDAR EN BD */
+      const preferences = this.customerPreferenceStorage.get();
+      preferences.deliveryAddress = direccionDespacho;
+      this.customerPreferenceStorage.set(preferences);
     });
   }
 }

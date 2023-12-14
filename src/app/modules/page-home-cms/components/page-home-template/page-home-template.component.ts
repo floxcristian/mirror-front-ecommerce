@@ -1,17 +1,14 @@
 // Angular
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 // Rxjs
-import { Subscription, first } from 'rxjs';
+import { first } from 'rxjs';
 // Models
 
 // Services
-import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { DirectionService } from '../../../../shared/services/direction.service';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
-import { ProductsService } from '../../../../shared/services/products.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { PageHomeService } from '../../services/pageHome.service';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { CmsService } from '@core/services-v2/cms.service';
@@ -20,13 +17,15 @@ import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
+import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
+import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 @Component({
   selector: 'app-page-home-template',
   templateUrl: './page-home-template.component.html',
   styleUrls: ['./page-home-template.component.scss'],
 })
 export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
-  preferenciasCliente!: PreferenciasCliente;
+  preferenciasCliente!: ICustomerPreference;
   user!: ISession;
 
   //declarando la variable para ver los tipos
@@ -41,7 +40,8 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     private readonly csmService: CmsService,
     private readonly authStateService: AuthStateServiceV2,
     private readonly geolocationService: GeolocationServiceV2,
-    private readonly geolocationStorage: GeolocationStorageService
+    private readonly geolocationStorage: GeolocationStorageService,
+    private readonly customerPreferenceService: CustomerPreferenceService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -53,10 +53,14 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
           const geo = this.geolocationStorage.get();
           if (geo) {
             if (this.user.documentId !== '0') {
-              this.root.getPreferenciasCliente().then((preferencias) => {
-                this.preferenciasCliente = preferencias;
-                this.cargarPage();
-              });
+              this.customerPreferenceService
+                .getCustomerPreferences()
+                .subscribe({
+                  next: (preferences) => {
+                    this.preferenciasCliente = preferences;
+                    this.cargarPage();
+                  },
+                });
             } else {
               this.cargarPage();
             }
@@ -78,16 +82,16 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     });
 
     this.authStateService.session$.subscribe(() => {
-      this.root.getPreferenciasCliente().then((preferencias) => {
-        this.preferenciasCliente = preferencias;
-        console.log('cargarPage 4');
-        this.cargarPage();
+      this.customerPreferenceService.getCustomerPreferences().subscribe({
+        next: (preferences) => {
+          this.preferenciasCliente = preferences;
+          this.cargarPage();
+        },
       });
     });
 
     this.logisticsService.direccionCliente$.subscribe((r) => {
-      this.preferenciasCliente.direccionDespacho = r;
-      console.log('cargarPage 5');
+      this.preferenciasCliente.deliveryAddress = r;
       this.cargarPage();
     });
   }
@@ -98,8 +102,8 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     console.log('getSelectedStore desde PageHomeTemplateComponent');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada.code;
-    const localidad = this.preferenciasCliente?.direccionDespacho
-      ? this.preferenciasCliente.direccionDespacho.city
+    const localidad = this.preferenciasCliente?.deliveryAddress
+      ? this.preferenciasCliente.deliveryAddress.city
       : '';
     this.csmService.getHomePage(rut, sucursal, localidad).subscribe({
       next: (res) => {

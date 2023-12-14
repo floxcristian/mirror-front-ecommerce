@@ -9,7 +9,6 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { PreferenciasCliente } from '../../../../shared/interfaces/preferenciasCliente';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/states-v2/session.service';
@@ -65,7 +64,6 @@ export class Lista_productoComponent implements OnInit {
   @Input() id = '-1';
   product_list: any;
   productList: any;
-  preferenciasCliente!: PreferenciasCliente;
   products: any;
   user!: ISession;
   cargar: boolean = false;

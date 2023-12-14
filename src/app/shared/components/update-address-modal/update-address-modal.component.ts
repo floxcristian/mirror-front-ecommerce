@@ -10,7 +10,7 @@ import { DireccionMap } from '../map/map.component';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { SessionService } from '@core/states-v2/session.service';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
-import { CustomerAddressService } from '@core/services-v2/customer-address.service';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
 import { AddressType } from '@core/enums/address-type.enum';
 import { IError } from '@core/models-v2/error/error.interface';
 import { LogisticService } from '@core/services-v2/logistic.service';
@@ -39,7 +39,7 @@ export class UpdateAddressModalComponent implements OnInit {
     private toastr: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly customerAddressService: CustomerAddressService,
+    private readonly customerAddressService: CustomerAddressApiService,
     private readonly logisticService: LogisticService
   ) {}
 
@@ -213,7 +213,7 @@ export class UpdateAddressModalComponent implements OnInit {
     };
 
     this.customerAddressService.updateAddress(direccion).subscribe({
-      next: (_) => {
+      next: () => {
         this.toastr.success('Se actualizó la dirección correctamente');
         this.respuesta.emit(true);
         this.modalUpdateAddressRef.hide();

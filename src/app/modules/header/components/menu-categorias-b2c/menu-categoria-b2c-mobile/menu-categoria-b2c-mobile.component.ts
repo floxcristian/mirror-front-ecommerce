@@ -92,7 +92,6 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
     private modalService: BsModalService,
     private router: Router,
     public localS: LocalStorageService,
-    private logisticsService: LogisticsService,
     private cartService: CartService,
     private root: RootService,
     // Services V2
@@ -215,10 +214,8 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
     }
   }
 
-  // Mostrar client
-  abrirModalTiendas() {
+  showStores(): void {
     this.modalService.show(ModalStoresComponent);
-    this.logisticsService.obtenerTiendas().subscribe();
   }
 
   async validarCuenta() {
