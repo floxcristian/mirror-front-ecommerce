@@ -15,7 +15,6 @@ import { ToastrService } from 'ngx-toastr';
 
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, first } from 'rxjs/operators';
-import { CartService } from '../../../../shared/services/cart.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
@@ -40,6 +39,10 @@ import {
   ISuggestion,
 } from '@core/models-v2/article/article-response.interface';
 import { ArticleService } from '@core/services-v2/article.service';
+import { CartService } from '@core/services-v2/cart.service';
+import { PathStorageService } from '@core/storage/path-storage.service';
+import { CustomerPreferenceStorageService } from '@core/storage/customer-preference-storage.service';
+import { IPreference } from '@core/models-v2/customer/customer-preference.interface';
 
 @Component({
   selector: 'app-header-search',
@@ -104,16 +107,16 @@ export class SearchComponent implements OnInit, OnDestroy {
     private productsService: ProductsService,
     public root: RootService,
     private toastr: ToastrService,
-    public cart: CartService,
     public menuCategorias: MenuCategoriasB2cService,
-    public localS: LocalStorageService,
     private logisticsService: LogisticsService,
-    private cartService: CartService,
     private readonly gtmService: GoogleTagManagerService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
     private readonly geolocationService: GeolocationServiceV2,
+    public readonly shoppingCartService: CartService,
+    private readonly pathStorage: PathStorageService,
+    private readonly customerPreferenceStorage: CustomerPreferenceStorageService,
     private readonly articleService: ArticleService
   ) {}
 
@@ -138,7 +141,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       next: (selectedStore) => {
         console.log('tiendaSeleccionada 2');
         this.tiendaSeleccionada = selectedStore;
-        this.cartService.calc();
+        this.shoppingCartService.calc();
         if (selectedStore.isChangeToNearestStore) {
           setTimeout(() => {
             if (this.menuTienda) this.menuTienda.open();
@@ -288,7 +291,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   async validarCuenta() {
-    this.localS.set('ruta', ['/', 'mi-cuenta', 'seguimiento']);
+    this.pathStorage.set(['/', 'mi-cuenta', 'seguimiento']);
     this.router.navigate(['/mi-cuenta', 'seguimiento']);
   }
 
@@ -311,11 +314,10 @@ export class SearchComponent implements OnInit, OnDestroy {
     bsModalRef.content.event.subscribe(async (res: any) => {
       const direccionDespacho = res;
       this.direccion = direccionDespacho;
-      const preferencias: PreferenciasCliente = this.localS.get(
-        'preferenciasCliente'
-      );
-      preferencias.direccionDespacho = direccionDespacho;
-      this.localS.set('preferenciasCliente', preferencias);
+      const preferencias: IPreference =
+        this.customerPreferenceStorage.get() as IPreference;
+      preferencias.deliveryAddress = direccionDespacho;
+      this.customerPreferenceStorage.set(preferencias);
     });
   }
 }

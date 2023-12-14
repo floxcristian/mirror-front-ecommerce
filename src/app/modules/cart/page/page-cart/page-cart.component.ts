@@ -5,7 +5,6 @@ import {
   OnInit,
   PLATFORM_ID,
 } from '@angular/core';
-import { CartService } from '../../../../shared/services/cart.service';
 import { FormControl, Validators } from '@angular/forms';
 import { ProductCart } from '../../../../shared/interfaces/cart-item';
 import { Subject } from 'rxjs';
@@ -15,23 +14,29 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { Banner } from '../../../../shared/interfaces/banner';
 import { HostListener } from '@angular/core';
-import { Product } from '../../../../shared/interfaces/product';
-import { ProductsService } from '../../../../shared/services/products.service';
-import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { DirectionService } from '../../../../shared/services/direction.service';
 import { environment } from '@env/environment';
 import { isVacio } from '../../../../shared/utils/utilidades';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
-import { PreferenciasCliente } from '@shared/interfaces/preferenciasCliente';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { CartService } from '@core/services-v2/cart.service';
+import { CustomerPreferenceStorageService } from '@core/storage/customer-preference-storage.service';
+import { IPreference } from '@core/models-v2/customer/customer-preference.interface';
+import { ShoppingCartStorageService } from '@core/storage/shopping-cart-storage.service';
+import {
+  IShoppingCart,
+  IShoppingCartProduct,
+} from '@core/models-v2/cart/shopping-cart.interface';
+import { ArticleService } from '@core/services-v2/article.service';
+import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
+import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 
 interface Item {
-  ProductCart: ProductCart;
+  ProductCart: IShoppingCartProduct;
   quantity: number;
   quantityControl: FormControl;
 }
@@ -45,7 +50,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject();
 
   removedItems: ProductCart[] = [];
-  items: any[] = []; //Item[] = [];
+  items: Item[] = [];
   updating = false;
   saveTimer: any;
   innerWidth: number;
@@ -55,7 +60,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
   IVA = environment.IVA || 0.19;
   isVacio = isVacio;
 
-  recommendedProducts: Product[] = [];
+  recommendedProducts: IArticle[] = [];
   user!: ISession;
   isB2B!: boolean;
   SumaTotal = 0;
@@ -91,44 +96,47 @@ export class PageCartComponent implements OnInit, OnDestroy {
       0: { items: 5, nav: false, mergeFit: true },
     },
   };
-  preferenciaCliente!: PreferenciasCliente;
+  preferenciaCliente!: IPreference;
 
   constructor(
     private router: Router,
     public root: RootService,
-    public cart: CartService,
     private toast: ToastrService,
-    private localS: LocalStorageService,
 
-    private productoService: ProductsService,
+    // private productoService: ProductsService,
     private direction: DirectionService, // @Inject(WINDOW) private window: Window
     private readonly gtmService: GoogleTagManagerService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService,
+    private readonly articleService: ArticleService,
     private readonly invitadoStorage: InvitadoStorageService,
+    public readonly shoppingCartService: CartService,
+    private readonly customerPreferenceStorage: CustomerPreferenceStorageService,
+    private readonly shoppingCartStorage: ShoppingCartStorageService,
     private readonly geolocationService: GeolocationServiceV2
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
-    this.preferenciaCliente = this.localS.get('preferenciasCliente');
+    this.preferenciaCliente =
+      this.customerPreferenceStorage.get() as IPreference;
   }
 
   ngOnInit(): void {
     const _this = this;
     //this.user = this.root.getDataSesionUsuario();
     this.user = this.sessionService.getSession();
-    this.cart.items$
+    this.shoppingCartService.items$
       .pipe(
         takeUntil(this.destroy$),
         map((ProductCarts) =>
-          (ProductCarts || []).map((item) => {
+          (ProductCarts || []).map((item): Item => {
             return {
               ProductCart: item,
-              quantity: item.cantidad,
+              quantity: item.quantity,
               quantityControl: new FormControl(
-                item.cantidad,
+                item.quantity,
                 Validators.required
               ),
             };
@@ -142,9 +150,9 @@ export class PageCartComponent implements OnInit, OnDestroy {
         this.getRecommendedProductsList();
       });
 
-    _this.cart.calc(true);
+    _this.shoppingCartService.calc(true);
     setTimeout(() => {
-      this.cart.dropCartActive$.next(false);
+      this.shoppingCartService.dropCartActive$.next(false);
     });
     if (['supervisor', 'comprador'].includes(this.user?.userRole || '')) {
       this.gtmService.pushTag({
@@ -162,7 +170,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
 
     setTimeout(() => {
-      this.cart.dropCartActive$.next(true);
+      this.shoppingCartService.dropCartActive$.next(true);
     });
   }
 
@@ -179,12 +187,12 @@ export class PageCartComponent implements OnInit, OnDestroy {
 
     item.ProductCart.cantidad = cantidad;
 
-    const productos: ProductCart[] = [];
+    const productos: IShoppingCartProduct[] = [];
     this.items.map((r) => {
       productos.push(r.ProductCart);
     });
 
-    this.cart.saveCart(productos).subscribe((r) => {
+    this.shoppingCartService.saveCart(productos).subscribe((r) => {
       for (const el of r.data.productos) {
         if (el.sku == item.ProductCart.sku) {
           item.ProductCart.conflictoEntrega = el.conflictoEntrega;
@@ -192,12 +200,12 @@ export class PageCartComponent implements OnInit, OnDestroy {
           item.ProductCart.precio = el.precio;
         }
       }
-      this.cart.updateCart(productos);
+      this.shoppingCartService.updateCart(productos);
     });
   }
 
-  remove(item: ProductCart): void {
-    this.cart.remove(item).subscribe((r) => {});
+  remove(item: IShoppingCartProduct): void {
+    // this.shoppingCartService.remove(item).subscribe((r) => {});
   }
 
   saveCart() {
@@ -209,7 +217,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
           cantidad: item.quantity,
         };
       });
-      this.cart.saveCart(productos).subscribe((r) => {});
+      this.shoppingCartService.saveCart(productos).subscribe((r) => {});
     }, 1000);
   }
 
@@ -219,16 +227,14 @@ export class PageCartComponent implements OnInit, OnDestroy {
   }
 
   async setSaveCart() {
-    let cartSession: any = this.localS.get('carroCompraB2B');
+    let cartSession: IShoppingCart =
+      this.shoppingCartStorage.get() as IShoppingCart;
 
-    let objeto = {
-      id: cartSession._id,
-      estado: 'guardado',
-    };
-
-    let respuesta: any = await this.cart.setSaveCart(objeto).toPromise();
+    let respuesta: any = await this.shoppingCartService
+      .setSaveCart(cartSession._id, 'saved')
+      .toPromise();
     console.log('cart load desde PageCartComponent');
-    this.cart.load();
+    this.shoppingCartService.load();
     if (!respuesta.error) {
       this.toast.success('Carro guardado exitosamente');
       this.router.navigate(['/', 'inicio']);
@@ -236,39 +242,47 @@ export class PageCartComponent implements OnInit, OnDestroy {
   }
 
   getRecommendedProductsList() {
-    console.log('getSelectedStore desde getRecommendedProductsList');
-    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    this.preferenciaCliente = this.localS.get('preferenciasCliente');
-    let obj: any = {
-      listaSku: [],
-      rut: '',
-      cantidad: 6,
-      sucursal: tiendaSeleccionada.code,
-      localidad: '',
-    };
+    if (this.items.length > 0) {
+      console.log('getSelectedStore desde getRecommendedProductsList');
+      const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+      this.preferenciaCliente =
+        this.customerPreferenceStorage.get() as IPreference;
 
-    for (let i in this.items) {
-      let item = this.items[i];
-      obj.listaSku.push(item.ProductCart.sku);
-    }
-
-    if (this.user) {
-      obj.rut = this.user.documentId;
-    }
-    if (this.preferenciaCliente && this.preferenciaCliente.direccionDespacho)
-      obj.localidad = this.preferenciaCliente.direccionDespacho.city
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
-    this.productoService.getRecommendedProductsList(obj).subscribe(
-      (r: ResponseApi) => {
-        this.recommendedProducts = r.data;
-      },
-      (error) => {
-        this.toast.error(
-          'Error de conexión, para obtener los productos recomendados '
-        );
+      let listaSku: string[] = [];
+      let rut = '';
+      let localidad = '';
+      console.log(this.items);
+      this.items.forEach((item) => {
+        console.log(item);
+        listaSku.push(item.ProductCart.sku);
+      });
+      console.log(listaSku);
+      if (this.user) {
+        rut = this.user.documentId;
       }
-    );
+      if (this.preferenciaCliente && this.preferenciaCliente.deliveryAddress)
+        localidad = this.preferenciaCliente.deliveryAddress.city
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '');
+
+      this.articleService
+        .getArticleSuggestions({
+          skus: listaSku,
+          documentId: rut,
+          branchCode: tiendaSeleccionada.code,
+          quantityToSuggest: 6,
+        })
+        .subscribe(
+          (r: IArticleResponse[]) => {
+            this.recommendedProducts = r;
+          },
+          (error) => {
+            this.toast.error(
+              'Error de conexión, para obtener los productos recomendados '
+            );
+          }
+        );
+    }
   }
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
