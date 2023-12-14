@@ -5,6 +5,7 @@ import { UsersService } from '../../service/users.service';
 import { ToastrService } from 'ngx-toastr';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { SubAccountService } from '@core/services-v2/sub-account.service';
 export interface Archivo {
   archivo: File;
   nombre: string;
@@ -25,7 +26,8 @@ export class PageGestionUsuarioComponent implements OnInit {
 
     private toast: ToastrService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly subAccountService: SubAccountService
   ) {}
   archivo!: Archivo | undefined;
   idArchivo!: string;
@@ -64,18 +66,34 @@ export class PageGestionUsuarioComponent implements OnInit {
       id: this.userSession.documentId,
       accion: 'guardar',
     };
-    let respuesta: any = await this.userService.uploadExcel(data).toPromise();
-    if (respuesta.nuevo.length) {
-      respuesta.nuevo.forEach((item: any) => {
-        this.nuevo.push(item);
+
+    await this.subAccountService
+      .createSubAccountsFromExcel({
+        documentId: this.userSession.documentId,
+        file: this.archivo?.archivo!,
+      })
+      .subscribe({
+        next: (respuesta) => {
+          if (respuesta.registered.length) {
+            respuesta.registered.forEach((item: any) => {
+              this.nuevo.push(item);
+            });
+          }
+          if (respuesta.duplicated.length) {
+            respuesta.duplicated.forEach((item: any) => {
+              this.existe.push(item);
+            });
+          }
+          this.userService.LoadData();
+        },
+        error: (err) => {
+          console.log(err);
+          this.toast.error(
+            'Ocurrió un error al intentar subir excel de usuarios'
+          );
+          this.userService.LoadData();
+        },
       });
-    }
-    if (respuesta.duplicados.length) {
-      respuesta.duplicados.forEach((item: any) => {
-        this.existe.push(item);
-      });
-    }
-    this.userService.LoadData();
   }
 
   crearUsuario() {

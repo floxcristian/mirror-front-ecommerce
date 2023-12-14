@@ -1,17 +1,29 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UsersService } from '../../service/users.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Subscription } from 'rxjs';
+import { UserRoleType } from '@core/enums/user-role-type.enum';
+import { SubAccountService } from '@core/services-v2/sub-account.service';
+import { ToastrService } from 'ngx-toastr';
+import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
+import { SessionService } from '@core/states-v2/session.service';
 
 @Component({
   selector: 'app-modaluser',
   templateUrl: './modaluser.component.html',
   styleUrls: ['./modaluser.component.scss'],
 })
-export class ModaluserComponent implements OnInit {
+export class ModaluserComponent implements OnInit, OnDestroy {
   formUsuario!: FormGroup;
   editUser: Boolean = false;
-  users: any = null;
+  users!: IEcommerceUser;
   user_raiz: any = [];
   modalRef!: BsModalRef;
   @ViewChild('template_usuario', { static: false })
@@ -21,17 +33,24 @@ export class ModaluserComponent implements OnInit {
   @ViewChild('template_eliminarusuario', { static: false })
   modalEliminarUsuario!: TemplateRef<any>;
 
+  subscriptions: Subscription = new Subscription();
+
   constructor(
     private fb: FormBuilder,
     private modalService: BsModalService,
-    private userService: UsersService
+    private userService: UsersService,
+    private toastr: ToastrService,
+    // Services V2
+    private readonly sessionService: SessionService,
+    private readonly subAccountService: SubAccountService
   ) {}
 
   ngOnInit() {
     this.formUser();
-    this.userService.templateRead$.subscribe((r: any) => {
+    //this.subscriptions.unsubscribe();
+    const subscription = this.userService.templateRead$.subscribe((r: any) => {
       this.users = r.data;
-      this.users.user_role = 'comprador';
+      this.users.userRole = UserRoleType.BUYER;
       this.user_raiz = r.raiz;
       this.editUser = r.edit;
 
@@ -43,11 +62,12 @@ export class ModaluserComponent implements OnInit {
       }
       this.formEditar();
     });
+    this.subscriptions.add(subscription);
   }
 
   formUser() {
     this.formUsuario = this.fb.group({
-      active: [false, Validators.required],
+      active: [false],
       username: ['', Validators.required],
       email: [
         '',
@@ -59,10 +79,10 @@ export class ModaluserComponent implements OnInit {
       ],
       password: ['', Validators.required],
       phone: ['', Validators.required],
-      first_name: ['', Validators.required],
-      last_name: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
       method_payment: ['OC', Validators.required],
-      user_role: 'comprador',
+      userRole: UserRoleType.BUYER,
     });
 
     this.editUser = false;
@@ -71,12 +91,12 @@ export class ModaluserComponent implements OnInit {
   formEditar() {
     this.formUsuario.controls['active'].setValue(this.users.active);
     this.formUsuario.controls['username'].setValue(this.users.username);
-    this.formUsuario.controls['first_name'].setValue(this.users.first_name);
-    this.formUsuario.controls['last_name'].setValue(this.users.last_name);
+    this.formUsuario.controls['firstName'].setValue(this.users.firstName);
+    this.formUsuario.controls['lastName'].setValue(this.users.lastName);
     this.formUsuario.controls['email'].setValue(this.users.email);
     this.formUsuario.controls['phone'].setValue(this.users.phone);
-    this.formUsuario.controls['password'].setValue(this.users.password);
-    this.formUsuario.controls['user_role'].setValue(this.users.user_role);
+    this.formUsuario.controls['password'].setValue('');
+    this.formUsuario.controls['userRole'].setValue(this.users.userRole);
   }
 
   openModalCrear() {
@@ -105,25 +125,71 @@ export class ModaluserComponent implements OnInit {
   }
 
   async onSubmit(data: any) {
-    let id = this.users._id;
     data.company = this.user_raiz.company;
-    data.rut = this.user_raiz.rut;
+    data.documentId = this.users.documentId
+      ? this.users.documentId
+      : this.sessionService.getSession().documentId;
     data.giro = this.user_raiz.giro;
     data.tipo_usuario = 1;
     if (this.editUser) {
-      await this.userService.Update(id, data).toPromise();
-      this.modalRef.hide();
-      this.userService.LoadData();
+      this.subAccountService
+        .updateSubAccount({
+          ...data,
+        })
+        .subscribe({
+          next: () => {
+            this.modalRef.hide();
+            this.userService.LoadData();
+          },
+          error: () => {
+            this.toastr.error(
+              'No se pudo actualizar el usuario ' + data.username
+            );
+            this.modalRef.hide();
+            this.userService.LoadData();
+          },
+        });
     } else if (!this.editUser) {
-      await this.userService.insertar(data).toPromise();
-      this.modalRef.hide();
-      this.userService.LoadData();
+      this.subAccountService
+        .createSubAccount({
+          ...data,
+        })
+        .subscribe({
+          next: () => {
+            this.modalRef.hide();
+            this.userService.LoadData();
+          },
+          error: () => {
+            this.toastr.error(
+              'No se pudo actualizar el usuario ' + data.username
+            );
+            this.modalRef.hide();
+            this.userService.LoadData();
+          },
+        });
     }
   }
 
-  async Eliminar(data: any) {
-    await this.userService.Eliminar(data._id).toPromise();
-    this.modalRef.hide();
-    this.userService.LoadData();
+  async Eliminar(data: IEcommerceUser) {
+    this.subAccountService
+      .deleteSubAccount({
+        documentId: data.documentId,
+        username: data.username,
+      })
+      .subscribe({
+        next: () => {
+          this.modalRef.hide();
+          this.userService.LoadData();
+        },
+        error: () => {
+          this.toastr.error('No se pudo eliminar el usuario ' + data.username);
+          this.modalRef.hide();
+          this.userService.LoadData();
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

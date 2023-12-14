@@ -4,8 +4,8 @@
     <tbody *ngIf="users.length != 0">
       <tr *ngFor="let user of users">
         <td>{{ user.username }}</td>
-        <td>{{ user.first_name | titlecase }}</td>
-        <td>{{ user.last_name | titlecase }}</td>
+        <td>{{ user.firstName | titlecase }}</td>
+        <td>{{ user.lastName | titlecase }}</td>
         <td>
           <ng-container *ngIf="user.phone !== undefined">{{
             user.phone
@@ -15,17 +15,17 @@
           >
         </td>
         <td>{{ user.email }}</td>
-        <td>{{ user.user_role }}</td>
+        <td>{{ user.userRole === 'buyer' ? 'Comprador' : user.userRole }}</td>
         <td align="center">
           <div class="form-check form-switch">
             <input
               type="checkbox"
               class="form-check-input"
-              id="s{{ user._id }}"
+              id="s{{ user.username }}"
               [disabled]="true"
               [checked]="user.active"
             />
-            <label class="form-check-label" for="{{ user._id }}"></label>
+            <label class="form-check-label" for="{{ user.username }}"></label>
           </div>
         </td>
         <td align="center">
@@ -36,7 +36,10 @@
                 style="cursor: pointer"
                 (click)="Editar(user)"
               >
-                <i class="fas fa-edit" style="color: blue; font-size: 18px"></i>
+                <i
+                  class="fas fa-edit"
+                  style="color: blue; font-size: 18px"
+                ></i>
               </div>
               <div
                 class="col-sm-6"
