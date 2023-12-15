@@ -31,16 +31,16 @@ export interface IShoppingCart {
 }
 
 export interface IShoppingCartProduct {
-  num: number;
-  detailId: number;
+  num?: number;
+  detailId?: number;
   sku: string;
   name: string;
   brand?: string;
   quantity: number;
   price: number;
-  commonPrice: number;
-  origin: IShoppingCartProductOrigin;
-  images: {
+  commonPrice?: number;
+  origin?: IShoppingCartProductOrigin;
+  images?: {
     '150': string[];
     '250': string[];
     '450': string[];
@@ -49,15 +49,15 @@ export interface IShoppingCartProduct {
     '2000': string[];
   };
   image?: string;
-  addedAt: Date;
+  addedAt?: Date;
   deliveryConflict?: boolean;
   pickupConflict?: boolean;
-  delivery: {
+  delivery?: {
     homeDelivery: boolean;
     pickup: boolean;
   };
-  weight: number;
-  lading: boolean;
+  weight?: number;
+  lading?: boolean;
 }
 
 export interface IShoppingCartProductOrigin {

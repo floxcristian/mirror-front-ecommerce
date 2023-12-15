@@ -4,27 +4,27 @@
   (window:resize)="onResize($event)"
 >
   <div class="dropcart__product-image">
-    <a [routerLink]="root.product(item.sku, item.nombre)">
+    <a [routerLink]="root.product(item.sku, item.name)">
       <img
         [src]="item.images[0]['150'][0]"
         width="50px"
         height="50px"
-        [alt]="item.nombre"
+        [alt]="item.name"
         onerror="this.onerror=null; this.src='/assets/img/no-image-ficha.jpg'"
       />
     </a>
   </div>
   <div class="dropcart__product-info dropcart__product-info-1 my-auto">
     <div class="dropcart__product-name">
-      <a [routerLink]="root.product(item.sku, item.nombre)"
-        >{{ item.nombre | capitalizeFirst }}
+      <a [routerLink]="root.product(item.sku, item.name)"
+        >{{ item.name | capitalizeFirst }}
       </a>
     </div>
 
     <div class="dropcart__product-meta">
-      <span class="dropcart__product-cant fw-bold">{{ item.cantidad }} X </span>
+      <span class="dropcart__product-cant fw-bold">{{ item.quantity }} X </span>
       <span class="dropcart__product-price" style="margin-left: 10px">{{
-        item.precio | currencyFormat
+        item.price | currencyFormat
       }}</span>
     </div>
   </div>
@@ -33,6 +33,6 @@
     class="dropcart__product-info col-4 text-end"
     [ngStyle]="{ 'font-size': innerWidth < 450 ? '14px' : '16px' }"
   >
-    {{ item.precio * item.cantidad | currencyFormat }}
+    {{ item.price * item.quantity | currencyFormat }}
   </div>
 </div>

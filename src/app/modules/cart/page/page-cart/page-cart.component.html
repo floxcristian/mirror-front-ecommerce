@@ -107,12 +107,12 @@
                         <div
                           class="item"
                           [ngClass]="{
-                            active: item.ProductCart.delivery.homeDelivery
+                            active: item.ProductCart.delivery?.homeDelivery
                           }"
                         >
                           <i
                             [ngClass]="
-                              item.ProductCart.delivery.homeDelivery
+                              item.ProductCart.delivery?.homeDelivery
                                 ? 'fas fa-truck text-success me-1'
                                 : 'fas fa-truck me-1'
                             "
@@ -122,12 +122,12 @@
                         <div
                           class="item"
                           [ngClass]="{
-                            active: item.ProductCart.delivery.pickup
+                            active: item.ProductCart.delivery?.pickup
                           }"
                         >
                           <i
                             [ngClass]="
-                              item.ProductCart.delivery.pickup
+                              item.ProductCart.delivery?.pickup
                                 ? 'fas fa-store text-success me-1'
                                 : 'fas fa-store me-1'
                             "
@@ -160,12 +160,12 @@
                         <div
                           class="item"
                           [ngClass]="{
-                            active: item.ProductCart.delivery.homeDelivery
+                            active: item.ProductCart.delivery?.homeDelivery
                           }"
                         >
                           <i
                             [ngClass]="
-                              item.ProductCart.delivery.homeDelivery
+                              item.ProductCart.delivery?.homeDelivery
                                 ? 'fas fa-truck text-success me-1'
                                 : 'fas fa-truck me-1'
                             "
@@ -175,12 +175,12 @@
                         <div
                           class="item"
                           [ngClass]="{
-                            active: item.ProductCart.delivery.pickup
+                            active: item.ProductCart.delivery?.pickup
                           }"
                         >
                           <i
                             [ngClass]="
-                              item.ProductCart.delivery.pickup
+                              item.ProductCart.delivery?.pickup
                                 ? 'fas fa-store text-success me-1'
                                 : 'fas fa-store me-1'
                             "

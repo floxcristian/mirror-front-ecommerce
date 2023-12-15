@@ -6,7 +6,6 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ProductCart } from '../../../../shared/interfaces/cart-item';
 import { Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { RootService } from '../../../../shared/services/root.service';
@@ -49,7 +48,7 @@ interface Item {
 export class PageCartComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject();
 
-  removedItems: ProductCart[] = [];
+  removedItems: IShoppingCart[] = [];
   items: Item[] = [];
   updating = false;
   saveTimer: any;
@@ -205,7 +204,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
   }
 
   remove(item: IShoppingCartProduct): void {
-    // this.shoppingCartService.remove(item).subscribe((r) => {});
+    this.shoppingCartService.remove(item);
   }
 
   saveCart() {

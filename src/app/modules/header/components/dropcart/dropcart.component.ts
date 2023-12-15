@@ -17,9 +17,10 @@ import { RootService } from '../../../../shared/services/root.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { CartService } from '@core/services-v2/cart.service';
+import { IShoppingCart, IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
 
 interface Item {
-  ProductCart: ProductCart;
+  ProductCart: IShoppingCartProduct;
   quantity: number;
   quantityControl: FormControl;
 }
@@ -30,12 +31,11 @@ interface Item {
   styleUrls: ['./dropcart.component.scss'],
 })
 export class DropcartComponent implements OnInit, OnDestroy {
-  removedItems: ProductCart[] = [];
+  removedItems: IShoppingCart[] = [];
 
   private destroy$: Subject<void> = new Subject();
 
-  // items: Item[] = [];
-  items: any[] = [];
+  items: Item[] = [];
   updating = false;
   saveTimer: any;
   saveTimerLocalCart: any;
@@ -71,7 +71,7 @@ export class DropcartComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         map((ProductCarts) =>
-          (ProductCarts || []).map((item) => {
+          (ProductCarts || []).map((item): Item => {
             return {
               ProductCart: item,
               quantity: item.quantity,
@@ -88,13 +88,13 @@ export class DropcartComponent implements OnInit, OnDestroy {
       });
   }
 
-  remove(item: ProductCart): void {
-    // this.shoppingCartService.remove(item).subscribe((r) => {});
+  remove(item: IShoppingCartProduct): void {
+    this.shoppingCartService.remove(item);
   }
 
   ngOnDestroy(): void {
-    // this.destroy$.next();
-    // this.destroy$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   async updateCart(cantidad: any, item: any) {
@@ -104,7 +104,7 @@ export class DropcartComponent implements OnInit, OnDestroy {
     }
 
     item.ProductCart.cantidad = cantidad;
-    const productos: ProductCart[] = [];
+    const productos: IShoppingCartProduct[] = [];
     this.items.map((r) => {
       productos.push(r.ProductCart);
     });

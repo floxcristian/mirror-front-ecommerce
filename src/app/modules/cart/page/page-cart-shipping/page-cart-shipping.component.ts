@@ -15,7 +15,6 @@ import * as moment from 'moment';
 import { Subject, Subscription } from 'rxjs';
 // Models
 import {
-  ProductCart,
   CartTotal,
   CartData,
 } from '../../../../shared/interfaces/cart-item';
@@ -30,7 +29,6 @@ import { Banner } from '../../../../shared/interfaces/banner';
 // Components
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 // Services
-import { CartService } from '../../../../shared/services/cart.service';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 // Constants
 import { ShippingType } from '../../../../core/enums';
@@ -55,6 +53,9 @@ import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
+import { CartService } from '@core/services-v2/cart.service';
+import { IRemoveGroupRequest } from '@core/models-v2/requests/cart/removeGroup.request';
 
 export let browserRefresh = false;
 declare let dataLayer: any;
@@ -65,7 +66,7 @@ declare let dataLayer: any;
   providers: [DatePipe],
 })
 export class PageCartShippingComponent implements OnInit, OnDestroy {
-  productCart!: ProductCart[];
+  productCart!: IShoppingCartProduct[];
   @ViewChild('tabsShipping', { static: false }) tabsShipping!: TabsetComponent;
 
   innerWidth: number;
@@ -134,7 +135,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
 
   // productos validados
-  productsValidate: ProductCart[] = [];
+  productsValidate: IShoppingCartProduct[] = [];
   productosSeleccionado: any = [];
   fechas: any = [];
   //generar grupo de carritos
@@ -146,7 +147,6 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
   stores: IStore[] = [];
 
   constructor(
-    public cart: CartService,
     private logistics: LogisticsService,
     private toast: ToastrService,
     private datePipe: DatePipe,
@@ -163,6 +163,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     private readonly invitadoStorage: InvitadoStorageService,
     private readonly geolocationService: GeolocationServiceV2,
     private readonly geolocationApiService: GeolocationApiService,
+    public readonly cart: CartService,
     private readonly geolocationStorage: GeolocationStorageService
   ) {
     this.localS.set('recibe', {});
@@ -193,7 +194,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
 
     this.subscribeOnLogin();
 
-    this.cart.shippingValidateProducts$.subscribe((r: ProductCart[]) => {
+    this.cart.shippingValidateProducts$.subscribe((r: IShoppingCartProduct[]) => {
       this.productsValidate = r;
 
       this.invitado = this.invitadoStorage.get();
@@ -208,7 +209,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
           (ProductCarts || []).map((item) => {
             return {
               ProductCart: item,
-              quantity: item.cantidad,
+              quantity: item.quantity,
             };
           })
         )
@@ -314,7 +315,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
     }
 
     if (Object.keys(data).length > 0)
-      await this.cart.registrar_contacto(data).toPromise();
+      await this.cart.setNotificationContact(data).toPromise();
   }
 
   /**
@@ -732,7 +733,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
           this.addShipping(r.data);
         }
       },
-      (e) => {
+      () => {
         this.toast.error(
           'Ha ocurrido un error en servicio al actualizar el carro de compra'
         );
@@ -1215,26 +1216,26 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
       (item) => item.recid == this.selectedShippingId
     );
 
-    const usuario = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
-    let params = {};
+    const usuario: ISession = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
+    let request: IRemoveGroupRequest = {};
     if (this.shippingType === ShippingType.DESPACHO) {
-      params = {
-        usuario: usuario.username,
+      request = {
+        user: usuario.username,
         id: index,
-        destino: resultado.comuna,
+        branch: resultado.comuna,
       };
     } else {
       let disponible = this.stores.find(
         (item) => item.id == this.selectedShippingIdStore
       );
-      params = {
-        usuario: usuario.username,
+      request = {
+        user: usuario.username,
         id: index,
-        sucursal: disponible?.code,
+        branch: disponible?.code,
       };
     }
 
-    this.cart.removeGroup(params).subscribe((r) => {
+    this.cart.removeGroup(request).subscribe((r) => {
       this.cart.load();
 
       this.shippingDaysStore = [];
@@ -1400,7 +1401,7 @@ export class PageCartShippingComponent implements OnInit, OnDestroy {
           r.data.numero,
         ]);
       },
-      (e) => {
+      () => {
         this.toast.error('Ha ocurrido un error al generar la cotización');
       }
     );

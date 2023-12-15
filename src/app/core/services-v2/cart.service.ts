@@ -1,5 +1,5 @@
 // Angular
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import {
   ICartTotal,
@@ -11,12 +11,21 @@ import { environment } from '@env/environment';
 import { GeolocationServiceV2 } from './geolocation/geolocation.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { map } from 'rxjs/operators';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, lastValueFrom } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { ShoppingCartStorageService } from '@core/storage/shopping-cart-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { IError } from '@core/models-v2/error/error.interface';
 import { ToastrService } from 'ngx-toastr';
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { GuestStorageService } from '@core/storage/guest-storage.service';
+import { IGuest } from '@core/models-v2/storage/guest.interface';
+import { ReceiveStorageService } from '@core/storage/receive-storage.service';
+import { IReceive } from '@core/models-v2/storage/receive.interface';
+import { PurshaseOrderLoadedStorageService } from '@core/storage/pruchase-order-loaded-storage.service';
+import { IRemoveGroupRequest } from '@core/models-v2/requests/cart/removeGroup.request';
+import { ResponseApi } from '@shared/interfaces/response-api';
+import { RootService } from '@shared/services/root.service';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -28,9 +37,13 @@ export class CartService {
   private geolocationService = inject(GeolocationServiceV2);
   private sessionStorage = inject(SessionStorageService);
   private shoppingCartStorage = inject(ShoppingCartStorageService);
+  private guestStorage = inject(GuestStorageService);
+  private receiveStorage = inject(ReceiveStorageService);
+  private purchaseOrderLoadedStorage = inject(PurshaseOrderLoadedStorageService);
   private sessionService = inject(SessionService);
   private datePipe = inject(DatePipe);
   private toastrServise = inject(ToastrService);
+  private root = inject(RootService);
 
   private data: IShoppingCart = {
     products: [],
@@ -41,7 +54,7 @@ export class CartService {
   };
   private CartData!: IShoppingCart;
   private cartTempData!: IShoppingCart;
-  shipping!: ICartTotal;
+  shipping!: ICartTotal | null;
   discount: ICartTotal | null = null;
   private shippingType!: string;
   private isLoadingCart!: boolean;
@@ -58,9 +71,9 @@ export class CartService {
   private totalSubject$: BehaviorSubject<number | undefined> =
     new BehaviorSubject(this.data.total);
   private onAddingSubject$: Subject<IShoppingCartProduct> = new Subject();
-  private shippingTypeSubject$: BehaviorSubject<string> = new BehaviorSubject(
-    ''
-  );
+  private shippingTypeSubject$: BehaviorSubject<string> = new BehaviorSubject('');
+  private shippingValidateProductsSubject$: BehaviorSubject<[]> = new BehaviorSubject([]);
+  private onAddingMovilButtonSubject$: Subject<IShoppingCartProduct | null> = new Subject();
 
   /* dropdown */
   public dropCartActive$: BehaviorSubject<boolean> = new BehaviorSubject(true);
@@ -83,8 +96,72 @@ export class CartService {
     this.dropCartActive$.asObservable();
   readonly shippingType$: Observable<any> =
     this.shippingTypeSubject$.asObservable();
-  // readonly shippingValidateProducts$: Observable<any> = this.shippingValidateProductsSubject$.asObservable();
-  // readonly onAddingmovilButton$: Observable<IShoppingCartProduct | null> = this.onAddingMovilButtonSubject$.asObservable();
+  readonly shippingValidateProducts$: Observable<any> = this.shippingValidateProductsSubject$.asObservable();
+  readonly onAddingmovilButton$: Observable<IShoppingCartProduct | null> = this.onAddingMovilButtonSubject$.asObservable();
+
+
+  async add(product: any, quantity: number): Promise<IShoppingCart | undefined> {
+  // Sucursal
+    console.log('getSelectedStore desde add');
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    const sucursal = tiendaSeleccionada.code;
+
+    const cart = this.shoppingCartStorage.get() as IShoppingCart;
+    let productoCarro;
+
+    if (cart == null) {
+      productoCarro = { cantidad: 0 };
+    } else {
+      productoCarro = (cart.products || []).find(
+        (item) => item.sku === product.sku
+      ) || { cantidad: 0 };
+    }
+
+    const usuario = this.sessionService.getSession();
+
+    if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
+
+    const data = {
+      user: usuario.username,
+      documentId: usuario.documentId,
+      branch: sucursal,
+      products: [
+        {
+          sku: product.sku,
+          quantity: (productoCarro.quantity || 0) + quantity,
+          origin: product.origen ? product.origen : null,
+          status: product.estado,
+        },
+      ],
+    };
+
+    let response;
+    try {
+      response = await lastValueFrom(this.http.post<IShoppingCart>(`${API_CART}/article`, data));
+      this.CartData = response;
+
+      const productoCart: IShoppingCartProduct = {
+        name: product.nombre,
+        sku: product.sku,
+        quantity: quantity,
+        image: this.root.getUrlImagenMiniatura150(product),
+        price: 0
+      };
+
+      this.onAddingSubject$.next(productoCart);
+      this.data.products = this.CartData.products;
+      /* se limpia OV cargada */
+      this.purchaseOrderLoadedStorage.remove();
+      this.save();
+      this.calc();
+
+    } catch(error) {
+      console.log('error', JSON.stringify(error));
+      this.data.products = [];
+    }
+
+    return response;
+  }
 
   load(): void {
     if (this.isLoadingCart) return;
@@ -248,7 +325,7 @@ export class CartService {
           if (error.errorCode !== 'SHOPPING_CART_NOT_FOUND') {
             this.toastrServise.error(error.message);
           }
-        },
+        }
       });
   }
 
@@ -260,6 +337,42 @@ export class CartService {
 
   private save(): void {
     this.shoppingCartStorage.set(this.CartData);
+  }
+
+  updateShipping(despacho: any) {
+    // Sucursal
+    console.log('getSelectedStore desde updateShipping');
+
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    const sucursal = tiendaSeleccionada.code;
+    const carro: IShoppingCart = this.shoppingCartStorage.get() as IShoppingCart;
+    const usuario: ISession = this.sessionService.getSession();
+    // this.root.getDataSesionUsuario();
+    const invitado: IGuest = this.guestStorage.get() as IGuest;
+    const recibe: IReceive = this.receiveStorage.get() as IReceive;
+    const productos = (carro.products || []).map((item) => {
+      return {
+        sku: item.sku,
+        cantidad: item.quantity,
+      };
+    });
+
+    const data = {
+      usuario: usuario.username ? usuario.username : invitado._id,
+      rut: usuario.documentId ? usuario.documentId : 0,
+      sucursal,
+      productos,
+      despacho,
+      invitado,
+      recibe,
+    };
+
+    return this.http.post(`${API_CART}/article`, data).pipe(
+      map((r: any) => {
+        this.load();
+        return r;
+      })
+    );
   }
 
   calc(totalesFull = false): void {
@@ -396,6 +509,101 @@ export class CartService {
     return this.http.put(`${API_CART}/${id}/status/${status}`, {});
   }
 
+  setNotificationContact(data: any) {
+    return this.http.put(`${API_CART}/setNotificationContact`, data);
+  }
+
+  emitValidateProducts(products: any): void {
+    this.shippingValidateProductsSubject$.next(products);
+  }
+
+  addTotalShipping(envio: ICartTotal) {
+    this.shipping = envio;
+    this.calc();
+  }
+
+  removeTotalShipping() {
+    this.shipping = null;
+    this.calc();
+  }
+
+  addTotaldiscount(envio: ICartTotal) {
+    this.discount = envio;
+    this.calc();
+  }
+
+  addProductfromMovilButton() {
+    this.onAddingMovilButtonSubject$.next(null);
+  }
+
+  removeTotalDiscount() {
+    this.discount = null;
+    this.calc();
+  }
+
+  remove(item: IShoppingCartProduct): void {
+    const carro: IShoppingCart = this.shoppingCartStorage.get() as IShoppingCart;
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      body: {
+        sku: item.sku,
+        user: carro.user,
+        documentId: carro.customer?.documentId,
+        branch: carro.branchCode,
+      },
+    };
+
+    this.http
+    .delete<IShoppingCart>(`${API_CART}/article`, options)
+    .subscribe({
+      next: (r: IShoppingCart) => {
+        this.CartData = r;
+
+        this.data.products = this.CartData.products;
+        /* se limpia OV cargada */
+        this.purchaseOrderLoadedStorage.remove();
+        this.save();
+        this.calc();
+        return r;
+      },
+      error: (error: any) => {
+        console.log('error', JSON.stringify(error));
+      }
+    });
+  }
+
+  removeGroup(request: IRemoveGroupRequest): Observable<any> {
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      body: request,
+    };
+    return this.http
+      .delete(`${API_CART}/group`, options)
+      .pipe(
+        map((r: any) => {
+          if (!r.error) {
+            if (r.data == null) {
+              this.CartData.products = [];
+            } else {
+              this.CartData = r.data;
+            }
+
+            this.data.products = this.CartData.products;
+            /* se limpia OV cargada */
+            this.purchaseOrderLoadedStorage.remove();
+            this.save();
+            this.calc();
+          }
+
+          return r;
+        })
+      );
+  }
+
   getPriceArticle(params: {
     sku: string;
     branch: string;
@@ -404,5 +612,12 @@ export class CartService {
     return this.http.get(API_CART, {
       params,
     });
+  }
+
+  generaOrdenDeCompra(data: any): Observable<ResponseApi> {
+    return this.http.post<ResponseApi>(
+      environment.apiShoppingCart + `generar`,
+      data
+    );
   }
 }
