@@ -12,14 +12,15 @@ import { ToastrService } from 'ngx-toastr';
 import { ISession } from '@core/models-v2/auth/session.interface';
 // Services
 import { SessionService } from '@core/states-v2/session.service';
-import { CartService } from '../../../../shared/services/cart.service';
 import { ProductCart } from '../../../../shared/interfaces/cart-item';
 import { RootService } from '../../../../shared/services/root.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { CartService } from '@core/services-v2/cart.service';
+import { IShoppingCart, IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
 
 interface Item {
-  ProductCart: ProductCart;
+  ProductCart: IShoppingCartProduct;
   quantity: number;
   quantityControl: FormControl;
 }
@@ -30,12 +31,11 @@ interface Item {
   styleUrls: ['./dropcart.component.scss'],
 })
 export class DropcartComponent implements OnInit, OnDestroy {
-  removedItems: ProductCart[] = [];
+  removedItems: IShoppingCart[] = [];
 
   private destroy$: Subject<void> = new Subject();
 
-  // items: Item[] = [];
-  items: any[] = [];
+  items: Item[] = [];
   updating = false;
   saveTimer: any;
   saveTimerLocalCart: any;
@@ -46,12 +46,12 @@ export class DropcartComponent implements OnInit, OnDestroy {
   products: ProductCart[] = [];
 
   constructor(
-    public cart: CartService,
     public root: RootService,
     private toast: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly geolocationService: GeolocationServiceV2
+    private readonly geolocationService: GeolocationServiceV2,
+    public readonly shoppingCartService: CartService
   ) {}
 
   onStoresLoaded(): void {
@@ -59,7 +59,7 @@ export class DropcartComponent implements OnInit, OnDestroy {
       .pipe(first((stores) => stores.length > 0))
       .subscribe({
         next: () => {
-          this.cart.load();
+          this.shoppingCartService.load();
         },
       });
   }
@@ -67,16 +67,16 @@ export class DropcartComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.onStoresLoaded();
     this.usuario = this.sessionService.getSession();
-    this.cart.items$
+    this.shoppingCartService.items$
       .pipe(
         takeUntil(this.destroy$),
         map((ProductCarts) =>
-          (ProductCarts || []).map((item) => {
+          (ProductCarts || []).map((item): Item => {
             return {
               ProductCart: item,
-              quantity: item.cantidad,
+              quantity: item.quantity,
               quantityControl: new FormControl(
-                item.cantidad,
+                item.quantity,
                 Validators.required
               ),
             };
@@ -88,13 +88,13 @@ export class DropcartComponent implements OnInit, OnDestroy {
       });
   }
 
-  remove(item: ProductCart): void {
-    this.cart.remove(item).subscribe((r) => {});
+  remove(item: IShoppingCartProduct): void {
+    this.shoppingCartService.remove(item);
   }
 
   ngOnDestroy(): void {
-    // this.destroy$.next();
-    // this.destroy$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   async updateCart(cantidad: any, item: any) {
@@ -104,13 +104,13 @@ export class DropcartComponent implements OnInit, OnDestroy {
     }
 
     item.ProductCart.cantidad = cantidad;
-    const productos: ProductCart[] = [];
+    const productos: IShoppingCartProduct[] = [];
     this.items.map((r) => {
       productos.push(r.ProductCart);
     });
     clearTimeout(this.saveTimerLocalCart);
     this.saveTimerLocalCart = setTimeout(() => {
-      this.cart.saveCart(productos).subscribe((r) => {
+      this.shoppingCartService.saveCart(productos).subscribe((r) => {
         for (const el of r.data.productos) {
           if (el.sku == item.ProductCart.sku) {
             item.ProductCart.conflictoEntrega = el.conflictoEntrega;
@@ -118,7 +118,7 @@ export class DropcartComponent implements OnInit, OnDestroy {
             item.ProductCart.precio = el.precio;
           }
         }
-        this.cart.updateCart(productos);
+        this.shoppingCartService.updateCart(productos);
       });
     }, 100);
   }
@@ -132,7 +132,7 @@ export class DropcartComponent implements OnInit, OnDestroy {
           cantidad: item.quantity,
         };
       });
-      this.cart.saveCart(productos).subscribe((r) => {});
+      this.shoppingCartService.saveCart(productos).subscribe((r) => {});
     }, 700);
   }
 }

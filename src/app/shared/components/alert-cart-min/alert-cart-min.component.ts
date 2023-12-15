@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { ProductCart } from '../../interfaces/cart-item';
 import { Router } from '@angular/router';
+import { IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
 
 @Component({
   selector: 'app-alert-cart-min',
@@ -10,9 +10,9 @@ import { Router } from '@angular/router';
 })
 export class AlertCartMinComponent {
   showAlert!: boolean;
-  productDef!: ProductCart;
+  productDef!: IShoppingCartProduct;
 
-  @Input() set product(value: ProductCart) {
+  @Input() set product(value: IShoppingCartProduct) {
     if (value) {
       this.productDef = value;
     }

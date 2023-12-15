@@ -1,3 +1,5 @@
+import { IShoppingCartProductOrigin } from "../cart/shopping-cart.interface";
+
 export interface ISpecialResponse {
   banners: IBanner[];
   specials: ISpecial[];
@@ -49,6 +51,8 @@ export interface IArticle {
   priceInfo: IPriceInfo; // *
   deliverySupply: IDeliverySupply; // *
   stockSummary: IStockSummary; // *
+  origin: IShoppingCartProductOrigin;
+  cyber: number;
   // No se usa..
   description: string; // *
 }
