@@ -2,7 +2,7 @@
   <h5 class="modal-title pull-left">
     <i class="fas fa-pencil-alt me-2"></i>
     <span style="font-size: 16px"
-      >Cambiar nombre a centro de costo cod. {{ codigo }}</span
+      >Cambiar nombre a centro de costo cod. {{ code }}</span
     >
   </h5>
   <button
@@ -24,10 +24,10 @@
         class="form-control"
         id="nombre"
         maxlength="40"
-        [(ngModel)]="nombre"
-        (keyup)="cantCaracteres = nombre.length"
-        (keydown)="cantCaracteres = nombre.length"
-        (keypress)="cantCaracteres = nombre.length"
+        [(ngModel)]="name"
+        (keyup)="cantCaracteres = name.length"
+        (keydown)="cantCaracteres = name.length"
+        (keypress)="cantCaracteres = name.length"
       />
       <div class="w-100 d-flex justify-content-end mt-1">
         <div class="max-caracteres">

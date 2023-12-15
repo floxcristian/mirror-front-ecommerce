@@ -9,8 +9,8 @@ import { isVacio } from '../../../../../../shared/utils/utilidades';
   styleUrls: ['./add-centro-costo-modal.component.scss'],
 })
 export class AddCentroCostoModalComponent implements OnInit {
-  codigo!: string;
-  nombre = '';
+  code!: string;
+  name = '';
 
   closeToOK!: boolean;
   cargando = false;
@@ -28,10 +28,10 @@ export class AddCentroCostoModalComponent implements OnInit {
   }
 
   guardar() {
-    if (!isVacio(this.codigo) && !isVacio(this.nombre)) {
+    if (!isVacio(this.code) && !isVacio(this.name)) {
       const obj = {
-        codigo: this.codigo,
-        nombre: this.nombre,
+        code: this.code,
+        name: this.name,
       };
       this.event.emit(obj);
 
