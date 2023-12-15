@@ -30,11 +30,11 @@
             <table>
               <tr>
                 <th class="fw-bold titilo-w">Código</th>
-                <td class="text-start">{{ item.codigo }}</td>
+                <td class="text-start">{{ item.code }}</td>
               </tr>
               <tr>
                 <th class="fw-bold titilo-w">Nombre</th>
-                <td class="text-start">{{ item.nombre }}</td>
+                <td class="text-start">{{ item.name }}</td>
               </tr>
               <tr>
                 <th class="fw-bold titilo-w">Acciones</th>
@@ -75,8 +75,8 @@
               </thead>
               <tbody>
                 <tr *ngFor="let item of centrosCosto">
-                  <td>{{ item.codigo }}</td>
-                  <td nowrap>{{ item.nombre | capitalizeFirst }}</td>
+                  <td>{{ item.code }}</td>
+                  <td nowrap>{{ item.name | capitalizeFirst }}</td>
                   <td style="font-size: 0.9rem">
                     <button
                       class="btn btn-sm btn-link"

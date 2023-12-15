@@ -15,13 +15,13 @@ import {
   TipoIcon,
   TipoModal,
 } from '../../../../shared/components/modal/modal.component';
-import { CentroCosto } from '../../../../shared/interfaces/centroCosto';
-import { ClientsService } from '../../../../shared/services/clients.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { AddCentroCostoModalComponent } from './components/add-centro-costo-modal/add-centro-costo-modal.component';
 import { EditCentroCostoModalComponent } from './components/edit-centro-costo-modal/edit-centro-costo-modal.component';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { ICostCenter } from '@core/models-v2/customer/customer-cost-center.interface';
+import { CustomerCostCenterService } from '@core/services-v2/customer-cost-center.service';
 
 @Component({
   selector: 'app-page-centros-costo',
@@ -32,24 +32,23 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
   @ViewChildren(DataTableDirective) dtElements!: QueryList<DataTableDirective>;
 
   userSession!: ISession;
-
-  centrosCosto: CentroCosto[] = [];
+  centrosCosto:ICostCenter[] = []
 
   dtOptions: DataTables.Settings = {};
   dtTrigger1: Subject<any> = new Subject();
   cargando = true;
 
   constructor(
-    private clientsService: ClientsService,
     public root: RootService,
     private toastr: ToastrService,
     private modalService: BsModalService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly customerCostCenterService:CustomerCostCenterService
   ) {}
 
   ngOnInit() {
-    this.userSession = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.userSession = this.sessionService.getSession();
     this.dtOptions = this.root.simpleDtOptions;
     this.dtOptions = {
       ...this.dtOptions,
@@ -65,17 +64,19 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
 
   getData() {
     this.cargando = true;
-
-    this.clientsService
-      .getCentrosCosto(this.userSession.documentId)
-      .subscribe((resp: any) => {
-        this.centrosCosto = resp.data;
+    this.customerCostCenterService.getCostCenters(this.userSession.documentId).subscribe({
+      next:(res)=>{
+        this.centrosCosto = res;
         this.cargando = false;
 
         if (this.centrosCosto.length > 0) {
           this.dtTrigger1.next('');
         }
-      });
+      },
+      error:(err) =>{
+        console.log(err)
+      }
+    })
   }
 
   reDraw(): void {
@@ -99,32 +100,31 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
     );
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res !== '') {
-        const request: any = {
-          rut: this.userSession.documentId,
-          codigo: res.codigo,
-          nombre: res.nombre,
+        const request: ICostCenter = {
+          code: res.code,
+          name: res.name,
         };
-        const respuesta: any = await this.clientsService
-          .setCentroCosto(request)
-          .toPromise();
-        if (!respuesta.error) {
-          this.toastr.success('Centro de costo ingresado exitosamente.');
-          bsModalRef.hide();
-
-          this.reDraw();
-          this.getData();
-        } else {
-          this.toastr.error(respuesta.msg);
-          bsModalRef.hide();
-        }
+        this.customerCostCenterService.createCostCenter(request,this.userSession.documentId).subscribe({
+          next:(res)=>{
+            console.log('create centro costo',res)
+            this.toastr.success('Centro de costo ingresado exitosamente.');
+            bsModalRef.hide();
+            this.reDraw();
+            this.getData();
+          },
+          error:(err)=>{
+            this.toastr.error(err.msg);
+            bsModalRef.hide();
+          }
+        })
       }
     });
   }
 
-  actualizarCentroCosto(centroCosto: CentroCosto) {
+  actualizarCentroCosto(centroCosto: ICostCenter) {
     const initialState = {
-      codigo: centroCosto.codigo,
-      nombre: centroCosto.nombre,
+      code: centroCosto.code,
+      name: centroCosto.name,
       closeToOk: false,
     };
     const bsModalRef: BsModalRef = this.modalService.show(
@@ -133,24 +133,25 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
     );
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res !== '') {
-        const respuesta: any = await this.clientsService
-          .updateCentroCosto(res, this.userSession.documentId, centroCosto._id)
-          .toPromise();
-        if (!respuesta.error) {
-          this.toastr.success('Centro de costo actualizado exitosamente.');
-          bsModalRef.hide();
-
-          this.reDraw();
-          this.getData();
-        }
+        this.customerCostCenterService.updateCostCenter(res,this.userSession.documentId).subscribe({
+          next:(res)=>{
+            this.toastr.success('Centro de costo actualizado exitosamente.');
+            bsModalRef.hide();
+            this.reDraw();
+            this.getData();
+          },
+          error:(err) =>{
+            console.log(err)
+          }
+        })
       }
     });
   }
 
-  eliminarCentroCosto(centroCosto: CentroCosto) {
+  eliminarCentroCosto(centroCosto: ICostCenter) {
     const initialState: DataModal = {
       titulo: 'Confirmación',
-      mensaje: `¿Esta seguro que desea <strong>eliminar</strong> el centro de costo código ${centroCosto.codigo}?`,
+      mensaje: `¿Esta seguro que desea <strong>eliminar</strong> el centro de costo código ${centroCosto.code}?`,
       tipoIcon: TipoIcon.QUESTION,
       tipoModal: TipoModal.QUESTION,
     };
@@ -158,19 +159,17 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
       initialState,
     });
     bsModalRef.content.event.subscribe(async (res: any) => {
-      if (res) {
-        const respuesta: any = await this.clientsService
-          .deleteCentroCosto(this.userSession.documentId, centroCosto._id)
-          .toPromise();
-        if (!respuesta.error) {
+      this.customerCostCenterService.deleteCostCenter(this.userSession.documentId,centroCosto.code).subscribe({
+        next:(res)=>{
+          console.log('eliminar center',res)
           this.toastr.success('Centro de costo eliminado exitosamente.');
-
           this.reDraw();
           this.getData();
-        } else {
-          this.toastr.error(respuesta.msg);
+        },
+        error:(err)=>{
+          this.toastr.error(err.msg);
         }
-      }
+      })
     });
   }
 }

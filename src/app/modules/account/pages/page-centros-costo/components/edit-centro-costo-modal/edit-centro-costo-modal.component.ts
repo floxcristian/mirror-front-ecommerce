@@ -9,8 +9,8 @@ import { isVacio } from '../../../../../../shared/utils/utilidades';
   styleUrls: ['./edit-centro-costo-modal.component.scss'],
 })
 export class EditCentroCostoModalComponent implements OnInit {
-  codigo!: string;
-  nombre!: string;
+  code!: string;
+  name!: string;
 
   closeToOK!: boolean;
   cargando = false;
@@ -28,8 +28,8 @@ export class EditCentroCostoModalComponent implements OnInit {
   }
 
   guardar() {
-    if (!isVacio(this.nombre)) {
-      this.event.emit(this.nombre);
+    if (!isVacio(this.name)) {
+      this.event.emit({name:this.name,code:this.code});
 
       if (this.closeToOK) {
         this.ModalRef.hide();

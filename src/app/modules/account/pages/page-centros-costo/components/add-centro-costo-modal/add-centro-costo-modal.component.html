@@ -21,7 +21,7 @@
         type="text"
         class="form-control"
         id="codigo"
-        [(ngModel)]="codigo"
+        [(ngModel)]="code"
       />
     </div>
     <div class="mb-3 col-md-6">
@@ -31,11 +31,11 @@
         class="form-control"
         id="nombre"
         maxlength="30"
-        [(ngModel)]="nombre"
+        [(ngModel)]="name"
         autocomplete="off"
-        (keyup)="cantCaracteres = nombre.length"
-        (keydown)="cantCaracteres = nombre.length"
-        (keypress)="cantCaracteres = nombre.length"
+        (keyup)="cantCaracteres = name.length"
+        (keydown)="cantCaracteres = name.length"
+        (keypress)="cantCaracteres = name.length"
       />
       <div class="w-100 d-flex justify-content-end mt-1">
         <div class="max-caracteres">
