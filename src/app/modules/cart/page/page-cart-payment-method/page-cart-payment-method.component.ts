@@ -48,7 +48,7 @@ import { CentroCosto } from '../../../../shared/interfaces/centroCosto';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AgregarCentroCostoComponent } from '../../components/agregar-centro-costo/agregar-centro-costo.component';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { DireccionMap } from 'src/app/shared/components/map/map.component';
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
@@ -65,6 +65,10 @@ import { StorageKey } from '@core/storage/storage-keys.enum';
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 import { UserRoleType } from '@core/enums/user-role-type.enum';
 import { IKhipuBank } from '@core/models-v2/payment-method/khipu-bank.interface';
+import { InvoiceType } from '@core/enums/invoice-type.enum';
+import { ShoppingCartService } from '@core/services-v2/shopping-cart.service';
+import { IValidateShoppingCartStockLineResponse } from '@core/models-v2/shopping-cart/validate-stock-response.interface';
+import { PaymentMethodType } from '@core/enums/payment-method.enum';
 
 declare const $: any;
 export interface Archivo {
@@ -117,7 +121,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   validado!: boolean;
   innerWidth: number;
   transBankToken!: TransBankToken;
-  productosSinStock: ProductCart[] | any = [];
+  productosSinStock: IValidateShoppingCartStockLineResponse[] = [];
   loadkhipu: boolean = false;
   recibe: Usuario;
 
@@ -143,7 +147,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   cd_ver: boolean = false;
 
   selectedDocument!: string;
-  documentOptions = [{ id: 'BEL', name: 'BOLETA' }];
+  documentOptions = [{ id: InvoiceType.RECEIPT, name: 'BOLETA' }];
   girosOptions: any[] = [];
   selectedGiro!: string;
   isB2B!: boolean;
@@ -151,6 +155,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   giros$!: Observable<any[]>;
 
   userRoleType = UserRoleType;
+  invoiceType = InvoiceType;
 
   constructor(
     private router: Router,
@@ -173,7 +178,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     // Services V2
     private readonly sessionService: SessionService,
     private readonly geolocationApiService: GeolocationApiService,
-    private readonly paymentMethodService: PaymentMethodService
+    private readonly paymentMethodService: PaymentMethodService,
+    private readonly shoppingCartService: ShoppingCartService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -233,12 +239,14 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
           if (this.girosOptions.length) {
             this.documentOptions = [
-              { id: 'BEL', name: 'BOLETA' },
-              { id: 'FEL', name: 'FACTURA' },
+              { id: InvoiceType.RECEIPT, name: 'BOLETA' },
+              { id: InvoiceType.INVOICE, name: 'FACTURA' },
             ];
           } else {
-            this.documentOptions = [{ id: 'BEL', name: 'BOLETA' }];
-            this.selectedDocument = 'BEL';
+            this.documentOptions = [
+              { id: InvoiceType.RECEIPT, name: 'BOLETA' },
+            ];
+            this.selectedDocument = InvoiceType.RECEIPT;
           }
           /*if (!this.girosOptions.length) {
             this.documentOptions = [{ id: 'BEL', name: 'BOLETA' }];
@@ -253,8 +261,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         }
       );
     } else {
-      this.documentOptions = [{ id: 'BEL', name: 'BOLETA' }];
-      this.selectedDocument = 'BEL';
+      this.documentOptions = [{ id: InvoiceType.RECEIPT, name: 'BOLETA' }];
+      this.selectedDocument = InvoiceType.RECEIPT;
     }
   }
 
@@ -275,7 +283,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     // this.root.getDataSesionUsuario();
     this.isB2B = this.checkIsB2b();
     if (this.isB2B || this.userSession.businessLine) {
-      this.documentOptions.push({ id: 'FEL', name: 'FACTURA' });
+      this.documentOptions.push({ id: InvoiceType.INVOICE, name: 'FACTURA' });
     }
     if (this.invitado) {
       this.loadComunas();
@@ -294,7 +302,9 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.esBoleta =
       this.userSession?.businessLine == '' ||
       this.userSession?.businessLine == null;
-    this.selectedDocument = this.userSession?.businessLine ? 'FEL' : 'BEL';
+    this.selectedDocument = this.userSession?.businessLine
+      ? InvoiceType.INVOICE
+      : InvoiceType.RECEIPT;
 
     this.formOV();
     this.cart.load();
@@ -353,8 +363,10 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
     this.route.queryParams.subscribe((query) => {
       if (query['status']) this.showRejectedMsg(query);
-      if (query['site_id'] === 'MLC' && query['external_reference'])
-        this.manejarAlertaMercadoPagoSiEsNecesario(query);
+      const paymentMethod = query['paymentMethod'];
+      if (paymentMethod === PaymentMethodType.MERCADOPAGO) {
+        this.manejarAlertaMercadoPago(query);
+      }
     });
 
     // LOGICA PARA OBTENER DESPACHO A MOSTRAR
@@ -411,34 +423,15 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     }
   }
 
-  manejarAlertaMercadoPagoSiEsNecesario(query: any) {
-    const documento = this.paymentService.obtenerDocumentoDeBuyOrderMPago(
-      query.external_reference || ''
-    );
-    if (
-      query.external_reference &&
-      documento == this.cartSession._id &&
-      query.site_id &&
-      query.site_id === 'MLC'
-    ) {
-      const reason =
-        query.status && query.status == 'rejected'
-          ? 'un rechazo'
-          : 'una anulación';
-      this.alertCartShow = true;
-      this.alertCart = {
-        detalleMensaje: `No se ha podido completar la transacción con Mercadopago debido a ${reason} del pago. Si el error persiste, por favor comunicate con soporte técnico.`,
-        mostrarBotonVolverIntentar: true,
-        proceso: 'Anulado',
-      };
-      if (query.status && query.status == 'null') {
-        {
-          this.paymentService
-            .anularInicioNoPagoMercadoPago(query.external_reference)
-            .subscribe((r) => {});
-        }
-      }
-    }
+  manejarAlertaMercadoPago(query: any) {
+    const message = query.message;
+    const reason = message;
+    this.alertCartShow = true;
+    this.alertCart = {
+      detalleMensaje: `No se ha podido completar la transacción con Mercadopago debido a ${reason} del pago. Si el error persiste, por favor comunicate con soporte técnico.`,
+      mostrarBotonVolverIntentar: true,
+      proceso: 'Anulado',
+    };
   }
 
   obtieneTiendaSegunRecid(recid: any) {
@@ -731,7 +724,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
    */
   activepaymentMethod(item: IPaymentMethod) {
     if (item.code === 'OC') {
-      this.selectedDocument = 'FEL';
+      this.selectedDocument = InvoiceType.INVOICE;
     }
     this.paymentMethodActive = item.code;
     let active_khipu = false;
@@ -803,16 +796,11 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
    * + Si es invitado se guarda.
    */
   async prepararCarroPrePago(): Promise<void> {
-    // FIXME: se debería actualizar dirección de facturación si es invitado.
-    let paso3: any = await this.cart
-      .savePaso({ id: this.cartSession._id, paso: 3 })
-      .toPromise();
-
     if (this.invitado) {
       this.invitado.rut = this.getValidRutFormat(this.invitado.rut ?? '');
 
       const isValidAddress =
-        this.selectedDocument === 'FEL' &&
+        this.selectedDocument === InvoiceType.INVOICE &&
         this.formDireccion &&
         this.formDireccion.value &&
         this.formDireccion.value.calle &&
@@ -863,12 +851,10 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.alertCartShow = false;
 
     if (query.status === 'rejected') {
-      this.rejectedCode = query.codRejected;
+      const message = query.message;
       this.alertCart = {
         pagoValidado: false,
-        detalleMensaje: await this.paymentService.getPaymentErrorDetail(
-          query.codRejected
-        ),
+        detalleMensaje: message,
         mostrarBotonVolverIntentar: true,
       };
       this.alertCartShow = true;
@@ -883,22 +869,24 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   async validarStockActual() {
-    let consultaStock: any = await this.cart.validarStockActual(
-      this.cartSession
+    let consultaStock = await firstValueFrom(
+      this.shoppingCartService.validateStock({
+        shoppingCartId: this.cartSession._id!.toString(),
+      })
     );
-    if (consultaStock.problemaStock && consultaStock.productosSinStock) {
-      this.productosSinStock = consultaStock.productosSinStock;
+    if (consultaStock.stockProblem && consultaStock.stockProblemLines) {
+      this.productosSinStock = consultaStock.stockProblemLines;
       document.getElementById('openModalButton')?.click();
       this.paymentService.sendEmailError(
         `Productos sin stock: <br> ${JSON.stringify(
-          this.productosSinStock.map((producto: any) => {
-            return `sku: ${producto.sku}, cantidad: ${producto.cantidad}`;
+          this.productosSinStock.map((producto) => {
+            return `sku: ${producto.sku}, cantidad: ${producto.quantity}`;
           })
         )} <br><br> Carro: <br> ${JSON.stringify(this.cartSession)}`,
         `[B2B ${window.location.hostname}] Error - Se ha detectado que no habia stock suficiente al momento de intengar pagar`
       );
     }
-    return consultaStock.problemaStock;
+    return consultaStock.stockProblem;
   }
 
   VolverPaginaCarro() {
@@ -960,29 +948,27 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   private updateCartAndUserTurn(): Promise<any> {
     const isValidAddress =
-      this.selectedDocument === 'FEL' &&
+      this.selectedDocument === InvoiceType.INVOICE &&
       this.formDireccion &&
       this.formDireccion.value;
     const params = {
-      cartId: this.cartSession._id,
-      username: this.userSession.username,
-      rutClient: this.userSession.documentId,
-      calle:
+      shoppingCartId: this.cartSession._id!,
+      street:
         isValidAddress && this.formDireccion.value.calle
           ? this.formDireccion.value.calle
           : null,
-      numero:
+      number:
         isValidAddress && this.formDireccion.value.numero
           ? this.formDireccion.value.numero
           : null,
-      comuna:
+      city:
         isValidAddress && this.formDireccion.value.comuna
           ? this.formDireccion.value.comuna.split('@')[0]
           : null,
-      documentType: this.selectedDocument,
-      giro: this.selectedGiro || null,
+      invoiceType: this.selectedDocument,
+      businessLine: this.selectedGiro || undefined,
     };
-    return this.cart.updateCartAndUserTurn(params).toPromise();
+    return firstValueFrom(this.shoppingCartService.prepay(params));
   }
 
   /*********************************************************************

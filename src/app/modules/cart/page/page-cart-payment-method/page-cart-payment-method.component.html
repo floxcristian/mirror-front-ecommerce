@@ -171,7 +171,8 @@
                   tooltip="Giros"
                   style="margin-bottom: 1rem"
                   *ngIf="
-                    selectedDocument === 'FEL' && !userSession.businessLine
+                    selectedDocument === invoiceType.INVOICE &&
+                    !userSession.businessLine
                   "
                 >
                   <div class="row">
@@ -342,7 +343,8 @@
                   class="list-group-item"
                   tooltip="Giros"
                   *ngIf="
-                    selectedDocument === 'FEL' && !userSession.businessLine
+                    selectedDocument === invoiceType.INVOICE &&
+                    !userSession.businessLine
                   "
                   style="margin-bottom: 1rem"
                 >
@@ -375,7 +377,7 @@
                 <div
                   class="list-group-item"
                   tooltip="Dirección"
-                  *ngIf="selectedDocument === 'FEL' && invitado"
+                  *ngIf="selectedDocument === invoiceType.INVOICE && invitado"
                 >
                   <div class="col-12" style="padding: 0 !important">
                     <app-map
@@ -1568,7 +1570,7 @@
                     loadingPage ||
                     !selectedDocument ||
                     (!userSession.businessLine &&
-                      selectedDocument === 'FEL' &&
+                      selectedDocument === invoiceType.INVOICE &&
                       !selectedGiro)
                   "
                   class="btn btn-lg btn-secondary w-100 text-center"
@@ -1598,7 +1600,7 @@
                     loadingPage ||
                     !selectedDocument ||
                     (!userSession.businessLine &&
-                      selectedDocument === 'FEL' &&
+                      selectedDocument === invoiceType.INVOICE &&
                       !selectedGiro)
                   "
                   class="btn btn-lg btn-secondary w-100 text-center"
@@ -1637,7 +1639,7 @@
                     alertCartShow ||
                     !selectedDocument ||
                     (!userSession.businessLine &&
-                      selectedDocument === 'FEL' &&
+                      selectedDocument === invoiceType.INVOICE &&
                       !selectedGiro)
                   "
                   *ngIf="
@@ -1666,10 +1668,10 @@
                     alertCartShow ||
                     btnWebpayPost ||
                     (!userSession.businessLine &&
-                      selectedDocument === 'FEL' &&
+                      selectedDocument === invoiceType.INVOICE &&
                       !selectedGiro) ||
                     (invitado &&
-                      selectedDocument === 'FEL' &&
+                      selectedDocument === invoiceType.INVOICE &&
                       (!formDireccion.valid || !tienda))
                   "
                   (click)="paymentMercadopago()"
@@ -1690,7 +1692,7 @@
                     btnWebpayPost ||
                     alertCartShow ||
                     (!userSession.businessLine &&
-                      selectedDocument === 'FEL' &&
+                      selectedDocument === invoiceType.INVOICE &&
                       !selectedGiro)
                   "
                   *ngIf="
@@ -1718,10 +1720,10 @@
                     alertCartShow ||
                     btnWebpayPost ||
                     (!userSession.businessLine &&
-                      selectedDocument === 'FEL' &&
+                      selectedDocument === invoiceType.INVOICE &&
                       !selectedGiro) ||
                     (invitado &&
-                      selectedDocument === 'FEL' &&
+                      selectedDocument === invoiceType.INVOICE &&
                       (!formDireccion.valid || !tienda))
                   "
                   *ngIf="invitado && paymentMethodActive == 'khipu'"
@@ -1743,7 +1745,7 @@
                     btnWebpayPost ||
                     alertCartShow ||
                     (!userSession.businessLine &&
-                      selectedDocument === 'FEL' &&
+                      selectedDocument === invoiceType.INVOICE &&
                       !selectedGiro)
                   "
                   *ngIf="
@@ -1774,10 +1776,10 @@
                     alertCartShow ||
                     btnWebpayPost ||
                     (!userSession.businessLine &&
-                      selectedDocument === 'FEL' &&
+                      selectedDocument === invoiceType.INVOICE &&
                       !selectedGiro) ||
                     (invitado &&
-                      selectedDocument === 'FEL' &&
+                      selectedDocument === invoiceType.INVOICE &&
                       (!formDireccion.valid || !tienda))
                   "
                   *ngIf="invitado && paymentMethodActive == 'webPay'"
@@ -2198,7 +2200,8 @@
                   tooltip="Giros"
                   style="margin-bottom: 1rem"
                   *ngIf="
-                    selectedDocument === 'FEL' && !userSession.businessLine
+                    selectedDocument === invoiceType.INVOICE &&
+                    !userSession.businessLine
                   "
                 >
                   <div class="row">
@@ -2227,7 +2230,7 @@
                 <div
                   class="list-group-item"
                   tooltip="Dirección"
-                  *ngIf="selectedDocument === 'FEL' && invitado"
+                  *ngIf="selectedDocument === invoiceType.INVOICE && invitado"
                 >
                   <div>
                     <app-map
@@ -2411,7 +2414,7 @@
                 isVacio(archivo) ||
                 loadingPage ||
                 (!userSession.businessLine &&
-                  selectedDocument === 'FEL' &&
+                  selectedDocument === invoiceType.INVOICE &&
                   !selectedGiro)
               "
               class="btn btn-lg btn-secondary w-100 text-center"
@@ -2438,7 +2441,7 @@
                 isVacio(paymentMethodActive) ||
                 loadingPage ||
                 (!userSession.businessLine &&
-                  selectedDocument === 'FEL' &&
+                  selectedDocument === invoiceType.INVOICE &&
                   !selectedGiro)
               "
               class="btn btn-lg btn-secondary w-100 text-center"
@@ -2457,7 +2460,7 @@
                 btnWebpayPost ||
                 alertCartShow ||
                 (!userSession.businessLine &&
-                  selectedDocument === 'FEL' &&
+                  selectedDocument === invoiceType.INVOICE &&
                   !selectedGiro)
               "
               *ngIf="
@@ -2482,10 +2485,10 @@
                 alertCartShow ||
                 btnWebpayPost ||
                 (!userSession.businessLine &&
-                  selectedDocument === 'FEL' &&
+                  selectedDocument === invoiceType.INVOICE &&
                   !selectedGiro) ||
                 (invitado &&
-                  selectedDocument === 'FEL' &&
+                  selectedDocument === invoiceType.INVOICE &&
                   (!formDireccion.valid || !tienda))
               "
               (click)="creteateTransactionTransBank()"
@@ -2503,7 +2506,7 @@
                 alertCartShow ||
                 !selectedDocument ||
                 (!userSession.businessLine &&
-                  selectedDocument === 'FEL' &&
+                  selectedDocument === invoiceType.INVOICE &&
                   !selectedGiro)
               "
               *ngIf="
@@ -2529,10 +2532,10 @@
                 btnWebpayPost ||
                 !selectedDocument ||
                 (!userSession.businessLine &&
-                  selectedDocument === 'FEL' &&
+                  selectedDocument === invoiceType.INVOICE &&
                   !selectedGiro) ||
                 (invitado &&
-                  selectedDocument === 'FEL' &&
+                  selectedDocument === invoiceType.INVOICE &&
                   (!formDireccion.valid || !tienda))
               "
               (click)="paymentMercadopago()"
@@ -2692,12 +2695,12 @@
         >
           <div class="col-2">
             <img
-              *ngIf="productoSinStock.images[0]"
+              *ngIf="productoSinStock.images"
               [src]="
-                productoSinStock.images[0]['250']
-                  ? productoSinStock.images[0]['250'][0]
-                  : productoSinStock.images[0]['150']
-                  ? productoSinStock.images[0]['150'][0]
+                productoSinStock.images['250']
+                  ? productoSinStock.images['250'][0]
+                  : productoSinStock.images['150']
+                  ? productoSinStock.images['150'][0]
                   : './assets/images/products/no-image-ficha.jpg'
               "
               onError="this.src='./assets/images/products/no-image-ficha.jpg'"
@@ -2705,7 +2708,7 @@
             />
 
             <img
-              *ngIf="!productoSinStock.images[0]"
+              *ngIf="!productoSinStock.images"
               [src]="
                 productoSinStock.images['250']
                   ? productoSinStock.images['250'][0]
@@ -2718,9 +2721,9 @@
             />
           </div>
           <div class="col-7 text-truncate">
-            {{ productoSinStock.nombre | titlecase }}
+            {{ productoSinStock.name | titlecase }}
           </div>
-          <div class="col-3">Cant: {{ productoSinStock.cantidad }}</div>
+          <div class="col-3">Cant: {{ productoSinStock.quantity }}</div>
         </div>
       </div>
       <div class="modal-footer">
