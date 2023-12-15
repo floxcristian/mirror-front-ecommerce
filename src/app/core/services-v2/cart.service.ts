@@ -26,6 +26,7 @@ import { PurshaseOrderLoadedStorageService } from '@core/storage/pruchase-order-
 import { IRemoveGroupRequest } from '@core/models-v2/requests/cart/removeGroup.request';
 import { ResponseApi } from '@shared/interfaces/response-api';
 import { RootService } from '@shared/services/root.service';
+import { IValidateShoppingCartStockResponse } from '@core/models-v2/cart/validate-stock-response.interface';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -39,7 +40,9 @@ export class CartService {
   private shoppingCartStorage = inject(ShoppingCartStorageService);
   private guestStorage = inject(GuestStorageService);
   private receiveStorage = inject(ReceiveStorageService);
-  private purchaseOrderLoadedStorage = inject(PurshaseOrderLoadedStorageService);
+  private purchaseOrderLoadedStorage = inject(
+    PurshaseOrderLoadedStorageService
+  );
   private sessionService = inject(SessionService);
   private datePipe = inject(DatePipe);
   private toastrServise = inject(ToastrService);
@@ -71,9 +74,13 @@ export class CartService {
   private totalSubject$: BehaviorSubject<number | undefined> =
     new BehaviorSubject(this.data.total);
   private onAddingSubject$: Subject<IShoppingCartProduct> = new Subject();
-  private shippingTypeSubject$: BehaviorSubject<string> = new BehaviorSubject('');
-  private shippingValidateProductsSubject$: BehaviorSubject<[]> = new BehaviorSubject([]);
-  private onAddingMovilButtonSubject$: Subject<IShoppingCartProduct | null> = new Subject();
+  private shippingTypeSubject$: BehaviorSubject<string> = new BehaviorSubject(
+    ''
+  );
+  private shippingValidateProductsSubject$: BehaviorSubject<[]> =
+    new BehaviorSubject([]);
+  private onAddingMovilButtonSubject$: Subject<IShoppingCartProduct | null> =
+    new Subject();
 
   /* dropdown */
   public dropCartActive$: BehaviorSubject<boolean> = new BehaviorSubject(true);
@@ -96,12 +103,16 @@ export class CartService {
     this.dropCartActive$.asObservable();
   readonly shippingType$: Observable<any> =
     this.shippingTypeSubject$.asObservable();
-  readonly shippingValidateProducts$: Observable<any> = this.shippingValidateProductsSubject$.asObservable();
-  readonly onAddingmovilButton$: Observable<IShoppingCartProduct | null> = this.onAddingMovilButtonSubject$.asObservable();
+  readonly shippingValidateProducts$: Observable<any> =
+    this.shippingValidateProductsSubject$.asObservable();
+  readonly onAddingmovilButton$: Observable<IShoppingCartProduct | null> =
+    this.onAddingMovilButtonSubject$.asObservable();
 
-
-  async add(product: any, quantity: number): Promise<IShoppingCart | undefined> {
-  // Sucursal
+  async add(
+    product: any,
+    quantity: number
+  ): Promise<IShoppingCart | undefined> {
+    // Sucursal
     console.log('getSelectedStore desde add');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada.code;
@@ -137,7 +148,9 @@ export class CartService {
 
     let response;
     try {
-      response = await lastValueFrom(this.http.post<IShoppingCart>(`${API_CART}/article`, data));
+      response = await lastValueFrom(
+        this.http.post<IShoppingCart>(`${API_CART}/article`, data)
+      );
       this.CartData = response;
 
       const productoCart: IShoppingCartProduct = {
@@ -145,7 +158,7 @@ export class CartService {
         sku: product.sku,
         quantity: quantity,
         image: this.root.getUrlImagenMiniatura150(product),
-        price: 0
+        price: 0,
       };
 
       this.onAddingSubject$.next(productoCart);
@@ -154,8 +167,7 @@ export class CartService {
       this.purchaseOrderLoadedStorage.remove();
       this.save();
       this.calc();
-
-    } catch(error) {
+    } catch (error) {
       console.log('error', JSON.stringify(error));
       this.data.products = [];
     }
@@ -325,7 +337,7 @@ export class CartService {
           if (error.errorCode !== 'SHOPPING_CART_NOT_FOUND') {
             this.toastrServise.error(error.message);
           }
-        }
+        },
       });
   }
 
@@ -345,7 +357,8 @@ export class CartService {
 
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada.code;
-    const carro: IShoppingCart = this.shoppingCartStorage.get() as IShoppingCart;
+    const carro: IShoppingCart =
+      this.shoppingCartStorage.get() as IShoppingCart;
     const usuario: ISession = this.sessionService.getSession();
     // this.root.getDataSesionUsuario();
     const invitado: IGuest = this.guestStorage.get() as IGuest;
@@ -542,7 +555,8 @@ export class CartService {
   }
 
   remove(item: IShoppingCartProduct): void {
-    const carro: IShoppingCart = this.shoppingCartStorage.get() as IShoppingCart;
+    const carro: IShoppingCart =
+      this.shoppingCartStorage.get() as IShoppingCart;
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -555,9 +569,7 @@ export class CartService {
       },
     };
 
-    this.http
-    .delete<IShoppingCart>(`${API_CART}/article`, options)
-    .subscribe({
+    this.http.delete<IShoppingCart>(`${API_CART}/article`, options).subscribe({
       next: (r: IShoppingCart) => {
         this.CartData = r;
 
@@ -570,7 +582,7 @@ export class CartService {
       },
       error: (error: any) => {
         console.log('error', JSON.stringify(error));
-      }
+      },
     });
   }
 
@@ -581,27 +593,25 @@ export class CartService {
       }),
       body: request,
     };
-    return this.http
-      .delete(`${API_CART}/group`, options)
-      .pipe(
-        map((r: any) => {
-          if (!r.error) {
-            if (r.data == null) {
-              this.CartData.products = [];
-            } else {
-              this.CartData = r.data;
-            }
-
-            this.data.products = this.CartData.products;
-            /* se limpia OV cargada */
-            this.purchaseOrderLoadedStorage.remove();
-            this.save();
-            this.calc();
+    return this.http.delete(`${API_CART}/group`, options).pipe(
+      map((r: any) => {
+        if (!r.error) {
+          if (r.data == null) {
+            this.CartData.products = [];
+          } else {
+            this.CartData = r.data;
           }
 
-          return r;
-        })
-      );
+          this.data.products = this.CartData.products;
+          /* se limpia OV cargada */
+          this.purchaseOrderLoadedStorage.remove();
+          this.save();
+          this.calc();
+        }
+
+        return r;
+      })
+    );
   }
 
   getPriceArticle(params: {
@@ -619,5 +629,34 @@ export class CartService {
       environment.apiShoppingCart + `generar`,
       data
     );
+  }
+
+  validateStock(params: {
+    shoppingCartId: string;
+  }): Observable<IValidateShoppingCartStockResponse> {
+    return this.http.post<IValidateShoppingCartStockResponse>(
+      `${API_CART}/validate-stock`,
+      {
+        shoppingCartId: params.shoppingCartId,
+      }
+    );
+  }
+
+  prepay(params: {
+    shoppingCartId: string;
+    invoiceType: string; // invoice, receipt
+    street?: string;
+    number?: string;
+    city?: string;
+    businessLine?: string;
+  }) {
+    return this.http.post(`${API_CART}/prepay`, {
+      shoppingCartId: params.shoppingCartId,
+      invoiceType: params.invoiceType,
+      street: params.street,
+      number: params.number,
+      city: params.city,
+      businessLine: params.businessLine,
+    });
   }
 }

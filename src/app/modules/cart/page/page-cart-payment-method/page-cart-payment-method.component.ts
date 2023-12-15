@@ -10,7 +10,7 @@ import {
   Inject,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CartService } from '../../../../shared/services/cart.service';
+import { CartService as CartServiceOld } from '../../../../shared/services/cart.service';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import {
   CartData,
@@ -66,9 +66,10 @@ import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 import { UserRoleType } from '@core/enums/user-role-type.enum';
 import { IKhipuBank } from '@core/models-v2/payment-method/khipu-bank.interface';
 import { InvoiceType } from '@core/enums/invoice-type.enum';
-import { ShoppingCartService } from '@core/services-v2/shopping-cart.service';
-import { IValidateShoppingCartStockLineResponse } from '@core/models-v2/shopping-cart/validate-stock-response.interface';
+import { IValidateShoppingCartStockLineResponse } from '@core/models-v2/cart/validate-stock-response.interface';
 import { PaymentMethodType } from '@core/enums/payment-method.enum';
+import { CartService } from '@core/services-v2/cart.service';
+import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 
 declare const $: any;
 export interface Archivo {
@@ -95,7 +96,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   loadingPage = false;
   loadingText = 'Generando orden de compra...';
   userSession!: ISession;
-  cartSession: CartData;
+  cartSession: IShoppingCart;
   uploadedFiles!: File;
   documentType = 'factura';
   totalCarro = 0;
@@ -160,7 +161,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    public cart: CartService,
+    public cart: CartServiceOld,
     private localS: LocalStorageService,
     private fb: FormBuilder,
     private modalService: BsModalService,
@@ -179,7 +180,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private readonly sessionService: SessionService,
     private readonly geolocationApiService: GeolocationApiService,
     private readonly paymentMethodService: PaymentMethodService,
-    private readonly shoppingCartService: ShoppingCartService
+    private readonly cartService: CartService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -196,8 +197,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       });
     }
 
-    this.recibe = this.localS.get('recibe');
-    this.cartSession = this.localS.get('carroCompraB2B');
+    this.recibe = this.localS.get(StorageKey.recibe);
+    this.cartSession = this.localS.get(StorageKey.carroCompraB2B);
     this.direccionDespacho = <ShippingAddress>{};
   }
 
@@ -205,8 +206,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.userSession = this.sessionService.getSession();
     //this.userSession = this.root.getDataSesionUsuario();
     // this.userSession['requiereValidacion'] = true;
-    this.cartSession = this.localS.get('carroCompraB2B');
-    this.fechas_entregas = this.localS.get('fechas');
+    this.cartSession = this.localS.get(StorageKey.carroCompraB2B);
+    this.fechas_entregas = this.localS.get(StorageKey.fechas);
   }
 
   onBlur() {
@@ -297,7 +298,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       .pipe(filter(() => this.formVisita.valid))
       .subscribe(() => this.validForm());
 
-    this.fechas_entregas = this.localS.get('fechas');
+    this.fechas_entregas = this.localS.get(StorageKey.fechas);
     this.pagoKhipu = this.localS.get('Metodo') || null;
     this.esBoleta =
       this.userSession?.businessLine == '' ||
@@ -307,19 +308,19 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       : InvoiceType.RECEIPT;
 
     this.formOV();
-    this.cart.load();
+    this.cartService.load();
 
-    this.cart.total$.subscribe((r) => {
+    this.cartService.total$.subscribe((r) => {
       this.totalCarro = r || 0;
     });
-    this.cart.items$
+    this.cartService.items$
       .pipe(
         takeUntil(this.destroy$),
         map((ProductCarts) =>
           (ProductCarts || []).map((item) => {
             return {
               ProductCart: item,
-              quantity: item.cantidad,
+              quantity: item.quantity,
             };
           })
         )
@@ -327,15 +328,15 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       .subscribe((items) => {
         this.items = items;
       });
-    this.cartSession = this.localS.get('carroCompraB2B');
-    if (this.cartSession == null || this.cartSession.productos?.length === 0) {
+    this.cartSession = this.localS.get(StorageKey.carroCompraB2B);
+    if (this.cartSession == null || this.cartSession.products?.length === 0) {
       this.router.navigate(['/', 'carro-compra']);
     }
 
     this.setMethodPayment();
 
-    this.cart.load();
-    this.cart.total$.subscribe((r) => {
+    this.cartService.load();
+    this.cartService.total$.subscribe((r) => {
       this.totalCarro = r || 0;
       this.formOv.get('monto')?.setValue(r);
       this.formOv.get('folio')?.setValue(this.idArchivo.split('-')[0]);
@@ -358,7 +359,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       });
 
     setTimeout(() => {
-      this.cart.dropCartActive$.next(false);
+      this.cartService.dropCartActive$.next(false);
     });
 
     this.route.queryParams.subscribe((query) => {
@@ -370,21 +371,21 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     });
 
     // LOGICA PARA OBTENER DESPACHO A MOSTRAR
-    switch (this.cartSession.despacho?.tipo) {
-      case 'TIENDA': //RETIRO EN TIENDA
+    switch (this.cartSession.shipment?.deliveryMode) {
+      case 'TIENDA':
+      case 'pickup': //RETIRO EN TIENDA
         //se revisa si existe la informacion en el localstor  age desde el paso anterior
         this.tiendaRetiro = this.localS.get(StorageKey.tiendaRetiro);
 
         if (!this.tiendaRetiro) {
           //si no se encontró, se obtiene llamando a la api
-          this.obtieneTiendaSegunRecid(
-            this.cartSession.despacho.recidDireccion
-          );
+          this.obtieneTiendaSegunRecid(this.cartSession.shipment.addressId);
         }
         break;
       case 'EXP': //DESPACHO DOMICILIO
+      case 'delivery':
       default:
-        if (this.cartSession.cliente?.rutCliente != '0') {
+        if (this.cartSession.customer?.documentId != '0') {
           //si está la informacion del cliente, se busca la direccion del usuario indicada en el despacho
           this.obtieneDireccionCliente();
           break;
@@ -461,8 +462,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
           for (let dir of r.data) {
             if (
               dir.recid.toString() ===
-              (this.cartSession.despacho?.recidDireccion
-                ? this.cartSession.despacho.recidDireccion.toString()
+              (this.cartSession.shipment?.addressId
+                ? this.cartSession.shipment.addressId.toString()
                 : '')
             ) {
               this.direccionDespacho = dir;
@@ -486,7 +487,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.rejectedCode = null;
     this.btnWebpayPost = false;
     setTimeout(() => {
-      this.cart.dropCartActive$.next(false);
+      this.cartService.dropCartActive$.next(false);
     });
   }
 
@@ -587,7 +588,9 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       this.loadingPage = true;
       //modificar pasos
 
-      let r: any = await this.cart.generaOrdenDeCompra(data).toPromise();
+      let r: any = await this.cartService
+        .generaOrdenDeCompra(data)
+        .toPromise();
 
       this.loadingPage = false;
       this.localS.remove('ordenCompraCargada');
@@ -617,7 +620,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
           status: 'approved',
         };
 
-        this.cart.load();
+        this.cartService.load();
         if (this.userSession?.userRole === UserRoleType.SUPERVISOR) {
           await this.cart.confirmarOV(this.cartSession._id).toPromise();
           this.router.navigate(
@@ -654,7 +657,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
     this.loadingPage = true;
     this.loadingText = 'Generando cotización...';
-    this.cart.generaOrdenDeCompra(data).subscribe(
+    this.cartService.generaOrdenDeCompra(data).subscribe(
       (r: any) => {
         this.loadingPage = false;
 
@@ -663,7 +666,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
           return;
         }
 
-        this.cart.load();
+        this.cartService.load();
         this.router.navigate([
           '/carro-compra/comprobante-de-cotizacion',
           r.data.numero,
@@ -701,7 +704,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
           return;
         }
-        this.cart.load();
+        this.cartService.load();
         this.router.navigate([
           '/',
           'carro-compra',
@@ -741,8 +744,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       invitado.rut = this.getValidRutFormat(this.formVisita.value.rut);
       invitado.carro_id = this.cartSession._id || '';
       invitado.tipoEnvio =
-        this.cartSession.despacho?.codTipo === 'VEN- DPCLI' ||
-        this.cartSession.despacho?.codTipo === 'delivery'
+        this.cartSession.shipment?.deliveryMode === 'VEN- DPCLI' ||
+        this.cartSession.shipment?.deliveryMode === 'delivery'
           ? 'DES'
           : 'RC';
       // this.localS.remove('invitado');
@@ -870,7 +873,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   async validarStockActual() {
     let consultaStock = await firstValueFrom(
-      this.shoppingCartService.validateStock({
+      this.cartService.validateStock({
         shoppingCartId: this.cartSession._id!.toString(),
       })
     );
@@ -936,14 +939,14 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   async verificar_carro() {
-    await this.cart.load();
-    this.cartSession = this.localS.get('carroCompraB2B');
+    await this.cartService.load();
+    this.cartSession = this.localS.get(StorageKey.carroCompraB2B);
     this.fechas_entregas = [];
-    this.cartSession.grupos.forEach((item: any) => {
-      this.fechas_entregas.push(item.despacho.fechaEntrega);
+    (this.cartSession.groups ?? []).forEach((item) => {
+      this.fechas_entregas.push(item.shipment.requestedDate);
     });
 
-    this.localS.set('fechas', this.fechas_entregas);
+    this.localS.set(StorageKey.fechas, this.fechas_entregas);
   }
 
   private updateCartAndUserTurn(): Promise<any> {
@@ -968,7 +971,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       invoiceType: this.selectedDocument,
       businessLine: this.selectedGiro || undefined,
     };
-    return firstValueFrom(this.shoppingCartService.prepay(params));
+    return firstValueFrom(this.cartService.prepay(params));
   }
 
   /*********************************************************************

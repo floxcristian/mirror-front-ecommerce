@@ -24,7 +24,7 @@
 
             <!-- Start::despacho a domicilio (desktop) -->
             <div
-              *ngIf="cartSession.despacho?.tipo != 'TIENDA'"
+              *ngIf="cartSession.shipment?.deliveryMode != 'pickup'"
               class="row block_despacho"
             >
               <div
@@ -83,7 +83,7 @@
                         >
                       </div>
                       <div class="col-12" style="color: #0063b9">
-                        <span *ngIf="recibe.company">
+                        <span *ngIf="recibe && recibe.company">
                           <!-- <i class="fa-solid fa-circle-check" style="color: #118565"></i> -->
                           <i
                             class="fas fa-people-carry"
@@ -91,7 +91,7 @@
                           ></i
                           >{{ recibe.company }}
                         </span>
-                        <span *ngIf="!recibe.company">
+                        <span *ngIf="!recibe || !recibe.company">
                           <!-- <i class="fa-solid fa-circle-check" style="color: #118565"></i> -->
                           <i
                             class="fas fa-people-carry"
@@ -205,7 +205,9 @@
 
             <!-- Start::retiro en tienda (mobile) -->
             <div
-              *ngIf="cartSession.despacho?.tipo == 'TIENDA' && tiendaRetiro"
+              *ngIf="
+                cartSession.shipment?.deliveryMode == 'pickup' && tiendaRetiro
+              "
               class="row block_despacho"
             >
               <div
@@ -266,10 +268,10 @@
                             style="color: #0063b9"
                           ></i>
                           {{
-                            cartSession.observacion ==
+                            cartSession.observation ==
                             'Persona que recibe: Titular de la Venta'
                               ? 'Titular de la compra'
-                              : (cartSession.observacion || '')
+                              : (cartSession.observation || '')
                                   .split('Celular')[0]
                                   .split('Recibe:')[1]
                           }}</span
@@ -1507,12 +1509,12 @@
         <div class="card-header" style="color: #0063b9">Resumen pedido</div>
         <div class="card-body">
           <app-detalle-carro-productos
-            [shippingType]="cartSession.despacho?.tipo"
+            [shippingType]="cartSession.shipment?.deliveryMode"
             *ngIf="innerWidth < 450"
             [seePrices]="false"
           ></app-detalle-carro-productos>
           <app-detalle-carro-productos
-            [shippingType]="cartSession.despacho?.tipo"
+            [shippingType]="cartSession.shipment?.deliveryMode"
             *ngIf="innerWidth >= 450"
           >
           </app-detalle-carro-productos>
@@ -1858,7 +1860,7 @@
 
             <!-- Start::despacho a domicilio (mobile) -->
             <div
-              *ngIf="cartSession.despacho?.tipo != 'TIENDA'"
+              *ngIf="cartSession.shipment?.deliveryMode != 'pickup'"
               class="row block_despacho"
             >
               <!-- Start::despacho -->
@@ -1995,14 +1997,14 @@
                             class="col-12"
                             style="color: #005db9 !important"
                           >
-                            <span *ngIf="recibe.company"
+                            <span *ngIf="recibe && recibe.company"
                               ><i
                                 class="fas fa-people-carry"
                                 style="color: #005db9 !important"
                               ></i>
                               {{ recibe.company }}
                             </span>
-                            <span *ngIf="!recibe.company"
+                            <span *ngIf="!recibe || !recibe.company"
                               ><i
                                 class="fas fa-people-carry"
                                 style="color: #005db9 !important"
@@ -2062,7 +2064,9 @@
 
             <!-- Start::retiro en tienda (mobile) -->
             <div
-              *ngIf="cartSession.despacho?.tipo == 'TIENDA' && tiendaRetiro"
+              *ngIf="
+                cartSession.shipment?.deliveryMode == 'pickup' && tiendaRetiro
+              "
               class="row block_despacho"
             >
               <div class="col-12" style="color: #005db9 !important">
@@ -2120,10 +2124,10 @@
                               style="color: #005db9 !important"
                             ></i>
                             <span>{{
-                              cartSession.observacion ==
+                              cartSession.observation ==
                               'Persona que recibe: Titular de la Venta'
                                 ? 'Titular de la compra'
-                                : (cartSession.observacion || '')
+                                : (cartSession.observation || '')
                                     .split('Celular')[0]
                                     .split('Recibe:')[1]
                             }}</span>
@@ -2380,7 +2384,7 @@
 
           <div class="card-body text-justify" style="font-size: 14px">
             <app-detalle-carro-productos
-              [shippingType]="cartSession.despacho?.tipo"
+              [shippingType]="cartSession.shipment?.deliveryMode"
               [seeProducts]="false"
             >
             </app-detalle-carro-productos>
