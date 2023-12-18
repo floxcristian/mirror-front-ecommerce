@@ -178,25 +178,25 @@ export class PageCartComponent implements OnInit, OnDestroy {
     return needUpdate;
   }
 
-  async updateCart(cantidad: number, item: any) {
-    if (cantidad < 1) {
-      cantidad = 1;
+  async updateCart(quantity: number, item: Item) {
+    if (quantity < 1) {
+      quantity = 1;
       this.toast.error('No se permiten números negativos en la cantidad');
     }
 
-    item.ProductCart.cantidad = cantidad;
+    item.ProductCart.quantity = quantity;
 
     const productos: IShoppingCartProduct[] = [];
-    this.items.map((r) => {
+    this.items.map((r: Item) => {
       productos.push(r.ProductCart);
     });
 
     this.shoppingCartService.saveCart(productos).subscribe((r) => {
       for (const el of r.data.productos) {
         if (el.sku == item.ProductCart.sku) {
-          item.ProductCart.conflictoEntrega = el.conflictoEntrega;
-          item.ProductCart.entregas = el.entregas;
-          item.ProductCart.precio = el.precio;
+          item.ProductCart.deliveryConflict = el.conflictoEntrega;
+          item.ProductCart.delivery = el.entregas;
+          item.ProductCart.price = el.precio;
         }
       }
       this.shoppingCartService.updateCart(productos);
@@ -207,18 +207,18 @@ export class PageCartComponent implements OnInit, OnDestroy {
     this.shoppingCartService.remove(item);
   }
 
-  saveCart() {
-    clearTimeout(this.saveTimer);
-    this.saveTimer = setTimeout(() => {
-      const productos = this.items.map((item) => {
-        return {
-          sku: item.ProductCart.sku,
-          cantidad: item.quantity,
-        };
-      });
-      this.shoppingCartService.saveCart(productos).subscribe((r) => {});
-    }, 1000);
-  }
+  // saveCart() {
+  //   clearTimeout(this.saveTimer);
+  //   this.saveTimer = setTimeout(() => {
+  //     const productos = this.items.map((item: Item) => {
+  //       return {
+  //         sku: item.ProductCart.sku,
+  //         cantidad: item.quantity,
+  //       };
+  //     });
+  //     this.shoppingCartService.saveCart(productos).subscribe((r) => {});
+  //   }, 1000);
+  // }
 
   limpiarInvitado() {
     // this.localS.remove('invitado');

@@ -4,6 +4,7 @@ import { Injectable, inject } from '@angular/core';
 import {
   ICartTotal,
   IShoppingCart,
+  IShoppingCartGroup,
   IShoppingCartProduct,
 } from '@core/models-v2/cart/shopping-cart.interface';
 // Environment
@@ -23,11 +24,14 @@ import { IGuest } from '@core/models-v2/storage/guest.interface';
 import { ReceiveStorageService } from '@core/storage/receive-storage.service';
 import { IReceive } from '@core/models-v2/storage/receive.interface';
 import { PurshaseOrderLoadedStorageService } from '@core/storage/pruchase-order-loaded-storage.service';
-import { IRemoveGroupRequest } from '@core/models-v2/requests/cart/removeGroup.request';
+import { IRemoveGroupRequest } from '@core/models-v2/requests/cart/remove-group.request';
 import { ResponseApi } from '@shared/interfaces/response-api';
 import { RootService } from '@shared/services/root.service';
 import { IValidateShoppingCartStockResponse } from '@core/models-v2/cart/validate-stock-response.interface';
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
+import { AddNotificacionContactRequest } from '@core/models-v2/requests/cart/add-notification-contact.request';
+import { GetLogisticPromiseRequest } from '@core/models-v2/requests/cart/logistic-promise-request';
+import { GetLogisticPromiseResponse } from '@core/models-v2/responses/logistic-promise-responses';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -217,8 +221,8 @@ export class CartService {
                 //ver quien tiene la mayor fecha para el despacho
                 let temp: any[] = [];
 
-                this.cartTempData.groups.forEach((item: any) => {
-                  temp.push(item.despacho.fechaDespacho);
+                this.cartTempData.groups.forEach((item: IShoppingCartGroup) => {
+                  temp.push(item.shipment.requestedDate);
                 });
 
                 temp = temp.sort(
@@ -248,8 +252,8 @@ export class CartService {
               ) {
                 //ver quien tiene la mayor fecha para el despacho
                 let temp: any[] = [];
-                this.cartTempData.groups.forEach((item: any) => {
-                  temp.push(item.despacho.fechaDespacho);
+                this.cartTempData.groups.forEach((item: IShoppingCartGroup) => {
+                  temp.push(item.shipment.requestedDate);
                 });
 
                 temp = temp.sort(
@@ -280,13 +284,13 @@ export class CartService {
               this.CartData.shipment.serviceType == 'TIENDA' ||
               this.CartData.shipment.serviceType == 'EXP'
             ) {
-              this.cartTempData.groups?.forEach((item: any) => {
+              this.cartTempData.groups?.forEach((item: IShoppingCartGroup) => {
                 let precio: number = 0;
-                suma = Number(suma + item.despacho.precio);
+                suma = Number(suma + item.shipment.price);
 
                 // calculando el total
-                item.productos.forEach((prod: any) => {
-                  precio = Number(precio + prod.precio * prod.cantidad);
+                item.products.forEach((prod: IShoppingCartProduct) => {
+                  precio = Number(precio + prod.price * prod.quantity);
                 });
 
                 array_precio.push(precio);
@@ -303,13 +307,13 @@ export class CartService {
             let descuento = 0;
             this.discount = null;
             let index = 0;
-            this.cartTempData.groups?.forEach((item: any) => {
+            this.cartTempData.groups?.forEach((item: IShoppingCartGroup) => {
               if (
                 array_precio[index] >= 60000 ||
                 (usuario.userRole != 'compradorb2c' &&
                   usuario.userRole != 'temp')
               ) {
-                descuento = descuento + item.despacho.descuento;
+                descuento = descuento + item.shipment.discount;
               }
 
               index = index + 1;
@@ -340,6 +344,10 @@ export class CartService {
           }
         },
       });
+  }
+
+  logisticPromise(request: GetLogisticPromiseRequest): Observable<GetLogisticPromiseResponse> {
+    return this.http.post<GetLogisticPromiseResponse>(`${API_CART}/logistic-promise`, request)
   }
 
   updateShippingType(type: any) {
@@ -381,12 +389,12 @@ export class CartService {
       recibe,
     };
 
-    return this.http.post(`${API_CART}/article`, data).pipe(
-      map((r: any) => {
-        this.load();
-        return r;
-      })
-    );
+    this.load();
+    // return this.http.post(`${API_CART}/article`, data).pipe(
+    //   map((r: any) => {
+    //     return r;
+    //   })
+    // );
   }
 
   calc(totalesFull = false): void {
@@ -425,10 +433,10 @@ export class CartService {
     subtotal = subtotal / 1.19;
 
     if (this.shipping !== undefined && this.shipping != null) {
-      if (!this.shipping.price) {
-        this.shipping.price = 0;
-        this.shipping.title = 'Seleccione Fecha ';
-      }
+      // if (!this.shipping.price) {
+      //   this.shipping.price = 0;
+      //   this.shipping.title = 'Seleccione Fecha ';
+      // }
       totals.push(this.shipping);
     }
 
@@ -459,13 +467,13 @@ export class CartService {
     this.totalSubject$.next(this.data.total);
   }
 
-  updateCart(items: any) {
+  updateCart(items: IShoppingCartProduct[]) {
     this.CartData.products = items;
     this.calc();
     this.save();
   }
 
-  saveCart(productos: any) {
+  saveCart(products: IShoppingCartProduct[]) {
     // Sucursal
     console.log('getSelectedStore desde saveCart');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
@@ -474,13 +482,13 @@ export class CartService {
 
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
     const data = {
-      usuario: usuario.username,
-      rut: usuario.documentId,
-      sucursal,
-      productos,
+      user: usuario.username,
+      documentId: usuario.documentId,
+      branch: sucursal,
+      products,
     };
 
-    return this.http.post(environment.apiShoppingCart + 'articulo', data).pipe(
+    return this.http.post(`${API_CART}/article`, data).pipe(
       map((r: any) => {
         this.CartData.shipment = r.data.despacho;
 
@@ -523,8 +531,8 @@ export class CartService {
     return this.http.put(`${API_CART}/${id}/status/${status}`, {});
   }
 
-  setNotificationContact(data: any) {
-    return this.http.put(`${API_CART}/setNotificationContact`, data);
+  setNotificationContact(id: string, data: AddNotificacionContactRequest) {
+    return this.http.put(`${API_CART}/notificactionContact/${id}`, data);
   }
 
   emitValidateProducts(products: any): void {

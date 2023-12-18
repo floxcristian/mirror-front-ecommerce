@@ -14,7 +14,7 @@ export interface IShoppingCart {
   purchaseOrder?: ShoppingCartPurchaseOrder;
   payment?: IShoppingCartPayment;
   notification?: IShoppingCartNotification;
-  groups?: ShoppingCartGroup[];
+  groups?: IShoppingCartGroup[];
   branchCode?: string;
   warehouse?: string;
   remarketing?: number;
@@ -110,7 +110,7 @@ export interface IShoppingCartTripDate {
   scheduleReference: string;
 }
 
-export interface ShoppingCartGroup {
+export interface IShoppingCartGroup {
   id: number;
   identifier: string;
   dropshipmentType: number;

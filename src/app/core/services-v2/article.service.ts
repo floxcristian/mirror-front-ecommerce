@@ -14,7 +14,7 @@ import { IReviewsResponse } from '@core/models-v2/article/review-response.interf
 import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
 
-const API_ARTICLE = `${environment.apiEcommerce}/api/v1/article`;
+const API_ARTICLE = `http://10.158.15.204:8080/api/v1/article`;
 
 @Injectable({
   providedIn: 'root',
