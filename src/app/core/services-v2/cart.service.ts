@@ -26,6 +26,7 @@ import { PurshaseOrderLoadedStorageService } from '@core/storage/pruchase-order-
 import { IRemoveGroupRequest } from '@core/models-v2/requests/cart/removeGroup.request';
 import { ResponseApi } from '@shared/interfaces/response-api';
 import { RootService } from '@shared/services/root.service';
+import { IValidateShoppingCartStockResponse } from '@core/models-v2/cart/validate-stock-response.interface';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -628,5 +629,34 @@ export class CartService {
       environment.apiShoppingCart + `generar`,
       data
     );
+  }
+
+  validateStock(params: {
+    shoppingCartId: string;
+  }): Observable<IValidateShoppingCartStockResponse> {
+    return this.http.post<IValidateShoppingCartStockResponse>(
+      `${API_CART}/validate-stock`,
+      {
+        shoppingCartId: params.shoppingCartId,
+      }
+    );
+  }
+
+  prepay(params: {
+    shoppingCartId: string;
+    invoiceType: string; // invoice, receipt
+    street?: string;
+    number?: string;
+    city?: string;
+    businessLine?: string;
+  }) {
+    return this.http.post(`${API_CART}/prepay`, {
+      shoppingCartId: params.shoppingCartId,
+      invoiceType: params.invoiceType,
+      street: params.street,
+      number: params.number,
+      city: params.city,
+      businessLine: params.businessLine,
+    });
   }
 }

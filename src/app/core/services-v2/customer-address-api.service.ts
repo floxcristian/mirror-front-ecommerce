@@ -18,7 +18,6 @@ const API_CUSTOMER = `${environment.apiEcommerce}/api/v1/customer`;
 export class CustomerAddressApiService {
   constructor(private http: HttpClient) {}
 
-  /*
   getAddresses(
     documentId: string,
     type: number
@@ -26,15 +25,14 @@ export class CustomerAddressApiService {
     return this.http.get<ICustomerAddress[]>(
       `${API_CUSTOMER}/${documentId}/addresses?type=${type}`
     );
-  }*/
+  }
 
-  /*
   getInvoiceAddresses(documentId: string): Observable<ICustomerAddress[]> {
     const type = AddressType.INVOICE;
     return this.http.get<ICustomerAddress[]>(
       `${API_CUSTOMER}/${documentId}/addresses?type=${type}`
     );
-  }*/
+  }
 
   getDeliveryAddresses(documentId: string): Observable<ICustomerAddress[]> {
     return this.http.get<ICustomerAddress[]>(

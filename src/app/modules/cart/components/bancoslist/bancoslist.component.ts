@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PaymentService } from '../../../../shared/services/payment.service';
+import { PaymentMethodService } from '@core/services-v2/payment-method.service';
+import { IKhipuBank } from '@core/models-v2/payment-method/khipu-bank.interface';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-bancoslist',
@@ -7,19 +10,34 @@ import { PaymentService } from '../../../../shared/services/payment.service';
   styleUrls: ['./bancoslist.component.scss'],
 })
 export class BancoslistComponent implements OnInit {
-  constructor(private bancosService: PaymentService) {}
-  listaBancos: any = [];
-  banco: any;
+  constructor(
+    private bancosService: PaymentService,
+    private readonly toastr: ToastrService,
+    // Services V2
+    private readonly paymentMethodService: PaymentMethodService
+  ) {}
+  listaBancos: IKhipuBank[] = [];
+  banco?: IKhipuBank;
   index_banco = -1;
   selectbank: boolean = false;
   loadbank: boolean = false;
+
   async ngOnInit() {
     this.loadbank = true;
-    let consulta: any = await this.bancosService.listaBancoKhipu();
-    this.loadbank = false;
-    this.listaBancos = consulta.data.banks;
-    this.convertir_numero();
+    this.paymentMethodService.getKhipuBanks().subscribe({
+      next: (banks) => {
+        this.listaBancos = banks;
+        this.convertir_numero();
+        this.loadbank = false;
+      },
+      error: (err) => {
+        console.log(err);
+        this.toastr.error('No se pudieron listar los bancos de Khipu');
+        this.loadbank = false;
+      },
+    });
   }
+
   async ngOnChange() {
     this.loadbank = false;
   }
