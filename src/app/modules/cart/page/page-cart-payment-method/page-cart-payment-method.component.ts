@@ -10,7 +10,7 @@ import {
   Inject,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CartService } from '../../../../shared/services/cart.service';
+import { CartService as CartServiceOld } from '../../../../shared/services/cart.service';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import {
   CartData,
@@ -26,7 +26,6 @@ import {
 import { ToastrService } from 'ngx-toastr';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import {
-  PaymentMethod,
   PaymentParams,
   TransBankToken,
 } from '../../../../shared/interfaces/payment-method';
@@ -48,7 +47,7 @@ import { CentroCosto } from '../../../../shared/interfaces/centroCosto';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AgregarCentroCostoComponent } from '../../components/agregar-centro-costo/agregar-centro-costo.component';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { DireccionMap } from 'src/app/shared/components/map/map.component';
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
@@ -58,8 +57,20 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
-import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
+import { PaymentMethodService } from '@core/services-v2/payment-method.service';
+import { IPaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
+import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
+import { IStore } from '@core/services-v2/geolocation/models/store.interface';
+import { UserRoleType } from '@core/enums/user-role-type.enum';
+import { IKhipuBank } from '@core/models-v2/payment-method/khipu-bank.interface';
+import { InvoiceType } from '@core/enums/invoice-type.enum';
+import { IValidateShoppingCartStockLineResponse } from '@core/models-v2/cart/validate-stock-response.interface';
+import { PaymentMethodType } from '@core/enums/payment-method.enum';
+import { CartService } from '@core/services-v2/cart.service';
+import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
 
 declare const $: any;
 export interface Archivo {
@@ -86,11 +97,11 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   loadingPage = false;
   loadingText = 'Generando orden de compra...';
   userSession!: ISession;
-  cartSession: CartData;
+  cartSession: IShoppingCart;
   uploadedFiles!: File;
   documentType = 'factura';
   totalCarro = 0;
-  paymentMethods: PaymentMethod[] = [];
+  paymentMethods: IPaymentMethod[] = [];
   paymentMethodActive: string | null = null;
   bloqueoCliente: any;
   clienteBloqueado = false;
@@ -112,7 +123,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   validado!: boolean;
   innerWidth: number;
   transBankToken!: TransBankToken;
-  productosSinStock: ProductCart[] | any = [];
+  productosSinStock: IValidateShoppingCartStockLineResponse[] = [];
   loadkhipu: boolean = false;
   recibe: Usuario;
 
@@ -120,7 +131,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   addresses: ShippingAddress[] = [];
   direccionDespacho!: ICustomerAddress; //ShippingAddress;
   shippingType = '';
-  tiendaRetiro!: ShippingStore;
+  tiendaRetiro?: IStore = undefined;
   pagoKhipu = null;
   esBoleta: boolean = false;
   showresumen: boolean = false;
@@ -138,17 +149,20 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   cd_ver: boolean = false;
 
   selectedDocument!: string;
-  documentOptions = [{ id: 'BEL', name: 'BOLETA' }];
+  documentOptions = [{ id: InvoiceType.RECEIPT, name: 'BOLETA' }];
   girosOptions: any[] = [];
   selectedGiro!: string;
   isB2B!: boolean;
   cargandoGiros!: boolean;
   giros$!: Observable<any[]>;
 
+  userRoleType = UserRoleType;
+  invoiceType = InvoiceType;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    public cart: CartService,
+    public cart: CartServiceOld,
     private localS: LocalStorageService,
     private fb: FormBuilder,
     private modalService: BsModalService,
@@ -161,8 +175,13 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     // Services V2
     private readonly sessionStorage: SessionStorageService,
     private readonly invitadoStorage: InvitadoStorageService,
+    private readonly toastr: ToastrService,
+    // Services V2
     private readonly sessionService: SessionService,
-    private readonly customerAddressApiService: CustomerAddressApiService
+    private readonly geolocationApiService: GeolocationApiService,
+    private readonly paymentMethodService: PaymentMethodService,
+    private readonly cartService: CartService,
+    private readonly customerAddressService: CustomerAddressApiService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -179,16 +198,16 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       });
     }
 
-    this.recibe = this.localS.get('recibe');
-    this.cartSession = this.localS.get('carroCompraB2B');
+    this.recibe = this.localS.get(StorageKey.recibe);
+    this.cartSession = this.localS.get(StorageKey.carroCompraB2B);
   }
 
   ngDoCheck() {
     this.userSession = this.sessionService.getSession();
     //this.userSession = this.root.getDataSesionUsuario();
     // this.userSession['requiereValidacion'] = true;
-    this.cartSession = this.localS.get('carroCompraB2B');
-    this.fechas_entregas = this.localS.get('fechas');
+    this.cartSession = this.localS.get(StorageKey.carroCompraB2B);
+    this.fechas_entregas = this.localS.get(StorageKey.fechas);
   }
 
   onBlur() {
@@ -221,12 +240,14 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
           if (this.girosOptions.length) {
             this.documentOptions = [
-              { id: 'BEL', name: 'BOLETA' },
-              { id: 'FEL', name: 'FACTURA' },
+              { id: InvoiceType.RECEIPT, name: 'BOLETA' },
+              { id: InvoiceType.INVOICE, name: 'FACTURA' },
             ];
           } else {
-            this.documentOptions = [{ id: 'BEL', name: 'BOLETA' }];
-            this.selectedDocument = 'BEL';
+            this.documentOptions = [
+              { id: InvoiceType.RECEIPT, name: 'BOLETA' },
+            ];
+            this.selectedDocument = InvoiceType.RECEIPT;
           }
           /*if (!this.girosOptions.length) {
             this.documentOptions = [{ id: 'BEL', name: 'BOLETA' }];
@@ -241,8 +262,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         }
       );
     } else {
-      this.documentOptions = [{ id: 'BEL', name: 'BOLETA' }];
-      this.selectedDocument = 'BEL';
+      this.documentOptions = [{ id: InvoiceType.RECEIPT, name: 'BOLETA' }];
+      this.selectedDocument = InvoiceType.RECEIPT;
     }
   }
 
@@ -252,7 +273,10 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
    */
   checkIsB2b(): boolean {
     const user = this.sessionService.getSession();
-    return ['supervisor', 'comprador'].includes(user.userRole);
+    return (
+      user.userRole === UserRoleType.SUPERVISOR ||
+      user.userRole === UserRoleType.BUYER
+    );
   }
 
   async ngOnInit() {
@@ -260,7 +284,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     // this.root.getDataSesionUsuario();
     this.isB2B = this.checkIsB2b();
     if (this.isB2B || this.userSession.businessLine) {
-      this.documentOptions.push({ id: 'FEL', name: 'FACTURA' });
+      this.documentOptions.push({ id: InvoiceType.INVOICE, name: 'FACTURA' });
     }
     if (this.invitado) {
       this.loadComunas();
@@ -274,27 +298,29 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       .pipe(filter(() => this.formVisita.valid))
       .subscribe(() => this.validForm());
 
-    this.fechas_entregas = this.localS.get('fechas');
+    this.fechas_entregas = this.localS.get(StorageKey.fechas);
     this.pagoKhipu = this.localS.get('Metodo') || null;
     this.esBoleta =
       this.userSession?.businessLine == '' ||
       this.userSession?.businessLine == null;
-    this.selectedDocument = this.userSession?.businessLine ? 'FEL' : 'BEL';
+    this.selectedDocument = this.userSession?.businessLine
+      ? InvoiceType.INVOICE
+      : InvoiceType.RECEIPT;
 
     this.formOV();
-    this.cart.load();
+    this.cartService.load();
 
-    this.cart.total$.subscribe((r) => {
+    this.cartService.total$.subscribe((r) => {
       this.totalCarro = r || 0;
     });
-    this.cart.items$
+    this.cartService.items$
       .pipe(
         takeUntil(this.destroy$),
         map((ProductCarts) =>
           (ProductCarts || []).map((item) => {
             return {
               ProductCart: item,
-              quantity: item.cantidad,
+              quantity: item.quantity,
             };
           })
         )
@@ -302,15 +328,15 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       .subscribe((items) => {
         this.items = items;
       });
-    this.cartSession = this.localS.get('carroCompraB2B');
-    if (this.cartSession == null || this.cartSession.productos?.length === 0) {
+    this.cartSession = this.localS.get(StorageKey.carroCompraB2B);
+    if (this.cartSession == null || this.cartSession.products?.length === 0) {
       this.router.navigate(['/', 'carro-compra']);
     }
 
     this.setMethodPayment();
 
-    this.cart.load();
-    this.cart.total$.subscribe((r) => {
+    this.cartService.load();
+    this.cartService.total$.subscribe((r) => {
       this.totalCarro = r || 0;
       this.formOv.get('monto')?.setValue(r);
       this.formOv.get('folio')?.setValue(this.idArchivo.split('-')[0]);
@@ -333,31 +359,33 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       });
 
     setTimeout(() => {
-      this.cart.dropCartActive$.next(false);
+      this.cartService.dropCartActive$.next(false);
     });
 
     this.route.queryParams.subscribe((query) => {
       if (query['status']) this.showRejectedMsg(query);
-      if (query['site_id'] === 'MLC' && query['external_reference'])
-        this.manejarAlertaMercadoPagoSiEsNecesario(query);
+      const paymentMethod = query['paymentMethod'];
+      if (paymentMethod === PaymentMethodType.MERCADOPAGO) {
+        this.manejarAlertaMercadoPago(query);
+      }
     });
 
     // LOGICA PARA OBTENER DESPACHO A MOSTRAR
-    switch (this.cartSession.despacho?.tipo) {
-      case 'TIENDA': //RETIRO EN TIENDA
+    switch (this.cartSession.shipment?.deliveryMode) {
+      case 'TIENDA':
+      case 'pickup': //RETIRO EN TIENDA
         //se revisa si existe la informacion en el localstor  age desde el paso anterior
-        this.tiendaRetiro = this.localS.get('tiendaRetiro');
+        this.tiendaRetiro = this.localS.get(StorageKey.tiendaRetiro);
 
         if (!this.tiendaRetiro) {
           //si no se encontró, se obtiene llamando a la api
-          this.obtieneTiendaSegunRecid(
-            this.cartSession.despacho.recidDireccion
-          );
+          this.obtieneTiendaSegunRecid(this.cartSession.shipment.addressId);
         }
         break;
       case 'EXP': //DESPACHO DOMICILIO
+      case 'delivery':
       default:
-        if (this.cartSession.cliente?.rutCliente != '0') {
+        if (this.cartSession.customer?.documentId != '0') {
           //si está la informacion del cliente, se busca la direccion del usuario indicada en el despacho
           this.obtieneDireccionCliente();
           break;
@@ -383,8 +411,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       this.paymentKhipu(r);
     });
     if (
-      this.userSession?.userRole !== 'supervisor' &&
-      this.userSession?.userRole !== 'comprador'
+      this.userSession?.userRole !== UserRoleType.SUPERVISOR &&
+      this.userSession?.userRole !== UserRoleType.BUYER
     ) {
       this.gtmService.pushTag({
         event: 'payment',
@@ -396,64 +424,42 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     }
   }
 
-  manejarAlertaMercadoPagoSiEsNecesario(query: any) {
-    const documento = this.paymentService.obtenerDocumentoDeBuyOrderMPago(
-      query.external_reference || ''
-    );
-    if (
-      query.external_reference &&
-      documento == this.cartSession._id &&
-      query.site_id &&
-      query.site_id === 'MLC'
-    ) {
-      const reason =
-        query.status && query.status == 'rejected'
-          ? 'un rechazo'
-          : 'una anulación';
-      this.alertCartShow = true;
-      this.alertCart = {
-        detalleMensaje: `No se ha podido completar la transacción con Mercadopago debido a ${reason} del pago. Si el error persiste, por favor comunicate con soporte técnico.`,
-        mostrarBotonVolverIntentar: true,
-        proceso: 'Anulado',
-      };
-      if (query.status && query.status == 'null') {
-        {
-          this.paymentService
-            .anularInicioNoPagoMercadoPago(query.external_reference)
-            .subscribe((r) => {});
-        }
-      }
-    }
+  manejarAlertaMercadoPago(query: any) {
+    const message = query.message;
+    const reason = message;
+    this.alertCartShow = true;
+    this.alertCart = {
+      detalleMensaje: `No se ha podido completar la transacción con Mercadopago debido a ${reason} del pago. Si el error persiste, por favor comunicate con soporte técnico.`,
+      mostrarBotonVolverIntentar: true,
+      proceso: 'Anulado',
+    };
   }
 
   obtieneTiendaSegunRecid(recid: any) {
-    this.logistics
-      .obtieneDireccionesTiendaRetiro({
-        usuario: this.userSession?.documentId,
-      })
-      .subscribe(
-        (r: ResponseApi) => {
-          this.tiendaRetiro = r.data.filter(
-            (x: ShippingStore) => x.recid.toString() == recid.toString()
-          )[0];
-          if (this.tiendaRetiro) {
-            this.localS.set('tiendaRetiro', this.tiendaRetiro);
-          }
-        },
-        (e) => {
-          this.toast.error(
-            'Ha ocurrido un error en servicio al obtener las direccion de la tienda'
-          );
+    this.geolocationApiService.getStores().subscribe({
+      next: (data) => {
+        this.tiendaRetiro = data.find(
+          (x) => x.id.toString() === recid.toString()
+        );
+        if (this.tiendaRetiro) {
+          this.localS.set(StorageKey.tiendaRetiro, this.tiendaRetiro);
         }
-      );
+      },
+      error: (err) => {
+        console.log(err);
+        this.toast.error(
+          'Ha ocurrido un error en servicio al obtener las direccion de la tienda'
+        );
+      },
+    });
   }
 
   obtieneDireccionCliente() {
-    if (!this.cartSession.despacho?.recidDireccion) return;
+    if (!this.cartSession.shipment?.addressId) return;
     const currentCartDeliveryAddress =
-      this.cartSession.despacho.recidDireccion.toString();
+      this.cartSession.shipment.addressId.toString();
     const { documentId } = this.sessionService.getSession();
-    this.customerAddressApiService.getDeliveryAddresses(documentId).subscribe({
+    this.customerAddressService.getDeliveryAddresses(documentId).subscribe({
       next: (addresses) => {
         const cartDeliveryAddress = addresses.find(
           (address) => address.id === currentCartDeliveryAddress
@@ -476,36 +482,23 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.rejectedCode = null;
     this.btnWebpayPost = false;
     setTimeout(() => {
-      this.cart.dropCartActive$.next(false);
+      this.cartService.dropCartActive$.next(false);
     });
   }
 
   async setMethodPayment() {
-    this.paymentMethods = await this.paymentService.getMetodosPago();
-    //if(this.userSession.username!='claudio.montoya@biopc.cl') this.paymentMethods.pop();
-    if (this.sessionService.isB2B()) {
-      const respBloqueo: any = await this.clientsService
-        .getBloqueo(this.userSession.documentId)
-        .toPromise();
-      if (respBloqueo.error) {
-        this.getBloqueoError = true;
-      } else {
-        this.bloqueoCliente = respBloqueo.data;
-        if (this.bloqueoCliente.estado === 'NO') {
-          this.paymentMethods.push({
-            name: 'Línea de crédito',
-            iconClass: '',
-            cod: 'ordenCompra',
-          });
-        } else {
-          this.clienteBloqueado = true;
-        }
-      }
-    }
-
-    if (this.paymentMethods.length == 1) {
-      this.activepaymentMethod(this.paymentMethods[0]);
-    }
+    const username = this.sessionService.getSession().username ?? '';
+    this.paymentMethodService.getPaymentMethods({ username }).subscribe({
+      next: (data) => {
+        this.paymentMethods = data;
+        if (this.paymentMethods.length > 0)
+          this.activepaymentMethod(this.paymentMethods[0]);
+      },
+      error: (err) => {
+        console.log(err);
+        this.toastr.error('No se pudo cargar los métodos de pago');
+      },
+    });
   }
 
   formOV() {
@@ -590,7 +583,9 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       this.loadingPage = true;
       //modificar pasos
 
-      let r: any = await this.cart.generaOrdenDeCompra(data).toPromise();
+      let r: any = await this.cartService
+        .generaOrdenDeCompra(data)
+        .toPromise();
 
       this.loadingPage = false;
       this.localS.remove('ordenCompraCargada');
@@ -620,8 +615,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
           status: 'approved',
         };
 
-        this.cart.load();
-        if (this.userSession?.userRole === 'supervisor') {
+        this.cartService.load();
+        if (this.userSession?.userRole === UserRoleType.SUPERVISOR) {
           await this.cart.confirmarOV(this.cartSession._id).toPromise();
           this.router.navigate(
             ['/', 'carro-compra', 'gracias-por-tu-compra'],
@@ -657,7 +652,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
     this.loadingPage = true;
     this.loadingText = 'Generando cotización...';
-    this.cart.generaOrdenDeCompra(data).subscribe(
+    this.cartService.generaOrdenDeCompra(data).subscribe(
       (r: any) => {
         this.loadingPage = false;
 
@@ -666,7 +661,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
           return;
         }
 
-        this.cart.load();
+        this.cartService.load();
         this.router.navigate([
           '/carro-compra/comprobante-de-cotizacion',
           r.data.numero,
@@ -704,7 +699,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
           return;
         }
-        this.cart.load();
+        this.cartService.load();
         this.router.navigate([
           '/',
           'carro-compra',
@@ -725,11 +720,11 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
    * Seleccionar pago.
    * @param item
    */
-  activepaymentMethod(item: PaymentMethod) {
-    if (item.cod === 'ordenCompra') {
-      this.selectedDocument = 'FEL';
+  activepaymentMethod(item: IPaymentMethod) {
+    if (item.code === 'OC') {
+      this.selectedDocument = InvoiceType.INVOICE;
     }
-    this.paymentMethodActive = item.cod;
+    this.paymentMethodActive = item.code;
     let active_khipu = false;
 
     if (!this.invitado) {
@@ -744,7 +739,10 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       invitado.rut = this.getValidRutFormat(this.formVisita.value.rut);
       invitado.carro_id = this.cartSession._id || '';
       invitado.tipoEnvio =
-        this.cartSession.despacho?.codTipo === 'VEN- DPCLI' ? 'DES' : 'RC';
+        this.cartSession.shipment?.deliveryMode === 'VEN- DPCLI' ||
+        this.cartSession.shipment?.deliveryMode === 'delivery'
+          ? 'DES'
+          : 'RC';
       // this.localS.remove('invitado');
       this.invitadoStorage.remove();
       // this.localS.set('invitado', invitado);
@@ -796,16 +794,11 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
    * + Si es invitado se guarda.
    */
   async prepararCarroPrePago(): Promise<void> {
-    // FIXME: se debería actualizar dirección de facturación si es invitado.
-    let paso3: any = await this.cart
-      .savePaso({ id: this.cartSession._id, paso: 3 })
-      .toPromise();
-
     if (this.invitado) {
       this.invitado.rut = this.getValidRutFormat(this.invitado.rut ?? '');
 
       const isValidAddress =
-        this.selectedDocument === 'FEL' &&
+        this.selectedDocument === InvoiceType.INVOICE &&
         this.formDireccion &&
         this.formDireccion.value &&
         this.formDireccion.value.calle &&
@@ -838,7 +831,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
           // let userCambio: any = this.root.getDataSesionUsuario();
           //userCambio._id = user.email;
           userCambio.email = user.email;
-          userCambio.userRole = 'compradorb2c';
+          userCambio.userRole = UserRoleType.B2C;
           userCambio.documentId = user.rut;
           userCambio.login_temp = true;
           userCambio.firstName = this.formVisita.value.nombre || '';
@@ -856,12 +849,10 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.alertCartShow = false;
 
     if (query.status === 'rejected') {
-      this.rejectedCode = query.codRejected;
+      const message = query.message;
       this.alertCart = {
         pagoValidado: false,
-        detalleMensaje: await this.paymentService.getPaymentErrorDetail(
-          query.codRejected
-        ),
+        detalleMensaje: message,
         mostrarBotonVolverIntentar: true,
       };
       this.alertCartShow = true;
@@ -876,22 +867,24 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   async validarStockActual() {
-    let consultaStock: any = await this.cart.validarStockActual(
-      this.cartSession
+    let consultaStock = await firstValueFrom(
+      this.cartService.validateStock({
+        shoppingCartId: this.cartSession._id!.toString(),
+      })
     );
-    if (consultaStock.problemaStock && consultaStock.productosSinStock) {
-      this.productosSinStock = consultaStock.productosSinStock;
+    if (consultaStock.stockProblem && consultaStock.stockProblemLines) {
+      this.productosSinStock = consultaStock.stockProblemLines;
       document.getElementById('openModalButton')?.click();
       this.paymentService.sendEmailError(
         `Productos sin stock: <br> ${JSON.stringify(
-          this.productosSinStock.map((producto: any) => {
-            return `sku: ${producto.sku}, cantidad: ${producto.cantidad}`;
+          this.productosSinStock.map((producto) => {
+            return `sku: ${producto.sku}, cantidad: ${producto.quantity}`;
           })
         )} <br><br> Carro: <br> ${JSON.stringify(this.cartSession)}`,
         `[B2B ${window.location.hostname}] Error - Se ha detectado que no habia stock suficiente al momento de intengar pagar`
       );
     }
-    return consultaStock.problemaStock;
+    return consultaStock.stockProblem;
   }
 
   VolverPaginaCarro() {
@@ -941,41 +934,39 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   async verificar_carro() {
-    await this.cart.load();
-    this.cartSession = this.localS.get('carroCompraB2B');
+    await this.cartService.load();
+    this.cartSession = this.localS.get(StorageKey.carroCompraB2B);
     this.fechas_entregas = [];
-    this.cartSession.grupos.forEach((item: any) => {
-      this.fechas_entregas.push(item.despacho.fechaEntrega);
+    (this.cartSession.groups ?? []).forEach((item) => {
+      this.fechas_entregas.push(item.shipment.requestedDate);
     });
 
-    this.localS.set('fechas', this.fechas_entregas);
+    this.localS.set(StorageKey.fechas, this.fechas_entregas);
   }
 
   private updateCartAndUserTurn(): Promise<any> {
     const isValidAddress =
-      this.selectedDocument === 'FEL' &&
+      this.selectedDocument === InvoiceType.INVOICE &&
       this.formDireccion &&
       this.formDireccion.value;
     const params = {
-      cartId: this.cartSession._id,
-      username: this.userSession.username,
-      rutClient: this.userSession.documentId,
-      calle:
+      shoppingCartId: this.cartSession._id!,
+      street:
         isValidAddress && this.formDireccion.value.calle
           ? this.formDireccion.value.calle
           : null,
-      numero:
+      number:
         isValidAddress && this.formDireccion.value.numero
           ? this.formDireccion.value.numero
           : null,
-      comuna:
+      city:
         isValidAddress && this.formDireccion.value.comuna
           ? this.formDireccion.value.comuna.split('@')[0]
           : null,
-      documentType: this.selectedDocument,
-      giro: this.selectedGiro || null,
+      invoiceType: this.selectedDocument,
+      businessLine: this.selectedGiro || undefined,
     };
-    return this.cart.updateCartAndUserTurn(params).toPromise();
+    return firstValueFrom(this.cartService.prepay(params));
   }
 
   /*********************************************************************
@@ -993,24 +984,12 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
       if (await this.validarStockActual()) return;
       await this.verificar_carro();
-      let params: PaymentParams = {
-        buy_order: this.cartSession._id || '',
-        session_id: this.cartSession._id || '',
-        amount: this.totalCarro,
-        return_url: `${environment.apiImplementosPagos}transbank/confirmarTransaccion`,
-      };
       await this.updateCartAndUserTurn();
       await this.prepararCarroPrePago();
 
-      let consulta: any = await this.paymentService.createTransBankTransaccion(
-        params
-      );
-      if (consulta) {
-        this.transBankToken = consulta;
-        setTimeout(() => {
-          $('#transBankForm').submit();
-        }, 10);
-      }
+      this.paymentMethodService.redirectToWebpayTransaction({
+        shoppingCartId: this.cartSession._id!.toString(),
+      });
     } catch (err) {
       this.toast.error('Ha ocurrido un error al gestionar el pago.');
       this.btnWebpayPost = false;
@@ -1030,13 +1009,12 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
       if (await this.validarStockActual()) return;
       await this.verificar_carro();
-      const successUrl = environment.urlPaymentVoucher;
-      const canceledUrl = environment.urlPaymentCanceled;
-      const documento = this.cartSession._id;
-      const url = `${environment.urlMercadoPago}?documento=${documento}&success=${successUrl}&pending=${canceledUrl}&failure=${canceledUrl}`;
       await this.updateCartAndUserTurn();
       await this.prepararCarroPrePago();
-      window.location.href = url + '&nocache=' + new Date().getTime();
+
+      this.paymentMethodService.redirectToMercadoPagoTransaction({
+        shoppingCartId: this.cartSession._id!.toString(),
+      });
     } catch (err) {
       this.toast.error('Ha ocurrido un error al gestionar el pago.');
       this.btnWebpayPost = false;
@@ -1046,7 +1024,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   /**
    * Continuar pago con Khipu.
    */
-  async paymentKhipu(banco: any) {
+  async paymentKhipu(banco?: IKhipuBank) {
     try {
       this.localS.set('Metodo', 'KHIP');
       this.localS.set('id_carro', this.cartSession._id);
@@ -1059,36 +1037,13 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       await this.verificar_carro();
       await this.updateCartAndUserTurn();
       await this.prepararCarroPrePago();
-      const successUrl = environment.urlPaymentVoucher;
-      const canceledUrl = environment.urlPaymentCanceled;
-      const documento = this.cartSession._id;
-      let params = {};
-      if (!this.invitado) {
-        params = {
-          successUrl: successUrl,
-          canceledUrl: canceledUrl,
-          id_carro: documento,
-          usuario_email: this.userSession.username,
-          usuario_name:
-            this.userSession.firstName + ' ' + this.userSession.lastName,
-          bank: banco,
-        };
-      } else {
-        params = {
-          successUrl: successUrl,
-          canceledUrl: canceledUrl,
-          id_carro: documento,
-          usuario_email: this.invitado.email,
-          usuario_name:
-            this.invitado.first_name + ' ' + this.invitado.last_name,
-          bank: banco,
-        };
-      }
 
-      let consulta: any = await this.paymentService.createTransKhipu(params);
-
-      window.location.href = consulta.simplified_transfer_url;
       this.loadkhipu = false;
+      this.paymentMethodService.redirectToKhipuTransaction({
+        shoppingCartId: this.cartSession._id!.toString(),
+        bankId: banco ? banco.bankId : '',
+        bankName: banco ? banco.name : '',
+      });
     } catch (err) {
       this.toast.error('Ha ocurrido un error al gestionar el pago.');
       this.loadkhipu = false;

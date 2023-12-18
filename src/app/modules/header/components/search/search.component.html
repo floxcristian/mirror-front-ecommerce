@@ -464,9 +464,9 @@
             />
 
             <span
-              *ngIf="((cart.quantity$ | async) || 0) > 0"
+              *ngIf="((shoppingCartService.quantity$ | async) || 0) > 0"
               class="indicator__value"
-              >{{ cart.quantity$ | async }}</span
+              >{{ shoppingCartService.quantity$ | async }}</span
             >
           </span>
 

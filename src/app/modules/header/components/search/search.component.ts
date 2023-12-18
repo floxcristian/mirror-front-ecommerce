@@ -15,9 +15,6 @@ import { ToastrService } from 'ngx-toastr';
 // Rxjs
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, first } from 'rxjs/operators';
-// Services
-import { RootService } from '../../../../shared/services/root.service';
-import { CartService } from '../../../../shared/services/cart.service';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
@@ -25,7 +22,6 @@ import { isVacio } from '../../../../shared/utils/utilidades';
 import { SessionService } from '@core/states-v2/session.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ArticleService } from '@core/services-v2/article.service';
 // Directives
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
 // Models
@@ -38,11 +34,14 @@ import {
   ICategorySearch,
   ISuggestion,
 } from '@core/models-v2/article/article-response.interface';
-// Components
+import { ArticleService } from '@core/services-v2/article.service';
+import { CartService } from '@core/services-v2/cart.service';
+import { CustomerPreferenceStorageService } from '@core/storage/customer-preference-storage.service';
+import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
+import { PathStorageService } from '@core/storage/path-storage.service';
 import { DireccionDespachoComponent } from '../search-vin-b2b/components/direccion-despacho/direccion-despacho.component';
 import { ModalStoresComponent } from '../modal-stores/modal-stores.component';
-import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
-import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
+import { RootService } from '@shared/services/root.service';
 
 @Component({
   selector: 'app-header-search',
@@ -89,21 +88,20 @@ export class SearchComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private modalService: BsModalService,
-    public root: RootService,
     private toastr: ToastrService,
-    public cart: CartService,
     public menuCategorias: MenuCategoriasB2cService,
-    public localS: LocalStorageService,
     private logisticsService: LogisticsService,
-    private cartService: CartService,
     private readonly gtmService: GoogleTagManagerService,
+    public readonly root: RootService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
     private readonly geolocationService: GeolocationServiceV2,
+    private readonly pathStorage: PathStorageService,
+    private readonly customerPreferenceStorage: CustomerPreferenceStorageService,
+    private readonly customerPreferenceService: CustomerPreferenceService,
     private readonly articleService: ArticleService,
-    private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
-    private readonly customerPreferenceService: CustomerPreferenceService
+    public readonly shoppingCartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -234,8 +232,8 @@ export class SearchComponent implements OnInit, OnDestroy {
     }
   }
 
-  async validarCuenta(): Promise<void> {
-    this.localS.set('ruta', ['/', 'mi-cuenta', 'seguimiento']);
+  async validarCuenta() {
+    this.pathStorage.set(['/', 'mi-cuenta', 'seguimiento']);
     this.router.navigate(['/mi-cuenta', 'seguimiento']);
   }
 
@@ -259,8 +257,10 @@ export class SearchComponent implements OnInit, OnDestroy {
       const direccionDespacho = res;
       this.direccion = direccionDespacho;
       const preferences = this.customerPreferenceStorage.get();
-      preferences.deliveryAddress = direccionDespacho;
-      this.customerPreferenceStorage.set(preferences);
+      if (preferences) {
+        preferences.deliveryAddress = direccionDespacho;
+        this.customerPreferenceStorage.set(preferences);
+      }
     });
   }
 
@@ -292,7 +292,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       next: (selectedStore) => {
         console.log('tiendaSeleccionada 2');
         this.selectedStore = selectedStore;
-        this.cartService.calc();
+        this.shoppingCartService.calc();
         if (selectedStore.isChangeToNearestStore) {
           setTimeout(() => {
             if (this.menuTienda) this.menuTienda.open();

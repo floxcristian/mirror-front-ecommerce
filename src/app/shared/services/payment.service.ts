@@ -137,18 +137,6 @@ export class PaymentService {
 
   /**
    * @author José Espinoza
-   * @description Cuando el cliente inicia pago en mercado pago y presiona "Anular pago y volver al comercio"
-   * debiese ejecutarse este método
-   * @param buy_order
-   */
-  anularInicioNoPagoMercadoPago(buy_order: any) {
-    return this.http.post(`${environment.apiImplementosPagos}mpago/anular`, {
-      buy_order: buy_order,
-    });
-  }
-
-  /**
-   * @author José Espinoza
    * @description Obtiene el carro del buy order del external reference, ejemplo: 0702c7b5-b9e7-4ed1-b4b6-70e0eb422525|605dff933d425329c87480b7
    * @param buy_order
    */
