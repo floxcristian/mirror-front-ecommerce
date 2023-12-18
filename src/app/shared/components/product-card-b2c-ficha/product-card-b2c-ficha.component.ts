@@ -8,8 +8,6 @@ import {
   TemplateRef,
   Output,
 } from '@angular/core';
-import { CartService } from '../../services/cart.service';
-import { Product, ProductOrigen } from '../../interfaces/product';
 import { WishlistService } from '../../services/wishlist.service';
 import { CompareService } from '../../services/compare.service';
 import { QuickviewService } from '../../services/quickview.service';
@@ -27,6 +25,8 @@ import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
+import { IShoppingCartProductOrigin } from '@core/models-v2/cart/shopping-cart.interface';
+import { CartService } from '@core/services-v2/cart.service';
 
 @Component({
   selector: 'app-product-card-b2c-ficha',
@@ -164,30 +164,25 @@ export class ProductCardB2cFichaComponent implements OnInit {
     if (this.addingToCart) {
       return;
     }
-    //FIXME: ARREGLAR CARRITO
-    // this.productData.origen = {} as ProductOrigen;
 
-    // if (this.origen) {
-    //   // Seteamos el origen de donde se hizo click a add cart.
-    //   this.productData.origen.origen = this.origen[0] ? this.origen[0] : '';
-    //   this.productData.origen.subOrigen = this.origen[1] ? this.origen[1] : '';
-    //   this.productData.origen.seccion = this.origen[2] ? this.origen[2] : '';
-    //   this.productData.origen.recomendado = this.origen[3]
-    //     ? this.origen[3]
-    //     : '';
-    //   this.productData.origen.ficha = false;
-    //   this.productData.origen.cyber = this.productData.cyber
-    //     ? this.productData.cyber
-    //     : 0;
-    // }
+    if (this.origen) {
+      // Seteamos el origen de donde se hizo click a add cart.
+      const origin: IShoppingCartProductOrigin = {
+        origin: this.origen[0] ? this.origen[0] : '',
+        subOrigin: this.origen[1] ? this.origen[1] : '',
+        section: this.origen[2] ? this.origen[2] : '',
+        recommended: this.origen[3],
+        sheet: false,
+        cyber: this.productData.cyber ? this.productData.cyber : 0,
+      };
+      this.productData.origin = origin;
+    }
 
-    // this.addingToCart = true;
-    // this.cart.add(this.productData, 1).subscribe({
-    //   complete: () => {
-    //     this.addingToCart = false;
-    //     this.cd.markForCheck();
-    //   },
-    // });
+    this.addingToCart = true;
+    this.cart.add(this.productData, 1).finally(() => {
+      this.addingToCart = false;
+      this.cd.markForCheck();
+    });
   }
 
   addToWishlist(): void {
@@ -243,7 +238,8 @@ export class ProductCardB2cFichaComponent implements OnInit {
    * @return
    */
   setOrigenBeforeFicha() {
-    this.cart.setOrigenHistory(this.origen);
+    // FIXME: falta servicio
+    // this.cart.setOrigenHistory(this.origen);
   }
 
   porcentaje_descuento() {
