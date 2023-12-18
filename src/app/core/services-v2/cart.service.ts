@@ -27,6 +27,7 @@ import { IRemoveGroupRequest } from '@core/models-v2/requests/cart/removeGroup.r
 import { ResponseApi } from '@shared/interfaces/response-api';
 import { RootService } from '@shared/services/root.service';
 import { IValidateShoppingCartStockResponse } from '@core/models-v2/cart/validate-stock-response.interface';
+import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -109,7 +110,7 @@ export class CartService {
     this.onAddingMovilButtonSubject$.asObservable();
 
   async add(
-    product: any,
+    product: IArticle,
     quantity: number
   ): Promise<IShoppingCart | undefined> {
     // Sucursal
@@ -140,8 +141,8 @@ export class CartService {
         {
           sku: product.sku,
           quantity: (productoCarro.quantity || 0) + quantity,
-          origin: product.origen ? product.origen : null,
-          status: product.estado,
+          origin: product.origin ? product.origin : null,
+          // status: product.status,
         },
       ],
     };
@@ -154,7 +155,7 @@ export class CartService {
       this.CartData = response;
 
       const productoCart: IShoppingCartProduct = {
-        name: product.nombre,
+        name: product.name,
         sku: product.sku,
         quantity: quantity,
         image: this.root.getUrlImagenMiniatura150(product),
