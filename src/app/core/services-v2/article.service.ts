@@ -1,5 +1,5 @@
 // Angular
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   IArticleResponse,
@@ -144,10 +144,19 @@ export class ArticleService {
     branchCode: string;
     quantityToSuggest: number;
   }): Observable<IArticleResponse[]> {
+    let httpParams = new HttpParams();
+    for (const sku of params.skus) {
+      httpParams = httpParams.append('skus[]', sku);
+    }
+    httpParams = httpParams
+      .append('documentId', params.documentId)
+      .append('branchCode', params.branchCode)
+      .append('quantityToSuggest', params.quantityToSuggest);
+
     return this.http.get<IArticleResponse[]>(
       `${API_ARTICLE}/suggestion/article-suggestions`,
       {
-        params,
+        params: httpParams,
       }
     );
   }

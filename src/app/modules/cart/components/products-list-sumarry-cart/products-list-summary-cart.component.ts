@@ -2,6 +2,7 @@ import { Component, OnInit, Input, PLATFORM_ID, Inject } from '@angular/core';
 import { ProductCart } from '../../../../shared/interfaces/cart-item';
 import { RootService } from '../../../../shared/services/root.service';
 import { isPlatformBrowser } from '@angular/common';
+import { IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
 
 @Component({
   selector: 'app-products-list-summary-cart',
@@ -9,7 +10,7 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./products-list-summary-cart.component.scss'],
 })
 export class ProductsListSummaryCartComponent implements OnInit {
-  productoList: ProductCart[] | any[] = [];
+  productoList: IShoppingCartProduct[] | any[] = [];
   innerWidth!: number;
 
   @Input() set products(value: any) {

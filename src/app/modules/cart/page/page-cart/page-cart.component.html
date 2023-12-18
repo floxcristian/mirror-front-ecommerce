@@ -72,14 +72,14 @@
                         [routerLink]="
                           root.product(
                             item.ProductCart.sku,
-                            item.ProductCart.nombre
+                            item.ProductCart.name
                           )
                         "
                       >
                         <img
                           class="cart-img lazyload"
                           [src]="root.getUrlImagenMiniatura(item.ProductCart)"
-                          [alt]="item.ProductCart.nombre"
+                          [alt]="item.ProductCart.name"
                         />
                       </a>
                     </div>
@@ -87,12 +87,12 @@
                     <div class="col-9 col-md-8">
                       <div class="col-sm-12">
                         <span class="text-marca">
-                          {{ item.ProductCart.marca }}
+                          {{ item.ProductCart.brand }}
                         </span>
                       </div>
                       <div class="col-sm-12">
                         <span class="product-title">
-                          {{ item.ProductCart.nombre | titlecase }}
+                          {{ item.ProductCart.name | titlecase }}
                         </span>
                       </div>
                       <div class="col-sm-12">
@@ -107,12 +107,12 @@
                         <div
                           class="item"
                           [ngClass]="{
-                            active: item.ProductCart.entregas.despacho
+                            active: item.ProductCart.delivery?.homeDelivery
                           }"
                         >
                           <i
                             [ngClass]="
-                              item.ProductCart.entregas.despacho
+                              item.ProductCart.delivery?.homeDelivery
                                 ? 'fas fa-truck text-success me-1'
                                 : 'fas fa-truck me-1'
                             "
@@ -122,12 +122,12 @@
                         <div
                           class="item"
                           [ngClass]="{
-                            active: item.ProductCart.entregas.retiroTienda
+                            active: item.ProductCart.delivery?.pickup
                           }"
                         >
                           <i
                             [ngClass]="
-                              item.ProductCart.entregas.retiroTienda
+                              item.ProductCart.delivery?.pickup
                                 ? 'fas fa-store text-success me-1'
                                 : 'fas fa-store me-1'
                             "
@@ -160,12 +160,12 @@
                         <div
                           class="item"
                           [ngClass]="{
-                            active: item.ProductCart.entregas.despacho
+                            active: item.ProductCart.delivery?.homeDelivery
                           }"
                         >
                           <i
                             [ngClass]="
-                              item.ProductCart.entregas.despacho
+                              item.ProductCart.delivery?.homeDelivery
                                 ? 'fas fa-truck text-success me-1'
                                 : 'fas fa-truck me-1'
                             "
@@ -175,12 +175,12 @@
                         <div
                           class="item"
                           [ngClass]="{
-                            active: item.ProductCart.entregas.retiroTienda
+                            active: item.ProductCart.delivery?.pickup
                           }"
                         >
                           <i
                             [ngClass]="
-                              item.ProductCart.entregas.retiroTienda
+                              item.ProductCart.delivery?.pickup
                                 ? 'fas fa-store text-success me-1'
                                 : 'fas fa-store me-1'
                             "
@@ -218,10 +218,10 @@
                         >{{
                           (!isVacio(user.preferences.iva)
                             ? (user.preferences.iva
-                                ? item.ProductCart.precio
-                                : item.ProductCart.precio / (1 + IVA)) *
+                                ? item.ProductCart.price
+                                : item.ProductCart.price / (1 + IVA)) *
                               item.quantity
-                            : item.ProductCart.precio * item.quantity
+                            : item.ProductCart.price * item.quantity
                           ) | currencyFormat
                         }}
                         <em>
@@ -491,7 +491,7 @@
                   <tr style="font-size: 14px; color: #0d61bb">
                     <th>Total</th>
                     <td class="fw-bold">
-                      {{ cart.total$ | async | currencyFormat }}
+                      {{ shoppingCartService.total$ | async | currencyFormat }}
                     </td>
                   </tr>
                 </table>
