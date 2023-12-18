@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ProductCart } from '../../../../shared/interfaces/cart-item';
 import { Router } from '@angular/router';
 import { ChilexpressService } from '../../services/chilexpress.service';
+import { IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
 
 @Component({
   selector: 'app-detalle-carro-productos-oc',
@@ -11,16 +11,16 @@ import { ChilexpressService } from '../../services/chilexpress.service';
 })
 export class DetalleCarroProductosOcComponent implements OnInit {
   @Input() show = true;
-  @Input() productCart!: ProductCart[];
+  @Input() productCart!: IShoppingCartProduct[];
   @Input() CartSession: any;
   @Input() total: any;
   @Input() seeProducts = true;
   @Input() seePrices = true;
   @Output() sinStock: EventEmitter<any> = new EventEmitter();
   @Output() fechas: EventEmitter<any> = new EventEmitter();
-  products: ProductCart[] = [];
+  products: IShoppingCartProduct[] = [];
 
-  shippingNotSupported: ProductCart[] = [];
+  shippingNotSupported: IShoppingCartProduct[] = [];
   itemSubscription!: Subscription;
   shippingTypeSubs!: Subscription;
   shippinGroup: any = {};
@@ -55,9 +55,9 @@ export class DetalleCarroProductosOcComponent implements OnInit {
     this.products.forEach((item) => {
       let json = {
         sku: item.sku,
-        nombre: item.nombre,
-        peso: item.peso,
-        cantidad: item.cantidad,
+        name: item.name,
+        weight: item.weight,
+        quantity: item.quantity,
         esVentaVerde: false,
         proveedor: null,
       };
@@ -76,7 +76,7 @@ export class DetalleCarroProductosOcComponent implements OnInit {
     });
     this.fechas.emit(array_flete);
     this.productosCarro = consulta.data.productosCarro;
-    let cumple: any[] = [];
+    let cumple: IShoppingCartProduct[] = [];
     //filtro para los productos que cumple
     this.productosCarro.forEach((item: any) => {
       let prod = this.products.filter((resp) => resp.sku === item.sku);

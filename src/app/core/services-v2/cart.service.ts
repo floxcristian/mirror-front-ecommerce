@@ -10,7 +10,7 @@ import {
 import { environment } from '@env/environment';
 import { GeolocationServiceV2 } from './geolocation/geolocation.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subject, lastValueFrom } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { ShoppingCartStorageService } from '@core/storage/shopping-cart-storage.service';
@@ -27,6 +27,8 @@ import { IRemoveGroupRequest } from '@core/models-v2/requests/cart/removeGroup.r
 import { ResponseApi } from '@shared/interfaces/response-api';
 import { RootService } from '@shared/services/root.service';
 import { IValidateShoppingCartStockResponse } from '@core/models-v2/cart/validate-stock-response.interface';
+import { IShoppingCartDetail } from '@core/models-v2/cart/shopping-cart-detail.interface';
+import { StorageKey } from '@core/storage/storage-keys.enum';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -341,6 +343,72 @@ export class CartService {
       });
   }
 
+  getOneById(id: string): Observable<IShoppingCartDetail> {
+    const url = `${API_CART}/${id}`;
+    return this.http.get<IShoppingCartDetail>(url);
+  }
+
+  addLista(products: IShoppingCartProduct[]) {
+    // Sucursal
+    console.log('getSelectedStore desde addLista');
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    const sucursal = tiendaSeleccionada.code;
+
+    const cartSession = this.shoppingCartStorage.get();
+    if (!cartSession) {
+      return;
+    }
+    let productoCarro;
+    const productos: any[] = [];
+
+    (products || []).forEach((producto) => {
+      if (cartSession == null) {
+        productoCarro = { quantity: 0 };
+      } else {
+        productoCarro = (cartSession.products || []).find(
+          (item) => item.sku === producto.sku
+        ) || { quantity: 0 };
+      }
+
+      productos.push({
+        sku: producto.sku,
+        quantity: (productoCarro.quantity || 0) + 1,
+        origin: producto.origin ? producto.origin : null,
+        status: '',
+      });
+    });
+
+    const usuario = this.sessionService.getSession();
+    // this.root.getDataSesionUsuario();
+
+    if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
+
+    const data = {
+      usuario: usuario.username,
+      documentId: usuario.documentId,
+      branch: sucursal,
+      products: productos,
+    };
+
+    return this.http.post<IShoppingCart>(`${API_CART}/article`, data).pipe(
+      map((r) => {
+        this.CartData = r;
+
+        this.data.products = this.CartData.products;
+        /* se limpia OV cargada */
+        this.purchaseOrderLoadedStorage.remove();
+        this.save();
+        this.calc();
+
+        return r;
+      }),
+      catchError((e) => {
+        this.toastrServise.error(e.message);
+        throw new Error(e.message);
+      })
+    );
+  }
+
   updateShippingType(type: any) {
     this.shippingTypeSubject$.next(type);
     this.shippingType = type;
@@ -640,6 +708,18 @@ export class CartService {
         shoppingCartId: params.shoppingCartId,
       }
     );
+  }
+
+  saveTemp(params: {
+    shoppingCartId: string;
+    documentId: string;
+    email: string;
+  }) {
+    return this.http.post(`${API_CART}/save-temp`, {
+      shoppingCartId: params.shoppingCartId,
+      documentId: params.documentId,
+      email: params.email,
+    });
   }
 
   prepay(params: {

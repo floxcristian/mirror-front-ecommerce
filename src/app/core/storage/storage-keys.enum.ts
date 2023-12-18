@@ -25,4 +25,5 @@ export enum StorageKey {
   wishlistItems = 'wishlistItems',
   utm_campaign = 'utm_campaign',
   tokens = '_t',
+  idCarro = 'id_carro',
 }

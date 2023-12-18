@@ -10,12 +10,7 @@ import {
   Inject,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CartService as CartServiceOld } from '../../../../shared/services/cart.service';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
-import {
-  CartData,
-  ProductCart,
-} from '../../../../shared/interfaces/cart-item';
 import { Usuario } from '../../../../shared/interfaces/login';
 import {
   FormGroup,
@@ -24,18 +19,10 @@ import {
   FormControl,
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { ResponseApi } from '../../../../shared/interfaces/response-api';
-import {
-  PaymentParams,
-  TransBankToken,
-} from '../../../../shared/interfaces/payment-method';
+import { TransBankToken } from '../../../../shared/interfaces/payment-method';
 import { PaymentService } from '../../../../shared/services/payment.service';
-import { environment } from '@env/environment';
 import { filter } from 'rxjs/internal/operators/filter';
-import {
-  ShippingAddress,
-  ShippingStore,
-} from '../../../../shared/interfaces/address';
+import { ShippingAddress } from '../../../../shared/interfaces/address';
 import {
   calculaIcono,
   dataURLtoFile,
@@ -66,11 +53,21 @@ import { UserRoleType } from '@core/enums/user-role-type.enum';
 import { IKhipuBank } from '@core/models-v2/payment-method/khipu-bank.interface';
 import { InvoiceType } from '@core/enums/invoice-type.enum';
 import { IValidateShoppingCartStockLineResponse } from '@core/models-v2/cart/validate-stock-response.interface';
-import { PaymentMethodType } from '@core/enums/payment-method.enum';
+import {
+  PaymentMethodCodeType,
+  PaymentMethodType,
+} from '@core/enums/payment-method.enum';
 import { CartService } from '@core/services-v2/cart.service';
 import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
+import { PaymentMethodPurchaseOrderRequestService } from '@core/services-v2/payment-method-purchase-order-request.service';
+import { DocumentType } from '@core/enums/document-type.enum';
+import { CustomerService } from '@core/services-v2/customer.service';
+import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
+import { ICreateGuest } from '@core/models-v2/customer/create-guest.interface';
+import { environment } from '@env/environment';
+import { IInvitado } from '@core/models-v2/storage/invitado.interface';
 
 declare const $: any;
 export interface Archivo {
@@ -106,10 +103,6 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   bloqueoCliente: any;
   clienteBloqueado = false;
   getBloqueoError = false;
-  urlApiWebPay = environment.apiImplementosPagos + 'webpay/pagar';
-  urlPaymentVoucher = environment.urlPaymentVoucher + '?estado=confirmado';
-  urlPaymentCanceled = environment.urlPaymentCanceled + '?estado=anulado';
-  urlNotificationPayment = environment.apiShoppingCart + 'generar-ov-b2b';
   paymentWebpayForm = false;
   @ViewChild('bankmodal', { static: false }) content: any;
   @ViewChild('formWp', { static: false }) tref!: ElementRef;
@@ -118,7 +111,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   alertCartShow = false;
   rejectedCode!: number | null;
   btnWebpayPost = false;
-  invitado: Usuario;
+  invitado: IInvitado;
   formVisita!: FormGroup;
   validado!: boolean;
   innerWidth: number;
@@ -159,14 +152,15 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   userRoleType = UserRoleType;
   invoiceType = InvoiceType;
 
+  purchaseOrderId!: string;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    public cart: CartServiceOld,
     private localS: LocalStorageService,
     private fb: FormBuilder,
     private modalService: BsModalService,
-    private toast: ToastrService,
+    private toastr: ToastrService,
     private paymentService: PaymentService,
     private logistics: LogisticsService,
     private clientsService: ClientsService,
@@ -175,12 +169,13 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     // Services V2
     private readonly sessionStorage: SessionStorageService,
     private readonly invitadoStorage: InvitadoStorageService,
-    private readonly toastr: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly geolocationApiService: GeolocationApiService,
     private readonly paymentMethodService: PaymentMethodService,
-    private readonly cartService: CartService,
+    private readonly paymentMethodPurchaseOrderRequestService: PaymentMethodPurchaseOrderRequestService,
+    public readonly cartService: CartService,
+    private readonly customerService: CustomerService,
     private readonly customerAddressService: CustomerAddressApiService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
@@ -257,7 +252,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
           this.cargandoGiros = false;
         },
         (error) => {
-          this.toast.error('Ha ocurrido un error al obtener los giros.');
+          this.toastr.error('Ha ocurrido un error al obtener los giros.');
           this.cargandoGiros = false;
         }
       );
@@ -299,7 +294,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       .subscribe(() => this.validForm());
 
     this.fechas_entregas = this.localS.get(StorageKey.fechas);
-    this.pagoKhipu = this.localS.get('Metodo') || null;
+    this.pagoKhipu = this.localS.get(StorageKey.Metodo) || null;
     this.esBoleta =
       this.userSession?.businessLine == '' ||
       this.userSession?.businessLine == null;
@@ -338,15 +333,15 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.cartService.load();
     this.cartService.total$.subscribe((r) => {
       this.totalCarro = r || 0;
-      this.formOv.get('monto')?.setValue(r);
-      this.formOv.get('folio')?.setValue(this.idArchivo.split('-')[0]);
+      this.formOv.get('amount')?.setValue(r);
+      this.formOv.get('number')?.setValue(this.idArchivo.split('-')[0]);
     });
     /* Se setean datos de la OC cargados en localStorage */
-    const OC: any = this.localS.get('ordenCompraCargada');
+    const OC: any = this.localS.get(StorageKey.ordenCompraCargada);
     if (!isVacio(OC)) {
       this.archivo = this.cargaArchivo(dataURLtoFile(OC.pdf, OC.nombre));
-      this.formOv.get('folio')?.setValue(OC.numero);
-      this.formOv.get('monto')?.setValue(OC.total);
+      this.formOv.get('number')?.setValue(OC.numero);
+      this.formOv.get('amount')?.setValue(OC.total);
     }
 
     /* Se cargan los centros de costo */
@@ -373,7 +368,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     // LOGICA PARA OBTENER DESPACHO A MOSTRAR
     switch (this.cartSession.shipment?.deliveryMode) {
       case 'TIENDA':
-      case 'pickup': //RETIRO EN TIENDA
+      case DeliveryModeType.PICKUP: //RETIRO EN TIENDA
         //se revisa si existe la informacion en el localstor  age desde el paso anterior
         this.tiendaRetiro = this.localS.get(StorageKey.tiendaRetiro);
 
@@ -383,7 +378,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         }
         break;
       case 'EXP': //DESPACHO DOMICILIO
-      case 'delivery':
+      case DeliveryModeType.DELIVERY:
       default:
         if (this.cartSession.customer?.documentId != '0') {
           //si está la informacion del cliente, se busca la direccion del usuario indicada en el despacho
@@ -446,8 +441,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         }
       },
       error: (err) => {
-        console.log(err);
-        this.toast.error(
+        console.error(err);
+        this.toastr.error(
           'Ha ocurrido un error en servicio al obtener las direccion de la tienda'
         );
       },
@@ -469,7 +464,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         }
       },
       error: () => {
-        this.toast.error(
+        this.toastr.error(
           'Ha ocurrido un error en servicio al obtener las direcciones'
         );
       },
@@ -487,15 +482,46 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   async setMethodPayment() {
+    const documentId = this.sessionService.getSession().documentId ?? '';
     const username = this.sessionService.getSession().username ?? '';
     this.paymentMethodService.getPaymentMethods({ username }).subscribe({
       next: (data) => {
-        this.paymentMethods = data;
-        if (this.paymentMethods.length > 0)
-          this.activepaymentMethod(this.paymentMethods[0]);
+        const hasOC = data.some((r) => r.code === PaymentMethodType.OC);
+        if (hasOC) {
+          this.customerService.getCustomerBlocked(documentId).subscribe({
+            next: (resp) => {
+              if (resp.isBlocked) {
+                this.bloqueoCliente = 'Línea de crédito bloqueada';
+                this.clienteBloqueado = true;
+                this.getBloqueoError = true;
+                data = data.filter((r) => r.code !== 'OC');
+              }
+              this.paymentMethods = data;
+
+              if (this.paymentMethods.length > 0)
+                this.activepaymentMethod(this.paymentMethods[0]);
+            },
+            error: (e) => {
+              console.error(e);
+              this.bloqueoCliente = 'No pudo verificarse línea de crédito';
+              this.clienteBloqueado = true;
+              this.getBloqueoError = true;
+              data = data.filter((r) => r.code !== 'OC');
+              this.paymentMethods = data;
+
+              if (this.paymentMethods.length > 0)
+                this.activepaymentMethod(this.paymentMethods[0]);
+            },
+          });
+        } else {
+          this.paymentMethods = data;
+
+          if (this.paymentMethods.length > 0)
+            this.activepaymentMethod(this.paymentMethods[0]);
+        }
       },
       error: (err) => {
-        console.log(err);
+        console.error(err);
         this.toastr.error('No se pudo cargar los métodos de pago');
       },
     });
@@ -503,12 +529,12 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   formOV() {
     this.formOv = this.fb.group({
-      user_role: this.userSession?.userRole,
-      id: this.cartSession._id,
+      userRole: this.userSession?.userRole,
+      shoppingCartId: this.cartSession._id!.toString(),
       file: [null],
-      centroCosto: [''],
-      folio: ['', Validators.required],
-      monto: ['', Validators.required],
+      costCenter: [''],
+      number: ['', Validators.required],
+      amount: ['', Validators.required],
     });
   }
 
@@ -562,80 +588,38 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   private async finishPaymentOv(): Promise<void> {
-    try {
-      this.loadingText = 'Generando orden de compra...';
-      // FIXME: enviar direccion
-      // genera la orden de compra
-      const data = {
-        id: this.cartSession._id,
-        usuario: this.userSession?.email,
-        tipo: 2,
-        formaPago: 'OC',
-        web: 1,
-        proveedorPago: 'Orden de compra',
-        /*documentType: this.documentType,
-        giro: this.selectedGiro || null,
-        calle: this.formDireccion.value.calle || null,
-        numero: this.formDireccion.value.numero || null,
-        comuna: this.formDireccion.value.comuna || null*/
-      };
+    let params = {
+      status: 'approved',
+      paymentMethod: 'OC',
+      shoppingCartId: this.cartSession._id!.toString(),
+      shoppingCartNumber: this.cartSession.cartNumber,
+    };
 
-      this.loadingPage = true;
-      //modificar pasos
-
-      let r: any = await this.cartService
-        .generaOrdenDeCompra(data)
-        .toPromise();
-
-      this.loadingPage = false;
-      this.localS.remove('ordenCompraCargada');
-      let cart_id = this.cartSession._id;
-      if (r.error) {
-        this.alertCartShow = true;
-        this.alertCart = {
-          detalleMensaje: `No se ha podido completar esta compra, favor volver a intentar. De persistir el problema comunicarse con nosotros.`,
-          mostrarBotonVolverIntentar: true,
-          proceso: 'Anulado',
-        };
-        this.toast.error(r.msg);
-        this.paymentService.sendEmailError(
-          `A ocurrido error para orden decompra B2B: <br> ${JSON.stringify(
-            r
-          )} <br><br> Carro: <br> ${cart_id}`,
-          `[B2B ${window.location.hostname}] Error - Generando OV para usuario B2B con Orden de Compra`
-        );
-
-        return;
-      }
-
-      if (!r.error) {
-        let params = {
-          site_id: 'OC',
-          external_reference: cart_id,
-          status: 'approved',
-        };
-
-        this.cartService.load();
-        if (this.userSession?.userRole === UserRoleType.SUPERVISOR) {
-          await this.cart.confirmarOV(this.cartSession._id).toPromise();
-          this.router.navigate(
-            ['/', 'carro-compra', 'gracias-por-tu-compra'],
-            { queryParams: { ...params } }
-          );
-        } else
-          this.router.navigate(
-            ['/', 'carro-compra', 'gracias-por-tu-compra'],
-            { queryParams: { ...params } }
-          );
-      }
-    } catch (e) {
-      console.log(e);
-      this.paymentService.sendEmailError(
-        `A ocurrido error para orden decompra B2B: <br> ${JSON.stringify(
-          e
-        )} <br><br> Carro: <br> ${this.cartSession._id}`,
-        `[B2B ${window.location.hostname}] Error - Generando OV para usuario B2B con Orden de Compra`
-      );
+    this.cartService.load();
+    if (!params.shoppingCartNumber) {
+      params.shoppingCartNumber = this.cartSession.cartNumber;
+    }
+    if (this.userSession?.userRole === UserRoleType.SUPERVISOR) {
+      this.paymentMethodPurchaseOrderRequestService
+        .approve({
+          shoppingCartId: this.cartSession._id!.toString(),
+        })
+        .subscribe({
+          next: (r) => {
+            this.purchaseOrderId = r._id.toString();
+            if (!params.shoppingCartNumber) {
+              params.shoppingCartNumber = r.shoppingCartNumber;
+            }
+            this.router.navigate(
+              ['/', 'carro-compra', 'gracias-por-tu-compra'],
+              { queryParams: { ...params } }
+            );
+          },
+          error: (e) => {
+            console.error(e);
+            this.toastr.error('No se pudo aprobar la orden de compra');
+          },
+        });
     }
   }
 
@@ -657,7 +641,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         this.loadingPage = false;
 
         if (r.error) {
-          this.toast.error(r.msg);
+          this.toastr.error(r.msg);
           return;
         }
 
@@ -668,48 +652,51 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         ]);
       },
       (e) => {
-        this.toast.error('Ha ocurrido un error al generar la cotización');
+        this.toastr.error('Ha ocurrido un error al generar la cotización');
       }
     );
   }
 
   //  Sube documento y genera la solicitud
   purchaseRequestAll() {
-    this.cart.subeOrdenDeCompra(this.formOv.value).subscribe((r) => {
-      this.purchaseRequest();
-    });
+    this.paymentMethodPurchaseOrderRequestService
+      .upload(this.formOv.value)
+      .subscribe({
+        next: (r) => {
+          this.purchaseOrderId = r._id.toString();
+          this.purchaseRequest();
+        },
+        error: (e) => {
+          console.error(e);
+          this.toastr.error('No se pudo subir la orden de compra');
+        },
+      });
   }
 
   purchaseRequest() {
-    const data = {
-      id: this.cartSession._id,
-      usuario: this.userSession?.username,
-      tipo: 2,
-      formaPago: 'OC',
-    };
-
     this.loadingPage = true;
     this.loadingText = 'Generando solicitud de compra...';
-    this.cart.purchaseRequest(data).subscribe(
-      (r: any) => {
-        this.loadingPage = false;
+    this.paymentMethodPurchaseOrderRequestService
+      .requestApproval({
+        shoppingCartId: this.cartSession._id!.toString(),
+        salesDocumentType: DocumentType.SALES_ORDER,
+      })
+      .subscribe({
+        next: () => {
+          this.loadingPage = false;
 
-        if (r.error) {
-          this.toast.error(r.msg);
-
-          return;
-        }
-        this.cartService.load();
-        this.router.navigate([
-          '/',
-          'carro-compra',
-          'comprobante-de-solicitud',
-        ]);
-      },
-      (e) => {
-        this.toast.error('Ha ocurrido un error al generar la orden de venta');
-      }
-    );
+          this.cartService.load();
+          this.router.navigate([
+            '/',
+            'carro-compra',
+            'comprobante-de-solicitud',
+          ]);
+        },
+        error: (e) => {
+          console.error(e);
+          this.toastr.error('No se pudo generar solicitud de compra');
+        },
+      });
   }
 
   setDocumentType(type: string) {
@@ -740,7 +727,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       invitado.carro_id = this.cartSession._id || '';
       invitado.tipoEnvio =
         this.cartSession.shipment?.deliveryMode === 'VEN- DPCLI' ||
-        this.cartSession.shipment?.deliveryMode === 'delivery'
+        this.cartSession.shipment?.deliveryMode === DeliveryModeType.DELIVERY
           ? 'DES'
           : 'RC';
       // this.localS.remove('invitado');
@@ -811,38 +798,72 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       }
 
       this.invitado.giro = this.selectedGiro || '';
-      let respuesta: any = await this.cart
-        .saveInvitado(this.invitado)
-        .toPromise();
 
-      if (!respuesta.error) {
-        let user: any = this.invitado;
-        let objeto = {
-          carro_id: user.carro_id,
-          rut: user.rut,
-          recid: respuesta.data,
-          email: user.email,
-        };
+      const createGuestRequest: ICreateGuest = {
+        email: this.invitado.email ?? '',
+        documentId: this.invitado.rut ?? '',
+        documentType: environment.country.toUpperCase(),
+        firstName: this.invitado.first_name ?? '',
+        lastName: this.invitado.last_name ?? '',
+        phone: this.invitado.phone ?? '',
+        address: {
+          location: this.invitado.comunaCompleta ?? '',
+          city: this.invitado.comunaCompleta
+            ? this.invitado.comunaCompleta.split('@')[0]
+            : 'SAN BERNARDO',
+          region: this.invitado.comunaCompleta
+            ? this.invitado.comunaCompleta.split('@')[2]
+            : '13',
+          province: this.invitado.comunaCompleta
+            ? this.invitado.comunaCompleta.split('@')[1]
+            : '134',
+          number: this.invitado.numero ?? '',
+          street: this.invitado.calle ?? '',
+          departmentOrHouse: '',
+          reference: '',
+          latitude: 0,
+          longitude: 0,
+        },
+      };
 
-        let resp: any = await this.cart.saveCarroTemp(objeto).toPromise();
+      this.customerService.createGuest(createGuestRequest).subscribe({
+        next: () => {
+          let user = this.invitado;
 
-        if (!resp.error) {
-          let userCambio = this.sessionService.getSession();
-          // let userCambio: any = this.root.getDataSesionUsuario();
-          //userCambio._id = user.email;
-          userCambio.email = user.email;
-          userCambio.userRole = UserRoleType.B2C;
-          userCambio.documentId = user.rut;
-          userCambio.login_temp = true;
-          userCambio.firstName = this.formVisita.value.nombre || '';
-          userCambio.lastName = this.formVisita.value.apellido || '';
-          this.sessionStorage.set(userCambio);
-          // this.localS.set('usuario', userCambio);
-        }
-      }
+          this.cartService
+            .saveTemp({
+              shoppingCartId: user.carro_id.toString(),
+              documentId: user.rut,
+              email: user.email,
+            })
+            .subscribe({
+              next: () => {
+                let userCambio = this.sessionService.getSession();
+                // let userCambio: any = this.root.getDataSesionUsuario();
+                //userCambio._id = user.email;
+                userCambio.email = user.email;
+                userCambio.userRole = UserRoleType.B2C;
+                userCambio.documentId = user.rut;
+                userCambio.login_temp = true;
+                userCambio.firstName = this.formVisita.value.nombre || '';
+                userCambio.lastName = this.formVisita.value.apellido || '';
+                this.sessionStorage.set(userCambio);
+                // this.localS.set('usuario', userCambio);
+              },
+              error: (e) => {
+                console.error(e);
+                this.toastr.error(
+                  'No se pudo guardar datos temporales del carro'
+                );
+              },
+            });
+        },
+        error: (e) => {
+          console.error(e);
+          this.toastr.error('No puedo crearse el invitado');
+        },
+      });
     }
-
-    // FIXME: se debe actualizar giro si
   }
 
   async showRejectedMsg(query: any) {
@@ -917,17 +938,17 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         .setCentroCosto(request)
         .toPromise();
       if (!respuesta.error) {
-        this.toast.success('Centro de costo ingresado exitosamente.');
+        this.toastr.success('Centro de costo ingresado exitosamente.');
         let resp: any = await this.clientsService
           .getCentrosCosto(this.userSession?.documentId ?? '')
           .toPromise();
         if (!resp.error) {
           this.centrosCosto = resp.data;
-          this.formOv.controls['centroCosto'].setValue(request.codigo);
+          this.formOv.controls['costCenter'].setValue(request.codigo);
         }
         modal.hide();
       } else {
-        this.toast.error(respuesta.msg);
+        this.toastr.error(respuesta.msg);
         modal.hide();
       }
     });
@@ -991,7 +1012,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         shoppingCartId: this.cartSession._id!.toString(),
       });
     } catch (err) {
-      this.toast.error('Ha ocurrido un error al gestionar el pago.');
+      this.toastr.error('Ha ocurrido un error al gestionar el pago.');
       this.btnWebpayPost = false;
     }
   }
@@ -1016,7 +1037,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         shoppingCartId: this.cartSession._id!.toString(),
       });
     } catch (err) {
-      this.toast.error('Ha ocurrido un error al gestionar el pago.');
+      this.toastr.error('Ha ocurrido un error al gestionar el pago.');
       this.btnWebpayPost = false;
     }
   }
@@ -1026,8 +1047,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
    */
   async paymentKhipu(banco?: IKhipuBank) {
     try {
-      this.localS.set('Metodo', 'KHIP');
-      this.localS.set('id_carro', this.cartSession._id);
+      this.localS.set(StorageKey.Metodo, PaymentMethodCodeType.KHIPU);
+      this.localS.set(StorageKey.idCarro, this.cartSession._id);
       if (this.btnWebpayPost) {
         return;
       }
@@ -1045,7 +1066,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         bankName: banco ? banco.name : '',
       });
     } catch (err) {
-      this.toast.error('Ha ocurrido un error al gestionar el pago.');
+      this.toastr.error('Ha ocurrido un error al gestionar el pago.');
       this.loadkhipu = false;
       this.btnWebpayPost = false;
     }
@@ -1062,7 +1083,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         this.archivo !== undefined &&
         !this.extensionValida(this.archivo?.extension || '')
       ) {
-        this.toast.error('Debe seleccionar un archivo de tipo PDF.');
+        this.toastr.error('Debe seleccionar un archivo de tipo PDF.');
         return;
       }
       await this.updateCartAndUserTurn();
@@ -1074,14 +1095,24 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       const data: any = this.formOv.value;
       data.file = this.archivo !== undefined ? this.archivo?.archivo : null;
 
-      await this.cart.subeOrdenDeCompra(this.formOv.value).toPromise();
-      await this.updateCartAndUserTurn();
-      await this.prepararCarroPrePago();
-      await this.finishPaymentOv();
-      // aqui se pone el cambio para la mensajeria
-      this.loadingPage = false;
+      this.paymentMethodPurchaseOrderRequestService
+        .upload(this.formOv.value)
+        .subscribe({
+          next: async (r) => {
+            this.purchaseOrderId = r._id.toString();
+            await this.updateCartAndUserTurn();
+            await this.prepararCarroPrePago();
+            await this.finishPaymentOv();
+            // aqui se pone el cambio para la mensajeria
+            this.loadingPage = false;
+          },
+          error: (e) => {
+            console.error(e);
+            this.toastr.error('No se pudo subir la orden de compra');
+          },
+        });
     } catch (err) {
-      this.toast.error('Ha ocurrido un error al gestionar el pago.');
+      this.toastr.error('Ha ocurrido un error al gestionar el pago.');
       this.loadingPage = false;
     }
   }
@@ -1098,7 +1129,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         this.archivo !== undefined &&
         !this.extensionValida(this.archivo?.extension || '')
       ) {
-        this.toast.error('Debe seleccionar un archivo de tipo PDF.');
+        this.toastr.error('Debe seleccionar un archivo de tipo PDF.');
         return;
       }
 
@@ -1121,19 +1152,22 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         this.cd_ver = true;
       }
 
-      if (!data.credito) {
-        this.cart.subeOrdenDeCompra(data).subscribe((r) => {
-          this.purchaseRequest();
-        });
-      } else {
-        await this.cart.subeOrdenDeCompra(data).toPromise();
-      }
-
-      // aqui se pone el cambio para la mensajeria
+      this.paymentMethodPurchaseOrderRequestService.upload(data).subscribe({
+        next: (r) => {
+          this.purchaseOrderId = r._id.toString();
+          if (!data.credito) {
+            this.purchaseRequest();
+          }
+        },
+        error: (e) => {
+          console.error(e);
+          this.toastr.error('No se pudo subir la orden de compra');
+        },
+      });
 
       this.loadingPage = false;
     } catch (err) {
-      this.toast.error('Ha ocurrido un error al gestionar el pago.');
+      this.toastr.error('Ha ocurrido un error al gestionar el pago.');
       this.loadingPage = false;
     }
   }
@@ -1247,7 +1281,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         });
       },
       (error) => {
-        this.toast.error(error.error.msg);
+        this.toastr.error(error.error.msg);
       }
     );
   }
