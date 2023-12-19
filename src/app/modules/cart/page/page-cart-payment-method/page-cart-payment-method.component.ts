@@ -56,7 +56,6 @@ import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
-import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 import { PaymentMethodService } from '@core/services-v2/payment-method.service';
 import { IPaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
@@ -71,6 +70,8 @@ import { CartService } from '@core/services-v2/cart.service';
 import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
+import { GuestStorageService } from '@core/storage/guest-storage.service';
+import { IGuest } from '@core/models-v2/storage/guest.interface';
 
 declare const $: any;
 export interface Archivo {
@@ -174,7 +175,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionStorage: SessionStorageService,
-    private readonly invitadoStorage: InvitadoStorageService,
+    private readonly guestStorage: GuestStorageService,
     private readonly toastr: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
@@ -188,7 +189,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       : 900;
     this.formDefault();
     // this.invitado = this.localS.get('invitado');
-    this.invitado = this.invitadoStorage.get();
+    this.invitado = this.guestStorage.get() as IGuest;
     if (this.invitado) {
       this.formVisita.setValue({
         rut: this.invitado.rut,
@@ -735,20 +736,20 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       this.validado = true;
 
       // let invitado: any = this.localS.get('invitado');
-      let invitado = this.invitadoStorage.get();
-      invitado.rut = this.getValidRutFormat(this.formVisita.value.rut);
-      invitado.carro_id = this.cartSession._id || '';
-      invitado.tipoEnvio =
+      let invitado = this.guestStorage.get() as IGuest;
+      invitado.documentId = this.getValidRutFormat(this.formVisita.value.rut);
+      invitado.cartId = this.cartSession._id || '';
+      invitado.deliveryType =
         this.cartSession.shipment?.deliveryMode === 'VEN- DPCLI' ||
         this.cartSession.shipment?.deliveryMode === 'delivery'
           ? 'DES'
           : 'RC';
       // this.localS.remove('invitado');
-      this.invitadoStorage.remove();
+      this.guestStorage.remove();
       // this.localS.set('invitado', invitado);
-      this.invitadoStorage.set(invitado);
+      this.guestStorage.set(invitado);
       // this.invitado = this.localS.get('invitado');
-      this.invitado = this.invitadoStorage.get();
+      this.invitado = this.guestStorage.get() as IGuest;
       active_khipu = true;
     }
 
@@ -1343,24 +1344,24 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     };
 
     // let invitado: any = this.localS.get('invitado');
-    let invitado = this.invitadoStorage.get();
+    let invitado = this.guestStorage.get() as IGuest;
 
-    invitado.calle = direccion.calle;
-    invitado.comuna = direccion.comuna;
-    invitado.comunaCompleta = direccion.comunaCompleta;
-    invitado.numero = direccion.numero;
-    invitado.depto = direccion.depto ? direccion.depto : 0;
+    invitado.street = direccion.calle;
+    invitado.commune = direccion.comuna;
+    invitado.completeComune = direccion.comunaCompleta;
+    invitado.number = direccion.numero;
+    invitado.department = direccion.depto ? direccion.depto : 0;
 
     // this.localS.remove('invitado');
-    this.invitadoStorage.remove();
+    this.guestStorage.remove();
     // this.localS.set('invitado', invitado);
-    this.invitadoStorage.set(invitado);
+    this.guestStorage.set(invitado);
 
     /*
     invitado.rut = this.getValidRutFormat(this.formVisita.value.rut);
     invitado.carro_id = this.cartSession._id;
     invitado.tipoEnvio = this.cartSession.despacho.codTipo === 'VEN- DPCLI' ? 'DES' : 'RC';*/
     // this.invitado = this.localS.get('invitado');
-    this.invitado = this.invitadoStorage.get();
+    this.invitado = this.guestStorage.get() as IGuest;
   }
 }

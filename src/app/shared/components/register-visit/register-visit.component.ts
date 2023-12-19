@@ -10,7 +10,6 @@ import { ClientsService } from '../../services/clients.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ResponseApi } from '../../interfaces/response-api';
-import { CartService } from '../../services/cart.service';
 import { Usuario } from '../../interfaces/login';
 import { rutValidator } from '../../../shared/utils/utilidades';
 import { Router } from '@angular/router';
@@ -18,6 +17,10 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthApiService } from '@core/services-v2/auth.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { CartService } from '@core/services-v2/cart.service';
+import { IShoppingCartGuest } from '@core/models-v2/cart/shopping-cart.interface';
+import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
+import { IGuest } from '@core/models-v2/storage/guest.interface';
 
 @Component({
   selector: 'app-register-visit',
@@ -28,7 +31,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
   @Output() returnLoginEvent: EventEmitter<any> = new EventEmitter();
   @Input() linkLogin!: any;
   @Input() innerWidth!: number;
-  @Input() invitado!: Usuario;
+  @Input() invitado!: IEcommerceUser | IGuest;
   giros!: any[];
   comunas!: any[];
   slices = 8;
@@ -45,8 +48,8 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     private toastr: ToastrService,
     private fb: FormBuilder,
     private router: Router,
-    private cartService: CartService,
     // Services V2
+    private cartService: CartService,
     private readonly sessionStorage: SessionStorageService,
     private readonly authService: AuthApiService,
     private readonly authStateService: AuthStateServiceV2
@@ -61,9 +64,9 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
         this.tipo_fono = '+56';
       }
       this.formVisita.setValue({
-        rut: this.invitado.rut || '',
-        nombre: this.invitado.first_name,
-        apellido: this.invitado.last_name,
+        rut: this.invitado.documentId || '',
+        nombre: this.invitado.firstName,
+        apellido: this.invitado.lastName,
         telefono: this.invitado?.phone?.slice(-this.slices),
         email: this.invitado.email,
       });
@@ -77,10 +80,10 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
   formDefault() {
     this.formVisita = this.fb.group({
       rut: ['', [Validators.required, Validators.maxLength(10), rutValidator]],
-      nombre: [, Validators.required],
-      apellido: [, Validators.required],
-      telefono: [, [Validators.required]],
-      email: [, [Validators.required, Validators.email]],
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
+      telefono: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 
@@ -109,12 +112,24 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
       dataSave.telefono = this.tipo_fono + dataSave.telefono;
       const user = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario');
 
-      let usuarioVisita: Usuario;
+      let usuarioVisita: IEcommerceUser;
       usuarioVisita = this.setUsuario(dataSave);
 
       // FIXME: antes se usaba, y ahora??
       // usuarioVisita._id = user._id;
-      this.cartService.agregaInvitado(usuarioVisita).subscribe((r: any) => {});
+      if (user) {
+        const guest: IGuest = {
+          documentId: usuarioVisita.documentId,
+          firstName: usuarioVisita.firstName,
+          lastName: usuarioVisita.lastName,
+          phone: usuarioVisita.phone,
+          email: usuarioVisita.email,
+          street: '',
+          number: '',
+          commune: '',
+        }
+        this.cartService.setGuestUser(user.email, guest).subscribe((r: any) => {});
+      }
 
       this.returnLoginEvent.emit(usuarioVisita);
     } else if (resp.error && resp.data != 2) {
@@ -124,64 +139,64 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     }
   }
 
-  setUsuario(formulario: any) {
+  setUsuario(formulario: any): IEcommerceUser {
     return {
       active: true,
       avatar: '',
-      rut: formulario.rut,
+      documentId: formulario.rut,
       company: formulario.nombre + ' ' + formulario.apellido,
       country: 'CL',
       email: String(formulario.email).toLowerCase(),
-      first_name: formulario.nombre,
-      last_name: formulario.apellido,
-      login_temp: true,
+      firstName: formulario.nombre,
+      lastName: formulario.apellido,
+      loginTemp: true,
       phone: formulario.telefono,
-      user_role: 'temp',
+      userRole: 'temp',
     };
   }
 
-  login() {
-    const user = this.sessionStorage.get();
+  // login() {
+  //   const user = this.sessionStorage.get();
 
-    let userIdOld: any = null;
-    if (user) {
-      userIdOld = user.email;
-    }
+  //   let userIdOld: any = null;
+  //   if (user) {
+  //     userIdOld = user.email;
+  //   }
 
-    const dataLogin = {
-      username: this.formVisita.value.email,
-      password: this.formVisita.value.pwd,
-    };
+  //   const dataLogin = {
+  //     username: this.formVisita.value.email,
+  //     password: this.formVisita.value.pwd,
+  //   };
 
-    this.authService.login(dataLogin.username, dataLogin.password).subscribe({
-      next: (res) => {
-        const iva = res.user.preferences.iva ?? true;
-        const data: ISession = {
-          ...res.user,
-          login_temp: false,
-          preferences: { iva },
-        };
-        this.sessionStorage.set(data);
-        this.authStateService.setSession(data);
-        if (userIdOld) {
-          this.cartService
-            .cartTransfer({
-              origen: userIdOld,
-              destino: data.email,
-            })
-            .subscribe((res: ResponseApi) => {
-              this.cartService.load();
-            });
-        } else {
-          this.cartService.load();
-        }
-        this.router.navigate(['/inicio']);
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      },
-    });
-  }
+  //   this.authService.login(dataLogin.username, dataLogin.password).subscribe({
+  //     next: (res) => {
+  //       const iva = res.user.preferences.iva ?? true;
+  //       const data: ISession = {
+  //         ...res.user,
+  //         login_temp: false,
+  //         preferences: { iva },
+  //       };
+  //       this.sessionStorage.set(data);
+  //       this.authStateService.setSession(data);
+  //       if (userIdOld) {
+  //         this.cartService
+  //           .cartTransfer({
+  //             origen: userIdOld,
+  //             destino: data.email,
+  //           })
+  //           .subscribe((res: ResponseApi) => {
+  //             this.cartService.load();
+  //           });
+  //       } else {
+  //         this.cartService.load();
+  //       }
+  //       this.router.navigate(['/inicio']);
+  //     },
+  //     error: (err) => {
+  //       this.toastr.error(err.message);
+  //     },
+  //   });
+  // }
 
   invoice() {
     this.isInvoice = !this.isInvoice;

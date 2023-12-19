@@ -9,9 +9,9 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { AuthApiService } from '@core/services-v2/auth.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
-import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
+import { GuestStorageService } from '@core/storage/guest-storage.service';
 
 @Component({
   selector: 'app-header-login',
@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
     private readonly authStateService: AuthStateServiceV2,
     private readonly sessionStorage: SessionStorageService,
     private readonly sessionTokenStorage: SessionTokenStorageService,
-    private readonly invitadoStorage: InvitadoStorageService
+    private readonly guestStorage: GuestStorageService
   ) {
     this.form = this.fb.group({
       username: ['', Validators.required],
@@ -127,7 +127,7 @@ export class LoginComponent implements OnInit {
           };
           this.sessionStorage.set(data);
           this.sessionTokenStorage.set(res.token);
-          this.invitadoStorage.remove();
+          this.guestStorage.remove();
           this.authStateService.setSession(data);
           this.verificaSession();
           if (userIdOld) {

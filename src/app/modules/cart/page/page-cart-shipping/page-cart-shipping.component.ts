@@ -42,7 +42,6 @@ import {
 } from '@shared/components/modal/modal.component';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
@@ -59,6 +58,8 @@ import { ShoppingCartStorageService } from '@core/storage/shopping-cart-storage.
 import { AddNotificacionContactRequest } from '@core/models-v2/requests/cart/add-notification-contact.request';
 import { GetLogisticPromiseRequest } from '@core/models-v2/requests/cart/logistic-promise-request';
 import { GetLogisticPromiseResponse } from '@core/models-v2/responses/logistic-promise-responses';
+import { IGuest } from '@core/models-v2/storage/guest.interface';
+import { GuestStorageService } from '@core/storage/guest-storage.service';
 
 export let browserRefresh = false;
 declare let dataLayer: any;
@@ -77,7 +78,7 @@ export class PageCartShippingComponent implements OnInit {
   banners: Banner[] = [];
   private destroy$: Subject<void> = new Subject();
   usuarioInvitado: boolean = false;
-  invitado!: Usuario;
+  invitado!: IGuest;
   direccion: boolean = false;
   usuarioInv: any;
   recibeType = 'yo';
@@ -165,7 +166,7 @@ export class PageCartShippingComponent implements OnInit {
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
     public readonly cart: CartService,
-    private readonly invitadoStorage: InvitadoStorageService,
+    private readonly guestStorage: GuestStorageService,
     private readonly geolocationService: GeolocationServiceV2,
     private readonly geolocationStorage: GeolocationStorageService,
     private readonly customerPreferencesStorage: CustomerPreferencesStorageService,
@@ -182,7 +183,7 @@ export class PageCartShippingComponent implements OnInit {
   async ngOnInit() {
     this.cartSession = this.shppingCartStorage.get();
 
-    this.invitado = this.invitadoStorage.get();
+    this.invitado = this.guestStorage.get() as IGuest;
     this.tienda_actual = this.geolocationStorage.get();
     this.userSession = this.sessionService.getSession();
     this.addNotificationContact();
@@ -205,7 +206,7 @@ export class PageCartShippingComponent implements OnInit {
       (r: IShoppingCartProduct[]) => {
         this.productsValidate = r;
 
-        this.invitado = this.invitadoStorage.get();
+        this.invitado = this.guestStorage.get() as IGuest;
         this.userSession = this.sessionService.getSession();
         this.grupoShippingCart.grupo = [];
       }
@@ -246,35 +247,38 @@ export class PageCartShippingComponent implements OnInit {
   async obtieneDireccionesCliente(isDelete: boolean = false) {
     this.loadingShippingAll = true;
     const { documentId } = this.sessionService.getSession();
-    // FIXME:
-    this.customerAddressApiService.getDeliveryAddresses(documentId).subscribe({
-      next: (addresses) => {
-        this.loadingShippingAll = false;
-        if (!isDelete) {
-          // Obtener última dirección (id más alto).
-          const addressIds = addresses.map((address) => Number(address.id));
-          this.selectedShippingId = String(Math.max(...addressIds));
-        }
 
-        this.addresses = addresses.map((address) => {
-          const isDefault = address.id === this.selectedShippingId;
-          // Formatear dirección.
-          const startAddress = `${address.street} ${address.number},`;
-          const fullAddress = address.departmentHouse
-            ? `${startAddress} depto/casa: ${address.departmentHouse}, ${address.city}`
-            : `${startAddress} ${address.city}`;
-          return { ...address, fullAddress, isDefault };
-        });
-        if (this.shippingType === 'despacho') this.obtieneDespachos();
+    if (!this.usuarioInvitado) {
+      this.customerAddressApiService.getDeliveryAddresses(documentId).subscribe({
+        next: (addresses) => {
+          this.loadingShippingAll = false;
+          if (!isDelete) {
+            // Obtener última dirección (id más alto).
+            const addressIds = addresses.map((address) => Number(address.id));
+            this.selectedShippingId = String(Math.max(...addressIds));
+          }
 
-        this.showNewAddress = false;
-      },
-      error: () => {
-        this.toast.error(
-          'Ha ocurrido un error en servicio al obtener las direcciones'
-        );
-      },
-    });
+          this.addresses = addresses.map((address) => {
+            const isDefault = address.id === this.selectedShippingId;
+            // Formatear dirección.
+            const startAddress = `${address.street} ${address.number},`;
+            const fullAddress = address.departmentHouse
+              ? `${startAddress} depto/casa: ${address.departmentHouse}, ${address.city}`
+              : `${startAddress} ${address.city}`;
+            return { ...address, fullAddress, isDefault };
+          });
+          if (this.shippingType === 'despacho') this.obtieneDespachos();
+
+          this.showNewAddress = false;
+        },
+        error: (e) => {
+          // this.toast.error(
+          //   'Ha ocurrido un error en servicio al obtener las direcciones'
+          // );
+        },
+      });
+    }
+    this.loadingShippingAll = false;
   }
 
   /**
@@ -284,7 +288,7 @@ export class PageCartShippingComponent implements OnInit {
     let data: AddNotificacionContactRequest = {};
 
     this.userSession = this.sessionService.getSession();
-    this.invitado = this.invitadoStorage.get();
+    this.invitado = this.guestStorage.get() as IGuest;
     if (this.userSession.userRole != 'temp') {
       data.phone = this.userSession.phone;
       data.email = this.userSession.email;
@@ -294,8 +298,9 @@ export class PageCartShippingComponent implements OnInit {
       data.email = this.invitado.email;
       data.name = this.getFullName(this.invitado);
     }
-
+    if (data.name) {
       await this.cart.setNotificationContact(this.cartSession._id, data).toPromise();
+    }
   }
 
   /**
@@ -529,9 +534,9 @@ export class PageCartShippingComponent implements OnInit {
   /**
    * Obtiene el nombre del usuario.
    */
-  private getFullName(session: Usuario): string {
-    const { first_name, last_name } = session;
-    return `${first_name} ${last_name}`;
+  private getFullName(guest: IGuest | ISession): string {
+    const { firstName, lastName } = guest;
+    return `${firstName} ${lastName}`;
   }
 
   /**
@@ -607,11 +612,11 @@ export class PageCartShippingComponent implements OnInit {
       this.obj_fecha[pos] = item;
     }
     if (this.invitado) {
-      invitado = this.invitadoStorage.get();
+      invitado = this.guestStorage.get();
       this.recibeYoname = this.getFullName(invitado);
       this.recidDireccion = 0;
-      this.invitadoStorage.set(invitado);
-      this.usuarioInv = this.invitadoStorage.get();
+      this.guestStorage.set(invitado);
+      this.usuarioInv = this.guestStorage.get();
     }
 
     this.grupoShippingActive = this.shippingDays[pos].grupo ?? null;
@@ -818,15 +823,15 @@ export class PageCartShippingComponent implements OnInit {
     }
 
     // let invitado: any = this.localS.get('invitado');
-    let invitado = this.invitadoStorage.get();
+    let invitado = this.guestStorage.get();
     if (invitado != null) {
-      invitado.tipoEnvio = 'RC';
+      invitado.deliveryType = 'RC';
       // this.localS.remove('invitado');
-      this.invitadoStorage.remove();
+      this.guestStorage.remove();
       // this.localS.set('invitado', invitado);
-      this.invitadoStorage.set(invitado);
+      this.guestStorage.set(invitado);
       // this.usuarioInv = this.localS.get('invitado');
-      this.usuarioInv = this.invitadoStorage.get();
+      this.usuarioInv = this.guestStorage.get();
 
       this.obtieneDespachos();
     }
@@ -841,7 +846,7 @@ export class PageCartShippingComponent implements OnInit {
     this.usuarioInvitado = true;
     invitado.tipoEnvio = '';
     // this.localS.set('invitado', invitado);
-    this.invitadoStorage.set(invitado);
+    this.guestStorage.set(invitado);
 
     this.addNotificationContact();
     window.scrollTo({ top: 0 });
@@ -850,16 +855,16 @@ export class PageCartShippingComponent implements OnInit {
   // evento ejecutado cuando un invitado agrega una nueva direccion.
   async direccionVisita(direccion: any, removeShipping = true) {
     this.direccion = true;
-    let invitado = this.invitadoStorage.get();
+    let invitado = this.guestStorage.get() as IGuest;
 
-    invitado.calle = direccion.calle;
-    invitado.comuna = direccion.comuna;
-    invitado.comunaCompleta = direccion.comunaCompleta;
-    invitado.numero = direccion.numero;
-    invitado.depto = direccion.depto ? direccion.depto : 0;
-    this.invitadoStorage.remove();
-    this.invitadoStorage.set(invitado);
-    this.usuarioInv = this.invitadoStorage.get();
+    invitado.street = direccion.calle;
+    invitado.commune = direccion.comuna;
+    invitado.completeComune = direccion.comunaCompleta;
+    invitado.number = direccion.numero;
+    invitado.department = direccion.depto ? direccion.depto : 0;
+    this.guestStorage.remove();
+    this.guestStorage.set(invitado);
+    this.usuarioInv = this.guestStorage.get();
     this.loadingShipping = true;
     this.shippingSelected = null;
 

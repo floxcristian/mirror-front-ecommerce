@@ -5,6 +5,7 @@ import {
   ICartTotal,
   IShoppingCart,
   IShoppingCartGroup,
+  IShoppingCartGuest,
   IShoppingCartProduct,
 } from '@core/models-v2/cart/shopping-cart.interface';
 // Environment
@@ -339,9 +340,9 @@ export class CartService {
         error: (error: any) => {
           console.log('error', JSON.stringify(error));
           this.data.products = [];
-          if (error.errorCode !== 'SHOPPING_CART_NOT_FOUND') {
-            this.toastrServise.error(error.message);
-          }
+          // if (error.errorCode !== 'SHOPPING_CART_NOT_FOUND') {
+          //   this.toastrServise.error(error.message);
+          // }
         },
       });
   }
@@ -365,10 +366,9 @@ export class CartService {
     console.log('getSelectedStore desde updateShipping');
 
     const usuario: ISession = this.sessionService.getSession();
-    const invitado: IGuest = this.guestStorage.get() as IGuest;
 
     const data: SetLogisticPromiseRequest = {
-      user: usuario.username ? usuario.username : invitado._id,
+      user: usuario.username ? usuario.username : usuario.email,
       group: indexGroup,
       tripDate: indexTripDate
     };
@@ -515,6 +515,10 @@ export class CartService {
 
   setNotificationContact(id: string, data: AddNotificacionContactRequest) {
     return this.http.put(`${API_CART}/notificactionContact/${id}`, data);
+  }
+
+  setGuestUser(user: string, data: IShoppingCartGuest) {
+    return this.http.put(`${API_CART}/guest/${user}`, data);
   }
 
   emitValidateProducts(products: any): void {

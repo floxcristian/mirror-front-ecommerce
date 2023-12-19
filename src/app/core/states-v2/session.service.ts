@@ -5,7 +5,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionStorageService } from '../storage/session-storage.service';
 // Libs
 import { v4 as uuidv4 } from 'uuid';
-import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
+import { GuestStorageService } from '@core/storage/guest-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +13,7 @@ import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 export class SessionService {
   constructor(
     private readonly sessionStorage: SessionStorageService,
-    private readonly invitadoStorage: InvitadoStorageService
+    private readonly guestStorage: GuestStorageService
   ) {}
 
   getSession(): ISession {
@@ -42,7 +42,7 @@ export class SessionService {
         return false;
       } else {
         // Porque borramos esto?
-        this.invitadoStorage.remove();
+        this.guestStorage.remove();
         return true;
       }
     }

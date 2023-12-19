@@ -20,7 +20,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
-import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { CartService } from '@core/services-v2/cart.service';
 import { CustomerPreferenceStorageService } from '@core/storage/customer-preference-storage.service';
@@ -33,6 +32,7 @@ import {
 import { ArticleService } from '@core/services-v2/article.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
+import { GuestStorageService } from '@core/storage/guest-storage.service';
 
 interface Item {
   ProductCart: IShoppingCartProduct;
@@ -109,7 +109,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
     // Services V2
     private readonly sessionService: SessionService,
     private readonly articleService: ArticleService,
-    private readonly invitadoStorage: InvitadoStorageService,
+    private readonly guestStorage: GuestStorageService,
     public readonly shoppingCartService: CartService,
     private readonly customerPreferenceStorage: CustomerPreferenceStorageService,
     private readonly shoppingCartStorage: ShoppingCartStorageService,
@@ -222,7 +222,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
 
   limpiarInvitado() {
     // this.localS.remove('invitado');
-    this.invitadoStorage.remove();
+    this.guestStorage.remove();
   }
 
   async setSaveCart() {

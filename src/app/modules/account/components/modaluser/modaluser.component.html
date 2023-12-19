@@ -356,7 +356,7 @@
         <tbody>
           <tr>
             <th scope="row">Usuario</th>
-            <td>{{ users.username | titlecase }}</td>
+            <td>{{ users.username ? users.username : '' | titlecase }}</td>
           </tr>
           <tr>
             <th scope="row">Nombre</th>

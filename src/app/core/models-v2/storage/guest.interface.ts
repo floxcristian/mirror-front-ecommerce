@@ -1,15 +1,15 @@
 export interface IGuest {
-  _id: string;
+  _id?: string;
   documentId: string;
-  cartId: string;
+  cartId?: string;
   firstName: string;
   lastName: string;
   phone: string;
   email: string;
-  deliveryType: 'DES' | 'RC';
+  deliveryType?: 'DES' | 'RC';
   street: string;
   commune: string;
-  completeComune: string;
+  completeComune?: string;
   number: string;
-  department: string;
+  department?: string;
 }
