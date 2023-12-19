@@ -1,7 +1,6 @@
 // Angular
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IConfirmedPayment } from '@core/models-v2/payment-method/confirmed-payment.interface';
 import { IKhipuBank } from '@core/models-v2/payment-method/khipu-bank.interface';
 import { IPaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
 // Environment
@@ -13,25 +12,32 @@ const API_PAYMENT = `${environment.apiEcommerce}/api/v1/payment`;
 @Injectable({
   providedIn: 'root',
 })
-export class PaymentMethodService {
+export class PaymentMethodOmniService {
   private close$: Subject<any> = new Subject();
   readonly closemodal$: Observable<any> = this.close$.asObservable();
   private bancokhipu$: Subject<any> = new Subject();
   readonly banco$: Observable<any> = this.bancokhipu$.asObservable();
+
+  successUrl = environment.urlPaymentOmniVoucher;
+  rejectUrl = environment.urlPaymentOmniCanceled;
 
   constructor(private http: HttpClient) {}
 
   getPaymentMethods(params: {
     username: string;
   }): Observable<IPaymentMethod[]> {
-    return this.http.get<IPaymentMethod[]>(`${API_PAYMENT}/payment-methods`, {
-      params,
-    });
+    return this.http.get<IPaymentMethod[]>(
+      `${API_PAYMENT}/payment-methods-omni`,
+      {
+        params,
+      }
+    );
   }
 
   redirectToWebpayTransaction(params: { shoppingCartId: string }) {
     const { shoppingCartId } = params;
     let qs = `shoppingCartId=${shoppingCartId}&redirect=1`;
+    qs += `&successUrl=${this.successUrl}&rejectUrl=${this.rejectUrl}`;
     qs += '&nocache=' + new Date().getTime();
     const url = `${API_PAYMENT}/webpay/create-transaction?${qs}`;
     window.location.href = url;
@@ -40,6 +46,7 @@ export class PaymentMethodService {
   redirectToMercadoPagoTransaction(params: { shoppingCartId: string }) {
     const { shoppingCartId } = params;
     let qs = `shoppingCartId=${shoppingCartId}&redirect=1`;
+    qs += `&successUrl=${this.successUrl}&rejectUrl=${this.rejectUrl}`;
     qs += '&nocache=' + new Date().getTime();
     const url = `${API_PAYMENT}/mercadopago/create-transaction?${qs}`;
     window.location.href = url;
@@ -54,13 +61,10 @@ export class PaymentMethodService {
   }) {
     const { shoppingCartId, bankName, bankId, payerName, payerEmail } = params;
     let qs = `shoppingCartId=${shoppingCartId}&bankId=${bankId}&bankName=${bankName}&payerName=${payerName}&payerEmail=${payerEmail}&redirect=1`;
+    qs += `&successUrl=${this.successUrl}&rejectUrl=${this.rejectUrl}`;
     qs += '&nocache=' + new Date().getTime();
     const url = `${API_PAYMENT}/khipu/create-transaction?${qs}`;
     window.location.href = url;
-  }
-
-  verifyPayment(url: string): Observable<IConfirmedPayment> {
-    return this.http.get<IConfirmedPayment>(url);
   }
 
   getKhipuBanks(): Observable<IKhipuBank[]> {

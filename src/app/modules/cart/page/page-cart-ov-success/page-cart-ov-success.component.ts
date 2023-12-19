@@ -21,6 +21,7 @@ import { StorageKey } from '@core/storage/storage-keys.enum';
 import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 import { PaymentMethodType } from '@core/enums/payment-method.enum';
 import { CartTagService } from '@core/services-v2/cart-tag.service';
+import { PaymentMethodService } from '@core/services-v2/payment-method.service';
 declare let fbq: any;
 
 @Component({
@@ -45,6 +46,9 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
   fbclid!: string;
   gclid: string = '';
 
+  verifyingPayment = false;
+  maxVerifyTries = 30;
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.screenWidth = isPlatformBrowser(this.platformId)
@@ -60,6 +64,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     // Services V2
     private readonly sessionService: SessionService,
     private readonly cartService: CartService,
+    private readonly paymentMethodService: PaymentMethodService,
     private readonly cartTagService: CartTagService
   ) {
     console.log('cart load desde PageCartOvSuccessComponent 1');
@@ -96,14 +101,49 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
       ? query.payment_status
       : null;
 
+    this.proveedorPago = query.paymentMethod
+      ? query.paymentMethod
+      : PaymentMethodType.MERCADOPAGO;
+
+    const action = query.action;
+    if (action === 'wait' || action === 'verify') {
+      const url = query.verifyUrl;
+      await this.verifyPayment(url);
+      return;
+    }
+
     if (query.shoppingCartId && status && status == 'approved') {
       this.documento = query.shoppingCartId;
       await this.loadCartData(this.documento);
-      this.proveedorPago = query.paymentMethod
-        ? query.paymentMethod
-        : PaymentMethodType.MERCADOPAGO;
       this.showFolioMsj = true;
     }
+  }
+
+  async verifyPayment(url: string) {
+    this.verifyingPayment = true;
+    let done = false;
+    let count = 0;
+    while (!done || count < this.maxVerifyTries) {
+      try {
+        const result = await firstValueFrom(
+          this.paymentMethodService.verifyPayment(url)
+        );
+        if (result.ok) {
+          done = true;
+          const redirectUrl = result.redirectUrl;
+          window.location.href = redirectUrl;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+      count++;
+      await this.wait(3000);
+    }
+    this.verifyingPayment = false;
+  }
+
+  wait(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   ngOnDestroy(): void {

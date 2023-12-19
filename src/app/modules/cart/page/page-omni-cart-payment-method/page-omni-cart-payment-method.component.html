@@ -34,7 +34,7 @@
                 <app-resumen-retiro
                   *ngIf="!loadCart"
                   [direccion]="direccion"
-                  [despacho]="cartSession.despacho"
+                  [despacho]="cartSession.shipment"
                   [shippingType]="shippingType"
                 >
                 </app-resumen-retiro>
@@ -47,7 +47,10 @@
               <div class="card-body">
                 <ng-container *ngIf="alertCartShow && alertCart">
                   <div class="alert-cart">
-                    <div class="row" class="d-flex justify-content-center mb-3">
+                    <div
+                      class="row"
+                      class="d-flex justify-content-center mb-3"
+                    >
                       <div class="col-12" class="text-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +72,7 @@
                     <h4 class="text-danger text-center">
                       {{
                         rejectedCode != -11
-                          ? "Pago Rechazado"
+                          ? 'Pago Rechazado'
                           : alertCart?.detalleMensaje
                       }}
                     </h4>
@@ -164,22 +167,6 @@
               </div>
             </div>
           </div>
-          <!-- aparecer el form de transbanck-->
-          <ng-container *ngIf="transBankToken">
-            <form
-              id="transBankForm"
-              [action]="transBankToken.url"
-              method="POST"
-            >
-              <input
-                type="hidden"
-                name="token_ws"
-                [value]="transBankToken.token"
-              />
-              <input type="hidden" value="Pagar" />
-            </form>
-            <!-- fin del formulario de transbank-->
-          </ng-container>
         </div>
       </div>
     </div>

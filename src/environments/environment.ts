@@ -28,21 +28,21 @@ export const environment = {
   logoSrc: 'assets/images/logos/logo_header.svg',
   logoSrcFooter: 'assets/images/logos/logo_header2.PNG',
   // Base
-  canonical: 'https://www.implementos.cl',
+  canonical: 'https://dev.implementos.cl',
   apib2b: 'https://dev-api.implementos.cl',
 
   urlPagosImplementos: 'https://pagos.implementos.cl/',
   urlMercadoPago: 'https://dev-api.implementos.cl/api/pagos/mpago/link_pago',
   // Carro de compras
   urlPaymentVoucher:
-    'https://www.implementos.cl/carro-compra/gracias-por-tu-compra/',
+    'https://dev.implementos.cl/carro-compra/gracias-por-tu-compra/',
   urlNotificaciones: 'https://dev-api.implementos.cl/api/notificaciones',
   // No Env.
   urlPaymentOmniCanceled:
-    'https://www.implementos.cl/carro-compra/omni-forma-de-pago',
-  urlPaymentCanceled: 'https://www.implementos.cl/carro-compra/forma-de-pago/',
+    'https://dev.implementos.cl/carro-compra/omni-forma-de-pago',
+  urlPaymentCanceled: 'https://dev.implementos.cl/carro-compra/forma-de-pago/',
   urlPaymentOmniVoucher:
-    'https://www.implementos.cl/carro-compra/omni-gracias-por-tu-compra/',
+    'https://dev.implementos.cl/carro-compra/omni-gracias-por-tu-compra/',
   // Nuevo Ecommerce
   apiEcommerce: 'http://10.158.15.204:8080',
   tokenMapbox:

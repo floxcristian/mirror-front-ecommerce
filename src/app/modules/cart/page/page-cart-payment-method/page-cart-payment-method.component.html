@@ -2606,13 +2606,6 @@
 </ng-container>
 <!-- End::resumen de tu compra (mobile) (no existe en desktop)-->
 
-<ng-container *ngIf="transBankToken && paymentWebpayForm">
-  <form id="transBankForm" [action]="transBankToken.url" method="POST">
-    <input type="hidden" name="token_ws" [value]="transBankToken.token" />
-    <input type="hidden" value="Pagar" />
-  </form>
-</ng-container>
-
 <button
   id="openModalButton"
   [hidden]="true"

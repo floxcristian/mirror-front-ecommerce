@@ -25,7 +25,6 @@ import { PageSpecialsComponent } from '../pages/page-specials/page-specials.comp
 
 import { LayoutComponent } from '../layout/layout.component';
 import { B2cComponent } from '../layout/b2c/b2c.component';
-import { VerificarpagoComponent } from './pages/verificarpago/verificarpago.component';
 
 import { RouterModule } from '@angular/router';
 import { FooterB2cModule } from '../modules/footer-b2c/footer-b2c.module';
@@ -43,7 +42,6 @@ import { DevolucionOkModalComponent } from '../pages/components/devolucion-ok-mo
 
     B2cComponent,
     LayoutComponent,
-    VerificarpagoComponent,
     PageDevolucionesComponent,
     DevolucionOkModalComponent,
   ],
