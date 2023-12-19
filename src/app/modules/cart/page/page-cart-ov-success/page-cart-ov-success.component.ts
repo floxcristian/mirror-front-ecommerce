@@ -10,14 +10,17 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 // Rxjs
-import { Subscription } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 // Services
-import { PaymentService } from './../../../../shared/services/payment.service';
-import { CartService } from '../../../../shared/services/cart.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { CartService } from '@core/services-v2/cart.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
+import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
+import { PaymentMethodType } from '@core/enums/payment-method.enum';
+import { CartTagService } from '@core/services-v2/cart-tag.service';
 declare let fbq: any;
 
 @Component({
@@ -30,13 +33,13 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
   numeroCarro = '';
   proveedorPago = '';
   loadingCart = true;
-  cartData: any = null;
+  cartData?: IShoppingCart;
   documento: any = null;
   SubscriptionQueryParams: Subscription;
   SubscriptionParams: Subscription;
   showFolioMsj: boolean = false;
   carro: any = [];
-  total: any = 0;
+  total: number = 0;
   usuario!: ISession;
   screenWidth: any;
   fbclid!: string;
@@ -51,23 +54,23 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private cart: CartService,
     private localS: LocalStorageService,
-    private paymentService: PaymentService,
     @Inject(PLATFORM_ID) private platformId: Object,
     private readonly gtmService: GoogleTagManagerService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly cartService: CartService,
+    private readonly cartTagService: CartTagService
   ) {
     console.log('cart load desde PageCartOvSuccessComponent 1');
-    this.cart.load();
+    this.cartService.load();
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
     // cuando hay OV en la url. Generalmente al generar ov desde OC
     this.SubscriptionParams = this.route.params.subscribe((params) => {
-      if (params['numeroOv']) {
-        this.numero = params['numeroOv'];
+      if (params['salesId']) {
+        this.numero = params['salesId'];
         this.showFolioMsj = false;
       }
     });
@@ -81,9 +84,9 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.gclid = this.localS.get('gclid');
+    this.gclid = this.localS.get(StorageKey.gclid);
     console.log('cart load desde PageCartOvSuccessComponent 2');
-    this.cart.load();
+    this.cartService.load();
   }
 
   async manejaRespuesta(query: any) {
@@ -93,12 +96,12 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
       ? query.payment_status
       : null;
 
-    if (query.external_reference && status && status == 'approved') {
-      this.documento = this.paymentService.obtenerDocumentoDeBuyOrderMPago(
-        query.external_reference
-      );
+    if (query.shoppingCartId && status && status == 'approved') {
+      this.documento = query.shoppingCartId;
       await this.loadCartData(this.documento);
-      this.proveedorPago = query.site_id ? query.site_id : 'MLC';
+      this.proveedorPago = query.paymentMethod
+        ? query.paymentMethod
+        : PaymentMethodType.MERCADOPAGO;
       this.showFolioMsj = true;
     }
   }
@@ -115,30 +118,49 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
 
   async loadCartData(cartId: string) {
     this.loadingCart = true;
-    let response: any = await this.cart.getOrderDetail(cartId).toPromise();
+    let response = await firstValueFrom(this.cartService.getOneById(cartId));
     this.total = response.total;
-    this.cartData = response.data;
+    this.cartData = response.shoppingCart;
     this.mostrar_detalle();
-    this.numero = this.cartData.numero ? this.cartData.numero : 0;
-    this.numeroCarro = this.cartData.folio.toString();
-    this.carro = await this.cart.cargar_folio(this.numeroCarro).toPromise();
-    let index = 0;
+    this.numero = this.cartData.cartNumber ? this.cartData.cartNumber : 0;
+    this.numeroCarro = this.cartData.cartNumber!.toString();
 
-    await Promise.all(
-      this.carro.data.map(async (item: any) => {
-        let tempcarro: any = this.carro.carro[index];
-        index = index + 1;
+    if (!this.cartData.tags || !this.cartData.tags.gtag) {
+      this.cartTagService.getGTagData(cartId).subscribe({
+        next: async (response) => {
+          let index = 0;
 
-        if (!tempcarro.gtag) {
-          this.gtmService.pushTag({
-            event: 'transaction',
-            ecommerce: item,
-          });
+          await Promise.all(
+            response.data.map(async (item) => {
+              let tempcarro = response.shoppingCarts[index];
+              index = index + 1;
 
-          await this.cart.confirmarGtag(tempcarro._id).toPromise();
-        }
-      })
-    );
+              if (!tempcarro.tags || !tempcarro.tags.gtag) {
+                this.gtmService.pushTag({
+                  event: 'transaction',
+                  ecommerce: item,
+                });
+
+                const id = tempcarro._id!.toString();
+                this.cartTagService
+                  .markGtag({
+                    shoppingCartId: id,
+                  })
+                  .subscribe({
+                    next: () => {
+                      console.log('ok gtag');
+                    },
+                    error: (e) => console.error(e),
+                  });
+              }
+            })
+          );
+        },
+        error: (e) => {
+          console.error(e);
+        },
+      });
+    }
 
     this.addFacebookPixel();
     this.loadingCart = false;

@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IKhipuBank } from '@core/models-v2/payment-method/khipu-bank.interface';
 import { IPaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
-import { IPaymentTransaction } from '@core/models-v2/payment-method/payment-transaction.interface';
 // Environment
 import { environment } from '@env/environment';
 import { Observable } from 'rxjs';

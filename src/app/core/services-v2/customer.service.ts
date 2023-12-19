@@ -2,6 +2,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ILoginResponse } from '@core/models-v2/auth/login-response.interface';
+import { ICreateGuest } from '@core/models-v2/customer/create-guest.interface';
+import { ICustomerBlocked } from '@core/models-v2/customer/customer-blocked.interface';
+import { IUsersDetail } from '@core/models-v2/customer/users-detail.interface';
 import { ICustomerCredit } from '@core/models-v2/customer/customer.interface';
 // Environment
 import { environment } from '@env/environment';
@@ -103,9 +106,26 @@ export class CustomerService {
    * CUSTOMER
    **********************************************/
 
+  getCustomerBlocked(documentId: string): Observable<ICustomerBlocked> {
+    return this.http.get<ICustomerBlocked>(
+      `${API_CUSTOMER}/${documentId}/blocked`
+    );
+  }
+
   getCustomerCredit(documentId: string): Observable<ICustomerCredit> {
     return this.http.get<ICustomerCredit>(
       `${API_CUSTOMER}/${documentId}/credit`
     );
+  }
+
+  getSupervisors(documentId: string): Observable<IUsersDetail> {
+    return this.http.get<IUsersDetail>(
+      `${API_CUSTOMER}/${documentId}/supervisor`
+    );
+  }
+
+  createGuest(params: ICreateGuest): Observable<ICustomerCredit> {
+    const url = `${API_CUSTOMER}/new-guest`;
+    return this.http.post<ICustomerCredit>(url, params);
   }
 }

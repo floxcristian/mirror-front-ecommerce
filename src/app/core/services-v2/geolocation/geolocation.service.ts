@@ -157,7 +157,8 @@ export class GeolocationServiceV2 {
             next: (res) => {
               this.geolocation = {
                 isSelectedByClient: false,
-                isChangeToNearestStore: this.geolocation.code !== res.code,
+                isChangeToNearestStore:
+                  this.geolocation && this.geolocation.code !== res.code,
                 zone: res.zone,
                 code: res.code,
                 city: res.city,

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { CartService } from '../../../../shared/services/cart.service';
-import { PaymentService } from '../../../../shared/services/payment.service';
+import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
+import { CartService } from '@core/services-v2/cart.service';
+import { Subscription, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-page-omni-cart-ov-success',
@@ -12,7 +12,7 @@ import { PaymentService } from '../../../../shared/services/payment.service';
 export class PageOmniCartOvSuccessComponent implements OnInit {
   numeroCarro = '';
   loadingCart = true;
-  cartData: any = null;
+  cartData?: IShoppingCart;
   documento: any = null;
   SubscriptionQueryParams: Subscription;
   showFolioMsj: boolean = false;
@@ -21,8 +21,8 @@ export class PageOmniCartOvSuccessComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private cart: CartService,
-    private paymentService: PaymentService
+    // Services V2
+    private readonly cartService: CartService
   ) {
     //Manejar respuesta desde metodos de pago.
     this.SubscriptionQueryParams = this.route.queryParams.subscribe(
@@ -39,17 +39,15 @@ export class PageOmniCartOvSuccessComponent implements OnInit {
       ? query.payment_status
       : null;
 
-    if (query.external_reference && status && status == 'approved') {
-      this.documento = this.paymentService.obtenerDocumentoDeBuyOrderMPago(
-        query.external_reference
-      );
+    if (query.shoppingCartId && status && status == 'approved') {
+      this.documento = query.shoppingCartId;
       await this.loadCartData(this.documento);
       this.showFolioMsj = true;
     }
   }
 
   async ngOnInit() {
-    this.cart.load();
+    this.cartService.load();
   }
 
   ngOnDestroy() {
@@ -62,9 +60,9 @@ export class PageOmniCartOvSuccessComponent implements OnInit {
 
   async loadCartData(cartId: string) {
     this.loadingCart = true;
-    let response: any = await this.cart.getOrderDetail(cartId).toPromise();
-    this.cartData = response.data;
-    this.numeroCarro = this.cartData.folio.toString().padStart(8, '0');
+    let response = await firstValueFrom(this.cartService.getOneById(cartId));
+    this.cartData = response.shoppingCart;
+    this.numeroCarro = this.cartData.cartNumber!.toString().padStart(8, '0');
 
     this.loadingCart = false;
   }
