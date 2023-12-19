@@ -1,10 +1,15 @@
+// Angular
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { ActivatedRoute, Router } from '@angular/router';
+// Libs
+import { BsModalService } from 'ngx-bootstrap/modal';
+// Envs
+import { environment } from '@env/environment';
+// Models
 import { PaymentParams } from '../../../../shared/interfaces/payment-method';
+// Services
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { PaymentService } from '../../../../shared/services/payment.service';
-import { environment } from '@env/environment';
 import { CartService } from '../../../../shared/services/cart.service';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
@@ -15,8 +20,9 @@ import { isVacio } from '../../../../shared/utils/utilidades';
   styleUrls: ['./page-omni-cart-payment-method.component.scss'],
 })
 export class PageOmniCartPaymentMethodComponent implements OnInit {
-  id: string = '';
   @ViewChild('bankmodal', { static: false }) content: any;
+
+  id: string = '';
   cartSession: any = [];
   shippingType: string = '';
   productCart: any = [];
@@ -30,7 +36,6 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
   rejectedCode!: number;
 
   totalCarro: any = '0';
-  modalRef!: BsModalRef;
   constructor(
     private cartService: CartService,
     private logisticaService: LogisticsService,
@@ -79,12 +84,11 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
   }
 
   async getDireccion() {
-    let data = {
-      rut: this.cartSession.usuario,
-    };
     if (this.cartSession.despacho.codTipo === 'VEN- DPCLI') {
       let cliente: any = await this.clienteService
-        .getDataClient(data)
+        .getDataClient({
+          rut: this.cartSession.usuario,
+        })
         .toPromise();
       this.direccion = cliente.data[0].direcciones.filter(
         (item: any) => item.recid == this.cartSession.despacho.recidDireccion
@@ -100,12 +104,15 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
       );
     }
   }
-  //fincuon para activar el boton de pago
-  async Activepayment(event: any) {
+  /**
+   * Activa el botón de pago.
+   * @param event
+   */
+  Activepayment(event: any): void {
     this.pago = event;
   }
 
-  async payment() {
+  payment(): void {
     if (this.pago.cod == 'mercadopago') this.PaymentMercadoPago();
     if (this.pago.cod == 'webPay') this.PaymentWebpay();
     if (this.pago.cod == 'khipu') {
@@ -147,16 +154,14 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
     const canceledUrl = environment.urlPaymentOmniCanceled;
     const documento = this.cartSession._id;
 
-    const params = {
-      successUrl: successUrl,
-      canceledUrl: canceledUrl,
+    let consulta: any = await this.paymentService.createTransKhipu({
+      successUrl,
+      canceledUrl,
       id_carro: documento,
       usuario_email: this.cartSession.emailNotificacion,
       usuario_name: this.cartSession.emailNotificacion,
       bank: banco,
-    };
-
-    let consulta: any = await this.paymentService.createTransKhipu(params);
+    });
 
     window.location.href = consulta.simplified_transfer_url;
   }
@@ -177,7 +182,7 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
     }
   }
 
-  intentarPagoNuevamente() {
+  intentarPagoNuevamente(): void {
     this.alertCartShow = false;
     this.alertCart = null;
     this.rejectedCode = 0;
@@ -186,8 +191,11 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
     });
   }
 
-  openModal() {
-    this.modalRef = this.modalService.show(this.content, {
+  /**
+   * Abrir modal de pago para Khipu.
+   */
+  openModal(): void {
+    this.modalService.show(this.content, {
       backdrop: 'static',
       keyboard: false,
     });
