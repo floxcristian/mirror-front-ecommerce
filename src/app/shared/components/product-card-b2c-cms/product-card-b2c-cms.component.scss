@@ -616,3 +616,8 @@
 .product-card__info {
   flex-grow: 1 !important;
 }
+.modal-header {
+  .btn {
+    padding: 0 !important;
+  }
+}

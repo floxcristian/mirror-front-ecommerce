@@ -21,4 +21,4 @@ export interface IStore {
   regionCode: string;
   createdAt: Date;
   updatedAt: Date;
-}
+  }

@@ -19,12 +19,12 @@ export class MapaFichasComponent implements OnInit {
   @Input() stock: any = 0;
 
   constructor() {}
-  async ngOnInit() {
-    await this.tiendaSeleccionada;
+ async ngOnInit() {
+     await this.tiendaSeleccionada;
     fromEvent(window, 'resize')
       .pipe(debounceTime(200))
       .subscribe((event) => {});
-    this.initMap();
+      this.initMap();
   }
   ngOnChange() {
     window.dispatchEvent(new Event('resize'));

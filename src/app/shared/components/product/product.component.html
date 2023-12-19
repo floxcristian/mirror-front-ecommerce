@@ -378,7 +378,7 @@
                 <div class="col-md-12">
                   <!-- // test -->
                   <span
-                    *ngIf="product?.priceInfo?.documentId != ''"
+                    *ngIf="product?.priceInfo?.documentId != '0'"
                     tooltip="Precio con descuento cliente"
                     class="text-price-product me-2 text-danger"
                     [ngStyle]="{
@@ -388,7 +388,7 @@
                   >
 
                   <span
-                    *ngIf="product.priceInfo.documentId == ''"
+                    *ngIf="product.priceInfo.documentId == '0'"
                     class="text-price-product me-2"
                     [ngStyle]="{
                       'font-size.rem': preciosEscalas.length > 1 ? '1.6' : '2'
@@ -550,7 +550,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <span
-                    *ngIf="product.priceInfo.documentId != ''"
+                    *ngIf="product.priceInfo.documentId != '0'"
                     tooltip="Precio con descuento cliente"
                     class="text-price-product me-2 text-danger"
                     style="font-size: 2rem"
@@ -558,7 +558,7 @@
                   >
 
                   <span
-                    *ngIf="product.priceInfo.documentId == ''"
+                    *ngIf="product.priceInfo.documentId == '0'"
                     class="text-price-product me-2"
                     style="font-size: 2rem"
                     >{{ product.priceInfo.price | currencyFormat }}</span
@@ -577,8 +577,6 @@
                   <span class="text-civa">
                     {{ usuario.preferences.iva ? 'c/iva' : 's/iva' }}
                   </span>
-
-                  >
                 </div>
               </div>
             </ng-container>

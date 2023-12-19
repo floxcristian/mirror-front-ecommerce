@@ -12,6 +12,8 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PromesaService } from '../../services/promesa.service';
 import { MpSimuladorHeaderFiltrosMagicos } from './mp-simulador-header.filtros-magicos';
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
+import { LogisticService } from '@core/services-v2/logistic.service';
+import { LogisticPromiseService } from '@core/services-v2/logistic-promise.service';
 
 @Component({
   selector: 'app-despacho',
@@ -26,7 +28,7 @@ export class DespachoComponent implements OnInit {
   tiendaSeleccionada: any = [];
   stock: any = 0;
   stock_bodega: any = 0;
-  MODOS = { RETIRO_TIENDA: 'retiroTienda', DESPACHO: 'domicilio' };
+  MODOS = { RETIRO_TIENDA: 'pickup', DESPACHO: 'delivery' };
   filtrosMagicosRetiroTienda: any;
   filtrosMagicosDespacho: any;
   filtrosDespacho: any = null;
@@ -42,16 +44,23 @@ export class DespachoComponent implements OnInit {
 
   constructor(
     private promesaService: PromesaService,
+
     private modalService: BsModalService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    // V2
+    private logisticService:LogisticService,
+    private logisticPromiseService:LogisticPromiseService
   ) {}
 
   async ngOnInit() {
     this.cd.detectChanges();
+
   }
 
   async generateChangeGeneralData() {
     let data: any;
+    console.log("🚀 ~ file: despacho.component.ts:63 ~ DespachoComponent ~ generateChangeGeneralData ~ this.modo:", this.modo)
+    console.log("🚀 ~ file: despacho.component.ts:63 ~ DespachoComponent ~ generateChangeGeneralData ~ this.MODOS.RETIRO_TIENDA:", this.MODOS.RETIRO_TIENDA)
     if (this.modo === this.MODOS.RETIRO_TIENDA) {
       this.loadPromesas = true;
       data = {
@@ -64,15 +73,12 @@ export class DespachoComponent implements OnInit {
       let productos = [
         {
           sku: this.product.sku,
-          image: this.product.images['150'],
-          nombre: this.product.name,
-          cantidad: this.cantidad,
-          // peso: this.product.peso,
-          esVentaVerde: false,
-          proveedor: null,
+          quantity : this.cantidad,
         },
       ];
+
       if (this.filtrosRetiroTienda.tienda.nombre) {
+
         if (
           this.filtrosRetiroTienda.tienda.nombre.split('TIENDA ')[1] !==
           undefined
@@ -81,10 +87,11 @@ export class DespachoComponent implements OnInit {
             this.filtrosRetiroTienda.tienda.nombre.split('TIENDA ')[1];
         }
       }
-      let consulta: any = await this.promesaService
-        .getpromesa(
+
+      let consulta: any = await this.logisticPromiseService
+        .getLogisticPromise(
           this.MODOS.RETIRO_TIENDA,
-          this.filtrosRetiroTienda.tienda.nombre,
+          this.filtrosRetiroTienda.tienda,
           productos
         )
         .toPromise();
@@ -121,17 +128,17 @@ export class DespachoComponent implements OnInit {
       this.generateChangeGeneralData();
     } else this.filtrosDespacho = null;
   }
-
+/// FIXME: fix, no funciona bien
   openForm(template: TemplateRef<any>, modo: any) {
     this.modo = modo;
     this.filtrosMagicosRetiroTienda = MpSimuladorHeaderFiltrosMagicos(
       this.MODOS.RETIRO_TIENDA,
-      this.promesaService,
+      this.logisticService,
       this.tiendaActual
     );
     this.filtrosMagicosDespacho = MpSimuladorHeaderFiltrosMagicos(
       this.MODOS.DESPACHO,
-      this.promesaService,
+      this.logisticService,
       this.tiendaActual
     );
     this.modalRef = this.modalService.show(template, {
@@ -147,25 +154,22 @@ export class DespachoComponent implements OnInit {
     let productos = [
       {
         sku: this.product.sku,
-        image: this.product.images['150'],
-        nombre: this.product.name,
-        cantidad: this.cantidad,
-        // peso: this.product.peso,
-        esVentaVerde: false,
-        proveedor: null,
+        quantity : this.cantidad,
       },
     ];
 
-    let consulta: any = await this.promesaService
-      .getpromesa(this.modo, codTienda, productos)
+    let consulta: any = await this.logisticPromiseService
+    .getLogisticPromise(this.modo, codTienda, productos)
       .toPromise();
-    if (consulta.data != null)
+
+        if (consulta.data != null)
       this.promesas = consulta.data.respuesta[0].subOrdenes[0].fletes;
     this.loadPromesas = false;
+
   }
 
   onFiltrosCambiadosRetiroTienda(filtros: any) {
-    this.filtrosRetiroTienda = filtros;
+        this.filtrosRetiroTienda = filtros;
     this.encontrado = false;
     this.generateChangeGeneralData();
   }
