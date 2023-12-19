@@ -20,7 +20,6 @@ import {
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { TransBankToken } from '../../../../shared/interfaces/payment-method';
-import { PaymentService } from '../../../../shared/services/payment.service';
 import { filter } from 'rxjs/internal/operators/filter';
 import { ShippingAddress } from '../../../../shared/interfaces/address';
 import {
@@ -161,7 +160,6 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private modalService: BsModalService,
     private toastr: ToastrService,
-    private paymentService: PaymentService,
     private logistics: LogisticsService,
     private clientsService: ClientsService,
     private readonly gtmService: GoogleTagManagerService,
@@ -395,14 +393,14 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         break;
     }
     // hilo para escuchar el close del modal
-    this.paymentService.closemodal$.subscribe((r) => {
+    this.paymentMethodService.closemodal$.subscribe((r) => {
       if (r) {
         this.modalRef.hide();
         this.paymentMethodActive = null;
       }
     });
 
-    this.paymentService.banco$.subscribe((r) => {
+    this.paymentMethodService.banco$.subscribe((r) => {
       this.paymentKhipu(r);
     });
     if (
@@ -896,14 +894,6 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     if (consultaStock.stockProblem && consultaStock.stockProblemLines) {
       this.productosSinStock = consultaStock.stockProblemLines;
       document.getElementById('openModalButton')?.click();
-      this.paymentService.sendEmailError(
-        `Productos sin stock: <br> ${JSON.stringify(
-          this.productosSinStock.map((producto) => {
-            return `sku: ${producto.sku}, cantidad: ${producto.quantity}`;
-          })
-        )} <br><br> Carro: <br> ${JSON.stringify(this.cartSession)}`,
-        `[B2B ${window.location.hostname}] Error - Se ha detectado que no habia stock suficiente al momento de intengar pagar`
-      );
     }
     return consultaStock.stockProblem;
   }
@@ -1064,6 +1054,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         shoppingCartId: this.cartSession._id!.toString(),
         bankId: banco ? banco.bankId : '',
         bankName: banco ? banco.name : '',
+        payerName: this.userSession.email,
+        payerEmail: this.userSession.email,
       });
     } catch (err) {
       this.toastr.error('Ha ocurrido un error al gestionar el pago.');
