@@ -929,8 +929,8 @@
                     <b>Estado: </b
                     ><span class="text-danger"><b>BLOQUEADO</b></span
                     ><br />
-                    <span *ngIf="bloqueoCliente.nombreMotivoBloqueo != null">
-                      <b>Motivo: </b>{{ bloqueoCliente.nombreMotivoBloqueo }}
+                    <span *ngIf="bloqueoCliente != null">
+                      <b>Motivo: </b>{{ bloqueoCliente }}
                     </span>
                   </div>
                 </div>
@@ -1530,6 +1530,7 @@
               >
                 <app-codigo-oc
                   [id]="cartSession._id"
+                  [purchaseOrderId]="purchaseOrderId"
                   (verificar)="Confirmar($event)"
                   (renv_cod)="paymentOvSms()"
                 ></app-codigo-oc>
@@ -2367,7 +2368,7 @@
               <tr style="font-size: 14px; color: #005db9">
                 <th>Total</th>
                 <td class="fw-bold">
-                  {{ cart.total$ | async | currencyFormat }}
+                  {{ cartService.total$ | async | currencyFormat }}
                 </td>
               </tr>
             </table>
@@ -2395,6 +2396,7 @@
         <app-codigo-oc
           *ngIf="cd_ver"
           [id]="cartSession._id"
+          [purchaseOrderId]="purchaseOrderId"
           (verificar)="Confirmar($event)"
           (renv_cod)="paymentOvSms()"
         >
@@ -2603,62 +2605,6 @@
   </div>
 </ng-container>
 <!-- End::resumen de tu compra (mobile) (no existe en desktop)-->
-
-<ng-container *ngIf="paymentWebpayForm">
-  <form
-    id="myform"
-    action="{{ urlApiWebPay }}"
-    method="POST"
-    [hidden]="'false'"
-  >
-    <input
-      type="text"
-      placeholder="cartId"
-      name="cartId"
-      [value]="cartSession._id"
-    />
-    <br />
-
-    <input
-      type="number"
-      min="10"
-      placeholder="Monto a pagar"
-      name="amount"
-      [value]="totalCarro"
-    />
-    <br />
-
-    <input
-      type="text"
-      style="width: 400px"
-      placeholder="url para mostrar comprobante"
-      name="urlPaymentVoucher"
-      [value]="urlPaymentVoucher"
-    />
-    <br />
-
-    <input
-      type="text"
-      placeholder="endpoint para mostrar generar la ov desde la api pagos"
-      name="urlNotificationPayment"
-      [value]="urlNotificationPayment"
-    />
-    <br />
-
-    <input
-      type="text"
-      style="width: 400px"
-      placeholder="url para mostrar comprobante"
-      name="urlPaymentCanceled"
-      [value]="urlPaymentCanceled"
-    />
-    <br />
-
-    <input type="text" name="system" value="b2b/b2c" />
-
-    <br />
-  </form>
-</ng-container>
 
 <ng-container *ngIf="transBankToken && paymentWebpayForm">
   <form id="transBankForm" [action]="transBankToken.url" method="POST">

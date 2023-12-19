@@ -23,6 +23,7 @@ export interface IShoppingCart {
   createdAt?: Date;
   updatedAt?: Date;
   guest?: IShoppingCartGuest;
+  tags?: IShoppingCartTag;
 
   quantity: number;
   subtotal?: number;
@@ -162,6 +163,10 @@ export interface IShoppingCartGuest {
   street: string;
   number: string;
   commune: string;
+}
+
+export interface IShoppingCartTag {
+  gtag: boolean;
 }
 
 export interface ICartTotal {
