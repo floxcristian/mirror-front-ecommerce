@@ -316,9 +316,7 @@ export class PageCartShippingComponent implements OnInit {
       const data: GetLogisticPromiseRequest = {
         user: usuario.username,
         deliveryMode: 'delivery',
-        destination:
-          resultado.city.normalize('NFD').replace(/[\u0300-\u036f]/g, '') +
-          '|1' ,
+        destination: `${resultado.city.normalize('NFD').replace(/[\u0300-\u036f]/g, '')}|${resultado.regionCode ? resultado.regionCode: ''}`,
           address: resultado.address,
           addressId: resultado.id
       };
@@ -636,7 +634,7 @@ export class PageCartShippingComponent implements OnInit {
     this.cart.addTotalShipping(envio);
 
     // guardamos el despacho y vericamos si tiene descuento o no
-    // this.saveShipping();
+    this.saveShipping(pos, item.index);
     this.fechas[pos] = this.shippingSelected?.fecha;
     this.localS.set('fechas', this.fechas);
     this.localS.remove('tiendaRetiro');
@@ -665,14 +663,14 @@ export class PageCartShippingComponent implements OnInit {
     this.cart.addTotalShipping(envio);
 
     // guardamos el despacho y vericamos si tiene descuento o no
-    // this.saveShipping();
+    this.saveShipping(pos, item.index);
     this.localS.set('fechas', this.fechas);
   }
 
-  addShipping(data: any) {
-    if (data.despacho.descuento > 0) {
+  addShipping(data: IShoppingCart) {
+    if (data.shipment && data.shipment.discount > 0) {
       const descuentoEnvio: CartTotal = {
-        price: data.despacho.descuento * -1,
+        price: data.shipment.discount * -1,
         title: 'Descuento Despacho',
         type: 'discount',
       };
@@ -681,52 +679,39 @@ export class PageCartShippingComponent implements OnInit {
   }
 
   next() {
-    this.saveShipping(true);
+    this.saveShipping(-1, -1, true);
   }
 
-  saveShipping(redirect = false) {
+  saveShipping(indexGroup: number = -1, indexTripDate: number = -1, redirect = false) {
     if (!this.loadingResumen) this.loadingResumen = true;
-    if (this.shippingSelected?.tipoenvio === 'TIENDA')
+    if (this.shippingSelected?.tipoenvio === 'TIENDA') {
       this.shippingSelected.tipopedido = 'VEN- RPTDA';
-    else if (this.shippingSelected)
+    } else if (this.shippingSelected) {
       this.shippingSelected.tipopedido = 'VEN- DPCLI';
-    const despacho = {
-      id: this.shippingSelected?.id,
-      tipo: this.shippingSelected?.tipoenvio,
-      codTipo: this.shippingSelected?.tipopedido,
-      origen: this.shippingSelected?.origen,
-      recidDireccion: this.recidDireccion,
-      codProveedor: this.shippingSelected?.proveedor,
-      nombreProveedor: this.shippingSelected?.proveedor,
-      precio: this.shippingSelected?.precio,
-      observacion: 'b2b',
-      diasNecesarios: this.shippingSelected?.diasdemora,
-      fechaPicking: this.shippingSelected?.fechaPicking,
-      fechaEntrega: this.shippingSelected?.fecha,
-      fechaDespacho: this.shippingSelected?.fecha,
-    };
+    }
 
-    this.cart.updateShipping(despacho);
-      // (r: ResponseApi) => {
-        this.loadingResumen = false;
-
-        // if (r.error) {
-        //   this.toast.error(r.msg);
-        // } else {
+    if (indexGroup !== -1 && indexTripDate !== -1) {
+      this.cart.updateShipping(indexGroup, indexTripDate).then(
+        (response: IShoppingCart) => {
+          this.loadingResumen = false;
           if (redirect) {
             this.router.navigate(['/', 'carro-compra', 'forma-de-pago']);
           }
-          // this.addShipping(r.data);
-      //   }
-      // },
-      // () => {
-      //   this.toast.error(
-      //     'Ha ocurrido un error en servicio al actualizar el carro de compra'
-      //   );
-      //   this.loadingResumen = false;
-      // }
-    // );
-    this.getDireccionName(despacho.tipo || '');
+          this.addShipping(response);
+        },
+        () => {
+          this.toast.error(
+            'Ha ocurrido un error en servicio al actualizar el carro de compra'
+          );
+          this.loadingResumen = false;
+        }
+      );
+      this.getDireccionName(this.shippingSelected?.tipoenvio || '');
+    } else {
+      if (redirect) {
+        this.router.navigate(['/', 'carro-compra', 'forma-de-pago']);
+      }
+    }
   }
 
   subscribeOnLogin() {

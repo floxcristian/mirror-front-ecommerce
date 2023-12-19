@@ -30,7 +30,7 @@ import { RootService } from '@shared/services/root.service';
 import { IValidateShoppingCartStockResponse } from '@core/models-v2/cart/validate-stock-response.interface';
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 import { AddNotificacionContactRequest } from '@core/models-v2/requests/cart/add-notification-contact.request';
-import { GetLogisticPromiseRequest } from '@core/models-v2/requests/cart/logistic-promise-request';
+import { GetLogisticPromiseRequest, SetLogisticPromiseRequest } from '@core/models-v2/requests/cart/logistic-promise-request';
 import { GetLogisticPromiseResponse } from '@core/models-v2/responses/logistic-promise-responses';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
@@ -360,41 +360,23 @@ export class CartService {
     this.shoppingCartStorage.set(this.CartData);
   }
 
-  updateShipping(despacho: any) {
+  async updateShipping(indexGroup: number, indexTripDate: number) {
     // Sucursal
     console.log('getSelectedStore desde updateShipping');
 
-    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.code;
-    const carro: IShoppingCart =
-      this.shoppingCartStorage.get() as IShoppingCart;
     const usuario: ISession = this.sessionService.getSession();
-    // this.root.getDataSesionUsuario();
     const invitado: IGuest = this.guestStorage.get() as IGuest;
-    const recibe: IReceive = this.receiveStorage.get() as IReceive;
-    const productos = (carro.products || []).map((item) => {
-      return {
-        sku: item.sku,
-        cantidad: item.quantity,
-      };
-    });
 
-    const data = {
-      usuario: usuario.username ? usuario.username : invitado._id,
-      rut: usuario.documentId ? usuario.documentId : 0,
-      sucursal,
-      productos,
-      despacho,
-      invitado,
-      recibe,
+    const data: SetLogisticPromiseRequest = {
+      user: usuario.username ? usuario.username : invitado._id,
+      group: indexGroup,
+      tripDate: indexTripDate
     };
 
-    this.load();
-    // return this.http.post(`${API_CART}/article`, data).pipe(
-    //   map((r: any) => {
-    //     return r;
-    //   })
-    // );
+    const respuesta = await lastValueFrom(this.http.put<IShoppingCart>(`${API_CART}/group/trip-date`, data));
+    // this.load();
+
+    return respuesta;
   }
 
   calc(totalesFull = false): void {

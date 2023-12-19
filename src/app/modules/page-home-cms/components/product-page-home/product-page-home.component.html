@@ -18,7 +18,7 @@
 <ng-container *ngIf="!cargando && screenWidth > 1024 && tipo_producto">
   <ul ngbNav #nav="ngbNav" class="nav-tabs">
     <li ngbNavItem *ngFor="let item of tipo_producto; let i = index">
-      <button ngbNavLink>{{ item.title }}</button>
+      <button style="font-size: 30px;" ngbNavLink>{{ item.title }}</button>
       <ng-template ngbNavContent>
         <div class="row" style="margin-top: 20px">
           <div *ngIf="screenWidth > 1024" class="col-sm-6 d-flex">
