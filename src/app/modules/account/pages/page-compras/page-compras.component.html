@@ -57,9 +57,9 @@
     <div class="card mb-2">
       <div class="card-header bg-transparent border-success">
         <div class="text-fechas">
-          {{ item.fechaCreacionOrden | date : 'dd-MM-yyyy' }}
+          {{ item.timestamps.creationDate | date : 'dd-MM-yyyy' }}
         </div>
-        <div class="text-fechas">{{ item.OrdenSeguimiento }}</div>
+        <div class="text-fechas">{{ item.trackingNumber }}</div>
         <span>
           <button class="btn btn-secondary btn-sm" (click)="addToCart(i)">
             Rehacer Pedido
@@ -67,24 +67,24 @@
         </span>
       </div>
       <div class="card-body">
-        <div class="mt-2" *ngFor="let info of item.productos; let in = index">
+        <div class="mt-2" *ngFor="let info of item.products; let in = index">
           <div class="row">
             <div class="col-3 col-sm-2 d-flex justify-content-center">
-              <a [routerLink]="root.product(info.sku, info.nombre)">
+              <a [routerLink]="root.product(info.sku, info.name)">
                 <img
                   class="cart-img"
-                  [src]="root.getUrlImagenMiniatura(info)"
-                  [alt]="info.nombre"
+                  [src]="info.preview"
+                  [alt]="info.name"
                 />
               </a>
             </div>
             <div class="row col-9 col-sm-10">
               <div class="col-md-10">
-                <div class="product-title" *ngIf="info.nombre.length > 114">
-                  {{ info.nombre | slice : 0 : 114 }} ...
+                <div class="product-title" *ngIf="info.name.length > 114">
+                  {{ info.name | slice : 0 : 114 }} ...
                 </div>
-                <div class="product-title" *ngIf="info.nombre.length <= 114">
-                  {{ info.nombre }}
+                <div class="product-title" *ngIf="info.name.length <= 114">
+                  {{ info.name }}
                 </div>
                 <div class="product-sku">{{ info.sku }}</div>
                 <div class="product-sku">
@@ -109,7 +109,7 @@
             </div>
           </div>
           <div
-            *ngIf="in != item.productos.length - 1"
+            *ngIf="in != item.products.length - 1"
             style="border-bottom: 1px solid #0063b957"
           ></div>
         </div>
