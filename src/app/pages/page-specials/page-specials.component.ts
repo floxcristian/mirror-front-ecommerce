@@ -1,8 +1,4 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { products } from '../../../data/shop-products';
-import { categories } from '../../../data/shop-block-categories';
-import { Category } from '../../shared/interfaces/category';
-import { Banner } from '../../shared/interfaces/banner';
 import { ActivatedRoute } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 

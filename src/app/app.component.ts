@@ -19,7 +19,6 @@ import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import * as $ from 'jquery';
 // Services
-import { CartService } from './shared/services/cart.service';
 import { CompareService } from './shared/services/compare.service';
 import { WishlistService } from './shared/services/wishlist.service';
 import { CurrencyService } from './shared/services/currency.service';
@@ -27,8 +26,9 @@ import { SeoService } from './shared/services/seo.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { CartService } from '@core/services-v2/cart.service';
 // Models
-import { ProductCart } from './shared/interfaces/cart-item';
+import { IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
 // Components
 import { AlertCartMinComponent } from './shared/components/alert-cart-min/alert-cart-min.component';
 
@@ -44,7 +44,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   })
   alert!: AlertCartMinComponent;
 
-  productCard!: ProductCart;
+  productCard!: IShoppingCartProduct;
   s: any;
   node: any;
   isOmni!: boolean;
@@ -54,7 +54,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     @Inject(PLATFORM_ID) private platformId: Object,
     public router: Router,
     private toastr: ToastrService,
-    private cart: CartService,
     private compare: CompareService,
     private wishlist: WishlistService,
     private zone: NgZone,
@@ -64,6 +63,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     // Services V2
     private readonly sessionStorage: SessionStorageService,
     private readonly sessionService: SessionService,
+    private readonly shoppingCartService: CartService,
     private readonly geolocationService: GeolocationServiceV2
   ) {}
 
@@ -151,10 +151,12 @@ export class AppComponent implements AfterViewInit, OnInit {
       }
     });
 
-    this.cart.onAdding$.subscribe((product: ProductCart) => {
-      this.productCard = product;
-      this.showAlertCart();
-    });
+    this.shoppingCartService.onAdding$.subscribe(
+      (product: IShoppingCartProduct) => {
+        this.productCard = product;
+        this.showAlertCart();
+      }
+    );
 
     this.compare.onAdding$.subscribe((product) => {
       this.toastr.success(
@@ -175,7 +177,7 @@ export class AppComponent implements AfterViewInit, OnInit {
       next: () => {
         // si es que la tienda seleccionada no cambia no se carga el carro.
         console.log('selectedStore$ desde [AppComponent]====================');
-        this.cart.load();
+        this.shoppingCartService.load();
       },
     });
   }

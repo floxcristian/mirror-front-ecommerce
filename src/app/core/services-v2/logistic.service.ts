@@ -1,12 +1,12 @@
 // Angular
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-// Rxjs
-import { Observable } from 'rxjs';
+import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
+import { ICity } from '@core/models-v2/logistic/city.interface';
 // Environment
 import { environment } from '@env/environment';
-// Models
-import { ICity } from '@core/models-v2/logistic/city.interface';
+import { Observable } from 'rxjs';
+import { IStore } from './geolocation/models/store.interface';
 
 const API_LOGISTIC = `${environment.apiEcommerce}/api/v1/logistic`;
 
@@ -14,9 +14,14 @@ const API_LOGISTIC = `${environment.apiEcommerce}/api/v1/logistic`;
   providedIn: 'root',
 })
 export class LogisticService {
+
   constructor(private http: HttpClient) {}
 
   getCities(): Observable<ICity[]> {
     return this.http.get<ICity[]>(`${API_LOGISTIC}/cities`);
+  }
+
+  getStores(): Observable<IStore[]> {
+    return this.http.get<IStore[]>(`${API_LOGISTIC}/stores`);
   }
 }

@@ -420,3 +420,8 @@ table thead th {
   font-size: 0.9375rem;
   padding: 8px 15px !important;
 }
+.modal-header {
+  .btn {
+    padding: 0 !important;
+  }
+}

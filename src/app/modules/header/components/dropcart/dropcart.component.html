@@ -4,23 +4,26 @@
     Carro de compra
   </div>
 
-  <div class="dropcart__empty" *ngIf="!(cart.items$ | async)?.length">
+  <div
+    class="dropcart__empty"
+    *ngIf="!(shoppingCartService.items$ | async)?.length"
+  >
     Todavia no ha agregado productos al carro
   </div>
-  <ng-container *ngIf="(cart.items$ | async)?.length">
+  <ng-container *ngIf="(shoppingCartService.items$ | async)?.length">
     <div class="dropcart__products-list">
       <div *ngFor="let item of items; let i = index" class="cart-row d-flex">
         <div class="dropcart__product-image me-3">
           <a
             [routerLink]="
-              root.product(item.ProductCart.sku, item.ProductCart.nombre)
+              root.product(item.ProductCart.sku, item.ProductCart.name)
             "
           >
             <img
               class="img-fluid lazyload"
               alt="carro-compra"
               [src]="root.getUrlImagenMiniatura(item.ProductCart)"
-              [alt]="item.ProductCart.nombre"
+              [alt]="item.ProductCart.name"
             />
           </a>
         </div>
@@ -28,9 +31,9 @@
           <div class="text-truncate">
             <span
               class="product-title fw-bold"
-              title=" {{ item.ProductCart.nombre | capitalizeFirst }}"
+              title=" {{ item.ProductCart.name | capitalizeFirst }}"
             >
-              {{ item.ProductCart.nombre | capitalizeFirst }}
+              {{ item.ProductCart.name | capitalizeFirst }}
             </span>
           </div>
 
@@ -38,7 +41,7 @@
             {{ item.ProductCart.sku }}
           </span>
           <span class="product-sku text-gray-2">
-            {{ item.ProductCart.marca }}
+            {{ item.ProductCart.brand }}
           </span>
 
           <div class="clearfix"></div>
@@ -48,9 +51,9 @@
               {{
                 (!isVacio(usuario.preferences.iva)
                   ? usuario.preferences.iva
-                    ? item.ProductCart.precio
-                    : item.ProductCart.precio / (1 + IVA)
-                  : item.ProductCart.precio
+                    ? item.ProductCart.price
+                    : item.ProductCart.price / (1 + IVA)
+                  : item.ProductCart.price
                 ) | currencyFormat
               }}
               <em>
@@ -82,9 +85,9 @@
             >{{
               (!isVacio(usuario.preferences.iva)
                 ? (usuario.preferences.iva
-                    ? item.ProductCart.precio
-                    : item.ProductCart.precio / (1 + IVA)) * item.quantity
-                : item.ProductCart.precio * item.quantity
+                    ? item.ProductCart.price
+                    : item.ProductCart.price / (1 + IVA)) * item.quantity
+                : item.ProductCart.price * item.quantity
               ) | currencyFormat
             }}
             <em>

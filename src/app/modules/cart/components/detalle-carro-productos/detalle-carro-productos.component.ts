@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { ProductCart } from '../../../../shared/interfaces/cart-item';
-import { CartService } from '../../../../shared/services/cart.service';
 import { Router } from '@angular/router';
+import { CartService } from '@core/services-v2/cart.service';
+import { IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
 
 @Component({
   selector: 'app-detalle-carro-productos',
@@ -11,12 +12,12 @@ import { Router } from '@angular/router';
 })
 export class DetalleCarroProductosComponent implements OnInit, OnDestroy {
   @Input() show = true;
-  @Input() productCart!: ProductCart[];
+  @Input() productCart!: IShoppingCartProduct[];
   @Input() seeProducts = true;
   @Input() seePrices = true;
-  fullProducts: ProductCart[] = [];
-  products: ProductCart[] = [];
-  shippingNotSupported: ProductCart[] = [];
+  fullProducts: IShoppingCartProduct[] = [];
+  products: IShoppingCartProduct[] = [];
+  shippingNotSupported: IShoppingCartProduct[] = [];
   itemSubscription!: Subscription;
   shippingTypeSubs!: Subscription;
   shippinGroup: any = {};
@@ -50,8 +51,8 @@ export class DetalleCarroProductosComponent implements OnInit, OnDestroy {
     });
 
     this.itemSubscription = (
-      this.cart.items$ as Observable<ProductCart[]>
-    ).subscribe((products: ProductCart[]) => {
+      this.cart.items$ as Observable<IShoppingCartProduct[]>
+    ).subscribe((products: IShoppingCartProduct[]) => {
       this.fullProducts = products;
       if (products.length > 0) {
         this.validateItemCart(products);

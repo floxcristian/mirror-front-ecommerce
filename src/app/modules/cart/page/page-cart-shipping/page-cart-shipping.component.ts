@@ -11,13 +11,9 @@ import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 // Rxjs
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 // Models
-import {
-  ProductCart,
-  CartTotal,
-  CartData,
-} from '../../../../shared/interfaces/cart-item';
+import { CartTotal, CartData } from '../../../../shared/interfaces/cart-item';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import {
@@ -29,7 +25,6 @@ import { Banner } from '../../../../shared/interfaces/banner';
 // Components
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 // Services
-import { CartService } from '../../../../shared/services/cart.service';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 // Constants
 import { ShippingType } from '../../../../core/enums';
@@ -49,13 +44,15 @@ import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
+import { CartService } from '@core/services-v2/cart.service';
+import { IRemoveGroupRequest } from '@core/models-v2/requests/cart/removeGroup.request';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
-import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
+import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 
 export let browserRefresh = false;
 declare let dataLayer: any;
@@ -66,7 +63,7 @@ declare let dataLayer: any;
   providers: [DatePipe],
 })
 export class PageCartShippingComponent implements OnInit {
-  productCart!: ProductCart[];
+  productCart!: IShoppingCartProduct[];
   @ViewChild('tabsShipping', { static: false }) tabsShipping!: TabsetComponent;
 
   innerWidth: number;
@@ -134,10 +131,9 @@ export class PageCartShippingComponent implements OnInit {
   showAllAddress: boolean = false;
   isLogin!: boolean;
   loadingResumen = false;
-  subscription!: Subscription;
 
   // productos validados
-  productsValidate: ProductCart[] = [];
+  productsValidate: IShoppingCartProduct[] = [];
   productosSeleccionado: any = [];
   fechas: any = [];
   //generar grupo de carritos
@@ -149,7 +145,6 @@ export class PageCartShippingComponent implements OnInit {
   stores: IStore[] = [];
 
   constructor(
-    public cart: CartService,
     private logistics: LogisticsService,
     private toast: ToastrService,
     private datePipe: DatePipe,
@@ -165,7 +160,7 @@ export class PageCartShippingComponent implements OnInit {
     private readonly authStateService: AuthStateServiceV2,
     private readonly invitadoStorage: InvitadoStorageService,
     private readonly geolocationService: GeolocationServiceV2,
-    private readonly geolocationApiService: GeolocationApiService,
+    public readonly cart: CartService,
     private readonly geolocationStorage: GeolocationStorageService,
     private readonly customerPreferencesStorage: CustomerPreferencesStorageService,
     private readonly customerAddressApiService: CustomerAddressApiService
@@ -198,13 +193,15 @@ export class PageCartShippingComponent implements OnInit {
 
     this.subscribeOnLogin();
 
-    this.cart.shippingValidateProducts$.subscribe((r: ProductCart[]) => {
-      this.productsValidate = r;
+    this.cart.shippingValidateProducts$.subscribe(
+      (r: IShoppingCartProduct[]) => {
+        this.productsValidate = r;
 
-      this.invitado = this.invitadoStorage.get();
-      this.userSession = this.sessionService.getSession();
-      this.grupoShippingCart.grupo = [];
-    });
+        this.invitado = this.invitadoStorage.get();
+        this.userSession = this.sessionService.getSession();
+        this.grupoShippingCart.grupo = [];
+      }
+    );
 
     this.cart.items$
       .pipe(
@@ -213,7 +210,7 @@ export class PageCartShippingComponent implements OnInit {
           (ProductCarts || []).map((item) => {
             return {
               ProductCart: item,
-              quantity: item.cantidad,
+              quantity: item.quantity,
             };
           })
         )
@@ -294,7 +291,7 @@ export class PageCartShippingComponent implements OnInit {
     }
 
     if (Object.keys(data).length > 0)
-      await this.cart.registrar_contacto(data).toPromise();
+      await this.cart.setNotificationContact(data).toPromise();
   }
 
   /**
@@ -707,7 +704,7 @@ export class PageCartShippingComponent implements OnInit {
           this.addShipping(r.data);
         }
       },
-      (e) => {
+      () => {
         this.toast.error(
           'Ha ocurrido un error en servicio al actualizar el carro de compra'
         );
@@ -1185,26 +1182,26 @@ export class PageCartShippingComponent implements OnInit {
       (address) => address.id == this.selectedShippingId
     );
 
-    const { username } = this.sessionService.getSession();
-    let params = {};
+    const usuario: ISession = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
+    let request: IRemoveGroupRequest = {};
     if (this.shippingType === ShippingType.DESPACHO) {
-      params = {
-        usuario: username,
+      request = {
+        user: usuario.username,
         id: index,
-        destino: resultado.comuna,
+        branch: resultado.comuna,
       };
     } else {
       let disponible = this.stores.find(
         (item) => item.id == this.selectedShippingIdStore
       );
-      params = {
-        usuario: username,
+      request = {
+        user: usuario.username,
         id: index,
-        sucursal: disponible?.code,
+        branch: disponible?.code,
       };
     }
 
-    this.cart.removeGroup(params).subscribe((r) => {
+    this.cart.removeGroup(request).subscribe((r) => {
       this.cart.load();
 
       this.shippingDaysStore = [];
@@ -1370,7 +1367,7 @@ export class PageCartShippingComponent implements OnInit {
           r.data.numero,
         ]);
       },
-      (e) => {
+      () => {
         this.toast.error('Ha ocurrido un error al generar la cotización');
       }
     );
