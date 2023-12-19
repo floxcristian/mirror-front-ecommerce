@@ -11,15 +11,15 @@ export class TrackingStepsComponent implements OnInit {
   @Input() tipoEntrega = 'RPTDA';
   estado_envio: any = {};
   Informe_estado: any = [];
-  seguimiento_estado = [
-    'CREADO',
-    'ORIGEN',
-    'EN PREPARACIÓN',
-    'ESPERA CLIENTE',
-    'ENVIADO',
-    'RECIBIDO',
-    'N/A',
-  ];
+  // seguimiento_estado = [
+  //   'CREADO',
+  //   'ORIGEN',
+  //   'EN PREPARACIÓN',
+  //   'ESPERA CLIENTE',
+  //   'ENVIADO',
+  //   'RECIBIDO',
+  //   'N/A',
+  // ];
   constructor() {}
 
   ngOnInit() {
@@ -30,18 +30,18 @@ export class TrackingStepsComponent implements OnInit {
     this.informarEstados();
   }
 
-  buscarRetirOV() {
-    let estado_envio = this.OVEstados.filter(
-      (r) =>
-        r.CodigoSeguimiento == 30 ||
-        r.CodigoSeguimiento == 3 ||
-        r.CodigoSeguimiento == 31
-    );
-    if (estado_envio.length > 0) {
-      this.estado_envio.nombre = 'Retiro en Tienda';
-      this.estado_envio.fecha = estado_envio[0].FechaSeguimiento;
-    }
-  }
+  // buscarRetirOV() {
+  //   let estado_envio = this.OVEstados.filter(
+  //     (r) =>
+  //       r.CodigoSeguimiento == 30 ||
+  //       r.CodigoSeguimiento == 3 ||
+  //       r.CodigoSeguimiento == 31
+  //   );
+  //   if (estado_envio.length > 0) {
+  //     this.estado_envio.nombre = 'Retiro en Tienda';
+  //     this.estado_envio.fecha = estado_envio[0].FechaSeguimiento;
+  //   }
+  // }
 
   async informarEstados() {
     this.Informe_estado = [];

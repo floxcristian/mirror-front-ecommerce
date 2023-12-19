@@ -1,5 +1,5 @@
 <app-tracking-steps
-  [tipoEntrega]="detalle.codModoEntregaNom"
+  [tipoEntrega]="detalle.shipping.shippingCode"
   [OVEstados]="OVEstados"
 ></app-tracking-steps>
 <div class="row">
@@ -12,10 +12,10 @@
       <div class="body" style="font-size: 14px">
         <div class="row">
           <font color="#0063b9" style="margin-right: 10px">Modo Entrega:</font>
-          <ng-container *ngIf="detalle.codModoEntregaNom == 'RETDA'">
+          <ng-container *ngIf="detalle.shipping.shippingCode == 'RETDA'">
             Retiro en Tienda
           </ng-container>
-          <ng-container *ngIf="detalle.codModoEntregaNom == 'DDLIO'">
+          <ng-container *ngIf="detalle.shipping.shippingCode == 'DDLIO'">
             Despacho a Domicilio
           </ng-container>
         </div>
@@ -23,7 +23,7 @@
           <font color="#0063b9" style="margin-right: 10px"
             >Direccion Despacho:</font
           >
-          {{ detalle.DireccionDespacho | titlecase }}
+          {{ detalle.shipping.fullAddress | titlecase }}
         </div>
         <div
           class="row"
@@ -67,7 +67,8 @@
               <th>Total</th>
             </thead>
             <tbody>
-              <tr *ngFor="let item of productos">
+              <!-- <tr *ngFor="let item of productos"> -->
+                <tr *ngFor="let item of detalle.products">
                 <td>
                   <a [routerLink]="['/inicio/productos/ficha/', item.sku]"
                     ><font color="#0063b9" style="margin-right: 10px">{{
@@ -75,10 +76,10 @@
                     }}</font></a
                   >
                 </td>
-                <td>{{ item.nombre | slice : 0 : 30 }}</td>
-                <td>{{ item.neto | currencyFormat }}</td>
-                <td>{{ item.iva | currencyFormat }}</td>
-                <td>{{ item.cantidad }}</td>
+                <td>{{ item.name | slice : 0 : 30 }}</td>
+                <td>{{ item.lineAmount | currencyFormat }}</td>
+                <td>{{ item.ivaAmount | currencyFormat }}</td>
+                <td>{{ item.quantity }}</td>
                 <td>{{ item.total | currencyFormat }}</td>
               </tr>
               <tr>

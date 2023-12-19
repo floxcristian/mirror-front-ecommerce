@@ -14,11 +14,11 @@
         </span>
         <span class="subtitle"> Creado </span><br />
         <span
-          *ngIf="Informe_estado[0] && Informe_estado[0].FechaSeguimiento"
+          *ngIf="Informe_estado[0] && Informe_estado[0].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[0].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[0].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
       </div>

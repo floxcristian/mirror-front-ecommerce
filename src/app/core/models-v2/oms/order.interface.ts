@@ -26,6 +26,7 @@ export interface Iorder{
     documents: IDocument[]
     salesOrigin: ISalesOrigin
     timestamps: ITimestamps
+    expanded?:boolean
 }
 
 export interface IWarehouse {

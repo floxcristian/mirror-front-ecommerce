@@ -6,6 +6,7 @@ import { TrackingService } from '../../../../shared/services/tracking.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 // Components
 import { Modal_reciboComponent } from '../../components/modal_recibo/modal_recibo/modal_recibo.component';
+import { IProduct, Iorder } from '@core/models-v2/oms/order.interface';
 
 @Component({
   selector: 'app-page-detalle-traking-ov',
@@ -14,11 +15,10 @@ import { Modal_reciboComponent } from '../../components/modal_recibo/modal_recib
 })
 export class DetalleTrakingOvComponent implements OnInit {
   @Input() Ov: string = '';
-  @Input() detalle: any = [];
+  @Input() detalle!: Iorder;
   estadoEnvio: any = [];
   recibo: any;
   productos: any = [];
-  subestados: any = [];
   DetalleOV: any = {};
   suma: number = 0;
 
@@ -34,7 +34,6 @@ export class DetalleTrakingOvComponent implements OnInit {
     private _TrackingService: TrackingService,
     private modalService: BsModalService
   ) {
-    this.subestados = [];
     this.loadingShippingAll = true;
   }
 
@@ -50,19 +49,18 @@ export class DetalleTrakingOvComponent implements OnInit {
   }
 
   async buscar_detalle_estado() {
-    console.log('buscar_detalle_estado...');
-    let consulta: any = await this._TrackingService
-      .DetalleOV(this.Ov)
-      .toPromise();
-    this.subestados = [];
-    this.productos = consulta.data;
+    // console.log('buscar_detalle_estado...');
+    // let consulta: any = await this._TrackingService
+    //   .DetalleOV(this.Ov)
+    //   .toPromise();
+    // this.productos = consulta.data;
     this.suma = 0;
-    this.productos.forEach((r: any) => {
-      this.suma = this.suma + parseInt(r.total);
+    this.detalle.products.forEach((r: IProduct) => {
+      this.suma = this.suma + r.total;
     });
-
-    this.OVEstados = this.detalle.estados;
-    if (this.OVEstados[0].EstadoSegPanel === 'RECIBIDO') {
+    // FIXME
+    this.OVEstados = this.detalle.tracking;
+    if (this.OVEstados[0].status === 'received') {
       this.ver_recibo();
     }
   }
