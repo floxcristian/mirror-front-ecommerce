@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CartService } from '../../../../shared/services/cart.service';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
-import { ClientsService } from '../../../../shared/services/clients.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { AuthApiService } from '@core/services-v2/auth.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
@@ -12,6 +11,7 @@ import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
+import { WishlistService } from '@core/services-v2/whishlist/wishlist.service';
 
 @Component({
   selector: 'app-header-login',
@@ -35,14 +35,14 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private cart: CartService,
-    private clientsService: ClientsService,
     private localStorage: LocalStorageService,
     // Service V2
     private readonly authService: AuthApiService,
     private readonly authStateService: AuthStateServiceV2,
     private readonly sessionStorage: SessionStorageService,
     private readonly sessionTokenStorage: SessionTokenStorageService,
-    private readonly invitadoStorage: InvitadoStorageService
+    private readonly invitadoStorage: InvitadoStorageService,
+    private readonly wishlistService: WishlistService
   ) {
     this.form = this.fb.group({
       username: ['', Validators.required],
@@ -111,7 +111,11 @@ export class LoginComponent implements OnInit {
           }
 
           // Se carga lista de favoritos
-          this.clientsService.cargaFavoritosLocalStorage(res.user.documentId);
+          this.wishlistService
+            .setWishlistOnStorage(res.user.documentId)
+            .subscribe({
+              next: () => {},
+            });
 
           if (
             this.router.url.split('?')[0] != '/carro-compra/confirmar-orden-oc'

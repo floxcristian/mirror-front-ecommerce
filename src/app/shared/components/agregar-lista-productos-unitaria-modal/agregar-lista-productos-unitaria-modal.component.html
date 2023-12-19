@@ -81,7 +81,7 @@
           >
             <option selected [value]="undefined">Seleccione lista...</option>
             <option *ngFor="let item of listas" [ngValue]="item">
-              {{ item.nombre }}
+              {{ item.name }}
             </option>
           </select>
         </div>
@@ -92,7 +92,9 @@
   <h6 class="mb-2">Busque un Artículo</h6>
   <app-producto-select-busqueda
     #search
-    (articulosSeleccionados)="onFiltrosCambiados($event); search.articulos = []"
+    (articulosSeleccionados)="
+      onFiltrosCambiados($event); search.articulos = []
+    "
     [multiple]="false"
   ></app-producto-select-busqueda>
 
@@ -105,10 +107,10 @@
         <th>Acción</th>
       </thead>
       <tbody>
-        <tr *ngIf="skus.length == 0">
+        <tr *ngIf="!selectedProducts.length">
           <td colspan="4" class="text-center">Agregue artículos a la lista</td>
         </tr>
-        <tr *ngFor="let item of skus; let i = index">
+        <tr *ngFor="let item of selectedProducts; let i = index">
           <td>
             <img
               [src]="item.image"
@@ -119,7 +121,7 @@
             />
           </td>
           <td>{{ item.sku }}</td>
-          <td>{{ item.nombre }}</td>
+          <td>{{ item.name }}</td>
           <td>
             <button
               class="btn btn-sm btn-link p-0"

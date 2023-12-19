@@ -12,20 +12,13 @@ import { LocalStorageService } from '@core/modules/local-storage/local-storage.s
 import { Flota } from '../interfaces/flota';
 import { isVacio } from '../utils/utilidades';
 import { ResponseApi } from '../interfaces/response-api';
-import { ArticuloFavorito } from '../interfaces/articuloFavorito';
 import { CargosContactoResponse } from '../interfaces/cargoContacto';
-import { SessionService } from '@core/states-v2/session.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClientsService {
-  constructor(
-    private http: HttpClient,
-    private localS: LocalStorageService,
-    // Services V2
-    private readonly sessionService: SessionService
-  ) {}
+  constructor(private http: HttpClient, private localS: LocalStorageService) {}
 
   obtenerGiros(rut: string) {
     return this.http
@@ -73,11 +66,6 @@ export class ClientsService {
     return this.http.patch(call, data);
   }
 
-  updateIVA(data: any) {
-    const call = environment.apiCustomer + `actualizarIva`;
-    return this.http.put<ResponseApi>(call, data);
-  }
-
   buscarUsuario(id: string) {
     const call = environment.apiCMS + `users/${id}`;
     return this.http.get(call);
@@ -98,24 +86,6 @@ export class ClientsService {
       `${environment.apiCustomer}direccionCRM`,
       request
     );
-  }
-
-  async updateProfile(data: any) {
-    const endpoint = `${environment.apiCustomer}actualizarPerfil`;
-    const params = `?rut=${data.rut}&nombre=${data.nombre}&apellido=${data.apellido}&correo=${data.correo}&telefono=${data.telefono}`;
-    const url = `${endpoint}${params}`;
-    return this.http.get(url).toPromise();
-  }
-
-  async changePassword(data: any) {
-    const usuario = this.sessionService.getSession();
-    const params: any = {
-      correo: usuario.username,
-      passActual: data.password,
-      passNueva: data.pwd,
-    };
-    const url = `${environment.apiCustomer}actualizarContrasenna`;
-    return this.http.get(url, { params }).toPromise();
   }
 
   async ValidarCorreo(data: any) {
@@ -190,149 +160,8 @@ export class ClientsService {
     return this.http.post(environment.apiCustomer + `deuda/generaPago`, data);
   }
 
-  getListaArticulosFavoritos(rut: string): Observable<ResponseApi> {
-    return this.http.get<ResponseApi>(
-      environment.apiCustomer + `favoritos/lista?rut=${rut}`
-    );
-  }
-
   setDevolucion(data: any) {
     return this.http.post(environment.apiCustomer + `devolucion`, data);
-  }
-
-  setListaArticulosFavoritos(
-    nombre: string,
-    rut: string
-  ): Observable<ResponseApi> {
-    return this.http.post<ResponseApi>(
-      environment.apiCustomer + `favoritos/lista`,
-      { nombre, rut }
-    );
-  }
-
-  setArticulosFavoritos(
-    sku: string,
-    rut: string,
-    idLista: string
-  ): Observable<ResponseApi> {
-    return this.http.post<ResponseApi>(
-      environment.apiCustomer + `favoritos/sku/${idLista}`,
-      { sku, rut }
-    );
-  }
-
-  deleteArticulosFavoritos(
-    sku: string,
-    rut: string,
-    idLista: string
-  ): Observable<ResponseApi> {
-    const options = {
-      body: {
-        sku,
-        rut,
-      },
-    };
-    return this.http.delete<ResponseApi>(
-      environment.apiCustomer + `favoritos/sku/${idLista}`,
-      options
-    );
-  }
-
-  deleteTodosArticulosFavoritos(
-    sku: string,
-    rut: string
-  ): Observable<ResponseApi> {
-    const options = {
-      body: {
-        sku,
-        rut,
-      },
-    };
-    return this.http.delete<ResponseApi>(
-      environment.apiCustomer + `favoritos/sku`,
-      options
-    );
-  }
-
-  updateListaArticulosFavoritos(
-    nombre: string,
-    rut: string,
-    idLista: string
-  ): Observable<ResponseApi> {
-    return this.http.put<ResponseApi>(
-      environment.apiCustomer + `favoritos/lista/${idLista}`,
-      { nombre, rut }
-    );
-  }
-
-  predeterminadaListaArticulosFavoritos(
-    rut: string,
-    idLista: string
-  ): Observable<ResponseApi> {
-    return this.http.put<ResponseApi>(
-      environment.apiCustomer + `favoritos/lista/${idLista}/predeterminada`,
-      { rut }
-    );
-  }
-
-  deleteListaArticulosFavoritos(
-    rut: string,
-    idLista: string
-  ): Observable<ResponseApi> {
-    const options = {
-      body: {
-        rut,
-      },
-    };
-    return this.http.delete<ResponseApi>(
-      environment.apiCustomer + `favoritos/lista/${idLista}`,
-      options
-    );
-  }
-
-  setArticulosFavoritosMasivo(
-    formData: FormData,
-    idLista: string
-  ): Observable<ResponseApi> {
-    let url: string;
-    if (isVacio(idLista)) {
-      url = 'favoritos/excel';
-    } else {
-      url = `favoritos/excel/${idLista}`;
-    }
-    return this.http.post<ResponseApi>(
-      environment.apiCustomer + url,
-      formData
-    );
-  }
-
-  setArticulosFavoritosUnitario(
-    request: any,
-    idLista: string
-  ): Observable<ResponseApi> {
-    let url: string;
-    if (isVacio(idLista)) {
-      url = 'favoritos/skus';
-    } else {
-      url = `favoritos/skus/${idLista}`;
-    }
-    return this.http.post<ResponseApi>(environment.apiCustomer + url, request);
-  }
-
-  async cargaFavoritosLocalStorage(rut: string) {
-    let favoritos: ArticuloFavorito;
-    const resp: any = await this.getListaArticulosFavoritos(rut).toPromise();
-    if (resp.data.length > 0) {
-      favoritos = resp.data[0];
-
-      this.localS.set('favoritos', favoritos);
-    } else {
-      this.localS.set('favoritos', {
-        _id: 0,
-        rut,
-        listas: [],
-      });
-    }
   }
 
   getCentrosCosto(rut: string): Observable<ResponseApi> {

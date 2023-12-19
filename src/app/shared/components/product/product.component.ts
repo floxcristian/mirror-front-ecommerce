@@ -23,47 +23,45 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 // Libs
-import { CarouselComponent, SlidesOutputData } from 'ngx-owl-carousel-o';
-
-import { CartService } from '../../services/cart.service';
-import { isPlatformBrowser } from '@angular/common';
-import { OwlCarouselOConfig } from 'ngx-owl-carousel-o/lib/carousel/owl-carousel-o-config';
-import { PhotoSwipeService } from '../../services/photo-swipe.service';
-import { DirectionService } from '../../services/direction.service';
-import { Subscription } from 'rxjs';
-
-import { RootService } from '../../services/root.service';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { ResponseApi } from '../../../shared/interfaces/response-api';
-
-import { ArticuloFavorito, Lista } from '../../interfaces/articuloFavorito';
-import { ClientsService } from '../../services/clients.service';
-import {
-  DataWishListModal,
-  WishListModalComponent,
-} from '../wish-list-modal/wish-list-modal.component';
-import { isVacio } from '../../utils/utilidades';
-import { environment } from '@env/environment';
 import { NguCarousel, NguCarouselConfig } from '@ngu/carousel';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
-import { SessionService } from '@core/states-v2/session.service';
+import { CarouselComponent, SlidesOutputData } from 'ngx-owl-carousel-o';
+import { OwlCarouselOConfig } from 'ngx-owl-carousel-o/lib/carousel/owl-carousel-o-config';
+// Rxjs
+import { Subscription } from 'rxjs';
+// Envs
+import { environment } from '@env/environment';
+// Models
 import { ISession } from '@core/models-v2/auth/session.interface';
 import {
   Attribute,
   IArticleResponse,
 } from '@core/models-v2/article/article-response.interface';
 import { IProductImage } from './image.interface';
+import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { IScalePriceItem } from './scale-price-item.interface';
+import { IWishlist } from '@core/services-v2/whishlist/models/whishlist-response.interface';
+// Services
+import { CartService } from '../../services/cart.service';
+import { PhotoSwipeService } from '../../services/photo-swipe.service';
+import { DirectionService } from '../../services/direction.service';
+import { RootService } from '../../services/root.service';
+import { WishListModalComponent } from '../wish-list-modal/wish-list-modal.component';
+import { isVacio } from '../../utils/utilidades';
+import { SessionService } from '@core/states-v2/session.service';
 import { InventoryService } from '@core/services-v2/inventory.service';
+import { WishlistApiService } from '@core/services-v2/whishlist/whishlist-api.service';
+import { WishlistStorageService } from '@core/storage/wishlist-storage.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 // Modals
 import { ModalScalePriceComponent } from '../modal-scale-price/modal-scale-price.component';
-import { IScalePriceItem } from './scale-price-item.interface';
-import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { WishlistService } from '@core/services-v2/whishlist/wishlist.service';
 
 export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
 
@@ -122,8 +120,8 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   wishlistPromise!: Subscription;
 
   favorito = false;
-  listasEnQueExiste: Lista[] = [];
-  listaPredeterminada!: Lista | undefined;
+  listasEnQueExiste: IWishlist[] = [];
+  listaPredeterminada: IWishlist | null = null;
 
   usuario: ISession;
   isB2B: boolean;
@@ -217,16 +215,17 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     private modalService: BsModalService,
     public router: Router,
     public route: ActivatedRoute,
-    private localS: LocalStorageService,
     public sanitizer: DomSanitizer,
-    private clientsService: ClientsService,
     private cd: ChangeDetectorRef,
     private fb: FormBuilder,
     private readonly gtmService: GoogleTagManagerService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly inventoryService: InventoryService,
-    private readonly geolocationService: GeolocationServiceV2
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly wishlistApiService: WishlistApiService,
+    private readonly wishlistStorage: WishlistStorageService,
+    private readonly wishlistService: WishlistService
   ) {
     this.isB2B = this.sessionService.isB2B();
     this.usuario = this.sessionService.getSession();
@@ -247,7 +246,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       this.geolocationService.selectedStore$.subscribe({
         next: () => {
           this.estado = true;
-          console.log('getSelectedStore desde ProductComponent 1');
           this.tiendaActual = this.geolocationService.getSelectedStore();
           this.Actualizar();
           this.getPopularProducts();
@@ -261,7 +259,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       this.isMobile();
     };
 
-    console.log('getSelectedStore desde ProductComponent 2');
     this.tiendaActual = this.geolocationService.getSelectedStore();
     if (this.layout !== 'quickview' && isPlatformBrowser(this.platformId)) {
       this.photoSwipePromise = this.photoSwipe.load().subscribe();
@@ -522,132 +519,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /*************************************************
-   * Métodos lista de favoritos.
-   *************************************************/
-  async addToWishlist(): Promise<void> {
-    if (this.favorito) {
-      // saca SKU de todas las listas en que existe
-      const resp: ResponseApi = (await this.clientsService
-        .deleteTodosArticulosFavoritos(
-          this.product!.sku,
-          this.usuario.documentId || ''
-        )
-        .toPromise()) as ResponseApi;
-
-      if (!resp.error) {
-        this.favorito = false;
-        this.cd.markForCheck();
-        // se elimina sku de la lista en LocalStorage
-        await this.clientsService.cargaFavoritosLocalStorage(
-          this.usuario.documentId || ''
-        );
-        this.refreshListasEnQueExiste();
-        this.toast.success('Se eliminó de todas las listas');
-      }
-    } else {
-      let listas: Lista[] = [];
-      const resp: ResponseApi = (await this.clientsService
-        .getListaArticulosFavoritos(this.usuario.documentId || '')
-        .toPromise()) as ResponseApi;
-
-      if (resp.data.length) {
-        if (resp.data[0].listas.length) {
-          listas = resp.data[0].listas;
-
-          const listaPredeterminada: Lista | undefined = listas.find(
-            (l) => l.predeterminada
-          );
-          // agregamos SKU a lista predeterminada
-          const resp1: ResponseApi = (await this.clientsService
-            .setArticulosFavoritos(
-              this.product!.sku,
-              this.usuario.documentId || '',
-              listaPredeterminada?._id || ''
-            )
-            .toPromise()) as ResponseApi;
-          if (!resp1.error) {
-            // se agrega sku en la lista del LocalStorage
-            await this.clientsService.cargaFavoritosLocalStorage(
-              this.usuario.documentId || ''
-            );
-
-            this.refreshListasEnQueExiste();
-            this.toast.success(
-              `Se agregó a la lista: ${listaPredeterminada?.nombre}`
-            );
-          }
-
-          this.favorito = true;
-          this.cd.markForCheck();
-          this.listaPredeterminada = listaPredeterminada;
-          return;
-        }
-      }
-
-      const initialState: DataWishListModal = {
-        producto: this.product!,
-        listas: [],
-        listasEnQueExiste: this.listasEnQueExiste,
-      };
-
-      const modal: BsModalRef = this.modalService.show(
-        WishListModalComponent,
-        {
-          initialState,
-          class: 'modal-sm2 modal-dialog-centered',
-          ignoreBackdropClick: true,
-        }
-      );
-      modal.content.event.subscribe((res: any) => {
-        this.refreshListasEnQueExiste();
-        this.favorito = res;
-        this.cd.markForCheck();
-      });
-    }
-  }
-
-  async addToWishlistOptions() {
-    let listas: Lista[] = [];
-    const resp: ResponseApi = (await this.clientsService
-      .getListaArticulosFavoritos(this.usuario.documentId)
-      .toPromise()) as ResponseApi;
-    if (resp.data.length) {
-      if (resp.data[0].listas.length) {
-        listas = resp.data[0].listas;
-      }
-    }
-
-    const initialState: DataWishListModal = {
-      producto: this.product!,
-      listas,
-      listasEnQueExiste: this.listasEnQueExiste,
-    };
-    const modal: BsModalRef = this.modalService.show(WishListModalComponent, {
-      class: 'modal-sm2 modal-dialog-centered',
-      initialState,
-    });
-    modal.content.event.subscribe((res: any) => {
-      this.refreshListasEnQueExiste();
-      this.favorito = res;
-      this.cd.markForCheck();
-    });
-  }
-
-  refreshListasEnQueExiste() {
-    this.listasEnQueExiste = [];
-    const favoritos: ArticuloFavorito = this.localS.get('favoritos');
-    if (!isVacio(favoritos)) {
-      favoritos.listas.forEach((lista) => {
-        if (!isVacio(lista.skus.find((sku) => sku === this.product!.sku))) {
-          this.favorito = true;
-          this.listasEnQueExiste.push(lista);
-        }
-      });
-    }
-    this.cd.markForCheck();
-  }
-
-  /*************************************************
    * Métodos para la galería de imágenes.
    *************************************************/
   private formatThumbVideo(attribute: Attribute): string {
@@ -736,5 +607,126 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       }));
       this.images.push(...videoImages);
     }
+  }
+
+  /*************************************************
+   * Métodos lista de deseos.
+   *************************************************/
+  private refreshListasEnQueExiste(): void {
+    this.listasEnQueExiste = [];
+    const wishlists = this.wishlistStorage.get();
+    if (wishlists.length) {
+      wishlists.forEach((wishlist) => {
+        const isProductOnList = wishlist.articles.find(
+          (product) => product.sku === this.product.sku
+        );
+        if (isProductOnList) {
+          this.favorito = true;
+          this.listasEnQueExiste.push(wishlist);
+        }
+      });
+    }
+    this.cd.markForCheck();
+  }
+
+  async addToWishlist(): Promise<void> {
+    if (this.favorito) {
+      this.wishlistApiService
+        .deleteProductFromAllWishlists(
+          this.usuario.documentId,
+          this.product.sku
+        )
+        .subscribe({
+          next: () => {
+            this.favorito = false;
+            this.cd.markForCheck();
+            this.wishlistService
+              .setWishlistOnStorage(this.usuario.documentId)
+              .subscribe({
+                next: () => {
+                  this.refreshListasEnQueExiste();
+                  this.toast.success('Se eliminó de todas las listas');
+                },
+              });
+          },
+        });
+    } else {
+      let listas: IWishlist[] = [];
+      this.wishlistApiService.getWishlists(this.usuario.documentId).subscribe({
+        next: (wishlists) => {
+          listas = wishlists;
+          if (!wishlists.length) return;
+          const listaPredeterminada = listas.find((l) => l.default);
+
+          this.wishlistApiService
+            .addProductsToWishlist({
+              documentId: this.usuario.documentId,
+              wishlistId: listaPredeterminada?.id || '',
+              skus: [this.product.sku],
+            })
+            .subscribe({
+              next: () => {
+                this.wishlistService
+                  .setWishlistOnStorage(this.usuario.documentId)
+                  .subscribe({
+                    next: () => {
+                      this.refreshListasEnQueExiste();
+                      this.toast.success(
+                        `Se agregó a la lista ${listaPredeterminada?.name}.`
+                      );
+                      this.favorito = true;
+                      this.cd.markForCheck();
+                      this.listaPredeterminada = listaPredeterminada || null;
+                    },
+                  });
+              },
+            });
+        },
+      });
+
+      const modal: BsModalRef = this.modalService.show(
+        WishListModalComponent,
+        {
+          class: 'modal-sm2 modal-dialog-centered',
+          ignoreBackdropClick: true,
+          initialState: {
+            producto: this.product!,
+            listas: [],
+            listasEnQueExiste: this.listasEnQueExiste,
+          },
+        }
+      );
+      modal.content.event.subscribe((res: any) => {
+        this.refreshListasEnQueExiste();
+        this.favorito = res;
+        this.cd.markForCheck();
+      });
+    }
+  }
+
+  /**
+   * Abrir modal con las listas de deseos.
+   */
+  async addToWishlistOptions() {
+    this.wishlistApiService.getWishlists(this.usuario.documentId).subscribe({
+      next: (whishlists) => {
+        const modal: BsModalRef = this.modalService.show(
+          WishListModalComponent,
+          {
+            class: 'modal-sm2 modal-dialog-centered',
+            initialState: {
+              producto: this.product!,
+              listas: whishlists,
+              listasEnQueExiste: this.listasEnQueExiste,
+            },
+          }
+        );
+        modal.content.event.subscribe((res: any) => {
+          this.refreshListasEnQueExiste();
+          this.favorito = res;
+          this.cd.markForCheck();
+        });
+      },
+    });
   }
 }

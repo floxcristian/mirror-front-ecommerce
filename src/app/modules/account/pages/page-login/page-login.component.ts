@@ -7,6 +7,7 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
+import { WishlistStorageService } from '@core/storage/wishlist-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -21,16 +22,16 @@ export class PageLoginComponent {
     private readonly sessionStorage: SessionStorageService,
     private readonly sessionTokenStorage: SessionTokenStorageService,
     private readonly authStateService: AuthStateServiceV2,
-    private readonly customerPreferencesStorage: CustomerPreferencesStorageService
+    private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
+    private readonly wishlistStorage: WishlistStorageService
   ) {
     // Cerramos la sesion del usuario
     this.sessionStorage.remove();
     this.sessionTokenStorage.remove();
-    this.customerPreferencesStorage.remove();
-    //this.localS.remove('preferenciasCliente');
+    this.customerPreferenceStorage.remove();
     this.localS.remove('ordenCompraCargada');
     this.localS.remove('buscadorB2B');
-    this.localS.remove('favoritos');
+    this.wishlistStorage.remove();
     this.authStateService.setSession(null);
 
     this.router.navigate(['/inicio']).then(() => {

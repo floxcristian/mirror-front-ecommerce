@@ -1,13 +1,16 @@
+// Angular
 import { Component, EventEmitter, OnInit } from '@angular/core';
+// Libs
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import { Lista } from '../../interfaces/articuloFavorito';
-import { ArticuloLista } from '../../interfaces/articuloLista';
-import { ResponseApi } from '../../interfaces/response-api';
-import { ClientsService } from '../../services/clients.service';
-import { RootService } from '../../services/root.service';
-import { SessionService } from '@core/states-v2/session.service';
+// Models
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { IWishlist } from '@core/services-v2/whishlist/models/whishlist-response.interface';
+import { ISelectedProduct } from './selected-product.interface';
+// Services
+import { SessionService } from '@core/states-v2/session.service';
+import { WishlistApiService } from '@core/services-v2/whishlist/whishlist-api.service';
+import { Articulo } from '@shared/interfaces/articulos.response';
 
 @Component({
   selector: 'app-agregar-lista-productos-unitaria-modal',
@@ -15,11 +18,11 @@ import { ISession } from '@core/models-v2/auth/session.interface';
   styleUrls: ['./agregar-lista-productos-unitaria-modal.component.scss'],
 })
 export class AgregarListaProductosUnitariaModalComponent implements OnInit {
-  listas: Lista[] = [];
-  skus: ArticuloLista[] = [];
+  listas: IWishlist[] = [];
+  selectedProducts: ISelectedProduct[] = [];
   modo: 'lotes' | 'lista' = 'lotes';
 
-  lista!: Lista;
+  lista!: IWishlist;
   nombre = '';
 
   creandoLista = false;
@@ -30,55 +33,56 @@ export class AgregarListaProductosUnitariaModalComponent implements OnInit {
 
   usuario!: ISession;
 
-  event: EventEmitter<any> = new EventEmitter();
+  event: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
     public ModalRef: BsModalRef,
     private toastr: ToastrService,
-    private clientsService: ClientsService,
-    public rootService: RootService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly wishlistApiService: WishlistApiService
   ) {}
 
   ngOnInit() {
-    this.usuario = this.sessionService.getSession(); // this.rootService.getDataSesionUsuario();
-    this.seleccionandoLista = this.modo === 'lista' ? true : false;
-    this.getListas();
+    this.usuario = this.sessionService.getSession();
+    this.seleccionandoLista = this.modo === 'lista';
+    this.getWishlists();
   }
 
-  getListas() {
-    this.clientsService
-      .getListaArticulosFavoritos(this.usuario.documentId || '0')
-      .subscribe((resp: ResponseApi) => {
-        if (resp.data.length > 0) {
-          if (resp.data[0].listas.length > 0) {
-            this.listas = resp.data[0].listas;
-          }
-        }
-      });
+  /**
+   * Obtener las listas de deseos.
+   */
+  getWishlists(): void {
+    this.wishlistApiService.getWishlists(this.usuario.documentId).subscribe({
+      next: (wishlists) => {
+        this.listas = wishlists;
+      },
+    });
   }
 
-  ingresaNombre() {
+  ingresaNombre(): void {
     this.cantCaracteres = this.nombre.length;
   }
 
-  onFiltrosCambiados(articulo: any) {
-    if (!this.skus.map((e) => e.sku).includes(articulo.sku)) {
-      this.skus.push({
+  onFiltrosCambiados(articulo: Articulo): void {
+    const currentSelectedSkus = this.selectedProducts.map(
+      (product) => product.sku
+    );
+    if (!currentSelectedSkus.includes(articulo.sku)) {
+      this.selectedProducts.push({
         image: articulo.image,
         sku: articulo.sku,
-        nombre: articulo.nombre,
+        name: articulo.nombre,
       });
     } else {
       this.toastr.error(
-        `Artículo SKU: ${articulo.sku} ya se encuentra agregado.`
+        `Artículo SKU <strong>${articulo.sku}</strong> ya se encuentra agregado.`
       );
     }
   }
 
-  eliminarArticulo(idx: any) {
-    this.skus.splice(idx, 1);
+  eliminarArticulo(productIndex: number): void {
+    this.selectedProducts.splice(productIndex, 1);
   }
 
   guardar(): void {
@@ -89,36 +93,54 @@ export class AgregarListaProductosUnitariaModalComponent implements OnInit {
       this.toastr.error('Debe crear una lista o seleccionar una existente.');
       return;
     }
-
-    const request: any = {};
-    if (this.creandoLista) {
-      request.nombre = this.nombre;
-    }
-    let idLista: string = '';
-    if (this.seleccionandoLista) {
-      idLista = this.lista._id;
-    }
-
-    request.rut = this.usuario.documentId;
-    request.skus = this.skus.map((s) => s.sku);
+    const skus = this.selectedProducts.map((product) => product.sku);
 
     this.guardando = true;
-    this.clientsService
-      .setArticulosFavoritosUnitario(request, idLista)
-      .subscribe((resp: ResponseApi) => {
-        if (!resp.error) {
-          this.toastr.success('Lista creada correctamente');
+    if (this.seleccionandoLista) {
+      this.updateWishlist(skus);
+    } else {
+      this.createWishlist(this.nombre, skus);
+    }
+  }
+
+  createWishlist(name: string, skus: string[]) {
+    this.wishlistApiService
+      .createWishlist({ name, skus, documentId: this.usuario.documentId })
+      .subscribe({
+        next: () => {
+          this.toastr.success(`Lista creada correctamente.`);
           this.close(true);
           this.guardando = false;
-        } else {
-          this.toastr.error(resp.msg);
+        },
+        error: () => {
+          this.toastr.error(`Ha ocurrido un error al crear la lista.`);
           this.guardando = false;
-        }
+        },
       });
   }
 
-  close(flag: boolean) {
-    this.event.emit(flag);
+  updateWishlist(skus: string[]) {
+    this.wishlistApiService
+      .addProductsToWishlist({
+        skus,
+        documentId: this.usuario.documentId,
+        wishlistId: this.lista.id,
+      })
+      .subscribe({
+        next: () => {
+          this.toastr.success(`Lista actualizada correctamente.`);
+          this.close(true);
+          this.guardando = false;
+        },
+        error: () => {
+          this.toastr.error(`Ha ocurrido un error al actualizar la lista.`);
+          this.guardando = false;
+        },
+      });
+  }
+
+  close(hasChanges: boolean): void {
+    this.event.emit(hasChanges);
     this.ModalRef.hide();
   }
 }
