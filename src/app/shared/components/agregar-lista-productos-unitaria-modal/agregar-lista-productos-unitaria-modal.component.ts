@@ -64,7 +64,7 @@ export class AgregarListaProductosUnitariaModalComponent implements OnInit {
     this.cantCaracteres = this.nombre.length;
   }
 
-  onFiltrosCambiados(articulo: Articulo): void {
+  onFiltrosCambiados(articulo: any): void {
     const currentSelectedSkus = this.selectedProducts.map(
       (product) => product.sku
     );
