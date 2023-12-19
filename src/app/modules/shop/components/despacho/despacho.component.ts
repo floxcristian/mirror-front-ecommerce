@@ -8,12 +8,13 @@ import {
 } from '@angular/core';
 // Libs
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-// Services
-import { PromesaService } from '../../services/promesa.service';
-import { MpSimuladorHeaderFiltrosMagicos } from './mp-simulador-header.filtros-magicos';
+// Models
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
+// Services
+import { MpSimuladorHeaderFiltrosMagicos } from './mp-simulador-header.filtros-magicos';
 import { LogisticService } from '@core/services-v2/logistic.service';
 import { LogisticPromiseService } from '@core/services-v2/logistic-promise.service';
+import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 
 @Component({
   selector: 'app-despacho',
@@ -22,7 +23,7 @@ import { LogisticPromiseService } from '@core/services-v2/logistic-promise.servi
 })
 export class DespachoComponent implements OnInit {
   @Input() product!: IArticle;
-  @Input() tiendaActual: any = [];
+  @Input() tiendaActual!: ISelectedStore;
   @Input() cantidad: number = 0;
 
   tiendaSeleccionada: any = [];
@@ -43,24 +44,30 @@ export class DespachoComponent implements OnInit {
   localidad: any = [];
 
   constructor(
-    private promesaService: PromesaService,
-
     private modalService: BsModalService,
     private cd: ChangeDetectorRef,
     // V2
-    private logisticService:LogisticService,
-    private logisticPromiseService:LogisticPromiseService
+    private logisticService: LogisticService,
+    private logisticPromiseService: LogisticPromiseService
   ) {}
 
-  async ngOnInit() {
+  ngOnInit(): void {
     this.cd.detectChanges();
-
+    console.log('[-] product: ', this.product);
+    console.log('[-] tiendaActual: ', this.tiendaActual);
+    console.log('[-] cantidad: ', this.cantidad);
   }
 
   async generateChangeGeneralData() {
     let data: any;
-    console.log("🚀 ~ file: despacho.component.ts:63 ~ DespachoComponent ~ generateChangeGeneralData ~ this.modo:", this.modo)
-    console.log("🚀 ~ file: despacho.component.ts:63 ~ DespachoComponent ~ generateChangeGeneralData ~ this.MODOS.RETIRO_TIENDA:", this.MODOS.RETIRO_TIENDA)
+    console.log(
+      '🚀 ~ file: despacho.component.ts:63 ~ DespachoComponent ~ generateChangeGeneralData ~ this.modo:',
+      this.modo
+    );
+    console.log(
+      '🚀 ~ file: despacho.component.ts:63 ~ DespachoComponent ~ generateChangeGeneralData ~ this.MODOS.RETIRO_TIENDA:',
+      this.MODOS.RETIRO_TIENDA
+    );
     if (this.modo === this.MODOS.RETIRO_TIENDA) {
       this.loadPromesas = true;
       data = {
@@ -73,12 +80,11 @@ export class DespachoComponent implements OnInit {
       let productos = [
         {
           sku: this.product.sku,
-          quantity : this.cantidad,
+          quantity: this.cantidad,
         },
       ];
 
       if (this.filtrosRetiroTienda.tienda.nombre) {
-
         if (
           this.filtrosRetiroTienda.tienda.nombre.split('TIENDA ')[1] !==
           undefined
@@ -128,7 +134,7 @@ export class DespachoComponent implements OnInit {
       this.generateChangeGeneralData();
     } else this.filtrosDespacho = null;
   }
-/// FIXME: fix, no funciona bien
+  /// FIXME: fix, no funciona bien
   openForm(template: TemplateRef<any>, modo: any) {
     this.modo = modo;
     this.filtrosMagicosRetiroTienda = MpSimuladorHeaderFiltrosMagicos(
@@ -154,22 +160,21 @@ export class DespachoComponent implements OnInit {
     let productos = [
       {
         sku: this.product.sku,
-        quantity : this.cantidad,
+        quantity: this.cantidad,
       },
     ];
 
     let consulta: any = await this.logisticPromiseService
-    .getLogisticPromise(this.modo, codTienda, productos)
+      .getLogisticPromise(this.modo, codTienda, productos)
       .toPromise();
 
-        if (consulta.data != null)
+    if (consulta.data != null)
       this.promesas = consulta.data.respuesta[0].subOrdenes[0].fletes;
     this.loadPromesas = false;
-
   }
 
   onFiltrosCambiadosRetiroTienda(filtros: any) {
-        this.filtrosRetiroTienda = filtros;
+    this.filtrosRetiroTienda = filtros;
     this.encontrado = false;
     this.generateChangeGeneralData();
   }

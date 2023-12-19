@@ -21,12 +21,7 @@
               style="position: unset"
             >
               <div *nguCarouselDef="let item" class="item">
-                <div
-                  class="tile"
-                  (click)="
-                    featuredCarousel.to(item.id); setActiveImage(item.id)
-                  "
-                >
+                <div class="tile" (click)="setActiveImage(item.id)">
                   <img
                     *ngIf="!item.video"
                     [ngClass]="{
@@ -506,9 +501,9 @@
             <!-- Start::opciones de entrega (desktop) -->
             <div class="col-12" style="margin-bottom: 10px">
               <app-despacho
-                *ngIf="tiendaActual"
+                *ngIf="selectedStore"
                 [product]="product"
-                [tiendaActual]="tiendaActual"
+                [tiendaActual]="selectedStore"
                 [cantidad]="quantity.value"
               ></app-despacho>
             </div>
@@ -787,9 +782,9 @@
           <div class="row px-3">
             <div class="col-12">
               <app-despacho
-                *ngIf="tiendaActual && !estado"
+                *ngIf="selectedStore && !estado"
                 [product]="product"
-                [tiendaActual]="tiendaActual"
+                [tiendaActual]="selectedStore"
                 [cantidad]="quantity.value"
               ></app-despacho>
             </div>

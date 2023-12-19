@@ -1,3 +1,4 @@
+// Angular
 import {
   Component,
   PLATFORM_ID,
@@ -7,33 +8,38 @@ import {
   HostListener,
 } from '@angular/core';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-import { Product, ProductOrigen } from '../../../../shared/interfaces/product';
 import { ActivatedRoute, Router } from '@angular/router';
-import { categories } from '../../../../../data/shop-widget-categories';
+// Libs
 import { ToastrService } from 'ngx-toastr';
+// Rxjs
+import { Subscription, forkJoin } from 'rxjs';
+// Envs
+import { environment } from '@env/environment';
+// Models
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
+import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
+import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
+import { Product, ProductOrigen } from '../../../../shared/interfaces/product';
+// Services
 import { RootService } from '../../../../shared/services/root.service';
-import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
-
 import { SeoService } from '../../../../shared/services/seo.service';
 import { CartService } from '../../../../shared/services/cart.service';
 import { CanonicalService } from '../../../../shared/services/canonical.service';
-import { environment } from '@env/environment';
 import { BuscadorService } from '../../../../shared/services/buscador.service';
-import { Subscription, forkJoin } from 'rxjs';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { ArticleService } from '@core/services-v2/article.service';
-import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
-import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
-import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
+// Pipes
+import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
+import { categories } from '../../../../../data/shop-widget-categories';
+
 declare const $: any;
 declare let fbq: any;
 
@@ -49,8 +55,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
   recommendedProducts: IArticleResponse[] = [];
   matrixProducts: IArticleResponse[] = [];
   relatedProducts: IArticleResponse[] = [];
-  // popularProducts: Product[] = [];
-  //mixProducts: IArticleResponse[] = [];
   minItems = 5;
   stock: boolean = true;
   layout: 'standard' | 'columnar' | 'sidebar' = 'standard';
@@ -141,7 +145,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private canonicalService: CanonicalService,
     private buscadorService: BuscadorService,
     private logistic: LogisticsService,
-    private localS: LocalStorageService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
@@ -150,7 +153,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
     private readonly customerPreferenceService: CustomerPreferenceService
   ) {
-    console.log('getSelectedStore desde PageProductComponent 1');
     this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
     this.preferenciaCliente = this.customerPreferenceStorage.get();
     // cambio de sucursal
