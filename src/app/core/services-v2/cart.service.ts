@@ -29,6 +29,7 @@ import { RootService } from '@shared/services/root.service';
 import { IValidateShoppingCartStockResponse } from '@core/models-v2/cart/validate-stock-response.interface';
 import { IShoppingCartDetail } from '@core/models-v2/cart/shopping-cart-detail.interface';
 import { StorageKey } from '@core/storage/storage-keys.enum';
+import { IThanksForYourPurchase } from '@core/models-v2/cart/thanks-for-your-purchase.interface';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -281,13 +282,13 @@ export class CartService {
               this.CartData.shipment.serviceType == 'TIENDA' ||
               this.CartData.shipment.serviceType == 'EXP'
             ) {
-              this.cartTempData.groups?.forEach((item: any) => {
+              this.cartTempData.groups?.forEach((item) => {
                 let precio: number = 0;
-                suma = Number(suma + item.despacho.precio);
+                suma = Number(suma + item.shipment.price);
 
                 // calculando el total
-                item.productos.forEach((prod: any) => {
-                  precio = Number(precio + prod.precio * prod.cantidad);
+                item.products.forEach((prod) => {
+                  precio = Number(precio + prod.price * prod.quantity);
                 });
 
                 array_precio.push(precio);
@@ -304,13 +305,13 @@ export class CartService {
             let descuento = 0;
             this.discount = null;
             let index = 0;
-            this.cartTempData.groups?.forEach((item: any) => {
+            this.cartTempData.groups?.forEach((item) => {
               if (
                 array_precio[index] >= 60000 ||
                 (usuario.userRole != 'compradorb2c' &&
                   usuario.userRole != 'temp')
               ) {
-                descuento = descuento + item.despacho.descuento;
+                descuento = descuento + item.shipment.discount;
               }
 
               index = index + 1;
@@ -738,5 +739,22 @@ export class CartService {
       city: params.city,
       businessLine: params.businessLine,
     });
+  }
+
+  /**
+   * @description Update thans for your purchase param
+   * @param idCarro
+   * Ejemplo de respuesta:
+   * {
+   *    "isFirstVisit": false,
+   *    "shoppingCart": {...}
+   * }
+   */
+  thanksForYourPurchase(params: {
+    shoppingCartId: string;
+  }): Observable<IThanksForYourPurchase> {
+    const { shoppingCartId } = params;
+    const url = `${API_CART}/${shoppingCartId}/thanksForYourPurchase`;
+    return this.http.put<IThanksForYourPurchase>(url, {});
   }
 }
