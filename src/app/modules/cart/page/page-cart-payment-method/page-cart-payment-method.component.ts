@@ -24,7 +24,6 @@ import {
   FormControl,
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import {
   PaymentParams,
   TransBankToken,
@@ -32,10 +31,7 @@ import {
 import { PaymentService } from '../../../../shared/services/payment.service';
 import { environment } from '@env/environment';
 import { filter } from 'rxjs/internal/operators/filter';
-import {
-  ShippingAddress,
-  ShippingStore,
-} from '../../../../shared/interfaces/address';
+import { ShippingAddress } from '../../../../shared/interfaces/address';
 import {
   calculaIcono,
   dataURLtoFile,

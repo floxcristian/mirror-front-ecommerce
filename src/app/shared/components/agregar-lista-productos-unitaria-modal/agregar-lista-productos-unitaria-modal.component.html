@@ -56,7 +56,7 @@
             type="search"
             class="form-control form-control-sm"
             maxlength="40"
-            [disabled]="guardando"
+            [disabled]="isLoading"
             (search)="cantCaracteres = nombre.length"
             (keyup)="ingresaNombre()"
             (keydown)="ingresaNombre()"
@@ -76,11 +76,11 @@
         <div class="input-group">
           <select
             class="form-control form-control-sm bootstrap-select"
-            [disabled]="guardando"
-            [(ngModel)]="lista"
+            [disabled]="isLoading"
+            [(ngModel)]="selectedWishlist"
           >
             <option selected [value]="undefined">Seleccione lista...</option>
-            <option *ngFor="let item of listas" [ngValue]="item">
+            <option *ngFor="let item of wishlists" [ngValue]="item">
               {{ item.name }}
             </option>
           </select>
@@ -127,7 +127,7 @@
               class="btn btn-sm btn-link p-0"
               ngbTooltip="Eliminar Artículo"
               placement="top"
-              (click)="eliminarArticulo(i)"
+              (click)="unselectProduct(i)"
             >
               <i class="fas fa-trash-alt text-danger"></i>
             </button>
@@ -143,14 +143,14 @@
     name="Cerrar"
     class="btn btn-link text-danger me-2"
     (click)="close(false)"
-    [disabled]="guardando"
+    [disabled]="isLoading"
   >
     Cancelar
   </button>
   <button
     name="Guardar"
     class="btn btn-secondary"
-    [ngClass]="{ 'btn-loading': guardando }"
+    [ngClass]="{ 'btn-loading': isLoading }"
     (click)="guardar()"
   >
     Guardar

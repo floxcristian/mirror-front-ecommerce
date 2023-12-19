@@ -45,16 +45,3 @@ export interface ShippingDateItem {
   productodespacho?: any[];
   fechas?: any[];
 }
-export interface ShippingStore {
-  // Usados
-
-  // No usados
-  nombre: string;
-  recid: string;
-  direccion: string;
-  codigo: string;
-  comuna: string;
-  lat: string;
-  lng: string;
-  direccionCompleta?: string;
-}
