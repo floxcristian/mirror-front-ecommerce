@@ -106,7 +106,8 @@ export interface IProduct {
     iva: number
     ivaAmount: number
     total: number
-    warehouse: string
+    warehouse: string,
+    origin?:string
 }
 
 export interface IStatus {
