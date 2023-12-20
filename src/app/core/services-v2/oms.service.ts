@@ -14,7 +14,7 @@ const API_OMS = `${environment.apiEcommerce}/api/v1/oms`;
 export class OmsService {
   constructor(private http: HttpClient) {}
 
-  getOrders(params: { search: string; page: number; limit: number }):Observable<IOrdersResponse> {
+  getOrders(params: { search: string; page: number; limit: number; sort?: string }):Observable<IOrdersResponse> {
     return this.http.get<IOrdersResponse>(`${API_OMS}/orders`, { params });
   }
 

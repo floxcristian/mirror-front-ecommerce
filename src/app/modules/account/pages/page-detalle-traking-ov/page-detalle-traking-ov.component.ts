@@ -6,6 +6,9 @@ import { TrackingService } from '../../../../shared/services/tracking.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 // Components
 import { Modal_reciboComponent } from '../../components/modal_recibo/modal_recibo/modal_recibo.component';
+import { IProduct, ITracking, Iorder } from '@core/models-v2/oms/order.interface';
+import { EcommerceDocumentService } from '@core/services-v2/ecommerce-document.service';
+import { IBackupOrder } from '@core/models-v2/ecommerce-document/backup-oder.interface';
 
 @Component({
   selector: 'app-page-detalle-traking-ov',
@@ -14,27 +17,20 @@ import { Modal_reciboComponent } from '../../components/modal_recibo/modal_recib
 })
 export class DetalleTrakingOvComponent implements OnInit {
   @Input() Ov: string = '';
-  @Input() detalle: any = [];
-  estadoEnvio: any = [];
-  recibo: any;
-  productos: any = [];
-  subestados: any = [];
-  DetalleOV: any = {};
+  @Input() detalle!: Iorder;
+  recibo!: IBackupOrder;
   suma: number = 0;
 
-  servicio_despacho: any = [];
-  entrega_despacho = {};
-  nombre_servicio = '';
-  OVEstados: any[] = [];
+  OVEstados: ITracking[] = [];
   loadingShippingAll: boolean;
-  EstadoOV: any = [];
   bsModalRef?: BsModalRef;
 
   constructor(
     private _TrackingService: TrackingService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    //Services v2
+    private readonly ecommerceDocumentService:EcommerceDocumentService
   ) {
-    this.subestados = [];
     this.loadingShippingAll = true;
   }
 
@@ -50,28 +46,30 @@ export class DetalleTrakingOvComponent implements OnInit {
   }
 
   async buscar_detalle_estado() {
-    console.log('buscar_detalle_estado...');
-    let consulta: any = await this._TrackingService
-      .DetalleOV(this.Ov)
-      .toPromise();
-    this.subestados = [];
-    this.productos = consulta.data;
     this.suma = 0;
-    this.productos.forEach((r: any) => {
-      this.suma = this.suma + parseInt(r.total);
+    this.detalle.products.forEach((r: IProduct) => {
+      this.suma = this.suma + r.total;
     });
-
-    this.OVEstados = this.detalle.estados;
-    if (this.OVEstados[0].EstadoSegPanel === 'RECIBIDO') {
+    this.OVEstados = this.detalle.tracking;
+    if (this.OVEstados[this.OVEstados.length-1].status === 'received') {
       this.ver_recibo();
     }
   }
 
   async ver_recibo() {
-    const consulta: any = await this._TrackingService
-      .recibo(this.Ov)
-      .toPromise();
-    this.recibo = consulta.data[0];
+    this.ecommerceDocumentService.getSalesOrderBackup({number:this.Ov}).subscribe({
+      next:(res)=>{
+        console.log('asddas',res)
+        this.recibo = res[0]
+      },
+      error:(err)=>{
+        console.log(err)
+      }
+    })
+    // const consulta: any = await this._TrackingService
+    //   .recibo(this.Ov)
+    //   .toPromise();
+    // this.recibo = consulta.data[0];
   }
 
   OpenModal() {

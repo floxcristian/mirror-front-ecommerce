@@ -29,15 +29,15 @@ export class Modal_reciboComponent implements OnInit {
   }
 
   setPodImage() {
-    if (this.data && this.data.strImagen64) {
+    if (this.data && this.data.base64Data) {
       if (!this.esPdf()) {
-        this.urlGuiaMostrarNotSanitized = this.data.strImagen64;
+        this.urlGuiaMostrarNotSanitized = this.data.base64Data;
         this.urlGuiaMostrar = this.sanitizer.bypassSecurityTrustResourceUrl(
           this.urlGuiaMostrarNotSanitized
         );
       } else {
         const pdfBase64 =
-          this.data.strImagen64 + '#toolbar=1&statusbar=1&navpanes=1';
+          this.data.base64Data + '#toolbar=1&statusbar=1&navpanes=1';
         this.pdfBase64 =
           this.sanitizer.bypassSecurityTrustResourceUrl(pdfBase64);
       }
@@ -47,7 +47,7 @@ export class Modal_reciboComponent implements OnInit {
   }
 
   esPdf(): boolean {
-    return this.data.tipoArchivo.toLowerCase().trim() === 'pdf';
+    return this.data.fileType.toLowerCase().trim() === 'pdf';
   }
 
   openPhotoSwipe(event: MouseEvent): void {

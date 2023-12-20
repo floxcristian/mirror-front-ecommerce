@@ -14,14 +14,8 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
   styleUrls: ['./page-tracking.component.scss'],
 })
 export class PageTrackingComponent implements OnInit {
-  formBuscar!: FormGroup;
   innerWidth: number;
-  OVEstados: TrackingStep[] = [];
   OV: string | null = '';
-  loadingShippingAll: boolean = false;
-  OVEstado: any = [];
-  EstadoOV: any = [];
-  DetalleOV: any = {};
   usuario: ISession | null;
   constructor(
     //  private localS: LocalStorageService,
@@ -33,7 +27,6 @@ export class PageTrackingComponent implements OnInit {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
-    // this.usuario = this.localS.get('usuario');
     this.usuario = this.sessionStorage.get();
   }
 
@@ -43,9 +36,6 @@ export class PageTrackingComponent implements OnInit {
     }
   }
 
-  onPageChange(pageNumber: any): void {
-    window.scrollTo({ top: 0 });
-  }
   onResize(event: any) {
     this.innerWidth = event.target.innerWidth;
     window.scrollTo({ top: 0 });

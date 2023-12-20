@@ -6,7 +6,8 @@
     <thead>
       <tr>
         <th>Ov</th>
-        <th>OrdenCompra</th>
+        <!-- <th>OrdenCompra</th> -->
+        <th>N Carro</th>
         <th>Estado</th>
         <th style="width: 15%">Destino</th>
         <th>Modo Entrega</th>
@@ -34,39 +35,39 @@
               </a>
               <a
                 routerLink="/carro-compra/downloadpdf"
-                [queryParams]="{ numero: person.OrdenSeguimiento }"
+                [queryParams]="{ numero: person.trackingNumber }"
                 target="_blank"
-                >{{ person.OrdenSeguimiento }}</a
+                >{{ person.trackingNumber }}</a
               >
             </div>
           </td>
           <td>
             <ng-container
-              *ngIf="person.OrdenCompra != null && person.OrdenCompra != '0'"
+              *ngIf="person.cartNumber != null && person.cartNumber != '0'"
             >
-              {{ person.OrdenCompra }}
+              {{ person.cartNumber }}
             </ng-container>
             <ng-container
-              *ngIf="person.OrdenCompra == null || person.OrdenCompra == '0'"
+              *ngIf="person.cartNumber == null || person.cartNumber == '0'"
             >
               <font color="red">S/OC</font>
             </ng-container>
           </td>
           <td>
-            <ng-container *ngIf="person.EstadoActual == 'RECIBIDO'">
+            <ng-container *ngIf="person.status.status == 'received'">
               <span style="white-space: nowrap"
                 ><i
                   class="fas fa-check-circle"
                   style="margin-right: 10px; color: green"
                 ></i>
-                {{ person.EstadoActual | titlecase }}</span
+                {{ person.status.statusName | titlecase }}</span
               >
             </ng-container>
             <ng-container
               *ngIf="
-                (person.EstadoActual == 'ESPERA CLIENTE' ||
-                  person.EstadoActual == 'ENVIADO') &&
-                person.ModoEntrega == 'VEN- RPTDA'
+                (person.status.status == 'pickup' ||
+                  person.status.status == 'shipped') &&
+                person.shipping.shippingType == 'pickup'
               "
             >
               <span style="white-space: nowrap"
@@ -79,8 +80,8 @@
             </ng-container>
             <ng-container
               *ngIf="
-                person.EstadoActual == 'ENVIADO' &&
-                person.ModoEntrega == 'VEN- DPCLI'
+                person.status.status == 'shipped' &&
+                person.shipping.shippingType == 'delivery'
               "
             >
               <span style="white-space: nowrap"
@@ -88,23 +89,21 @@
                   class="fa fa-paper-plane"
                   style="margin-right: 10px; color: #0063b9"
                 ></i>
-                {{ person.EstadoActual | titlecase }}</span
+                {{ person.status.statusName | titlecase }}</span
               >
             </ng-container>
-            <ng-container *ngIf="person.EstadoActual == 'EN PREPARACIÓN'">
+            <ng-container *ngIf="person.status.status == 'in_process'">
               <span style="white-space: nowrap"
                 ><i
                   class="fas fa-cubes"
                   style="color: orangered; margin-right: 10px"
                 ></i
-                >{{ person.EstadoActual | titlecase }}</span
+                >{{ person.status.statusName | titlecase }}</span
               >
             </ng-container>
             <ng-container
               *ngIf="
-                person.EstadoActual == 'CREADO' ||
-                person.EstadoActual == 'ORIGEN'
-              "
+                person.status.status == 'created'"
             >
               <i
                 class="far fa-file-alt"
@@ -112,24 +111,24 @@
               ></i
               >Creado
             </ng-container>
-            <ng-container *ngIf="person.EstadoActual == 'N/A'">
+            <ng-container *ngIf="person.status.status == 'cancelled'">
               <font color="red">
                 <i class="fas fa-ban" style="margin-right: 10px"></i>
                 Cancelada</font
               >
             </ng-container>
           </td>
-          <td style="width: 15%">{{ person.TiendaDestino | titlecase }}</td>
+          <td style="width: 15%">{{ person.pickupBranch.name | titlecase }}</td>
 
           <td>
-            <ng-container *ngIf="person.ModoEntrega == 'VEN- RPTDA'">
+            <ng-container *ngIf="person.shipping.shippingType == 'pickup'">
               <i
                 class="fas fa-store"
                 style="color: green; font-size: 18px; margin-right: 10px"
               ></i>
               Tienda
             </ng-container>
-            <ng-container *ngIf="person.ModoEntrega == 'VEN- DPCLI'">
+            <ng-container *ngIf="person.shipping.shippingType == 'delivery'">
               <i
                 class="fas fa-truck-moving"
                 style="color: #0063b9; font-size: 18px; margin-right: 10px"
@@ -138,15 +137,15 @@
             </ng-container>
           </td>
           <td style="text-align: right">
-            {{ person.MontoNeto | currencyFormat }}
+            {{ person.payment.salesAmount | currencyFormat }}
           </td>
-          <td>{{ person.FechaCompromisoCliente | date : 'dd-MM-yyyy' }}</td>
+          <td>{{ person.shipping.requestedDate | date : 'dd-MM-yyyy' }}</td>
         </tr>
         <tr [attr.id]="'expand-' + i" class="collapse" aria-expanded="true">
           <td colspan="9">
             <app-page-detalle-traking-ov
               *ngIf="person.expanded"
-              [Ov]="person.OrdenSeguimiento"
+              [Ov]="person.trackingNumber"
               [detalle]="person"
             >
             </app-page-detalle-traking-ov>

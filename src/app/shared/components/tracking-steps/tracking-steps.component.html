@@ -14,11 +14,11 @@
         </span>
         <span class="subtitle"> Creado </span><br />
         <span
-          *ngIf="Informe_estado[0] && Informe_estado[0].FechaSeguimiento"
+          *ngIf="Informe_estado[0] && Informe_estado[0].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[0].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[0].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
       </div>
@@ -38,23 +38,23 @@
         ></span>
         <span class="subtitle"> En Preparación </span><br />
         <span
-          *ngIf="Informe_estado[1] && Informe_estado[1].FechaSeguimiento"
+          *ngIf="Informe_estado[1] && Informe_estado[1].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[1].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[1].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <span
           *ngIf="
             !Informe_estado[1] &&
             Informe_estado[2] &&
-            Informe_estado[2].FechaSeguimiento
+            Informe_estado[2].trackingDate
           "
           style="font-size: 14px"
         >
           {{
-            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[2].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <span
@@ -62,12 +62,12 @@
             !Informe_estado[1] &&
             !Informe_estado[2] &&
             Informe_estado[3] &&
-            Informe_estado[3].FechaSeguimiento
+            Informe_estado[3].trackingDate
           "
           style="font-size: 14px"
         >
           {{
-            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[3].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
       </div>
@@ -83,23 +83,23 @@
         ></span>
         <span class="subtitle"> En reparto a domicilio</span><br />
         <span
-          *ngIf="Informe_estado[2] && Informe_estado[2].FechaSeguimiento"
+          *ngIf="Informe_estado[2] && Informe_estado[2].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[2].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <span
           *ngIf="
             !Informe_estado[2] &&
             Informe_estado[3] &&
-            Informe_estado[3].FechaSeguimiento
+            Informe_estado[3].trackingDate
           "
           style="font-size: 14px"
         >
           {{
-            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[3].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
       </div>
@@ -115,14 +115,14 @@
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel == 'N/A'
+              Informe_estado[3].status == 'cancelled'
             "
             ><i class="fas fa-ban"></i
           ></ng-container>
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel != 'N/A'
+              Informe_estado[3].status != 'cancelled'
             "
           >
             <i class="fas fa-check"></i
@@ -135,25 +135,25 @@
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel == 'N/A'
+              (Informe_estado[3].status == 'N/A' || Informe_estado[3].status == 'cancelled')
             "
             >Cancelada</ng-container
           >
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel != 'N/A'
+              Informe_estado[3].status != 'N/A'
             "
-            >{{ Informe_estado[3].EstadoSegPanel }}</ng-container
+            >{{ Informe_estado[3].satusName }}</ng-container
           >
         </span>
         <br />
         <span
-          *ngIf="Informe_estado[3] && Informe_estado[3].FechaSeguimiento"
+          *ngIf="Informe_estado[3] && Informe_estado[3].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[3].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
       </div>
@@ -171,11 +171,11 @@
         </span>
         <span class="subtitle"> Creado </span><br />
         <span
-          *ngIf="Informe_estado[0] && Informe_estado[0].FechaSeguimiento"
+          *ngIf="Informe_estado[0] && Informe_estado[0].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[0].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[0].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
       </div>
@@ -195,23 +195,23 @@
         ></span>
         <span class="subtitle"> En Preparación </span><br />
         <span
-          *ngIf="Informe_estado[1] && Informe_estado[1].FechaSeguimiento"
+          *ngIf="Informe_estado[1] && Informe_estado[1].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[1].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[1].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <span
           *ngIf="
             !Informe_estado[1] &&
             Informe_estado[2] &&
-            Informe_estado[2].FechaSeguimiento
+            Informe_estado[2].trackingDate
           "
           style="font-size: 14px"
         >
           {{
-            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[2].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <span
@@ -219,12 +219,12 @@
             !Informe_estado[1] &&
             !Informe_estado[2] &&
             Informe_estado[3] &&
-            Informe_estado[3].FechaSeguimiento
+            Informe_estado[3].trackingDate
           "
           style="font-size: 14px"
         >
           {{
-            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[3].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
       </div>
@@ -240,11 +240,11 @@
         ></span>
         <span class="subtitle"> Retirar en tienda</span><br />
         <span
-          *ngIf="Informe_estado[2] && Informe_estado[2].FechaSeguimiento"
+          *ngIf="Informe_estado[2] && Informe_estado[2].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[2].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <span
@@ -252,12 +252,12 @@
             Informe_estado[3] &&
             Informe_estado[1] &&
             !Informe_estado[2] &&
-            Informe_estado[3].FechaSeguimiento
+            Informe_estado[3].trackingDate
           "
           style="font-size: 14px"
         >
           {{
-            Informe_estado[1].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[1].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <span
@@ -265,12 +265,12 @@
             !Informe_estado[1] &&
             !Informe_estado[2] &&
             Informe_estado[3] &&
-            Informe_estado[3].FechaSeguimiento
+            Informe_estado[3].trackingDate
           "
           style="font-size: 14px"
         >
           {{
-            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[3].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
       </div>
@@ -286,14 +286,14 @@
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel == 'N/A'
+              Informe_estado[3].status == 'cancelled'
             "
             ><i class="fas fa-ban"></i
           ></ng-container>
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel != 'N/A'
+              Informe_estado[3].status != 'cancelled'
             "
           >
             <i class="fas fa-check"></i
@@ -306,25 +306,25 @@
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel == 'N/A'
+              (Informe_estado[3].status == 'undefined' || Informe_estado[3].status == 'cancelled')
             "
             >Cancelada</ng-container
           >
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel != 'N/A'
+              Informe_estado[3].status != 'N/A'
             "
-            >{{ Informe_estado[3].EstadoSegPanel }}</ng-container
+            >{{ Informe_estado[3].statusName }}</ng-container
           >
         </span>
         <br />
         <span
-          *ngIf="Informe_estado[3] && Informe_estado[3].FechaSeguimiento"
+          *ngIf="Informe_estado[3] && Informe_estado[3].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[3].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
       </div>
@@ -349,11 +349,11 @@
         </span>
         <span class="subtitle"> Creado </span> <br />
         <span
-          *ngIf="Informe_estado[0] && Informe_estado[0].FechaSeguimiento"
+          *ngIf="Informe_estado[0] && Informe_estado[0].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[0].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[0].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <br />
@@ -375,23 +375,23 @@
         ></span>
         <span class="subtitle"> En Preparación </span> <br />
         <span
-          *ngIf="Informe_estado[1] && Informe_estado[1].FechaSeguimiento"
+          *ngIf="Informe_estado[1] && Informe_estado[1].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[1].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[1].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <span
           *ngIf="
             !Informe_estado[1] &&
             Informe_estado[2] &&
-            Informe_estado[2].FechaSeguimiento
+            Informe_estado[2].trackingDate
           "
           style="font-size: 14px"
         >
           {{
-            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[2].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <span
@@ -404,7 +404,7 @@
           style="font-size: 14px"
         >
           {{
-            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[3].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <br /><span>
@@ -423,23 +423,23 @@
         ></span>
         <span class="subtitle"> En reparto a domicilio</span> <br />
         <span
-          *ngIf="Informe_estado[2] && Informe_estado[2].FechaSeguimiento"
+          *ngIf="Informe_estado[2] && Informe_estado[2].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[2].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <span
           *ngIf="
             !Informe_estado[2] &&
             Informe_estado[3] &&
-            Informe_estado[3].FechaSeguimiento
+            Informe_estado[3].trackingDate
           "
           style="font-size: 14px"
         >
           {{
-            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[3].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <br /><span>
@@ -458,14 +458,14 @@
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel == 'N/A'
+              Informe_estado[3].status == 'N/A'
             "
             ><i class="fas fa-ban"></i
           ></ng-container>
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel != 'N/A'
+              Informe_estado[3].status != 'N/A'
             "
           >
             <i class="fas fa-check"></i
@@ -478,25 +478,25 @@
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel == 'N/A'
+              Informe_estado[3].status == 'N/A'
             "
             >Cancelada</ng-container
           >
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel != 'N/A'
+              Informe_estado[3].status != 'N/A'
             "
-            >{{ Informe_estado[3].EstadoSegPanel }}</ng-container
+            >{{ Informe_estado[3].statusName }}</ng-container
           >
         </span>
         <br />
         <span
-          *ngIf="Informe_estado[3] && Informe_estado[3].FechaSeguimiento"
+          *ngIf="Informe_estado[3] && Informe_estado[3].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[3].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
       </div>
@@ -514,11 +514,11 @@
         </span>
         <span class="subtitle"> Creado </span> <br />
         <span
-          *ngIf="Informe_estado[0] && Informe_estado[0].FechaSeguimiento"
+          *ngIf="Informe_estado[0] && Informe_estado[0].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[0].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[0].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <br />
@@ -540,23 +540,23 @@
         ></span>
         <span class="subtitle"> En Preparación </span> <br />
         <span
-          *ngIf="Informe_estado[1] && Informe_estado[1].FechaSeguimiento"
+          *ngIf="Informe_estado[1] && Informe_estado[1].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[1].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[1].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <span
           *ngIf="
             !Informe_estado[1] &&
             Informe_estado[2] &&
-            Informe_estado[2].FechaSeguimiento
+            Informe_estado[2].trackingDate
           "
           style="font-size: 14px"
         >
           {{
-            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[2].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <span
@@ -564,12 +564,12 @@
             !Informe_estado[1] &&
             !Informe_estado[2] &&
             Informe_estado[3] &&
-            Informe_estado[3].FechaSeguimiento
+            Informe_estado[3].trackingDate
           "
           style="font-size: 14px"
         >
           {{
-            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[3].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <br />
@@ -587,11 +587,11 @@
         ></span>
         <span class="subtitle"> Retirar en tienda</span> <br />
         <span
-          *ngIf="Informe_estado[2] && Informe_estado[2].FechaSeguimiento"
+          *ngIf="Informe_estado[2] && Informe_estado[2].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[2].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[2].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <span
@@ -599,12 +599,12 @@
             Informe_estado[3] &&
             Informe_estado[1] &&
             !Informe_estado[2] &&
-            Informe_estado[3].FechaSeguimiento
+            Informe_estado[3].trackingDate
           "
           style="font-size: 14px"
         >
           {{
-            Informe_estado[1].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[1].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <span
@@ -612,12 +612,12 @@
             !Informe_estado[1] &&
             !Informe_estado[2] &&
             Informe_estado[3] &&
-            Informe_estado[3].FechaSeguimiento
+            Informe_estado[3].trackingDate
           "
           style="font-size: 14px"
         >
           {{
-            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[3].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
         <br />
@@ -635,14 +635,14 @@
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel == 'N/A'
+              Informe_estado[3].status == 'N/A'
             "
             ><i class="fas fa-ban"></i
           ></ng-container>
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel != 'N/A'
+              Informe_estado[3].status != 'N/A'
             "
           >
             <i class="fas fa-check"></i
@@ -655,25 +655,25 @@
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel == 'N/A'
+              Informe_estado[3].status == 'N/A'
             "
             >Cancelada</ng-container
           >
           <ng-container
             *ngIf="
               Informe_estado[3] !== undefined &&
-              Informe_estado[3].EstadoSegPanel != 'N/A'
+              Informe_estado[3].status != 'N/A'
             "
-            >{{ Informe_estado[3].EstadoSegPanel }}</ng-container
+            >{{ Informe_estado[3].satusName }}</ng-container
           >
         </span>
         <br />
         <span
-          *ngIf="Informe_estado[3] && Informe_estado[3].FechaSeguimiento"
+          *ngIf="Informe_estado[3] && Informe_estado[3].trackingDate"
           style="font-size: 14px"
         >
           {{
-            Informe_estado[3].FechaSeguimiento | date : 'dd/MM/yyyy HH:mm:ss'
+            Informe_estado[3].trackingDate | date : 'dd/MM/yyyy HH:mm:ss'
           }}
         </span>
       </div>

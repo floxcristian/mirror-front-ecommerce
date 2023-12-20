@@ -48,6 +48,7 @@ import { GetLogisticPromiseResponse } from '@core/models-v2/responses/logistic-p
 import { TransferShoppingCartRequest } from '@core/models-v2/requests/cart/transfer-shopping-cart.request';
 import { ShoppingCartOmniStorageService } from '@core/storage/shopping-cart-omni-storage.service';
 import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
+import { IProduct } from '@core/models-v2/oms/order.interface';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -131,7 +132,7 @@ export class CartService {
     this.onAddingMovilButtonSubject$.asObservable();
 
   async add(
-    product: IArticle,
+    product: IArticle | IProduct,
     quantity: number
   ): Promise<IShoppingCart | undefined> {
     // Sucursal
