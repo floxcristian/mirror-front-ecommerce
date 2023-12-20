@@ -42,7 +42,6 @@ import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
-import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 import { PaymentMethodService } from '@core/services-v2/payment-method.service';
 import { IPaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
@@ -66,7 +65,8 @@ import { CustomerService } from '@core/services-v2/customer.service';
 import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
 import { ICreateGuest } from '@core/models-v2/customer/create-guest.interface';
 import { environment } from '@env/environment';
-import { IInvitado } from '@core/models-v2/storage/invitado.interface';
+import { GuestStorageService } from '@core/storage/guest-storage.service';
+import { IGuest } from '@core/models-v2/storage/guest.interface';
 
 declare const $: any;
 export interface Archivo {
@@ -110,7 +110,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   alertCartShow = false;
   rejectedCode!: number | null;
   btnWebpayPost = false;
-  invitado: IInvitado;
+  guest: IGuest;
   formVisita!: FormGroup;
   validado!: boolean;
   innerWidth: number;
@@ -166,7 +166,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionStorage: SessionStorageService,
-    private readonly invitadoStorage: InvitadoStorageService,
+    private readonly guestStorage: GuestStorageService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly geolocationApiService: GeolocationApiService,
@@ -181,13 +181,13 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       : 900;
     this.formDefault();
     // this.invitado = this.localS.get('invitado');
-    this.invitado = this.invitadoStorage.get();
-    if (this.invitado) {
+    this.guest = this.guestStorage.get() as IGuest;
+    if (this.guest) {
       this.formVisita.setValue({
-        rut: this.invitado.rut,
-        nombre: this.invitado.first_name,
-        apellido: this.invitado.last_name,
-        telefono: (this.invitado.phone || '').slice(-8),
+        rut: this.guest.documentId,
+        nombre: this.guest.firstName,
+        apellido: this.guest.lastName,
+        telefono: (this.guest.phone || '').slice(-8),
       });
     }
 
@@ -218,7 +218,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   obtenerGiros(): void {
     this.girosOptions = [];
     let rut = this.userSession?.documentId;
-    if (this.invitado) {
+    if (this.guest) {
       let formattedRut = this.formVisita.value.rut.includes('-')
         ? this.formVisita.value.rut
         : this.formatRut(this.formVisita.value.rut);
@@ -279,7 +279,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     if (this.isB2B || this.userSession.businessLine) {
       this.documentOptions.push({ id: InvoiceType.INVOICE, name: 'FACTURA' });
     }
-    if (this.invitado) {
+    if (this.guest) {
       this.loadComunas();
       this.tienda = null;
       this.buildForm();
@@ -383,11 +383,11 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
           this.obtieneDireccionCliente();
           break;
         }
-        if (this.invitado) {
+        if (this.guest) {
           //si es usuario invitado, se obtiene la direccion
-          this.direccionDespacho.street = this.invitado['calle'] ?? '';
-          this.direccionDespacho.city = this.invitado['comuna'] ?? '';
-          this.direccionDespacho.number = this.invitado['numero'] ?? '';
+          this.direccionDespacho.street = this.guest.street ?? '';
+          this.direccionDespacho.city = this.guest.commune ?? '';
+          this.direccionDespacho.number = this.guest.number ?? '';
           break;
         }
         break;
@@ -712,7 +712,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.paymentMethodActive = item.code;
     let active_khipu = false;
 
-    if (!this.invitado) {
+    if (!this.guest) {
       active_khipu = true;
     }
 
@@ -720,20 +720,20 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       this.validado = true;
 
       // let invitado: any = this.localS.get('invitado');
-      let invitado = this.invitadoStorage.get();
-      invitado.rut = this.getValidRutFormat(this.formVisita.value.rut);
-      invitado.carro_id = this.cartSession._id || '';
-      invitado.tipoEnvio =
+      let invitado = this.guestStorage.get() as IGuest;
+      invitado.documentId = this.getValidRutFormat(this.formVisita.value.rut);
+      invitado.cartId = this.cartSession._id || '';
+      invitado.deliveryType =
         this.cartSession.shipment?.deliveryMode === 'VEN- DPCLI' ||
         this.cartSession.shipment?.deliveryMode === DeliveryModeType.DELIVERY
           ? 'DES'
           : 'RC';
       // this.localS.remove('invitado');
-      this.invitadoStorage.remove();
+      this.guestStorage.remove();
       // this.localS.set('invitado', invitado);
-      this.invitadoStorage.set(invitado);
+      this.guestStorage.set(invitado);
       // this.invitado = this.localS.get('invitado');
-      this.invitado = this.invitadoStorage.get();
+      this.guest = this.guestStorage.get() as IGuest;
       active_khipu = true;
     }
 
@@ -779,8 +779,10 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
    * + Si es invitado se guarda.
    */
   async prepararCarroPrePago(): Promise<void> {
-    if (this.invitado) {
-      this.invitado.rut = this.getValidRutFormat(this.invitado.rut ?? '');
+    if (this.guest) {
+      this.guest.documentId = this.getValidRutFormat(
+        this.guest.documentId ?? ''
+      );
 
       const isValidAddress =
         this.selectedDocument === InvoiceType.INVOICE &&
@@ -790,33 +792,33 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         this.formDireccion.value.numero &&
         this.formDireccion.value.comuna;
       if (isValidAddress) {
-        this.invitado['calle'] = this.formDireccion.value.calle;
-        this.invitado['numero'] = this.formDireccion.value.numero;
-        this.invitado['comunaCompleta'] = this.formDireccion.value.comuna;
+        this.guest.street = this.formDireccion.value.calle;
+        this.guest.number = this.formDireccion.value.numero;
+        this.guest.completeComune = this.formDireccion.value.comuna;
       }
 
-      this.invitado.giro = this.selectedGiro || '';
+      this.guest.businessLine = this.selectedGiro || '';
 
       const createGuestRequest: ICreateGuest = {
-        email: this.invitado.email ?? '',
-        documentId: this.invitado.rut ?? '',
+        email: this.guest.email ?? '',
+        documentId: this.guest.documentId ?? '',
         documentType: environment.country.toUpperCase(),
-        firstName: this.invitado.first_name ?? '',
-        lastName: this.invitado.last_name ?? '',
-        phone: this.invitado.phone ?? '',
+        firstName: this.guest.firstName ?? '',
+        lastName: this.guest.lastName ?? '',
+        phone: this.guest.phone ?? '',
         address: {
-          location: this.invitado.comunaCompleta ?? '',
-          city: this.invitado.comunaCompleta
-            ? this.invitado.comunaCompleta.split('@')[0]
+          location: this.guest.completeComune ?? '',
+          city: this.guest.completeComune
+            ? this.guest.completeComune.split('@')[0]
             : 'SAN BERNARDO',
-          region: this.invitado.comunaCompleta
-            ? this.invitado.comunaCompleta.split('@')[2]
+          region: this.guest.completeComune
+            ? this.guest.completeComune.split('@')[2]
             : '13',
-          province: this.invitado.comunaCompleta
-            ? this.invitado.comunaCompleta.split('@')[1]
+          province: this.guest.completeComune
+            ? this.guest.completeComune.split('@')[1]
             : '134',
-          number: this.invitado.numero ?? '',
-          street: this.invitado.calle ?? '',
+          number: this.guest.number ?? '',
+          street: this.guest.street ?? '',
           departmentOrHouse: '',
           reference: '',
           latitude: 0,
@@ -826,12 +828,12 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
       this.customerService.createGuest(createGuestRequest).subscribe({
         next: () => {
-          let user = this.invitado;
+          let user: IGuest = this.guest;
 
           this.cartService
             .saveTemp({
-              shoppingCartId: user.carro_id.toString(),
-              documentId: user.rut,
+              shoppingCartId: user.cartId ? user.cartId.toString() : '',
+              documentId: user.documentId,
               email: user.email,
             })
             .subscribe({
@@ -841,7 +843,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
                 //userCambio._id = user.email;
                 userCambio.email = user.email;
                 userCambio.userRole = UserRoleType.B2C;
-                userCambio.documentId = user.rut;
+                userCambio.documentId = user.documentId;
                 userCambio.login_temp = true;
                 userCambio.firstName = this.formVisita.value.nombre || '';
                 userCambio.lastName = this.formVisita.value.apellido || '';
@@ -1369,24 +1371,24 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     };
 
     // let invitado: any = this.localS.get('invitado');
-    let invitado = this.invitadoStorage.get();
+    let invitado = this.guestStorage.get() as IGuest;
 
-    invitado.calle = direccion.calle;
-    invitado.comuna = direccion.comuna;
-    invitado.comunaCompleta = direccion.comunaCompleta;
-    invitado.numero = direccion.numero;
-    invitado.depto = direccion.depto ? direccion.depto : 0;
+    invitado.street = direccion.calle;
+    invitado.commune = direccion.comuna;
+    invitado.completeComune = direccion.comunaCompleta;
+    invitado.number = direccion.numero;
+    invitado.department = direccion.depto ? direccion.depto : 0;
 
     // this.localS.remove('invitado');
-    this.invitadoStorage.remove();
+    this.guestStorage.remove();
     // this.localS.set('invitado', invitado);
-    this.invitadoStorage.set(invitado);
+    this.guestStorage.set(invitado);
 
     /*
     invitado.rut = this.getValidRutFormat(this.formVisita.value.rut);
     invitado.carro_id = this.cartSession._id;
     invitado.tipoEnvio = this.cartSession.despacho.codTipo === 'VEN- DPCLI' ? 'DES' : 'RC';*/
     // this.invitado = this.localS.get('invitado');
-    this.invitado = this.invitadoStorage.get();
+    this.guest = this.guestStorage.get() as IGuest;
   }
 }

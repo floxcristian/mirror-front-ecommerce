@@ -1,3 +1,5 @@
+import { IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
+
 export interface Address {
   default: boolean;
   firstName: string;
@@ -42,6 +44,6 @@ export interface ShippingService {
 
 export interface ShippingDateItem {
   grupo?: number;
-  productodespacho?: any[];
+  productodespacho: IShoppingCartProduct[];
   fechas?: any[];
 }
