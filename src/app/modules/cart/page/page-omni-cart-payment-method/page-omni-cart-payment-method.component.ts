@@ -52,7 +52,7 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
     private readonly paymentMethodOmniService: PaymentMethodOmniService
   ) {}
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     this.loadCart = true;
     this.route.queryParams.subscribe((params) => {
       this.id = params['cart_id'];
@@ -74,7 +74,7 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
     this.loadCart = false;
   }
 
-  async loadData() {
+  private async loadData() {
     /*let consulta: any = await this.cartService
       .getCarroOmniChannel(this.id)
       .toPromise();
@@ -89,7 +89,7 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
     }*/
   }
 
-  async getDireccion() {
+  private async getDireccion() {
     if (
       this.cartSession.shipment?.deliveryMode === DeliveryModeType.DELIVERY
     ) {
@@ -104,11 +104,7 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
       const stores = await firstValueFrom(
         this.geolocationApiService.getStores()
       );
-      if (
-        this.cartSession &&
-        this.cartSession.groups &&
-        this.cartSession.groups.length
-      ) {
+      if (this.cartSession.groups?.length) {
         this.direccion = stores.find(
           (item) => item.id === this.cartSession.groups![0].shipment.addressId
         );
@@ -132,20 +128,20 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
   }
 
   //funciones para los pagos
-  async PaymentMercadoPago() {
+  private async PaymentMercadoPago() {
     this.paymentMethodOmniService.redirectToMercadoPagoTransaction({
       shoppingCartId: this.cartSession._id!.toString(),
     });
   }
 
-  async PaymentWebpay() {
+  private async PaymentWebpay() {
     this.paymentMethodOmniService.redirectToWebpayTransaction({
       shoppingCartId: this.cartSession._id!.toString(),
     });
   }
 
   //proceso khipu
-  async paymentKhipu(banco: any) {
+  private async paymentKhipu(banco: any) {
     this.paymentMethodOmniService.redirectToKhipuTransaction({
       shoppingCartId: this.cartSession._id!.toString(),
       bankId: banco ? banco.bankId : '',
@@ -155,7 +151,7 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
     });
   }
 
-  async showRejectedMsg(query: any) {
+  private async showRejectedMsg(query: any) {
     this.alertCartShow = false;
 
     if (query.status === 'rejected') {
@@ -181,7 +177,7 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
   /**
    * Abrir modal de pago para Khipu.
    */
-  openModal(): void {
+  private openModal(): void {
     this.modalService.show(this.content, {
       backdrop: 'static',
       keyboard: false,

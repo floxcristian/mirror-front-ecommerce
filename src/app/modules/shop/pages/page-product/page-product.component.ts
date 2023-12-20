@@ -39,6 +39,11 @@ import { CustomerPreferenceService } from '@core/services-v2/customer-preference
 // Pipes
 import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
 import { categories } from '../../../../../data/shop-widget-categories';
+import { OwlOptions } from 'ngx-owl-carousel-o';
+import {
+  CarouselDesktopOptions,
+  CarouselMobileOptions,
+} from './constants/carousel-config';
 
 declare const $: any;
 declare let fbq: any;
@@ -73,41 +78,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
   breadcrumbs: any[] = [];
 
   relleno: any[] = [1, 2, 3, 4, 5, 6];
-  carouselOptions = {
-    items: 6,
-    nav: true,
-    navText: [
-      `<i class="fas fa-chevron-left"></i>`,
-      `<i class="fas fa-chevron-right"></i>`,
-    ],
-    dots: true,
-    slideBy: 'page',
-    responsive: {
-      1366: { items: 6 },
-      1100: { items: 6 },
-      920: { items: 6 },
-      680: { items: 3 },
-      500: { items: 3 },
-      0: { items: 2 },
-    },
-  };
-
-  carrouselOptionsMobile = {
-    items: 6,
-    nav: false,
-    dots: true,
-    slideBy: 'page',
-    //loop: true,
-    merge: true,
-    responsive: {
-      1366: { items: 6 },
-      1100: { items: 6 },
-      920: { items: 6 },
-      680: { items: 3 },
-      500: { items: 3 },
-      0: { items: 5, nav: false, mergeFit: true },
-    },
-  };
+  carouselOptions: OwlOptions;
+  carrouselOptionsMobile: OwlOptions;
 
   acordion = [
     {
@@ -153,6 +125,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
     private readonly customerPreferenceService: CustomerPreferenceService
   ) {
+    this.carouselOptions = CarouselDesktopOptions;
+    this.carrouselOptionsMobile = CarouselMobileOptions;
     this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
     this.preferenciaCliente = this.customerPreferenceStorage.get();
     // cambio de sucursal
@@ -252,7 +226,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     this.isMobile();
   }
 
-  isMobile() {
+  isMobile(): void {
     this.showMobile = window.innerWidth < this.puntoQuiebre;
   }
 
@@ -350,7 +324,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     const descripcion = this.root.limpiarNombres(product.description);
     const descripcionFull = `${nombre} - ${descripcion}`;
 
-    const meta = {
+    this.seoService.generarMetaTag({
       title: this.capitalize.transform(nombre),
       description: this.capitalize.transform(descripcionFull),
       image: imagen,
@@ -359,8 +333,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
       type: 'product',
       keywords: descripcionFull,
       slug,
-    };
-    this.seoService.generarMetaTag(meta);
+    });
 
     if (isPlatformBrowser(this.platformId)) {
       this.canonicalService.setCanonicalURL(location.href);
