@@ -11,6 +11,7 @@ import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 // Libs
 import { ToastrService } from 'ngx-toastr';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 // Rxjs
 import { Subscription, forkJoin } from 'rxjs';
 // Envs
@@ -21,6 +22,8 @@ import { IArticleResponse } from '@core/models-v2/article/article-response.inter
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
+import { IBreadcrumbItem } from './models/breadcrumb.interface';
+import { ICategoryParams } from './models/category-params.interface';
 import { Product, ProductOrigen } from '../../../../shared/interfaces/product';
 // Services
 import { RootService } from '../../../../shared/services/root.service';
@@ -38,13 +41,12 @@ import { CustomerPreferencesStorageService } from '@core/storage/customer-prefer
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 // Pipes
 import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
-import { categories } from '../../../../../data/shop-widget-categories';
-import { OwlOptions } from 'ngx-owl-carousel-o';
+
 import {
   CarouselDesktopOptions,
   CarouselMobileOptions,
 } from './constants/carousel-config';
-import { IBreadcrumbItem } from './models/breadcrumb.interface';
+
 import { BreadcrumbUtils } from './services/breadcrumb-utils.service';
 
 declare const $: any;
@@ -56,7 +58,6 @@ declare let fbq: any;
   styleUrls: ['./page-product.component.scss'],
 })
 export class PageProductComponent implements OnInit, OnDestroy {
-  categories = categories;
   product!: IArticleResponse | undefined | any;
   recommendedProducts: IArticleResponse[] = [];
   matrixProducts: IArticleResponse[] = [];
@@ -71,11 +72,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
   innerWidth: number;
   window = window;
 
-  paramsCategory = {
-    firstCategory: '',
-    secondCategory: '',
-    thirdCategory: '',
-  };
+  private paramsCategory!: ICategoryParams;
   breadcrumbs: IBreadcrumbItem[] = [];
 
   relleno: any[] = [1, 2, 3, 4, 5, 6];
@@ -130,17 +127,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
     this.carrouselOptionsMobile = CarouselMobileOptions;
     this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
     this.preferenciaCliente = this.customerPreferenceStorage.get();
-    // cambio de sucursal
-    this.geolocationService.selectedStore$.subscribe({
-      next: (res) => {
-        if (this.product) {
-          this.tiendaSeleccionada = res;
-          this.cart.cargarPrecioEnProducto(this.product);
-          this.getMixProducts(this.product.sku);
-          // this.getMatrixProducts(this.product.sku);
-        }
-      },
-    });
+
+    this.onSelectedStoreChange();
 
     //cambio de dirección
     this.despachoCliente = this.logistic.direccionCliente$.subscribe((r) => {
@@ -179,10 +167,31 @@ export class PageProductComponent implements OnInit, OnDestroy {
           : this.sidebarPosition;
     });
 
+    this.onRouteParamsChange();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize(): void {
+    this.isMobile();
+  }
+
+  private onSelectedStoreChange(): void {
+    this.geolocationService.selectedStore$.subscribe({
+      next: (selectedStore) => {
+        if (this.product) {
+          this.tiendaSeleccionada = selectedStore;
+          this.cart.cargarPrecioEnProducto(this.product);
+          this.getMixProducts(this.product.sku);
+          // this.getMatrixProducts(this.product.sku);
+        }
+      },
+    });
+  }
+
+  private onRouteParamsChange(): void {
     this.route.params.subscribe((params) => {
-      console.log('params en ficha: ', params);
       // Seteamos el origen del ingreso a la ficha del producto.
-      let origenHistory: string[] = this.cart.getOrigenHistory();
+      const origenHistory = this.cart.getOrigenHistory();
       this.origen = origenHistory.length ? origenHistory : ['link', ''];
 
       this.root.hideModalRefBuscador();
@@ -193,7 +202,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
           thirdCategory: params['thirdCategory'] || '',
         };
         const sku = params['id'].split('-').reverse()[0];
-        this.getDetailArticle(sku);
+        this.getProductDetail(sku);
         this.getMixProducts(sku);
         // this.getMatrixProducts(sku);
       } else {
@@ -215,61 +224,57 @@ export class PageProductComponent implements OnInit, OnDestroy {
     this.buscadorService.filtrosVisibles(false);
   }
 
-  @HostListener('window:resize', ['$event'])
-  cambiaDimension(event: any) {
-    this.isMobile();
-  }
-
   isMobile(): void {
     this.showMobile = window.innerWidth < this.puntoQuiebre;
   }
 
-  private getDetailArticle(sku: string): void {
+  private getProductDetail(sku: string): void {
     const { documentId } = this.sessionService.getSession();
     const selectedStore = this.geolocationService.getSelectedStore();
 
-    if (selectedStore) {
-      const params: any = {
-        sku,
-        documentId: documentId,
-        branchCode: selectedStore.code,
-        location: selectedStore.city,
-      };
-
-      if (this.preferenciaCliente?.deliveryAddress) {
-        params.location = this.preferenciaCliente?.deliveryAddress?.location
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '');
-      }
-
-      this.articleService
-        .getArticleDataSheet(params)
-        .subscribe((response: any) => {
-          if (response) {
-            response.chassis = response.chassis || '';
-            const product = response;
-            this.product = { ...product };
-            response.stockSummary.companyStock > 0
-              ? (this.stock = true)
-              : (this.stock = false);
-            // TODO: probar funcion por funcion para ver si funciona
-            this.setMeta(this.product);
-            console.log('llego');
-
-            this.breadcrumbs = BreadcrumbUtils.setBreadcrumbs(
-              this.paramsCategory,
-              product.name
-            );
-            // this.productFacebook(this.product);
-          } else {
-            this.toastr.error(
-              'Connection error, unable to fetch the articles'
-            );
-          }
-        });
-    } else {
-      console.error('User or store information is missing');
+    if (!selectedStore) {
+      this.toastr.error(
+        `Ha ocurrido un error al obtener información del producto.`
+      );
+      return;
     }
+
+    const params: any = {
+      sku,
+      documentId: documentId,
+      branchCode: selectedStore.code,
+      location: selectedStore.city,
+    };
+
+    if (this.preferenciaCliente?.deliveryAddress) {
+      params.location = this.preferenciaCliente?.deliveryAddress?.location
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+    }
+
+    this.articleService
+      .getArticleDataSheet(params)
+      .subscribe((response: any) => {
+        if (response) {
+          response.chassis = response.chassis || '';
+          const product = response;
+          this.product = { ...product };
+          response.stockSummary.companyStock > 0
+            ? (this.stock = true)
+            : (this.stock = false);
+          // TODO: probar funcion por funcion para ver si funciona
+          this.setMeta(this.product);
+          console.log('llego');
+
+          this.breadcrumbs = BreadcrumbUtils.setBreadcrumbs(
+            this.paramsCategory,
+            product.name
+          );
+          // this.productFacebook(this.product);
+        } else {
+          this.toastr.error('Connection error, unable to fetch the articles');
+        }
+      });
   }
 
   setMeta(product: IArticle): void {
@@ -320,11 +325,11 @@ export class PageProductComponent implements OnInit, OnDestroy {
     });
   }
 
-  getMixProducts(sku: any) {
+  getMixProducts(sku: string): void {
     const selectedStore = this.geolocationService.getSelectedStore();
 
     const obj4 = {
-      sku: sku,
+      sku,
       documentId: this.user.documentId,
       branchCode: selectedStore.code,
       location: this.preferenciaCliente?.deliveryAddress
