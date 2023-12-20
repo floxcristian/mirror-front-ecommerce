@@ -13,7 +13,13 @@ import { environment } from '@env/environment';
 import { GeolocationServiceV2 } from './geolocation/geolocation.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { catchError, map } from 'rxjs/operators';
-import { BehaviorSubject, Observable, Subject, lastValueFrom } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  firstValueFrom,
+  lastValueFrom,
+} from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { ShoppingCartStorageService } from '@core/storage/shopping-cart-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
@@ -40,6 +46,8 @@ import {
 } from '@core/models-v2/requests/cart/logistic-promise-request';
 import { GetLogisticPromiseResponse } from '@core/models-v2/responses/logistic-promise-responses';
 import { TransferShoppingCartRequest } from '@core/models-v2/requests/cart/transfer-shopping-cart.request';
+import { ShoppingCartOmniStorageService } from '@core/storage/shopping-cart-omni-storage.service';
+import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -51,6 +59,7 @@ export class CartService {
   private geolocationService = inject(GeolocationServiceV2);
   private sessionStorage = inject(SessionStorageService);
   private shoppingCartStorage = inject(ShoppingCartStorageService);
+  private shoppingCartOmniStorage = inject(ShoppingCartOmniStorageService);
   private guestStorage = inject(GuestStorageService);
   private receiveStorage = inject(ReceiveStorageService);
   private purchaseOrderLoadedStorage = inject(
@@ -772,5 +781,154 @@ export class CartService {
     const { shoppingCartId } = params;
     const url = `${API_CART}/${shoppingCartId}/thanksForYourPurchase`;
     return this.http.put<IThanksForYourPurchase>(url, {});
+  }
+
+  /*********************************
+   * Inicio métodos OMNI
+   *********************************/
+  getOmniShoppingCart(
+    shoppingCartId: string
+  ): Observable<IShoppingCartDetail> {
+    const url = `${API_CART}/${shoppingCartId}/omni`;
+    return this.http.get<IShoppingCartDetail>(url);
+  }
+
+  async loadOmni(id: string) {
+    this.isLoadingCart = false;
+
+    if (this.isLoadingCart) return;
+
+    this.isLoadingCart = true;
+
+    const r = await firstValueFrom(this.getOmniShoppingCart(id));
+    this.isLoadingCart = false;
+
+    this.CartData = r.shoppingCart;
+    this.cartTempData = r.shoppingCart;
+    this.cartDataSubject$.next(this.CartData);
+    if (r.shoppingCart.products && r.shoppingCart.products.length) {
+      this.data.products = this.CartData.products;
+
+      // obtenemos el despacho desde el carro
+      if (this.CartData.shipment) {
+        let nombre = '';
+        if (this.CartData.shipment.deliveryMode == DeliveryModeType.PICKUP) {
+          const groups = this.cartTempData.groups ?? [];
+          if (groups.length > 1) {
+            //ver quien tiene la mayor fecha para el despacho
+            let temp: Date[] = [];
+
+            groups.forEach((item) => {
+              temp.push(item.shipment.requestedDate);
+            });
+
+            temp = (temp || []).sort(
+              (a, b) => new Date(b).getTime() - new Date(a).getTime()
+            );
+
+            nombre =
+              `Retiro en tienda ` +
+              this.datePipe.transform(temp[0], 'EEEE dd MMM');
+          } else {
+            nombre =
+              `Retiro en tienda ` +
+              this.datePipe.transform(
+                this.CartData.shipment.requestedDate,
+                'EEEE dd MMM'
+              );
+          }
+
+          this.updateShippingType('retiro');
+        } else if (
+          this.CartData.shipment.serviceType != '' &&
+          this.CartData.shipment.serviceType != 'TIENDA'
+        ) {
+          const groups = this.cartTempData.groups ?? [];
+          if (groups.length > 1) {
+            //ver quien tiene la mayor fecha para el despacho
+            let temp: Date[] = [];
+            groups.forEach((item) => {
+              temp.push(item.shipment.requestedDate);
+            });
+
+            temp = temp.sort(
+              (a, b) => new Date(b).getTime() - new Date(a).getTime()
+            );
+
+            nombre =
+              `Despacho ` + this.datePipe.transform(temp[0], 'EEEE dd MMM');
+            this.updateShippingType('despacho');
+          } else {
+            nombre =
+              `Despacho ` +
+              this.datePipe.transform(
+                this.CartData.shipment.requestedDate,
+                'EEEE dd MMM'
+              );
+            this.updateShippingType('despacho');
+          }
+        } else if (this.CartData.shipment.deliveryMode == '') {
+          nombre = `Seleccione Fecha `;
+        }
+
+        let suma = 0;
+        let array_precio = [];
+        if (
+          this.CartData.shipment.serviceType == 'STD' ||
+          this.CartData.shipment.serviceType == 'TIENDA' ||
+          this.CartData.shipment.serviceType == 'EXP'
+        ) {
+          const groups = this.cartTempData.groups ?? [];
+          groups.forEach((item) => {
+            let precio: number = 0;
+            suma = Number(suma + item.shipment.price);
+
+            // calculando el total
+            item.products.forEach((prod) => {
+              precio = Number(precio + prod.price * prod.quantity);
+            });
+
+            array_precio.push(precio);
+          });
+        }
+
+        this.shipping = {
+          price: suma,
+          title: nombre,
+          type: 'shipping',
+        };
+
+        // si existe descuento de despacho se agrega
+        let descuento = 0;
+        this.discount = null;
+        let index = 0;
+        (this.cartTempData.groups ?? []).forEach((item) => {
+          descuento = descuento + item.shipment.discount;
+
+          index = index + 1;
+        });
+
+        if (
+          descuento > 0 &&
+          (this.CartData.shipment.serviceType == 'STD' ||
+            this.CartData.shipment.serviceType == 'TIENDA' ||
+            this.CartData.shipment.serviceType == 'EXP')
+        ) {
+          this.discount = {
+            price: descuento * -1,
+            title: 'Descuento Despacho',
+            type: 'discount',
+          };
+        }
+      }
+    } else {
+      this.data.products = [];
+    }
+    this.calc();
+    this.saveOmni();
+  }
+
+  private saveOmni(): void {
+    this.shoppingCartOmniStorage.set(this.CartData);
   }
 }

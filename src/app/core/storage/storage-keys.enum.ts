@@ -6,6 +6,7 @@ export enum StorageKey {
   queryParams = 'queryParams',
   menuCollapsed = 'menuCollapsed',
   carroCompraB2B = 'carroCompraB2B',
+  carroCompraOMNI = 'carroCompraOMNI',
   ov = 'ov',
   gclid = 'gclid',
   fbclid = 'fbclid',
