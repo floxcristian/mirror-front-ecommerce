@@ -33,6 +33,7 @@ import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 import { AddNotificacionContactRequest } from '@core/models-v2/requests/cart/add-notification-contact.request';
 import { GetLogisticPromiseRequest, SetLogisticPromiseRequest } from '@core/models-v2/requests/cart/logistic-promise-request';
 import { GetLogisticPromiseResponse } from '@core/models-v2/responses/logistic-promise-responses';
+import { TransferShoppingCartRequest } from '@core/models-v2/requests/cart/transfer-shopping-cart.request';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -606,6 +607,12 @@ export class CartService {
 
         return r;
       })
+    );
+  }
+
+  transferShoppingCart(data: TransferShoppingCartRequest): Observable<IShoppingCart> {
+    return this.http.put<IShoppingCart>(`${API_CART}/transfer`,
+      data
     );
   }
 

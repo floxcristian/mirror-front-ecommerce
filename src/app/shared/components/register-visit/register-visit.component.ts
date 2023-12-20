@@ -18,7 +18,7 @@ import { AuthApiService } from '@core/services-v2/auth.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { CartService } from '@core/services-v2/cart.service';
-import { IShoppingCartGuest } from '@core/models-v2/cart/shopping-cart.interface';
+import { IShoppingCart, IShoppingCartGuest } from '@core/models-v2/cart/shopping-cart.interface';
 import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
 import { IGuest } from '@core/models-v2/storage/guest.interface';
 
@@ -155,48 +155,48 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     };
   }
 
-  // login() {
-  //   const user = this.sessionStorage.get();
+  login() {
+    const user = this.sessionStorage.get();
 
-  //   let userIdOld: any = null;
-  //   if (user) {
-  //     userIdOld = user.email;
-  //   }
+    let userIdOld: any = null;
+    if (user) {
+      userIdOld = user.email;
+    }
 
-  //   const dataLogin = {
-  //     username: this.formVisita.value.email,
-  //     password: this.formVisita.value.pwd,
-  //   };
+    const dataLogin = {
+      username: this.formVisita.value.email,
+      password: this.formVisita.value.pwd,
+    };
 
-  //   this.authService.login(dataLogin.username, dataLogin.password).subscribe({
-  //     next: (res) => {
-  //       const iva = res.user.preferences.iva ?? true;
-  //       const data: ISession = {
-  //         ...res.user,
-  //         login_temp: false,
-  //         preferences: { iva },
-  //       };
-  //       this.sessionStorage.set(data);
-  //       this.authStateService.setSession(data);
-  //       if (userIdOld) {
-  //         this.cartService
-  //           .cartTransfer({
-  //             origen: userIdOld,
-  //             destino: data.email,
-  //           })
-  //           .subscribe((res: ResponseApi) => {
-  //             this.cartService.load();
-  //           });
-  //       } else {
-  //         this.cartService.load();
-  //       }
-  //       this.router.navigate(['/inicio']);
-  //     },
-  //     error: (err) => {
-  //       this.toastr.error(err.message);
-  //     },
-  //   });
-  // }
+    this.authService.login(dataLogin.username, dataLogin.password).subscribe({
+      next: (res) => {
+        const iva = res.user.preferences.iva ?? true;
+        const data: ISession = {
+          ...res.user,
+          login_temp: false,
+          preferences: { iva },
+        };
+        this.sessionStorage.set(data);
+        this.authStateService.setSession(data);
+        if (userIdOld) {
+          this.cartService
+            .transferShoppingCart({
+              origin: userIdOld,
+              destination: data.email,
+            })
+            .subscribe((res: IShoppingCart) => {
+              this.cartService.load();
+            });
+        } else {
+          this.cartService.load();
+        }
+        this.router.navigate(['/inicio']);
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
+      },
+    });
+  }
 
   invoice() {
     this.isInvoice = !this.isInvoice;

@@ -2,7 +2,6 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { CartService } from '../../../../shared/services/cart.service';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
@@ -12,6 +11,8 @@ import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
 import { GuestStorageService } from '@core/storage/guest-storage.service';
+import { CartService } from '@core/services-v2/cart.service';
+import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 
 @Component({
   selector: 'app-header-login',
@@ -34,10 +35,10 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private toastr: ToastrService,
-    private cart: CartService,
     private clientsService: ClientsService,
     private localStorage: LocalStorageService,
     // Service V2
+    private cart: CartService,
     private readonly authService: AuthApiService,
     private readonly authStateService: AuthStateServiceV2,
     private readonly sessionStorage: SessionStorageService,
@@ -132,11 +133,11 @@ export class LoginComponent implements OnInit {
           this.verificaSession();
           if (userIdOld) {
             this.cart
-              .cartTransfer({
-                origen: userIdOld,
-                destino: data.email,
+              .transferShoppingCart({
+                origin: userIdOld,
+                destination: data.email,
               })
-              .subscribe((res: ResponseApi) => {
+              .subscribe((res: IShoppingCart) => {
                 this.cart.load();
               });
           } else {
