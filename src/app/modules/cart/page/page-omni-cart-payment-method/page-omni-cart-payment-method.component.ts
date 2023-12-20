@@ -13,8 +13,8 @@ import {
 } from '@core/models-v2/cart/shopping-cart.interface';
 import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
-import { isVacio } from '@shared/utils/utilidades';
 import { firstValueFrom } from 'rxjs';
+import { SHOPPING_CART_STATUS_TYPE } from '@core/enums/shopping-cart-status.enum';
 
 @Component({
   selector: 'app-page-omni-cart-payment-method',
@@ -73,18 +73,25 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
   }
 
   async loadData() {
-    /*let consulta: any = await this.cartService
-      .getCarroOmniChannel(this.id)
-      .toPromise();
-    if (!isVacio(consulta.data)) {
-      this.cartSession = consulta.data;
-      await this.getDireccion();
-      this.shippingType = this.cartSession.shipment?.deliveryMode ?? '';
-      this.productCart = this.cartSession.products;
-      await this.cartService.loadOmni(this.id);
-    } else {
+    try {
+      const resp = await firstValueFrom(
+        this.cartService.getOmniShoppingCart(this.id)
+      );
+      this.cartSession = resp.shoppingCart;
+      if (this.cartSession.status === SHOPPING_CART_STATUS_TYPE.OPEN) {
+        await this.getDireccion();
+        this.shippingType = this.cartSession.shipment?.deliveryMode ?? '';
+        this.productCart = this.cartSession.products;
+        await this.cartService.loadOmni(this.id);
+      } else {
+        this.loadCart = false;
+        this.linkNoValido = true;
+      }
+    } catch (e) {
+      console.error(e);
+      this.loadCart = false;
       this.linkNoValido = true;
-    }*/
+    }
   }
 
   async getDireccion() {

@@ -44,7 +44,7 @@ export const environment = {
   urlPaymentOmniVoucher:
     'https://dev.implementos.cl/carro-compra/omni-gracias-por-tu-compra/',
   // Nuevo Ecommerce
-  apiEcommerce: 'http://10.158.15.204:8080',
+  apiEcommerce: 'https://dev-api.implementos.cl/ecommerce',
   tokenMapbox:
     'pk.eyJ1Ijoic3VwZXJzYngwMCIsImEiOiJjaWpsZ3FsN3QwMDIydGhtNTh4aGhubG5xIn0.i2J0k0mBZhIi7W-bsPTJiQ',
 };
