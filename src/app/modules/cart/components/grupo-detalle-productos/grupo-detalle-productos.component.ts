@@ -11,6 +11,8 @@ import {
 import { ProductCart } from '../../../../shared/interfaces/cart-item';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { isPlatformBrowser } from '@angular/common';
+import { IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
+import { RootService } from '@shared/services/root.service';
 
 @Component({
   selector: 'app-grupo-detalle-productos',
@@ -18,7 +20,7 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./grupo-detalle-productos.component.scss'],
 })
 export class GrupoDetalleProductosComponent implements OnInit {
-  @Input() grupo_producto: any = [];
+  @Input() grupo_producto: IShoppingCartProduct[] = [];
   @Input() index: any = 0;
   @Input() length: number = 0;
   products: ProductCart[] = [];
@@ -29,6 +31,7 @@ export class GrupoDetalleProductosComponent implements OnInit {
 
   constructor(
     private modalService: BsModalService,
+    public root: RootService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)

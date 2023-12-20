@@ -41,7 +41,7 @@ export const environment = {
   urlPaymentOmniCanceled:
     'https://dev.implementos.cl/carro-compra/omni-forma-de-pago',
   urlNotificaciones: 'https://dev-api.implementos.cl/api/notificaciones',
-  apiEcommerce: 'http://10.158.15.204:8080',
+  apiEcommerce: 'https://dev-api.implementos.cl/ecommerce',
   tokenMapbox:
     'pk.eyJ1Ijoic3VwZXJzYngwMCIsImEiOiJjaWpsZ3FsN3QwMDIydGhtNTh4aGhubG5xIn0.i2J0k0mBZhIi7W-bsPTJiQ',
 };

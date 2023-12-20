@@ -126,16 +126,16 @@ export class DropcartComponent implements OnInit, OnDestroy {
     }, 100);
   }
 
-  saveCart() {
-    clearTimeout(this.saveTimer);
-    this.saveTimer = setTimeout(() => {
-      const productos = this.items.map((item) => {
-        return {
-          sku: item.ProductCart.sku,
-          cantidad: item.quantity,
-        };
-      });
-      this.shoppingCartService.saveCart(productos).subscribe((r) => {});
-    }, 700);
-  }
+  // saveCart() {
+  //   clearTimeout(this.saveTimer);
+  //   this.saveTimer = setTimeout(() => {
+  //     const productos = this.items.map((item) => {
+  //       return {
+  //         sku: item.ProductCart.sku,
+  //         cantidad: item.quantity,
+  //       };
+  //     });
+  //     this.shoppingCartService.saveCart(productos).subscribe((r) => {});
+  //   }, 700);
+  // }
 }

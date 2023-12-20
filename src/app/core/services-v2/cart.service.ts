@@ -4,6 +4,8 @@ import { Injectable, inject } from '@angular/core';
 import {
   ICartTotal,
   IShoppingCart,
+  IShoppingCartGroup,
+  IShoppingCartGuest,
   IShoppingCartProduct,
 } from '@core/models-v2/cart/shopping-cart.interface';
 // Environment
@@ -11,7 +13,13 @@ import { environment } from '@env/environment';
 import { GeolocationServiceV2 } from './geolocation/geolocation.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { catchError, map } from 'rxjs/operators';
-import { BehaviorSubject, Observable, Subject, lastValueFrom } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  firstValueFrom,
+  lastValueFrom,
+} from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { ShoppingCartStorageService } from '@core/storage/shopping-cart-storage.service';
 import { SessionService } from '@core/states-v2/session.service';
@@ -23,13 +31,23 @@ import { IGuest } from '@core/models-v2/storage/guest.interface';
 import { ReceiveStorageService } from '@core/storage/receive-storage.service';
 import { IReceive } from '@core/models-v2/storage/receive.interface';
 import { PurshaseOrderLoadedStorageService } from '@core/storage/pruchase-order-loaded-storage.service';
-import { IRemoveGroupRequest } from '@core/models-v2/requests/cart/removeGroup.request';
+import { IRemoveGroupRequest } from '@core/models-v2/requests/cart/remove-group.request';
 import { ResponseApi } from '@shared/interfaces/response-api';
 import { RootService } from '@shared/services/root.service';
 import { IValidateShoppingCartStockResponse } from '@core/models-v2/cart/validate-stock-response.interface';
 import { IShoppingCartDetail } from '@core/models-v2/cart/shopping-cart-detail.interface';
 import { StorageKey } from '@core/storage/storage-keys.enum';
 import { IThanksForYourPurchase } from '@core/models-v2/cart/thanks-for-your-purchase.interface';
+import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
+import { AddNotificacionContactRequest } from '@core/models-v2/requests/cart/add-notification-contact.request';
+import {
+  GetLogisticPromiseRequest,
+  SetLogisticPromiseRequest,
+} from '@core/models-v2/requests/cart/logistic-promise-request';
+import { GetLogisticPromiseResponse } from '@core/models-v2/responses/logistic-promise-responses';
+import { TransferShoppingCartRequest } from '@core/models-v2/requests/cart/transfer-shopping-cart.request';
+import { ShoppingCartOmniStorageService } from '@core/storage/shopping-cart-omni-storage.service';
+import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -41,6 +59,7 @@ export class CartService {
   private geolocationService = inject(GeolocationServiceV2);
   private sessionStorage = inject(SessionStorageService);
   private shoppingCartStorage = inject(ShoppingCartStorageService);
+  private shoppingCartOmniStorage = inject(ShoppingCartOmniStorageService);
   private guestStorage = inject(GuestStorageService);
   private receiveStorage = inject(ReceiveStorageService);
   private purchaseOrderLoadedStorage = inject(
@@ -112,7 +131,7 @@ export class CartService {
     this.onAddingMovilButtonSubject$.asObservable();
 
   async add(
-    product: any,
+    product: IArticle,
     quantity: number
   ): Promise<IShoppingCart | undefined> {
     // Sucursal
@@ -143,8 +162,8 @@ export class CartService {
         {
           sku: product.sku,
           quantity: (productoCarro.quantity || 0) + quantity,
-          origin: product.origen ? product.origen : null,
-          status: product.estado,
+          origin: product.origin ? product.origin : null,
+          // status: product.status,
         },
       ],
     };
@@ -157,7 +176,7 @@ export class CartService {
       this.CartData = response;
 
       const productoCart: IShoppingCartProduct = {
-        name: product.nombre,
+        name: product.name,
         sku: product.sku,
         quantity: quantity,
         image: this.root.getUrlImagenMiniatura150(product),
@@ -219,9 +238,11 @@ export class CartService {
                 //ver quien tiene la mayor fecha para el despacho
                 let temp: any[] = [];
 
-                this.cartTempData.groups.forEach((item: any) => {
-                  temp.push(item.despacho.fechaDespacho);
-                });
+                this.cartTempData.groups.forEach(
+                  (item: IShoppingCartGroup) => {
+                    temp.push(item.shipment.requestedDate);
+                  }
+                );
 
                 temp = temp.sort(
                   (a, b) => new Date(b).getTime() - new Date(a).getTime()
@@ -250,9 +271,11 @@ export class CartService {
               ) {
                 //ver quien tiene la mayor fecha para el despacho
                 let temp: any[] = [];
-                this.cartTempData.groups.forEach((item: any) => {
-                  temp.push(item.despacho.fechaDespacho);
-                });
+                this.cartTempData.groups.forEach(
+                  (item: IShoppingCartGroup) => {
+                    temp.push(item.shipment.requestedDate);
+                  }
+                );
 
                 temp = temp.sort(
                   (a, b) => new Date(b).getTime() - new Date(a).getTime()
@@ -282,12 +305,12 @@ export class CartService {
               this.CartData.shipment.serviceType == 'TIENDA' ||
               this.CartData.shipment.serviceType == 'EXP'
             ) {
-              this.cartTempData.groups?.forEach((item) => {
+              this.cartTempData.groups?.forEach((item: IShoppingCartGroup) => {
                 let precio: number = 0;
                 suma = Number(suma + item.shipment.price);
 
                 // calculando el total
-                item.products.forEach((prod) => {
+                item.products.forEach((prod: IShoppingCartProduct) => {
                   precio = Number(precio + prod.price * prod.quantity);
                 });
 
@@ -305,7 +328,7 @@ export class CartService {
             let descuento = 0;
             this.discount = null;
             let index = 0;
-            this.cartTempData.groups?.forEach((item) => {
+            this.cartTempData.groups?.forEach((item: IShoppingCartGroup) => {
               if (
                 array_precio[index] >= 60000 ||
                 (usuario.userRole != 'compradorb2c' &&
@@ -337,9 +360,9 @@ export class CartService {
         error: (error: any) => {
           console.log('error', JSON.stringify(error));
           this.data.products = [];
-          if (error.errorCode !== 'SHOPPING_CART_NOT_FOUND') {
-            this.toastrServise.error(error.message);
-          }
+          // if (error.errorCode !== 'SHOPPING_CART_NOT_FOUND') {
+          //   this.toastrServise.error(error.message);
+          // }
         },
       });
   }
@@ -410,6 +433,15 @@ export class CartService {
     );
   }
 
+  logisticPromise(
+    request: GetLogisticPromiseRequest
+  ): Observable<GetLogisticPromiseResponse> {
+    return this.http.post<GetLogisticPromiseResponse>(
+      `${API_CART}/logistic-promise`,
+      request
+    );
+  }
+
   updateShippingType(type: any) {
     this.shippingTypeSubject$.next(type);
     this.shippingType = type;
@@ -420,41 +452,24 @@ export class CartService {
     this.shoppingCartStorage.set(this.CartData);
   }
 
-  updateShipping(despacho: any) {
+  async updateShipping(indexGroup: number, indexTripDate: number) {
     // Sucursal
     console.log('getSelectedStore desde updateShipping');
 
-    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.code;
-    const carro: IShoppingCart =
-      this.shoppingCartStorage.get() as IShoppingCart;
     const usuario: ISession = this.sessionService.getSession();
-    // this.root.getDataSesionUsuario();
-    const invitado: IGuest = this.guestStorage.get() as IGuest;
-    const recibe: IReceive = this.receiveStorage.get() as IReceive;
-    const productos = (carro.products || []).map((item) => {
-      return {
-        sku: item.sku,
-        cantidad: item.quantity,
-      };
-    });
 
-    const data = {
-      usuario: usuario.username ? usuario.username : invitado._id,
-      rut: usuario.documentId ? usuario.documentId : 0,
-      sucursal,
-      productos,
-      despacho,
-      invitado,
-      recibe,
+    const data: SetLogisticPromiseRequest = {
+      user: usuario.username ? usuario.username : usuario.email,
+      group: indexGroup,
+      tripDate: indexTripDate,
     };
 
-    return this.http.post(`${API_CART}/article`, data).pipe(
-      map((r: any) => {
-        this.load();
-        return r;
-      })
+    const respuesta = await lastValueFrom(
+      this.http.put<IShoppingCart>(`${API_CART}/group/trip-date`, data)
     );
+    // this.load();
+
+    return respuesta;
   }
 
   calc(totalesFull = false): void {
@@ -493,10 +508,10 @@ export class CartService {
     subtotal = subtotal / 1.19;
 
     if (this.shipping !== undefined && this.shipping != null) {
-      if (!this.shipping.price) {
-        this.shipping.price = 0;
-        this.shipping.title = 'Seleccione Fecha ';
-      }
+      // if (!this.shipping.price) {
+      //   this.shipping.price = 0;
+      //   this.shipping.title = 'Seleccione Fecha ';
+      // }
       totals.push(this.shipping);
     }
 
@@ -527,13 +542,13 @@ export class CartService {
     this.totalSubject$.next(this.data.total);
   }
 
-  updateCart(items: any) {
+  updateCart(items: IShoppingCartProduct[]) {
     this.CartData.products = items;
     this.calc();
     this.save();
   }
 
-  saveCart(productos: any) {
+  saveCart(products: IShoppingCartProduct[]) {
     // Sucursal
     console.log('getSelectedStore desde saveCart');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
@@ -542,13 +557,13 @@ export class CartService {
 
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
     const data = {
-      usuario: usuario.username,
-      rut: usuario.documentId,
-      sucursal,
-      productos,
+      user: usuario.username,
+      documentId: usuario.documentId,
+      branch: sucursal,
+      products,
     };
 
-    return this.http.post(environment.apiShoppingCart + 'articulo', data).pipe(
+    return this.http.post(`${API_CART}/article`, data).pipe(
       map((r: any) => {
         this.CartData.shipment = r.data.despacho;
 
@@ -591,8 +606,12 @@ export class CartService {
     return this.http.put(`${API_CART}/${id}/status/${status}`, {});
   }
 
-  setNotificationContact(data: any) {
-    return this.http.put(`${API_CART}/setNotificationContact`, data);
+  setNotificationContact(id: string, data: AddNotificacionContactRequest) {
+    return this.http.put(`${API_CART}/notificactionContact/${id}`, data);
+  }
+
+  setGuestUser(user: string, data: IShoppingCartGuest) {
+    return this.http.put(`${API_CART}/guest/${user}`, data);
   }
 
   emitValidateProducts(products: any): void {
@@ -683,6 +702,12 @@ export class CartService {
     );
   }
 
+  transferShoppingCart(
+    data: TransferShoppingCartRequest
+  ): Observable<IShoppingCart> {
+    return this.http.put<IShoppingCart>(`${API_CART}/transfer`, data);
+  }
+
   getPriceArticle(params: {
     sku: string;
     branch: string;
@@ -756,5 +781,154 @@ export class CartService {
     const { shoppingCartId } = params;
     const url = `${API_CART}/${shoppingCartId}/thanksForYourPurchase`;
     return this.http.put<IThanksForYourPurchase>(url, {});
+  }
+
+  /*********************************
+   * Inicio métodos OMNI
+   *********************************/
+  getOmniShoppingCart(
+    shoppingCartId: string
+  ): Observable<IShoppingCartDetail> {
+    const url = `${API_CART}/${shoppingCartId}/omni`;
+    return this.http.get<IShoppingCartDetail>(url);
+  }
+
+  async loadOmni(id: string) {
+    this.isLoadingCart = false;
+
+    if (this.isLoadingCart) return;
+
+    this.isLoadingCart = true;
+
+    const r = await firstValueFrom(this.getOmniShoppingCart(id));
+    this.isLoadingCart = false;
+
+    this.CartData = r.shoppingCart;
+    this.cartTempData = r.shoppingCart;
+    this.cartDataSubject$.next(this.CartData);
+    if (r.shoppingCart.products && r.shoppingCart.products.length) {
+      this.data.products = this.CartData.products;
+
+      // obtenemos el despacho desde el carro
+      if (this.CartData.shipment) {
+        let nombre = '';
+        if (this.CartData.shipment.deliveryMode == DeliveryModeType.PICKUP) {
+          const groups = this.cartTempData.groups ?? [];
+          if (groups.length > 1) {
+            //ver quien tiene la mayor fecha para el despacho
+            let temp: Date[] = [];
+
+            groups.forEach((item) => {
+              temp.push(item.shipment.requestedDate);
+            });
+
+            temp = (temp || []).sort(
+              (a, b) => new Date(b).getTime() - new Date(a).getTime()
+            );
+
+            nombre =
+              `Retiro en tienda ` +
+              this.datePipe.transform(temp[0], 'EEEE dd MMM');
+          } else {
+            nombre =
+              `Retiro en tienda ` +
+              this.datePipe.transform(
+                this.CartData.shipment.requestedDate,
+                'EEEE dd MMM'
+              );
+          }
+
+          this.updateShippingType('retiro');
+        } else if (
+          this.CartData.shipment.serviceType != '' &&
+          this.CartData.shipment.serviceType != 'TIENDA'
+        ) {
+          const groups = this.cartTempData.groups ?? [];
+          if (groups.length > 1) {
+            //ver quien tiene la mayor fecha para el despacho
+            let temp: Date[] = [];
+            groups.forEach((item) => {
+              temp.push(item.shipment.requestedDate);
+            });
+
+            temp = temp.sort(
+              (a, b) => new Date(b).getTime() - new Date(a).getTime()
+            );
+
+            nombre =
+              `Despacho ` + this.datePipe.transform(temp[0], 'EEEE dd MMM');
+            this.updateShippingType('despacho');
+          } else {
+            nombre =
+              `Despacho ` +
+              this.datePipe.transform(
+                this.CartData.shipment.requestedDate,
+                'EEEE dd MMM'
+              );
+            this.updateShippingType('despacho');
+          }
+        } else if (this.CartData.shipment.deliveryMode == '') {
+          nombre = `Seleccione Fecha `;
+        }
+
+        let suma = 0;
+        let array_precio = [];
+        if (
+          this.CartData.shipment.serviceType == 'STD' ||
+          this.CartData.shipment.serviceType == 'TIENDA' ||
+          this.CartData.shipment.serviceType == 'EXP'
+        ) {
+          const groups = this.cartTempData.groups ?? [];
+          groups.forEach((item) => {
+            let precio: number = 0;
+            suma = Number(suma + item.shipment.price);
+
+            // calculando el total
+            item.products.forEach((prod) => {
+              precio = Number(precio + prod.price * prod.quantity);
+            });
+
+            array_precio.push(precio);
+          });
+        }
+
+        this.shipping = {
+          price: suma,
+          title: nombre,
+          type: 'shipping',
+        };
+
+        // si existe descuento de despacho se agrega
+        let descuento = 0;
+        this.discount = null;
+        let index = 0;
+        (this.cartTempData.groups ?? []).forEach((item) => {
+          descuento = descuento + item.shipment.discount;
+
+          index = index + 1;
+        });
+
+        if (
+          descuento > 0 &&
+          (this.CartData.shipment.serviceType == 'STD' ||
+            this.CartData.shipment.serviceType == 'TIENDA' ||
+            this.CartData.shipment.serviceType == 'EXP')
+        ) {
+          this.discount = {
+            price: descuento * -1,
+            title: 'Descuento Despacho',
+            type: 'discount',
+          };
+        }
+      }
+    } else {
+      this.data.products = [];
+    }
+    this.calc();
+    this.saveOmni();
+  }
+
+  private saveOmni(): void {
+    this.shoppingCartOmniStorage.set(this.CartData);
   }
 }
