@@ -33,7 +33,6 @@ export class GraciasPorTuCompraGuard {
 
     if (this.isPaymentApproved(queryParams)) {
       const shoppingCartId = queryParams['shoppingCartId'];
-      return true;
       return this.cartService.thanksForYourPurchase({ shoppingCartId }).pipe(
         map((r) => {
           if (r.isFirstVisit) {

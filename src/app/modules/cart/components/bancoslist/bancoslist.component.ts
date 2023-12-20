@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { PaymentService } from '../../../../shared/services/payment.service';
 import { PaymentMethodService } from '@core/services-v2/payment-method.service';
 import { IKhipuBank } from '@core/models-v2/payment-method/khipu-bank.interface';
 import { ToastrService } from 'ngx-toastr';
@@ -11,7 +10,6 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class BancoslistComponent implements OnInit {
   constructor(
-    private bancosService: PaymentService,
     private readonly toastr: ToastrService,
     // Services V2
     private readonly paymentMethodService: PaymentMethodService
@@ -42,7 +40,7 @@ export class BancoslistComponent implements OnInit {
     this.loadbank = false;
   }
   close() {
-    this.bancosService.close(true);
+    this.paymentMethodService.close(true);
   }
 
   convertir_numero() {
@@ -58,13 +56,13 @@ export class BancoslistComponent implements OnInit {
 
   async Pagar() {
     this.loadbank = true;
-    this.bancosService.selectBancoKhipu(this.banco);
+    this.paymentMethodService.selectBancoKhipu(this.banco);
     await new Promise((resolve) => {
       setTimeout(() => {
         resolve('listo');
       }, 5000);
     });
     this.loadbank = false;
-    this.bancosService.close(true);
+    this.paymentMethodService.close(true);
   }
 }
