@@ -54,7 +54,6 @@ declare let fbq: any;
   styleUrls: ['./page-product.component.scss'],
 })
 export class PageProductComponent implements OnInit, OnDestroy {
-  //TODO: FINAL
   categories = categories;
   product!: IArticleResponse | undefined | any;
   recommendedProducts: IArticleResponse[] = [];
@@ -98,7 +97,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
   matriz: any[] = [];
   comparacion: any[] = [];
   tiendaSeleccionada!: ISelectedStore;
-  IVA = environment.IVA || 0.19;
+  IVA = environment.IVA;
   addingToCart: boolean = false;
   addcartPromise!: Subscription;
   despachoCliente!: Subscription;
@@ -230,13 +229,12 @@ export class PageProductComponent implements OnInit, OnDestroy {
     this.showMobile = window.innerWidth < this.puntoQuiebre;
   }
 
-  setBreadcrumbs(product: IArticle) {
-    this.breadcrumbs = [];
-    this.breadcrumbs.push({ label: 'Inicio', url: ['/', 'inicio'] });
+  private setBreadcrumbs(product: IArticle): void {
+    this.breadcrumbs = [{ label: 'Inicio', url: ['/', 'inicio'] }];
 
     // Funcion auxiliar para agregar categorias al breadcrumb
     const addCategory = (category: string, path: string[]) => {
-      if (category !== '') {
+      if (category) {
         const cat = this.root.replaceAll(category, /-/g);
         this.breadcrumbs.push({
           label: this.capitalize.transform(cat),
@@ -262,16 +260,14 @@ export class PageProductComponent implements OnInit, OnDestroy {
     });
   }
 
-  // TODO: confirmar nombre de la función
-
   getDetailArticle(sku: string): void {
-    const user = this.sessionService.getSession();
+    const { documentId } = this.sessionService.getSession();
     const selectedStore = this.geolocationService.getSelectedStore();
 
-    if (user && selectedStore) {
+    if (selectedStore) {
       const params: any = {
         sku,
-        documentId: user.documentId,
+        documentId: documentId,
         branchCode: selectedStore.code,
         location: selectedStore.city,
       };
@@ -279,10 +275,11 @@ export class PageProductComponent implements OnInit, OnDestroy {
       if (
         this.preferenciaCliente &&
         this.preferenciaCliente?.deliveryAddress !== null
-      )
+      ) {
         params.location = this.preferenciaCliente?.deliveryAddress?.location
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '');
+      }
 
       this.articleService
         .getArticleDataSheet(params)
@@ -360,16 +357,12 @@ export class PageProductComponent implements OnInit, OnDestroy {
   }
 
   getMixProducts(sku: any) {
-    console.log('getSelectedStore desde PageProductComponent 3');
-    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    let rut: string = '0';
-    if (this.user) {
-      rut = this.user.documentId || '0';
-    }
+    const selectedStore = this.geolocationService.getSelectedStore();
+
     const obj4 = {
       sku: sku,
-      documentId: this.user.documentId || '0',
-      branchCode: tiendaSeleccionada?.code || 'SAN BRNRDO',
+      documentId: this.user.documentId,
+      branchCode: selectedStore.code,
       location: this.preferenciaCliente?.deliveryAddress
         ? this.preferenciaCliente.deliveryAddress.location
         : '',
@@ -410,7 +403,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     }
   }
 
-  abrirTabEvaluacion() {
+  abrirTabEvaluacion(): void {
     $('#descripcion-tab').removeClass('active');
     $('#detallesTecnicos-tab').removeClass('active');
     $('#evaluacion-tab').addClass('active');
@@ -422,37 +415,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     $('#evaluacion').tab('show');
     document.querySelector('#ancla')?.scrollIntoView();
   }
-  over(event: any) {
-    let el: any = event.target.parentNode;
-    let clase: any = el.classList;
-    while (!clase.contains('owl-item')) {
-      el = el.parentNode;
-      clase = el.classList;
-    }
 
-    el.style['box-shadow'] = '0 4px 4px 0 rgb(0 0 0 / 50%)';
-  }
-
-  leave(event: any) {
-    let el: any = event.target.parentNode;
-    let clase: any = el.classList;
-    while (!clase.contains('owl-item')) {
-      el = el.parentNode;
-      clase = el.classList;
-    }
-
-    el.style['box-shadow'] = 'none';
-  }
-
-  controlaChevron(indice: number) {
-    const control = this.acordion[indice].abierto;
-    this.acordion.forEach((a) => (a.abierto = false));
-    if (control) {
-      this.acordion[indice].abierto = false;
-    } else {
-      this.acordion[indice].abierto = true;
-    }
-  }
   //Funciones para matriz comparativa
   async obtienePrecioxCantidad(producto: any, tipo: any = null) {
     if (tipo == '+') {
@@ -493,7 +456,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
   }
 
   agregarProductoMatriz(producto: any) {
-    if (this.user == null) {
+    if (!this.user) {
       this.toastr.warning(
         'Debe iniciar sesion para poder comprar',
         'Información'
