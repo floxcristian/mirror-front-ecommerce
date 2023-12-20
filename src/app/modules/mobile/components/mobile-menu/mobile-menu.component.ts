@@ -23,7 +23,6 @@ import { DireccionDespachoComponent } from '../../../header/components/search-vi
 
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/states-v2/session.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
@@ -70,7 +69,6 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
   tiendaSeleccionada!: ISelectedStore;
   constructor(
     public mobilemenu: MobileMenuService,
-    private localS: LocalStorageService,
     private modalService: BsModalService,
     private categoriesService: CategoryService,
     private root: RootService,

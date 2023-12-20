@@ -1,21 +1,18 @@
+// Angular
 import { Component, EventEmitter, OnInit } from '@angular/core';
+// Libs
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import { ArticuloFavorito, Lista } from '../../interfaces/articuloFavorito';
-import { Product } from '../../interfaces/product';
-import { ResponseApi } from '../../interfaces/response-api';
-import { ClientsService } from '../../services/clients.service';
-import { isVacio } from '../../utils/utilidades';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { SessionService } from '@core/states-v2/session.service';
+// Models
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
-
-export interface DataWishListModal {
-  producto: IArticleResponse;
-  listas: Lista[];
-  listasEnQueExiste: Lista[];
-}
+import { IWishlist } from '@core/services-v2/whishlist/models/whishlist-response.interface';
+// Services
+import { isVacio } from '../../utils/utilidades';
+import { SessionService } from '@core/states-v2/session.service';
+import { WishlistStorageService } from '@core/storage/wishlist-storage.service';
+import { WishlistApiService } from '@core/services-v2/whishlist/whishlist-api.service';
+import { WishlistService } from '@core/services-v2/whishlist/wishlist.service';
 
 @Component({
   selector: 'app-wish-list-modal',
@@ -24,8 +21,8 @@ export interface DataWishListModal {
 })
 export class WishListModalComponent implements OnInit {
   producto!: IArticleResponse;
-  listas!: Lista[];
-  listasEnQueExiste!: Lista[];
+  listas!: (IWishlist & { checked?: boolean })[];
+  listasEnQueExiste!: IWishlist[];
 
   creandoLista = false;
   nombre = '';
@@ -40,17 +37,20 @@ export class WishListModalComponent implements OnInit {
   constructor(
     public ModalRef: BsModalRef,
     private toast: ToastrService,
-    private localS: LocalStorageService,
-    private clientsService: ClientsService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly wishlistStorage: WishlistStorageService,
+    private readonly wishlistApiService: WishlistApiService,
+    private readonly wishlistService: WishlistService
   ) {}
 
-  ngOnInit() {
-    this.usuario = this.sessionService.getSession(); //this.rootService.getDataSesionUsuario();
+  ngOnInit(): void {
+    this.usuario = this.sessionService.getSession();
 
     this.listas = this.listas.map((l) => {
-      l.checked = !isVacio(this.listasEnQueExiste.find((e) => e._id === l._id))
+      l.checked = !isVacio(
+        this.listasEnQueExiste.find((wishlist) => wishlist.id === l.id)
+      )
         ? true
         : false;
       return l;
@@ -58,24 +58,16 @@ export class WishListModalComponent implements OnInit {
   }
 
   getListas() {
-    this.clientsService
-      .getListaArticulosFavoritos(this.usuario.documentId)
-      .subscribe((resp: ResponseApi) => {
-        if (resp.data.length > 0) {
-          if (resp.data[0].listas.length) {
-            this.listas = resp.data[0].listas;
-
-            this.listas = this.listas.map((l) => {
-              l.checked = !isVacio(
-                this.listasEnQueExiste.find((e) => e._id === l._id)
-              )
-                ? true
-                : false;
-              return l;
-            });
-          }
-        }
-      });
+    this.wishlistApiService.getWishlists(this.usuario.documentId).subscribe({
+      next: (wishlists) => {
+        this.listas = wishlists.map((wishlist) => {
+          const isProductOnList = this.listasEnQueExiste.some(
+            (_wishlist) => _wishlist.id === wishlist.id
+          );
+          return { ...wishlist, checked: isProductOnList };
+        });
+      },
+    });
   }
 
   ingresaNombre() {
@@ -90,76 +82,80 @@ export class WishListModalComponent implements OnInit {
       document.querySelector('.validacion')?.classList.add('d-block');
       return;
     }
-
-    this.clientsService
-      .setListaArticulosFavoritos(this.nombre, this.usuario.documentId)
-      .subscribe(async (resp: ResponseApi) => {
-        if (!resp.error) {
-          // se agrega la lista en el LocalStorage
-          await this.clientsService.cargaFavoritosLocalStorage(
-            this.usuario.documentId
-          );
-
-          this.refreshListasEnQueExiste();
-          this.toast.success(`Se creó la lista: ${this.nombre}`);
-          this.getListas();
-        }
+    this.wishlistApiService
+      .createWishlist({
+        documentId: this.usuario.documentId,
+        name: this.nombre,
+      })
+      .subscribe({
+        next: () => {
+          this.wishlistService
+            .setWishlistOnStorage(this.usuario.documentId)
+            .subscribe({
+              next: () => {
+                this.refreshListasEnQueExiste();
+                this.toast.success(`Se creó la lista: ${this.nombre}`);
+                this.getListas();
+              },
+            });
+        },
       });
     this.nombre = '';
     this.creandoLista = false;
   }
 
-  listaPredeterminada(lista: Lista) {
-    this.clientsService
-      .predeterminadaListaArticulosFavoritos(
-        this.usuario.documentId,
-        lista._id
-      )
-      .subscribe((resp: ResponseApi) => {
-        if (!resp.error) {
+  listaPredeterminada(lista: IWishlist) {
+    this.wishlistApiService
+      .setDefaultWishlist(this.usuario.documentId, lista.id)
+      .subscribe({
+        next: () => {
           this.getListas();
-        }
+        },
       });
   }
 
   // agrega o elimina SKU de una lista
-  async seleccionaLista(lista: Lista) {
-    const objHTML: any = document.getElementById('ID-' + lista._id);
+  async seleccionaLista(lista: IWishlist) {
+    const objHTML: any = document.getElementById('ID-' + lista.id);
 
     if (objHTML.checked) {
-      const resp: ResponseApi = (await this.clientsService
-        .setArticulosFavoritos(
-          this.producto.sku,
-          this.usuario.documentId,
-          lista._id
-        )
-        .toPromise()) as ResponseApi;
-      if (!resp.error) {
-        // se agrega sku en la lista del LocalStorage
-        await this.clientsService.cargaFavoritosLocalStorage(
-          this.usuario.documentId
-        );
-
-        this.refreshListasEnQueExiste();
-        this.toast.success(`Se agregó a la lista: ${lista.nombre}`);
-      }
+      this.wishlistApiService
+        .addProductsToWishlist({
+          documentId: this.usuario.documentId,
+          wishlistId: lista.id,
+          skus: [this.producto.sku],
+        })
+        .subscribe({
+          next: () => {
+            this.wishlistService
+              .setWishlistOnStorage(this.usuario.documentId)
+              .subscribe({
+                next: () => {
+                  this.refreshListasEnQueExiste();
+                  this.toast.success(`Se agregó a la lista: ${lista.name}`);
+                },
+              });
+          },
+        });
     } else {
-      const resp: ResponseApi = (await this.clientsService
-        .deleteArticulosFavoritos(
-          this.producto.sku,
-          this.usuario.documentId,
-          lista._id
-        )
-        .toPromise()) as ResponseApi;
-      if (!resp.error) {
-        // se elimina sku de la lista en LocalStorage
-        await this.clientsService.cargaFavoritosLocalStorage(
-          this.usuario.documentId
-        );
-
-        this.refreshListasEnQueExiste();
-        this.toast.success(`Se eliminó de la lista: ${lista.nombre}`);
-      }
+      this.wishlistApiService
+        .deleteProductFromWishlist({
+          documentId: this.usuario.documentId,
+          wishlistId: lista.id,
+          sku: this.producto.sku,
+        })
+        .subscribe({
+          next: () => {
+            this.wishlistService
+              .setWishlistOnStorage(this.usuario.documentId)
+              .subscribe({
+                next: () => {
+                  this.refreshListasEnQueExiste();
+                  this.toast.success(`Se eliminó de la lista: ${lista.name}`);
+                },
+              });
+          },
+        });
     }
   }
 
@@ -181,13 +177,16 @@ export class WishListModalComponent implements OnInit {
     }
   }
 
-  refreshListasEnQueExiste() {
+  private refreshListasEnQueExiste(): void {
     this.listasEnQueExiste = [];
-    const favoritos: ArticuloFavorito = this.localS.get('favoritos') as any;
-    if (!isVacio(favoritos)) {
-      favoritos.listas.forEach((lista) => {
-        if (!isVacio(lista.skus.find((sku) => sku === this.producto.sku))) {
-          this.listasEnQueExiste.push(lista);
+    const wishlists = this.wishlistStorage.get();
+    if (wishlists?.length) {
+      wishlists.forEach((wishlist) => {
+        const isProductOnList = wishlist.articles.find(
+          (product) => product.sku === this.producto.sku
+        );
+        if (isProductOnList) {
+          this.listasEnQueExiste.push(wishlist);
         }
       });
     }

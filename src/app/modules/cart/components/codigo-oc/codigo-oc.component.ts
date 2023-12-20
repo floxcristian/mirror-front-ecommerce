@@ -5,9 +5,10 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { CartService } from '../../../../shared/services/cart.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { PaymentMethodPurchaseOrderRequestService } from '@core/services-v2/payment-method-purchase-order-request.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-codigo-oc',
@@ -17,6 +18,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 export class CodigoOcComponent implements OnInit {
   formulario!: FormGroup;
   @Input() id: any = null;
+  @Input() purchaseOrderId: string = '';
   user!: ISession | null;
   fecha_limite = new Date();
   finishDateString = '';
@@ -26,9 +28,10 @@ export class CodigoOcComponent implements OnInit {
   @Output() renv_cod: EventEmitter<any> = new EventEmitter();
   constructor(
     private fb: FormBuilder,
-    private cartService: CartService,
-    // Storage
-    private readonly sessionStorage: SessionStorageService
+    private readonly toastr: ToastrService,
+    // Services V2
+    private readonly sessionStorage: SessionStorageService,
+    private readonly paymentMethodPurchaseOrderRequestService: PaymentMethodPurchaseOrderRequestService
   ) {
     this.iniciar_formulario();
   }
@@ -57,18 +60,20 @@ export class CodigoOcComponent implements OnInit {
   }
 
   async Verificar_codigo() {
-    let param = {
-      id: this.id,
-      codigo: this.formulario.controls['codigo'].value,
-      aprobador:
-        this.user?.firstName && this.user?.lastName
-          ? `${this.user?.firstName} ${this.user?.lastName}`
-          : '',
-    };
-
-    let r: any = await this.cartService.confirmarOc(param).toPromise();
-    this.confirmar = r.data.confirmar;
-    if (this.confirmar) this.verificar.emit(r.data.confirmar);
+    this.paymentMethodPurchaseOrderRequestService
+      .confirmOTP({
+        purchaseOrderId: this.purchaseOrderId,
+        otp: this.formulario.controls['codigo'].value,
+      })
+      .subscribe({
+        next: () => {
+          this.verificar.emit(true);
+        },
+        error: (e) => {
+          console.error(e);
+          this.toastr.error('No se pudo verificar el código');
+        },
+      });
   }
 
   async Atras_codigo() {

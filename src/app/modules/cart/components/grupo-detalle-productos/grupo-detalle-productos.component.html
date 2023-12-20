@@ -4,22 +4,34 @@
       <div class="row">
         <ng-container *ngIf="innerWidth > 450">
           <div class="text-rigth col-5" style="font-size: 16px">
-            <i class="fa-sharp fa-solid fa-circle-check" style="margin-right: 10px"></i> Entrega {{ index }}/{{ length }}
+            <i
+              class="fa-sharp fa-solid fa-circle-check"
+              style="margin-right: 10px"
+            ></i>
+            Entrega {{ index }}/{{ length }}
           </div>
           <div class="text-precio col-6" style="font-size: 16px">
             <strong> {{ suma | currencyFormat }}</strong>
           </div>
           <div class="text-precio col-1" (mousedown)="openModal(content)">
-            <i class="fa-sharp fa-solid fa-circle-xmark" style="font-size: 20px; color: white; cursor: pointer"></i>
+            <i
+              class="fa-sharp fa-solid fa-circle-xmark"
+              style="font-size: 20px; color: white; cursor: pointer"
+            ></i>
           </div>
         </ng-container>
         <ng-container *ngIf="innerWidth <= 450">
-          <div class="text-rigth col-5" style="font-size: 14px">Entrega {{ index }}/{{ length }}</div>
+          <div class="text-rigth col-5" style="font-size: 14px">
+            Entrega {{ index }}/{{ length }}
+          </div>
           <div class="text-precio col-5" style="font-size: 14px">
             <strong> {{ suma | currencyFormat }}</strong>
           </div>
           <div class="text-precio col-1" (mousedown)="openModal(content)">
-            <i class="fa-sharp fa-solid fa-circle-xmark" style="font-size: 14px; color: white; cursor: pointer"></i>
+            <i
+              class="fa-sharp fa-solid fa-circle-xmark"
+              style="font-size: 14px; color: white; cursor: pointer"
+            ></i>
           </div>
         </ng-container>
       </div>
@@ -29,28 +41,44 @@
         <div class="producto-card row">
           <div class="text-center col-2">
             <img
-              [src]="item.images[0]['150'][0]"
+              [src]="root.getUrlImagenMiniatura150(item)"
               width="50px"
               height="50px"
               onerror="this.onerror=null; this.src='/assets/img/no-image-ficha.jpg'"
             />
           </div>
-          <div [ngClass]="{ 'col-8': innerWidth > 450, 'col-7': innerWidth <= 450 }">
-            <div [ngStyle]="{ 'font-size': innerWidth > 450 ? '14px' : '11px' }">
-              {{ item.marca | uppercase }}
+          <div
+            [ngClass]="{
+              'col-8': innerWidth > 450,
+              'col-7': innerWidth <= 450
+            }"
+          >
+            <div
+              [ngStyle]="{ 'font-size': innerWidth > 450 ? '14px' : '11px' }"
+            >
+              {{ item.brand | uppercase }}
             </div>
-            <div [ngStyle]="{ 'font-size': innerWidth > 450 ? '14px' : '11px' }">
-              <strong>{{ item.nombre | capitalizeFirst }}</strong>
+            <div
+              [ngStyle]="{ 'font-size': innerWidth > 450 ? '14px' : '11px' }"
+            >
+              <strong>{{ item.name | capitalizeFirst }}</strong>
             </div>
-            <div class="text-muted" [ngStyle]="{ 'font-size': innerWidth > 450 ? '11px' : '9px' }">{{ item.sku }}</div>
+            <div
+              class="text-muted"
+              [ngStyle]="{ 'font-size': innerWidth > 450 ? '11px' : '9px' }"
+            >
+              {{ item.sku }}
+            </div>
           </div>
           <div class="col-2 d-flex justify-content-center align-items-center">
-            <div [ngStyle]="{ 'font-size': innerWidth > 450 ? '11px' : '9px' }">
-              {{ item.cantidad }}
-              <ng-container *ngIf="item.cantidad > 1">
+            <div
+              [ngStyle]="{ 'font-size': innerWidth > 450 ? '11px' : '9px' }"
+            >
+              {{ item.quantity }}
+              <ng-container *ngIf="item.quantity > 1">
                 <font styler="margin-right:5px">Unidades</font>
               </ng-container>
-              <ng-container *ngIf="item.cantidad == 1">
+              <ng-container *ngIf="item.quantity == 1">
                 <font styler="margin-right:5px">Unidad</font>
               </ng-container>
             </div>
@@ -64,20 +92,25 @@
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">
-      <font color="#0063b9"><i class="fas fa-shopping-cart" style="margin-right: 10px"></i> Eliminar Productos</font>
+      <font color="#0063b9"
+        ><i class="fas fa-shopping-cart" style="margin-right: 10px"></i>
+        Eliminar Productos</font
+      >
     </h4>
   </div>
   <div class="modal-body">
-    <p align="justify">¿Esta seguro que desea eliminar el grupo seleccionado?</p>
+    <p align="justify">
+      ¿Esta seguro que desea eliminar el grupo seleccionado?
+    </p>
     <hr />
     <ng-container *ngFor="let item of grupo_producto">
       <div class="dropcart__product" (window:resize)="onResize($event)">
         <div class="dropcart__product-image">
-          <img [src]="item.images[0]['150'][0]" [alt]="item.nombre" />
+          <img [src]="root.getUrlImagenMiniatura150(item)" [alt]="item.name" />
         </div>
         <div class="dropcart__product-info dropcart__product-info-1 my-auto">
           <div class="dropcart__product-name">
-            {{ item.nombre | capitalizeFirst }}
+            {{ item.name | capitalizeFirst }}
           </div>
         </div>
       </div>
@@ -85,7 +118,11 @@
     </ng-container>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="eliminar(index)">Confirmar</button>
-    <button type="button" class="btn btn-danger" (click)="closeModal()">Cerrar</button>
+    <button type="button" class="btn btn-secondary" (click)="eliminar(index)">
+      Confirmar
+    </button>
+    <button type="button" class="btn btn-danger" (click)="closeModal()">
+      Cerrar
+    </button>
   </div>
 </ng-template>

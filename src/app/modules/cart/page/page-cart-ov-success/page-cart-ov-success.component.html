@@ -165,7 +165,13 @@
               margin-top: 20px;
             "
           >
-            Espere unos momentos, su compra es muy importante para nosotros.
+            <span *ngIf="!verifyingPayment">
+              Espere unos momentos, su compra es muy importante para nosotros.
+            </span>
+            <span *ngIf="verifyingPayment">
+              Estamos validando su pago, por favor, espere unos momentos y no
+              cierre esta ventana, su compra es muy importante para nosotros.
+            </span>
           </div>
         </div>
 

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Category } from '../../../../shared/interfaces/category';
 
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { FormGroup } from '@angular/forms';
@@ -16,11 +15,8 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 })
 export class PageProductsCategoriesComponent implements OnInit {
   usuario: ISession;
-  category!: Category;
-  selectedCategory!: Category;
   editing = false;
   loadingData = true;
-  categories: Category[] = [];
   modalRef!: BsModalRef;
   form!: FormGroup;
   formUploads!: FormGroup;

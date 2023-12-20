@@ -2,16 +2,17 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { CartService } from '../../../../shared/services/cart.service';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
-import { ClientsService } from '../../../../shared/services/clients.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { AuthApiService } from '@core/services-v2/auth.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
-import { InvitadoStorageService } from '@core/storage/invitado-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
+import { WishlistService } from '@core/services-v2/whishlist/wishlist.service';
+import { GuestStorageService } from '@core/storage/guest-storage.service';
+import { CartService } from '@core/services-v2/cart.service';
+import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 
 @Component({
   selector: 'app-header-login',
@@ -34,15 +35,15 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private toastr: ToastrService,
-    private cart: CartService,
-    private clientsService: ClientsService,
     private localStorage: LocalStorageService,
     // Service V2
+    private cart: CartService,
     private readonly authService: AuthApiService,
     private readonly authStateService: AuthStateServiceV2,
     private readonly sessionStorage: SessionStorageService,
     private readonly sessionTokenStorage: SessionTokenStorageService,
-    private readonly invitadoStorage: InvitadoStorageService
+    private readonly wishlistService: WishlistService,
+    private readonly guestStorage: GuestStorageService
   ) {
     this.form = this.fb.group({
       username: ['', Validators.required],
@@ -111,7 +112,11 @@ export class LoginComponent implements OnInit {
           }
 
           // Se carga lista de favoritos
-          this.clientsService.cargaFavoritosLocalStorage(res.user.documentId);
+          this.wishlistService
+            .setWishlistOnStorage(res.user.documentId)
+            .subscribe({
+              next: () => {},
+            });
 
           if (
             this.router.url.split('?')[0] != '/carro-compra/confirmar-orden-oc'
@@ -127,16 +132,16 @@ export class LoginComponent implements OnInit {
           };
           this.sessionStorage.set(data);
           this.sessionTokenStorage.set(res.token);
-          this.invitadoStorage.remove();
+          this.guestStorage.remove();
           this.authStateService.setSession(data);
           this.verificaSession();
           if (userIdOld) {
             this.cart
-              .cartTransfer({
-                origen: userIdOld,
-                destino: data.email,
+              .transferShoppingCart({
+                origin: userIdOld,
+                destination: data.email,
               })
-              .subscribe((res: ResponseApi) => {
+              .subscribe((res: IShoppingCart) => {
                 this.cart.load();
               });
           } else {

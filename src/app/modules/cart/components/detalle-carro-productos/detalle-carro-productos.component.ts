@@ -69,7 +69,7 @@ export class DetalleCarroProductosComponent implements OnInit, OnDestroy {
     this.shippingNotSupported = [];
   }
 
-  validateItemCart(products: any[]) {
+  validateItemCart(products: IShoppingCartProduct[]) {
     this.resetVariables();
 
     if (products.length === 0) {
@@ -78,13 +78,13 @@ export class DetalleCarroProductosComponent implements OnInit, OnDestroy {
 
     products.map((item) => {
       if (this.shippingType === 'retiro' || this.shippingType === 'TIENDA') {
-        if (!item.conflictoRetiro) {
+        if (!item.pickupConflict) {
           this.products.push(item);
         } else {
           this.shippingNotSupported.push(item);
         }
       } else {
-        if (!item.conflictoEntrega) {
+        if (!item.deliveryConflict) {
           this.products.push(item);
         } else {
           this.shippingNotSupported.push(item);

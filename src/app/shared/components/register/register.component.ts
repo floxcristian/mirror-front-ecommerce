@@ -4,7 +4,6 @@ import { ToastrService } from 'ngx-toastr';
 import { LogisticsService } from '../../services/logistics.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ResponseApi } from '../../interfaces/response-api';
-import { CartService } from '../../services/cart.service';
 import { PasswordValidator } from '../../validations/password';
 import { Router } from '@angular/router';
 import {
@@ -19,6 +18,8 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthApiService } from '@core/services-v2/auth.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { CartService } from '@core/services-v2/cart.service';
+import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 
 @Component({
   selector: 'app-register',
@@ -59,9 +60,9 @@ export class RegisterComponent implements OnInit {
     private logisticsService: LogisticsService,
     private fb: FormBuilder,
     private localS: LocalStorageService,
-    private cartService: CartService,
     private router: Router,
     // Services V2
+    private cartService: CartService,
     private readonly sessionStorage: SessionStorageService,
     private readonly authService: AuthApiService,
     private readonly authStateService: AuthStateServiceV2
@@ -212,11 +213,11 @@ export class RegisterComponent implements OnInit {
               this.authStateService.setSession(session);
               if (userIdOld) {
                 this.cartService
-                  .cartTransfer({
-                    origen: userIdOld,
-                    destino: session.email,
+                  .transferShoppingCart({
+                    origin: userIdOld,
+                    destination: session.email,
                   })
-                  .subscribe((res: ResponseApi) => {
+                  .subscribe((res: IShoppingCart) => {
                     this.cartService.load();
                   });
               } else {
@@ -285,11 +286,11 @@ export class RegisterComponent implements OnInit {
         this.authStateService.setSession(session);
         if (userIdOld) {
           this.cartService
-            .cartTransfer({
-              origen: userIdOld,
-              destino: session.email,
+            .transferShoppingCart({
+              origin: userIdOld,
+              destination: session.email,
             })
-            .subscribe((res: ResponseApi) => {
+            .subscribe((res: IShoppingCart) => {
               this.cartService.load();
             });
         } else {
@@ -329,11 +330,11 @@ export class RegisterComponent implements OnInit {
         this.authStateService.setSession(session);
         if (userIdOld) {
           this.cartService
-            .cartTransfer({
-              origen: userIdOld,
-              destino: session.email,
+            .transferShoppingCart({
+              origin: userIdOld,
+              destination: session.email,
             })
-            .subscribe((res: ResponseApi) => {
+            .subscribe((res: IShoppingCart) => {
               this.cartService.load();
             });
         } else {

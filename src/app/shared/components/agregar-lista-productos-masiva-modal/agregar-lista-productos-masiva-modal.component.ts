@@ -1,14 +1,21 @@
+// Angular
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+// Libs
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import { Lista } from '../../interfaces/articuloFavorito';
-import { ResponseApi } from '../../interfaces/response-api';
-import { ClientsService } from '../../services/clients.service';
+// Models
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { IWishlist } from '@core/services-v2/whishlist/models/whishlist-response.interface';
+// Services
 import { RootService } from '../../services/root.service';
 import { isVacio } from '../../utils/utilidades';
 import { SessionService } from '@core/states-v2/session.service';
-import { ISession } from '@core/models-v2/auth/session.interface';
+import { WishlistApiService } from '@core/services-v2/whishlist/whishlist-api.service';
+import {
+  IProductFromFile,
+  IRegisteredProductFromFile,
+} from '@core/services-v2/whishlist/models/product-from-file-response.interface';
 
 @Component({
   selector: 'app-agregar-lista-productos-masiva-modal',
@@ -16,14 +23,15 @@ import { ISession } from '@core/models-v2/auth/session.interface';
   styleUrls: ['./agregar-lista-productos-masiva-modal.component.scss'],
 })
 export class AgregarListaProductosMasivaModalComponent implements OnInit {
-  listas: Lista[] = [];
-  productosCargados: any[] = [];
-  productosNoCargados: any[] = [];
+  listas: IWishlist[] = [];
+  productosCargados: IRegisteredProductFromFile[] = [];
+  productosNoCargados: IProductFromFile[] = [];
   modo: 'lotes' | 'lista' = 'lotes';
 
-  lista!: Lista;
+  lista!: IWishlist;
   nombre = '';
   file!: File;
+  isCollapsed = false;
 
   creandoLista = false;
   seleccionandoLista = false;
@@ -39,47 +47,44 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
   usuario!: ISession;
   form!: FormGroup;
 
-  event: EventEmitter<any> = new EventEmitter();
+  event: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
     public ModalRef: BsModalRef,
     private fb: FormBuilder,
     public rootService: RootService,
     private toast: ToastrService,
-    private clientsService: ClientsService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly wishlistApiService: WishlistApiService
   ) {}
 
   ngOnInit() {
-    this.usuario = this.sessionService.getSession(); //this.rootService.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
     this.form = this.fb.group({
       file: ['', Validators.required],
     });
-    this.seleccionandoLista = this.modo === 'lista' ? true : false;
-    this.getListas();
+    this.seleccionandoLista = this.modo === 'lista';
+    this.getWishlists();
   }
 
-  getListas() {
-    this.clientsService
-      .getListaArticulosFavoritos(this.usuario.documentId)
-      .subscribe((resp: ResponseApi) => {
-        if (resp.data.length > 0) {
-          if (resp.data[0].listas.length > 0) {
-            this.listas = resp.data[0].listas;
-          }
-        }
-      });
+  getWishlists(): void {
+    this.wishlistApiService.getWishlists(this.usuario.documentId).subscribe({
+      next: (wishlists) => {
+        this.listas = wishlists;
+      },
+    });
   }
 
-  onFileChange(event: any) {
-    if (event.target.files.length > 0) {
+  onFileChange(event: any): void {
+    if (event.target.files.length) {
       const file = event.target.files[0];
       this.file = file;
     }
   }
 
-  clickCollapse(item: any) {
+  clickCollapse(item: number): void {
+    console.log('clickCollapse: ', item);
     switch (item) {
       case 1:
         if (
@@ -106,7 +111,7 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
     }
   }
 
-  ingresaNombre() {
+  ingresaNombre(): void {
     this.cantCaracteres = this.nombre.length;
   }
 
@@ -132,37 +137,30 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
       return;
     }
 
-    const formData: FormData = new FormData();
-    if (this.creandoLista) {
-      formData.append('nombre', this.nombre);
-    }
-    let idLista: string = '';
-    if (this.seleccionandoLista) {
-      idLista = this.lista._id;
-    }
-
-    formData.append('rut', this.usuario.documentId);
-    formData.append('file', this.file);
-
     this.procesandoExcel = true;
-    this.clientsService
-      .setArticulosFavoritosMasivo(formData, idLista)
-      .subscribe((resp: ResponseApi) => {
-        if (!resp.error) {
-          this.productosCargados = resp.data.productos;
-          this.productosNoCargados = resp.data.productosNoEncontrados;
+    this.wishlistApiService
+      .addProductsFromFileToWishlist({
+        documentId: this.usuario.documentId,
+        wishlistId: this.lista.id,
+        file: this.file,
+      })
+      .subscribe({
+        next: (res) => {
+          console.log('addProductsFromFileToWishlist [res]: ', res);
+          this.productosCargados = res.registered;
+          this.productosNoCargados = res.notFound;
 
           if (
-            this.productosCargados.length > 0 &&
-            this.productosNoCargados.length === 0
+            this.productosCargados.length &&
+            !this.productosNoCargados.length
           ) {
             this.alertClass = 'alert alert-success';
             this.mensaje = 'Se cargaron todos los productos correctamente.';
           }
 
           if (
-            this.productosCargados.length > 0 &&
-            this.productosNoCargados.length > 0
+            this.productosCargados.length &&
+            this.productosNoCargados.length
           ) {
             this.alertClass = 'alert alert-warning';
             this.mensaje = `Se cargaron ${this.productosCargados.length} de ${
@@ -171,8 +169,8 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
           }
 
           if (
-            this.productosCargados.length === 0 &&
-            this.productosNoCargados.length > 0
+            !this.productosCargados.length &&
+            this.productosNoCargados.length
           ) {
             this.alertClass = 'alert alert-danger';
             this.mensaje = 'No se cargó ningún producto.';
@@ -181,16 +179,19 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
           this.procesandoExcel = false;
           this.procesado = true;
           this.form.reset();
-        } else {
-          this.toast.error(resp.msg);
+        },
+        error: () => {
+          this.toast.error(
+            `Ha ocurrido un error al cargar los productos a la lista.`
+          );
           this.procesandoExcel = false;
           this.form.reset();
-        }
+        },
       });
   }
 
-  close(flag: boolean) {
-    this.event.emit(flag);
+  close(hasChanges: boolean): void {
+    this.event.emit(hasChanges);
     this.ModalRef.hide();
   }
 }
