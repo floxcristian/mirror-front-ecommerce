@@ -116,7 +116,9 @@
                   }"
                 >
                   Orden de Compra numero
-                  <strong>({{ cartSession.ordenCompra.folio }})</strong>
+                  <strong
+                    >({{ cartSession.purchaseOrder?.number ?? '' }})</strong
+                  >
                 </div>
               </div>
               <hr />
@@ -130,12 +132,12 @@
                 </div>
                 <div
                   class="col-12 mt-4"
-                  *ngFor="let item of cartSession.grupos; let i = index"
+                  *ngFor="let item of cartSession.groups; let i = index"
                 >
                   <app-grupo-detalle-productos
                     [index]="i + 1"
                     [length]="fechas.length"
-                    [grupo_producto]="item.productos"
+                    [grupo_producto]="item.products"
                   ></app-grupo-detalle-productos>
 
                   <div style="margin-bottom: 30px">
@@ -227,6 +229,7 @@
                   <app-codigo-oc
                     *ngIf="verificar_oc"
                     [id]="cartSession._id"
+                    [purchaseOrderId]="purchaseOrderId"
                     (verificar)="confirmar($event)"
                     (renv_cod)="aceptar_compra()"
                   ></app-codigo-oc>
@@ -263,6 +266,7 @@
                   <app-codigo-oc
                     *ngIf="verificar_oc"
                     [id]="cartSession._id"
+                    [purchaseOrderId]="purchaseOrderId"
                     (verificar)="confirmar($event)"
                   ></app-codigo-oc>
                 </div>
@@ -280,7 +284,7 @@
                 <app-resumen-retiro
                   [direccion]="direccion"
                   [fechasEvent]="fecha_entrega"
-                  [despacho]="cartSession.despacho"
+                  [despacho]="cartSession.shipment"
                   [shippingType]="shippingType"
                 >
                 </app-resumen-retiro>
@@ -359,6 +363,7 @@
               <app-codigo-oc
                 *ngIf="verificar_oc"
                 [id]="cartSession._id"
+                [purchaseOrderId]="purchaseOrderId"
                 (verificar)="confirmar($event)"
               >
               </app-codigo-oc>

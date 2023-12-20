@@ -6,6 +6,7 @@ export enum StorageKey {
   queryParams = 'queryParams',
   menuCollapsed = 'menuCollapsed',
   carroCompraB2B = 'carroCompraB2B',
+  carroCompraOMNI = 'carroCompraOMNI',
   ov = 'ov',
   gclid = 'gclid',
   fbclid = 'fbclid',
@@ -25,4 +26,5 @@ export enum StorageKey {
   wishlistItems = 'wishlistItems',
   utm_campaign = 'utm_campaign',
   tokens = '_t',
+  idCarro = 'id_carro',
 }

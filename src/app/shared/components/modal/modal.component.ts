@@ -36,7 +36,7 @@ export class ModalComponent implements OnInit {
   textoBotonNO?: string;
   textoBotonSI?: string;
 
-  event: EventEmitter<any> = new EventEmitter();
+  event: EventEmitter<boolean> = new EventEmitter();
 
   constructor(public ModalRef: BsModalRef) {}
 

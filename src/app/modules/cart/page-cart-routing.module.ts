@@ -1,5 +1,5 @@
 // Angular
-import { NgModule } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 // Guards
 import { GraciasPorTuCompraGuard } from './guards/gracias-por-tu-compra/gracias-por-tu-compra.guard';

@@ -10,7 +10,6 @@ import { PageNotFoundComponent } from '../pages/page-not-found/page-not-found.co
 import { PageHomeOneComponent } from '../pages/page-home-one/page-home-one.component';
 import { PageSpecialsComponent } from '../pages/page-specials/page-specials.component';
 
-import { VerificarpagoComponent } from './pages/verificarpago/verificarpago.component';
 import { AuthGuard } from '../core/guards/auth.guard';
 import { PageDevolucionesComponent } from '../pages/page-devoluciones/page-devoluciones.component';
 
@@ -25,12 +24,6 @@ const routes: Routes = [
     path: 'devoluciones',
     component: PageDevolucionesComponent,
   },
-
-  {
-    path: 'verificar-pago',
-    component: VerificarpagoComponent,
-  },
-
   {
     path: 'carro-compra',
     component: LayoutComponent,

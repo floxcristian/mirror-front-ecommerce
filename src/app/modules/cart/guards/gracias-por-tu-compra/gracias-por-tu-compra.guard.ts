@@ -1,29 +1,27 @@
-import { PaymentService } from './../../../../shared/services/payment.service';
 import { map } from 'rxjs/operators';
-import { CartService } from './../../../../shared/services/cart.service';
 import { Injectable } from '@angular/core';
 import {
-  CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
   UrlTree,
   Params,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { CartService } from '@core/services-v2/cart.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class GraciasPorTuCompraGuard implements CanActivate {
+export class GraciasPorTuCompraGuard {
   constructor(
-    private cartService: CartService,
     private router: Router,
-    private paymentService: PaymentService
+    // Services V2
+    private readonly cartService: CartService
   ) {}
 
   canActivate(
-    next: ActivatedRouteSnapshot,
+    route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ):
     | Observable<boolean | UrlTree>
@@ -31,22 +29,24 @@ export class GraciasPorTuCompraGuard implements CanActivate {
     | boolean
     | UrlTree {
     let haveAccess = false;
-    const queryParams = next.queryParams;
+    const queryParams = route.queryParams;
 
     if (this.isPaymentApproved(queryParams)) {
-      const documento = this.paymentService.obtenerDocumentoDeBuyOrderMPago(
-        queryParams['external_reference']
+      const shoppingCartId = queryParams['shoppingCartId'];
+      return this.cartService.thanksForYourPurchase({ shoppingCartId }).pipe(
+        map((r) => {
+          if (r.isFirstVisit) {
+            return true;
+          } else {
+            this.router.parseUrl('/inicio');
+            return false;
+          }
+        })
       );
-      return this.cartService
-        .primeraVisitaGraciasPorTuCompra(documento)
-        .pipe(
-          map((r) =>
-            r.esPrimeraVisita ? true : this.router.parseUrl('/inicio')
-          )
-        );
     } else {
       if (!haveAccess) {
-        return this.router.parseUrl('/inicio');
+        this.router.parseUrl('/inicio');
+        return false;
       }
       return true;
     }
@@ -59,6 +59,6 @@ export class GraciasPorTuCompraGuard implements CanActivate {
       ? query['payment_status']
       : null;
 
-    return query['external_reference'] && status && status == 'approved';
+    return query['shoppingCartId'] && status && status == 'approved';
   }
 }

@@ -31,11 +31,14 @@
         <button
           class="btn btn-sm btn-secondary mt-2"
           style="margin-right: 10px"
-          (click)="cargaUnitaria()"
+          (click)="addProductsToWishlist()"
         >
           Carga unitaria
         </button>
-        <button class="btn btn-sm btn-secondary mt-2" (click)="cargaMasiva()">
+        <button
+          class="btn btn-sm btn-secondary mt-2"
+          (click)="addProductsFromFileToWishlist()"
+        >
           Cargar productos por lotes
         </button>
       </div>
@@ -52,10 +55,10 @@
             <ng-container *ngFor="let lista of listas; let i = index">
               <a
                 class="list-group-item list-group-item-action"
-                [ngClass]="{ active: i === seleccionada }"
-                (click)="seleccionarLista(i, '')"
+                [ngClass]="{ active: i === indexSelectedWishlist }"
+                (click)="indexSelectedWishlist = i"
                 data-bs-toggle="list"
-                [href]="'#list-' + lista._id"
+                [href]="'#list-' + lista.id"
                 role="tab"
               >
                 <div
@@ -63,14 +66,14 @@
                   style="font-weight: bold"
                 >
                   <div class="flex-shrink-1 flex-grow-1">
-                    {{ lista.nombre }}
+                    {{ lista.name }}
                   </div>
                   <div class="d-flex align-items-center">
                     <i
                       class="fas fa-check-circle text-success me-3"
                       tooltip="Predeterminada"
                       container="body"
-                      *ngIf="lista.predeterminada"
+                      *ngIf="lista.default"
                     ></i>
                     <div dropdown class="ms-1">
                       <button
@@ -85,20 +88,20 @@
                         <a
                           class="dropdown-item px-1"
                           style="font-size: 0.85rem; cursor: pointer"
-                          (click)="listaPredeterminada(lista)"
+                          (click)="setDefaultWishlist(lista)"
                           >Establecer como predeterminada</a
                         >
                         <div class="dropdown-divider"></div>
                         <a
                           class="dropdown-item px-1"
                           style="font-size: 0.85rem; cursor: pointer"
-                          (click)="cambiarNombre(lista)"
+                          (click)="changeWishlistName(lista)"
                           >Cambiar nombre</a
                         >
                         <a
                           class="dropdown-item px-1"
                           style="font-size: 0.85rem; cursor: pointer"
-                          (click)="eliminarLista(lista)"
+                          (click)="deleteWishlist(lista)"
                           >Eliminar</a
                         >
                       </div>
@@ -115,30 +118,31 @@
         <h6 class="mb-2">Carga de productos:</h6>
         <button
           class="btn btn-sm btn-secondary float-start"
-          (click)="cargaUnitaria()"
+          (click)="addProductsToWishlist()"
         >
           Carga unitaria
         </button>
         <button
           class="btn btn-sm btn-secondary float-end"
-          (click)="cargaMasiva()"
+          (click)="addProductsFromFileToWishlist()"
         >
           Carga masiva
         </button>
       </div>
     </div>
   </div>
-  <div class="col-lg-8 mt-3 mt-lg-0 d-flex" *ngIf="listas.length > 0">
+  <div class="col-lg-8 mt-3 mt-lg-0 d-flex" *ngIf="listas.length">
     <div class="card">
       <div class="card-header">
         <div class="text-center mb-2"><strong>Mis productos</strong></div>
       </div>
       <div class="card-body mt-3">
+        <!-- Start::buscar producto -->
         <div class="input-group" style="margin-bottom: 10px">
           <input
             type="text"
             class="form-control"
-            (keyup)="buscar_producto($event, seleccionada)"
+            (keyup)="searchProductOnList($event, indexSelectedWishlist)"
             aria-label="Amount (to the nearest dollar)"
           />
           <span class="input-group-text">
@@ -151,13 +155,15 @@
             </button>
           </span>
         </div>
+        <!-- End::buscar producto -->
+
         <div style="max-height: 500px; overflow-y: auto; padding-right: 10px">
           <div class="tab-content border-0" id="nav-tabContent">
             <ng-container *ngFor="let lista of listas; let i = index">
               <div
                 class="tab-pane fade"
-                [ngClass]="{ 'show active': i === seleccionada }"
-                [id]="'list-' + lista._id"
+                [ngClass]="{ 'show active': i === indexSelectedWishlist }"
+                [id]="'list-' + lista.id"
                 role="tabpanel"
               >
                 <div
@@ -165,14 +171,14 @@
                 >
                   <div
                     class="border-bottom d-sm-flex d-block align-items-center flex-grow-1 flex-shrink-1"
-                    *ngFor="let product of lista.detalleSkus"
+                    *ngFor="let product of lista.articles"
                   >
                     <div class="col-12 d-block d-sm-none text-center">
                       <span class="product-title">
-                        {{ product.nombre | titlecase }} </span
+                        {{ product.name | titlecase }} </span
                       ><br />
                       <span class="product-sku text-gray-2"
-                        >{{ getCodigoCliente(product) }} -
+                        >{{ getCustomerCode(product) }} -
                         {{ product.sku }}</span
                       >
                     </div>
@@ -182,26 +188,26 @@
                     >
                       <a
                         [routerLink]="
-                          rootService.product(product.sku, product.nombre)
+                          rootService.product(product.sku, product.name)
                         "
                       >
                         <img
                           class="precio-img lazyload"
-                          [src]="rootService.getUrlImagenMiniatura(product)"
-                          [alt]="product.nombre"
+                          [src]="product.preview"
+                          [alt]="product.name"
                         />
                       </a>
                     </div>
                     <div class="col-8 col-sm-5 d-flex align-items-center">
                       <span class="product-title d-none d-sm-block">
-                        {{ product.nombre | titlecase }}
+                        {{ product.name | titlecase }}
                       </span>
                     </div>
                     <div
                       class="col-8 col-sm-2 flex-sm-column justify-content-xl-end justify-content-center d-flex align-items-center"
                     >
                       <span class="product-sku ms-2 d-none d-sm-block">
-                        {{ getCodigoCliente(product) }}
+                        {{ getCustomerCode(product) }}
                       </span>
                       <span
                         class="product-sku text-gray-2 ms-2 d-none d-sm-block"
@@ -233,7 +239,7 @@
                         tooltip="Eliminar producto"
                         placement="left"
                         container="body"
-                        (click)="eliminarProducto(lista, product.sku)"
+                        (click)="deleteProductFromWishlist(lista, product.sku)"
                       >
                         <i class="fas fa-trash-alt text-danger"></i>
                       </button>
@@ -253,15 +259,12 @@
                     </button>
                   </div>
                 </div>
-                <div
-                  class="text-center mt-3"
-                  *ngIf="lista.detalleSkus.length === 0"
-                >
+                <div class="text-center mt-3" *ngIf="!lista.articles.length">
                   <div>No hay productos</div>
 
                   <button
                     class="btn btn-secondary mt-3"
-                    (click)="cargaMasiva()"
+                    (click)="addProductsFromFileToWishlist()"
                   >
                     Agregar productos a la lista
                   </button>

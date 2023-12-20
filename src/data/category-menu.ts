@@ -1,7 +1,4 @@
-import {
-  CategoryMenuSimple,
-  CategoryColumn,
-} from '../app/shared/interfaces/category-api';
+import { CategoryColumn } from '../app/shared/interfaces/category-api';
 
 export const categoryMenu: CategoryColumn[] = [
   {

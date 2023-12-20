@@ -2,8 +2,6 @@ import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { posts } from '../../../data/blog-posts';
 import { brands } from '../../../data/shop-brands';
 import { products } from '../../../data/shop-products';
-import { categories } from '../../../data/shop-block-categories';
-import { Category } from '../../shared/interfaces/category';
 import { isPlatformBrowser } from '@angular/common';
 import { brandsB2c } from '../../../data/shop-brands-b2c';
 import { SessionService } from '@core/states-v2/session.service';
@@ -15,7 +13,6 @@ import { SessionService } from '@core/states-v2/session.service';
 })
 export class PageHomeOneComponent implements OnInit {
   products = products;
-  categories: Category[] = categories;
   banners: any = [];
 
   posts = posts;

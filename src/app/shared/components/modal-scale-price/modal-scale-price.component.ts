@@ -3,7 +3,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/states-v2/session.service';
 import { environment } from '@env/environment';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { IScalePriceItem } from '../product/scale-price-item.interface';
+import { IScalePriceItem } from '../product/models/scale-price-item.interface';
 
 @Component({
   selector: 'app-modal-scale-price',

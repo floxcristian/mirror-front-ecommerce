@@ -5,7 +5,7 @@
       >Cargar productos por lotes</span
     >
     <span style="font-size: 16px" *ngIf="modo === 'lista'"
-      >Agregando productos a lista "{{ lista.nombre }}"</span
+      >Agregando productos a lista "{{ lista.name }}"</span
     >
   </h5>
 </div>
@@ -118,7 +118,7 @@
           >
             <option selected [value]="undefined">Seleccione lista...</option>
             <option *ngFor="let item of listas" [ngValue]="item">
-              {{ item.nombre }}
+              {{ item.name }}
             </option>
           </select>
         </div>
@@ -132,15 +132,15 @@
       <strong>{{ mensaje }} </strong>
     </div>
     <label>Detalle Resultados: </label><br />
+
     <div class="accordion" id="DetalleResultados">
-      <div *ngIf="productosCargados.length > 0">
+      <!-- Start::acordion productos cargados -->
+      <div *ngIf="productosCargados.length">
         <div class="border accordion-header">
           <div
             class="mb-0 d-flex"
             style="cursor: pointer"
-            data-bs-toggle="collapse"
-            data-target="#productosOK"
-            aria-expanded="false"
+            [attr.aria-expanded]="!collapsed1State"
             aria-controls="productosOK"
             (click)="clickCollapse(1)"
           >
@@ -151,9 +151,7 @@
               {{ productosCargados.length }}
               <span *ngIf="productosCargados.length == 1"
                 >Producto cargado</span
-              ><span *ngIf="productosCargados.length > 0"
-                >Productos cargados</span
-              >
+              ><span *ngIf="productosCargados.length">Productos cargados</span>
               correctamente
             </div>
             <div style="float: right" class="me-3 d-flex align-items-center">
@@ -164,11 +162,10 @@
             </div>
           </div>
         </div>
-
         <div
           id="productosOK"
-          class="collapse"
-          data-parent="#DetalleResultados"
+          [collapse]="collapsed1State"
+          [isAnimated]="true"
           style="max-height: 200px; overflow-y: scroll"
         >
           <div
@@ -177,46 +174,36 @@
             <div class="producto" *ngFor="let item of productosCargados">
               <div>
                 <div class="me-2 float-start">
-                  <a
-                    [routerLink]="
-                      rootService.product(
-                        item.detalleSku.sku,
-                        item.detalleSku.nombre
-                      )
-                    "
-                  >
+                  <a [routerLink]="rootService.product(item.sku, item.name)">
                     <img
                       style="width: 3rem"
-                      [src]="
-                        rootService.getUrlImagenMiniatura(item.detalleSku)
-                      "
-                      [alt]="item.detalleSku.nombre"
+                      [src]="item.preview"
+                      [alt]="item.name"
                     />
                   </a>
                 </div>
                 <div>
                   <div class="text-truncate" style="height: 20px">
                     <span style="font-size: 0.9rem">{{
-                      item.detalleSku.nombre | capitalizeFirst
+                      item.name | capitalizeFirst
                     }}</span>
                   </div>
-                  <span style="font-size: 70%">{{
-                    'SKU: ' + item.detalleSku.sku
-                  }}</span>
+                  <span style="font-size: 70%">{{ 'SKU: ' + item.sku }}</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div *ngIf="productosNoCargados.length > 0">
+      <!-- End::acordion productos cargados -->
+
+      <!-- Start::acordion productos no cargados -->
+      <div *ngIf="productosNoCargados.length">
         <div class="border accordion-header">
           <div
             class="mb-0 d-flex"
             style="cursor: pointer"
-            data-bs-toggle="collapse"
-            data-target="#productosERROR"
-            aria-expanded="false"
+            [attr.aria-expanded]="!collapsed2State"
             aria-controls="productosERROR"
             (click)="clickCollapse(2)"
           >
@@ -241,8 +228,8 @@
         </div>
         <div
           id="productosERROR"
-          class="collapse"
-          data-parent="#DetalleResultados"
+          [collapse]="collapsed1State"
+          [isAnimated]="true"
           style="max-height: 200px; overflow-y: scroll"
         >
           <div
@@ -252,7 +239,7 @@
               <div>
                 <div class="col-sm-12">
                   <span class="product-sku text-gray-2"
-                    >Celda: {{ item.celda }}
+                    >Celda: {{ item.line }}
                   </span>
                 </div>
                 <div class="col-sm-12">
@@ -270,6 +257,7 @@
           </div>
         </div>
       </div>
+      <!-- End::acordion productos no cargados -->
     </div>
   </div>
 </div>

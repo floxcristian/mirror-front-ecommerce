@@ -1156,7 +1156,7 @@ export class CartService {
     this.origenHistory = this.origenHistory ? origen : [];
   }
 
-  getOrigenHistory() {
+  getOrigenHistory(): string[] {
     return this.origenHistory;
   }
 

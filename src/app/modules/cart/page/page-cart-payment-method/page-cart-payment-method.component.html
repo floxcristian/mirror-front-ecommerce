@@ -380,7 +380,7 @@
                 <div
                   class="list-group-item"
                   tooltip="Dirección"
-                  *ngIf="selectedDocument === invoiceType.INVOICE && invitado"
+                  *ngIf="selectedDocument === invoiceType.INVOICE && guest"
                 >
                   <div class="col-12" style="padding: 0 !important">
                     <app-map
@@ -513,7 +513,7 @@
               [text]="loadingText"
             ></app-loading-element>
 
-            <div *ngIf="invitado">
+            <div *ngIf="guest">
               <div class="row">
                 <div style="margin-bottom: 10px; padding: 5px">
                   <div class="card-body m-0">
@@ -687,7 +687,7 @@
 
             <ng-container *ngIf="!alertCartShow">
               <ng-container *ngIf="documentType == 'factura'">
-                <div *ngIf="invitado" class="row-pagos">
+                <div *ngIf="guest" class="row-pagos">
                   <div
                     *ngFor="let item of paymentMethods"
                     class="col-sm-12"
@@ -734,7 +734,7 @@
                     </div>
                   </div>
                 </div>
-                <div *ngIf="!invitado" class="row-pagos">
+                <div *ngIf="!guest" class="row-pagos">
                   <div
                     *ngFor="let item of paymentMethods"
                     class="col-sm-12"
@@ -929,8 +929,8 @@
                     <b>Estado: </b
                     ><span class="text-danger"><b>BLOQUEADO</b></span
                     ><br />
-                    <span *ngIf="bloqueoCliente.nombreMotivoBloqueo != null">
-                      <b>Motivo: </b>{{ bloqueoCliente.nombreMotivoBloqueo }}
+                    <span *ngIf="bloqueoCliente != null">
+                      <b>Motivo: </b>{{ bloqueoCliente }}
                     </span>
                   </div>
                 </div>
@@ -983,7 +983,7 @@
               documentType != 'cotizacion' &&
               paymentMethodActive != 'ordenCompra' &&
               userSession.userRole !== 'compradorb2c' &&
-              !invitado
+              !guest
             "
           >
             <div class="col-12 text-end">
@@ -1055,7 +1055,7 @@
               [text]="loadingText"
             ></app-loading-element>
 
-            <div *ngIf="invitado">
+            <div *ngIf="guest">
               <div class="row">
                 <div
                   class="card shadow-none"
@@ -1227,7 +1227,7 @@
               <ng-container *ngIf="documentType == 'factura'">
                 <div class="row justify-content-center">
                   <div class="mb-3 col-11">
-                    <div *ngIf="invitado" class="row mt-2">
+                    <div *ngIf="guest" class="row mt-2">
                       <div
                         *ngFor="let item of paymentMethods"
                         class="col-md-6"
@@ -1276,10 +1276,7 @@
                         </div>
                       </div>
                     </div>
-                    <div
-                      *ngIf="!invitado"
-                      class="row ion-justify-content-center"
-                    >
+                    <div *ngIf="!guest" class="row ion-justify-content-center">
                       <div
                         *ngFor="let item of paymentMethods"
                         class="col-md-6"
@@ -1482,7 +1479,7 @@
               documentType != 'cotizacion' &&
               paymentMethodActive != 'ordenCompra' &&
               userSession.userRole !== 'compradorb2c' &&
-              !invitado
+              !guest
             "
           >
             <div class="col-12 text-end" style="color: #0063b9 !important">
@@ -1530,6 +1527,7 @@
               >
                 <app-codigo-oc
                   [id]="cartSession._id"
+                  [purchaseOrderId]="purchaseOrderId"
                   (verificar)="Confirmar($event)"
                   (renv_cod)="paymentOvSms()"
                 ></app-codigo-oc>
@@ -1563,7 +1561,7 @@
                     !['webPay', 'mercadopago', 'khipu'].includes(
                       paymentMethodActive || ''
                     ) &&
-                    !invitado
+                    !guest
                   "
                   (click)="paymentOv()"
                   [disabled]="
@@ -1594,7 +1592,7 @@
                     !['webPay', 'mercadopago', 'khipu'].includes(
                       paymentMethodActive || ''
                     ) &&
-                    !invitado
+                    !guest
                   "
                   (click)="paymentOvSms()"
                   [disabled]="
@@ -1620,7 +1618,7 @@
                 <button
                   name="paymentwebpay2 "
                   [disabled]="true"
-                  *ngIf="!paymentMethodActive && invitado"
+                  *ngIf="!paymentMethodActive && guest"
                   class="btn btn-lg btn-secondary w-100 text-center"
                 >
                   Ir a pagar
@@ -1648,7 +1646,7 @@
                   *ngIf="
                     userSession.userRole != userRoleType.BUYER &&
                     paymentMethodActive == 'mercadopago' &&
-                    !invitado
+                    !guest
                   "
                   (click)="paymentMercadopago()"
                   class="btn btn-lg btn-secondary w-100 text-center"
@@ -1663,7 +1661,7 @@
 
                 <!-- Start::pagar con mercadopago siendo invitado (desktop) (ir a pagar5)-->
                 <button
-                  *ngIf="invitado && paymentMethodActive == 'mercadopago'"
+                  *ngIf="guest && paymentMethodActive == 'mercadopago'"
                   name="paymentMercadopago2 "
                   [disabled]="
                     !formVisita.valid ||
@@ -1673,7 +1671,7 @@
                     (!userSession.businessLine &&
                       selectedDocument === invoiceType.INVOICE &&
                       !selectedGiro) ||
-                    (invitado &&
+                    (guest &&
                       selectedDocument === invoiceType.INVOICE &&
                       (!formDireccion.valid || !tienda))
                   "
@@ -1701,7 +1699,7 @@
                   *ngIf="
                     userSession.userRole != userRoleType.BUYER &&
                     paymentMethodActive == 'khipu' &&
-                    !invitado
+                    !guest
                   "
                   (click)="paymentKhipu()"
                   class="btn btn-lg btn-secondary w-100 text-center"
@@ -1725,11 +1723,11 @@
                     (!userSession.businessLine &&
                       selectedDocument === invoiceType.INVOICE &&
                       !selectedGiro) ||
-                    (invitado &&
+                    (guest &&
                       selectedDocument === invoiceType.INVOICE &&
                       (!formDireccion.valid || !tienda))
                   "
-                  *ngIf="invitado && paymentMethodActive == 'khipu'"
+                  *ngIf="guest && paymentMethodActive == 'khipu'"
                   (click)="paymentKhipu()"
                   class="btn btn-lg btn-secondary w-100 tex-tcenter"
                 >
@@ -1754,7 +1752,7 @@
                   *ngIf="
                     userSession.userRole != userRoleType.BUYER &&
                     paymentMethodActive == 'webPay' &&
-                    !invitado
+                    !guest
                   "
                   (click)="creteateTransactionTransBank()"
                   class="btn btn-lg btn-secondary w-100 text-center"
@@ -1781,11 +1779,11 @@
                     (!userSession.businessLine &&
                       selectedDocument === invoiceType.INVOICE &&
                       !selectedGiro) ||
-                    (invitado &&
+                    (guest &&
                       selectedDocument === invoiceType.INVOICE &&
                       (!formDireccion.valid || !tienda))
                   "
-                  *ngIf="invitado && paymentMethodActive == 'webPay'"
+                  *ngIf="guest && paymentMethodActive == 'webPay'"
                   (click)="creteateTransactionTransBank()"
                   class="btn btn-lg btn-secondary w-100 text-center"
                 >
@@ -2236,7 +2234,7 @@
                 <div
                   class="list-group-item"
                   tooltip="Dirección"
-                  *ngIf="selectedDocument === invoiceType.INVOICE && invitado"
+                  *ngIf="selectedDocument === invoiceType.INVOICE && guest"
                 >
                   <div>
                     <app-map
@@ -2367,7 +2365,7 @@
               <tr style="font-size: 14px; color: #005db9">
                 <th>Total</th>
                 <td class="fw-bold">
-                  {{ cart.total$ | async | currencyFormat }}
+                  {{ cartService.total$ | async | currencyFormat }}
                 </td>
               </tr>
             </table>
@@ -2395,6 +2393,7 @@
         <app-codigo-oc
           *ngIf="cd_ver"
           [id]="cartSession._id"
+          [purchaseOrderId]="purchaseOrderId"
           (verificar)="Confirmar($event)"
           (renv_cod)="paymentOvSms()"
         >
@@ -2411,7 +2410,7 @@
                 !['webPay', 'mercadopago', 'khipu'].includes(
                   paymentMethodActive || ''
                 ) &&
-                !invitado
+                !guest
               "
               (click)="paymentOv()"
               [disabled]="
@@ -2439,7 +2438,7 @@
                 !cd_ver &&
                 paymentMethodActive != 'webPay' &&
                 paymentMethodActive != 'mercadopago' &&
-                !invitado
+                !guest
               "
               (click)="paymentOvSms()"
               [disabled]="
@@ -2472,7 +2471,7 @@
               *ngIf="
                 userSession.userRole != userRoleType.BUYER &&
                 paymentMethodActive == 'webPay' &&
-                !invitado
+                !guest
               "
               (click)="creteateTransactionTransBank()"
               class="btn btn-lg btn-secondary w-100 text-center"
@@ -2484,7 +2483,7 @@
             <!-- Start::pagar con webpay siendo invitado (mobile) (ir a pagar13) -->
             <button
               name="paymentwebpay2"
-              *ngIf="invitado && paymentMethodActive == 'webPay'"
+              *ngIf="guest && paymentMethodActive == 'webPay'"
               [disabled]="
                 !formVisita.valid ||
                 !validado ||
@@ -2493,7 +2492,7 @@
                 (!userSession.businessLine &&
                   selectedDocument === invoiceType.INVOICE &&
                   !selectedGiro) ||
-                (invitado &&
+                (guest &&
                   selectedDocument === invoiceType.INVOICE &&
                   (!formDireccion.valid || !tienda))
               "
@@ -2518,7 +2517,7 @@
               *ngIf="
                 userSession.userRole != userRoleType.BUYER &&
                 paymentMethodActive == 'mercadopago' &&
-                !invitado
+                !guest
               "
               (click)="paymentMercadopago()"
               class="btn btn-lg btn-secondary w-100 text-center"
@@ -2529,7 +2528,7 @@
 
             <!-- Start::pagar con mercadopago siendo invitado (mobile) (ir a pagar15) -->
             <button
-              *ngIf="invitado && paymentMethodActive == 'mercadopago'"
+              *ngIf="guest && paymentMethodActive == 'mercadopago'"
               name="paymentMercadopago2 "
               [disabled]="
                 !formVisita.valid ||
@@ -2540,7 +2539,7 @@
                 (!userSession.businessLine &&
                   selectedDocument === invoiceType.INVOICE &&
                   !selectedGiro) ||
-                (invitado &&
+                (guest &&
                   selectedDocument === invoiceType.INVOICE &&
                   (!formDireccion.valid || !tienda))
               "
@@ -2603,69 +2602,6 @@
   </div>
 </ng-container>
 <!-- End::resumen de tu compra (mobile) (no existe en desktop)-->
-
-<ng-container *ngIf="paymentWebpayForm">
-  <form
-    id="myform"
-    action="{{ urlApiWebPay }}"
-    method="POST"
-    [hidden]="'false'"
-  >
-    <input
-      type="text"
-      placeholder="cartId"
-      name="cartId"
-      [value]="cartSession._id"
-    />
-    <br />
-
-    <input
-      type="number"
-      min="10"
-      placeholder="Monto a pagar"
-      name="amount"
-      [value]="totalCarro"
-    />
-    <br />
-
-    <input
-      type="text"
-      style="width: 400px"
-      placeholder="url para mostrar comprobante"
-      name="urlPaymentVoucher"
-      [value]="urlPaymentVoucher"
-    />
-    <br />
-
-    <input
-      type="text"
-      placeholder="endpoint para mostrar generar la ov desde la api pagos"
-      name="urlNotificationPayment"
-      [value]="urlNotificationPayment"
-    />
-    <br />
-
-    <input
-      type="text"
-      style="width: 400px"
-      placeholder="url para mostrar comprobante"
-      name="urlPaymentCanceled"
-      [value]="urlPaymentCanceled"
-    />
-    <br />
-
-    <input type="text" name="system" value="b2b/b2c" />
-
-    <br />
-  </form>
-</ng-container>
-
-<ng-container *ngIf="transBankToken && paymentWebpayForm">
-  <form id="transBankForm" [action]="transBankToken.url" method="POST">
-    <input type="hidden" name="token_ws" [value]="transBankToken.token" />
-    <input type="hidden" value="Pagar" />
-  </form>
-</ng-container>
 
 <button
   id="openModalButton"

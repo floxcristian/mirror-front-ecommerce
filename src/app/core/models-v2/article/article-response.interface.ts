@@ -12,7 +12,7 @@ export interface CategoryDetail {
   updatedAt: string;
 }
 
-export interface Attribute {
+export interface IAttribute {
   name: string;
   value: string;
 }
@@ -56,7 +56,7 @@ export interface ILineBoss {
 
 export type IArticleResponse = IArticle & {
   assortment: number; //*
-  attributes: Attribute[]; // *
+  attributes: IAttribute[]; // *
   barcodes: Barcode[]; //*
   barcodesSearch: Barcode[]; // *
   categories: CategoryDetail[]; // *

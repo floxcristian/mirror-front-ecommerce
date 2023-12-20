@@ -1,7 +1,10 @@
+// Angular
 import { Component, EventEmitter, OnInit } from '@angular/core';
+// Libs
 import { ToastrService } from 'ngx-toastr';
-import { isVacio } from '../../utils/utilidades';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+// Services
+import { isVacio } from '../../utils/utilidades';
 
 @Component({
   selector: 'app-editar-lista-productos',
@@ -10,13 +13,13 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class EditarListaProductosComponent implements OnInit {
   nombre!: string;
-
   closeToOK!: boolean;
+
   cargando = false;
   cantCaracteres = 0;
   maxCaracteres = 40;
 
-  event: EventEmitter<any> = new EventEmitter();
+  event: EventEmitter<string> = new EventEmitter();
 
   constructor(public ModalRef: BsModalRef, private toastr: ToastrService) {}
 

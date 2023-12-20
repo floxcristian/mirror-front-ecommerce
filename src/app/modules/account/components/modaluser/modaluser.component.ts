@@ -174,7 +174,7 @@ export class ModaluserComponent implements OnInit, OnDestroy {
     this.subAccountService
       .deleteSubAccount({
         documentId: data.documentId,
-        username: data.username,
+        username: data.username || '',
       })
       .subscribe({
         next: () => {

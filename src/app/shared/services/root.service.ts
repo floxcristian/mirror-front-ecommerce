@@ -4,14 +4,12 @@ import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 // Pipes
 import { SlugifyPipe } from '../pipes/slugify.pipe';
-// Services
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-// Interfaces
-import { isVacio } from '../utils/utilidades';
-import { SessionService } from '@core/states-v2/session.service';
+// Models
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
-import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
+// Services
+import { SessionService } from '@core/states-v2/session.service';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +23,6 @@ export class RootService {
   constructor(
     public slugify: SlugifyPipe,
     public decimal: DecimalPipe,
-    private localS: LocalStorageService,
     private router: Router,
     // Services V2
     private readonly sessionService: SessionService,

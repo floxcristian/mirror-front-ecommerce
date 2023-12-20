@@ -74,10 +74,8 @@ import { ProductCardB2cComponent } from './components/product-card-b2c/product-c
 import { UpdateFlotaModalComponent } from './components/update-flota-modal/update-flota-modal.component';
 import { InputNumberProductComponent } from './components/input-number-product/input-number-product.component';
 import { WishListModalComponent } from './components/wish-list-modal/wish-list-modal.component';
-import { ProductListCardComponent } from './components/product-list-card/product-list-card.component';
 import { EditarListaProductosComponent } from './components/editar-lista-productos/editar-lista-productos.component';
 import { AgregarListaProductosMasivaModalComponent } from './components/agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
-import { ProductListModalComponent } from './components/product-list-card/components/product-list-modal/product-list-modal.component';
 import { AngularEmailAutocompleteComponent } from './components/angular-email-autocomplete/angular-email-autocomplete.component';
 import { FiltroMagicoModule } from './components/filtro-magico/filtro-magico.module';
 import { ProductoSelectBusquedaComponent } from './components/producto-select-busqueda/producto-select-busqueda.component';
@@ -158,10 +156,8 @@ const NGU_CAROUSEL_MODULES = [
     UpdateFlotaModalComponent,
     InputNumberProductComponent,
     WishListModalComponent,
-    ProductListCardComponent,
     EditarListaProductosComponent,
     AgregarListaProductosMasivaModalComponent,
-    ProductListModalComponent,
     AngularEmailAutocompleteComponent,
     ProductoSelectBusquedaComponent,
     AgregarListaProductosUnitariaModalComponent,

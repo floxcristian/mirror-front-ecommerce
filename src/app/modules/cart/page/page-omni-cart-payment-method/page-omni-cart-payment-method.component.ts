@@ -1,13 +1,24 @@
+// Angular
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { PaymentParams } from '../../../../shared/interfaces/payment-method';
-import { LogisticsService } from '../../../../shared/services/logistics.service';
-import { PaymentService } from '../../../../shared/services/payment.service';
-import { environment } from '@env/environment';
-import { CartService } from '../../../../shared/services/cart.service';
-import { ClientsService } from '../../../../shared/services/clients.service';
-import { isVacio } from '../../../../shared/utils/utilidades';
+import { ActivatedRoute, Router } from '@angular/router';
+// Libs
+import { BsModalService } from 'ngx-bootstrap/modal';
+// Rxjs
+import { firstValueFrom } from 'rxjs';
+// Models
+import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
+import {
+  IShoppingCart,
+  IShoppingCartProduct,
+} from '@core/models-v2/cart/shopping-cart.interface';
+import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
+import { IStore } from '@core/services-v2/geolocation/models/store.interface';
+// Services
+import { PaymentMethodOmniService } from '@core/services-v2/payment-method-omni.service';
+import { CartService } from '@core/services-v2/cart.service';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
+import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
+import { SHOPPING_CART_STATUS_TYPE } from '@core/enums/shopping-cart-status.enum';
 
 @Component({
   selector: 'app-page-omni-cart-payment-method',
@@ -15,14 +26,15 @@ import { isVacio } from '../../../../shared/utils/utilidades';
   styleUrls: ['./page-omni-cart-payment-method.component.scss'],
 })
 export class PageOmniCartPaymentMethodComponent implements OnInit {
-  id: string = '';
   @ViewChild('bankmodal', { static: false }) content: any;
-  cartSession: any = [];
+
+  id: string = '';
+  cartSession!: IShoppingCart;
   shippingType: string = '';
-  productCart: any = [];
+  productCart: IShoppingCartProduct[] = [];
   loadCart = false;
   linkNoValido = false;
-  direccion: any;
+  direccion: ICustomerAddress | IStore | undefined = undefined;
   pago: any = null;
   transBankToken: any = null;
   alertCart: any;
@@ -30,18 +42,18 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
   rejectedCode!: number;
 
   totalCarro: any = '0';
-  modalRef!: BsModalRef;
   constructor(
-    private cartService: CartService,
-    private logisticaService: LogisticsService,
     private router: Router,
     private route: ActivatedRoute,
-    private clienteService: ClientsService,
-    private paymentService: PaymentService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    // Services V2
+    private readonly cartService: CartService,
+    private readonly geolocationApiService: GeolocationApiService,
+    private readonly customerAddressService: CustomerAddressApiService,
+    private readonly paymentMethodOmniService: PaymentMethodOmniService
   ) {}
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     this.loadCart = true;
     this.route.queryParams.subscribe((params) => {
       this.id = params['cart_id'];
@@ -49,7 +61,7 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
     await this.loadData();
 
     this.cartService.total$.subscribe((r) => (this.totalCarro = r));
-    this.paymentService.banco$.subscribe((r) => {
+    this.paymentMethodOmniService.banco$.subscribe((r) => {
       this.paymentKhipu(r);
     });
 
@@ -64,48 +76,58 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
   }
 
   async loadData() {
-    let consulta: any = await this.cartService
-      .getCarroOmniChannel(this.id)
-      .toPromise();
-    if (!isVacio(consulta.data)) {
-      this.cartSession = consulta.data;
-      await this.getDireccion();
-      this.shippingType = this.cartSession.despacho.tipo;
-      this.productCart = this.cartSession.productos;
-      await this.cartService.loadOmni(this.id);
-    } else {
+    try {
+      const resp = await firstValueFrom(
+        this.cartService.getOmniShoppingCart(this.id)
+      );
+      this.cartSession = resp.shoppingCart;
+      if (this.cartSession.status === SHOPPING_CART_STATUS_TYPE.OPEN) {
+        await this.getDireccion();
+        this.shippingType = this.cartSession.shipment?.deliveryMode ?? '';
+        this.productCart = this.cartSession.products;
+        await this.cartService.loadOmni(this.id);
+      } else {
+        this.loadCart = false;
+        this.linkNoValido = true;
+      }
+    } catch (e) {
+      console.error(e);
+      this.loadCart = false;
       this.linkNoValido = true;
     }
   }
 
-  async getDireccion() {
-    let data = {
-      rut: this.cartSession.usuario,
-    };
-    if (this.cartSession.despacho.codTipo === 'VEN- DPCLI') {
-      let cliente: any = await this.clienteService
-        .getDataClient(data)
-        .toPromise();
-      this.direccion = cliente.data[0].direcciones.filter(
-        (item: any) => item.recid == this.cartSession.despacho.recidDireccion
+  private async getDireccion() {
+    if (
+      this.cartSession.shipment?.deliveryMode === DeliveryModeType.DELIVERY
+    ) {
+      const documentId = this.cartSession.customer?.documentId ?? '';
+      const addresses = await firstValueFrom(
+        this.customerAddressService.getDeliveryAddresses(documentId)
+      );
+      this.direccion = addresses.find(
+        (item) => item.id == this.cartSession.shipment?.addressId
       );
     } else {
-      let consulta: any = await this.logisticaService
-        .obtenerTiendasOmni()
-        .toPromise();
-      let tiendas: any = consulta.data;
-      this.direccion = tiendas.filter(
-        (item: any) =>
-          item.recid == this.cartSession.grupos[0].despacho.recidDireccion
+      const stores = await firstValueFrom(
+        this.geolocationApiService.getStores()
       );
+      if (this.cartSession.groups?.length) {
+        this.direccion = stores.find(
+          (item) => item.id === this.cartSession.groups![0].shipment.addressId
+        );
+      }
     }
   }
-  //fincuon para activar el boton de pago
-  async Activepayment(event: any) {
+  /**
+   * Activa el botón de pago.
+   * @param event
+   */
+  Activepayment(event: any): void {
     this.pago = event;
   }
 
-  async payment() {
+  payment(): void {
     if (this.pago.cod == 'mercadopago') this.PaymentMercadoPago();
     if (this.pago.cod == 'webPay') this.PaymentWebpay();
     if (this.pago.cod == 'khipu') {
@@ -114,70 +136,44 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
   }
 
   //funciones para los pagos
-  async PaymentMercadoPago() {
-    const successUrl = environment.urlPaymentOmniVoucher;
-    const canceledUrl = environment.urlPaymentOmniCanceled;
-    const documento = this.cartSession._id;
-    const url = `${environment.urlMercadoPago}?documento=${documento}&success=${successUrl}&pending=${canceledUrl}&failure=${canceledUrl}`;
-    window.location.href = url + '&nocache=' + new Date().getTime();
+  private async PaymentMercadoPago() {
+    this.paymentMethodOmniService.redirectToMercadoPagoTransaction({
+      shoppingCartId: this.cartSession._id!.toString(),
+    });
   }
 
-  async PaymentWebpay() {
-    let params: PaymentParams = {
-      buy_order: this.cartSession._id,
-      session_id: this.cartSession._id,
-      amount: this.totalCarro,
-      return_url: `${environment.apiImplementosPagos}transbank/confirmarTransaccion`,
-    };
-
-    let consulta: any = await this.paymentService.createTransBankTransaccion(
-      params
-    );
-    if (consulta) {
-      this.transBankToken = consulta;
-      setTimeout(() => {
-        $('#transBankForm').submit();
-      }, 10);
-    }
+  private async PaymentWebpay() {
+    this.paymentMethodOmniService.redirectToWebpayTransaction({
+      shoppingCartId: this.cartSession._id!.toString(),
+    });
   }
 
   //proceso khipu
-  async paymentKhipu(banco: any) {
-    const successUrl = environment.urlPaymentOmniVoucher;
-    const canceledUrl = environment.urlPaymentOmniCanceled;
-    const documento = this.cartSession._id;
-
-    const params = {
-      successUrl: successUrl,
-      canceledUrl: canceledUrl,
-      id_carro: documento,
-      usuario_email: this.cartSession.emailNotificacion,
-      usuario_name: this.cartSession.emailNotificacion,
-      bank: banco,
-    };
-
-    let consulta: any = await this.paymentService.createTransKhipu(params);
-
-    window.location.href = consulta.simplified_transfer_url;
+  private async paymentKhipu(banco: any) {
+    this.paymentMethodOmniService.redirectToKhipuTransaction({
+      shoppingCartId: this.cartSession._id!.toString(),
+      bankId: banco ? banco.bankId : '',
+      bankName: banco ? banco.name : '',
+      payerName: this.cartSession.notification?.email ?? undefined,
+      payerEmail: this.cartSession.notification?.email ?? undefined,
+    });
   }
 
-  async showRejectedMsg(query: any) {
+  private async showRejectedMsg(query: any) {
     this.alertCartShow = false;
 
     if (query.status === 'rejected') {
       this.rejectedCode = query.codRejected;
       this.alertCart = {
         pagoValidado: false,
-        detalleMensaje: await this.paymentService.getPaymentErrorDetail(
-          query.codRejected
-        ),
+        detalleMensaje: query.message,
         mostrarBotonVolverIntentar: true,
       };
       this.alertCartShow = true;
     }
   }
 
-  intentarPagoNuevamente() {
+  intentarPagoNuevamente(): void {
     this.alertCartShow = false;
     this.alertCart = null;
     this.rejectedCode = 0;
@@ -186,8 +182,11 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
     });
   }
 
-  openModal() {
-    this.modalRef = this.modalService.show(this.content, {
+  /**
+   * Abrir modal de pago para Khipu.
+   */
+  private openModal(): void {
+    this.modalService.show(this.content, {
       backdrop: 'static',
       keyboard: false,
     });

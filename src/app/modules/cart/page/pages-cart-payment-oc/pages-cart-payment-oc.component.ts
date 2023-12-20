@@ -7,7 +7,6 @@ import {
   TemplateRef,
   PLATFORM_ID,
 } from '@angular/core';
-import { CartService } from '../../../../shared/services/cart.service';
 import { FormControl } from '@angular/forms';
 import { ProductCart } from '../../../../shared/interfaces/cart-item';
 import { RootService } from '../../../../shared/services/root.service';
@@ -23,11 +22,25 @@ import { ClientsService } from '../../../../shared/services/clients.service';
 import { LogisticsService } from '../../../../shared/services/logistics.service';
 import * as moment from 'moment';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { PaymentMethodPurchaseOrderRequestService } from '@core/services-v2/payment-method-purchase-order-request.service';
+import { CartService } from '@core/services-v2/cart.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
+import { firstValueFrom } from 'rxjs';
+import {
+  IShoppingCart,
+  IShoppingCartProduct,
+} from '@core/models-v2/cart/shopping-cart.interface';
+import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
+import { CustomerService } from '@core/services-v2/customer.service';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
+import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
+import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
+import { IStore } from '@core/services-v2/geolocation/models/store.interface';
+import { SHOPPING_CART_STATUS_TYPE } from '@core/enums/shopping-cart-status.enum';
 
 interface Item {
   ProductCart: ProductCart;
@@ -43,19 +56,18 @@ export class PagesCartPaymentOcComponent implements OnInit {
   @ViewChild('modalRefuse', { static: false }) modalRefuse!: TemplateRef<any>;
   modalRefuseRef!: BsModalRef;
 
-  cartSession: any = null;
+  cartSession!: IShoppingCart;
   items: any = [];
   propietario = true;
   loadingPage = false;
-  shippingType = null;
+  shippingType: string = '';
   fechas: any = [];
   fecha_entrega: any = [];
-  productCart: any;
-  producto_grupo: any;
-  productoDisponible: any;
+  productCart: IShoppingCartProduct[] = [];
+  productoDisponible: IShoppingCartProduct[] = [];
   fecha_actual = moment().startOf('day').toISOString();
   saveTimer: any;
-  direccion: any;
+  direccion?: ICustomerAddress | IStore;
   innerWidth: number;
   banners: Banner[] = [];
   verificar_oc = false;
@@ -91,6 +103,8 @@ export class PagesCartPaymentOcComponent implements OnInit {
   usuarioTemp!: boolean;
   obsRefuse = '';
 
+  purchaseOrderId!: string;
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.innerWidth = isPlatformBrowser(this.platformId)
@@ -100,9 +114,8 @@ export class PagesCartPaymentOcComponent implements OnInit {
 
   constructor(
     public root: RootService,
-    public cart: CartService,
     private localS: LocalStorageService,
-    private toast: ToastrService,
+    private toastr: ToastrService,
     private clienteService: ClientsService,
     private logisticaService: LogisticsService,
     private modalService: BsModalService,
@@ -111,7 +124,12 @@ export class PagesCartPaymentOcComponent implements OnInit {
     private direction: DirectionService, // @Inject(WINDOW) private window: Window
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
-    private readonly sessionStorage: SessionStorageService
+    private readonly sessionStorage: SessionStorageService,
+    private readonly customerService: CustomerService,
+    private readonly customerAddressService: CustomerAddressApiService,
+    private readonly geolocationApiService: GeolocationApiService,
+    public readonly cartService: CartService,
+    private readonly paymentMethodPurchaseOrderRequestService: PaymentMethodPurchaseOrderRequestService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -125,54 +143,72 @@ export class PagesCartPaymentOcComponent implements OnInit {
     // this.user = this.localS.get('usuario');
     this.user = this.sessionStorage.get();
 
-    let consulta: any = await this.cart.cargar_carro_oc(this.id).toPromise();
-    this.cartSession = consulta.data.carro;
-    this.total = consulta.data.total;
+    let consulta = await firstValueFrom(this.cartService.getOneById(this.id));
+
+    this.cartSession = consulta.shoppingCart;
+    this.total = consulta.total;
+
+    const status = this.cartSession.status ?? '';
+    if (
+      [
+        SHOPPING_CART_STATUS_TYPE.OPEN.toString(),
+        SHOPPING_CART_STATUS_TYPE.PENDING.toString(),
+      ].includes(status)
+    ) {
+      return;
+    }
+
     await this.verificar_usuario();
 
-    this.productCart = this.cartSession.productos;
-    this.shippingType = this.cartSession.despacho.tipo;
+    this.productCart = this.cartSession.products;
+    this.shippingType =
+      this.cartSession.shipment?.deliveryMode ?? DeliveryModeType.DELIVERY;
     await this.getDireccion();
-    this.cartSession.productos.map((producto: any) => {
+    this.cartSession.products.map((producto) => {
       //asignando producto al carro
-      producto.quantity = producto.cantidad;
+      producto.quantity = producto.quantity;
       this.items.push(producto);
     });
-    this.cartSession.grupos.forEach((item: any) => {
-      this.fecha_entrega.push(item.despacho.fechaEntrega);
+    (this.cartSession.groups ?? []).forEach((item) => {
+      this.fecha_entrega.push(item.shipment.requestedDate);
     });
     this.verificar_fechas();
   }
 
   async getDireccion() {
     let data = {
-      rut: this.cartSession.cliente.rutCliente,
+      rut: this.cartSession.customer?.documentId,
     };
-    if (this.cartSession.despacho.tipo === 'STD') {
-      let cliente: any = await this.clienteService
-        .getDataClient(data)
-        .toPromise();
-      this.direccion = cliente.data[0].direcciones.filter(
-        (item: any) => item.recid == this.cartSession.despacho.recidDireccion
+    const documentId = this.cartSession.customer?.documentId ?? '';
+    if (
+      this.cartSession.shipment?.deliveryMode === DeliveryModeType.DELIVERY
+    ) {
+      const addresses = await firstValueFrom(
+        this.customerAddressService.getDeliveryAddresses(documentId)
       );
+      if (addresses.length) {
+        this.direccion = addresses.find(
+          (item) => item.id == this.cartSession.shipment?.addressId
+        );
+      }
     } else {
-      let consulta: any = await this.logisticaService
-        .obtenerTiendasOmni()
-        .toPromise();
-      let tiendas: any = consulta.data;
-      this.direccion = tiendas.filter(
-        (item: any) => item.codigo == this.cartSession.codigoSucursal
+      const stores = await firstValueFrom(
+        this.geolocationApiService.getStores()
+      );
+      this.direccion = stores.find(
+        (item) => item.code == this.cartSession.branchCode
       );
     }
   }
 
   async verificar_usuario() {
     if (!this.user?.login_temp) {
-      let consulta: any = await this.cart
-        .verificar_supervisor(this.user?.documentId)
-        .toPromise();
-      this.usuario = consulta.data.filter(
-        (item: any) => item.username == this.user?.username
+      const documetId = this.user?.documentId!;
+      let consulta = await firstValueFrom(
+        this.customerService.getSupervisors(documetId)
+      );
+      this.usuario = consulta.users.filter(
+        (item) => item.username == this.user?.username
       );
       if (this.usuario.length == 0) {
         this.propietario = false;
@@ -193,8 +229,12 @@ export class PagesCartPaymentOcComponent implements OnInit {
         this.credito = true;
       }
     } else {
-      this.localS.set('ruta', ['/', 'carro-compra', `confirmar-orden-oc`]);
-      this.localS.set('queryParams', { cart_id: this.id });
+      this.localS.set(StorageKey.ruta, [
+        '/',
+        'carro-compra',
+        `confirmar-orden-oc`,
+      ]);
+      this.localS.set(StorageKey.queryParams, { cart_id: this.id });
       this.usuarioTemp = true;
     }
   }
@@ -210,18 +250,27 @@ export class PagesCartPaymentOcComponent implements OnInit {
   }
 
   async aceptar_compra() {
-    let formOv = {
-      user_role: this.user?.userRole,
-      id: this.cartSession._id,
+    await this.confirmar(true);
+    /*let formOv = {
+      userRole: this.user?.userRole,
+      shoppingCartId: this.cartSession._id,
       file: this.cartSession.ordenCompra.file,
-      centroCosto: this.cartSession.ordenCompra.centroCosto,
-      folio: this.cartSession.ordenCompra.folio,
-      monto: this.cartSession.ordenCompra.monto,
-      credito: true,
+      costCenter: this.cartSession.ordenCompra.centroCosto,
+      number: this.cartSession.ordenCompra.folio,
+      amount: this.cartSession.ordenCompra.monto,
+      credit: true,
     };
 
-    await this.cart.subeOrdenDeCompra(formOv).toPromise();
-    this.verificar_oc = true;
+    this.paymentMethodPurchaseOrderRequestService.upload(formOv).subscribe({
+      next: (r) => {
+        this.purchaseOrderId = r._id.toString();
+        this.verificar_oc = true;
+      },
+      error: (e) => {
+        console.error(e);
+        this.toastr.error('No se pudo aceptar la orden de compra');
+      }
+    });*/
   }
 
   async confirmar(event: any) {
@@ -230,65 +279,68 @@ export class PagesCartPaymentOcComponent implements OnInit {
   }
 
   async confirmar_compra() {
-    this.loadingText = 'Generando orden de compra...';
-
-    // genera la orden de compra
-    const data = {
-      id: this.cartSession._id,
-      usuario: this.user?.username,
-      rutCliente: this.user?.documentId,
-      tipo: 2,
-      formaPago: 'OC',
-      web: 1,
-      proveedorPago: 'Orden de compra',
-    };
-
+    this.loadingText = 'Confirmando orden de compra...';
     this.loadingPage = true;
     //modificar pasos
 
-    let r: any = await this.cart.generaOrdenDeCompra(data).toPromise();
+    this.paymentMethodPurchaseOrderRequestService
+      .approve({
+        shoppingCartId: this.cartSession._id!.toString(),
+      })
+      .subscribe({
+        next: (r) => {
+          this.purchaseOrderId = r._id.toString();
+          this.loadingPage = false;
 
-    this.loadingPage = false;
+          let params = {
+            status: 'approved',
+            paymentMethod: 'OC',
+            shoppingCartId: this.cartSession._id!.toString(),
+            shoppingCartNumber: this.cartSession.cartNumber,
+          };
 
-    let cart_id = this.cartSession._id;
-    if (r.error) {
-      this.toast.error(r.msg);
-      return;
-    }
-
-    if (!r.error) {
-      let params = {
-        site_id: 'OC',
-        external_reference: cart_id,
-        status: 'approved',
-      };
-
-      this.router.navigate(['/', 'carro-compra', 'gracias-por-tu-compra'], {
-        queryParams: { ...params },
+          this.router.navigate(
+            ['/', 'carro-compra', 'gracias-por-tu-compra'],
+            {
+              queryParams: { ...params },
+            }
+          );
+        },
+        error: (e) => {
+          console.error(e);
+          this.toastr.error('No se pudo confirmar la orden de compra');
+        },
       });
-    }
   }
 
-  agregar_lista(event: any) {
+  agregar_lista(event: IShoppingCartProduct[]) {
     this.productoDisponible = event;
   }
 
   addList() {
     this.addingToCart = true;
 
-    this.cart.addLista(this.productoDisponible).subscribe((resp) => {
-      this.addingToCart = false;
-      if (!resp.error) {
-        this.toast.success('producto añadido para solicitar nueva compra');
-      }
-    });
+    const listaResp = this.cartService.addLista(this.productoDisponible);
+    if (listaResp) {
+      listaResp.subscribe({
+        next: () => {
+          this.addingToCart = false;
+          this.toastr.success('producto añadido para solicitar nueva compra');
+        },
+        error: (e) => {
+          console.error(e);
+        },
+      });
+    }
   }
+
   verificarOc(event: any) {
     this.sinStock = event;
   }
 
   verificar_fechas() {
-    this.cartSession.grupos.forEach((item: any) => {});
+    const groups = this.cartSession.groups ?? [];
+    groups.forEach((item) => {});
   }
 
   Ver_fecha(event: any) {
@@ -296,8 +348,10 @@ export class PagesCartPaymentOcComponent implements OnInit {
     console.log(this.fechas);
   }
   setSeleccionarEnvio(event: any, i: any) {
-    this.cartSession.grupos[i].despacho.fechaEntrega = event.fecha;
-    this.fecha_entrega[i] = event.fecha;
+    if (this.cartSession && this.cartSession.groups) {
+      this.cartSession.groups[i].shipment.requestedDate = event.fecha;
+      this.fecha_entrega[i] = event.fecha;
+    }
   }
 
   refuseOrder() {
@@ -306,27 +360,26 @@ export class PagesCartPaymentOcComponent implements OnInit {
 
   confirmRefuseOrder() {
     const data = {
-      id: this.cartSession._id,
-      observacion: this.obsRefuse,
+      shoppingCartId: this.cartSession._id!.toString(),
+      observation: this.obsRefuse,
     };
 
     this.loadingPage = true;
-    this.cart.refuseOrder(data).subscribe(
-      (r: ResponseApi) => {
+    this.paymentMethodPurchaseOrderRequestService.reject(data).subscribe({
+      next: (r) => {
+        this.purchaseOrderId = r._id.toString();
         this.loadingPage = false;
 
-        if (r.error) {
-          this.toast.error(r.msg);
-          return;
-        }
-
-        this.toast.success('Solicitud rechazada correctamente');
+        this.toastr.success('Solicitud rechazada correctamente');
         this.modalRefuseRef.hide();
         this.router.navigate(['/', 'inicio']);
       },
-      (e) => {
-        this.toast.error('Ha ocurrido un error al rechazar la orden de venta');
-      }
-    );
+      error: (e) => {
+        console.error(e);
+        this.toastr.error(
+          'Ha ocurrido un error al rechazar la orden de venta'
+        );
+      },
+    });
   }
 }
