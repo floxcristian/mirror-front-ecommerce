@@ -11,15 +11,6 @@ export class TrackingStepsComponent implements OnInit {
   @Input() tipoEntrega = 'RPTDA';
   estado_envio: any = {};
   Informe_estado: any = [];
-  // seguimiento_estado = [
-  //   'CREADO',
-  //   'ORIGEN',
-  //   'EN PREPARACIÓN',
-  //   'ESPERA CLIENTE',
-  //   'ENVIADO',
-  //   'RECIBIDO',
-  //   'N/A',
-  // ];
   constructor() {}
 
   ngOnInit() {
@@ -47,21 +38,24 @@ export class TrackingStepsComponent implements OnInit {
     this.Informe_estado = [];
 
     this.OVEstados.forEach((estado) => {
+      // if (
+      //   estado.EstadoSegPanel == 'CREADO' ||
+      //   estado.EstadoSegPanel == 'ORIGEN'
+      // ) {
       if (
-        estado.EstadoSegPanel == 'CREADO' ||
-        estado.EstadoSegPanel == 'ORIGEN'
+        estado.status == 'created'
       ) {
         this.Informe_estado[0] = estado;
-      } else if (estado.EstadoSegPanel == 'ESPERA CLIENTE') {
-        this.Informe_estado[1] = 'EN PREPARACIÓN';
+      } else if (estado.status == 'pickup') {
+        this.Informe_estado[1] = 'in_process';
         this.Informe_estado[2] = estado;
-      } else if (estado.EstadoSegPanel == 'EN PREPARACIÓN') {
+      } else if (estado.status == 'in_process') {
         this.Informe_estado[1] = estado;
         // } else if (estado.EstadoSegPanel == 'ENVIADO') {
         //   this.Informe_estado[2] = estado;
       } else if (
-        estado.EstadoSegPanel == 'RECIBIDO' ||
-        estado.EstadoSegPanel == 'N/A'
+        estado.status == 'received' ||
+        estado.status == 'cancelled'
       ) {
         this.Informe_estado[3] = estado;
       }
