@@ -44,6 +44,8 @@ import {
   CarouselDesktopOptions,
   CarouselMobileOptions,
 } from './constants/carousel-config';
+import { IBreadcrumbItem } from './models/breadcrumb.interface';
+import { BreadcrumbUtils } from './services/breadcrumb-utils.service';
 
 declare const $: any;
 declare let fbq: any;
@@ -74,7 +76,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     secondCategory: '',
     thirdCategory: '',
   };
-  breadcrumbs: any[] = [];
+  breadcrumbs: IBreadcrumbItem[] = [];
 
   relleno: any[] = [1, 2, 3, 4, 5, 6];
   carouselOptions: OwlOptions;
@@ -177,27 +179,20 @@ export class PageProductComponent implements OnInit, OnDestroy {
           : this.sidebarPosition;
     });
 
-    this.route.params.subscribe((params: any) => {
+    this.route.params.subscribe((params) => {
+      console.log('params en ficha: ', params);
       // Seteamos el origen del ingreso a la ficha del producto.
       let origenHistory: string[] = this.cart.getOrigenHistory();
-      this.origen = origenHistory.length > 0 ? origenHistory : ['link', ''];
+      this.origen = origenHistory.length ? origenHistory : ['link', ''];
 
       this.root.hideModalRefBuscador();
-      if (params.id && params.id !== 'undefined') {
-        if (params.firstCategory) {
-          this.paramsCategory.firstCategory = params.firstCategory;
-        }
-
-        if (params.secondCategory) {
-          this.paramsCategory.secondCategory = params.secondCategory;
-        }
-
-        if (params.thirdCategory) {
-          this.paramsCategory.thirdCategory = params.thirdCategory;
-        }
-
-        const sku = params.id.split('-').reverse()[0];
-        // this.getDetailProduct(sku);
+      if (params['id']) {
+        this.paramsCategory = {
+          firstCategory: params['firstCategory'] || '',
+          secondCategory: params['secondCategory'] || '',
+          thirdCategory: params['thirdCategory'] || '',
+        };
+        const sku = params['id'].split('-').reverse()[0];
         this.getDetailArticle(sku);
         this.getMixProducts(sku);
         // this.getMatrixProducts(sku);
@@ -229,38 +224,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     this.showMobile = window.innerWidth < this.puntoQuiebre;
   }
 
-  private setBreadcrumbs(product: IArticle): void {
-    this.breadcrumbs = [{ label: 'Inicio', url: ['/', 'inicio'] }];
-
-    // Funcion auxiliar para agregar categorias al breadcrumb
-    const addCategory = (category: string, path: string[]) => {
-      if (category) {
-        const cat = this.root.replaceAll(category, /-/g);
-        this.breadcrumbs.push({
-          label: this.capitalize.transform(cat),
-          url: ['/', 'inicio', 'productos', 'todos', 'categoria', ...path],
-        });
-      }
-    };
-    addCategory(this.paramsCategory.firstCategory, [
-      this.paramsCategory.firstCategory,
-    ]);
-    addCategory(this.paramsCategory.secondCategory, [
-      this.paramsCategory.firstCategory,
-      this.paramsCategory.secondCategory,
-    ]);
-    addCategory(this.paramsCategory.thirdCategory, [
-      this.paramsCategory.firstCategory,
-      this.paramsCategory.secondCategory,
-      this.paramsCategory.thirdCategory,
-    ]);
-    this.breadcrumbs.push({
-      label: this.capitalize.transform(product.name),
-      url: '',
-    });
-  }
-
-  getDetailArticle(sku: string): void {
+  private getDetailArticle(sku: string): void {
     const { documentId } = this.sessionService.getSession();
     const selectedStore = this.geolocationService.getSelectedStore();
 
@@ -272,10 +236,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
         location: selectedStore.city,
       };
 
-      if (
-        this.preferenciaCliente &&
-        this.preferenciaCliente?.deliveryAddress !== null
-      ) {
+      if (this.preferenciaCliente?.deliveryAddress) {
         params.location = this.preferenciaCliente?.deliveryAddress?.location
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '');
@@ -295,7 +256,10 @@ export class PageProductComponent implements OnInit, OnDestroy {
             this.setMeta(this.product);
             console.log('llego');
 
-            this.setBreadcrumbs(this.product);
+            this.breadcrumbs = BreadcrumbUtils.setBreadcrumbs(
+              this.paramsCategory,
+              product.name
+            );
             // this.productFacebook(this.product);
           } else {
             this.toastr.error(
@@ -308,7 +272,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     }
   }
 
-  setMeta(product: IArticle) {
+  setMeta(product: IArticle): void {
     const slug = this.root.product(product.sku, product.name);
     const imagen =
       product.images &&
@@ -344,7 +308,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
   }
 
   // activar view content para el producto de facebook
-  productFacebook(product: Product) {
+  productFacebook(product: Product): void {
     fbq('track', 'ViewContent', {
       brand: product.marca,
       id: product.sku,
@@ -367,6 +331,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
         ? this.preferenciaCliente.deliveryAddress.location
         : '',
     };
+
     forkJoin([
       this.articleService.getArticleMatrix(obj4),
       this.articleService.getRelatedBySku(obj4),
@@ -392,6 +357,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
       this.formateaComparacion(resp[3].comparison);
     });
   }
+
   formateaComparacion(comparacion: any[]) {
     for (const element of comparacion) {
       const key = Object.keys(element);
