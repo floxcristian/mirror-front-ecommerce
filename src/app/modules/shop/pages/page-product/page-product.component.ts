@@ -49,6 +49,11 @@ import {
 
 import { BreadcrumbUtils } from './services/breadcrumb-utils.service';
 
+import {
+  IAttributeCompared,
+  IProductCompared,
+} from '@core/services-v2/product/models/formatted-product-compare-response.interface';
+
 declare const $: any;
 declare let fbq: any;
 
@@ -93,8 +98,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
   puntoQuiebre: number = 576;
   showMobile: boolean = false;
-  matriz: any[] = [];
-  comparacion: any[] = [];
+  matriz: IProductCompared[] = [];
+  comparacion: IAttributeCompared[] = [];
   tiendaSeleccionada!: ISelectedStore;
   IVA = environment.IVA;
   addingToCart: boolean = false;
@@ -178,12 +183,11 @@ export class PageProductComponent implements OnInit, OnDestroy {
   private onSelectedStoreChange(): void {
     this.geolocationService.selectedStore$.subscribe({
       next: (selectedStore) => {
-        if (this.product) {
-          this.tiendaSeleccionada = selectedStore;
-          this.cart.cargarPrecioEnProducto(this.product);
-          this.getMixProducts(this.product.sku);
-          // this.getMatrixProducts(this.product.sku);
-        }
+        if (!this.product) return;
+
+        this.tiendaSeleccionada = selectedStore;
+        this.cart.cargarPrecioEnProducto(this.product);
+        this.getMixProducts(this.product.sku);
       },
     });
   }
@@ -204,7 +208,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
         const sku = params['id'].split('-').reverse()[0];
         this.getProductDetail(sku);
         this.getMixProducts(sku);
-        // this.getMatrixProducts(sku);
       } else {
         this.router.navigate(['/inicio/**']);
       }
@@ -228,6 +231,9 @@ export class PageProductComponent implements OnInit, OnDestroy {
     this.showMobile = window.innerWidth < this.puntoQuiebre;
   }
 
+  /**
+   * Obtener detalle del producto.
+   */
   private getProductDetail(sku: string): void {
     const { documentId } = this.sessionService.getSession();
     const selectedStore = this.geolocationService.getSelectedStore();
@@ -239,52 +245,45 @@ export class PageProductComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const params: any = {
-      sku,
-      documentId: documentId,
-      branchCode: selectedStore.code,
-      location: selectedStore.city,
-    };
-
-    if (this.preferenciaCliente?.deliveryAddress) {
-      params.location = this.preferenciaCliente?.deliveryAddress?.location
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
-    }
-
     this.articleService
-      .getArticleDataSheet(params)
-      .subscribe((response: any) => {
-        if (response) {
-          response.chassis = response.chassis || '';
-          const product = response;
-          this.product = { ...product };
-          response.stockSummary.companyStock > 0
-            ? (this.stock = true)
-            : (this.stock = false);
-          // TODO: probar funcion por funcion para ver si funciona
-          this.setMeta(this.product);
-          console.log('llego');
-
-          this.breadcrumbs = BreadcrumbUtils.setBreadcrumbs(
-            this.paramsCategory,
-            product.name
+      .getArticleDataSheet({
+        sku,
+        documentId,
+        branchCode: selectedStore.code,
+        location:
+          this.preferenciaCliente?.deliveryAddress?.location ||
+          selectedStore.city,
+      })
+      .subscribe((productDetail) => {
+        if (!productDetail) {
+          this.toastr.error(
+            `Ha ocurrido un error al obtener información del producto.`
           );
-          // this.productFacebook(this.product);
-        } else {
-          this.toastr.error('Connection error, unable to fetch the articles');
+          return;
         }
+        // FIXME: corregir esto..
+        // productDetail.chassis = productDetail.chassis || '';
+
+        this.product = productDetail;
+        this.stock = productDetail.stockSummary.companyStock > 0;
+        this.setMetaTag(this.product);
+        this.breadcrumbs = BreadcrumbUtils.setBreadcrumbs(
+          this.paramsCategory,
+          productDetail.name
+        );
+        // this.productFacebook(this.product);
       });
   }
 
-  setMeta(product: IArticle): void {
+  /**
+   * Establecer metatag para funcionalidades de SEO.
+   * @param product
+   */
+  setMetaTag(product: IArticle): void {
     const slug = this.root.product(product.sku, product.name);
-    const imagen =
-      product.images &&
-      product.images['250'] &&
-      product.images['250'].length > 0
-        ? product.images['250'][0]
-        : this.root.returnUrlNoImagen();
+    const image = product.images?.['250']?.length
+      ? product.images['250'][0]
+      : this.root.returnUrlNoImagen();
 
     const nombre = this.root.limpiarNombres(product.name);
     const descripcion = this.root.limpiarNombres(product.description);
@@ -293,7 +292,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     this.seoService.generarMetaTag({
       title: this.capitalize.transform(nombre),
       description: this.capitalize.transform(descripcionFull),
-      image: imagen,
+      image,
       imageAlt: 'La imagen contiene nuestro producto: ' + product.description,
       imageType: 'image/jpeg',
       type: 'product',
@@ -328,50 +327,35 @@ export class PageProductComponent implements OnInit, OnDestroy {
   getMixProducts(sku: string): void {
     const selectedStore = this.geolocationService.getSelectedStore();
 
-    const obj4 = {
+    const params = {
       sku,
       documentId: this.user.documentId,
       branchCode: selectedStore.code,
-      location: this.preferenciaCliente?.deliveryAddress
-        ? this.preferenciaCliente.deliveryAddress.location
-        : '',
+      location: this.preferenciaCliente?.deliveryAddress?.location || '',
     };
 
     forkJoin([
-      this.articleService.getArticleMatrix(obj4),
-      this.articleService.getRelatedBySku(obj4),
-      this.articleService.getArticleSuggestionsBySku({
-        ...obj4,
+      this.articleService.getArticleMatrix(params),
+      this.articleService.getRelatedBySku(params),
+      this.articleService.getProductCompareMatrix(params),
+      this.articleService.getRecommendedProducts({
+        ...params,
         quantityToSuggest: 10,
       }),
-
-      this.articleService.getComparacionMatriz(obj4),
-      // this.catalogoService.getComparacionMatriz(
-      //   sku,
-      //   rut,
-      //   this.tiendaSeleccionada.codigo
-      // ),
-    ]).subscribe((resp: any[]) => {
-      this.matriz = [];
-      this.comparacion = [];
-      this.relatedProducts = resp[1];
-      this.recommendedProducts = resp[2];
-      this.matrixProducts = resp[0];
-      this.matriz = resp[3].articles;
-      this.matriz.map((p) => (p.cantidad = 1));
-      this.formateaComparacion(resp[3].comparison);
-    });
-  }
-
-  formateaComparacion(comparacion: any[]) {
-    for (const element of comparacion) {
-      const key = Object.keys(element);
-      const obj = {
-        name: key[0],
-        value: element[key[0]].map((x: any) => x.value),
-      };
-      this.comparacion.push(obj);
-    }
+    ]).subscribe(
+      ([
+        matrixProducts,
+        relatedProducts,
+        comparedProducts,
+        recommendedProducts,
+      ]) => {
+        this.matrixProducts = matrixProducts;
+        this.relatedProducts = relatedProducts;
+        this.recommendedProducts = recommendedProducts;
+        this.matriz = comparedProducts.products;
+        this.comparacion = comparedProducts.differences;
+      }
+    );
   }
 
   abrirTabEvaluacion(): void {

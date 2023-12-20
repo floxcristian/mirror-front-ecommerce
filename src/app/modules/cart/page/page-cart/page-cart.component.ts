@@ -242,7 +242,6 @@ export class PageCartComponent implements OnInit, OnDestroy {
 
   getRecommendedProductsList() {
     if (this.items.length > 0) {
-      console.log('getSelectedStore desde getRecommendedProductsList');
       const tiendaSeleccionada = this.geolocationService.getSelectedStore();
       this.preferenciaCliente =
         this.customerPreferenceStorage.get() as IPreference;

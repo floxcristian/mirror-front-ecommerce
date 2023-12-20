@@ -96,11 +96,17 @@
                         </div>
 
                         <div
-                          *ngIf="item.stockSummary.branchStock > 0 || item.stockSummary.companyStock > 0"
+                          *ngIf="
+                            item.stockSummary.branchStock > 0 ||
+                            item.stockSummary.companyStock > 0
+                          "
                           class="d-flex flex-column justify-content-center align-items-center"
                         >
                           <div
-                            *ngIf="item.priceInfo.commonPrice === item.priceInfo.price"
+                            *ngIf="
+                              item.priceInfo.commonPrice ===
+                              item.priceInfo.price
+                            "
                             class="product-card__new-price font-weight-bold"
                             style="color: #000"
                           >
@@ -114,7 +120,7 @@
                             >
                             <span *ngIf="preciosNeto"
                               >{{
-                                item?.priceInfo?.price / (1 + IVA)
+                                item.priceInfo.price / (1 + IVA)
                                   | currencyFormat
                               }}
                               <em
@@ -127,7 +133,10 @@
                             >
                           </div>
                           <div
-                            *ngIf="item.priceInfo.commonPrice !== item.priceInfo.price"
+                            *ngIf="
+                              item.priceInfo.commonPrice !==
+                              item.priceInfo.price
+                            "
                             class="product-card__new-price text-danger font-weight-bold"
                           >
                             <span *ngIf="!preciosNeto"
@@ -140,7 +149,7 @@
                             >
                             <span *ngIf="preciosNeto"
                               >{{
-                                item?.priceInfo?.price / (1 + IVA)
+                                item.priceInfo.price / (1 + IVA)
                                   | currencyFormat
                               }}
                               <em
@@ -153,17 +162,23 @@
                             >
                           </div>
                           <div
-                            *ngIf="item.priceInfo.commonPrice !== item.priceInfo.price"
+                            *ngIf="
+                              item.priceInfo.commonPrice !==
+                              item.priceInfo.price
+                            "
                             tooltip="Precio normal"
                             class="product-card__old-price text-end"
                           >
                             <span *ngIf="!preciosNeto"
-                              >{{ item.priceInfo.commonPrice | currencyFormat }}
+                              >{{
+                                item.priceInfo.commonPrice | currencyFormat
+                              }}
                               <em> c/iva </em></span
                             >
                             <span *ngIf="preciosNeto"
                               >{{
-                                item.priceInfo.commonPrice / (1 + IVA) | currencyFormat
+                                item.priceInfo.commonPrice / (1 + IVA)
+                                  | currencyFormat
                               }}
                               <em> neto </em></span
                             >
@@ -173,22 +188,44 @@
                           {{ item.brand }}
                         </div>
                         <div
-                          *ngIf="item.stockSummary.branchStock > 0 || item.stockSummary.companyStock > 0"
+                          *ngIf="
+                            item.stockSummary.branchStock > 0 ||
+                            item.stockSummary.companyStock > 0
+                          "
                           class="mb-2 d-flex flex-column justify-content-center align-items-center"
                         >
-                        <div class="row">
-                          <div class="col-12 d-flex justify-content-center align-items-center">
-                              <i class="fal fa-minus-circle fa-xl me-3" style="cursor: pointer; color: #005cb9" role="button" (click)="obtienePrecioxCantidad(item, '-')"></i>
-                              <input type="number" size="4" style="width: 50px" class="text-center" [(ngModel)]="item.cantidad" (change)="obtienePrecioxCantidad(item)" />
-                              <i class="fal fa-plus-circle fa-xl ms-3" style="cursor: pointer; color: #005cb9" (click)="obtienePrecioxCantidad(item, '+')" role="button"></i>
+                          <div class="row">
+                            <div
+                              class="col-12 d-flex justify-content-center align-items-center"
+                            >
+                              <i
+                                class="fal fa-minus-circle fa-xl me-3"
+                                style="cursor: pointer; color: #005cb9"
+                                role="button"
+                                (click)="obtienePrecioxCantidad(item, '-')"
+                              ></i>
+                              <input
+                                type="number"
+                                size="4"
+                                style="width: 50px"
+                                class="text-center"
+                                [(ngModel)]="item.quantity"
+                                (change)="obtienePrecioxCantidad(item)"
+                              />
+                              <i
+                                class="fal fa-plus-circle fa-xl ms-3"
+                                style="cursor: pointer; color: #005cb9"
+                                (click)="obtienePrecioxCantidad(item, '+')"
+                                role="button"
+                              ></i>
+                            </div>
                           </div>
-                        </div>
-
                         </div>
                         <div
                           class="col-12 marcaP text-center"
                           *ngIf="
-                            item.stockSummary.branchStock === 0 && item.stockSummary.companyStock === 0
+                            item.stockSummary.branchStock === 0 &&
+                            item.stockSummary.companyStock === 0
                           "
                         >
                           <div class="no_stock">
@@ -204,7 +241,10 @@
                           class="mb-2 d-flex flex-column justify-content-center align-items-center"
                         >
                           <button
-                          *ngIf="item.stockSummary.branchStock > 0 || item.stockSummary.companyStock > 0"
+                            *ngIf="
+                              item.stockSummary.branchStock > 0 ||
+                              item.stockSummary.companyStock > 0
+                            "
                             class="btn btn-sm btn-secondary"
                             (click)="agregarProductoMatriz(item)"
                           >
@@ -212,7 +252,8 @@
                           </button>
                           <button
                             *ngIf="
-                             item.stockSummary.branchStock=== 0 && item.stockSummary.companyStock === 0
+                              item.stockSummary.branchStock === 0 &&
+                              item.stockSummary.companyStock === 0
                             "
                             class="btn btn-sm btn-secondary"
                             [routerLink]="root.product(item.sku, item.name)"
@@ -227,7 +268,7 @@
                         <b>{{ item.name | capitalizeFirst }}</b>
                       </td>
                       <td
-                        *ngFor="let dato of item.value"
+                        *ngFor="let dato of item.values"
                         class="text-center"
                         [class.text-muted]="dato === 'N/A'"
                       >
@@ -488,11 +529,16 @@
                         {{ item.sku }}
                       </div>
                       <div
-                        *ngIf="item.stockSummary.branchStock > 0 || item.stockSummary.companyStock > 0"
+                        *ngIf="
+                          item.stockSummary.branchStock > 0 ||
+                          item.stockSummary.companyStock > 0
+                        "
                         class="d-flex flex-column justify-content-center align-items-center"
                       >
                         <div
-                          *ngIf="item.priceInfo.commonPrice === item.priceInfo.price"
+                          *ngIf="
+                            item.priceInfo.commonPrice === item.priceInfo.price
+                          "
                           class="product-card__new-price font-weight-bold"
                           style="color: #000"
                         >
@@ -516,7 +562,9 @@
                           >
                         </div>
                         <div
-                          *ngIf="item.priceInfo.commonPrice === item.priceInfo.price"
+                          *ngIf="
+                            item.priceInfo.commonPrice === item.priceInfo.price
+                          "
                           class="product-card__new-price text-danger font-weight-bold"
                         >
                           <span *ngIf="!preciosNeto"
@@ -539,7 +587,9 @@
                           >
                         </div>
                         <div
-                          *ngIf="item.priceInfo.commonPrice !== item.priceInfo.price"
+                          *ngIf="
+                            item.priceInfo.commonPrice !== item.priceInfo.price
+                          "
                           tooltip="Precio normal"
                           class="product-card__old-price text-end"
                         >
@@ -549,7 +599,8 @@
                           >
                           <span *ngIf="preciosNeto"
                             >{{
-                              item.priceInfo.commonPrice / (1 + IVA) | currencyFormat
+                              item.priceInfo.commonPrice / (1 + IVA)
+                                | currencyFormat
                             }}
                             <em> neto </em></span
                           >
@@ -559,22 +610,44 @@
                         {{ item.brand }}
                       </div>
                       <div
-                        *ngIf="item.stockSummary.branchStock > 0 || item.stockSummary.companyStock > 0"
+                        *ngIf="
+                          item.stockSummary.branchStock > 0 ||
+                          item.stockSummary.companyStock > 0
+                        "
                         class="mb-2 d-flex flex-column justify-content-center align-items-center"
                       >
-                      <div class="row">
-                        <div class="col-12 d-flex justify-content-center align-items-center">
-                            <i class="fal fa-minus-circle fa-xl me-3" style="cursor: pointer; color: #005cb9" role="button" (click)="obtienePrecioxCantidad(item, '-')"></i>
-                            <input type="number" size="4" style="width: 50px" class="text-center" [(ngModel)]="item.cantidad" (change)="obtienePrecioxCantidad(item)" />
-                            <i class="fal fa-plus-circle fa-xl ms-3" style="cursor: pointer; color: #005cb9" (click)="obtienePrecioxCantidad(item, '+')" role="button"></i>
+                        <div class="row">
+                          <div
+                            class="col-12 d-flex justify-content-center align-items-center"
+                          >
+                            <i
+                              class="fal fa-minus-circle fa-xl me-3"
+                              style="cursor: pointer; color: #005cb9"
+                              role="button"
+                              (click)="obtienePrecioxCantidad(item, '-')"
+                            ></i>
+                            <input
+                              type="number"
+                              size="4"
+                              style="width: 50px"
+                              class="text-center"
+                              [(ngModel)]="item.quantity"
+                              (change)="obtienePrecioxCantidad(item)"
+                            />
+                            <i
+                              class="fal fa-plus-circle fa-xl ms-3"
+                              style="cursor: pointer; color: #005cb9"
+                              (click)="obtienePrecioxCantidad(item, '+')"
+                              role="button"
+                            ></i>
+                          </div>
                         </div>
-                      </div>
-
                       </div>
                       <div
                         class="col-12 marcaP text-center"
                         *ngIf="
-                          item.stockSummary.branchStock === 0  &&  item.stockSummary.companyStock   === 0
+                          item.stockSummary.branchStock === 0 &&
+                          item.stockSummary.companyStock === 0
                         "
                       >
                         <div class="no_stock">
@@ -590,7 +663,10 @@
                         class="mb-2 d-flex flex-column justify-content-center align-items-center"
                       >
                         <button
-                          *ngIf="item.stockSummary.branchStock > 0 || item.stockSummary.companyStock  > 0"
+                          *ngIf="
+                            item.stockSummary.branchStock > 0 ||
+                            item.stockSummary.companyStock > 0
+                          "
                           class="btn btn-sm btn-secondary"
                           (click)="agregarProductoMatriz(item)"
                         >
@@ -598,7 +674,8 @@
                         </button>
                         <button
                           *ngIf="
-                            item.stockSummary.branchStock === 0 && item.stockSummary.companyStock === 0
+                            item.stockSummary.branchStock === 0 &&
+                            item.stockSummary.companyStock === 0
                           "
                           class="btn btn-sm btn-secondary"
                           [routerLink]="root.product(item.sku, item.name)"
@@ -613,11 +690,11 @@
                       <b>{{ item.name | capitalizeFirst }}</b>
                     </td>
                     <td
-                      *ngFor="let dato of item.value"
+                      *ngFor="let dato of item.values"
                       class="text-center"
                       [class.text-muted]="dato === 'N/A'"
                     >
-                  {{ dato }}
+                      {{ dato }}
                     </td>
                   </tr>
                 </table>

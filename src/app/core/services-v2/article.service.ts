@@ -12,7 +12,9 @@ import {
 import { IReviewsResponse } from '@core/models-v2/article/review-response.interface';
 // Environment
 import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { IProductCompareResponse } from './product/models/product-compare-response.interface';
+import { IFormmatedProductCompareResponse } from './product/models/formatted-product-compare-response.interface';
 
 const API_ARTICLE = `http://10.158.15.204:8080/api/v1/article`;
 
@@ -92,6 +94,9 @@ export class ArticleService {
   /**********************************************
    * SUGGESTION
    **********************************************/
+  /**
+   * Obtener matríz del producto.
+   */
   getArticleMatrix(params: {
     sku: string;
     documentId: string;
@@ -107,6 +112,11 @@ export class ArticleService {
     );
   }
 
+  /**
+   * Obtener productos relacionados.
+   * @param params
+   * @returns
+   */
   getRelatedBySku(params: {
     sku: string;
     documentId: string;
@@ -122,7 +132,12 @@ export class ArticleService {
     );
   }
 
-  getArticleSuggestionsBySku(params: {
+  /**
+   * Obtener productos recomendados.
+   * @param params
+   * @returns
+   */
+  getRecommendedProducts(params: {
     sku: string;
     documentId: string;
     branchCode: string;
@@ -176,14 +191,40 @@ export class ArticleService {
     );
   }
 
-  getComparacionMatriz(params: {
-    sku: any;
+  /**
+   * Obtener matríz de comparación del producto.
+   * @param params
+   * @returns
+   */
+  getProductCompareMatrix(params: {
+    sku: string;
     documentId: string;
     branchCode: string;
-  }) {
-    return this.http.get(
-      `${API_ARTICLE}/suggestion/article-compare-matrix?sku=${params.sku}&documentId=${params.documentId}&branchCode=${params.branchCode}`
-    );
+  }): Observable<IFormmatedProductCompareResponse> {
+    return this.http
+      .get<IProductCompareResponse>(
+        `${API_ARTICLE}/suggestion/article-compare-matrix`,
+        {
+          params,
+        }
+      )
+      .pipe(
+        map((response) => {
+          const products = response.articles.map((product) => ({
+            ...product,
+            quantity: 1,
+          }));
+          const differences = response.comparison.map((product) => {
+            const keys = Object.keys(product);
+            const attributeKey = keys[0];
+            const values = product[attributeKey].map(
+              (attribute) => attribute.value
+            );
+            return { name: attributeKey, values };
+          });
+          return { products, differences };
+        })
+      );
   }
 
   getResumenComentarios(sku: string) {

@@ -43,18 +43,18 @@ export interface IData {
 }
 
 export interface IArticle {
-  sku: string; //*
-  name: string; // *
-  brand: string; // *
-  minimumPrice: number; // *
-  images: IImage; // *
-  priceInfo: IPriceInfo; // *
-  deliverySupply: IDeliverySupply; // *
-  stockSummary: IStockSummary; // *
-  origin: IShoppingCartProductOrigin;
-  cyber: number;
+  sku: string; // +
+  name: string; // +
+  brand: string; // +
+  minimumPrice: number; // +
+  images: IImage; // +
+  priceInfo: IPriceInfo; // +
+  deliverySupply: IDeliverySupply; // ?
+  stockSummary: IStockSummary; // +
+  origin: IShoppingCartProductOrigin; // +
+  cyber: number; // +
   // No se usa..
-  description: string; // *
+  description: string; // +
 }
 
 export interface IImage {
