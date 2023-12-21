@@ -33,7 +33,7 @@ import {
   ICustomerContact,
 } from '@core/models-v2/customer/customer.interface';
 import { CustomerContactService } from '@core/services-v2/customer-contact.service';
-import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 import { IError } from '@core/models-v2/error/error.interface';
 import { CustomerPreferenceApiService } from '@core/services-v2/customer-preference/customer-preference-api.service';
 import { AddressType } from '@core/enums/address-type.enum';

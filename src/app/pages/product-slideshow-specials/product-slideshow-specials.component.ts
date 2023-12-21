@@ -8,13 +8,8 @@ import {
 } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { RootService } from 'src/app/shared/services/root.service';
-import { DirectionService } from 'src/app/shared/services/direction.service';
-import { ProductsService } from 'src/app/shared/services/products.service';
 import { isPlatformBrowser } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { LogisticsService } from '@shared/services/logistics.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
@@ -30,6 +25,7 @@ import { GeolocationStorageService } from '@core/storage/geolocation-storage.ser
 import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
+import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 
 export type Layout = 'grid' | 'grid-with-features' | 'list';
 export interface ISection {
@@ -63,11 +59,8 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
   despachoCliente!: Subscription;
 
   constructor(
-    private root: RootService,
     public toast: ToastrService,
-    private localStorage: LocalStorageService,
     private router: Router,
-    private logistic: LogisticsService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService,
@@ -76,7 +69,8 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     private readonly geolocationService: GeolocationServiceV2,
     private readonly geolocationStorage: GeolocationStorageService,
     private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
-    private readonly customerPreferenceService: CustomerPreferenceService
+    private readonly customerPreferenceService: CustomerPreferenceService,
+    private readonly customerAddressService: CustomerAddressService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -116,10 +110,13 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     });
 
     //Cuando se cambia de dirección despacho
-    this.despachoCliente = this.logistic.direccionCliente$.subscribe((r) => {
-      this.preferenciaCliente.deliveryAddress = r;
-      this.cargaEspeciales();
-    });
+    this.despachoCliente =
+      this.customerAddressService.customerAddress$.subscribe(
+        (customerAddress) => {
+          this.preferenciaCliente.deliveryAddress = customerAddress;
+          this.cargaEspeciales();
+        }
+      );
   }
 
   @HostListener('window:resize', ['$event'])

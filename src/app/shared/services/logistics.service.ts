@@ -15,29 +15,11 @@ import { ResponseApi } from '../interfaces/response-api';
 })
 export class LogisticsService {
   private urlApi = environment.apiLogistic;
-  private direccion$: Subject<any> = new Subject();
-  readonly direccionCliente$: Observable<any> = this.direccion$.asObservable();
 
   private storesSubject: Subject<any> = new Subject();
   readonly $stores: Observable<any> = this.storesSubject.asObservable();
 
   constructor(private http: HttpClient) {}
-
-  obtienRetiro(data: any) {
-    return this.http.post(environment.apiLogistic + `retirocarro`, data);
-  }
-
-  /**
-   * Eliminar.
-   * @param params
-   * @returns
-   */
-  obtieneDireccionesTiendaRetiro(params: any): Observable<ResponseApi> {
-    return this.http.get<ResponseApi>(
-      environment.apiLogistic + `tiendasretiroomni`,
-      { params }
-    );
-  }
 
   /**
    * Eliminar.
@@ -52,20 +34,8 @@ export class LogisticsService {
     );
   }
 
-  /**
-   * Eliminar.
-   * @returns
-   */
-  obtenerTiendasOmni() {
-    return this.http.get(this.urlApi + `tiendas`);
-  }
-
   obtieneComunas() {
     return this.http.get(this.urlApi + `comunas`);
-  }
-
-  guardarDireccionCliente(data: any) {
-    this.direccion$.next(data);
   }
 
   obtenerMultiDespachos(data: any) {

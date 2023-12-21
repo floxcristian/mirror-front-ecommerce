@@ -7,7 +7,7 @@ import { ICustomerPreference } from './models/customer-preference.interface';
 // Services
 import { SessionService } from '@core/states-v2/session.service';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
-import { CustomerAddressApiService } from '../customer-address-api.service';
+import { CustomerAddressApiService } from '../customer-address/customer-address-api.service';
 
 @Injectable({
   providedIn: 'root',

@@ -15,9 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 // Rxjs
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, first } from 'rxjs/operators';
-import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { SessionService } from '@core/states-v2/session.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
@@ -42,6 +40,7 @@ import { PathStorageService } from '@core/storage/path-storage.service';
 import { DireccionDespachoComponent } from '../search-vin-b2b/components/direccion-despacho/direccion-despacho.component';
 import { ModalStoresComponent } from '../modal-stores/modal-stores.component';
 import { RootService } from '@shared/services/root.service';
+import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 
 @Component({
   selector: 'app-header-search',
@@ -90,7 +89,6 @@ export class SearchComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private toastr: ToastrService,
     public menuCategorias: MenuCategoriasB2cService,
-    private logisticsService: LogisticsService,
     private readonly gtmService: GoogleTagManagerService,
     public readonly root: RootService,
     // Services V2
@@ -100,6 +98,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     private readonly pathStorage: PathStorageService,
     private readonly customerPreferenceStorage: CustomerPreferenceStorageService,
     private readonly customerPreferenceService: CustomerPreferenceService,
+    private readonly customerAddressService: CustomerAddressService,
     private readonly articleService: ArticleService,
     public readonly shoppingCartService: CartService
   ) {}
@@ -143,9 +142,11 @@ export class SearchComponent implements OnInit, OnDestroy {
     });
 
     this.despachoClienteRef =
-      this.logisticsService.direccionCliente$.subscribe((r) => {
-        this.direccion = r;
-      });
+      this.customerAddressService.customerAddress$.subscribe(
+        (customerAddress) => {
+          this.direccion = customerAddress;
+        }
+      );
   }
 
   ngOnDestroy(): void {

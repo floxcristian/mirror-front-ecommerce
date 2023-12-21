@@ -23,14 +23,19 @@ export class CustomerAddressApiService {
     type: number
   ): Observable<ICustomerAddress[]> {
     return this.http.get<ICustomerAddress[]>(
-      `${API_CUSTOMER}/${documentId}/addresses?type=${type}`
+      `${API_CUSTOMER}/${documentId}/addresses`,
+      {
+        params: { type },
+      }
     );
   }
 
   getInvoiceAddresses(documentId: string): Observable<ICustomerAddress[]> {
-    const type = AddressType.INVOICE;
     return this.http.get<ICustomerAddress[]>(
-      `${API_CUSTOMER}/${documentId}/addresses?type=${type}`
+      `${API_CUSTOMER}/${documentId}/addresses`,
+      {
+        params: { type: AddressType.INVOICE },
+      }
     );
   }
 

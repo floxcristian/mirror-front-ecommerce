@@ -51,6 +51,8 @@ import { CustomerPreferenceService } from '@core/services-v2/customer-preference
 import { BreadcrumbUtils } from './services/breadcrumb-utils.service';
 // Pipes
 import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
+import { INumberInputAction } from './models/number-input-action.interface';
+import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 
 declare const $: any;
 declare let fbq: any;
@@ -119,50 +121,39 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private cart: CartService,
     private canonicalService: CanonicalService,
     private buscadorService: BuscadorService,
-    private logistic: LogisticsService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
     private readonly articleService: ArticleService,
     private readonly geolocationService: GeolocationServiceV2,
     private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
-    private readonly customerPreferenceService: CustomerPreferenceService
+    private readonly customerPreferenceService: CustomerPreferenceService,
+    private readonly customerAddressService: CustomerAddressService
   ) {
     this.carouselOptions = CarouselDesktopOptions;
     this.carrouselOptionsMobile = CarouselMobileOptions;
     this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
     this.preferenciaCliente = this.customerPreferenceStorage.get();
-
-    this.onSelectedStoreChange();
-
-    //cambio de dirección
-    this.despachoCliente = this.logistic.direccionCliente$.subscribe((r) => {
-      if (!this.product) return;
-      this.preferenciaCliente.deliveryAddress = r;
-      // Pone el precio en el producto en producto.precio y producto.precioComun.
-      this.cart.cargarPrecioEnProducto(this.product);
-      this.getMixProducts(this.product.sku);
-    });
-
-    this.authStateService.session$.subscribe(() => {
-      this.user = this.sessionService.getSession();
-      this.customerPreferenceService.getCustomerPreferences().subscribe({
-        next: (preferences) => {
-          if (!this.product) return;
-
-          this.preferenciaCliente = preferences;
-          this.cart.cargarPrecioEnProducto(this.product);
-          this.getMixProducts(this.product.sku);
-        },
-      });
-    });
-
+    this.user = this.sessionService.getSession();
+    this.isB2B = this.sessionService.isB2B();
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
+  }
 
-    this.user = this.sessionService.getSession();
-    this.isB2B = this.sessionService.isB2B();
+  @HostListener('window:resize', ['$event'])
+  onWindowResize(): void {
+    this.isMobile();
+  }
+
+  ngOnInit(): void {
+    this.isMobile();
+    this.buscadorService.filtrosVisibles(false);
+
+    this.onRouteParamsChange();
+    this.onSelectedStoreChange();
+    this.onCustomerAddressChange();
+    this.onSessionChange();
 
     this.route.data.subscribe((data: any) => {
       this.layout = 'layout' in data ? data.layout : this.layout;
@@ -171,24 +162,46 @@ export class PageProductComponent implements OnInit, OnDestroy {
           ? data.sidebarPosition
           : this.sidebarPosition;
     });
-
-    this.onRouteParamsChange();
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onWindowResize(): void {
-    this.isMobile();
   }
 
   private onSelectedStoreChange(): void {
     this.geolocationService.selectedStore$.subscribe({
       next: (selectedStore) => {
         if (!this.product) return;
-
         this.tiendaSeleccionada = selectedStore;
+        console.log('cargo nuevo precio [onSelectedStoreChange]');
         this.cart.cargarPrecioEnProducto(this.product);
         this.getMixProducts(this.product.sku);
       },
+    });
+  }
+
+  private onCustomerAddressChange(): void {
+    this.despachoCliente =
+      this.customerAddressService.customerAddress$.subscribe(
+        (customerAddress) => {
+          if (!this.product) return;
+          this.preferenciaCliente.deliveryAddress = customerAddress;
+          // Pone el precio en el producto en producto.precio y producto.precioComun.
+          console.log('cargo nuevo precio [onCustomerAddressChange]');
+          this.cart.cargarPrecioEnProducto(this.product);
+          this.getMixProducts(this.product.sku);
+        }
+      );
+  }
+
+  private onSessionChange(): void {
+    this.authStateService.session$.subscribe(() => {
+      this.user = this.sessionService.getSession();
+      this.customerPreferenceService.getCustomerPreferences().subscribe({
+        next: (preferences) => {
+          if (!this.product) return;
+          this.preferenciaCliente = preferences;
+          console.log('cargo nuevo precio [onSessionChange]');
+          this.cart.cargarPrecioEnProducto(this.product);
+          this.getMixProducts(this.product.sku);
+        },
+      });
     });
   }
 
@@ -220,11 +233,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
     }*/
     this.buscadorService.filtrosVisibles(true);
     this.despachoCliente.unsubscribe();
-  }
-
-  ngOnInit(): void {
-    this.isMobile();
-    this.buscadorService.filtrosVisibles(false);
   }
 
   isMobile(): void {
@@ -369,46 +377,48 @@ export class PageProductComponent implements OnInit, OnDestroy {
     document.querySelector('#ancla')?.scrollIntoView();
   }
 
-  //Funciones para matriz comparativa
-  async obtienePrecioxCantidad(producto: any, tipo: any = null) {
-    if (tipo == '+') {
-      producto.cantidad = producto.cantidad + 1;
-    } else if (tipo == '-') {
-      producto.cantidad = producto.cantidad - 1;
-    }
-    if (producto.cantidad == 0) {
-      producto.cantidad = 1;
+  /**
+   * Obtener precio de un producto comparado en la matríz, según su cantidad actual.
+   * @param producto
+   * @param tipo
+   * @returns
+   */
+  async getComparedProductPrice(
+    product: IProductCompared,
+    inputAction?: INumberInputAction
+  ): Promise<void> {
+    if (!product.quantity) {
+      product.quantity = 1;
       return;
     }
-    let rut = '0';
 
-    if (this.user != null) {
-      rut = this.user.documentId || '0';
-    }
+    product.quantity =
+      inputAction === '+' ? product.quantity + 1 : product.quantity - 1;
 
     const datos: any = await this.cart
       .getPriceProduct({
-        rut,
-        sku: producto.sku,
+        rut: this.user.documentId,
+        sku: product.sku,
         sucursal: this.tiendaSeleccionada.code,
-        cantidad: producto.cantidad,
+        cantidad: product.quantity,
       })
       .toPromise();
-    if (datos['precio_escala']) {
-      producto.precioComun = !isVacio(this.user?.preferences.iva)
+    // FIXME: corregir esto....
+    /*if (datos['precio_escala']) {
+      product.precioComun = !isVacio(this.user?.preferences.iva)
         ? this.user?.preferences.iva
           ? datos['precioComun']
           : datos['precioComun'] / (1 + this.IVA)
         : datos['precioComun'];
-      producto.precio.precio = !isVacio(this.user?.preferences.iva)
+      product.precio.precio = !isVacio(this.user?.preferences.iva)
         ? this.user?.preferences.iva
           ? datos['precio'].precio
           : datos['precio'].precio / (1 + this.IVA)
         : datos['precio'].precio;
-    }
+    }*/
   }
 
-  agregarProductoMatriz(producto: any) {
+  agregarProductoMatriz(producto: any): void {
     if (!this.user) {
       this.toastr.warning(
         'Debe iniciar sesion para poder comprar',

@@ -7,8 +7,9 @@ import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 // Services
 import { LogisticsService } from '../../../../../../shared/services/logistics.service';
 import { SessionService } from '@core/states-v2/session.service';
-import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
+import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 
 @Component({
   selector: 'app-direccion-despacho',
@@ -26,13 +27,14 @@ export class DireccionDespachoComponent implements OnInit {
     private logisticsService: LogisticsService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly customerAddressService: CustomerAddressApiService,
+    private readonly customerAddressApiService: CustomerAddressApiService,
+    private readonly customerAddressService: CustomerAddressService,
     private readonly customerPreferenceStorage: CustomerPreferencesStorageService
   ) {}
 
   ngOnInit(): void {
     const { documentId } = this.sessionService.getSession();
-    this.customerAddressService.getDeliveryAddresses(documentId).subscribe({
+    this.customerAddressApiService.getDeliveryAddresses(documentId).subscribe({
       next: (addresses) => {
         this.direcciones = addresses;
         const direccionConfigurada = this.customerPreferenceStorage.get();
@@ -48,7 +50,7 @@ export class DireccionDespachoComponent implements OnInit {
   guardar(): void {
     this.event.emit(this.direccionSeleccionada);
     this.ModalRef.hide();
-    this.logisticsService.guardarDireccionCliente(this.direccionSeleccionada);
+    this.customerAddressService.setCustomerAddress(this.direccionSeleccionada);
   }
 
   seleccionaDireccion(direccion: ICustomerAddress): void {

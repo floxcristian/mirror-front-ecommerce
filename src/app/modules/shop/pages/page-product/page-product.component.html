@@ -208,7 +208,7 @@
                                 class="fal fa-minus-circle fa-xl me-3"
                                 style="cursor: pointer; color: #005cb9"
                                 role="button"
-                                (click)="obtienePrecioxCantidad(item, '-')"
+                                (click)="getComparedProductPrice(item, '-')"
                               ></i>
                               <input
                                 type="number"
@@ -216,12 +216,12 @@
                                 style="width: 50px"
                                 class="text-center"
                                 [(ngModel)]="item.quantity"
-                                (change)="obtienePrecioxCantidad(item)"
+                                (change)="getComparedProductPrice(item)"
                               />
                               <i
                                 class="fal fa-plus-circle fa-xl ms-3"
                                 style="cursor: pointer; color: #005cb9"
-                                (click)="obtienePrecioxCantidad(item, '+')"
+                                (click)="getComparedProductPrice(item, '+')"
                                 role="button"
                               ></i>
                             </div>
@@ -633,7 +633,7 @@
                               class="fal fa-minus-circle fa-xl me-3"
                               style="cursor: pointer; color: #005cb9"
                               role="button"
-                              (click)="obtienePrecioxCantidad(item, '-')"
+                              (click)="getComparedProductPrice(item, '-')"
                             ></i>
                             <input
                               type="number"
@@ -641,12 +641,12 @@
                               style="width: 50px"
                               class="text-center"
                               [(ngModel)]="item.quantity"
-                              (change)="obtienePrecioxCantidad(item)"
+                              (change)="getComparedProductPrice(item)"
                             />
                             <i
                               class="fal fa-plus-circle fa-xl ms-3"
                               style="cursor: pointer; color: #005cb9"
-                              (click)="obtienePrecioxCantidad(item, '+')"
+                              (click)="getComparedProductPrice(item, '+')"
                               role="button"
                             ></i>
                           </div>

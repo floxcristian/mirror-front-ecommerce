@@ -40,6 +40,7 @@ import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.
 import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
+import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 
 // export interface IFilterMedium{
 //   name:string;
@@ -136,7 +137,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     private readonly articleService: ArticleService,
     private readonly geolocationService: GeolocationServiceV2,
     private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
-    private readonly customerPreferenceService: CustomerPreferenceService
+    private readonly customerPreferenceService: CustomerPreferenceService,
+    private readonly customerAddressService: CustomerAddressService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -449,14 +451,15 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       this.cargarCatalogoProductos(this.parametrosBusqueda, '');
     });
 
-    this.despachoCliente = this.logistic.direccionCliente$.subscribe((r) => {
-      this.parametrosBusqueda.location = r.city
-        ? r.comuna.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        : '';
-      this.preferenciaCliente.deliveryAddress = r;
-      this.reinicaFiltros();
-      this.cargarCatalogoProductos(this.parametrosBusqueda, '');
-    });
+    this.despachoCliente =
+      this.customerAddressService.customerAddress$.subscribe(
+        (customerAddress) => {
+          this.parametrosBusqueda.location = customerAddress?.city || '';
+          this.preferenciaCliente.deliveryAddress = customerAddress;
+          this.reinicaFiltros();
+          this.cargarCatalogoProductos(this.parametrosBusqueda, '');
+        }
+      );
   }
 
   private reinicaFiltros() {

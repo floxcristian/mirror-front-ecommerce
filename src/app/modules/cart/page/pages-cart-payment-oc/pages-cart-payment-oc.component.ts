@@ -36,7 +36,7 @@ import {
 } from '@core/models-v2/cart/shopping-cart.interface';
 import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
 import { CustomerService } from '@core/services-v2/customer.service';
-import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';

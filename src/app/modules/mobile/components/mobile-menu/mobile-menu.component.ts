@@ -21,7 +21,6 @@ import { RootService } from '../../../../shared/services/root.service';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
 import { DireccionDespachoComponent } from '../../../header/components/search-vin-b2b/components/direccion-despacho/direccion-despacho.component';
 
-import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/states-v2/session.service';
@@ -35,6 +34,7 @@ import { ModalStoresComponent } from 'src/app/modules/header/components/modal-st
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
+import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -72,7 +72,6 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
     private modalService: BsModalService,
     private categoriesService: CategoryService,
     private root: RootService,
-    private logisticsService: LogisticsService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService,
@@ -81,7 +80,8 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
     private readonly menuService: MenuService,
     private readonly geolocationService: GeolocationServiceV2,
     private readonly customerPreferenceService: CustomerPreferenceService,
-    private readonly customerPreferenceStorage: CustomerPreferencesStorageService
+    private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
+    private readonly customerAddressService: CustomerAddressService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -115,11 +115,12 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
       },
     });
 
-    this.despachoCliente = this.logisticsService.direccionCliente$.subscribe(
-      (r) => {
-        this.direccion = r;
-      }
-    );
+    this.despachoCliente =
+      this.customerAddressService.customerAddress$.subscribe(
+        (customerAddress) => {
+          this.direccion = customerAddress;
+        }
+      );
   }
 
   ngOnDestroy(): void {

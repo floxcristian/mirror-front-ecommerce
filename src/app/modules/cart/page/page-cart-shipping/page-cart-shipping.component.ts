@@ -55,7 +55,7 @@ import {
 import { CartService } from '@core/services-v2/cart.service';
 import { IRemoveGroupRequest } from '@core/models-v2/requests/cart/remove-group.request';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
-import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 import { ReceiveStorageService } from '@core/storage/receive-storage.service';
 import { IReceive } from '@core/models-v2/storage/receive.interface';
@@ -65,6 +65,7 @@ import { GetLogisticPromiseRequest } from '@core/models-v2/requests/cart/logisti
 import { GetLogisticPromiseResponse } from '@core/models-v2/responses/logistic-promise-responses';
 import { IGuest } from '@core/models-v2/storage/guest.interface';
 import { GuestStorageService } from '@core/storage/guest-storage.service';
+import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 
 export let browserRefresh = false;
 declare let dataLayer: any;
@@ -177,7 +178,8 @@ export class PageCartShippingComponent implements OnInit {
     private readonly customerPreferencesStorage: CustomerPreferencesStorageService,
     private readonly shppingCartStorage: ShoppingCartStorageService,
     private readonly receiveStorage: ReceiveStorageService,
-    private readonly customerAddressApiService: CustomerAddressApiService
+    private readonly customerAddressApiService: CustomerAddressApiService,
+    private readonly customerAddressService: CustomerAddressService
   ) {
     this.receiveStorage.set({} as IReceive);
     this.innerWidth = window.innerWidth;
@@ -1454,7 +1456,7 @@ export class PageCartShippingComponent implements OnInit {
     let nueva_preferencia =
       this.addresses.find((address) => address.id !== addressId) || null;
     console.log('nueva', nueva_preferencia);
-    // this.logistics.guardarDireccionCliente(nueva_preferencia);
+    //this.customerAddressService.setCustomerAddress(nueva_preferencia);
     /*this.customerPreferencesStorage.set({
       deliveryAddress: nueva_preferencia,
     });*/

@@ -16,7 +16,7 @@ import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 // Services
 import { PaymentMethodOmniService } from '@core/services-v2/payment-method-omni.service';
 import { CartService } from '@core/services-v2/cart.service';
-import { CustomerAddressApiService } from '@core/services-v2/customer-address-api.service';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { SHOPPING_CART_STATUS_TYPE } from '@core/enums/shopping-cart-status.enum';
 

@@ -50,7 +50,6 @@ export class GeolocationServiceV2 {
       isSelectedByClient: true,
     };
     this.geolocationStorage.set(this.geolocation);
-    console.log('[selectedStoreSubject.next] desde [setSelectedStore].');
     this.selectedStoreSubject.next(this.geolocation);
   }
 
@@ -61,16 +60,12 @@ export class GeolocationServiceV2 {
   getSelectedStore(): ISelectedStore {
     //console.log('[getSelectedStore]');
     let geolocation = this.geolocationStorage.get();
-    console.log('--geolocation');
     if (geolocation) {
-      console.log('--1');
       this.geolocation = geolocation;
-      return this.geolocation; //.tiendaSelecciona;
+      return this.geolocation;
     } else {
-      console.log('setDefaultLocation desde getSelectedStore');
       geolocation = this.setDefaultLocation();
-      console.log('--2: ', geolocation);
-      return geolocation; //.tiendaSelecciona;
+      return geolocation;
     }
   }
 
@@ -80,10 +75,8 @@ export class GeolocationServiceV2 {
    * @returns
    */
   setDefaultLocation(): ISelectedStore {
-    console.log('setDefaultLocation...');
     const stores = this.storesSubject.value;
     const defaultStore = stores.find((store) => store.default);
-    // FIXME: corregir el tipo...
     if (defaultStore) {
       this.geolocation = {
         isChangeToNearestStore: false,
@@ -94,7 +87,6 @@ export class GeolocationServiceV2 {
       };
     } else {
       const firstLocation = stores[0];
-      console.log('firstLocation: ', firstLocation);
       this.geolocation = {
         isChangeToNearestStore: false,
         isSelectedByClient: false,
@@ -112,21 +104,18 @@ export class GeolocationServiceV2 {
    * Se llama solo una vez en el app.component.
    */
   initGeolocation(): void {
-    console.log('initGeolocation...');
     this.geolocationApiService.getStores().subscribe({
       next: (stores) => {
         this.storesSubject.next(stores);
         let geolocation = this.geolocationStorage.get();
 
         if (!geolocation) {
-          console.log('setDefaultLocation desde initGeolocation...');
           geolocation = this.setDefaultLocation();
         }
         // Si el navegador soporta geolocalización automática y la tienda no fue seleccionada por el cliente.
         if (navigator.geolocation && !geolocation.isSelectedByClient) {
           this.setNearestStore();
         } else {
-          console.log('[selectedStoreSubject.next] desde [initGeolocation].');
           this.selectedStoreSubject.next(this.geolocation);
         }
       },
@@ -138,8 +127,6 @@ export class GeolocationServiceV2 {
    */
   private setNearestStore(): void {
     let isFirstCallback = true;
-    console.log('[setNearestStore]===================');
-
     navigator.geolocation.getCurrentPosition(
       async ({ coords }) => {
         if (isFirstCallback) {
@@ -164,24 +151,18 @@ export class GeolocationServiceV2 {
                 city: res.city,
               };
               this.geolocationStorage.set(this.geolocation);
-              console.log(
-                '[selectedStoreSubject.next] desde [setNearestStore].'
-              );
+
               this.selectedStoreSubject.next(this.geolocation);
             },
             error: () => {
               console.warn(
                 'No se ha podido establecer la tienda más cercana.'
               );
-              console.log(
-                '[selectedStoreSubject.next] desde [setNearestStore(error)].'
-              );
               this.selectedStoreSubject.next(this.geolocation);
             },
           });
       },
       async (err) => {
-        console.log('err============================');
         if (isFirstCallback) {
           isFirstCallback = false;
           const hasSecondCallback = await this.hasSecondCallback();
@@ -190,9 +171,6 @@ export class GeolocationServiceV2 {
           clearTimeout(this.secondCallbackTimer);
         }
         console.error(err);
-        console.log(
-          '[selectedStoreSubject.next] desde [setNearestStore(failed)].'
-        );
         this.selectedStoreSubject.next(this.geolocation);
       }
     );

@@ -14,10 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 // Rxjs
 import { Subscription } from 'rxjs';
 // Services
-import { ProductsService } from '../../services/products.service';
-import { RootService } from '../../services/root.service';
 import { DirectionService } from '../../services/direction.service';
-import { ClientsService } from '../../services/clients.service';
 import { LogisticsService } from '../../services/logistics.service';
 import { isVacio } from '../../utils/utilidades';
 import { SessionService } from '@core/states-v2/session.service';
@@ -30,6 +27,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { IData } from '@core/models-v2/cms/customHomePage-response.interface';
 import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
+import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 
 @Component({
   selector: 'app-product-slideshow',
@@ -73,14 +71,10 @@ export class ProductSlideshowComponent
   };
 
   constructor(
-    private root: RootService,
-    private productsService: ProductsService,
     // @Inject(WINDOW) private window: Window,
     public toast: ToastrService,
     private direction: DirectionService,
     private router: Router,
-    private clientsService: ClientsService,
-    private logisticsService: LogisticsService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService,
@@ -88,7 +82,8 @@ export class ProductSlideshowComponent
     private readonly cmsService: CmsService,
     private readonly geolocationService: GeolocationServiceV2,
     private readonly geolocationStorage: GeolocationStorageService,
-    private readonly customerPreferenceService: CustomerPreferenceService
+    private readonly customerPreferenceService: CustomerPreferenceService,
+    private readonly customerAddressService: CustomerAddressService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -129,16 +124,15 @@ export class ProductSlideshowComponent
       },
     });
 
-    this.despachoCliente = this.logisticsService.direccionCliente$.subscribe(
-      async () => {
+    this.despachoCliente =
+      this.customerAddressService.customerAddress$.subscribe(() => {
         this.customerPreferenceService.getCustomerPreferences().subscribe({
           next: (preferences) => {
             this.preferenciasCliente = preferences;
             this.cargarHome();
           },
         });
-      }
-    );
+      });
 
     // cuando se inicia sesion
     this.authStateService.session$.subscribe((user) => {

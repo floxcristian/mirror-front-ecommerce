@@ -5,10 +5,6 @@ import { first } from 'rxjs';
 // Models
 
 // Services
-import { DirectionService } from '../../../../shared/services/direction.service';
-import { LogisticsService } from '../../../../shared/services/logistics.service';
-import { RootService } from '../../../../shared/services/root.service';
-import { PageHomeService } from '../../services/pageHome.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { CmsService } from '@core/services-v2/cms.service';
@@ -19,6 +15,7 @@ import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
+import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 @Component({
   selector: 'app-page-home-template',
   templateUrl: './page-home-template.component.html',
@@ -33,15 +30,14 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
   pageHome: IPage[] = [];
 
   constructor(
-    private root: RootService,
-    private logisticsService: LogisticsService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly csmService: CmsService,
     private readonly authStateService: AuthStateServiceV2,
     private readonly geolocationService: GeolocationServiceV2,
     private readonly geolocationStorage: GeolocationStorageService,
-    private readonly customerPreferenceService: CustomerPreferenceService
+    private readonly customerPreferenceService: CustomerPreferenceService,
+    private readonly customerAddressService: CustomerAddressService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -90,10 +86,12 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
       });
     });
 
-    this.logisticsService.direccionCliente$.subscribe((r) => {
-      this.preferenciasCliente.deliveryAddress = r;
-      this.cargarPage();
-    });
+    this.customerAddressService.customerAddress$.subscribe(
+      (customerAddress) => {
+        this.preferenciasCliente.deliveryAddress = customerAddress;
+        this.cargarPage();
+      }
+    );
   }
 
   async cargarPage() {
