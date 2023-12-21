@@ -4,6 +4,8 @@ import { environment } from '@env/environment';
 import { DataTablesResponse } from '../../../../shared/interfaces/data-table';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { CartService } from '@core/services-v2/cart.service';
+import { IOrderDetail } from '@core/models-v2/cart/order-details.interface';
 
 @Component({
   selector: 'app-page-pending-orders',
@@ -13,45 +15,36 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 export class PagePendingOrdersComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   usuario!: ISession;
-  orders!: any[];
-  urlDonwloadOC = environment.apiShoppingCart + 'getoc?id=';
+  orders!: IOrderDetail[];
   viewActive = 'list';
-  orderId = null;
+  orderId:string = '';
   title: string = '';
 
   constructor(
     private http: HttpClient,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly cartService:CartService
   ) {}
 
   ngOnInit(): void {
     this.loadData();
-    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
     if (!this.usuario.hasOwnProperty('username'))
       this.usuario.username = this.usuario.email;
   }
 
   loadData() {
-    const that = this;
     const columns = [
-      'modificacion',
-      'estado',
-      'numero',
-      'totalOv',
-      'folio',
-      'montoOcCliente',
-      'usuario',
+      'updatedAt',
+      'status',
+      'salesId',
+      'total',
+      'purchaseOrder.number',
+      'purchaseOrder.amount',
+      'purchaseOrder.costCenter',
+      'user',
     ];
-    let username: String = 'services';
-    let password: String = '0.=j3D2ss1.w29-';
-    let authdata = window.btoa(username + ':' + password);
-    let head = {
-      Authorization: `Basic ${authdata}`,
-      'Access-Control-Allow-Headers':
-        'Authorization, Access-Control-Allow-Headers',
-    };
-    let headers = new HttpHeaders(head);
     this.dtOptions = {
       language: {
         // url: 'assets/js/datatable/Spanish.json'
@@ -63,36 +56,41 @@ export class PagePendingOrdersComponent implements OnInit {
       order: [[0, 'desc']],
       columnDefs: [{ orderable: false, targets: 7 }],
       ajax: (dataTablesParameters: any, callback) => {
-        dataTablesParameters.usuario = this.usuario.username;
-        dataTablesParameters.estado = ['finalizado', 'generado'];
-        dataTablesParameters.sortColumn =
-          columns[dataTablesParameters.order[0].column];
-        dataTablesParameters.sortDir = dataTablesParameters.order[0].dir;
-        dataTablesParameters.tipo = 2;
+        let page_actual = dataTablesParameters.start === 0 ? 1 : (dataTablesParameters.start/dataTablesParameters.length)+1
+        let sort_column = columns[dataTablesParameters.order[0].column];
+        let sort_asc_desc = dataTablesParameters.order[0].dir === 'asc' ? 1 : -1
+        let sort_real = sort_column+'|'+sort_asc_desc
+        let params2 = {
+          user:this.usuario.username || '',
+          salesDocumentType:2,
+          search:dataTablesParameters.search.value,
+          statuses:['finalized', 'generated'],
+          page:page_actual,
+          limit:dataTablesParameters.length,
+          sort:sort_real
+        }
 
-        that.http
-          .post<DataTablesResponse>(
-            environment.apiShoppingCart + 'listadoPedidos',
-            dataTablesParameters,
-            { headers: headers }
-          )
-          .subscribe((resp) => {
-            that.orders = resp.data;
-
+        this.cartService.getOrderDetails(params2).subscribe({
+          next:(res)=>{
+            this.orders = res.data
             callback({
-              recordsTotal: resp.recordsTotal,
-              recordsFiltered: resp.recordsFiltered,
+              recordsTotal: res.total,
+              recordsFiltered: res.total,
               data: [],
             });
-          });
+          },
+          error:(err)=>{
+            console.log(err)
+          }
+        })
       },
     };
   }
 
   viewOrderDetail(item: any) {
     this.viewActive = 'detail';
-    this.orderId = item._id;
-    this.title = item.numero;
+    this.orderId = item.id;
+    this.title = item.salesId;
   }
 
   backToList() {

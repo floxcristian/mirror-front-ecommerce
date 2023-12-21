@@ -32,26 +32,26 @@
               </thead>
               <tbody *ngIf="orders?.length != 0">
                 <tr *ngFor="let item of orders">
-                  <td>{{ item.modificacion | date : "dd-MM-yyyy HH:mm" }}</td>
+                  <td>{{ item.updatedAt | date : "dd-MM-yyyy HH:mm" }}</td>
                   <td>
                     <span
                       class="badge"
                       [ngClass]="{
-                        'bg-danger': item?.estado == 'rechazado',
-                        'bg-warning': item?.estado == 'pendiente',
-                        'bg-info': item?.estado == 'generado',
-                        'bg-success': item?.estado == 'finalizado'
+                        'bg-danger': item?.status == 'rejected',
+                        'bg-warning': item?.status == 'pending',
+                        'bg-info': item?.status == 'generated',
+                        'bg-success': item?.status == 'finalized'
                       }"
                     >
-                      {{ item?.estado | capitalizeFirst }}
+                      {{ item?.status | capitalizeFirst }}
                     </span>
                   </td>
-                  <td>{{ item?.numero }}</td>
-                  <td>{{ item?.totalOv | currencyFormat }}</td>
-                  <td>{{ item?.folio }}</td>
-                  <td>{{ item?.montoOcCliente | currencyFormat }}</td>
-                  <td>{{ item?.centroCosto }}</td>
-                  <td>{{ item?.usuario }}</td>
+                  <td>{{ item?.salesId }}</td>
+                  <td>{{ item?.total | currencyFormat }}</td>
+                  <td>{{ item?.purchaseOrder?.number }}</td>
+                  <td>{{ item?.purchaseOrder?.amount | currencyFormat }}</td>
+                  <td>{{ item?.purchaseOrder?.costCenter }}</td>
+                  <td>{{ item?.user }}</td>
                   <td>
                     <div class="btn-group" dropdown>
                       <button
@@ -84,7 +84,7 @@
                           <a
                             class="dropdown-item"
                             routerLink="/carro-compra/downloadpdf"
-                            [queryParams]="{ numero: item?.numero }"
+                            [queryParams]="{ numero: item?.salesId }"
                           >
                             <i class="far fa-file-pdf"></i>
                             Descargar OV
@@ -96,7 +96,7 @@
                             class="dropdown-item"
                             routerLink="/carro-compra/downloadpdf"
                             [queryParams]="{
-                              numero: item?._id,
+                              numero: item?.id,
                               tipo: 'orden-compra'
                             }"
                           >

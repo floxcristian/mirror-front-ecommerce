@@ -1,10 +1,11 @@
 // Angular
 import { Component, Input } from '@angular/core';
 // Services
-import { CartService } from '../../services/cart.service';
 import { RootService } from '../../services/root.service';
-import { LogisticsService } from '../../services/logistics.service';
-import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { CartService } from '@core/services-v2/cart.service';
+import { IShoppingCartDetail } from '@core/models-v2/cart/shopping-cart-detail.interface';
+import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
+import { IStore } from '@core/models-v2/logistic/store.interface';
 
 @Component({
   selector: 'app-order-details',
@@ -17,36 +18,37 @@ export class OrderDetailsComponent {
   }
   @Input() title = 'Detalle';
 
-  data: any;
+  data!: IShoppingCartDetail;
   deliveryText: any;
 
   constructor(
-    private cartService: CartService,
     public root: RootService,
-    private logisticaService: LogisticsService,
     // Services V2
-    private readonly geolocationService: GeolocationServiceV2
+    private readonly geolocationApiService:GeolocationApiService,
+    private readonly cartService:CartService
   ) {}
 
   async getData(id: any) {
-    let r: any = await this.cartService.getOrderDetail(id).toPromise();
 
-    if (!r.error) {
-      this.data = r.data;
-      if (this.data.despacho.codTipo === 'VEN- RPTDA') {
-        // FIXME: este método ya no se usará, usar geolocationService.stores$
-        let tiendas: any = await this.logisticaService
-          .obtenerTiendas()
-          .toPromise();
-
-        let tienda = tiendas.data.filter(
-          (item: any) => item.codigo === this.data.codigoSucursal
-        );
-
-        this.deliveryText = 'Retiro en tienda ' + tienda[0].zona;
-      } else {
-        this.deliveryText = 'Despacho';
+    this.cartService.getOneById(id).subscribe({
+      next: async(res)=>{
+        this.data = res;
+        if (res.shoppingCart.shipment?.deliveryMode == 'delivery') {
+          this.deliveryText = 'Despacho';
+        } else {
+          let tiendas:IStore[] | any = await this.geolocationApiService.getStores().toPromise()
+          console.log('tieeendas',tiendas)
+          if(tiendas){
+            let tienda = tiendas.filter(
+              (item: any) => item.code === this.data.shoppingCart.branchCode
+            );
+            this.deliveryText = 'Retiro en tienda ' + tienda[0].zone;
+          }
+        }
+      },
+      error:(err)=>{
+        console.log(err)
       }
-    }
+    })
   }
 }

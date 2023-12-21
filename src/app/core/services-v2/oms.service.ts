@@ -23,6 +23,6 @@ export class OmsService {
   }
 
   getOrderDetail(trackingNumber: string) {
-    return this.http.get(`${API_OMS}/orders/${trackingNumber}`);
+    return this.http.get(`${API_OMS}/order/${trackingNumber}`);
   }
 }

@@ -5,11 +5,11 @@
     <div class="col-md-6 col-sm-12">
       <div class="row">
         <div class="col-5 title">RUT Cliente</div>
-        <div class="col-7 subtitle">{{ data?.cliente?.rutCliente }}</div>
+        <div class="col-7 subtitle">{{ data.shoppingCart.customer?.documentId }}</div>
       </div>
       <div class="row">
         <div class="col-5 title">Usuario</div>
-        <div class="col-7 subtitle">{{ data?.usuario }}</div>
+        <div class="col-7 subtitle">{{ data.shoppingCart.user }}</div>
       </div>
       <div class="row">
         <div class="col-5 title">Estado</div>
@@ -17,26 +17,26 @@
           <span
             class="badge"
             [ngClass]="{
-              'bg-danger': data?.estado == 'rechazado',
-              'badge-warning': data?.estado == 'pendiente',
-              'badge-info': data?.estado == 'generado',
-              'badge-success': data?.estado == 'finalizado'
+              'bg-danger': data.shoppingCart.status == 'rejected',
+              'bg-warning': data.shoppingCart.status == 'pending',
+              'bg-info': data.shoppingCart.status == 'generated',
+              'bg-success': data.shoppingCart.status == 'finalized'
             }"
           >
-            {{ data?.estado | capitalizeFirst }}
+            {{ data.shoppingCart.status | capitalizeFirst }}
           </span>
         </div>
       </div>
-      <div class="row" *ngIf="data?.ordenCompra?.folio != null">
+      <div class="row" *ngIf="data.shoppingCart.purchaseOrder?.number != null">
         <div class="col-5 title">Folio OC</div>
-        <div class="col-7 subtitle">{{ data?.ordenCompra.folio }}</div>
+        <div class="col-7 subtitle">{{ data.shoppingCart.purchaseOrder?.number }}</div>
       </div>
     </div>
     <div class="col-md-6 col-sm-12">
       <div class="row">
         <div class="col-5 title">Fecha Pedido</div>
         <div class="col-7 subtitle">
-          {{ data?.modificacion | date : 'dd-MM-yyyy HH:mm' }}
+          {{ data.shoppingCart.updatedAt | date : 'dd-MM-yyyy HH:mm' }}
         </div>
       </div>
       <div class="row">
@@ -46,22 +46,22 @@
       <div class="row">
         <div class="col-5 title">Fecha Entrega</div>
         <div class="col-7 subtitle">
-          {{ data?.despacho?.fechaEntrega | date : 'dd-MM-yyyy' }}
+          {{ data.shoppingCart.shipment?.requestedDate | date : 'dd-MM-yyyy' }}
         </div>
       </div>
-      <div class="row" *ngIf="data?.ordenCompra?.folio != null">
+      <div class="row" *ngIf="data.shoppingCart.purchaseOrder?.number != null">
         <div class="col-5 title">Monto OC</div>
         <div class="col-7 subtitle">
-          {{ data?.ordenCompra.monto | currencyFormat }}
+          {{ data.shoppingCart.purchaseOrder?.amount | currencyFormat }}
         </div>
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="data?.observacion != null">
+  <div class="row" *ngIf="data.shoppingCart.observation != null">
     <div class="col-md-6 col-sm-12">
       <div class="row">
         <div class="col-5 title">Observación:</div>
-        <div class="col-7 subtitle">{{ data?.observacion }}</div>
+        <div class="col-7 subtitle">{{ data.shoppingCart.observation }}</div>
       </div>
     </div>
   </div>
@@ -80,24 +80,24 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of data?.productos">
+        <tr *ngFor="let item of data.shoppingCart.products">
           <th class="text-start">
-            <a [routerLink]="root.product(item.sku, item.nombre)">
+            <a [routerLink]="root.product(item.sku, item.name)">
               <img
                 class="img-fluid img-product lazyload"
                 [src]="root.getUrlImagenMiniatura(item)"
-                [alt]="item.nombre"
+                [alt]="item.name"
               />
             </a>
           </th>
           <th class="text-start">
-            <span class="d-blok">{{ item.nombre }}</span>
+            <span class="d-blok">{{ item.name }}</span>
             <span class="d-block">{{ item.sku }}</span>
           </th>
-          <th class="text-start">{{ item.precio | currencyFormat }}</th>
-          <th class="text-start">{{ item.cantidad }}</th>
+          <th class="text-start">{{ item.price | currencyFormat }}</th>
+          <th class="text-start">{{ item.quantity }}</th>
           <th class="text-end">
-            {{ item.cantidad * item.precio | currencyFormat }}
+            {{ item.quantity * item.price | currencyFormat }}
           </th>
         </tr>
       </tbody>
@@ -105,7 +105,7 @@
   </div>
   <!-- Vista card de productos en mobile -->
   <div class="d-sm-none d-block">
-    <ng-container *ngFor="let item of data?.productos; let i = index">
+    <ng-container *ngFor="let item of data.shoppingCart.products; let i = index">
       <div class="card mb-2 bg-transparent">
         <div class="card-header">
           <div class="row">
@@ -113,7 +113,7 @@
               <img
                 class="img-fluid img-product lazyload"
                 [src]="root.getUrlImagenMiniatura(item)"
-                [alt]="item.nombre"
+                [alt]="item.name"
               />
             </div>
             <div class="col-8">
@@ -122,7 +122,7 @@
               </div>
               <div>
                 <span style="font-weight: bold">Producto: </span
-                >{{ item.nombre | titlecase }}
+                >{{ item.name | titlecase }}
               </div>
             </div>
           </div>
@@ -130,15 +130,15 @@
         <div class="card-body">
           <div class="row">
             <div class="col-4">
-              <span style="font-weight: bold">Precio: </span>{{ item.precio }}
+              <span style="font-weight: bold">Precio: </span>{{ item.price }}
             </div>
             <div class="col-4">
               <span style="font-weight: bold">Unidad: </span
-              >{{ item.cantidad }}
+              >{{ item.quantity }}
             </div>
             <div class="col-4">
               <span style="font-weight: bold">Total: </span>
-              {{ item.cantidad * item.precio | currencyFormat }}
+              {{ item.quantity * item.price | currencyFormat }}
             </div>
           </div>
         </div>

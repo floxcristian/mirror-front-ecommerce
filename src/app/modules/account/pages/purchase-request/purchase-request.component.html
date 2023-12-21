@@ -34,30 +34,30 @@
               </thead>
               <tbody *ngIf="orders?.length != 0">
                 <tr *ngFor="let item of orders">
-                  <td>{{ item.modificacion | date : 'dd-MM-yyyy HH:mm' }}</td>
+                  <td>{{ item.updatedAt | date : 'dd-MM-yyyy HH:mm' }}</td>
                   <td>
                     <span
                       class="badge"
                       [ngClass]="{
-                        'bg-danger': item?.estado == 'rechazado',
-                        'bg-warning': item?.estado == 'pendiente'
+                        'bg-danger': item?.status == 'rejected',
+                        'bg-warning': item?.status == 'pending'
                       }"
                     >
-                      {{ item?.estado | capitalizeFirst }}
+                      {{ item?.status | capitalizeFirst }}
                     </span>
                   </td>
-                  <td>{{ item?.totalOv | currencyFormat }}</td>
+                  <td>{{ item?.total | currencyFormat }}</td>
                   <td>
-                    {{ item?.folio }}
-                    <span *ngIf="item?.folio == null">No definido</span>
+                    {{ item?.purchaseOrder?.number }}
+                    <span *ngIf="item?.purchaseOrder?.number == null">No definido</span>
                   </td>
                   <td>
-                    {{ item?.montoOcCliente | currencyFormat }}
-                    <span *ngIf="item?.montoOcCliente == null"
+                    {{ item?.purchaseOrder?.amount | currencyFormat }}
+                    <span *ngIf="item?.purchaseOrder?.amount == null"
                       >No definido</span
                     >
                   </td>
-                  <td>{{ item?.usuario }}</td>
+                  <td>{{ item?.user }}</td>
                   <td>
                     <div class="btn-group" dropdown>
                       <button
@@ -91,7 +91,7 @@
                           role="menuitem"
                           *ngIf="
                             usuario.userRole == 'supervisor' &&
-                            item?.folio == null
+                            item?.purchaseOrder?.number == null
                           "
                         >
                           <a class="dropdown-item">
@@ -104,8 +104,8 @@
                           role="menuitem"
                           *ngIf="
                             usuario.userRole == 'supervisor' &&
-                            item?.folio != null &&
-                            item?.estado == 'pendiente'
+                            item?.purchaseOrder?.number != null &&
+                            item?.status == 'pending'
                           "
                         >
                           <a
@@ -121,8 +121,8 @@
                           role="menuitem"
                           *ngIf="
                             usuario.userRole == 'supervisor' &&
-                            item?.folio != null &&
-                            item?.estado == 'pendiente'
+                            item?.purchaseOrder?.number != null &&
+                            item?.status == 'pending'
                           "
                         >
                           <a class="dropdown-item" (click)="refuseOrder(item)">
@@ -156,9 +156,9 @@
               class="btn btn-border-primary mb-3 float-end"
               (click)="approveOrder(order)"
               *ngIf="
-                order?.folio != null &&
+                order?.purchaseOrder?.number != null &&
                 usuario.userRole == 'supervisor' &&
-                order?.estado == 'pendiente'
+                order?.status == 'pendiente'
               "
             >
               <i class="far fa-thumbs-up"></i>
@@ -168,9 +168,9 @@
               class="btn btn-border-primary mb-3 float-end me-2"
               (click)="refuseOrder(order)"
               *ngIf="
-                order?.folio != null &&
+                order?.purchaseOrder?.number != null &&
                 usuario.userRole == 'supervisor' &&
-                order?.estado == 'pendiente'
+                order?.status == 'pendiente'
               "
             >
               <i class="far fa-thumbs-down"></i>
@@ -180,9 +180,9 @@
               class="btn btn-border-primary mb-3 float-end"
               (click)="backToList()"
               *ngIf="
-                order?.folio == null &&
+                order?.purchaseOrder?.number == null &&
                 usuario.userRole == 'supervisor' &&
-                order?.estado == 'pendiente'
+                order?.status == 'pendiente'
               "
             >
               <i class="fas fa-marker"></i>
