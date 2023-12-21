@@ -16,7 +16,7 @@ import { Observable, map } from 'rxjs';
 import { IProductCompareResponse } from './product/models/product-compare-response.interface';
 import { IFormmatedProductCompareResponse } from './product/models/formatted-product-compare-response.interface';
 
-const API_ARTICLE = `http://10.158.15.204:8080/api/v1/article`;
+const API_ARTICLE = `${environment.apiEcommerce}/api/v1/article`;
 
 @Injectable({
   providedIn: 'root',
