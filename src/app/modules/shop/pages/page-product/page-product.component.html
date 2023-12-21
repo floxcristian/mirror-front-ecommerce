@@ -1,3 +1,4 @@
+<!-- Start::header -->
 <div class="container">
   <div class="mt-2">
     <app-page-header
@@ -8,6 +9,7 @@
     </app-page-header>
   </div>
 </div>
+<!-- End::header -->
 
 <ng-container *ngIf="layout !== 'sidebar'">
   <div>
@@ -132,12 +134,14 @@
                               ></span
                             >
                           </div>
+                          <!-- Start::precio oferta en rojo en producto de matriz -->
                           <div
                             *ngIf="
                               item.priceInfo.commonPrice !==
                               item.priceInfo.price
                             "
                             class="product-card__new-price text-danger font-weight-bold"
+                            style="border: 2px dotted green"
                           >
                             <span *ngIf="!preciosNeto"
                               >{{ item?.priceInfo?.price | currencyFormat }}
@@ -161,6 +165,8 @@
                               ></span
                             >
                           </div>
+                          <!-- End::precio oferta en rojo en producto de matriz -->
+
                           <div
                             *ngIf="
                               item.priceInfo.commonPrice !==
@@ -477,7 +483,7 @@
           *ngIf="showMobile && product?.visible === 1"
           class="d-block d-sm-none mt-4"
         >
-          <!-- Matriz Comparativa (Articulos similares) -->
+          <!-- Start::matriz comparativa (articulos similares) (mobile) -->
           <div *ngIf="matriz.length > 1" class="mt-3">
             <div class="d-flex flex-column align-items-center mb-3">
               <div
@@ -530,8 +536,8 @@
                       </div>
                       <div
                         *ngIf="
-                          item.stockSummary.branchStock > 0 ||
-                          item.stockSummary.companyStock > 0
+                          item.stockSummary.branchStock ||
+                          item.stockSummary.companyStock
                         "
                         class="d-flex flex-column justify-content-center align-items-center"
                       >
@@ -561,9 +567,10 @@
                             ></span
                           >
                         </div>
+                        <!-- Start::precio oferta en rojo -->
                         <div
                           *ngIf="
-                            item.priceInfo.commonPrice === item.priceInfo.price
+                            item.priceInfo.commonPrice !== item.priceInfo.price
                           "
                           class="product-card__new-price text-danger font-weight-bold"
                         >
@@ -586,6 +593,8 @@
                             ></span
                           >
                         </div>
+                        <!-- End::precio oferta en rojo -->
+
                         <div
                           *ngIf="
                             item.priceInfo.commonPrice !== item.priceInfo.price
@@ -702,7 +711,8 @@
             </div>
             <hr />
           </div>
-          <!-- Fin Matriz Comparativa (Articulos similares) -->
+          <!-- End::matriz comparativa (articulos similares) (mobile) -->
+
           <!-- Relacionados de productos -->
           <div class="mt-3" *ngIf="relatedProducts.length > 0">
             <div class="d-flex flex-column align-items-center mb-3">
@@ -901,11 +911,11 @@
 
 <ng-container *ngIf="product">
   <div itemscope itemtype="http://schema.org/Product">
-    <meta itemprop="name" [content]="product.nombre | capitalizeFirst" />
-    <meta itemprop="brand" [content]="product.marca" />
+    <meta itemprop="name" [content]="product.name | capitalizeFirst" />
+    <meta itemprop="brand" [content]="product.brand" />
     <meta
       itemprop="description"
-      [content]="product.descripcion | capitalizeFirst"
+      [content]="product.description | capitalizeFirst"
     />
     <meta itemprop="productID" [content]="product.sku" />
     <meta
@@ -919,11 +929,11 @@
       [content]="root.getUrlImagenMiniatura(product)"
     />
     <div itemprop="value" itemscope itemtype="http://schema.org/PropertyValue">
-      <meta itemprop="value" [content]="product.categoria" />
+      <meta itemprop="value" [content]="product.category" />
     </div>
     <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
       <link
-        *ngIf="!product?.stock"
+        *ngIf="!stock"
         itemprop="availability"
         href="http://schema.org/InStock"
         content="inStock"
@@ -934,9 +944,9 @@
         content="new"
       />
       <meta
-        *ngIf="product.precio"
+        *ngIf="product.priceInfo.price"
         itemprop="price"
-        [content]="product.precio.precio"
+        [content]="product.priceInfo.price"
       />
       <meta itemprop="priceCurrency" content="CLP" />
     </div>

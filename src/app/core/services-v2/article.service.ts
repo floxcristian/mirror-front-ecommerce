@@ -95,9 +95,9 @@ export class ArticleService {
    * SUGGESTION
    **********************************************/
   /**
-   * Obtener matríz del producto.
+   * Obtener productos que son parte de la matriz.
    */
-  getArticleMatrix(params: {
+  getMatrixProducts(params: {
     sku: string;
     documentId: string;
     branchCode: string;
@@ -117,7 +117,7 @@ export class ArticleService {
    * @param params
    * @returns
    */
-  getRelatedBySku(params: {
+  getRelatedProducts(params: {
     sku: string;
     documentId: string;
     branchCode: string;
@@ -142,13 +142,16 @@ export class ArticleService {
     documentId: string;
     branchCode: string;
     location: string;
-    quantityToSuggest: number;
+    quantityToSuggest?: number;
   }): Observable<IArticleResponse[]> {
     const { sku, ..._params } = params;
     return this.http.get<IArticleResponse[]>(
       `${API_ARTICLE}/suggestion/${sku}/article-suggestions`,
       {
-        params: _params,
+        params: {
+          ..._params,
+          quantityToSuggest: _params.quantityToSuggest || 10,
+        },
       }
     );
   }

@@ -16,6 +16,11 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
 import { Subscription, forkJoin } from 'rxjs';
 // Envs
 import { environment } from '@env/environment';
+// Constants
+import {
+  CarouselDesktopOptions,
+  CarouselMobileOptions,
+} from './constants/carousel-config';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
@@ -25,6 +30,10 @@ import { ICustomerPreference } from '@core/services-v2/customer-preference/model
 import { IBreadcrumbItem } from './models/breadcrumb.interface';
 import { ICategoryParams } from './models/category-params.interface';
 import { Product, ProductOrigen } from '../../../../shared/interfaces/product';
+import {
+  IAttributeCompared,
+  IProductCompared,
+} from '@core/services-v2/product/models/formatted-product-compare-response.interface';
 // Services
 import { RootService } from '../../../../shared/services/root.service';
 import { SeoService } from '../../../../shared/services/seo.service';
@@ -39,20 +48,9 @@ import { ArticleService } from '@core/services-v2/article.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
+import { BreadcrumbUtils } from './services/breadcrumb-utils.service';
 // Pipes
 import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
-
-import {
-  CarouselDesktopOptions,
-  CarouselMobileOptions,
-} from './constants/carousel-config';
-
-import { BreadcrumbUtils } from './services/breadcrumb-utils.service';
-
-import {
-  IAttributeCompared,
-  IProductCompared,
-} from '@core/services-v2/product/models/formatted-product-compare-response.interface';
 
 declare const $: any;
 declare let fbq: any;
@@ -67,6 +65,9 @@ export class PageProductComponent implements OnInit, OnDestroy {
   recommendedProducts: IArticleResponse[] = [];
   matrixProducts: IArticleResponse[] = [];
   relatedProducts: IArticleResponse[] = [];
+  matriz: IProductCompared[] = [];
+  comparacion: IAttributeCompared[] = [];
+
   minItems = 5;
   stock: boolean = true;
   layout: 'standard' | 'columnar' | 'sidebar' = 'standard';
@@ -98,8 +99,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
   puntoQuiebre: number = 576;
   showMobile: boolean = false;
-  matriz: IProductCompared[] = [];
-  comparacion: IAttributeCompared[] = [];
+
   tiendaSeleccionada!: ISelectedStore;
   IVA = environment.IVA;
   addingToCart: boolean = false;
@@ -137,11 +137,11 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
     //cambio de dirección
     this.despachoCliente = this.logistic.direccionCliente$.subscribe((r) => {
-      if (this.product) {
-        this.preferenciaCliente.deliveryAddress = r;
-        this.cart.cargarPrecioEnProducto(this.product);
-        this.getMixProducts(this.product.sku);
-      }
+      if (!this.product) return;
+      this.preferenciaCliente.deliveryAddress = r;
+      // Pone el precio en el producto en producto.precio y producto.precioComun.
+      this.cart.cargarPrecioEnProducto(this.product);
+      this.getMixProducts(this.product.sku);
     });
 
     this.authStateService.session$.subscribe(() => {
@@ -264,6 +264,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
         // FIXME: corregir esto..
         // productDetail.chassis = productDetail.chassis || '';
 
+        console.log('[-] productDetail: ', productDetail);
         this.product = productDetail;
         this.stock = productDetail.stockSummary.companyStock > 0;
         this.setMetaTag(this.product);
@@ -335,13 +336,10 @@ export class PageProductComponent implements OnInit, OnDestroy {
     };
 
     forkJoin([
-      this.articleService.getArticleMatrix(params),
-      this.articleService.getRelatedBySku(params),
+      this.articleService.getMatrixProducts(params),
+      this.articleService.getRelatedProducts(params),
       this.articleService.getProductCompareMatrix(params),
-      this.articleService.getRecommendedProducts({
-        ...params,
-        quantityToSuggest: 10,
-      }),
+      this.articleService.getRecommendedProducts(params),
     ]).subscribe(
       ([
         matrixProducts,
@@ -387,14 +385,14 @@ export class PageProductComponent implements OnInit, OnDestroy {
     if (this.user != null) {
       rut = this.user.documentId || '0';
     }
-    const parametrosPrecios = {
-      sku: producto.sku,
-      sucursal: this.tiendaSeleccionada.code,
-      rut,
-      cantidad: producto.cantidad,
-    };
+
     const datos: any = await this.cart
-      .getPriceProduct(parametrosPrecios)
+      .getPriceProduct({
+        rut,
+        sku: producto.sku,
+        sucursal: this.tiendaSeleccionada.code,
+        cantidad: producto.cantidad,
+      })
       .toPromise();
     if (datos['precio_escala']) {
       producto.precioComun = !isVacio(this.user?.preferences.iva)
@@ -418,21 +416,17 @@ export class PageProductComponent implements OnInit, OnDestroy {
       );
       return;
     }
-    if (!this.addingToCart && producto && producto.cantidad > 0) {
+    if (!this.addingToCart && producto?.cantidad) {
       if (this.product) {
         this.product.origen = {} as ProductOrigen;
 
         if (this.origen) {
-          this.product.origen.origen = this.origen[0] ? this.origen[0] : '';
-          this.product.origen.subOrigen = this.origen[1] ? this.origen[1] : '';
-          this.product.origen.seccion = this.origen[2] ? this.origen[2] : '';
-          this.product.origen.recomendado = this.origen[3]
-            ? this.origen[3]
-            : '';
+          this.product.origen.origen = this.origen[0] || '';
+          this.product.origen.subOrigen = this.origen[1] || '';
+          this.product.origen.seccion = this.origen[2] || '';
+          this.product.origen.recomendado = this.origen[3] || '';
           this.product.origen.ficha = true;
-          this.product.origen.cyber = this.product?.cyber
-            ? this.product.cyber
-            : 0;
+          this.product.origen.cyber = this.product?.cyber || 0;
         }
 
         this.addingToCart = true;

@@ -73,6 +73,27 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('myCarousel', { static: false }) myCarousel!: NguCarousel<any>;
   @Input() stock!: boolean;
   @Input() origen!: string[];
+  @Input() set product(value: IArticleResponse) {
+    if (!value) return;
+    // Eliminar?
+    this.getPopularProducts();
+    this.setAvailability(value.deliverySupply);
+    this.quantity.setValue(1);
+
+    this.dataProduct = value;
+    console.log('[-] producto: ', value);
+    // this.dataProduct.name = this.dataProduct.name.replace(/("|')/g, '');
+    this.images = GalleryUtils.formatImageSlider(value);
+    this.quality = this.root.setQuality(value);
+    this.root.limpiaAtributos(value);
+
+    /*const url: string = this.root.product(
+      this.dataProduct.sku,
+      this.dataProduct.name,
+      false
+    );
+    this.dataProduct.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);*/
+  }
   @Input() recommendedProducts!: Array<any>;
   @Output() comentarioGuardado: EventEmitter<boolean> = new EventEmitter();
   @Output() leerComentarios: EventEmitter<boolean> = new EventEmitter();
@@ -139,28 +160,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
         this.showGallery = true;
       }, 0);
     }
-  }
-
-  @Input() set product(value: IArticleResponse) {
-    if (!value) return;
-    // Eliminar?
-    this.getPopularProducts();
-    this.setAvailability(value.deliverySupply);
-    this.quantity.setValue(1);
-
-    this.dataProduct = value;
-    console.log('[-] producto: ', value);
-    // this.dataProduct.name = this.dataProduct.name.replace(/("|')/g, '');
-    this.images = GalleryUtils.formatImageSlider(value);
-    this.quality = this.root.setQuality(value);
-    this.root.limpiaAtributos(value);
-
-    /*const url: string = this.root.product(
-      this.dataProduct.sku,
-      this.dataProduct.name,
-      false
-    );
-    this.dataProduct.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);*/
   }
 
   get layout(): Layout {

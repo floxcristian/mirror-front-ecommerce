@@ -115,14 +115,14 @@ export class WishListModalComponent implements OnInit {
   }
 
   // agrega o elimina SKU de una lista
-  async seleccionaLista(lista: IWishlist) {
-    const objHTML: any = document.getElementById('ID-' + lista.id);
+  async seleccionaLista(wishlist: IWishlist) {
+    const objHTML: any = document.getElementById(`ID-${wishlist.id}`);
 
     if (objHTML.checked) {
       this.wishlistApiService
         .addProductsToWishlist({
           documentId: this.usuario.documentId,
-          wishlistId: lista.id,
+          wishlistId: wishlist.id,
           skus: [this.producto.sku],
         })
         .subscribe({
@@ -132,7 +132,7 @@ export class WishListModalComponent implements OnInit {
               .subscribe({
                 next: () => {
                   this.refreshListasEnQueExiste();
-                  this.toast.success(`Se agregó a la lista: ${lista.name}`);
+                  this.toast.success(`Se agregó a la lista: ${wishlist.name}`);
                 },
               });
           },
@@ -141,7 +141,7 @@ export class WishListModalComponent implements OnInit {
       this.wishlistApiService
         .deleteProductFromWishlist({
           documentId: this.usuario.documentId,
-          wishlistId: lista.id,
+          wishlistId: wishlist.id,
           sku: this.producto.sku,
         })
         .subscribe({
@@ -151,7 +151,9 @@ export class WishListModalComponent implements OnInit {
               .subscribe({
                 next: () => {
                   this.refreshListasEnQueExiste();
-                  this.toast.success(`Se eliminó de la lista: ${lista.name}`);
+                  this.toast.success(
+                    `Se eliminó de la lista: ${wishlist.name}`
+                  );
                 },
               });
           },
@@ -159,7 +161,7 @@ export class WishListModalComponent implements OnInit {
     }
   }
 
-  close() {
+  closeModal(): void {
     const listas: NodeListOf<Element> = document.querySelectorAll('.listas');
     let checked = false;
     listas.forEach((e: any) => {
