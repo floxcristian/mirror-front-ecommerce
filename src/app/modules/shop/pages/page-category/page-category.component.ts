@@ -608,7 +608,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
                   .replace(/[\u0300-\u036f]/g, '')
               : '',
         };
-        this.articleService.getArticleMatrix(params).subscribe({
+        this.articleService.getMatrixProducts(params).subscribe({
           next: (res) => {
             for (const item of res) {
               this.products.push(item);

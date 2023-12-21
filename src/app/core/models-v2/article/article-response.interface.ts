@@ -55,34 +55,34 @@ export interface ILineBoss {
 }
 
 export type IArticleResponse = IArticle & {
-  assortment: number; //*
-  attributes: IAttribute[]; // *
-  barcodes: Barcode[]; //*
-  barcodesSearch: Barcode[]; // *
-  categories: CategoryDetail[]; // *
-  category: string; // *
-  customerCodes: CustomerCode[]; // *
-  dropshipment: number; // *
-  dropshipmentType: string; // *
-  filters: Filter[]; // *
-  line: string; // *
-  lineBossId: string; // *
-  manufacturer: string; // *
-  matrix: IMatrixItem[]; // *
-  metaTags: MetaTag[]; // *
-  partNumber: string; // *
-  popularity: number; // *
-  price: number; // *
-  promotionDetails: PromotionDetail[]; // *
-  salesQuantity: number; // *
-  sbu: string; // *
-  score: number; // *
-  status: string; //*
-  synonyms: string[];
-  tags: string[]; // *
-  visible: number; // *
-  lineBoss: ILineBoss; //*
-  url?: string[];
+  assortment: number; //+
+  attributes: IAttribute[]; // +
+  barcodes: Barcode[]; //+
+  barcodesSearch: Barcode[]; // +
+  categories: CategoryDetail[]; // +
+  category: string; // +
+  customerCodes: CustomerCode[]; // +
+  dropshipment: number; //+
+  dropshipmentType: string; // +
+  filters: Filter[]; // +
+  line: string; // +
+  lineBossId: string; // +
+  manufacturer: string; // +
+  matrix: IMatrixItem[]; // +
+  metaTags: MetaTag[]; // +
+  partNumber: string; // +
+  popularity: number; // +
+  price: number; // +
+  promotionDetails: PromotionDetail[]; // +
+  salesQuantity: number; // +
+  sbu: string; // +
+  score: number; // +
+  status: string; //+
+  synonyms: string[]; //+
+  tags: string[]; // +
+  visible: number; // +
+  lineBoss: ILineBoss; // -
+  url?: string[]; // -
 };
 
 export interface ISearchResponse {

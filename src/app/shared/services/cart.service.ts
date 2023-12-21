@@ -1016,31 +1016,29 @@ export class CartService {
     this.calc();
   }
 
-  cargarPrecioEnProducto(producto: Product) {
-    //obtiene el usuario
+  /**
+   * Modifica el valor del precio en el producto que es pasado por referencia.
+   * @param producto
+   */
+  // Pone el precio en el producto en producto.precio y producto.precioComun.
+  cargarPrecioEnProducto(producto: Product): void {
     const user = this.sessionService.getSession();
-    // this.root.getDataSesionUsuario();
-    let rut = user && user.documentId;
-
-    //obtiene la tienda seleccionada
-    console.log('getSelectedStore desde cargarPrecioEnProducto');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
-    const parametrosPrecios = {
+    this.getPriceProduct({
       sku: producto.sku,
       sucursal: tiendaSeleccionada?.code,
-      rut: rut,
-    };
-
-    this.getPriceProduct(parametrosPrecios).subscribe((r: any) => {
+      rut: user.documentId,
+    }).subscribe((r: any) => {
       const precio: ProductPrecio = r.precio;
-
       precio.precio = !isVacio(user.preferences.iva)
         ? user.preferences.iva
           ? precio.precio
           : precio.precio / (1 + this.IVA)
         : precio.precio;
+
       producto.precio = precio;
+
       producto.precioComun = !isVacio(user.preferences.iva)
         ? user.preferences.iva
           ? r.precioComun
