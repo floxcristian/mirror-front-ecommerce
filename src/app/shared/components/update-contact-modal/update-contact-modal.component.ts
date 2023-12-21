@@ -16,7 +16,7 @@ import {
 } from '../../utils/utilidades';
 import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete/angular-email-autocomplete.component';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ICustomerContact } from '@core/models-v2/customer/customer.interface';
 import { CustomerContactService } from '@core/services-v2/customer-contact.service';
 import { IContactPosition } from '@core/models-v2/customer/contact-position.interface';

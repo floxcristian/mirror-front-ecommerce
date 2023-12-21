@@ -4,7 +4,7 @@ import {
   RouterStateSnapshot,
   Router,
 } from '@angular/router';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { MenuService } from '@core/services-v2/menu/menu.service';
 
 @Injectable({ providedIn: 'root' })

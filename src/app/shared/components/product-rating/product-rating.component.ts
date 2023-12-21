@@ -20,7 +20,7 @@ import {
   TipoModal,
 } from '../modal/modal.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { ArticleService } from '@core/services-v2/article.service';
 import { ReviewSummary } from '@core/models-v2/article/review-response.interface';
@@ -59,14 +59,14 @@ export class ProductRatingComponent implements OnChanges {
   cargaResumen() {
     this.articleService
       .getResumenComentarios(this.producto.sku)
-      .subscribe((resp:any) => {
+      .subscribe((resp: any) => {
         if (!resp.error) {
           this.rating = 0;
           this.total = resp.total;
           this.resumen = resp.summary;
 
           this.resumen = this.resumen.map((c) => {
-            c. percentage =
+            c.percentage =
               this.total > 0 ? (c.quantity * 100) / this.total : 0;
             this.rating =
               this.total > 0

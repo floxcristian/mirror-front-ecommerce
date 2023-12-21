@@ -5,11 +5,11 @@ import { first } from 'rxjs';
 // Models
 
 // Services
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { CmsService } from '@core/services-v2/cms.service';
 import { IPage } from '@core/models-v2/cms/homePage-response.interface';
-import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';

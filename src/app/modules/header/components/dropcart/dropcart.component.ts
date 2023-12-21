@@ -11,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
 // Services
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ProductCart } from '../../../../shared/interfaces/cart-item';
 import { RootService } from '../../../../shared/services/root.service';
 import { isVacio } from '../../../../shared/utils/utilidades';

@@ -10,7 +10,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '@env/environment';
 import { RootService } from '../../../../shared/services/root.service';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 class DataTablesResponse {
   data!: any[];

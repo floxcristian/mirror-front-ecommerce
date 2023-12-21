@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { DataTablesResponse } from '../../../../shared/interfaces/data-table';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({

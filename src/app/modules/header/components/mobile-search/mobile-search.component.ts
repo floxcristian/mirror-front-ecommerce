@@ -26,8 +26,8 @@ import {
   ISuggestion,
 } from '@core/models-v2/article/article-response.interface';
 import { ArticleService } from '@core/services-v2/article.service';
-import { SessionService } from '@core/states-v2/session.service';
-import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { SessionService } from '@core/services-v2/session/session.service';
+import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 

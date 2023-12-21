@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CartService } from '../../../../shared/services/cart.service';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { Router } from '@angular/router';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({

@@ -15,7 +15,7 @@ import { rutValidator } from '../../../shared/utils/utilidades';
 import { Router } from '@angular/router';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthApiService } from '@core/services-v2/auth.service';
-import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { CartService } from '@core/services-v2/cart.service';
 import {

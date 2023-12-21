@@ -6,7 +6,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 // Services
 import { LogisticsService } from '../../../../../../shared/services/logistics.service';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';

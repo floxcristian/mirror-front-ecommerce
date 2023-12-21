@@ -14,7 +14,7 @@ import { Subscription, firstValueFrom } from 'rxjs';
 // Services
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { CartService } from '@core/services-v2/cart.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';

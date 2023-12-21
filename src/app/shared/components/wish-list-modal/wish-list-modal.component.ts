@@ -9,7 +9,7 @@ import { IArticleResponse } from '@core/models-v2/article/article-response.inter
 import { IWishlist } from '@core/services-v2/whishlist/models/whishlist-response.interface';
 // Services
 import { isVacio } from '../../utils/utilidades';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { WishlistStorageService } from '@core/storage/wishlist-storage.service';
 import { WishlistApiService } from '@core/services-v2/whishlist/whishlist-api.service';
 import { WishlistService } from '@core/services-v2/whishlist/wishlist.service';

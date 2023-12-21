@@ -1,4 +1,10 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { AddCommentModalComponent } from '../../../../shared/components/add-comment-modal/add-comment-modal.component';
 import {
@@ -7,18 +13,15 @@ import {
   TipoIcon,
   TipoModal,
 } from '../../../../shared/components/modal/modal.component';
-import {
-  ComentarioArticulo,
-} from '../../../../shared/interfaces/comentariosArticulo';
+import { ComentarioArticulo } from '../../../../shared/interfaces/comentariosArticulo';
 import { ResponseApi } from '../../../..//shared/interfaces/response-api';
 import { CatalogoService } from '../../../..//shared/services/catalogo.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { ArticleService } from '@core/services-v2/article.service';
 import { CommentSummary } from '@core/models-v2/article/article-comment.interface';
 import { IComment } from '@core/models-v2/article/comment.interface';
-
 
 @Component({
   selector: 'app-comentarios',
@@ -51,15 +54,16 @@ export class ComentariosComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.cargaTodo();
-
   }
 
   cargaResumen() {
     if (this.producto) {
       this.articleService
         .getResumenComentarios(this.producto.sku)
-        .subscribe((resp) => { // Asegúrate de que esto coincida con la estructura de tu API
-          if (resp ) { // Asumiendo que la respuesta tiene una propiedad 'error'
+        .subscribe((resp) => {
+          // Asegúrate de que esto coincida con la estructura de tu API
+          if (resp) {
+            // Asumiendo que la respuesta tiene una propiedad 'error'
             this.rating = 0;
             this.total = resp.total;
             this.resumen = resp.summary;
@@ -94,13 +98,10 @@ export class ComentariosComponent implements OnChanges {
           },
           error: (error) => {
             console.warn('Error al obtener comentarios', error);
-          }
+          },
         });
     }
   }
-
-
-
 
   cargaTodo() {
     this.cargaResumen();
@@ -147,7 +148,7 @@ export class ComentariosComponent implements OnChanges {
     if (this.slice) {
       //this.comentarios = this.comentariosOriginal.slice(0, 4);
     } else {
-     // this.comentarios = this.comentariosOriginal;
+      // this.comentarios = this.comentariosOriginal;
     }
   }
 }

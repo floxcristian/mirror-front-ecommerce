@@ -8,9 +8,9 @@ import {
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 
 @Component({
   selector: 'app-mi-cuenta',

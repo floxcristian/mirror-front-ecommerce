@@ -8,7 +8,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { IWishlist } from '@core/services-v2/whishlist/models/whishlist-response.interface';
 import { ISelectedProduct } from './selected-product.interface';
 // Services
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { WishlistApiService } from '@core/services-v2/whishlist/whishlist-api.service';
 
 @Component({

@@ -5,7 +5,7 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { Context } from 'chartjs-plugin-datalabels';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { isPlatformBrowser } from '@angular/common';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { CustomerSaleService } from '@core/services-v2/customer-sale.service';
 import {

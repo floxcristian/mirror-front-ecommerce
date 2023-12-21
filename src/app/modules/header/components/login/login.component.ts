@@ -6,7 +6,7 @@ import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { AuthApiService } from '@core/services-v2/auth.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
-import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
 import { WishlistService } from '@core/services-v2/whishlist/wishlist.service';

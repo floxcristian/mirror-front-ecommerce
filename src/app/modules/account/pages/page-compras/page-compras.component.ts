@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { RootService } from '../../../../shared/services/root.service';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { OmsService } from '@core/services-v2/oms.service';
 import { IProduct, Iorder } from '@core/models-v2/oms/order.interface';
 import { CartService } from '@core/services-v2/cart.service';
@@ -18,16 +18,16 @@ export class PageComprasComponent implements OnInit {
     private toastr: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly omsService:OmsService
+    private readonly omsService: OmsService
   ) {}
 
   showBoundaryLinks: boolean = true;
   showDirectionLinks: boolean = false;
   totalItems = 0;
   addingToCart = false;
-  search:string = '';
+  search: string = '';
   data: Iorder[] = [];
-  maxlength:number = 5;
+  maxlength: number = 5;
   loadData = false;
   page = 1;
 
@@ -43,18 +43,16 @@ export class PageComprasComponent implements OnInit {
     let params = {
       search: this.search,
       page: this.page,
-      limit: this.maxlength
-    }
+      limit: this.maxlength,
+    };
     this.omsService.getOrders(params).subscribe({
-      next:(res)=>{
-        this.data = res.data
-        this.totalItems = res.total
+      next: (res) => {
+        this.data = res.data;
+        this.totalItems = res.total;
         this.loadData = false;
       },
-      error:(err)=>{
-
-      }
-    })
+      error: (err) => {},
+    });
   }
 
   async pageChanged(event: any) {
@@ -98,12 +96,16 @@ export class PageComprasComponent implements OnInit {
   }
 
   searchCantProduct(sku: string, index: number) {
-    let product = this.data[index].products.find((x: IProduct) => x.sku === sku);
+    let product = this.data[index].products.find(
+      (x: IProduct) => x.sku === sku
+    );
     return product ? product.quantity : 0;
   }
 
   searchPriceProduct(sku: string, index: number) {
-    let product = this.data[index].products.find((x: IProduct) => x.sku === sku);
+    let product = this.data[index].products.find(
+      (x: IProduct) => x.sku === sku
+    );
     return product ? product.price : 0;
   }
 }

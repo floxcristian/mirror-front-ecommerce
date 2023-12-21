@@ -19,7 +19,7 @@ import { isVacio } from '../../../../shared/utils/utilidades';
 import { isPlatformBrowser } from '@angular/common';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { CartService } from '@core/services-v2/cart.service';
 import { CustomerPreferenceStorageService } from '@core/storage/customer-preference-storage.service';

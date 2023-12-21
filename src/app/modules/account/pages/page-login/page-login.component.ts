@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 // Services
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
-import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 import { WishlistStorageService } from '@core/storage/wishlist-storage.service';

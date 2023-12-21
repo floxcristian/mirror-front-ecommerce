@@ -7,7 +7,7 @@ import { getDomainsToAutocomplete } from './domains-autocomplete';
 import { CustomerContactService } from '@core/services-v2/customer-contact.service';
 import { IContactPosition } from '@core/models-v2/customer/contact-position.interface';
 import { IError } from '@core/models-v2/error/error.interface';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({

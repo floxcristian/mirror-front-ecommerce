@@ -51,7 +51,7 @@ import { PhotoSwipeService } from '../../services/photo-swipe.service';
 import { RootService } from '../../services/root.service';
 import { WishListModalComponent } from '../wish-list-modal/wish-list-modal.component';
 import { isVacio } from '../../utils/utilidades';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { InventoryService } from '@core/services-v2/inventory.service';
 import { WishlistApiService } from '@core/services-v2/whishlist/whishlist-api.service';
 import { WishlistStorageService } from '@core/storage/wishlist-storage.service';

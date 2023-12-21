@@ -9,7 +9,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { CurrencyService } from '../../../../shared/services/currency.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
-import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 
 @Component({
   selector: 'app-header-topbar',

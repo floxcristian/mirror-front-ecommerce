@@ -8,7 +8,7 @@ import { SlugifyPipe } from '../pipes/slugify.pipe';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 // Services
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 
 @Injectable({

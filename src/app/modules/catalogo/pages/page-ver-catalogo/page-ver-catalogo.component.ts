@@ -6,7 +6,7 @@ import { CartService } from '../../../../shared/services/cart.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 
 @Component({

@@ -8,7 +8,7 @@ import {
 import { LogisticsService } from '../../services/logistics.service';
 import { ToastrService } from 'ngx-toastr';
 import { ClientsService } from '../../services/clients.service';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 
 @Component({
   selector: 'app-add-address',

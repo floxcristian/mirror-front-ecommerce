@@ -13,7 +13,7 @@ import { UserRoleType } from '@core/enums/user-role-type.enum';
 import { SubAccountService } from '@core/services-v2/sub-account.service';
 import { ToastrService } from 'ngx-toastr';
 import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 
 @Component({
   selector: 'app-modaluser',

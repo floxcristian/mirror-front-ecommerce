@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 // Services
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { isVacio } from '../../utils/utilidades';
 // Models

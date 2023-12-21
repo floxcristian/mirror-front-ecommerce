@@ -18,7 +18,7 @@ import { Product, ProductPrecio, ProductOrigen } from '../interfaces/product';
 import { CartData, ProductCart, CartTotal } from '../interfaces/cart-item';
 import { Usuario } from '../interfaces/login';
 import { ResponseApi } from '../interfaces/response-api';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';

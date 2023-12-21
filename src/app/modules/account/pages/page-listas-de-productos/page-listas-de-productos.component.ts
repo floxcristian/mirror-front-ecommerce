@@ -15,7 +15,7 @@ import { AgregarListaProductosMasivaModalComponent } from '../../../../shared/co
 import { AgregarListaProductosUnitariaModalComponent } from '../../../../shared/components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
 import { CartService } from '../../../../shared/services/cart.service';
 import { isPlatformBrowser } from '@angular/common';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';

@@ -21,7 +21,7 @@ import { Router } from '@angular/router';
 import { isVacio } from '../../utils/utilidades';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';

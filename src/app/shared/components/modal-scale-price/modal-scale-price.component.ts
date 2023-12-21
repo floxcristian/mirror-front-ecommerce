@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { environment } from '@env/environment';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { IScalePriceItem } from '../product/models/scale-price-item.interface';

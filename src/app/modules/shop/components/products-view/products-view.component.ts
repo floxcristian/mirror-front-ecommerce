@@ -12,7 +12,7 @@ import { Link } from '../../../../shared/interfaces/link';
 import { RootService } from '../../../../shared/services/root.service';
 import { Usuario } from '../../../../shared/interfaces/login';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 export type Layout = 'grid' | 'grid-with-features' | 'list';
 

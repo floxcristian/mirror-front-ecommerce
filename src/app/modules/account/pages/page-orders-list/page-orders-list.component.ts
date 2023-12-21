@@ -5,7 +5,7 @@ import { environment } from '@env/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
 import { isPlatformBrowser } from '@angular/common';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 
 class DataTablesResponse {

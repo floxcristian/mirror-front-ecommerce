@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { MenuService } from '@core/services-v2/menu/menu.service';
 
 @Component({

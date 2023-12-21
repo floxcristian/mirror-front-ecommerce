@@ -10,7 +10,7 @@ import { IWishlist } from '@core/services-v2/whishlist/models/whishlist-response
 // Services
 import { RootService } from '../../services/root.service';
 import { isVacio } from '../../utils/utilidades';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { WishlistApiService } from '@core/services-v2/whishlist/whishlist-api.service';
 import {
   IProductFromFile,

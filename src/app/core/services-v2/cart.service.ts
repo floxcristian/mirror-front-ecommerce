@@ -22,7 +22,7 @@ import {
 } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { ShoppingCartStorageService } from '@core/storage/shopping-cart-storage.service';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { IError } from '@core/models-v2/error/error.interface';
 import { ToastrService } from 'ngx-toastr';
 import { ISession } from '@core/models-v2/auth/session.interface';
