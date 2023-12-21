@@ -13,14 +13,12 @@ import * as moment from 'moment';
 // Rxjs
 import { Subject, lastValueFrom } from 'rxjs';
 // Models
-import { CartTotal, CartData } from '../../../../shared/interfaces/cart-item';
+import { CartTotal } from '../../../../shared/interfaces/cart-item';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
-import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import {
   ShippingService,
   ShippingDateItem,
 } from '../../../../shared/interfaces/address';
-import { Usuario } from '../../../../shared/interfaces/login';
 import { Banner } from '../../../../shared/interfaces/banner';
 // Components
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
@@ -1372,33 +1370,30 @@ export class PageCartShippingComponent implements OnInit {
   }
 
   finishQuotation() {
-    const data = {
-      id: this.cartSession._id,
-      usuario: this.userSession.username,
-      tipo: 1,
-      formaPago: 'OC',
-    };
-
+    const shoppingCartId = this.cartSession._id!.toString();
     this.loadingCotizacion = true;
-    this.cart.generaOrdenDeCompra(data).subscribe(
-      (r: ResponseApi) => {
-        this.loadingCotizacion = false;
 
-        if (r.error) {
-          this.toast.error(r.msg);
-          return;
-        }
+    this.cart
+      .generateQuotation({
+        shoppingCartId,
+      })
+      .subscribe({
+        next: (r) => {
+          this.loadingCotizacion = false;
 
-        this.cart.load();
-        this.router.navigate([
-          '/carro-compra/comprobante-de-cotizacion',
-          r.data.numero,
-        ]);
-      },
-      () => {
-        this.toast.error('Ha ocurrido un error al generar la cotización');
-      }
-    );
+          const number = r.shoppingCart.salesId;
+
+          this.cart.load();
+          this.router.navigate([
+            '/carro-compra/comprobante-de-cotizacion',
+            number,
+          ]);
+        },
+        error: (e) => {
+          console.error(e);
+          this.toast.error('Ha ocurrido un error al generar la cotización');
+        },
+      });
   }
 
   // Eliminar dirección

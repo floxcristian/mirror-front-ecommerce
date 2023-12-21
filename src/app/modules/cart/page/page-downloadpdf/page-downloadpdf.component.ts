@@ -40,7 +40,7 @@ export class PageDownloadpdfComponent implements OnInit {
   }
   downloadOvPdf() {
     let base64Code = '';
-    if (this.tipo == 1) {
+    if (this.tipo == 1 || this.numero.startsWith('CO-')) {
       base64Code = btoa(`quotation@quotation@${this.numero}`);
     } else {
       base64Code = btoa(`sales_order@sales_order@${this.numero}`);
