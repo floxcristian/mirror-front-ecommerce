@@ -49,6 +49,7 @@ import { TransferShoppingCartRequest } from '@core/models-v2/requests/cart/trans
 import { ShoppingCartOmniStorageService } from '@core/storage/shopping-cart-omni-storage.service';
 import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
 import { IProduct } from '@core/models-v2/oms/order.interface';
+import { IOrderDetailResponse } from '@core/models-v2/cart/order-details.interface';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -931,5 +932,18 @@ export class CartService {
 
   private saveOmni(): void {
     this.shoppingCartOmniStorage.set(this.CartData);
+  }
+
+  getOrderDetails(params:{
+    user:string;
+    salesDocumentType?:number;
+    search?:number;
+    statuses?:string[];
+    page?:number;
+    limit?:number;
+    sort?:string;
+
+  }):Observable<IOrderDetailResponse>{
+    return this.http.get<IOrderDetailResponse>(`${API_CART}/order-details`,{params})
   }
 }
