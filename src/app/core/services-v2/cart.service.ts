@@ -132,6 +132,12 @@ export class CartService {
   readonly onAddingmovilButton$: Observable<IShoppingCartProduct | null> =
     this.onAddingMovilButtonSubject$.asObservable();
 
+  /**
+   * Añadir producto al carro de compras.
+   * @param product
+   * @param quantity
+   * @returns
+   */
   async add(
     product: IArticle | IProduct,
     quantity: number
@@ -164,7 +170,7 @@ export class CartService {
         {
           sku: product.sku,
           quantity: (productoCarro.quantity || 0) + quantity,
-          origin: product.origin ? product.origin : null,
+          origin: product.origin || null,
           // status: product.status,
         },
       ],
@@ -399,7 +405,7 @@ export class CartService {
       productos.push({
         sku: producto.sku,
         quantity: (productoCarro.quantity || 0) + 1,
-        origin: producto.origin ? producto.origin : null,
+        origin: producto.origin || null,
         status: '',
       });
     });

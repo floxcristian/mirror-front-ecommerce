@@ -287,14 +287,14 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   async updateCart(cantidad: any) {
     this.quantity.setValue(cantidad);
-    const usuario = this.sessionService.getSession();
+    const session = this.sessionService.getSession();
     const selectedStore = this.geolocationService.getSelectedStore();
 
     const datos: any = await this.cart
       .getPriceProduct({
         sku: this.product!.sku,
         sucursal: selectedStore.code,
-        rut: usuario.documentId,
+        rut: session.documentId,
         cantidad,
       })
       .toPromise();
@@ -310,14 +310,14 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       //     ? datos['precio'].precio
       //     : datos['precio'].precio / (1 + this.IVA)
       //   : datos['precio'].precio;
-      this.product!.priceInfo.commonPrice = !isVacio(usuario!.preferences.iva)
-        ? usuario.preferences.iva
+      this.product!.priceInfo.commonPrice = !isVacio(session!.preferences.iva)
+        ? session.preferences.iva
           ? datos['precioComun']
           : datos['precioComun'] / (1 + this.IVA)
         : datos['precioComun'];
 
-      this.product!.priceInfo.price = !isVacio(usuario?.preferences.iva)
-        ? usuario.preferences.iva
+      this.product!.priceInfo.price = !isVacio(session?.preferences.iva)
+        ? session.preferences.iva
           ? datos['precio'].precio
           : datos['precio'].precio / (1 + this.IVA)
         : datos['precio'].precio;

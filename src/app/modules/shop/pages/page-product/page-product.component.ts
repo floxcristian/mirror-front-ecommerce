@@ -40,8 +40,6 @@ import { SeoService } from '../../../../shared/services/seo.service';
 import { CartService } from '../../../../shared/services/cart.service';
 import { CanonicalService } from '../../../../shared/services/canonical.service';
 import { BuscadorService } from '../../../../shared/services/buscador.service';
-import { isVacio } from '../../../../shared/utils/utilidades';
-import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { SessionService } from '@core/states-v2/session.service';
 import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
 import { ArticleService } from '@core/services-v2/article.service';
@@ -53,6 +51,8 @@ import { BreadcrumbUtils } from './services/breadcrumb-utils.service';
 import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
 import { INumberInputAction } from './models/number-input-action.interface';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
+import { ProductPriceApiService } from '@core/services-v2/product-price/product-price.service';
+import { CartV2Service } from '@core/services-v2/cart/cart.service';
 
 declare const $: any;
 declare let fbq: any;
@@ -63,7 +63,7 @@ declare let fbq: any;
   styleUrls: ['./page-product.component.scss'],
 })
 export class PageProductComponent implements OnInit, OnDestroy {
-  product!: IArticleResponse | undefined | any;
+  product!: IArticleResponse; // | undefined | any;
   recommendedProducts: IArticleResponse[] = [];
   matrixProducts: IArticleResponse[] = [];
   relatedProducts: IArticleResponse[] = [];
@@ -104,11 +104,11 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
   tiendaSeleccionada!: ISelectedStore;
   IVA = environment.IVA;
-  addingToCart: boolean = false;
+  addingToCart!: boolean;
   addcartPromise!: Subscription;
   despachoCliente!: Subscription;
   preferenciaCliente!: ICustomerPreference;
-  preciosNeto: boolean = false;
+  showNetPrice!: boolean;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -128,7 +128,9 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private readonly geolocationService: GeolocationServiceV2,
     private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
     private readonly customerPreferenceService: CustomerPreferenceService,
-    private readonly customerAddressService: CustomerAddressService
+    private readonly customerAddressService: CustomerAddressService,
+    private readonly productPriceApiService: ProductPriceApiService,
+    private readonly cartService: CartV2Service
   ) {
     this.carouselOptions = CarouselDesktopOptions;
     this.carrouselOptionsMobile = CarouselMobileOptions;
@@ -143,11 +145,11 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   onWindowResize(): void {
-    this.isMobile();
+    this.setIsMobile();
   }
 
   ngOnInit(): void {
-    this.isMobile();
+    this.setIsMobile();
     this.buscadorService.filtrosVisibles(false);
 
     this.onRouteParamsChange();
@@ -169,8 +171,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
       next: (selectedStore) => {
         if (!this.product) return;
         this.tiendaSeleccionada = selectedStore;
-        console.log('cargo nuevo precio [onSelectedStoreChange]');
-        this.cart.cargarPrecioEnProducto(this.product);
+        this.refreshProductPrice(this.product);
         this.getMixProducts(this.product.sku);
       },
     });
@@ -182,9 +183,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
         (customerAddress) => {
           if (!this.product) return;
           this.preferenciaCliente.deliveryAddress = customerAddress;
-          // Pone el precio en el producto en producto.precio y producto.precioComun.
-          console.log('cargo nuevo precio [onCustomerAddressChange]');
-          this.cart.cargarPrecioEnProducto(this.product);
+          this.refreshProductPrice(this.product);
           this.getMixProducts(this.product.sku);
         }
       );
@@ -197,8 +196,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
         next: (preferences) => {
           if (!this.product) return;
           this.preferenciaCliente = preferences;
-          console.log('cargo nuevo precio [onSessionChange]');
-          this.cart.cargarPrecioEnProducto(this.product);
+          this.refreshProductPrice(this.product);
           this.getMixProducts(this.product.sku);
         },
       });
@@ -208,8 +206,9 @@ export class PageProductComponent implements OnInit, OnDestroy {
   private onRouteParamsChange(): void {
     this.route.params.subscribe((params) => {
       // Seteamos el origen del ingreso a la ficha del producto.
-      const origenHistory = this.cart.getOrigenHistory();
+      const origenHistory = this.cartService.getProductOrigin();
       this.origen = origenHistory.length ? origenHistory : ['link', ''];
+      console.log('origen: ', this.origen);
 
       this.root.hideModalRefBuscador();
       if (params['id']) {
@@ -235,7 +234,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
     this.despachoCliente.unsubscribe();
   }
 
-  isMobile(): void {
+  setIsMobile(): void {
     this.showMobile = window.innerWidth < this.puntoQuiebre;
   }
 
@@ -245,7 +244,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
   private getProductDetail(sku: string): void {
     const { documentId } = this.sessionService.getSession();
     const selectedStore = this.geolocationService.getSelectedStore();
-
     if (!selectedStore) {
       this.toastr.error(
         `Ha ocurrido un error al obtener información del producto.`
@@ -271,8 +269,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
         }
         // FIXME: corregir esto..
         // productDetail.chassis = productDetail.chassis || '';
-
-        console.log('[-] productDetail: ', productDetail);
         this.product = productDetail;
         this.stock = productDetail.stockSummary.companyStock > 0;
         this.setMetaTag(this.product);
@@ -333,7 +329,11 @@ export class PageProductComponent implements OnInit, OnDestroy {
     });
   }
 
-  getMixProducts(sku: string): void {
+  /**
+   * Obtener sugerencias de productos.
+   * @param sku
+   */
+  private getMixProducts(sku: string): void {
     const selectedStore = this.geolocationService.getSelectedStore();
 
     const params = {
@@ -378,15 +378,31 @@ export class PageProductComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtener precio de un producto comparado en la matríz, según su cantidad actual.
-   * @param producto
-   * @param tipo
+   * Actualiza la información de precio del producto actual.
+   * @param product
+   */
+  private refreshProductPrice(product: IArticleResponse): void {
+    this.productPriceApiService
+      .getProductPrice({
+        documentId: this.user.documentId,
+        sku: product.sku,
+        branchCode: this.tiendaSeleccionada.code,
+      })
+      .subscribe({
+        next: (priceInfo) => (product.priceInfo = priceInfo),
+      });
+  }
+
+  /**
+   * Actualiza información de precio de un producto comparado en la matríz, según su cantidad actual.
+   * @param product
+   * @param inputAction
    * @returns
    */
-  async getComparedProductPrice(
+  refreshComparedProductPrice(
     product: IProductCompared,
     inputAction?: INumberInputAction
-  ): Promise<void> {
+  ): void {
     if (!product.quantity) {
       product.quantity = 1;
       return;
@@ -395,30 +411,25 @@ export class PageProductComponent implements OnInit, OnDestroy {
     product.quantity =
       inputAction === '+' ? product.quantity + 1 : product.quantity - 1;
 
-    const datos: any = await this.cart
-      .getPriceProduct({
-        rut: this.user.documentId,
+    this.productPriceApiService
+      .getProductPrice({
+        documentId: this.user.documentId,
         sku: product.sku,
-        sucursal: this.tiendaSeleccionada.code,
-        cantidad: product.quantity,
+        branchCode: this.tiendaSeleccionada.code,
+        quantity: product.quantity,
       })
-      .toPromise();
-    // FIXME: corregir esto....
-    /*if (datos['precio_escala']) {
-      product.precioComun = !isVacio(this.user?.preferences.iva)
-        ? this.user?.preferences.iva
-          ? datos['precioComun']
-          : datos['precioComun'] / (1 + this.IVA)
-        : datos['precioComun'];
-      product.precio.precio = !isVacio(this.user?.preferences.iva)
-        ? this.user?.preferences.iva
-          ? datos['precio'].precio
-          : datos['precio'].precio / (1 + this.IVA)
-        : datos['precio'].precio;
-    }*/
+      .subscribe({
+        next: (priceInfo) => (product.priceInfo = priceInfo),
+      });
   }
 
-  agregarProductoMatriz(producto: any): void {
+  /**
+   * Añadir producto de la matriz al carro de compras.
+   * @param producto
+   * @returns
+   */
+  addComparedProductToCart(producto: IProductCompared): void {
+    if (!this.product || this.addingToCart || !producto.quantity) return;
     if (!this.user) {
       this.toastr.warning(
         'Debe iniciar sesion para poder comprar',
@@ -426,9 +437,9 @@ export class PageProductComponent implements OnInit, OnDestroy {
       );
       return;
     }
-    if (!this.addingToCart && producto?.cantidad) {
-      if (this.product) {
-        this.product.origen = {} as ProductOrigen;
+
+    //FIXME: corregir esto..
+    /*this.product.origen = {} as ProductOrigen;
 
         if (this.origen) {
           this.product.origen.origen = this.origen[0] || '';
@@ -437,26 +448,24 @@ export class PageProductComponent implements OnInit, OnDestroy {
           this.product.origen.recomendado = this.origen[3] || '';
           this.product.origen.ficha = true;
           this.product.origen.cyber = this.product?.cyber || 0;
-        }
+        }*/
 
-        this.addingToCart = true;
-        //*moment
-        // this.addcartPromise = this.cart
-        //   .add(producto, producto.cantidad)
-        //   .subscribe(
-        //     (r) => {},
-        //     (e) => {
-        //       this.toastr.warning(
-        //         'Ha ocurrido un error en el proceso',
-        //         'Información'
-        //       );
-        //       this.addingToCart = false;
-        //     },
-        //     () => {
-        //       this.addingToCart = false;
-        //     }
-        //   );
-      }
-    }
+    this.addingToCart = true;
+    //*moment
+    // this.addcartPromise = this.cart
+    //   .add(producto, producto.cantidad)
+    //   .subscribe(
+    //     (r) => {},
+    //     (e) => {
+    //       this.toastr.warning(
+    //         'Ha ocurrido un error en el proceso',
+    //         'Información'
+    //       );
+    //       this.addingToCart = false;
+    //     },
+    //     () => {
+    //       this.addingToCart = false;
+    //     }
+    //   );
   }
 }

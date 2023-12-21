@@ -27,6 +27,7 @@ import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { IShoppingCartProductOrigin } from '@core/models-v2/cart/shopping-cart.interface';
 import { CartService } from '@core/services-v2/cart.service';
+import { CartV2Service } from '@core/services-v2/cart/cart.service';
 
 @Component({
   selector: 'app-product-card-b2c-ficha',
@@ -102,7 +103,8 @@ export class ProductCardB2cFichaComponent implements OnInit {
     public currency: CurrencyService,
     public sanitizer: DomSanitizer,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    public readonly cartService: CartV2Service
   ) {
     if (this.route.url.includes('/especial/')) this.home = true;
   }
@@ -229,17 +231,6 @@ export class ProductCardB2cFichaComponent implements OnInit {
     //     this.cd.markForCheck();
     //   },
     // });
-  }
-
-  /**
-   * @author ignacio zapata  \"2020-09-28\
-   * @desc metodo utilizado cuando se hace clic en el card, y antes de redireccionar a la ficha del prod, se guarda el origen en una variable de cart service
-   * @params
-   * @return
-   */
-  setOrigenBeforeFicha() {
-    // FIXME: falta servicio
-    // this.cart.setOrigenHistory(this.origen);
   }
 
   porcentaje_descuento() {

@@ -112,19 +112,16 @@
                             class="product-card__new-price font-weight-bold"
                             style="color: #000"
                           >
-                            <span *ngIf="!preciosNeto"
-                              >{{ item?.priceInfo?.price | currencyFormat }}
+                            <span *ngIf="!showNetPrice"
+                              >{{ item.priceInfo.price | currencyFormat }}
                               <em
                                 ><span class="rounded-pill badge-implementos">
                                   c/iva</span
                                 ></em
                               ></span
                             >
-                            <span *ngIf="preciosNeto"
-                              >{{
-                                item.priceInfo.price / (1 + IVA)
-                                  | currencyFormat
-                              }}
+                            <span *ngIf="showNetPrice"
+                              >{{ item.priceInfo.netPrice | currencyFormat }}
                               <em
                                 ><span
                                   class="rounded-pill badge-primary-custom"
@@ -143,19 +140,16 @@
                             class="product-card__new-price text-danger font-weight-bold"
                             style="border: 2px dotted green"
                           >
-                            <span *ngIf="!preciosNeto"
-                              >{{ item?.priceInfo?.price | currencyFormat }}
+                            <span *ngIf="!showNetPrice"
+                              >{{ item.priceInfo.price | currencyFormat }}
                               <em
                                 ><span class="rounded-pill badge-implementos">
                                   c/iva</span
                                 ></em
                               ></span
                             >
-                            <span *ngIf="preciosNeto"
-                              >{{
-                                item.priceInfo.price / (1 + IVA)
-                                  | currencyFormat
-                              }}
+                            <span *ngIf="showNetPrice"
+                              >{{ item.priceInfo.netPrice | currencyFormat }}
                               <em
                                 ><span
                                   class="rounded-pill badge-primary-custom"
@@ -167,6 +161,7 @@
                           </div>
                           <!-- End::precio oferta en rojo en producto de matriz -->
 
+                          <!-- Start::precio normal -->
                           <div
                             *ngIf="
                               item.priceInfo.commonPrice !==
@@ -175,20 +170,20 @@
                             tooltip="Precio normal"
                             class="product-card__old-price text-end"
                           >
-                            <span *ngIf="!preciosNeto"
+                            <span *ngIf="!showNetPrice"
                               >{{
                                 item.priceInfo.commonPrice | currencyFormat
                               }}
                               <em> c/iva </em></span
                             >
-                            <span *ngIf="preciosNeto"
+                            <span *ngIf="showNetPrice"
                               >{{
-                                item.priceInfo.commonPrice / (1 + IVA)
-                                  | currencyFormat
+                                item.priceInfo.commonNetPrice | currencyFormat
                               }}
                               <em> neto </em></span
                             >
                           </div>
+                          <!-- End::precio normal -->
                         </div>
                         <div class="col-12 marcaP text-center">
                           {{ item.brand }}
@@ -208,7 +203,9 @@
                                 class="fal fa-minus-circle fa-xl me-3"
                                 style="cursor: pointer; color: #005cb9"
                                 role="button"
-                                (click)="getComparedProductPrice(item, '-')"
+                                (click)="
+                                  refreshComparedProductPrice(item, '-')
+                                "
                               ></i>
                               <input
                                 type="number"
@@ -216,12 +213,14 @@
                                 style="width: 50px"
                                 class="text-center"
                                 [(ngModel)]="item.quantity"
-                                (change)="getComparedProductPrice(item)"
+                                (change)="refreshComparedProductPrice(item)"
                               />
                               <i
                                 class="fal fa-plus-circle fa-xl ms-3"
                                 style="cursor: pointer; color: #005cb9"
-                                (click)="getComparedProductPrice(item, '+')"
+                                (click)="
+                                  refreshComparedProductPrice(item, '+')
+                                "
                                 role="button"
                               ></i>
                             </div>
@@ -248,18 +247,18 @@
                         >
                           <button
                             *ngIf="
-                              item.stockSummary.branchStock > 0 ||
-                              item.stockSummary.companyStock > 0
+                              item.stockSummary.branchStock ||
+                              item.stockSummary.companyStock
                             "
                             class="btn btn-sm btn-secondary"
-                            (click)="agregarProductoMatriz(item)"
+                            (click)="addComparedProductToCart(item)"
                           >
                             AGREGAR
                           </button>
                           <button
                             *ngIf="
-                              item.stockSummary.branchStock === 0 &&
-                              item.stockSummary.companyStock === 0
+                              !item.stockSummary.branchStock &&
+                              !item.stockSummary.companyStock
                             "
                             class="btn btn-sm btn-secondary"
                             [routerLink]="root.product(item.sku, item.name)"
@@ -548,7 +547,7 @@
                           class="product-card__new-price font-weight-bold"
                           style="color: #000"
                         >
-                          <span *ngIf="!preciosNeto"
+                          <span *ngIf="!showNetPrice"
                             >{{ item.priceInfo.price | currencyFormat }}
                             <em
                               ><span class="rounded-pill badge-implementos">
@@ -556,10 +555,8 @@
                               ></em
                             ></span
                           >
-                          <span *ngIf="preciosNeto"
-                            >{{
-                              item.priceInfo.price / (1 + IVA) | currencyFormat
-                            }}
+                          <span *ngIf="showNetPrice"
+                            >{{ item.priceInfo.netPrice | currencyFormat }}
                             <em
                               ><span class="rounded-pill badge-primary-custom">
                                 neto</span
@@ -574,7 +571,7 @@
                           "
                           class="product-card__new-price text-danger font-weight-bold"
                         >
-                          <span *ngIf="!preciosNeto"
+                          <span *ngIf="!showNetPrice"
                             >{{ item.priceInfo.price | currencyFormat }}
                             <em
                               ><span class="rounded-pill badge-implementos">
@@ -582,10 +579,8 @@
                               ></em
                             ></span
                           >
-                          <span *ngIf="preciosNeto"
-                            >{{
-                              item.priceInfo.price / (1 + IVA) | currencyFormat
-                            }}
+                          <span *ngIf="showNetPrice"
+                            >{{ item.priceInfo.netPrice | currencyFormat }}
                             <em
                               ><span class="rounded-pill badge-primary-custom">
                                 neto</span
@@ -602,14 +597,13 @@
                           tooltip="Precio normal"
                           class="product-card__old-price text-end"
                         >
-                          <span *ngIf="!preciosNeto"
+                          <span *ngIf="!showNetPrice"
                             >{{ item.priceInfo.commonPrice | currencyFormat }}
                             <em> c/iva </em></span
                           >
-                          <span *ngIf="preciosNeto"
+                          <span *ngIf="showNetPrice"
                             >{{
-                              item.priceInfo.commonPrice / (1 + IVA)
-                                | currencyFormat
+                              item.priceInfo.commonNetPrice | currencyFormat
                             }}
                             <em> neto </em></span
                           >
@@ -633,7 +627,7 @@
                               class="fal fa-minus-circle fa-xl me-3"
                               style="cursor: pointer; color: #005cb9"
                               role="button"
-                              (click)="getComparedProductPrice(item, '-')"
+                              (click)="refreshComparedProductPrice(item, '-')"
                             ></i>
                             <input
                               type="number"
@@ -641,12 +635,12 @@
                               style="width: 50px"
                               class="text-center"
                               [(ngModel)]="item.quantity"
-                              (change)="getComparedProductPrice(item)"
+                              (change)="refreshComparedProductPrice(item)"
                             />
                             <i
                               class="fal fa-plus-circle fa-xl ms-3"
                               style="cursor: pointer; color: #005cb9"
-                              (click)="getComparedProductPrice(item, '+')"
+                              (click)="refreshComparedProductPrice(item, '+')"
                               role="button"
                             ></i>
                           </div>
@@ -677,7 +671,7 @@
                             item.stockSummary.companyStock > 0
                           "
                           class="btn btn-sm btn-secondary"
-                          (click)="agregarProductoMatriz(item)"
+                          (click)="addComparedProductToCart(item)"
                         >
                           AGREGAR
                         </button>

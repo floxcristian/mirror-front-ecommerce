@@ -67,18 +67,20 @@ export interface IImage {
 }
 
 export interface IPriceInfo {
-  sku: string;
-  price: number;
-  minimumPrice: number;
-  sellerMinimumPrice: number;
-  hasScalePrice: boolean;
-  scalePrice: IScalePrice[];
-  customerPrice: number;
-  netPrice: number;
+  sku: string; //
+  minimumPrice: number; //
+  sellerMinimumPrice: number; //
+  hasScalePrice: boolean; //
+  scalePrice: IScalePrice[]; //
   discount: number;
-  commonPrice: number;
-  comments: any[];
+  comments: string[];
   documentId: string;
+
+  price: number;
+  netPrice: number;
+  customerPrice: number;
+  commonPrice: number;
+  commonNetPrice: number;
 }
 
 export interface IScalePrice {
