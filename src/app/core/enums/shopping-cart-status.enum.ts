@@ -5,4 +5,6 @@ export enum SHOPPING_CART_STATUS_TYPE {
   ORIGINAL = 'original',
   CANCELED = 'canceled',
   SAVED = 'saved',
+  GENERATED = 'generated',
+  DELETED = 'deleted'
 }

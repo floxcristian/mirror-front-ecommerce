@@ -934,16 +934,24 @@ export class CartService {
     this.shoppingCartOmniStorage.set(this.CartData);
   }
 
-  getOrderDetails(params:{
-    user:string;
-    salesDocumentType?:number;
-    search?:number;
-    statuses?:string[];
-    page?:number;
-    limit?:number;
-    sort?:string;
+  getOrderDetails(params: {
+    user: string;
+    salesDocumentType?: number;
+    search?: string;
+    statuses?: string[];
+    page?: number;
+    limit?: number;
+    sort?: string;
+  }): Observable<IOrderDetailResponse> {
+    return this.http.get<IOrderDetailResponse>(`${API_CART}/order-details`, {
+      params,
+    });
+  }
 
-  }):Observable<IOrderDetailResponse>{
-    return this.http.get<IOrderDetailResponse>(`${API_CART}/order-details`,{params})
+  quotationToOpenShoppingCart(salesId: string, user: string) {
+    return this.http.put(`${API_CART}/quotationToOpenShoppingCart`, {
+      salesId,
+      user,
+    });
   }
 }

@@ -11,7 +11,6 @@ import { RootService } from '../../../../shared/services/root.service';
 import { ToastrService } from 'ngx-toastr';
 import { DataTablesResponse } from '../../../../shared/interfaces/data-table';
 import { ClientsService } from '../../../../shared/services/clients.service';
-import { CartService } from '../../../../shared/services/cart.service';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
@@ -20,6 +19,9 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { CartService } from '@core/services-v2/cart.service';
+import { IOrderDetail, IOrderDetailResponse } from '@core/models-v2/cart/order-details.interface';
+import { SHOPPING_CART_STATUS_TYPE } from '@core/enums/shopping-cart-status.enum';
 
 @Component({
   selector: 'app-page-quotation',
@@ -35,7 +37,7 @@ export class PageQuotationComponent implements OnInit {
   modalRef!: BsModalRef;
 
   usuario!: ISession;
-  orders!: any[];
+  orders!: IOrderDetail[];
   urlDonwloadOC = environment.apiShoppingCart + 'getoc?id=';
   innerWidth: any;
   columns = ['modificacion', 'folio', 'totalOv', 'usuario'];
@@ -45,11 +47,11 @@ export class PageQuotationComponent implements OnInit {
     private root: RootService,
     private toast: ToastrService,
     private clientsService: ClientsService,
-    private cartService: CartService,
     private modalService: BsModalService,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
+    private cartService: CartService,
     private readonly sessionService: SessionService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
@@ -90,25 +92,19 @@ export class PageQuotationComponent implements OnInit {
           ? [{ orderable: false, targets: 0 }]
           : [{ orderable: false, targets: 4 }],
       ajax: (dataTablesParameters: any, callback) => {
-        dataTablesParameters.usuario = that.usuario.username;
-        dataTablesParameters.tipo = 1;
-        dataTablesParameters.estado = ['generado'];
-        dataTablesParameters.sortColumn =
-          that.columns[dataTablesParameters.order[0].column];
-        dataTablesParameters.sortDir = dataTablesParameters.order[0].dir;
-
-        that.http
-          .post<DataTablesResponse>(
-            environment.apiShoppingCart + 'listadoPedidos',
-            dataTablesParameters,
-            { headers: headers }
-          )
-          .subscribe((resp) => {
+        this.cartService
+          .getOrderDetails({
+            user: that.usuario.username ? that.usuario.username : '',
+            salesDocumentType: 1,
+            statuses: [SHOPPING_CART_STATUS_TYPE.GENERATED, SHOPPING_CART_STATUS_TYPE.FINALIZED],
+            sort: `${that.columns[dataTablesParameters.order[0].column]}|${dataTablesParameters.order[0].dir}`,
+          })
+          .subscribe((resp: IOrderDetailResponse) => {
             that.orders = resp.data;
 
             callback({
-              recordsTotal: resp.recordsTotal,
-              recordsFiltered: resp.recordsFiltered,
+              recordsTotal: resp.total,
+              recordsFiltered: resp.total,
               data: [],
             });
           });
@@ -133,9 +129,7 @@ export class PageQuotationComponent implements OnInit {
     });
   }
 
-  convertirACarro(item: any) {
-    let _this = this;
-
+  convertirACarro(item: IOrderDetail) {
     const initialState = {
       title: 'Cargar productos en carro de compras',
       body: `Se cargarán todos los productos de esta cotización en el carro de compras, reemplazando el contenido actual.<br/>
@@ -145,8 +139,8 @@ export class PageQuotationComponent implements OnInit {
       textBtnFalse: 'Cancelar',
       callback: (confirm: boolean) => {
         if (confirm) {
-          this.clientsService
-            .cotizacionAOV(item.numero, item.usuario)
+          this.cartService
+            .quotationToOpenShoppingCart(item.salesId, item.user)
             .subscribe((res) => {
               this.toast.success(
                 'Esta cotización está ahora disponible en su carro de compras.'

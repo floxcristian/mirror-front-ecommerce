@@ -31,22 +31,22 @@
                 <tr *ngFor="let item of orders">
                   <td class="mobile-data-cell">
                     <strong>Fecha: </strong>
-                    {{ item.modificacion | date : "dd-MM-yyyy HH:mm" }}<br />
-                    <strong>Folio: </strong> {{ item?.numero }}<br />
-                    <strong>Monto: </strong> {{ item?.totalOv | currencyFormat
+                    {{ item.updatedAt | date : 'dd-MM-yyyy HH:mm' }}<br />
+                    <strong>Folio: </strong> {{ item?.salesId }}<br />
+                    <strong>Monto: </strong> {{ item?.total | currencyFormat
                     }}<br />
                     <strong>Tipo Entrega: </strong>
                     {{
-                      item?.tipoEntrega === "VEN- RPTDA"
-                        ? "Retiro Tienda"
-                        : item?.tipoEntrega === "VEN- DPCLI"
-                        ? "Despacho Domicilio"
-                        : item?.tipoEntrega === "VEN- RTCLI"
-                        ? "Entrega Inmediata"
-                        : ""
+                      item?.deliveryMode === 'pickup'
+                        ? 'Retiro Tienda'
+                        : item?.deliveryMode === 'delivery'
+                        ? 'Despacho Domicilio'
+                        : item?.deliveryMode === 'pickup_now'
+                        ? 'Entrega Inmediata'
+                        : ''
                     }}<br /><br />
                     <strong>Vendedor: </strong>
-                    {{ item?.vendedor === null ? "Web" : item.vendedor
+                    {{ item?.saler === null ? 'Web' : item.saler
                     }}<br /><br />
 
                     <div class="options">
@@ -72,7 +72,7 @@
                             <a
                               class="dropdown-item"
                               routerLink="/carro-compra/downloadpdf"
-                              [queryParams]="{ numero: item?.numero }"
+                              [queryParams]="{ numero: item?.salesId }"
                             >
                               <i class="far fa-file-pdf"></i>
                               Descargar cotización
@@ -127,21 +127,26 @@
               </thead>
               <tbody *ngIf="orders?.length != 0">
                 <tr *ngFor="let item of orders">
-                  <td>{{ item.modificacion | date : "dd-MM-yyyy HH:mm" }}</td>
-                  <td>{{ item?.numero }}</td>
-                  <td>{{ item?.totalOv | currencyFormat }}</td>
+                  <td>{{ item.updatedAt | date : 'dd-MM-yyyy HH:mm' }}</td>
+                  <td>{{ item?.salesId }}</td>
+                  <td>{{ item?.total | currencyFormat }}</td>
                   <td>
                     {{
-                      item?.tipoEntrega === "VEN- RPTDA"
-                        ? "Retiro Tienda"
-                        : item?.tipoEntrega === "VEN- DPCLI"
-                        ? "Despacho Domicilio"
-                        : item?.tipoEntrega === "VEN- RTCLI"
-                        ? "Entrega Inmediata"
-                        : ""
+                      item?.deliveryMode === 'pickup'
+                        ? 'Retiro Tienda'
+                        : item?.deliveryMode === 'delivery'
+                        ? 'Despacho Domicilio'
+                        : item?.deliveryMode === 'pickup_now'
+                        ? 'Entrega Inmediata'
+                        : ''
                     }}
                   </td>
-                  <td>{{ item?.vendedor === null ? "Web" : item.vendedor }}</td>
+                  <!-- <td>
+                    {{ item?.vendedor === null ? 'Web' : item.vendedor }}
+                  </td> -->
+                  <td>
+                    Web
+                  </td>
 
                   <td>
                     <div class="btn-group" dropdown>
@@ -167,7 +172,7 @@
                             class="dropdown-item"
                             target="_blank"
                             routerLink="/carro-compra/downloadpdf"
-                            [queryParams]="{ numero: item?.numero }"
+                            [queryParams]="{ numero: item?.salesId }"
                           >
                             <i class="far fa-file-pdf"></i>
                             Descargar cotización
