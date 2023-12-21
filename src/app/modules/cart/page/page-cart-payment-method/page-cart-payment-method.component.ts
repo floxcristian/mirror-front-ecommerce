@@ -33,7 +33,7 @@ import { CentroCosto } from '../../../../shared/interfaces/centroCosto';
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AgregarCentroCostoComponent } from '../../components/agregar-centro-costo/agregar-centro-costo.component';
-import { Observable, Subject, firstValueFrom } from 'rxjs';
+import { Observable, Subject, Subscription, firstValueFrom } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { DireccionMap } from 'src/app/shared/components/map/map.component';
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
@@ -67,6 +67,7 @@ import { ICreateGuest } from '@core/models-v2/customer/create-guest.interface';
 import { environment } from '@env/environment';
 import { GuestStorageService } from '@core/storage/guest-storage.service';
 import { IGuest } from '@core/models-v2/storage/guest.interface';
+import { ReceiveStorageService } from '@core/storage/receive-storage.service';
 
 declare const $: any;
 export interface Archivo {
@@ -153,6 +154,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   purchaseOrderId!: string;
 
+  subscriptions: Subscription = new Subscription();
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -167,8 +170,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     // Services V2
     private readonly sessionStorage: SessionStorageService,
     private readonly guestStorage: GuestStorageService,
-    // Services V2
     private readonly sessionService: SessionService,
+    private readonly receiveStorageService: ReceiveStorageService,
     private readonly geolocationApiService: GeolocationApiService,
     private readonly paymentMethodService: PaymentMethodService,
     private readonly paymentMethodPurchaseOrderRequestService: PaymentMethodPurchaseOrderRequestService,
@@ -191,7 +194,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       });
     }
 
-    this.recibe = this.localS.get(StorageKey.recibe);
+    this.recibe = receiveStorageService.get()!;
     this.cartSession = this.localS.get(StorageKey.carroCompraB2B);
   }
 
@@ -303,6 +306,14 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.formOV();
     this.cartService.load();
 
+    const subscription = this.cartService.cartDataSubject$.subscribe(
+      (cartSession) => {
+        this.cartSession = cartSession;
+        this.setDireccionOrTiendaRetiro();
+      }
+    );
+    this.subscriptions.add(subscription);
+
     this.cartService.total$.subscribe((r) => {
       this.totalCarro = r || 0;
     });
@@ -363,6 +374,32 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       }
     });
 
+    // hilo para escuchar el close del modal
+    this.paymentMethodService.closemodal$.subscribe((r) => {
+      if (r) {
+        this.modalRef.hide();
+        this.paymentMethodActive = null;
+      }
+    });
+
+    this.paymentMethodService.banco$.subscribe((r) => {
+      this.paymentKhipu(r);
+    });
+    if (
+      this.userSession?.userRole !== UserRoleType.SUPERVISOR &&
+      this.userSession?.userRole !== UserRoleType.BUYER
+    ) {
+      this.gtmService.pushTag({
+        event: 'payment',
+        pagePath: window.location.href,
+      });
+    }
+    if (!this.userSession?.businessLine) {
+      this.obtenerGiros();
+    }
+  }
+
+  private setDireccionOrTiendaRetiro() {
     // LOGICA PARA OBTENER DESPACHO A MOSTRAR
     switch (this.cartSession.shipment?.deliveryMode) {
       case 'TIENDA':
@@ -391,29 +428,6 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
           break;
         }
         break;
-    }
-    // hilo para escuchar el close del modal
-    this.paymentMethodService.closemodal$.subscribe((r) => {
-      if (r) {
-        this.modalRef.hide();
-        this.paymentMethodActive = null;
-      }
-    });
-
-    this.paymentMethodService.banco$.subscribe((r) => {
-      this.paymentKhipu(r);
-    });
-    if (
-      this.userSession?.userRole !== UserRoleType.SUPERVISOR &&
-      this.userSession?.userRole !== UserRoleType.BUYER
-    ) {
-      this.gtmService.pushTag({
-        event: 'payment',
-        pagePath: window.location.href,
-      });
-    }
-    if (!this.userSession?.businessLine) {
-      this.obtenerGiros();
     }
   }
 
@@ -448,7 +462,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   obtieneDireccionCliente() {
-    if (!this.cartSession.shipment?.addressId) return;
+    if (!this.cartSession?.shipment?.addressId) return;
     const currentCartDeliveryAddress =
       this.cartSession.shipment.addressId.toString();
     const { documentId } = this.sessionService.getSession();
@@ -477,6 +491,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.cartService.dropCartActive$.next(false);
     });
+    this.subscriptions.unsubscribe();
   }
 
   async setMethodPayment() {

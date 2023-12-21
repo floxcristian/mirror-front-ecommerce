@@ -272,7 +272,10 @@
                             cartSession.observation ==
                             'Persona que recibe: Titular de la Venta'
                               ? 'Titular de la compra'
-                              : (cartSession.observation || '')
+                              : (
+                                  cartSession.observation ||
+                                  'Recibe: Titular de la Venta'
+                                )
                                   .split('Celular')[0]
                                   .split('Recibe:')[1]
                           }}</span
