@@ -625,34 +625,32 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
    * Generar cotización.
    */
   finishQuotation(): void {
-    const data = {
-      id: this.cartSession._id,
-      usuario: this.userSession?.username,
-      tipo: this.QUOTATION_TYPE,
-      formaPago: 'OC',
-    };
+    const shoppingCartId = this.cartSession._id!.toString();
 
     this.loadingPage = true;
     this.loadingText = 'Generando cotización...';
-    this.cartService.generaOrdenDeCompra(data).subscribe(
-      (r: any) => {
-        this.loadingPage = false;
 
-        if (r.error) {
-          this.toastr.error(r.msg);
-          return;
-        }
+    this.cartService
+      .generateQuotation({
+        shoppingCartId,
+      })
+      .subscribe({
+        next: (r) => {
+          this.loadingPage = false;
 
-        this.cartService.load();
-        this.router.navigate([
-          '/carro-compra/comprobante-de-cotizacion',
-          r.data.numero,
-        ]);
-      },
-      (e) => {
-        this.toastr.error('Ha ocurrido un error al generar la cotización');
-      }
-    );
+          const number = r.shoppingCart.salesId;
+
+          this.cartService.load();
+          this.router.navigate([
+            '/carro-compra/comprobante-de-cotizacion',
+            number,
+          ]);
+        },
+        error: (e) => {
+          console.error(e);
+          this.toastr.error('Ha ocurrido un error al generar la cotización');
+        },
+      });
   }
 
   //  Sube documento y genera la solicitud

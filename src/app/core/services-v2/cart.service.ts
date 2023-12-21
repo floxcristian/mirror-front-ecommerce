@@ -785,6 +785,14 @@ export class CartService {
     return this.http.put<IThanksForYourPurchase>(url, {});
   }
 
+  generateQuotation(params: {
+    shoppingCartId: string;
+  }): Observable<IShoppingCartDetail> {
+    const { shoppingCartId } = params;
+    const url = `${API_CART}/${shoppingCartId}/generate-quotation`;
+    return this.http.post<IShoppingCartDetail>(url, {});
+  }
+
   /*********************************
    * Inicio métodos OMNI
    *********************************/
@@ -934,16 +942,17 @@ export class CartService {
     this.shoppingCartOmniStorage.set(this.CartData);
   }
 
-  getOrderDetails(params:{
-    user:string;
-    salesDocumentType?:number;
-    search?:number;
-    statuses?:string[];
-    page?:number;
-    limit?:number;
-    sort?:string;
-
-  }):Observable<IOrderDetailResponse>{
-    return this.http.get<IOrderDetailResponse>(`${API_CART}/order-details`,{params})
+  getOrderDetails(params: {
+    user: string;
+    salesDocumentType?: number;
+    search?: number;
+    statuses?: string[];
+    page?: number;
+    limit?: number;
+    sort?: string;
+  }): Observable<IOrderDetailResponse> {
+    return this.http.get<IOrderDetailResponse>(`${API_CART}/order-details`, {
+      params,
+    });
   }
 }
