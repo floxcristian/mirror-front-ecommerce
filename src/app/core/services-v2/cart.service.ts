@@ -50,6 +50,7 @@ import { ShoppingCartOmniStorageService } from '@core/storage/shopping-cart-omni
 import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
 import { IProduct } from '@core/models-v2/oms/order.interface';
 import { IOrderDetailResponse } from '@core/models-v2/cart/order-details.interface';
+import { UserRoleType } from '@core/enums/user-role-type.enum';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -236,9 +237,16 @@ export class CartService {
           this.data.products = this.CartData.products;
 
           // obtenemos el despacho desde el carro
-          if (this.CartData.shipment) {
+          const shipment = this.CartData.shipment;
+          if (shipment) {
             let nombre = '';
-            if (this.CartData.shipment.serviceType == 'TIENDA') {
+            const isPickup =
+              shipment.serviceType == 'TIENDA' ||
+              shipment.deliveryMode === DeliveryModeType.PICKUP;
+            const isDelivery =
+              shipment.serviceType != 'TIENDA' ||
+              shipment.deliveryMode === DeliveryModeType.DELIVERY;
+            if (isPickup) {
               if (
                 this.cartTempData.groups &&
                 this.cartTempData.groups.length > 1
@@ -263,16 +271,13 @@ export class CartService {
                 nombre =
                   `Retiro en tienda ` +
                   this.datePipe.transform(
-                    this.CartData.shipment.requestedDate,
+                    shipment.requestedDate,
                     'EEEE dd MMM'
                   );
               }
 
               this.updateShippingType('retiro');
-            } else if (
-              this.CartData.shipment.serviceType != '' &&
-              this.CartData.shipment.serviceType != 'TIENDA'
-            ) {
+            } else if (isDelivery) {
               if (
                 this.cartTempData.groups &&
                 this.cartTempData.groups.length > 1
@@ -297,21 +302,21 @@ export class CartService {
                 nombre =
                   `Despacho ` +
                   this.datePipe.transform(
-                    this.CartData.shipment.requestedDate,
+                    shipment.requestedDate,
                     'EEEE dd MMM'
                   );
                 this.updateShippingType('despacho');
               }
-            } else if (this.CartData.shipment.serviceType == '') {
+            } else if (shipment.serviceType == '') {
               nombre = `Seleccione Fecha `;
             }
 
             let suma = 0;
             let array_precio: any = [];
             if (
-              this.CartData.shipment.serviceType == 'STD' ||
-              this.CartData.shipment.serviceType == 'TIENDA' ||
-              this.CartData.shipment.serviceType == 'EXP'
+              shipment.serviceType == 'STD' ||
+              shipment.serviceType == 'TIENDA' ||
+              shipment.serviceType == 'EXP'
             ) {
               this.cartTempData.groups?.forEach((item: IShoppingCartGroup) => {
                 let precio: number = 0;
@@ -340,7 +345,8 @@ export class CartService {
               if (
                 array_precio[index] >= 60000 ||
                 (usuario.userRole != 'compradorb2c' &&
-                  usuario.userRole != 'temp')
+                  usuario.userRole != 'temp' &&
+                  usuario.userRole != UserRoleType.BUYER)
               ) {
                 descuento = descuento + item.shipment.discount;
               }
@@ -350,9 +356,9 @@ export class CartService {
 
             if (
               descuento > 0 &&
-              (this.CartData.shipment.serviceType == 'STD' ||
-                this.CartData.shipment.serviceType == 'TIENDA' ||
-                this.CartData.shipment.serviceType == 'EXP')
+              (shipment.serviceType == 'STD' ||
+                shipment.serviceType == 'TIENDA' ||
+                shipment.serviceType == 'EXP')
             ) {
               this.discount = {
                 price: descuento * -1,
@@ -826,9 +832,16 @@ export class CartService {
       this.data.products = this.CartData.products;
 
       // obtenemos el despacho desde el carro
-      if (this.CartData.shipment) {
+      const shipment = this.CartData.shipment;
+      if (shipment) {
         let nombre = '';
-        if (this.CartData.shipment.deliveryMode == DeliveryModeType.PICKUP) {
+        const isPickup =
+          shipment.serviceType == 'TIENDA' ||
+          shipment.deliveryMode === DeliveryModeType.PICKUP;
+        const isDelivery =
+          shipment.serviceType != 'TIENDA' ||
+          shipment.deliveryMode === DeliveryModeType.DELIVERY;
+        if (isPickup) {
           const groups = this.cartTempData.groups ?? [];
           if (groups.length > 1) {
             //ver quien tiene la mayor fecha para el despacho
@@ -848,17 +861,11 @@ export class CartService {
           } else {
             nombre =
               `Retiro en tienda ` +
-              this.datePipe.transform(
-                this.CartData.shipment.requestedDate,
-                'EEEE dd MMM'
-              );
+              this.datePipe.transform(shipment.requestedDate, 'EEEE dd MMM');
           }
 
           this.updateShippingType('retiro');
-        } else if (
-          this.CartData.shipment.serviceType != '' &&
-          this.CartData.shipment.serviceType != 'TIENDA'
-        ) {
+        } else if (isDelivery) {
           const groups = this.cartTempData.groups ?? [];
           if (groups.length > 1) {
             //ver quien tiene la mayor fecha para el despacho
@@ -877,22 +884,19 @@ export class CartService {
           } else {
             nombre =
               `Despacho ` +
-              this.datePipe.transform(
-                this.CartData.shipment.requestedDate,
-                'EEEE dd MMM'
-              );
+              this.datePipe.transform(shipment.requestedDate, 'EEEE dd MMM');
             this.updateShippingType('despacho');
           }
-        } else if (this.CartData.shipment.deliveryMode == '') {
+        } else if (shipment.deliveryMode == '') {
           nombre = `Seleccione Fecha `;
         }
 
         let suma = 0;
         let array_precio = [];
         if (
-          this.CartData.shipment.serviceType == 'STD' ||
-          this.CartData.shipment.serviceType == 'TIENDA' ||
-          this.CartData.shipment.serviceType == 'EXP'
+          shipment.serviceType == 'STD' ||
+          shipment.serviceType == 'TIENDA' ||
+          shipment.serviceType == 'EXP'
         ) {
           const groups = this.cartTempData.groups ?? [];
           groups.forEach((item) => {
@@ -926,9 +930,9 @@ export class CartService {
 
         if (
           descuento > 0 &&
-          (this.CartData.shipment.serviceType == 'STD' ||
-            this.CartData.shipment.serviceType == 'TIENDA' ||
-            this.CartData.shipment.serviceType == 'EXP')
+          (shipment.serviceType == 'STD' ||
+            shipment.serviceType == 'TIENDA' ||
+            shipment.serviceType == 'EXP')
         ) {
           this.discount = {
             price: descuento * -1,
@@ -951,7 +955,7 @@ export class CartService {
   getOrderDetails(params: {
     user: string;
     salesDocumentType?: number;
-    search?: number;
+    search?: string;
     statuses?: string[];
     page?: number;
     limit?: number;
@@ -959,6 +963,13 @@ export class CartService {
   }): Observable<IOrderDetailResponse> {
     return this.http.get<IOrderDetailResponse>(`${API_CART}/order-details`, {
       params,
+    });
+  }
+
+  quotationToOpenShoppingCart(salesId: string, user: string) {
+    return this.http.put(`${API_CART}/quotationToOpenShoppingCart`, {
+      salesId,
+      user,
     });
   }
 }

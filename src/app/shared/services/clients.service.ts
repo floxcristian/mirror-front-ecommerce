@@ -45,13 +45,6 @@ export class ClientsService {
     return this.http.get(call);
   }
 
-  cotizacionAOV(idCarro: any, usuario: any) {
-    return this.http.put(environment.apiShoppingCart + `cotizacionov`, {
-      numero: idCarro,
-      usuario,
-    });
-  }
-
   /**
    * Recuperar contraseña.
    * @param data
