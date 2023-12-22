@@ -9,6 +9,7 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { PaymentMethodPurchaseOrderRequestService } from '@core/services-v2/payment-method-purchase-order-request.service';
 import { ToastrService } from 'ngx-toastr';
+import { IPaymentPurchaseOrder } from '@core/models-v2/payment-method/payment-purchase-order.interface';
 
 @Component({
   selector: 'app-codigo-oc',
@@ -24,7 +25,8 @@ export class CodigoOcComponent implements OnInit {
   finishDateString = '';
   reenviar_codigo: boolean = false;
   confirmar: boolean = true;
-  @Output() verificar: EventEmitter<any> = new EventEmitter();
+  @Output() verificar: EventEmitter<IPaymentPurchaseOrder | null> =
+    new EventEmitter();
   @Output() renv_cod: EventEmitter<any> = new EventEmitter();
   constructor(
     private fb: FormBuilder,
@@ -66,8 +68,8 @@ export class CodigoOcComponent implements OnInit {
         otp: this.formulario.controls['codigo'].value,
       })
       .subscribe({
-        next: () => {
-          this.verificar.emit(true);
+        next: (r) => {
+          this.verificar.emit(r);
         },
         error: (e) => {
           console.error(e);
@@ -77,7 +79,7 @@ export class CodigoOcComponent implements OnInit {
   }
 
   async Atras_codigo() {
-    this.verificar.emit(false);
+    this.verificar.emit(null);
   }
 
   async timeout(event: any) {

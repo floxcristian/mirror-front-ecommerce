@@ -29,8 +29,6 @@ import {
   rutValidator,
 } from '../../../../shared/utils/utilidades';
 import { v1 as uuidv1 } from 'uuid';
-import { CentroCosto } from '../../../../shared/interfaces/centroCosto';
-import { ClientsService } from '../../../../shared/services/clients.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AgregarCentroCostoComponent } from '../../components/agregar-centro-costo/agregar-centro-costo.component';
 import { Observable, Subject, Subscription, firstValueFrom } from 'rxjs';
@@ -68,6 +66,11 @@ import { environment } from '@env/environment';
 import { GuestStorageService } from '@core/storage/guest-storage.service';
 import { IGuest } from '@core/models-v2/storage/guest.interface';
 import { ReceiveStorageService } from '@core/storage/receive-storage.service';
+import { IBusinessLine } from '@core/models-v2/customer/business-line.interface';
+import { CustomerCostCenterService } from '@core/services-v2/customer-cost-center.service';
+import { ICostCenter } from '@core/models-v2/customer/customer-cost-center.interface';
+import { IError } from '@core/models-v2/error/error.interface';
+import { IPaymentPurchaseOrder } from '@core/models-v2/payment-method/payment-purchase-order.interface';
 
 declare const $: any;
 export interface Archivo {
@@ -133,7 +136,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   archivo!: Archivo | null;
   idArchivo!: string;
   idArchivoMobile!: string | null;
-  centrosCosto: CentroCosto[] = [];
+  centrosCosto: ICostCenter[] = [];
   //crear nuevo centro de costo
   codigo_cc: string | null = null;
   nombre_cc: string | null = null;
@@ -143,7 +146,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   selectedDocument!: string;
   documentOptions = [{ id: InvoiceType.RECEIPT, name: 'BOLETA' }];
-  girosOptions: any[] = [];
+  girosOptions: IBusinessLine[] = [];
   selectedGiro!: string;
   isB2B!: boolean;
   cargandoGiros!: boolean;
@@ -164,7 +167,6 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private toastr: ToastrService,
     private logistics: LogisticsService,
-    private clientsService: ClientsService,
     private readonly gtmService: GoogleTagManagerService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
@@ -177,7 +179,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private readonly paymentMethodPurchaseOrderRequestService: PaymentMethodPurchaseOrderRequestService,
     public readonly cartService: CartService,
     private readonly customerService: CustomerService,
-    private readonly customerAddressService: CustomerAddressApiService
+    private readonly customerAddressService: CustomerAddressApiService,
+    private readonly customerCostCenterService: CustomerCostCenterService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -194,7 +197,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       });
     }
 
-    this.recibe = receiveStorageService.get()!;
+    this.recibe = this.receiveStorageService.get()!;
     this.cartSession = this.localS.get(StorageKey.carroCompraB2B);
   }
 
@@ -230,7 +233,31 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
     if (this.isValidRut(rut ?? '')) {
       this.cargandoGiros = true;
-      this.clientsService.obtenerGiros(rut ?? '').subscribe(
+      this.customerService.getBusinessLines().subscribe({
+        next: (businessLines) => {
+          this.girosOptions = businessLines || [];
+
+          if (this.girosOptions.length) {
+            this.documentOptions = [
+              { id: InvoiceType.RECEIPT, name: 'BOLETA' },
+              { id: InvoiceType.INVOICE, name: 'FACTURA' },
+            ];
+          } else {
+            this.documentOptions = [
+              { id: InvoiceType.RECEIPT, name: 'BOLETA' },
+            ];
+            this.selectedDocument = InvoiceType.RECEIPT;
+          }
+
+          this.cargandoGiros = false;
+        },
+        error: (e) => {
+          console.error(e);
+          this.toastr.error('Ha ocurrido un error al obtener los giros.');
+          this.cargandoGiros = false;
+        },
+      });
+      this.customerService.getBusinessLines().subscribe(
         (res: any) => {
           this.girosOptions = res.giros || [];
 
@@ -354,13 +381,16 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     }
 
     /* Se cargan los centros de costo */
-    this.clientsService
-      .getCentrosCosto(this.userSession?.documentId ?? '')
-      .subscribe((resp: any) => {
-        if (!resp.error) {
-          this.centrosCosto = resp.data;
-        }
-      });
+    const documentId = this.userSession?.documentId ?? '';
+    this.customerCostCenterService.getCostCenters(documentId).subscribe({
+      next: (costCenters) => {
+        this.centrosCosto = costCenters;
+      },
+      error: (e) => {
+        console.error(e);
+        this.toastr.error('No se pudo obtener los centros de costo');
+      },
+    });
 
     setTimeout(() => {
       this.cartService.dropCartActive$.next(false);
@@ -401,15 +431,16 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   private setDireccionOrTiendaRetiro() {
     // LOGICA PARA OBTENER DESPACHO A MOSTRAR
-    switch (this.cartSession.shipment?.deliveryMode) {
+    const shipment = this.cartSession.shipment;
+    switch (shipment && shipment.deliveryMode) {
       case 'TIENDA':
       case DeliveryModeType.PICKUP: //RETIRO EN TIENDA
         //se revisa si existe la informacion en el localstor  age desde el paso anterior
         this.tiendaRetiro = this.localS.get(StorageKey.tiendaRetiro);
 
-        if (!this.tiendaRetiro) {
+        if (!this.tiendaRetiro && shipment) {
           //si no se encontró, se obtiene llamando a la api
-          this.obtieneTiendaSegunRecid(this.cartSession.shipment.addressId);
+          this.obtieneTiendaSegunRecid(shipment.addressId);
         }
         break;
       case 'EXP': //DESPACHO DOMICILIO
@@ -594,13 +625,19 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     }
   }
 
-  Confirmar(event: any) {
-    this.cd_ver = event;
-    this.loadingPage = event;
-    if (event) this.finishPaymentOv();
+  Confirmar(event: IPaymentPurchaseOrder | null) {
+    this.cd_ver = event ? true : false;
+    this.loadingPage = event ? true : false;
+    if (event) this.finishPaymentOv(event);
   }
 
-  private async finishPaymentOv(): Promise<void> {
+  private async finishPaymentOv(
+    paymentPurchaseOrder: IPaymentPurchaseOrder | null
+  ): Promise<void> {
+    if (!paymentPurchaseOrder) {
+      return;
+    }
+
     let params = {
       status: 'approved',
       paymentMethod: 'OC',
@@ -609,31 +646,14 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     };
 
     this.cartService.load();
+
+    this.purchaseOrderId = paymentPurchaseOrder._id.toString();
     if (!params.shoppingCartNumber) {
-      params.shoppingCartNumber = this.cartSession.cartNumber;
+      params.shoppingCartNumber = paymentPurchaseOrder.shoppingCartNumber;
     }
-    if (this.userSession?.userRole === UserRoleType.SUPERVISOR) {
-      this.paymentMethodPurchaseOrderRequestService
-        .approve({
-          shoppingCartId: this.cartSession._id!.toString(),
-        })
-        .subscribe({
-          next: (r) => {
-            this.purchaseOrderId = r._id.toString();
-            if (!params.shoppingCartNumber) {
-              params.shoppingCartNumber = r.shoppingCartNumber;
-            }
-            this.router.navigate(
-              ['/', 'carro-compra', 'gracias-por-tu-compra'],
-              { queryParams: { ...params } }
-            );
-          },
-          error: (e) => {
-            console.error(e);
-            this.toastr.error('No se pudo aprobar la orden de compra');
-          },
-        });
-    }
+    this.router.navigate(['/', 'carro-compra', 'gracias-por-tu-compra'], {
+      queryParams: { ...params },
+    });
   }
 
   /**
@@ -670,12 +690,15 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   //  Sube documento y genera la solicitud
   purchaseRequestAll() {
+    const data = this.formOv.value;
+    data.file = this.archivo !== undefined ? this.archivo?.archivo : null;
     this.paymentMethodPurchaseOrderRequestService
       .upload(this.formOv.value)
       .subscribe({
         next: (r) => {
           this.purchaseOrderId = r._id.toString();
           this.purchaseRequest();
+          this.archivo = null;
         },
         error: (e) => {
           console.error(e);
@@ -931,29 +954,27 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     });
 
     modal.content?.event.subscribe(async (res) => {
-      const request: any = {
-        rut: this.userSession?.documentId,
-        codigo: res.codigo,
-        nombre: res.nombre,
-      };
-
       //recargar el selec centro de costo
-
-      const respuesta: any = await this.clientsService
-        .setCentroCosto(request)
-        .toPromise();
-      if (!respuesta.error) {
-        this.toastr.success('Centro de costo ingresado exitosamente.');
-        let resp: any = await this.clientsService
-          .getCentrosCosto(this.userSession?.documentId ?? '')
-          .toPromise();
-        if (!resp.error) {
-          this.centrosCosto = resp.data;
-          this.formOv.controls['costCenter'].setValue(request.codigo);
-        }
+      const documentId = this.userSession?.documentId ?? '';
+      const costCenter: ICostCenter = {
+        code: res.codigo,
+        name: res.nombre,
+      };
+      try {
+        await firstValueFrom(
+          this.customerCostCenterService.createCostCenter(
+            costCenter,
+            documentId
+          )
+        );
+        this.centrosCosto = [...this.centrosCosto, costCenter];
+        this.formOv.controls['costCenter'].setValue(costCenter.code);
         modal.hide();
-      } else {
-        this.toastr.error(respuesta.msg);
+      } catch (e) {
+        console.error(e);
+        this.toastr.error(
+          (e as IError)?.message ?? 'No se pudo crear el centro de costo'
+        );
         modal.hide();
       }
     });
@@ -1109,8 +1130,9 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
             this.purchaseOrderId = r._id.toString();
             await this.updateCartAndUserTurn();
             await this.prepararCarroPrePago();
-            await this.finishPaymentOv();
+            await this.finishPaymentOv(r);
             // aqui se pone el cambio para la mensajeria
+            this.archivo = null;
             this.loadingPage = false;
           },
           error: (e) => {
@@ -1159,12 +1181,14 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         this.cd_ver = true;
       }
 
+      data.file = this.archivo !== undefined ? this.archivo?.archivo : null;
       this.paymentMethodPurchaseOrderRequestService.upload(data).subscribe({
         next: (r) => {
           this.purchaseOrderId = r._id.toString();
           if (!data.credito) {
             this.purchaseRequest();
           }
+          this.archivo = null;
         },
         error: (e) => {
           console.error(e);

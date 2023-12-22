@@ -1,4 +1,5 @@
 export interface GetLogisticPromiseRequest {
+  shoppingCartId?: string; //Specific cart, only open or pending, for OC payment
   user?: string;
   deliveryMode: string;
   destination: string;

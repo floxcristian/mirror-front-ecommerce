@@ -36,7 +36,7 @@ export class PaymentMethodPurchaseOrderRequestService {
     shoppingCartId: string;
     salesDocumentType: number;
   }) {
-    const url = `${API_PAYMENT}/purchase-order/resend-otp`;
+    const url = `${API_PAYMENT}/purchase-order/request-approval`;
     return this.http.post<IShoppingCart>(url, {
       shoppingCartId: params.shoppingCartId,
       salesDocumentType: params.salesDocumentType,

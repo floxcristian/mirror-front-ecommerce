@@ -9,6 +9,7 @@ import { ICustomerCredit } from '@core/models-v2/customer/customer.interface';
 // Environment
 import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
+import { IBusinessLine } from '@core/models-v2/customer/business-line.interface';
 
 const API_AUTH = `${environment.apiEcommerce}/api/v1/auth`;
 const API_CUSTOMER = `${environment.apiEcommerce}/api/v1/customer`;
@@ -127,5 +128,9 @@ export class CustomerService {
   createGuest(params: ICreateGuest): Observable<ICustomerCredit> {
     const url = `${API_CUSTOMER}/new-guest`;
     return this.http.post<ICustomerCredit>(url, params);
+  }
+
+  getBusinessLines(): Observable<IBusinessLine[]> {
+    return this.http.get<IBusinessLine[]>(`${API_CUSTOMER}/business-lines`);
   }
 }
