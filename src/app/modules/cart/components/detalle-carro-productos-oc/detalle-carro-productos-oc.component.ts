@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Subscription, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   IShoppingCart,
@@ -14,6 +14,8 @@ import { GetLogisticPromiseResponse } from '@core/models-v2/responses/logistic-p
 import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { ITotals } from '@core/models-v2/cart/totals.interface';
+import { ShippingService } from '@shared/interfaces/address';
+import * as moment from 'moment';
 
 interface IAddressDestination {
   address: string;
@@ -33,22 +35,16 @@ export class DetalleCarroProductosOcComponent implements OnInit {
   @Input() seeProducts = true;
   @Input() seePrices = true;
   @Output() sinStock: EventEmitter<any> = new EventEmitter();
-  @Output() fechas: EventEmitter<IShoppingCartTripDate[][]> =
-    new EventEmitter();
+  @Output() fechas: EventEmitter<ShippingService[][]> = new EventEmitter();
   products: IShoppingCartProduct[] = [];
 
   shippingNotSupported: IShoppingCartProduct[] = [];
-  itemSubscription!: Subscription;
-  shippingTypeSubs!: Subscription;
-  shippinGroup: any = {};
   productosCarro: IShoppingCartProduct[] = [];
   @Output() productosDisponible: EventEmitter<IShoppingCartProduct[]> =
     new EventEmitter();
   productosSinCumplir: any = [];
   @Input() shippingType = 'retiro';
   @Input() cart!: IShoppingCart;
-  shippingTypeTitle = '';
-  totals: any = [];
 
   constructor(
     public router: Router,
@@ -60,9 +56,6 @@ export class DetalleCarroProductosOcComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    await this.total;
-    await this.productCart;
-
     this.products = this.productCart;
     await this.calculateLogisticPromise();
   }
@@ -100,10 +93,31 @@ export class DetalleCarroProductosOcComponent implements OnInit {
     const shoppingCart = response.shoppingCart;
     this.cart = shoppingCart;
 
-    const tripDatesSubOrder: IShoppingCartTripDate[][] = [];
-    shoppingCart.groups?.forEach((g) => tripDatesSubOrder.push(g.tripDates)) ??
-      [];
-    this.fechas.emit(tripDatesSubOrder);
+    const dia_despacho: ShippingService[][] = [];
+    shoppingCart.groups?.forEach((g) => {
+      const dia_despacho_grupo: ShippingService[] = [];
+      g.tripDates.forEach((item: IShoppingCartTripDate, index) => {
+        let isSabado = this.valFindeSemana(item.requestedDate.toString());
+        const obj: ShippingService = {
+          index: index,
+          id: g.id,
+          diasdemora: item.businessDays,
+          fecha: item.requestedDate,
+          fechaPicking: item.pickingDate,
+          origen: g.warehouse,
+          precio: item.price,
+          proveedor: item.carrier.description,
+          tipoenvio: g.shipment.deliveryMode,
+          tipopedido: g.shipment.deliveryMode,
+          isSabado: isSabado,
+        };
+
+        dia_despacho_grupo.push(obj);
+      });
+      dia_despacho.push(dia_despacho_grupo);
+    }) ?? [];
+
+    this.fechas.emit(dia_despacho);
 
     this.productosCarro = [...shoppingCart.products];
     this.productosCarro = this.productosCarro.filter(
@@ -158,5 +172,17 @@ export class DetalleCarroProductosOcComponent implements OnInit {
       return { address, destination };
     }
     return { address: '', destination: '' };
+  }
+
+  valFindeSemana(fecha: string) {
+    let isSabado = false;
+
+    let dia =
+      fecha && fecha.length > 0
+        ? moment(fecha).locale('es').format('dddd')
+        : null;
+    isSabado = dia && dia === 'sábado' ? true : false;
+
+    return isSabado;
   }
 }

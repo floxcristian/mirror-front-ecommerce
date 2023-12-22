@@ -31,6 +31,7 @@ import { firstValueFrom } from 'rxjs';
 import {
   IShoppingCart,
   IShoppingCartProduct,
+  IShoppingCartTripDate,
 } from '@core/models-v2/cart/shopping-cart.interface';
 import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
 import { CustomerService } from '@core/services-v2/customer.service';
@@ -41,6 +42,7 @@ import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 import { SHOPPING_CART_STATUS_TYPE } from '@core/enums/shopping-cart-status.enum';
 import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
 import { ITotals } from '@core/models-v2/cart/totals.interface';
+import { ShippingService } from '@shared/interfaces/address';
 
 interface Item {
   ProductCart: ProductCart;
@@ -61,7 +63,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
   propietario = true;
   loadingPage = false;
   shippingType: string = '';
-  fechas: any = [];
+  fechas: ShippingService[][] = [];
   fecha_entrega: any = [];
   productCart: IShoppingCartProduct[] = [];
   productoDisponible: IShoppingCartProduct[] = [];

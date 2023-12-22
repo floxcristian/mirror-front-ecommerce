@@ -45,5 +45,5 @@ export interface ShippingService {
 export interface ShippingDateItem {
   grupo?: number;
   productodespacho: IShoppingCartProduct[];
-  fechas?: any[];
+  fechas?: ShippingService[];
 }
