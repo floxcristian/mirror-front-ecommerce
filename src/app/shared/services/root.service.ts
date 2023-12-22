@@ -115,7 +115,7 @@ export class RootService {
   }
 
   getUrlImagenMiniatura150(product: any) {
-    if (Object.keys(product.images).length > 0) {
+    if (Object.keys(product.images).length) {
       if (product.images[0] == undefined) {
         if (product.images['150'].length > 0) return product.images['150'][0];
         else return 'assets/images/products/no-image-listado-2.jpg';

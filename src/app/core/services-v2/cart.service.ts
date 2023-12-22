@@ -12,7 +12,7 @@ import {
 import { environment } from '@env/environment';
 import { GeolocationServiceV2 } from './geolocation/geolocation.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import {
   BehaviorSubject,
   Observable,
@@ -140,47 +140,32 @@ export class CartService {
    * @returns
    */
   async add(
-    product: IArticle | IProduct,
+    product: IArticle | IProduct, // sku, name, origin, images, quantity
     quantity: number
   ): Promise<IShoppingCart | undefined> {
-    // Sucursal
-    console.log('getSelectedStore desde add');
-    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.code;
+    const { code: storeCode } = this.geolocationService.getSelectedStore();
+    const { username, email, documentId } = this.sessionService.getSession();
 
-    const cart = this.shoppingCartStorage.get() as IShoppingCart;
-    let productoCarro;
-
-    if (cart == null) {
-      productoCarro = { cantidad: 0 };
-    } else {
-      productoCarro = (cart.products || []).find(
-        (item) => item.sku === product.sku
-      ) || { cantidad: 0 };
-    }
-
-    const usuario = this.sessionService.getSession();
-
-    if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
-
-    const data = {
-      user: usuario.username,
-      documentId: usuario.documentId,
-      branch: sucursal,
-      products: [
-        {
-          sku: product.sku,
-          quantity: (productoCarro.quantity || 0) + quantity,
-          origin: product.origin || null,
-          // status: product.status,
-        },
-      ],
-    };
+    const cart = this.shoppingCartStorage.get();
+    const currentQuantity =
+      (cart?.products || []).find((item) => item.sku === product.sku)
+        ?.quantity || 0;
 
     let response;
     try {
       response = await lastValueFrom(
-        this.http.post<IShoppingCart>(`${API_CART}/article`, data)
+        this.http.post<IShoppingCart>(`${API_CART}/article`, {
+          documentId,
+          branch: storeCode,
+          user: username || email,
+          products: [
+            {
+              sku: product.sku,
+              quantity: currentQuantity + quantity,
+              origin: product.origin || null,
+            },
+          ],
+        })
       );
       this.CartData = response;
 

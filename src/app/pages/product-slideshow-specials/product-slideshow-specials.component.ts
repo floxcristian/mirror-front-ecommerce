@@ -17,7 +17,7 @@ import { CmsService } from '@core/services-v2/cms.service';
 import {
   IArticle,
   IBanner,
-  IData,
+  ISpecialData,
   ISpecial,
 } from '@core/models-v2/cms/special-reponse.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
@@ -158,12 +158,13 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
       .getSpecial(especials, documentId, sucursal, location)
       .subscribe({
         next: (res) => {
+          console.log('especial: ', res);
           this.especial = res.specials;
           this.banners = res.banners[0];
-          let data: IData[] = res.data;
+          let data: ISpecialData[] = res.data;
           let out: any = [];
           let i = 0;
-          data.forEach((x: IData) => {
+          data.forEach((x: ISpecialData) => {
             let seccion: ISection = {
               nombre: x.title,
               productos: x.articles,

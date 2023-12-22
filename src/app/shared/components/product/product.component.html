@@ -1,4 +1,8 @@
-<div class="product product--layout--{{ layout }}" *ngIf="product">
+<div
+  class="product product--layout--{{ layout }}"
+  *ngIf="product"
+  style="border: 1px solid green"
+>
   <div class="product__content_232 d-flex row px-sm-4">
     <!--  NOMBRE VERSION MOVIL -->
     <div class="col-12 d-block d-sm-none">
@@ -226,11 +230,11 @@
         <hr class="mb-0" />
         <div
           class="row justify-content-start px-3 my-2"
-          *ngIf="preciosEscalas.length > 1"
+          *ngIf="dataProduct.priceInfo.scalePrice.length > 1"
         >
           <div
             class="masXmenosTitle"
-            (click)="verPreciosEscala()"
+            (click)="showScalePrices()"
             style="cursor: pointer"
           >
             <img
@@ -365,8 +369,8 @@
         <div *ngIf="stock" class="product__sidebar col-12 p-0">
           <div
             class="product__prices"
-            [class.my-4]="preciosEscalas.length <= 1"
-            [class.my-0]="preciosEscalas.length > 1"
+            [class.my-4]="dataProduct.priceInfo.scalePrice.length <= 1"
+            [class.my-0]="dataProduct.priceInfo.scalePrice.length > 1"
           >
             <ng-container *ngIf="product.price">
               <div class="row">
@@ -377,7 +381,10 @@
                     tooltip="Precio con descuento cliente"
                     class="text-price-product me-2 text-danger"
                     [ngStyle]="{
-                      'font-size.rem': preciosEscalas.length > 1 ? '1.6' : '2'
+                      'font-size.rem':
+                        dataProduct.priceInfo.scalePrice.length > 1
+                          ? '1.6'
+                          : '2'
                     }"
                     >{{ product.priceInfo.price | currencyFormat }}</span
                   >
@@ -386,7 +393,10 @@
                     *ngIf="product.priceInfo.documentId == '0'"
                     class="text-price-product me-2"
                     [ngStyle]="{
-                      'font-size.rem': preciosEscalas.length > 1 ? '1.6' : '2'
+                      'font-size.rem':
+                        dataProduct.priceInfo.scalePrice.length > 1
+                          ? '1.6'
+                          : '2'
                     }"
                     >{{ product.priceInfo.price | currencyFormat }}</span
                   >
@@ -398,7 +408,10 @@
                     tooltip="Precio normal"
                     class="product__old-price me-2"
                     [ngStyle]="{
-                      'font-size.rem': preciosEscalas.length > 1 ? '1.6' : '2'
+                      'font-size.rem':
+                        dataProduct.priceInfo.scalePrice.length > 1
+                          ? '1.6'
+                          : '2'
                     }"
                     >{{ product.priceInfo.commonPrice | currencyFormat }}</span
                   >
@@ -423,14 +436,14 @@
               <div class="row m-0 align-items-center">
                 <div class="col-sm-5 ps-5">
                   <div class="d-flex flex-column">
-                    <span> Cantidadx </span>
+                    <span> Cantidad </span>
                     <app-input-number
                       aria-label="Quantity"
                       class="product__quantity number-quantity text-center w-100"
                       size="lg"
                       [min]="1"
                       [formControl]="quantity"
-                      (quantity)="updateCart($event)"
+                      (quantity)="refreshProductPrice($event)"
                     >
                     </app-input-number>
                   </div>
@@ -470,26 +483,23 @@
                 </div>
               </div>
             </div>
-            <div
-              class="row px-3"
-              *ngIf="cantidadFaltantePrecioEscala >= 1 && !isB2B"
-            >
+            <div class="row px-3" *ngIf="quantityToScalePrice && !isB2B">
               <div
                 class="col-12 text-danger px-3"
-                *ngIf="cantidadFaltantePrecioEscala === 1"
+                *ngIf="quantityToScalePrice === 1"
               >
                 <small
-                  >Falta {{ cantidadFaltantePrecioEscala }} producto para
-                  llevar más y pagar menos</small
+                  >Falta {{ quantityToScalePrice }} producto para llevar más y
+                  pagar menos</small
                 >
               </div>
               <div
                 class="col-12 text-danger px-3"
-                *ngIf="cantidadFaltantePrecioEscala > 1"
+                *ngIf="quantityToScalePrice > 1"
               >
                 <small
-                  >Faltan {{ cantidadFaltantePrecioEscala }} productos para
-                  llevar más y pagar menos</small
+                  >Faltan {{ quantityToScalePrice }} productos para llevar más
+                  y pagar menos</small
                 >
               </div>
             </div>
@@ -617,19 +627,19 @@
           </div>
         </div>
         <form *ngIf="stock" class="product__options">
-          <div class="row" *ngIf="cantidadFaltantePrecioEscala >= 1 && !isB2B">
+          <div class="row" *ngIf="quantityToScalePrice && !isB2B">
             <div class="col-12 text-danger">
               <small
                 style="font-weight: bolder !important"
-                *ngIf="cantidadFaltantePrecioEscala === 1"
-                >Falta {{ cantidadFaltantePrecioEscala }} producto para llevar
-                más y pagar menos</small
+                *ngIf="quantityToScalePrice === 1"
+                >Falta {{ quantityToScalePrice }} producto para llevar más y
+                pagar menos</small
               >
               <small
                 style="font-weight: bolder !important"
-                *ngIf="cantidadFaltantePrecioEscala > 1"
-                >Faltan {{ cantidadFaltantePrecioEscala }} productos para
-                llevar más y pagar menos</small
+                *ngIf="quantityToScalePrice > 1"
+                >Faltan {{ quantityToScalePrice }} productos para llevar más y
+                pagar menos</small
               >
             </div>
           </div>
@@ -760,9 +770,9 @@
         <hr class="mb-0" />
         <div
           class="row justify-content-start px-3 my-2"
-          *ngIf="preciosEscalas.length > 1 && !isB2B"
+          *ngIf="dataProduct.priceInfo.scalePrice.length > 1 && !isB2B"
         >
-          <div class="masXmenosTitle" (click)="verPreciosEscala()">
+          <div class="masXmenosTitle" (click)="showScalePrices()">
             <img
               src="../../../../assets/images/llevaMasPagaMenos/200x50_rectangular.jpg"
               style="z-index: 3"
@@ -838,7 +848,7 @@
 <!-- botton add card en movile -->
 <app-addcart-button
   [disponibilidad]="isAvailable"
-  (quantity)="updateCart($event)"
+  (quantity)="refreshProductPrice($event)"
   class="d-block d-sm-none"
 ></app-addcart-button>
 <!-- botton add card en movile / end -->

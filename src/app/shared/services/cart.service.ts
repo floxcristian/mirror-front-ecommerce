@@ -1052,24 +1052,6 @@ export class CartService {
     );
   }
 
-  // TODO: Eliminar
-  getPriceProduct(params: {
-    sku: string;
-    sucursal: string;
-    rut: string;
-    cantidad?: number;
-  }) {
-    return this.http.get(environment.apiShoppingCart + `buscaprecio`, {
-      params,
-    });
-  }
-
-  getPriceScale(params: any) {
-    return this.http.get(`${environment.apiShoppingCart}buscaprecioescala`, {
-      params,
-    });
-  }
-
   saveInvitado(params: any) {
     return this.http.post(`${environment.apiCustomer}nuevotemporal`, params);
   }

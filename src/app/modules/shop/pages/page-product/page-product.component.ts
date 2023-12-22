@@ -6,14 +6,17 @@ import {
   OnInit,
   OnDestroy,
   HostListener,
+  DestroyRef,
+  inject,
 } from '@angular/core';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 // Libs
 import { ToastrService } from 'ngx-toastr';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 // Rxjs
-import { Subscription, forkJoin } from 'rxjs';
+import { forkJoin } from 'rxjs';
 // Envs
 import { environment } from '@env/environment';
 // Constants
@@ -31,13 +34,12 @@ import { IBreadcrumbItem } from './models/breadcrumb.interface';
 import { ICategoryParams } from './models/category-params.interface';
 import { Product, ProductOrigen } from '../../../../shared/interfaces/product';
 import {
-  IAttributeCompared,
-  IProductCompared,
+  IComparedAttribute,
+  IComparedProduct,
 } from '@core/services-v2/product/models/formatted-product-compare-response.interface';
 // Services
 import { RootService } from '../../../../shared/services/root.service';
 import { SeoService } from '../../../../shared/services/seo.service';
-import { CartService } from '../../../../shared/services/cart.service';
 import { CanonicalService } from '../../../../shared/services/canonical.service';
 import { BuscadorService } from '../../../../shared/services/buscador.service';
 import { SessionService } from '@core/services-v2/session/session.service';
@@ -53,6 +55,8 @@ import { INumberInputAction } from './models/number-input-action.interface';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 import { ProductPriceApiService } from '@core/services-v2/product-price/product-price.service';
 import { CartV2Service } from '@core/services-v2/cart/cart.service';
+import { CartService } from '@core/services-v2/cart.service';
+import { IShoppingCartProductOrigin } from '@core/models-v2/cart/shopping-cart.interface';
 
 declare const $: any;
 declare let fbq: any;
@@ -63,12 +67,13 @@ declare let fbq: any;
   styleUrls: ['./page-product.component.scss'],
 })
 export class PageProductComponent implements OnInit, OnDestroy {
-  product!: IArticleResponse; // | undefined | any;
+  private readonly destroyRef: DestroyRef = inject(DestroyRef);
+  product!: IArticleResponse;
   recommendedProducts: IArticleResponse[] = [];
   matrixProducts: IArticleResponse[] = [];
   relatedProducts: IArticleResponse[] = [];
-  matriz: IProductCompared[] = [];
-  comparacion: IAttributeCompared[] = [];
+  matriz: IComparedProduct[] = [];
+  comparacion: IComparedAttribute[] = [];
 
   minItems = 5;
   stock: boolean = true;
@@ -105,8 +110,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
   tiendaSeleccionada!: ISelectedStore;
   IVA = environment.IVA;
   addingToCart!: boolean;
-  addcartPromise!: Subscription;
-  despachoCliente!: Subscription;
   preferenciaCliente!: ICustomerPreference;
   showNetPrice!: boolean;
 
@@ -118,7 +121,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
     public root: RootService,
     private capitalize: CapitalizeFirstPipe,
     private seoService: SeoService,
-    private cart: CartService,
     private canonicalService: CanonicalService,
     private buscadorService: BuscadorService,
     // Services V2
@@ -130,7 +132,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private readonly customerPreferenceService: CustomerPreferenceService,
     private readonly customerAddressService: CustomerAddressService,
     private readonly productPriceApiService: ProductPriceApiService,
-    private readonly cartService: CartV2Service
+    private readonly cartService: CartV2Service,
+    private readonly cartApiService: CartService
   ) {
     this.carouselOptions = CarouselDesktopOptions;
     this.carrouselOptionsMobile = CarouselMobileOptions;
@@ -167,40 +170,43 @@ export class PageProductComponent implements OnInit, OnDestroy {
   }
 
   private onSelectedStoreChange(): void {
-    this.geolocationService.selectedStore$.subscribe({
-      next: (selectedStore) => {
-        if (!this.product) return;
-        this.tiendaSeleccionada = selectedStore;
-        this.refreshProductPrice(this.product);
-        this.getMixProducts(this.product.sku);
-      },
-    });
-  }
-
-  private onCustomerAddressChange(): void {
-    this.despachoCliente =
-      this.customerAddressService.customerAddress$.subscribe(
-        (customerAddress) => {
+    this.geolocationService.selectedStore$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (selectedStore) => {
           if (!this.product) return;
-          this.preferenciaCliente.deliveryAddress = customerAddress;
-          this.refreshProductPrice(this.product);
-          this.getMixProducts(this.product.sku);
-        }
-      );
-  }
-
-  private onSessionChange(): void {
-    this.authStateService.session$.subscribe(() => {
-      this.user = this.sessionService.getSession();
-      this.customerPreferenceService.getCustomerPreferences().subscribe({
-        next: (preferences) => {
-          if (!this.product) return;
-          this.preferenciaCliente = preferences;
+          this.tiendaSeleccionada = selectedStore;
           this.refreshProductPrice(this.product);
           this.getMixProducts(this.product.sku);
         },
       });
-    });
+  }
+
+  private onCustomerAddressChange(): void {
+    this.customerAddressService.customerAddress$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((customerAddress) => {
+        if (!this.product) return;
+        this.preferenciaCliente.deliveryAddress = customerAddress;
+        this.refreshProductPrice(this.product);
+        this.getMixProducts(this.product.sku);
+      });
+  }
+
+  private onSessionChange(): void {
+    this.authStateService.session$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.user = this.sessionService.getSession();
+        this.customerPreferenceService.getCustomerPreferences().subscribe({
+          next: (preferences) => {
+            if (!this.product) return;
+            this.preferenciaCliente = preferences;
+            this.refreshProductPrice(this.product);
+            this.getMixProducts(this.product.sku);
+          },
+        });
+      });
   }
 
   private onRouteParamsChange(): void {
@@ -231,7 +237,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
       this.buscadorService.filtrosVisibles(true);
     }*/
     this.buscadorService.filtrosVisibles(true);
-    this.despachoCliente.unsubscribe();
   }
 
   setIsMobile(): void {
@@ -400,7 +405,7 @@ export class PageProductComponent implements OnInit, OnDestroy {
    * @returns
    */
   refreshComparedProductPrice(
-    product: IProductCompared,
+    product: IComparedProduct,
     inputAction?: INumberInputAction
   ): void {
     if (!product.quantity) {
@@ -428,8 +433,8 @@ export class PageProductComponent implements OnInit, OnDestroy {
    * @param producto
    * @returns
    */
-  addComparedProductToCart(producto: IProductCompared): void {
-    if (!this.product || this.addingToCart || !producto.quantity) return;
+  addComparedProductToCart(product: IComparedProduct): void {
+    if (!this.product || this.addingToCart || !product.quantity) return;
     if (!this.user) {
       this.toastr.warning(
         'Debe iniciar sesion para poder comprar',
@@ -438,20 +443,16 @@ export class PageProductComponent implements OnInit, OnDestroy {
       return;
     }
 
-    //FIXME: corregir esto..
-    /*this.product.origen = {} as ProductOrigen;
-
-        if (this.origen) {
-          this.product.origen.origen = this.origen[0] || '';
-          this.product.origen.subOrigen = this.origen[1] || '';
-          this.product.origen.seccion = this.origen[2] || '';
-          this.product.origen.recomendado = this.origen[3] || '';
-          this.product.origen.ficha = true;
-          this.product.origen.cyber = this.product?.cyber || 0;
-        }*/
-
     this.addingToCart = true;
-    //*moment
+    const origin: IShoppingCartProductOrigin = {
+      origin: this.origen[0] || '',
+      subOrigin: this.origen[1] || '',
+      section: this.origen[2] || '',
+      recommended: this.origen[3] || '',
+      sheet: true,
+      cyber: this.product.cyber || 0,
+    };
+    // this.cartApiService.add({ sku: product.sku })
     // this.addcartPromise = this.cart
     //   .add(producto, producto.cantidad)
     //   .subscribe(

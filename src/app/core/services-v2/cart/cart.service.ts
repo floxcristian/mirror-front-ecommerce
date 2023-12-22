@@ -16,6 +16,9 @@ export class CartV2Service {
     this.productOrigin = this.productOrigin ? origin : [];
   }
 
+  /***
+   * Obtener origen previo al ingreso de una ficha de producto.
+   */
   getProductOrigin(): string[] {
     return this.productOrigin;
   }

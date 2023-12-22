@@ -3,7 +3,7 @@ import { IShoppingCartProductOrigin } from '../cart/shopping-cart.interface';
 export interface ISpecialResponse {
   banners: IBanner[];
   specials: ISpecial[];
-  data: IData[];
+  data: ISpecialData[];
   total: number;
 }
 
@@ -35,11 +35,11 @@ export interface IBanner {
   updatedAt: string | null;
 }
 
-export interface IData {
+export interface ISpecialData {
   title: string;
   order: number;
-  articles: IArticle[];
   total: number;
+  articles: IArticle[];
 }
 
 export interface IArticle {
@@ -49,11 +49,10 @@ export interface IArticle {
   minimumPrice: number; // +
   images: IImage; // +
   priceInfo: IPriceInfo; // +
-  deliverySupply: IDeliverySupply; // ?
+  deliverySupply: IDeliverySupply; //
   stockSummary: IStockSummary; // +
-  origin: IShoppingCartProductOrigin; // +
+  origin: IShoppingCartProductOrigin; // + /// ESTO LO AGREGARON A MANO?
   cyber: number; // +
-  // No se usa..
   description: string; // +
 }
 
@@ -75,7 +74,6 @@ export interface IPriceInfo {
   discount: number;
   comments: string[];
   documentId: string;
-
   price: number;
   netPrice: number;
   customerPrice: number;
@@ -87,6 +85,7 @@ export interface IScalePrice {
   fromQuantity: number;
   toQuantity: number;
   price: number;
+  netPrice: number;
 }
 
 export interface IDeliverySupply {

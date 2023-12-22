@@ -9,12 +9,13 @@ import {
   QueryList,
   ViewChild,
   ViewChildren,
-  OnDestroy,
   ChangeDetectorRef,
   OnChanges,
   Output,
   EventEmitter,
   HostListener,
+  DestroyRef,
+  inject,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -33,7 +34,7 @@ import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { CarouselComponent, SlidesOutputData } from 'ngx-owl-carousel-o';
 import { OwlCarouselOConfig } from 'ngx-owl-carousel-o/lib/carousel/owl-carousel-o-config';
 // Rxjs
-import { Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 // Envs
 import { environment } from '@env/environment';
 // Constants
@@ -44,6 +45,7 @@ import { IArticleResponse } from '@core/models-v2/article/article-response.inter
 import { IProductImage } from './models/image.interface';
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { IScalePriceItem } from './models/scale-price-item.interface';
+import { IDeliverySupply } from '@core/models-v2/cms/special-reponse.interface';
 import { IWishlist } from '@core/services-v2/wishlist/models/wishlist-response.interface';
 // Services
 import { CartService } from '../../services/cart.service';
@@ -56,11 +58,11 @@ import { InventoryService } from '@core/services-v2/inventory.service';
 import { WishlistApiService } from '@core/services-v2/wishlist/wishlist-api.service';
 import { WishlistStorageService } from '@core/storage/wishlist-storage.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { WishlistService } from '@core/services-v2/wishlist/wishlist.service';
 import { GalleryUtils } from './services/gallery-utils.service';
 // Modals
 import { ModalScalePriceComponent } from '../modal-scale-price/modal-scale-price.component';
-import { WishlistService } from '@core/services-v2/wishlist/wishlist.service';
-import { IDeliverySupply } from '@core/models-v2/cms/special-reponse.interface';
+import { ProductPriceApiService } from '@core/services-v2/product-price/product-price.service';
 
 export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
 
@@ -69,7 +71,8 @@ export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss'],
 })
-export class ProductComponent implements OnInit, OnChanges, OnDestroy {
+export class ProductComponent implements OnInit, OnChanges {
+  private readonly destroyRef: DestroyRef = inject(DestroyRef);
   @ViewChild('myCarousel', { static: false }) myCarousel!: NguCarousel<any>;
   @Input() stock!: boolean;
   @Input() origen!: string[];
@@ -94,7 +97,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     );
     this.dataProduct.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);*/
   }
-  @Input() recommendedProducts!: Array<any>;
+  @Input() recommendedProducts!: IArticleResponse[];
   @Output() comentarioGuardado: EventEmitter<boolean> = new EventEmitter();
   @Output() leerComentarios: EventEmitter<boolean> = new EventEmitter();
   //codigo de slide vertical
@@ -113,9 +116,9 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
    * Items para la imagen activa.
    */
   images: IProductImage[] = [];
-  cantidadFaltantePrecioEscala!: number;
+  quantityToScalePrice!: number;
 
-  private dataProduct!: IArticleResponse;
+  dataProduct!: IArticleResponse;
   private dataLayout: Layout = 'standard';
 
   showGallery = true;
@@ -125,14 +128,6 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   isAvailable!: boolean;
   estado = true; // isDesktop
   products: IArticleResponse[] = [];
-
-  // Observables
-  addButtonMovilPromise!: Subscription;
-  geoLocationServicePromise!: Subscription;
-  routerPromise: Subscription;
-  photoSwipePromise!: Subscription;
-  addcartPromise!: Subscription;
-  wishlistPromise!: Subscription;
 
   favorito = false;
   listasEnQueExiste: IWishlist[] = [];
@@ -204,7 +199,8 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     private readonly geolocationService: GeolocationServiceV2,
     private readonly wishlistApiService: WishlistApiService,
     private readonly wishlistStorage: WishlistStorageService,
-    private readonly wishlistService: WishlistService
+    private readonly wishlistService: WishlistService,
+    private readonly productPriceApiService: ProductPriceApiService
   ) {
     this.carouselConfig = CarouselConfig;
     this.carouselOptions = CarouselOptions;
@@ -213,7 +209,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
-    this.routerPromise = this.route.data.subscribe((data) => {
+    this.route.data.subscribe((data) => {
       this.headerLayout = data['headerLayout'];
     });
     this.root.path = this.router
@@ -223,12 +219,12 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   onChangeStore(): void {
     this.selectedStore = this.geolocationService.getSelectedStore();
-    this.geoLocationServicePromise =
-      this.geolocationService.selectedStore$.subscribe({
+    this.geolocationService.selectedStore$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
         next: (selectedStore) => {
           this.estado = true;
           this.selectedStore = selectedStore;
-          this.obtienePrecioEscala();
           this.getPopularProducts();
         },
       });
@@ -236,10 +232,13 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit(): void {
     this.onChangeStore();
-    this.isMobile();
-    window.onresize = () => this.isMobile();
+    this.setIsMobile();
+    window.onresize = () => this.setIsMobile();
     if (this.layout !== 'quickview' && isPlatformBrowser(this.platformId)) {
-      this.photoSwipePromise = this.photoSwipe.load().subscribe();
+      this.photoSwipe
+        .load()
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe();
     }
 
     if (!this.sessionService.isB2B()) {
@@ -249,31 +248,18 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       });
     }
     // Observable cuyo fin es saber cuando se presiona el boton agregar al carro utilizado para los dispositivos moviles.
-    this.addButtonMovilPromise = this.cart.onAddingmovilButton$.subscribe(
-      () => {
+    this.cart.onAddingmovilButton$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
         // this.addToCart();
-      }
-    );
+      });
     this.buildRequestProductForm();
   }
 
   async ngOnChanges() {
     if (this.product) {
-      await this.obtienePrecioEscala();
       this.refreshListasEnQueExiste();
     }
-  }
-
-  ngOnDestroy(): void {
-    // dejamos de observar la observable cuando nos salimos de la pagina del producto.
-    this.addButtonMovilPromise ? this.addButtonMovilPromise.unsubscribe() : '';
-    this.geoLocationServicePromise
-      ? this.geoLocationServicePromise.unsubscribe()
-      : '';
-    this.routerPromise ? this.routerPromise.unsubscribe() : '';
-    this.photoSwipePromise ? this.photoSwipePromise.unsubscribe() : '';
-    this.addcartPromise ? this.addcartPromise.unsubscribe() : '';
-    this.wishlistPromise ? this.wishlistPromise.unsubscribe() : '';
   }
 
   getPopularProducts(): void {
@@ -285,57 +271,30 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.isAvailable = !pickupDate && !deliveryDate ? false : true;
   }
 
-  async updateCart(cantidad: any) {
-    this.quantity.setValue(cantidad);
+  /**
+   * Actualiza información de precio del producto.
+   * @param quantity
+   */
+  refreshProductPrice(quantity: number): void {
+    this.quantity.setValue(quantity);
     const session = this.sessionService.getSession();
     const selectedStore = this.geolocationService.getSelectedStore();
 
-    const datos: any = await this.cart
-      .getPriceProduct({
-        sku: this.product!.sku,
-        sucursal: selectedStore.code,
-        rut: session.documentId,
-        cantidad,
+    this.productPriceApiService
+      .getProductPrice({
+        quantity,
+        documentId: session.documentId,
+        sku: this.product.sku,
+        branchCode: selectedStore.code,
       })
-      .toPromise();
-    this.cantidadFaltantePrecioEscala = 0;
-    if (datos['precio_escala']) {
-      // this.product.precioComun = !isVacio(usuario?.preferences.iva)
-      //   ? usuario?.preferences.iva
-      //     ? datos['precioComun']
-      //     : datos['precioComun'] / (1 + this.IVA)
-      //   : datos['precioComun'];
-      // this.product.precio.precio = !isVacio(usuario?.preferences.iva)
-      //   ? usuario?.preferences.iva
-      //     ? datos['precio'].precio
-      //     : datos['precio'].precio / (1 + this.IVA)
-      //   : datos['precio'].precio;
-      this.product!.priceInfo.commonPrice = !isVacio(session!.preferences.iva)
-        ? session.preferences.iva
-          ? datos['precioComun']
-          : datos['precioComun'] / (1 + this.IVA)
-        : datos['precioComun'];
-
-      this.product!.priceInfo.price = !isVacio(session?.preferences.iva)
-        ? session.preferences.iva
-          ? datos['precio'].precio
-          : datos['precio'].precio / (1 + this.IVA)
-        : datos['precio'].precio;
-
-      // pinta de rojo los precios escala
-      this.preciosEscalas = this.preciosEscalas.map((p, i) => {
-        if (i === 1) {
-          this.cantidadFaltantePrecioEscala =
-            p.desde - (cantidad ? parseInt(cantidad) : 0);
-        }
-        if (p.precio === this.product!.priceInfo.price) {
-          p.marcado = true;
-        } else {
-          p.marcado = false;
-        }
-        return p;
+      .subscribe({
+        next: (priceInfo) => {
+          this.product.priceInfo = priceInfo;
+          const firstFromQuantity = priceInfo.scalePrice[0].fromQuantity;
+          this.quantityToScalePrice =
+            quantity >= firstFromQuantity ? 0 : firstFromQuantity - quantity;
+        },
       });
-    }
   }
 
   // addToCart(): void {
@@ -364,7 +323,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   //     this.addingToCart = true;
 
-  //     this.addcartPromise = this.cart
+  //     this.cart
   //       .add(this.product, this.quantity.value)
   //       .subscribe(
   //         (r) => {},
@@ -392,38 +351,13 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   /*************************************************
    * Métodos precios escala.
    *************************************************/
-  verPreciosEscala(): void {
-    // TODO: mostrar precios escala locales:
+  showScalePrices(): void {
     this.modalService.show(ModalScalePriceComponent, {
       class: 'modal-dialog-centered',
       initialState: {
-        scalePrices: this.preciosEscalas,
+        scalePrices: this.dataProduct.priceInfo.scalePrice,
       },
     });
-  }
-
-  // FIXME: ya no se debe llamar endpoint.
-  async obtienePrecioEscala() {
-    const selectedStore = this.geolocationService.getSelectedStore();
-    const resp: any = await this.cart
-      .getPriceScale({
-        sucursal: selectedStore.code,
-        sku: this.product!.sku,
-        rut: this.usuario.documentId,
-      })
-      .toPromise();
-    this.preciosEscalas = resp.data.map((p: any) => {
-      return { ...p, marcado: false };
-    });
-
-    // if (!isVacio(this.product!.price)) {
-    this.preciosEscalas.unshift({
-      desde: 0,
-      hasta: 0,
-      precio: this.product?.priceInfo.price || 0,
-      marcado: true,
-    });
-    // }
   }
 
   /*************************************************
@@ -557,7 +491,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.cd.markForCheck();
   }
 
-  async addToWishlist(): Promise<void> {
+  addToWishlist(): void {
     if (this.favorito) {
       this.wishlistApiService
         .deleteProductFromAllWishlists(
@@ -655,7 +589,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   /*************************************************
    * Métodos de responsive.
    *************************************************/
-  isMobile(): void {
+  setIsMobile(): void {
     this.showMobile = window.innerWidth < this.puntoQuiebre;
   }
 }
