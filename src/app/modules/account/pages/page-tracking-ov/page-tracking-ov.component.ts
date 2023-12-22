@@ -71,9 +71,17 @@ export class PageTrackingOvComponent implements OnInit {
           dataTablesParameters.columns[
             dataTablesParameters.order[0].column
           ].data;
+        console.log(
+          '🚀 ~ file: page-tracking-ov.component.ts:71 ~ PageTrackingOvComponent ~ resultado_busqueda ~ user.data_sort:',
+          user.data_sort
+        );
         user.data_order = dataTablesParameters.order[0].dir;
         this.persons = [];
         let params = Object.assign(dataTablesParameters, user);
+        console.log(
+          '🚀 ~ file: page-tracking-ov.component.ts:81 ~ PageTrackingOvComponent ~ resultado_busqueda ~ dataTablesParameters:',
+          dataTablesParameters
+        );
         let url = environment.apiOms + 'oms/clienteOv';
         let username: String = 'services';
         let password: String = '0.=j3D2ss1.w29-';

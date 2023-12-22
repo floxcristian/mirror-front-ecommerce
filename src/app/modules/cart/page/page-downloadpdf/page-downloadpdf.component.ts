@@ -16,6 +16,7 @@ export class PageDownloadpdfComponent implements OnInit {
   numero: any = null;
   tipo: any = null;
   authBasic = 'Basic c2VydmljZXM6MC49ajNEMnNzMS53Mjkt';
+  noDocument: boolean = false;
   constructor(
     private http: HttpClient,
     private sanitizer: DomSanitizer,
@@ -72,22 +73,35 @@ export class PageDownloadpdfComponent implements OnInit {
   }
 
   downloadFacturaPdf() {
-    let codigo = '';
-    let numero = this.numero.split('-');
-    const headers = this.headers();
+    // const numero = this.numero.split('-');
+    const numero = 'BEL-69788'.split('-');
+    if (numero.length < 2) {
+      console.warn('Formato de número no válido');
+      return;
+    }
+    const codigo = this.generarCodigo(numero[0], numero[1]);
+    this.documentDownloadService.downloadFacturaPdf(codigo).subscribe({
+      next: (data: any) => this.procesarRespuesta(data),
+      error: (err) => {
+        console.warn('Error al descargar el PDF:', err);
+        this.noDocument = true;
+      },
+    });
+  }
 
-    if (numero[0] === 'BEL') codigo = btoa(`@${numero[1]}@39@`);
-    else if (numero[0] === 'FEL') codigo = btoa(`@${numero[1]}@33@`);
-    else if (numero[0] === 'NCE') codigo = btoa(`@${numero[1]}@61@`);
+  generarCodigo(prefijo: string, valor: string) {
+    const codigos: any = {
+      BEL: 'receipt@39@',
+      FEL: 'invoice@33@',
+      NCE: 'credit_note@61@',
+    };
+    return codigos[prefijo] ? btoa(`${codigos[prefijo]}${valor}@`) : '';
+  }
 
-    const url =
-      environment.apiShoppingCart + 'documentos/documentoClientePDF/' + codigo;
-    this.http
-      .get(url, { headers, responseType: 'text' })
-      .subscribe((response) => {
-        response = response + '#toolbar=1&statusbar=1&navpanes=1';
-        this.pdfBase64 =
-          this.sanitizer.bypassSecurityTrustResourceUrl(response);
-      });
+  procesarRespuesta(data: { base64: string; filename: string }) {
+    const sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+      data.base64 + '#toolbar=1&statusbar=1&navpanes=1'
+    );
+    this.pdfBase64 = sanitizedUrl;
   }
 }

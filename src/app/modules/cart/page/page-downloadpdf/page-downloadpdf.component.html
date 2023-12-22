@@ -1,17 +1,18 @@
-<div *ngIf="!pdfBase64" class='loader-container'>
-    <div clasS='mt-10 text-center'>
-        
-        
-        <br>
-        <br>
-        <div>Cargando Documento, Espere...</div>
-    </div>
+<div *ngIf="noDocument">
+  <div class="text-center text-danger">
+    <br />
+    <br />
+    <div>Documento no encontrado.</div>
+  </div>
 </div>
-<div *ngIf="pdfBase64" class='pdf-container'>
-    <embed 
-        [src]="pdfBase64" 
-        type="application/pdf" 
-        width="100%" 
-        height="100%" 
-    />
+<div *ngIf="!noDocument && !pdfBase64" class="loader-container">
+  <div class="mt-10 text-center">
+    <br />
+    <br />
+    <div>Cargando Documento, Espere...</div>
+  </div>
+</div>
+
+<div *ngIf="pdfBase64" class="pdf-container">
+  <embed [src]="pdfBase64" type="application/pdf" width="100%" height="100%" />
 </div>
