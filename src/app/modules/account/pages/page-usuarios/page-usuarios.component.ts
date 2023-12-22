@@ -8,7 +8,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { environment } from '@env/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { rutValidator } from '../../../../shared/utils/utilidades';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 
 class DataTablesResponse {

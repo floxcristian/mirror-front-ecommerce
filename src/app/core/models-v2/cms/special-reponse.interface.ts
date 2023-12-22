@@ -3,7 +3,7 @@ import { IShoppingCartProductOrigin } from '../cart/shopping-cart.interface';
 export interface ISpecialResponse {
   banners: IBanner[];
   specials: ISpecial[];
-  data: IData[];
+  data: ISpecialData[];
   total: number;
 }
 
@@ -35,11 +35,11 @@ export interface IBanner {
   updatedAt: string | null;
 }
 
-export interface IData {
+export interface ISpecialData {
   title: string;
   order: number;
-  articles: IArticle[];
   total: number;
+  articles: IArticle[];
 }
 
 export interface IArticle {
@@ -49,11 +49,10 @@ export interface IArticle {
   minimumPrice: number; // +
   images: IImage; // +
   priceInfo: IPriceInfo; // +
-  deliverySupply: IDeliverySupply; // ?
+  deliverySupply: IDeliverySupply; //
   stockSummary: IStockSummary; // +
-  origin: IShoppingCartProductOrigin; // +
+  origin: IShoppingCartProductOrigin; // + /// ESTO LO AGREGARON A MANO?
   cyber: number; // +
-  // No se usa..
   description: string; // +
 }
 
@@ -67,24 +66,26 @@ export interface IImage {
 }
 
 export interface IPriceInfo {
-  sku: string;
-  price: number;
-  minimumPrice: number;
-  sellerMinimumPrice: number;
-  hasScalePrice: boolean;
-  scalePrice: IScalePrice[];
-  customerPrice: number;
-  netPrice: number;
+  sku: string; //
+  minimumPrice: number; //
+  sellerMinimumPrice: number; //
+  hasScalePrice: boolean; //
+  scalePrice: IScalePrice[]; //
   discount: number;
-  commonPrice: number;
-  comments: any[];
+  comments: string[];
   documentId: string;
+  price: number;
+  netPrice: number;
+  customerPrice: number;
+  commonPrice: number;
+  commonNetPrice: number;
 }
 
 export interface IScalePrice {
   fromQuantity: number;
   toQuantity: number;
   price: number;
+  netPrice: number;
 }
 
 export interface IDeliverySupply {

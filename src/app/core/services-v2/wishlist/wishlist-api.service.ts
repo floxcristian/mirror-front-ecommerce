@@ -9,7 +9,7 @@ import { environment } from '@env/environment';
 import {
   IWishlist,
   IWishlistResponse,
-} from './models/whishlist-response.interface';
+} from './models/wishlist-response.interface';
 import { IProductsFromFileResponse } from './models/product-from-file-response.interface';
 
 const API_CUSTOMER = `${environment.apiEcommerce}/api/v1/customer`;
@@ -20,6 +20,11 @@ const API_CUSTOMER = `${environment.apiEcommerce}/api/v1/customer`;
 export class WishlistApiService {
   constructor(private http: HttpClient) {}
 
+  /**
+   * Obtener las listas de deseos de un cliente.
+   * @param documentId
+   * @returns
+   */
   getWishlists(documentId: string): Observable<IWishlist[]> {
     return this.http
       .get<IWishlistResponse>(`${API_CUSTOMER}/${documentId}/article-list`)
@@ -40,6 +45,12 @@ export class WishlistApiService {
     );
   }
 
+  /**
+   * Eliminar una lista de deseos.
+   * @param documentId
+   * @param wishlistId
+   * @returns
+   */
   deleteWishlist(documentId: string, wishlistId: string): Observable<void> {
     return this.http.delete<void>(
       `${API_CUSTOMER}/${documentId}/article-list/${wishlistId}`

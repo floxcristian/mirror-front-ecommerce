@@ -21,11 +21,12 @@ import { Router } from '@angular/router';
 import { isVacio } from '../../utils/utilidades';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 import { CartService } from '@core/services-v2/cart.service';
 import { IShoppingCartProductOrigin } from '@core/models-v2/cart/shopping-cart.interface';
+import { CartV2Service } from '@core/services-v2/cart/cart.service';
 
 @Component({
   selector: 'app-product-card-b2c-cms',
@@ -91,7 +92,8 @@ export class ProductCardB2cCmsComponent implements OnInit {
     public currency: CurrencyService,
     public sanitizer: DomSanitizer,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    public readonly cartService: CartV2Service
   ) {
     if (this.route.url.includes('/especial/')) this.home = true;
   }
@@ -166,12 +168,12 @@ export class ProductCardB2cCmsComponent implements OnInit {
     if (this.origen) {
       // Seteamos el origen de donde se hizo click a add cart.
       const origin: IShoppingCartProductOrigin = {
-        origin: this.origen[0] ? this.origen[0] : '',
-        subOrigin: this.origen[1] ? this.origen[1] : '',
-        section: this.origen[2] ? this.origen[2] : '',
+        origin: this.origen[0] || '',
+        subOrigin: this.origen[1] || '',
+        section: this.origen[2] || '',
         recommended: this.origen[3],
         sheet: false,
-        cyber: this.productData.cyber ? this.productData.cyber : 0,
+        cyber: this.productData.cyber || 0,
       };
       this.productData.origin = origin;
     }
@@ -226,17 +228,6 @@ export class ProductCardB2cCmsComponent implements OnInit {
     //     this.cd.markForCheck();
     //   },
     // });
-  }
-
-  /**
-   * @author ignacio zapata  \"2020-09-28\
-   * @desc metodo utilizado cuando se hace clic en el card, y antes de redireccionar a la ficha del prod, se guarda el origen en una variable de cart service
-   * @params
-   * @return
-   */
-  setOrigenBeforeFicha() {
-    // FIXME: falta servicio
-    // this.cart.setOrigenHistory(this.origen);
   }
 
   porcentaje_descuento() {

@@ -18,7 +18,7 @@ import { Product, ProductPrecio, ProductOrigen } from '../interfaces/product';
 import { CartData, ProductCart, CartTotal } from '../interfaces/cart-item';
 import { Usuario } from '../interfaces/login';
 import { ResponseApi } from '../interfaces/response-api';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
@@ -101,7 +101,6 @@ export class CartService {
 
   tiendaPrecio: any = null;
   shippingType!: string;
-  origenHistory: string[] = [];
   IVA = environment.IVA || 0.19;
 
   constructor(
@@ -1016,37 +1015,6 @@ export class CartService {
     this.calc();
   }
 
-  /**
-   * Modifica el valor del precio en el producto que es pasado por referencia.
-   * @param producto
-   */
-  // Pone el precio en el producto en producto.precio y producto.precioComun.
-  cargarPrecioEnProducto(producto: Product): void {
-    const user = this.sessionService.getSession();
-    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-
-    this.getPriceProduct({
-      sku: producto.sku,
-      sucursal: tiendaSeleccionada?.code,
-      rut: user.documentId,
-    }).subscribe((r: any) => {
-      const precio: ProductPrecio = r.precio;
-      precio.precio = !isVacio(user.preferences.iva)
-        ? user.preferences.iva
-          ? precio.precio
-          : precio.precio / (1 + this.IVA)
-        : precio.precio;
-
-      producto.precio = precio;
-
-      producto.precioComun = !isVacio(user.preferences.iva)
-        ? user.preferences.iva
-          ? r.precioComun
-          : r.precioComun / (1 + this.IVA)
-        : r.precioComun;
-    });
-  }
-
   uploadExcel(data: any) {
     const formData: FormData = new FormData();
     // tslint:disable-next-line: forin
@@ -1082,18 +1050,6 @@ export class CartService {
       environment.apiShoppingCart + `traspaso`,
       data
     );
-  }
-
-  getPriceProduct(params: any) {
-    return this.http.get(environment.apiShoppingCart + `buscaprecio`, {
-      params,
-    });
-  }
-
-  getPriceScale(params: any) {
-    return this.http.get(`${environment.apiShoppingCart}buscaprecioescala`, {
-      params,
-    });
   }
 
   saveInvitado(params: any) {
@@ -1143,19 +1099,6 @@ export class CartService {
     let params = objeto;
 
     return this.http.put(environment.apiShoppingCart + `estado`, params);
-  }
-
-  /**
-   * @desc Metodo utilizado para guardar el origen y seccion al momento de ingresar a una ficha de producto.
-   * @params
-   * @return
-   */
-  setOrigenHistory(origen: string[]) {
-    this.origenHistory = this.origenHistory ? origen : [];
-  }
-
-  getOrigenHistory(): string[] {
-    return this.origenHistory;
   }
 
   /**

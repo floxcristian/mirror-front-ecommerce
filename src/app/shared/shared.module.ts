@@ -70,7 +70,6 @@ import { ScrollTopComponent } from './components/scroll-top/scroll-top.component
 //import { VideoComponent } from './components/video/video.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { AddFlotaModalComponent } from './components/add-flota-modal/add-flota-modal.component';
-import { ProductCardB2cComponent } from './components/product-card-b2c/product-card-b2c.component';
 import { UpdateFlotaModalComponent } from './components/update-flota-modal/update-flota-modal.component';
 import { InputNumberProductComponent } from './components/input-number-product/input-number-product.component';
 import { WishListModalComponent } from './components/wish-list-modal/wish-list-modal.component';
@@ -152,7 +151,7 @@ const NGU_CAROUSEL_MODULES = [
     // VideoComponent,
     ModalComponent,
     AddFlotaModalComponent,
-    ProductCardB2cComponent,
+
     UpdateFlotaModalComponent,
     InputNumberProductComponent,
     WishListModalComponent,
@@ -223,7 +222,6 @@ const NGU_CAROUSEL_MODULES = [
     LoadingBarComponent,
     PageHeaderComponent,
     // PaginationComponent,
-    ProductCardB2cComponent,
     LoadingElementComponent,
     // ProductSliderComponent,
     // FiltersProductsComponent,

@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { PaymentMethodService } from '@core/services-v2/payment-method.service';
 import { IPaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

@@ -10,7 +10,7 @@ import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { CartService } from '../../../../shared/services/cart.service';
 import { v1 as uuidv1 } from 'uuid';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 declare var $: any;
 

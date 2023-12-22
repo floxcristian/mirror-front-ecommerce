@@ -18,7 +18,7 @@ import {
 import { RootService } from '../../../../shared/services/root.service';
 import { AddCentroCostoModalComponent } from './components/add-centro-costo-modal/add-centro-costo-modal.component';
 import { EditCentroCostoModalComponent } from './components/edit-centro-costo-modal/edit-centro-costo-modal.component';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { ICostCenter } from '@core/models-v2/customer/customer-cost-center.interface';
 import { CustomerCostCenterService } from '@core/services-v2/customer-cost-center.service';
@@ -32,7 +32,7 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
   @ViewChildren(DataTableDirective) dtElements!: QueryList<DataTableDirective>;
 
   userSession!: ISession;
-  centrosCosto:ICostCenter[] = []
+  centrosCosto: ICostCenter[] = [];
 
   dtOptions: DataTables.Settings = {};
   dtTrigger1: Subject<any> = new Subject();
@@ -44,7 +44,7 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly customerCostCenterService:CustomerCostCenterService
+    private readonly customerCostCenterService: CustomerCostCenterService
   ) {}
 
   ngOnInit() {
@@ -64,19 +64,21 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
 
   getData() {
     this.cargando = true;
-    this.customerCostCenterService.getCostCenters(this.userSession.documentId).subscribe({
-      next:(res)=>{
-        this.centrosCosto = res;
-        this.cargando = false;
+    this.customerCostCenterService
+      .getCostCenters(this.userSession.documentId)
+      .subscribe({
+        next: (res) => {
+          this.centrosCosto = res;
+          this.cargando = false;
 
-        if (this.centrosCosto.length > 0) {
-          this.dtTrigger1.next('');
-        }
-      },
-      error:(err) =>{
-        console.log(err)
-      }
-    })
+          if (this.centrosCosto.length > 0) {
+            this.dtTrigger1.next('');
+          }
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
   }
 
   reDraw(): void {
@@ -104,19 +106,21 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
           code: res.code,
           name: res.name,
         };
-        this.customerCostCenterService.createCostCenter(request,this.userSession.documentId).subscribe({
-          next:(res)=>{
-            console.log('create centro costo',res)
-            this.toastr.success('Centro de costo ingresado exitosamente.');
-            bsModalRef.hide();
-            this.reDraw();
-            this.getData();
-          },
-          error:(err)=>{
-            this.toastr.error(err.msg);
-            bsModalRef.hide();
-          }
-        })
+        this.customerCostCenterService
+          .createCostCenter(request, this.userSession.documentId)
+          .subscribe({
+            next: (res) => {
+              console.log('create centro costo', res);
+              this.toastr.success('Centro de costo ingresado exitosamente.');
+              bsModalRef.hide();
+              this.reDraw();
+              this.getData();
+            },
+            error: (err) => {
+              this.toastr.error(err.msg);
+              bsModalRef.hide();
+            },
+          });
       }
     });
   }
@@ -133,17 +137,19 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
     );
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res !== '') {
-        this.customerCostCenterService.updateCostCenter(res,this.userSession.documentId).subscribe({
-          next:(res)=>{
-            this.toastr.success('Centro de costo actualizado exitosamente.');
-            bsModalRef.hide();
-            this.reDraw();
-            this.getData();
-          },
-          error:(err) =>{
-            console.log(err)
-          }
-        })
+        this.customerCostCenterService
+          .updateCostCenter(res, this.userSession.documentId)
+          .subscribe({
+            next: (res) => {
+              this.toastr.success('Centro de costo actualizado exitosamente.');
+              bsModalRef.hide();
+              this.reDraw();
+              this.getData();
+            },
+            error: (err) => {
+              console.log(err);
+            },
+          });
       }
     });
   }
@@ -159,17 +165,19 @@ export class PageCentrosCostoComponent implements OnInit, OnDestroy {
       initialState,
     });
     bsModalRef.content.event.subscribe(async (res: any) => {
-      this.customerCostCenterService.deleteCostCenter(this.userSession.documentId,centroCosto.code).subscribe({
-        next:(res)=>{
-          console.log('eliminar center',res)
-          this.toastr.success('Centro de costo eliminado exitosamente.');
-          this.reDraw();
-          this.getData();
-        },
-        error:(err)=>{
-          this.toastr.error(err.msg);
-        }
-      })
+      this.customerCostCenterService
+        .deleteCostCenter(this.userSession.documentId, centroCosto.code)
+        .subscribe({
+          next: (res) => {
+            console.log('eliminar center', res);
+            this.toastr.success('Centro de costo eliminado exitosamente.');
+            this.reDraw();
+            this.getData();
+          },
+          error: (err) => {
+            this.toastr.error(err.msg);
+          },
+        });
     });
   }
 }

@@ -4,8 +4,8 @@ import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ISession } from '@core/models-v2/auth/session.interface';
 // Services
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { SessionService } from '@core/states-v2/session.service';
-import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { SessionService } from '@core/services-v2/session/session.service';
+import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { MenuService } from '@core/services-v2/menu/menu.service';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 

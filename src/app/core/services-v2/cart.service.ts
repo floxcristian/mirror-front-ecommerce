@@ -12,7 +12,7 @@ import {
 import { environment } from '@env/environment';
 import { GeolocationServiceV2 } from './geolocation/geolocation.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import {
   BehaviorSubject,
   Observable,
@@ -22,7 +22,7 @@ import {
 } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { ShoppingCartStorageService } from '@core/storage/shopping-cart-storage.service';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { IError } from '@core/models-v2/error/error.interface';
 import { ToastrService } from 'ngx-toastr';
 import { ISession } from '@core/models-v2/auth/session.interface';
@@ -133,48 +133,39 @@ export class CartService {
   readonly onAddingmovilButton$: Observable<IShoppingCartProduct | null> =
     this.onAddingMovilButtonSubject$.asObservable();
 
+  /**
+   * Añadir producto al carro de compras.
+   * @param product
+   * @param quantity
+   * @returns
+   */
   async add(
-    product: IArticle | IProduct,
+    product: IArticle | IProduct, // sku, name, origin, images, quantity
     quantity: number
   ): Promise<IShoppingCart | undefined> {
-    // Sucursal
-    console.log('getSelectedStore desde add');
-    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.code;
+    const { code: storeCode } = this.geolocationService.getSelectedStore();
+    const { username, email, documentId } = this.sessionService.getSession();
 
-    const cart = this.shoppingCartStorage.get() as IShoppingCart;
-    let productoCarro;
-
-    if (cart == null) {
-      productoCarro = { cantidad: 0 };
-    } else {
-      productoCarro = (cart.products || []).find(
-        (item) => item.sku === product.sku
-      ) || { cantidad: 0 };
-    }
-
-    const usuario = this.sessionService.getSession();
-
-    if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
-
-    const data = {
-      user: usuario.username,
-      documentId: usuario.documentId,
-      branch: sucursal,
-      products: [
-        {
-          sku: product.sku,
-          quantity: (productoCarro.quantity || 0) + quantity,
-          origin: product.origin ? product.origin : null,
-          // status: product.status,
-        },
-      ],
-    };
+    const cart = this.shoppingCartStorage.get();
+    const currentQuantity =
+      (cart?.products || []).find((item) => item.sku === product.sku)
+        ?.quantity || 0;
 
     let response;
     try {
       response = await lastValueFrom(
-        this.http.post<IShoppingCart>(`${API_CART}/article`, data)
+        this.http.post<IShoppingCart>(`${API_CART}/article`, {
+          documentId,
+          branch: storeCode,
+          user: username || email,
+          products: [
+            {
+              sku: product.sku,
+              quantity: currentQuantity + quantity,
+              origin: product.origin || null,
+            },
+          ],
+        })
       );
       this.CartData = response;
 
@@ -380,7 +371,9 @@ export class CartService {
     return this.http.get<IShoppingCartDetail>(url);
   }
 
-  addLista(products: IShoppingCartProduct[] | IProduct[]):Observable<IShoppingCart> {
+  addLista(
+    products: IShoppingCartProduct[] | IProduct[]
+  ): Observable<IShoppingCart> {
     // Sucursal
     console.log('getSelectedStore desde addLista');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
@@ -406,7 +399,8 @@ export class CartService {
       productos.push({
         sku: producto.sku,
         quantity: (productoCarro.quantity || 0) + 1,
-        origin: producto.origin ? producto.origin : null
+        origin: producto.origin || null,
+        status: '',
       });
     });
 
@@ -966,7 +960,9 @@ export class CartService {
     });
   }
 
-  updateStatusShoppingCart(id:string,status:string,observation:string){
-    return this.http.put(`${API_CART}/${id}/status/${status}`,{observation})
+  updateStatusShoppingCart(id: string, status: string, observation: string) {
+    return this.http.put(`${API_CART}/${id}/status/${status}`, {
+      observation,
+    });
   }
 }

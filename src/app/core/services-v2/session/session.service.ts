@@ -1,10 +1,11 @@
 // Angular
 import { Injectable } from '@angular/core';
-// Models
-import { ISession } from '@core/models-v2/auth/session.interface';
-import { SessionStorageService } from '../storage/session-storage.service';
 // Libs
 import { v4 as uuidv4 } from 'uuid';
+// Models
+import { ISession } from '@core/models-v2/auth/session.interface';
+// Services
+import { SessionStorageService } from '../../storage/session-storage.service';
 import { GuestStorageService } from '@core/storage/guest-storage.service';
 
 @Injectable({

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { DataTablesResponse } from '../../../../shared/interfaces/data-table';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { CartService } from '@core/services-v2/cart.service';
 import { IOrderDetail } from '@core/models-v2/cart/order-details.interface';
@@ -17,14 +17,14 @@ export class PagePendingOrdersComponent implements OnInit {
   usuario!: ISession;
   orders!: IOrderDetail[];
   viewActive = 'list';
-  orderId:string = '';
+  orderId: string = '';
   title: string = '';
 
   constructor(
     private http: HttpClient,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly cartService:CartService
+    private readonly cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -56,33 +56,37 @@ export class PagePendingOrdersComponent implements OnInit {
       order: [[0, 'desc']],
       columnDefs: [{ orderable: false, targets: 7 }],
       ajax: (dataTablesParameters: any, callback) => {
-        let page_actual = dataTablesParameters.start === 0 ? 1 : (dataTablesParameters.start/dataTablesParameters.length)+1
+        let page_actual =
+          dataTablesParameters.start === 0
+            ? 1
+            : dataTablesParameters.start / dataTablesParameters.length + 1;
         let sort_column = columns[dataTablesParameters.order[0].column];
-        let sort_asc_desc = dataTablesParameters.order[0].dir === 'asc' ? 1 : -1
-        let sort_real = sort_column+'|'+sort_asc_desc
+        let sort_asc_desc =
+          dataTablesParameters.order[0].dir === 'asc' ? 1 : -1;
+        let sort_real = sort_column + '|' + sort_asc_desc;
         let params2 = {
-          user:this.usuario.username || '',
-          salesDocumentType:2,
-          search:dataTablesParameters.search.value,
-          statuses:['finalized', 'generated'],
-          page:page_actual,
-          limit:dataTablesParameters.length,
-          sort:sort_real
-        }
+          user: this.usuario.username || '',
+          salesDocumentType: 2,
+          search: dataTablesParameters.search.value,
+          statuses: ['finalized', 'generated'],
+          page: page_actual,
+          limit: dataTablesParameters.length,
+          sort: sort_real,
+        };
 
         this.cartService.getOrderDetails(params2).subscribe({
-          next:(res)=>{
-            this.orders = res.data
+          next: (res) => {
+            this.orders = res.data;
             callback({
               recordsTotal: res.total,
               recordsFiltered: res.total,
               data: [],
             });
           },
-          error:(err)=>{
-            console.log(err)
-          }
-        })
+          error: (err) => {
+            console.log(err);
+          },
+        });
       },
     };
   }

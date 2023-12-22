@@ -1,13 +1,13 @@
 import { IProductCompare } from './product-compare-response.interface';
 
-export type IProductCompared = IProductCompare & { quantity: number };
+export type IComparedProduct = IProductCompare & { quantity: number };
 
 export interface IFormmatedProductCompareResponse {
-  products: IProductCompared[];
-  differences: IAttributeCompared[];
+  products: IComparedProduct[];
+  differences: IComparedAttribute[];
 }
 
-export interface IAttributeCompared {
+export interface IComparedAttribute {
   name: string;
   values: string[];
 }

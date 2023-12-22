@@ -4,7 +4,7 @@ import { brands } from '../../../data/shop-brands';
 import { products } from '../../../data/shop-products';
 import { isPlatformBrowser } from '@angular/common';
 import { brandsB2c } from '../../../data/shop-brands-b2c';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 
 @Component({
   selector: 'app-home',

@@ -16,16 +16,16 @@ export class PageComprasComponent implements OnInit {
     private cart: CartService,
     private toastr: ToastrService,
     // Services V2
-    private readonly omsService:OmsService
+    private readonly omsService: OmsService
   ) {}
 
   showBoundaryLinks: boolean = true;
   showDirectionLinks: boolean = false;
   totalItems = 0;
   addingToCart = false;
-  search:string = '';
+  search: string = '';
   data: IOrder[] = [];
-  maxlength:number = 5;
+  maxlength: number = 5;
   loadData = false;
   page = 1;
 
@@ -40,18 +40,18 @@ export class PageComprasComponent implements OnInit {
     let params = {
       search: this.search,
       page: this.page,
-      limit: this.maxlength
-    }
+      limit: this.maxlength,
+    };
     this.omsService.getOrders(params).subscribe({
-      next:(res)=>{
-        this.data = res.data
-        this.totalItems = res.total
+      next: (res) => {
+        this.data = res.data;
+        this.totalItems = res.total;
         this.loadData = false;
       },
-      error:(err)=>{
-        console.log(err)
-      }
-    })
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   async pageChanged(event: any) {
@@ -70,9 +70,9 @@ export class PageComprasComponent implements OnInit {
       return;
     }
     this.addingToCart = true;
-    let products:IProduct[] = this.data[index]?.products || []
-    console.log(products)
-    if(products.length){
+    let products: IProduct[] = this.data[index]?.products || [];
+    console.log(products);
+    if (products.length) {
       this.cart.addLista(products).subscribe(() => {
         this.addingToCart = false;
         this.toastr.success(`El pedido fue agregado al carro correctamente.`);
@@ -96,12 +96,16 @@ export class PageComprasComponent implements OnInit {
   }
 
   searchCantProduct(sku: string, index: number) {
-    let product = this.data[index].products.find((x: IProduct) => x.sku === sku);
+    let product = this.data[index].products.find(
+      (x: IProduct) => x.sku === sku
+    );
     return product ? product.quantity : 0;
   }
 
   searchPriceProduct(sku: string, index: number) {
-    let product = this.data[index].products.find((x: IProduct) => x.sku === sku);
+    let product = this.data[index].products.find(
+      (x: IProduct) => x.sku === sku
+    );
     return product ? product.price : 0;
   }
 }

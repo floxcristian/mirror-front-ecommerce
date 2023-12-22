@@ -3,7 +3,7 @@ import { calculaIcono } from '../../../../shared/utils/utilidades';
 
 import { UsersService } from '../../service/users.service';
 import { ToastrService } from 'ngx-toastr';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SubAccountService } from '@core/services-v2/sub-account.service';
 export interface Archivo {

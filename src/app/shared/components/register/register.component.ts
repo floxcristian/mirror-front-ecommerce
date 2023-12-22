@@ -16,7 +16,7 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { getDomainsToAutocomplete } from './domains-autocomplete';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthApiService } from '@core/services-v2/auth.service';
-import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { CartService } from '@core/services-v2/cart.service';
 import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';

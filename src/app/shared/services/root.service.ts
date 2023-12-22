@@ -8,7 +8,7 @@ import { SlugifyPipe } from '../pipes/slugify.pipe';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 // Services
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 
 @Injectable({
@@ -115,7 +115,7 @@ export class RootService {
   }
 
   getUrlImagenMiniatura150(product: any) {
-    if (Object.keys(product.images).length > 0) {
+    if (Object.keys(product.images).length) {
       if (product.images[0] == undefined) {
         if (product.images['150'].length > 0) return product.images['150'][0];
         else return 'assets/images/products/no-image-listado-2.jpg';

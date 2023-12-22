@@ -6,7 +6,7 @@ import { ResponseApi } from '../../interfaces/response-api';
 import { CatalogoService } from '../../services/catalogo.service';
 import { isVacio } from '../../utils/utilidades';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { ArticleService } from '@core/services-v2/article.service';
@@ -71,9 +71,7 @@ export class AddCommentModalComponent implements OnInit {
       updatedAt: new Date().toISOString(),
     };
 
-    this.articleService
-    .guardarComentarioArticulo(request)
-    .subscribe({
+    this.articleService.guardarComentarioArticulo(request).subscribe({
       next: (resp) => {
         if (resp) {
           this.event.emit(true);
@@ -83,9 +81,8 @@ export class AddCommentModalComponent implements OnInit {
       error: (err) => {
         console.error(err);
         this.toastrService.error('Ocurrió un error al guardar el comentario.');
-      }
+      },
     });
-
   }
 
   setValoracion(valoracion: number) {

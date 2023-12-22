@@ -17,9 +17,9 @@ import { Subscription } from 'rxjs';
 import { DirectionService } from '../../services/direction.service';
 import { LogisticsService } from '../../services/logistics.service';
 import { isVacio } from '../../utils/utilidades';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { CmsService } from '@core/services-v2/cms.service';
-import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 // Models

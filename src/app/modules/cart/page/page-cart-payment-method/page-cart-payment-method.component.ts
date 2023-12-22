@@ -41,7 +41,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { SessionService } from '@core/states-v2/session.service';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { PaymentMethodService } from '@core/services-v2/payment-method.service';
 import { IPaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';

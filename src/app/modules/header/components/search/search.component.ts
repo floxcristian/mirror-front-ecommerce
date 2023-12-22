@@ -17,8 +17,8 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, first } from 'rxjs/operators';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
-import { SessionService } from '@core/states-v2/session.service';
-import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { SessionService } from '@core/services-v2/session/session.service';
+import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 // Directives
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';

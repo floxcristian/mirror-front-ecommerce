@@ -124,7 +124,7 @@
   >
     <a
       appClick
-      (click)="setOrigenBeforeFicha()"
+      (click)="cartService.setProductOrigin(origen)"
       [routerLink]="
         root.product(productData.sku, productData.name, paramsCategory)
       "
@@ -143,7 +143,7 @@
       <div>
         <a
           class="marcaP"
-          (click)="setOrigenBeforeFicha()"
+          (click)="cartService.setProductOrigin(origen)"
           appClick
           [routerLink]="
             root.product(productData.sku, productData.name, paramsCategory)
@@ -158,7 +158,7 @@
       <div class="mt-1">
         <a
           appClick
-          (click)="setOrigenBeforeFicha()"
+          (click)="cartService.setProductOrigin(origen)"
           [routerLink]="
             root.product(productData.sku, productData.name, paramsCategory)
           "
@@ -315,7 +315,7 @@
 
       <li>
         <a
-          (click)="setOrigenBeforeFicha()"
+          (click)="cartService.setPreviousPathToProductDetail(origen)"
           [routerLink]="
             root.product(productData.sku, productData.nombre, paramsCategory)
           "
@@ -602,7 +602,7 @@
     <a
       style="margin-bottom: 10px"
       appClick
-      (click)="setOrigenBeforeFicha(); modalEscalaRef.hide()"
+      (click)="cartService.setProductOrigin(origen); modalEscalaRef.hide()"
       [routerLink]="
         root.product(productData.sku, productData.name, paramsCategory)
       "

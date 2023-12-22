@@ -21,8 +21,8 @@ import { BuscadorService } from '../../../../shared/services/buscador.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { SessionService } from '@core/states-v2/session.service';
-import { AuthStateServiceV2 } from '@core/states-v2/auth-state.service';
+import { SessionService } from '@core/services-v2/session/session.service';
+import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import {
   IArticleResponse,
   IBanner,
