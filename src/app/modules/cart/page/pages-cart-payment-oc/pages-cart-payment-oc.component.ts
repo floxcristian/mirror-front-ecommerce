@@ -18,8 +18,6 @@ import { DirectionService } from '../../../../shared/services/direction.service'
 import { environment } from '@env/environment';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { ToastrService } from 'ngx-toastr';
-import { ClientsService } from '../../../../shared/services/clients.service';
-import { LogisticsService } from '../../../../shared/services/logistics.service';
 import * as moment from 'moment';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
@@ -41,6 +39,7 @@ import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 import { SHOPPING_CART_STATUS_TYPE } from '@core/enums/shopping-cart-status.enum';
+import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
 
 interface Item {
   ProductCart: ProductCart;
@@ -57,7 +56,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
   modalRefuseRef!: BsModalRef;
 
   cartSession!: IShoppingCart;
-  items: any = [];
+  items: IShoppingCartProduct[] = [];
   propietario = true;
   loadingPage = false;
   shippingType: string = '';
@@ -77,7 +76,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
   isVacio = isVacio;
   @Input() id: any;
   user!: ISession | null;
-  usuario: any;
+  usuario: IEcommerceUser[] = [];
   sinStock: boolean = false;
   isB2B!: boolean;
   addingToCart = false;
@@ -116,8 +115,6 @@ export class PagesCartPaymentOcComponent implements OnInit {
     public root: RootService,
     private localS: LocalStorageService,
     private toastr: ToastrService,
-    private clienteService: ClientsService,
-    private logisticaService: LogisticsService,
     private modalService: BsModalService,
     private route: ActivatedRoute,
     private router: Router,
@@ -150,7 +147,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
 
     const status = this.cartSession.status ?? '';
     if (
-      [
+      ![
         SHOPPING_CART_STATUS_TYPE.OPEN.toString(),
         SHOPPING_CART_STATUS_TYPE.PENDING.toString(),
       ].includes(status)
@@ -176,9 +173,6 @@ export class PagesCartPaymentOcComponent implements OnInit {
   }
 
   async getDireccion() {
-    let data = {
-      rut: this.cartSession.customer?.documentId,
-    };
     const documentId = this.cartSession.customer?.documentId ?? '';
     if (
       this.cartSession.shipment?.deliveryMode === DeliveryModeType.DELIVERY
@@ -215,11 +209,11 @@ export class PagesCartPaymentOcComponent implements OnInit {
         return;
       }
 
-      if (this.usuario[0].credito) {
+      if (this.usuario[0].creditLine) {
         if (
-          this.total.total >= this.usuario[0].credito.de &&
-          (this.total.total < this.usuario[0].credito.hasta ||
-            this.usuario[0].credito.hasta === -1)
+          this.total.total >= this.usuario[0].creditLine.fromAmount &&
+          (this.total.total < this.usuario[0].creditLine.toAmount ||
+            this.usuario[0].creditLine.toAmount === -1)
         ) {
           this.credito = false;
         } else {

@@ -191,8 +191,8 @@
                       >
                         <ng-option
                           *ngFor="let giro of girosOptions"
-                          [value]="giro.codigo"
-                          >{{ giro.nombre }}</ng-option
+                          [value]="giro.code"
+                          >{{ giro.name }}</ng-option
                         >
                       </ng-select>
                     </div>
@@ -372,8 +372,8 @@
                       >
                         <ng-option
                           *ngFor="let giro of girosOptions"
-                          [value]="giro.codigo"
-                          >{{ giro.nombre }}</ng-option
+                          [value]="giro.code"
+                          >{{ giro.name }}</ng-option
                         >
                       </ng-select>
                     </div>
@@ -800,7 +800,7 @@
                     <div class="mb-3 col-md-6">
                       <label>Número orden de compra</label>
                       <input
-                        formControlName="folio"
+                        formControlName="number"
                         class="form-control form-control-lg"
                         type="text"
                         placeholder="Ingrese el número de OC"
@@ -810,7 +810,7 @@
                     <div class="mb-3 col-md-6">
                       <label>Monto orden de compra</label>
                       <input
-                        formControlName="monto"
+                        formControlName="amount"
                         class="form-control form-control-lg"
                         type="number"
                         placeholder="Ingrese el monto de su OC"
@@ -889,16 +889,16 @@
                       </label>
                       <select
                         class="form-control form-control-lg"
-                        formControlName="centroCosto"
+                        formControlName="costCenter"
                       >
                         <option [value]="''">
                           Seleccione centro de costo
                         </option>
                         <option
                           *ngFor="let item of centrosCosto"
-                          [value]="item.codigo"
+                          [value]="item.code"
                         >
-                          {{ item.codigo }} - {{ item.nombre }}
+                          {{ item.code }} - {{ item.name }}
                         </option>
                       </select>
                     </div>
@@ -1337,7 +1337,7 @@
                     <div class="mb-3 col-md-6">
                       <label>Número orden de compra</label>
                       <input
-                        formControlName="folio"
+                        formControlName="number"
                         class="form-control form-control-lg"
                         type="text"
                         placeholder="Ingrese el número de OC"
@@ -1347,7 +1347,7 @@
                     <div class="mb-3 col-md-6">
                       <label>Monto orden de compra</label>
                       <input
-                        formControlName="monto"
+                        formControlName="amount"
                         class="form-control form-control-lg"
                         type="number"
                         placeholder="Ingrese el monto de su OC"
@@ -1406,16 +1406,16 @@
                       <label>Centro de costo</label>
                       <select
                         class="form-control form-control-lg"
-                        formControlName="centroCosto"
+                        formControlName="costCenter"
                       >
                         <option [value]="''">
                           Seleccione centro de costo
                         </option>
                         <option
                           *ngFor="let item of centrosCosto"
-                          [value]="item.codigo"
+                          [value]="item.code"
                         >
-                          {{ item.codigo }} - {{ item.nombre }}
+                          {{ item.code }} - {{ item.name }}
                         </option>
                       </select>
                     </div>
@@ -2226,8 +2226,8 @@
                       >
                         <ng-option
                           *ngFor="let giro of girosOptions"
-                          [value]="giro.codigo"
-                          >{{ giro.nombre }}</ng-option
+                          [value]="giro.code"
+                          >{{ giro.name }}</ng-option
                         >
                       </ng-select>
                     </div>

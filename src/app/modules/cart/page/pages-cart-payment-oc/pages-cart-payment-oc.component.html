@@ -69,17 +69,29 @@
                 style="margin-left: 30px"
               ></i>
               Estimado usuario, Tiene limite de credito
-              <span *ngIf="usuario[0].credito.hasta !== -1"
+              <span
+                *ngIf="
+                  usuario[0].creditLine &&
+                  usuario[0].creditLine.toAmount !== -1
+                "
                 >de
-                <strong>{{ usuario[0].credito.de | currencyFormat }}</strong>
+                <strong>{{
+                  usuario[0].creditLine.fromAmount | currencyFormat
+                }}</strong>
                 hasta
                 <strong>{{
-                  usuario[0].credito.hasta | currencyFormat
+                  usuario[0].creditLine.toAmount | currencyFormat
                 }}</strong>
               </span>
-              <span *ngIf="usuario[0].credito.hasta === -1"
+              <span
+                *ngIf="
+                  usuario[0].creditLine &&
+                  usuario[0].creditLine.toAmount === -1
+                "
                 >desde
-                <strong>{{ usuario[0].credito.de | currencyFormat }}</strong>
+                <strong>{{
+                  usuario[0].creditLine.fromAmount | currencyFormat
+                }}</strong>
                 para arriba</span
               >, por lo tanto no puede confirmar esta orden de venta. Favor
               contactarse con personal de implementos.
