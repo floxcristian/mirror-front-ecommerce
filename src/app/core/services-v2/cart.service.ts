@@ -400,7 +400,6 @@ export class CartService {
         sku: producto.sku,
         quantity: (productoCarro.quantity || 0) + 1,
         origin: producto.origin || null,
-        status: '',
       });
     });
 
