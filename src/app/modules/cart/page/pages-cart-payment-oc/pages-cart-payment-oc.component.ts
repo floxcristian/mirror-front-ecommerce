@@ -40,6 +40,7 @@ import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 import { SHOPPING_CART_STATUS_TYPE } from '@core/enums/shopping-cart-status.enum';
 import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
+import { ITotals } from '@core/models-v2/cart/totals.interface';
 
 interface Item {
   ProductCart: ProductCart;
@@ -80,7 +81,12 @@ export class PagesCartPaymentOcComponent implements OnInit {
   sinStock: boolean = false;
   isB2B!: boolean;
   addingToCart = false;
-  total: any = {};
+  total: ITotals = {
+    subtotal: 0,
+    iva: 0,
+    shipment: 0,
+    total: 0,
+  };
   credito = false;
   shippingDaysStore: any = [];
   carouselOptions = {
@@ -134,16 +140,15 @@ export class PagesCartPaymentOcComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.route.queryParams.subscribe((params) => {
-      this.id = params['cart_id'] ? params['cart_id'] : params['cart-id'];
-    });
+    const params = this.route.snapshot.queryParams;
+    this.id = params['cart_id'] ? params['cart_id'] : params['cart-id'];
     // this.user = this.localS.get('usuario');
     this.user = this.sessionStorage.get();
 
     let consulta = await firstValueFrom(this.cartService.getOneById(this.id));
 
     this.cartSession = consulta.shoppingCart;
-    this.total = consulta.total;
+    this.total = consulta.totals;
 
     const status = this.cartSession.status ?? '';
     if (

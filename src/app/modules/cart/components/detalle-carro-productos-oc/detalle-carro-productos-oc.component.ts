@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 import { GetLogisticPromiseResponse } from '@core/models-v2/responses/logistic-promise-responses';
 import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
+import { ITotals } from '@core/models-v2/cart/totals.interface';
 
 interface IAddressDestination {
   address: string;
@@ -27,8 +28,8 @@ interface IAddressDestination {
 export class DetalleCarroProductosOcComponent implements OnInit {
   @Input() show = true;
   @Input() productCart!: IShoppingCartProduct[];
-  @Input() CartSession: any;
-  @Input() total: any;
+  @Input() CartSession!: IShoppingCart;
+  @Input() total!: ITotals;
   @Input() seeProducts = true;
   @Input() seePrices = true;
   @Output() sinStock: EventEmitter<any> = new EventEmitter();
@@ -64,7 +65,6 @@ export class DetalleCarroProductosOcComponent implements OnInit {
 
     this.products = this.productCart;
     await this.calculateLogisticPromise();
-    this.shippingType = this.total.retiro;
   }
 
   async calculateLogisticPromise() {
