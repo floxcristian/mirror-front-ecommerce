@@ -44,7 +44,7 @@ import { IArticleResponse } from '@core/models-v2/article/article-response.inter
 import { IProductImage } from './models/image.interface';
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { IScalePriceItem } from './models/scale-price-item.interface';
-import { IWishlist } from '@core/services-v2/whishlist/models/whishlist-response.interface';
+import { IWishlist } from '@core/services-v2/wishlist/models/wishlist-response.interface';
 // Services
 import { CartService } from '../../services/cart.service';
 import { PhotoSwipeService } from '../../services/photo-swipe.service';
@@ -53,13 +53,13 @@ import { WishListModalComponent } from '../wish-list-modal/wish-list-modal.compo
 import { isVacio } from '../../utils/utilidades';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { InventoryService } from '@core/services-v2/inventory.service';
-import { WishlistApiService } from '@core/services-v2/whishlist/whishlist-api.service';
+import { WishlistApiService } from '@core/services-v2/wishlist/wishlist-api.service';
 import { WishlistStorageService } from '@core/storage/wishlist-storage.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { GalleryUtils } from './services/gallery-utils.service';
 // Modals
 import { ModalScalePriceComponent } from '../modal-scale-price/modal-scale-price.component';
-import { WishlistService } from '@core/services-v2/whishlist/wishlist.service';
+import { WishlistService } from '@core/services-v2/wishlist/wishlist.service';
 import { IDeliverySupply } from '@core/models-v2/cms/special-reponse.interface';
 
 export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
@@ -634,12 +634,12 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
    */
   async addToWishlistOptions() {
     this.wishlistApiService.getWishlists(this.usuario.documentId).subscribe({
-      next: (whishlists) => {
+      next: (wishlists) => {
         const modal = this.modalService.show(WishListModalComponent, {
           class: 'modal-sm2 modal-dialog-centered',
           initialState: {
             producto: this.product!,
-            listas: whishlists,
+            listas: wishlists,
             listasEnQueExiste: this.listasEnQueExiste,
           },
         });

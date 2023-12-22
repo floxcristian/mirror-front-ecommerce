@@ -19,11 +19,11 @@ import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
-import { WishlistApiService } from '@core/services-v2/whishlist/whishlist-api.service';
+import { WishlistApiService } from '@core/services-v2/wishlist/wishlist-api.service';
 import {
   IProductWishlist,
   IWishlist,
-} from '@core/services-v2/whishlist/models/whishlist-response.interface';
+} from '@core/services-v2/wishlist/models/wishlist-response.interface';
 
 @Component({
   selector: 'app-page-listas-de-productos',

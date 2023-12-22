@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { StorageKey } from './storage-keys.enum';
 // Services
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
-import { IWishlist } from '@core/services-v2/whishlist/models/whishlist-response.interface';
+import { IWishlist } from '@core/services-v2/wishlist/models/wishlist-response.interface';
 
 @Injectable({
   providedIn: 'root',

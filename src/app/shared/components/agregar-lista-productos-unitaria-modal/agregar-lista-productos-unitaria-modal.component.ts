@@ -5,11 +5,11 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { IWishlist } from '@core/services-v2/whishlist/models/whishlist-response.interface';
+import { IWishlist } from '@core/services-v2/wishlist/models/wishlist-response.interface';
 import { ISelectedProduct } from './selected-product.interface';
 // Services
 import { SessionService } from '@core/services-v2/session/session.service';
-import { WishlistApiService } from '@core/services-v2/whishlist/whishlist-api.service';
+import { WishlistApiService } from '@core/services-v2/wishlist/wishlist-api.service';
 
 @Component({
   selector: 'app-agregar-lista-productos-unitaria-modal',

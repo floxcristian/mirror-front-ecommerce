@@ -9,7 +9,7 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
-import { WishlistService } from '@core/services-v2/whishlist/wishlist.service';
+import { WishlistService } from '@core/services-v2/wishlist/wishlist.service';
 import { GuestStorageService } from '@core/storage/guest-storage.service';
 import { CartService } from '@core/services-v2/cart.service';
 import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';

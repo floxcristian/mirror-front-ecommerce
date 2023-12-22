@@ -9,7 +9,7 @@ import { environment } from '@env/environment';
 import {
   IWishlist,
   IWishlistResponse,
-} from './models/whishlist-response.interface';
+} from './models/wishlist-response.interface';
 import { IProductsFromFileResponse } from './models/product-from-file-response.interface';
 
 const API_CUSTOMER = `${environment.apiEcommerce}/api/v1/customer`;

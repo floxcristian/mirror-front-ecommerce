@@ -6,13 +6,13 @@ import { ToastrService } from 'ngx-toastr';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
-import { IWishlist } from '@core/services-v2/whishlist/models/whishlist-response.interface';
+import { IWishlist } from '@core/services-v2/wishlist/models/wishlist-response.interface';
 // Services
 import { isVacio } from '../../utils/utilidades';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { WishlistStorageService } from '@core/storage/wishlist-storage.service';
-import { WishlistApiService } from '@core/services-v2/whishlist/whishlist-api.service';
-import { WishlistService } from '@core/services-v2/whishlist/wishlist.service';
+import { WishlistApiService } from '@core/services-v2/wishlist/wishlist-api.service';
+import { WishlistService } from '@core/services-v2/wishlist/wishlist.service';
 
 @Component({
   selector: 'app-wish-list-modal',

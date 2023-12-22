@@ -6,16 +6,16 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { IWishlist } from '@core/services-v2/whishlist/models/whishlist-response.interface';
+import { IWishlist } from '@core/services-v2/wishlist/models/wishlist-response.interface';
 // Services
 import { RootService } from '../../services/root.service';
 import { isVacio } from '../../utils/utilidades';
 import { SessionService } from '@core/services-v2/session/session.service';
-import { WishlistApiService } from '@core/services-v2/whishlist/whishlist-api.service';
+import { WishlistApiService } from '@core/services-v2/wishlist/wishlist-api.service';
 import {
   IProductFromFile,
   IRegisteredProductFromFile,
-} from '@core/services-v2/whishlist/models/product-from-file-response.interface';
+} from '@core/services-v2/wishlist/models/product-from-file-response.interface';
 
 @Component({
   selector: 'app-agregar-lista-productos-masiva-modal',
