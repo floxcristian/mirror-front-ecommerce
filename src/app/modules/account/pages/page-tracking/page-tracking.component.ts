@@ -1,11 +1,8 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { TrackingStep } from '../../../../shared/interfaces/tracking';
 import { isPlatformBrowser } from '@angular/common';
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { SessionService } from '@core/states-v2/session.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 
 @Component({
@@ -18,7 +15,6 @@ export class PageTrackingComponent implements OnInit {
   OV: string | null = '';
   usuario: ISession | null;
   constructor(
-    //  private localS: LocalStorageService,
     private route: ActivatedRoute,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2

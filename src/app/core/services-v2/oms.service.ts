@@ -1,7 +1,7 @@
 // Angular
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IOrdersResponse } from '@core/models-v2/oms/order.interface';
+import { IOrder, IOrdersResponse } from '@core/models-v2/oms/order.interface';
 // Environment
 import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
@@ -18,11 +18,11 @@ export class OmsService {
     return this.http.get<IOrdersResponse>(`${API_OMS}/orders`, { params });
   }
 
-  getOrderDetailAndSummary(trackingNumber: string) {
-    return this.http.get(`${API_OMS}/orders/tracking/${trackingNumber}`);
+  getOrderDetailAndSummary(trackingNumber: string):Observable<IOrder> {
+    return this.http.get<IOrder>(`${API_OMS}/order/tracking/${trackingNumber}`);
   }
 
-  getOrderDetail(trackingNumber: string) {
-    return this.http.get(`${API_OMS}/order/${trackingNumber}`);
+  getOrderDetail(trackingNumber: string):Observable<IOrder> {
+    return this.http.get<IOrder>(`${API_OMS}/order/${trackingNumber}`);
   }
 }

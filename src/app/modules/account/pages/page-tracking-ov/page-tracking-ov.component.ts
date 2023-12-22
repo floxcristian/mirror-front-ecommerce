@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { OmsService } from '@core/services-v2/oms.service';
-import { Iorder } from '@core/models-v2/oms/order.interface';
+import { IOrder } from '@core/models-v2/oms/order.interface';
 
 @Component({
   selector: 'app-page-tracking-ov',
@@ -11,14 +11,11 @@ import { Iorder } from '@core/models-v2/oms/order.interface';
 export class PageTrackingOvComponent implements OnInit {
   datatableElement!: DataTableDirective;
   dtOptions: DataTables.Settings = {};
-  persons!: Iorder[];
+  persons!: IOrder[];
   loadData:boolean = false;
-  // We use this trigger because fetching the list of persons can be quite long,
-  // thus we ensure the data is fetched before rendering
 
   constructor(
     // Services V2
-    // private readonly sessionService: SessionService,
     private readonly omsService:OmsService
   ) {}
 
@@ -32,8 +29,6 @@ export class PageTrackingOvComponent implements OnInit {
 
   async resultado_busqueda() {
     this.loadData = true;
-
-    //utilizacion de dtOption para filtrar datos/
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
@@ -50,7 +45,6 @@ export class PageTrackingOvComponent implements OnInit {
       },
 
       ajax: (dataTablesParameters: any, callback) => {
-        //datos set de ordenamiento//
         this.loadData = true;
         this.persons = [];
         let page_actual = dataTablesParameters.start === 0 ? 1 : (dataTablesParameters.start/dataTablesParameters.length)+1

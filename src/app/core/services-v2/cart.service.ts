@@ -380,7 +380,7 @@ export class CartService {
     return this.http.get<IShoppingCartDetail>(url);
   }
 
-  addLista(products: IShoppingCartProduct[]) {
+  addLista(products: IShoppingCartProduct[] | IProduct[]):Observable<IShoppingCart> {
     // Sucursal
     console.log('getSelectedStore desde addLista');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
@@ -388,7 +388,8 @@ export class CartService {
 
     const cartSession = this.shoppingCartStorage.get();
     if (!cartSession) {
-      return;
+      // return;
+      throw new Error('No se ha encontrado el carro');
     }
     let productoCarro;
     const productos: any[] = [];
@@ -405,18 +406,16 @@ export class CartService {
       productos.push({
         sku: producto.sku,
         quantity: (productoCarro.quantity || 0) + 1,
-        origin: producto.origin ? producto.origin : null,
-        status: '',
+        origin: producto.origin ? producto.origin : null
       });
     });
 
     const usuario = this.sessionService.getSession();
-    // this.root.getDataSesionUsuario();
 
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
 
     const data = {
-      usuario: usuario.username,
+      user: usuario.username,
       documentId: usuario.documentId,
       branch: sucursal,
       products: productos,
@@ -965,5 +964,9 @@ export class CartService {
       salesId,
       user,
     });
+  }
+
+  updateStatusShoppingCart(id:string,status:string,observation:string){
+    return this.http.put(`${API_CART}/${id}/status/${status}`,{observation})
   }
 }

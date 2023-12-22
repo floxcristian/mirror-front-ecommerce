@@ -87,7 +87,7 @@
                           </a>
                         </li>
 
-                        <li
+                        <!-- <li
                           role="menuitem"
                           *ngIf="
                             usuario.userRole == 'supervisor' &&
@@ -98,7 +98,7 @@
                             <i class="fas fa-marker"></i>
                             Completar pedido
                           </a>
-                        </li>
+                        </li> -->
 
                         <li
                           role="menuitem"
@@ -158,7 +158,7 @@
               *ngIf="
                 order?.purchaseOrder?.number != null &&
                 usuario.userRole == 'supervisor' &&
-                order?.status == 'pendiente'
+                order?.status == 'pending'
               "
             >
               <i class="far fa-thumbs-up"></i>
@@ -170,24 +170,24 @@
               *ngIf="
                 order?.purchaseOrder?.number != null &&
                 usuario.userRole == 'supervisor' &&
-                order?.status == 'pendiente'
+                order?.status == 'pending'
               "
             >
               <i class="far fa-thumbs-down"></i>
               Rechazar
             </button>
-            <button
+            <!-- <button
               class="btn btn-border-primary mb-3 float-end"
               (click)="backToList()"
               *ngIf="
                 order?.purchaseOrder?.number == null &&
                 usuario.userRole == 'supervisor' &&
-                order?.status == 'pendiente'
+                order?.status == 'pending'
               "
             >
               <i class="fas fa-marker"></i>
               Completar
-            </button>
+            </button> -->
             <app-order-details
               [title]="'Solicitud de compra'"
               [id]="orderId"

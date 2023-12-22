@@ -6,9 +6,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { TrackingStep } from '../../../../shared/interfaces/tracking';
 import { TrackingService } from '../../../../shared/services/tracking.service';
 import { isPlatformBrowser } from '@angular/common';
+import { OmsService } from '@core/services-v2/oms.service';
+import { IOrder, IProduct, ITracking } from '@core/models-v2/oms/order.interface';
 
 @Component({
   selector: 'app-trakingb2c',
@@ -18,19 +19,21 @@ import { isPlatformBrowser } from '@angular/common';
 export class Trakingb2cComponent implements OnInit {
   formBuscar: FormGroup;
   innerWidth: number;
-  OVEstados: TrackingStep[] = [];
+  OVEstados: ITracking[] = [];
   @Input() OV: string = '';
   loadingShippingAll: boolean = false;
 
   EstadoOV: any = [];
   DetalleOV: any = {};
   productos: any = [];
-  detalle: any;
+  detalle!: IOrder;
   suma = 0;
   constructor(
     private fb: FormBuilder,
     private _TrackingService: TrackingService,
     private toast: ToastrService,
+    //Services v2
+    private readonly omsService:OmsService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
@@ -49,13 +52,10 @@ export class Trakingb2cComponent implements OnInit {
   }
 
   async buscarOrden(value: any) {
-    //reiniciando variables
     this.OVEstados = [];
     let OV = '';
     if (value.orden !== undefined) OV = value.orden.trim();
     else OV = value.trim();
-
-    //fin de reinicio
 
     if (OV.split('OV-').length == 1) {
       OV = `OV-${OV}`;
@@ -64,21 +64,26 @@ export class Trakingb2cComponent implements OnInit {
     if (OV.length > 0) {
       this.OV = OV;
       this.loadingShippingAll = true;
-      let consulta: any = await this._TrackingService
-        .buscarEstadosOV(OV)
-        .toPromise();
-      if (consulta != null) {
-        this.detalle = consulta;
-        this.OVEstados = consulta.estados;
-        this.DetalleOV = consulta.codModoEntregaNom;
-        await this.detalles_productos();
-        this.loadingShippingAll = false;
-      } else {
-        this.loadingShippingAll = false;
-        this.toast.info(
-          'No se ha encontrado datos de seguimiento para el número de orden ingresado.'
-        );
-      }
+
+      this.omsService.getOrderDetailAndSummary(this.OV).subscribe({
+        next:(res)=>{
+          this.detalle = res
+          this.OVEstados = res.tracking;
+          this.DetalleOV = res.shipping.shippingCode;
+          this.suma = 0;
+          this.detalle.products.forEach((r: IProduct) => {
+            this.suma = this.suma + r.total;
+          });
+          this.loadingShippingAll = false;
+        },
+        error:(err)=>{
+          console.log(err)
+          this.loadingShippingAll = false;
+          this.toast.info(
+            'No se ha encontrado datos de seguimiento para el número de orden ingresado.'
+          );
+        }
+      })
     } else {
       this.toast.success('Debe ingresar un número de orden valido.');
     }
@@ -96,9 +101,6 @@ export class Trakingb2cComponent implements OnInit {
     });
   }
 
-  onPageChange(pageNumber: any): void {
-    window.scrollTo({ top: 0 });
-  }
   onResize(event: any) {
     this.innerWidth = event.target.innerWidth;
     window.scrollTo({ top: 0 });

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { RootService } from '../../../../shared/services/root.service';
-import { SessionService } from '@core/states-v2/session.service';
 import { OmsService } from '@core/services-v2/oms.service';
-import { IProduct, Iorder } from '@core/models-v2/oms/order.interface';
+import { IProduct, IOrder } from '@core/models-v2/oms/order.interface';
 import { CartService } from '@core/services-v2/cart.service';
 
 @Component({
@@ -17,7 +16,6 @@ export class PageComprasComponent implements OnInit {
     private cart: CartService,
     private toastr: ToastrService,
     // Services V2
-    private readonly sessionService: SessionService,
     private readonly omsService:OmsService
   ) {}
 
@@ -26,7 +24,7 @@ export class PageComprasComponent implements OnInit {
   totalItems = 0;
   addingToCart = false;
   search:string = '';
-  data: Iorder[] = [];
+  data: IOrder[] = [];
   maxlength:number = 5;
   loadData = false;
   page = 1;
@@ -39,7 +37,6 @@ export class PageComprasComponent implements OnInit {
     this.loadData = true;
 
     this.data = [];
-    const usuario = this.sessionService.getSession();
     let params = {
       search: this.search,
       page: this.page,
@@ -52,7 +49,7 @@ export class PageComprasComponent implements OnInit {
         this.loadData = false;
       },
       error:(err)=>{
-
+        console.log(err)
       }
     })
   }
@@ -67,19 +64,20 @@ export class PageComprasComponent implements OnInit {
     await this.resultado_busqueda();
   }
 
-  addToCart(index: any) {
+  addToCart(index: number) {
     console.log(index);
     if (this.addingToCart) {
       return;
     }
-
     this.addingToCart = true;
-    // this.cart.addLista(this.data[index].productos).subscribe((resp) => {
-    //   this.addingToCart = false;
-    //   if (!resp.error) {
-    //     this.toastr.success(`El pedido fue agregado al carro correctamente.`);
-    //   }
-    // });
+    let products:IProduct[] = this.data[index]?.products || []
+    console.log(products)
+    if(products.length){
+      this.cart.addLista(products).subscribe(() => {
+        this.addingToCart = false;
+        this.toastr.success(`El pedido fue agregado al carro correctamente.`);
+      });
+    }
   }
 
   addCart(item: IProduct) {

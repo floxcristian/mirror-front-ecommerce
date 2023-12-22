@@ -5,10 +5,10 @@ export interface IOrdersResponse{
     page: number
     firstPage: number
     lastPage: number
-    data: Iorder[]
+    data: IOrder[]
 }
 
-export interface Iorder{
+export interface IOrder{
     trackingNumber: string
     cartNumber: string
     salesId: string

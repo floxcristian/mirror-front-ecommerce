@@ -1,12 +1,10 @@
 // Angular
 import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
-// Services
-import { TrackingService } from '../../../../shared/services/tracking.service';
 // Libs
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 // Components
 import { Modal_reciboComponent } from '../../components/modal_recibo/modal_recibo/modal_recibo.component';
-import { IProduct, ITracking, Iorder } from '@core/models-v2/oms/order.interface';
+import { IProduct, ITracking, IOrder } from '@core/models-v2/oms/order.interface';
 import { EcommerceDocumentService } from '@core/services-v2/ecommerce-document.service';
 import { IBackupOrder } from '@core/models-v2/ecommerce-document/backup-oder.interface';
 
@@ -17,7 +15,7 @@ import { IBackupOrder } from '@core/models-v2/ecommerce-document/backup-oder.int
 })
 export class DetalleTrakingOvComponent implements OnInit {
   @Input() Ov: string = '';
-  @Input() detalle!: Iorder;
+  @Input() detalle!: IOrder;
   recibo!: IBackupOrder;
   suma: number = 0;
 
@@ -26,7 +24,6 @@ export class DetalleTrakingOvComponent implements OnInit {
   bsModalRef?: BsModalRef;
 
   constructor(
-    private _TrackingService: TrackingService,
     private modalService: BsModalService,
     //Services v2
     private readonly ecommerceDocumentService:EcommerceDocumentService
@@ -35,12 +32,10 @@ export class DetalleTrakingOvComponent implements OnInit {
   }
 
   async ngOnInit() {
-    console.log('algoo...');
     this.buscar_detalle_estado();
   }
 
   async ngOnChanges(changes: SimpleChanges) {
-    console.log('ngOnChanges...');
     this.loadingShippingAll = true;
     this.buscar_detalle_estado();
   }
@@ -66,10 +61,6 @@ export class DetalleTrakingOvComponent implements OnInit {
         console.log(err)
       }
     })
-    // const consulta: any = await this._TrackingService
-    //   .recibo(this.Ov)
-    //   .toPromise();
-    // this.recibo = consulta.data[0];
   }
 
   OpenModal() {

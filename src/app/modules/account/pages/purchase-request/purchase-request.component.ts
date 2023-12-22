@@ -1,15 +1,12 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { environment } from '@env/environment';
-import { Usuario } from '../../../../shared/interfaces/login';
-import { DataTablesResponse } from '../../../../shared/interfaces/data-table';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { Router } from '@angular/router';
 import { SessionService } from '@core/states-v2/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { CartService } from '@core/services-v2/cart.service';
 import { IOrderDetail } from '@core/models-v2/cart/order-details.interface';
+import { PaymentMethodPurchaseOrderRequestService } from '@core/services-v2/payment-method-purchase-order-request.service';
 
 @Component({
   selector: 'app-purchase-request',
@@ -27,12 +24,10 @@ export class PurchaseRequestComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   usuario!: ISession;
   orders!: IOrderDetail[];
-  urlDonwloadOC = environment.apiShoppingCart + 'getoc?id=';
   title = '';
   viewActive = 'list';
   orderId:string = '';
   order!: IOrderDetail;
-  userSession!: Usuario;
   loadingPage = false;
   obsRefuse = '';
 
@@ -42,7 +37,8 @@ export class PurchaseRequestComponent implements OnInit {
     private toast: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly cartService:CartService
+    private readonly cartService:CartService,
+    private readonly paymentPurchaseOrderService:PaymentMethodPurchaseOrderRequestService
   ) {}
 
   ngOnInit(): void {
@@ -80,8 +76,7 @@ export class PurchaseRequestComponent implements OnInit {
           user:this.usuario.username || '',
           salesDocumentType:2,
           search:dataTablesParameters.search.value,
-          // statuses:['pending', 'rejected'],
-          statuses:['finalized', 'generated'],
+          statuses:['pending', 'rejected'],
           page:page_actual,
           limit:dataTablesParameters.length,
           sort:sort_real
@@ -102,10 +97,6 @@ export class PurchaseRequestComponent implements OnInit {
         })
       },
     };
-  }
-
-  addCart() {
-    alert('Funcionalidad en proceso');
   }
 
   viewOrderDetail(item: IOrderDetail) {
@@ -135,33 +126,29 @@ export class PurchaseRequestComponent implements OnInit {
 
     this.loadingPage = true;
     this.modalApproveRef.hide();
-    // this.cart.generaOrdenDeCompra(data).subscribe(
-    //   (r: ResponseApi) => {
-    //     this.loadingPage = false;
+    let params = {
+      shoppingCartId:this.order.id
+    }
+    this.paymentPurchaseOrderService.approve(params).subscribe({
+      next:(res)=>{
+        this.loadingPage = false;
+        let params = {
+          site_id: 'OC',
+          external_reference: this.order.id,
+          status: 'approved',
+        };
 
-    //     if (r.error) {
-    //       this.toast.error(r.msg);
-
-    //       return;
-    //     }
-    //     if (!r.error) {
-    //       let params = {
-    //         site_id: 'OC',
-    //         external_reference: this.order._id,
-    //         status: 'approved',
-    //       };
-
-    //       this.cart.load();
-    //       this.router.navigate(
-    //         ['/', 'carro-compra', 'gracias-por-tu-compra'],
-    //         { queryParams: { ...params } }
-    //       );
-    //     }
-    //   },
-    //   (e) => {
-    //     this.toast.error('Ha ocurrido  al generar la orden de venta');
-    //   }
-    // );
+        this.cartService.load();
+        this.router.navigate(
+          ['/', 'carro-compra', 'gracias-por-tu-compra'],
+          { queryParams: { ...params } }
+        );
+      },
+      error:(err)=>{
+        console.log(err)
+        this.toast.error('Ha ocurrido  al generar la orden de venta');
+      }
+    })
   }
 
   refuseOrder(item: any) {
@@ -170,26 +157,18 @@ export class PurchaseRequestComponent implements OnInit {
   }
 
   confirmRefuseOrder() {
-    const data = {
-      id: this.order.id,
-      observacion: this.obsRefuse,
-    };
     this.loadingPage = true;
-    // this.cart.refuseOrder(data).subscribe(
-    //   (r: ResponseApi) => {
-    //     this.loadingPage = false;
-
-    //     if (r.error) {
-    //       this.toast.error(r.msg);
-    //       return;
-    //     }
-    //     this.toast.success('Solitud rechazada correctamente');
-    //     this.modalRefuseRef.hide();
-    //     this.loadData();
-    //   },
-    //   (e) => {
-    //     this.toast.error('Ha ocurrido un error al rechazar la orden de venta');
-    //   }
-    // );
+    this.cartService.updateStatusShoppingCart(this.order.id,'rejected',this.obsRefuse).subscribe({
+      next:(res)=>{
+        console.log(res)
+        this.loadingPage = false;
+        this.toast.success('Solitud rechazada correctamente');
+        this.modalRefuseRef.hide();
+        this.loadData();
+      },
+      error:(err)=>{
+        this.toast.error('Ha ocurrido un error al rechazar la orden de venta');
+      }
+    })
   }
 }
