@@ -1,6 +1,10 @@
+// Angular
 import { Injectable } from '@angular/core';
-import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
+// Rxjs
 import { Observable, Subject } from 'rxjs';
+// Models
+import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
+
 
 @Injectable({
   providedIn: 'root',
