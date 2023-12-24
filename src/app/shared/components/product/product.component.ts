@@ -130,8 +130,8 @@ export class ProductComponent implements OnInit, OnChanges {
   estado = true; // isDesktop
   products: IArticleResponse[] = [];
 
-  isWishlistProduct!: boolean;
-  listasEnQueExiste: IWishlist[] = [];
+  isProductOnList!: boolean;
+  productWishlistsIds: string[] = [];
   listaPredeterminada: IWishlist | null = null;
 
   usuario: ISession;
@@ -242,15 +242,17 @@ export class ProductComponent implements OnInit, OnChanges {
     // Observable cuyo fin es saber cuando se presiona el boton agregar al carro utilizado para los dispositivos moviles.
     this.cart.onAddingmovilButton$
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        // this.addToCart();
+      .subscribe({
+        next: () => {
+          // this.addToCart();
+        },
       });
     this.buildRequestProductForm();
   }
 
-  async ngOnChanges() {
+  ngOnChanges(): void {
     if (this.product) {
-      this.refreshListasEnQueExiste();
+      this.refreshProductWishlistsIds();
     }
   }
 
@@ -466,25 +468,28 @@ export class ProductComponent implements OnInit, OnChanges {
   /*************************************************
    * Métodos lista de deseos.
    *************************************************/
-  private refreshListasEnQueExiste(): void {
-    this.listasEnQueExiste = [];
+  /**
+   * Actualizar los ids de las listas que contienen el producto actual.
+   * @returns
+   */
+  private refreshProductWishlistsIds(): void {
+    this.productWishlistsIds = [];
     const wishlists = this.wishlistStorage.get();
-    if (wishlists.length) {
-      wishlists.forEach((wishlist) => {
-        const isProductOnList = wishlist.articles.find(
-          (product) => product.sku === this.product.sku
-        );
-        if (isProductOnList) {
-          this.isWishlistProduct = true;
-          this.listasEnQueExiste.push(wishlist);
-        }
-      });
-    }
+    if (!wishlists.length) return;
+    wishlists.forEach((wishlist) => {
+      const isProductOnList = wishlist.articles.find(
+        (product) => product.sku === this.product.sku
+      );
+      this.isProductOnList = isProductOnList ? true : false;
+      if (isProductOnList) {
+        this.productWishlistsIds.push(wishlist.id);
+      }
+    });
     this.cd.markForCheck();
   }
 
   addToWishlist(): void {
-    if (this.isWishlistProduct) {
+    if (this.isProductOnList) {
       this.wishlistApiService
         .deleteProductFromAllWishlists(
           this.usuario.documentId,
@@ -492,13 +497,13 @@ export class ProductComponent implements OnInit, OnChanges {
         )
         .subscribe({
           next: () => {
-            this.isWishlistProduct = false;
+            this.isProductOnList = false;
             this.cd.markForCheck();
             this.wishlistService
               .setWishlistOnStorage(this.usuario.documentId)
               .subscribe({
                 next: () => {
-                  this.refreshListasEnQueExiste();
+                  this.refreshProductWishlistsIds();
                   this.toast.success('Se eliminó de todas las listas');
                 },
               });
@@ -524,11 +529,10 @@ export class ProductComponent implements OnInit, OnChanges {
                   .setWishlistOnStorage(this.usuario.documentId)
                   .subscribe({
                     next: () => {
-                      this.refreshListasEnQueExiste();
+                      this.refreshProductWishlistsIds();
                       this.toast.success(
                         `Se agregó a la lista ${listaPredeterminada?.name}.`
                       );
-                      this.isWishlistProduct = true;
                       this.cd.markForCheck();
                       this.listaPredeterminada = listaPredeterminada || null;
                     },
@@ -544,12 +548,11 @@ export class ProductComponent implements OnInit, OnChanges {
         initialState: {
           productSku: this.product.sku,
           wishlists: [],
-          listasEnQueExiste: this.listasEnQueExiste,
+          productWishlistsIds: this.productWishlistsIds,
         },
       });
-      modal.content?.event.subscribe((res: any) => {
-        this.refreshListasEnQueExiste();
-        this.isWishlistProduct = res;
+      modal.content?.event.subscribe(() => {
+        this.refreshProductWishlistsIds();
         this.cd.markForCheck();
       });
     }
@@ -558,7 +561,7 @@ export class ProductComponent implements OnInit, OnChanges {
   /**
    * Abrir modal con las listas de deseos.
    */
-  async addToWishlistOptions() {
+  addToWishlistOptions(): void {
     this.wishlistApiService.getWishlists(this.usuario.documentId).subscribe({
       next: (wishlists) => {
         const modal = this.modalService.show(WishListModalComponent, {
@@ -566,12 +569,11 @@ export class ProductComponent implements OnInit, OnChanges {
           initialState: {
             productSku: this.product.sku,
             wishlists,
-            listasEnQueExiste: this.listasEnQueExiste,
+            productWishlistsIds: this.productWishlistsIds,
           },
         });
-        modal.content?.event.subscribe((res: any) => {
-          this.refreshListasEnQueExiste();
-          this.isWishlistProduct = res;
+        modal.content?.event.subscribe(() => {
+          this.refreshProductWishlistsIds();
           this.cd.markForCheck();
         });
       },

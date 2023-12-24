@@ -528,13 +528,13 @@
                 appClick
                 (click)="addToWishlistOptions()"
                 [ngStyle]="{
-                  color: isWishlistProduct ? '#10753d' : '#3d464d'
+                  color: isProductOnList ? '#10753d' : '#3d464d'
                 }"
                 [ngClass]="{ 'btn-loading': addingToWishlist }"
               >
                 <i class="fa-solid fa-list-check fa-lg me-2"></i>
                 {{
-                  isWishlistProduct
+                  isProductOnList
                     ? 'Agregado a tus listas'
                     : 'Agregar a una lista'
                 }}
@@ -824,11 +824,11 @@
               type="button"
               appClick
               (click)="addToWishlist()"
-              [ngStyle]="{ color: isWishlistProduct ? '#10753d' : '#3d464d' }"
+              [ngStyle]="{ color: isProductOnList ? '#10753d' : '#3d464d' }"
               [ngClass]="{ 'btn-loading': addingToWishlist }"
             >
               {{
-                isWishlistProduct
+                isProductOnList
                   ? 'Agregado a tus listas'
                   : 'Agregar a una lista'
               }}

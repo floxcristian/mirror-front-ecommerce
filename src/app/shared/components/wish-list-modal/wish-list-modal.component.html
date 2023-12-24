@@ -15,18 +15,18 @@
 <div class="modal-body px-4">
   <div
     class="form-check align-items-center d-flex"
-    *ngFor="let item of wishlists"
+    *ngFor="let wishlist of checkedWishlists"
   >
     <div class="flex-shrink-1 flex-grow-1">
       <input
         type="checkbox"
         class="form-check-input listas"
-        [checked]="item.checked"
-        [id]="'ID-' + item.id"
-        (change)="seleccionaLista(item)"
+        [checked]="wishlist.checked"
+        [id]="'ID-' + wishlist.id"
+        (change)="selectWishlist(wishlist)"
       />
-      <label class="form-check-label" [for]="'ID-' + item.id">{{
-        item.name
+      <label class="form-check-label" [for]="'ID-' + wishlist.id">{{
+        wishlist.name
       }}</label>
     </div>
   </div>
@@ -58,13 +58,15 @@
         [(ngModel)]="nombre"
       />
       <div class="w-100 d-flex justify-content-end mt-1">
-        <div class="validacion d-none">Ingrese un nombre</div>
+        <div class="validacion d-none" style="border: 2px dotted green">
+          Ingrese un nombre
+        </div>
         <div class="max-caracteres">{{ nombre.length }} / 40</div>
       </div>
     </div>
     <button
       class="btn btn-link btn-sm mt-2 float-end text-decoration-none"
-      (click)="crearLista()"
+      (click)="createWishlist()"
     >
       Crear
     </button>

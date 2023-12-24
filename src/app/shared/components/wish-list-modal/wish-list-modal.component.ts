@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IWishlist } from '@core/services-v2/wishlist/models/wishlist-response.interface';
+import { ICheckedWishlist } from './checked-wishlist.interface';
 // Services
 import { SessionService } from '@core/services-v2/session/session.service';
 import { WishlistStorageService } from '@core/storage/wishlist-storage.service';
@@ -19,16 +20,14 @@ import { WishlistService } from '@core/services-v2/wishlist/wishlist.service';
 })
 export class WishListModalComponent implements OnInit {
   productSku!: string;
-
-  wishlists!: (IWishlist & { checked?: boolean })[];
-  listasEnQueExiste!: IWishlist[];
-
+  wishlists!: IWishlist[];
+  productWishlistsIds!: string[];
+  checkedWishlists!: ICheckedWishlist[];
   creatingWishlist!: boolean;
+  session!: ISession;
   nombre = '';
 
-  session!: ISession;
-
-  event: EventEmitter<any> = new EventEmitter();
+  event: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
     public ModalRef: BsModalRef,
@@ -42,33 +41,37 @@ export class WishListModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.session = this.sessionService.getSession();
-
-    this.wishlists = this.formatCheckedWishlists(this.wishlists);
+    this.checkedWishlists = this.formatCheckedWishlists(this.wishlists);
   }
 
   private getWishlists(): void {
     this.wishlistApiService.getWishlists(this.session.documentId).subscribe({
       next: (wishlists) => {
-        this.wishlists = this.formatCheckedWishlists(wishlists);
+        this.checkedWishlists = this.formatCheckedWishlists(wishlists);
       },
     });
   }
 
-  private formatCheckedWishlists(wishlists: IWishlist[]) {
+  /**
+   * Formatea las listas añadiendo el estado `checked` que indica si la lista contiene o no el producto.
+   * @param wishlists
+   * @returns
+   */
+  private formatCheckedWishlists(wishlists: IWishlist[]): ICheckedWishlist[] {
     return wishlists.map((wishlist) => {
-      const isProductOnList = this.listasEnQueExiste.some(
-        (_wishlist) => _wishlist.id === wishlist.id
+      const isProductOnList = this.productWishlistsIds.some(
+        (wishlistId) => wishlistId === wishlist.id
       );
       return { ...wishlist, checked: isProductOnList };
     });
   }
 
-  ingresaNombre() {
+  ingresaNombre(): void {
     document.querySelector('.validacion')?.classList.remove('d-block');
     document.querySelector('.validacion')?.classList.add('d-none');
   }
 
-  crearLista() {
+  createWishlist(): void {
     if (!this.nombre.length) {
       document.querySelector('.validacion')?.classList.remove('d-none');
       document.querySelector('.validacion')?.classList.add('d-block');
@@ -85,7 +88,7 @@ export class WishListModalComponent implements OnInit {
             .setWishlistOnStorage(this.session.documentId)
             .subscribe({
               next: () => {
-                this.refreshListasEnQueExiste();
+                this.refreshProductWishlistsIds();
                 this.toast.success(`Se creó la lista: ${this.nombre}`);
                 this.getWishlists();
               },
@@ -96,18 +99,8 @@ export class WishListModalComponent implements OnInit {
     this.creatingWishlist = false;
   }
 
-  listaPredeterminada(lista: IWishlist): void {
-    this.wishlistApiService
-      .setDefaultWishlist(this.session.documentId, lista.id)
-      .subscribe({
-        next: () => {
-          this.getWishlists();
-        },
-      });
-  }
-
   // agrega o elimina SKU de una lista
-  async seleccionaLista(wishlist: IWishlist) {
+  async selectWishlist(wishlist: IWishlist) {
     const objHTML: any = document.getElementById(`ID-${wishlist.id}`);
 
     if (objHTML.checked) {
@@ -123,7 +116,7 @@ export class WishListModalComponent implements OnInit {
               .setWishlistOnStorage(this.session.documentId)
               .subscribe({
                 next: () => {
-                  this.refreshListasEnQueExiste();
+                  this.refreshProductWishlistsIds();
                   this.toast.success(`Se agregó a la lista: ${wishlist.name}`);
                 },
               });
@@ -142,7 +135,7 @@ export class WishListModalComponent implements OnInit {
               .setWishlistOnStorage(this.session.documentId)
               .subscribe({
                 next: () => {
-                  this.refreshListasEnQueExiste();
+                  this.refreshProductWishlistsIds();
                   this.toast.success(
                     `Se eliminó de la lista: ${wishlist.name}`
                   );
@@ -153,8 +146,12 @@ export class WishListModalComponent implements OnInit {
     }
   }
 
+  /**
+   * Cerrar modal.
+   */
   closeModal(): void {
     const listas: NodeListOf<Element> = document.querySelectorAll('.listas');
+    console.log('listas: ', listas);
     let checked = false;
     listas.forEach((e: any) => {
       if (e.checked) {
@@ -164,25 +161,27 @@ export class WishListModalComponent implements OnInit {
 
     if (checked) {
       this.event.emit(true);
-      this.ModalRef.hide();
     } else {
       this.event.emit(false);
-      this.ModalRef.hide();
     }
+    this.ModalRef.hide();
   }
 
-  private refreshListasEnQueExiste(): void {
-    this.listasEnQueExiste = [];
+  /**
+   * Actualizar los ids de las listas que contienen el producto actual.
+   * @returns
+   */
+  private refreshProductWishlistsIds(): void {
+    this.productWishlistsIds = [];
     const wishlists = this.wishlistStorage.get();
-    if (wishlists?.length) {
-      wishlists.forEach((wishlist) => {
-        const isProductOnList = wishlist.articles.find(
-          (product) => product.sku === this.productSku
-        );
-        if (isProductOnList) {
-          this.listasEnQueExiste.push(wishlist);
-        }
-      });
-    }
+    if (!wishlists?.length) return;
+    wishlists.forEach((wishlist) => {
+      const isProductOnList = wishlist.articles.find(
+        (product) => product.sku === this.productSku
+      );
+      if (isProductOnList) {
+        this.productWishlistsIds.push(wishlist.id);
+      }
+    });
   }
 }
