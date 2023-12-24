@@ -108,7 +108,7 @@ export class PageCartShippingComponent implements OnInit {
   fecha_actual = moment().startOf('day').toISOString();
   sucursal = null;
 
-  shippingSelected: ShippingService | null = null;
+  shippingSelected: ShippingService | undefined | null = null;
 
   userSession!: ISession;
   cartSession!: any; //CartData;
@@ -362,7 +362,7 @@ export class PageCartShippingComponent implements OnInit {
 
           response.shoppingCart.groups.forEach((group: IShoppingCartGroup) => {
             let j = 0;
-            let dia_despacho: any = [];
+            let dia_despacho: ShippingService[] = [];
             i = i + 1;
             group.tripDates.forEach((item: IShoppingCartTripDate) => {
               let index = j++;
@@ -509,7 +509,7 @@ export class PageCartShippingComponent implements OnInit {
 
         response.shoppingCart.groups.forEach((group: IShoppingCartGroup) => {
           let i = 0;
-          let dia_despacho: any = [];
+          let dia_despacho: ShippingService[] = [];
 
           group.tripDates.forEach((item: IShoppingCartTripDate) => {
             let isSabado = this.valFindeSemana(item.requestedDate.toString());

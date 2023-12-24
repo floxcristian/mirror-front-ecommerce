@@ -2,8 +2,8 @@
   <!-- FIXME: NO EXISTE RUTA -->
   <!-- <app-header-login (muestraLogin)="validaLogin($event)" [ruta]="ruta" [linkRegister]="true">
     </app-header-login> -->
-  <app-header-login (muestraLogin)="validaLogin($event)" [linkRegister]="true">
-  </app-header-login>
+  <!-- <app-header-login (muestraLogin)="validaLogin($event)" [linkRegister]="true">
+  </app-header-login> -->
 </div>
 <div *ngIf="!usuarioTemp">
   <div *ngIf="!propietario" class="row justify-content-md-center mt-5">
@@ -148,7 +148,7 @@
                 >
                   <app-grupo-detalle-productos
                     [index]="i + 1"
-                    [length]="fechas.length"
+                    [length]="cartSession.groups?.length ?? 0"
                     [grupo_producto]="item.products"
                   ></app-grupo-detalle-productos>
 
