@@ -29,7 +29,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 // Libs
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { NguCarousel, NguCarouselConfig } from '@ngu/carousel';
+import { NguCarouselConfig } from '@ngu/carousel';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { CarouselComponent, SlidesOutputData } from 'ngx-owl-carousel-o';
 import { OwlCarouselOConfig } from 'ngx-owl-carousel-o/lib/carousel/owl-carousel-o-config';
@@ -69,7 +69,6 @@ export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
 })
 export class ProductComponent implements OnInit, OnChanges {
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
-  @ViewChild('myCarousel', { static: false }) myCarousel!: NguCarousel<any>;
   @ViewChild('featuredCarousel', { read: CarouselComponent, static: false })
   featuredCarousel!: CarouselComponent;
   @ViewChildren('imageElement', { read: ElementRef })
@@ -77,6 +76,7 @@ export class ProductComponent implements OnInit, OnChanges {
 
   @Input() stock!: boolean;
   @Input() origen!: string[];
+  @Input() recommendedProducts!: IArticleResponse[];
   @Input() set product(value: IArticleResponse) {
     if (!value) return;
     // Eliminar?
@@ -98,13 +98,10 @@ export class ProductComponent implements OnInit, OnChanges {
     );
     this.dataProduct.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);*/
   }
-  @Input() recommendedProducts!: IArticleResponse[];
+
   @Output() comentarioGuardado: EventEmitter<boolean> = new EventEmitter();
   @Output() leerComentarios: EventEmitter<boolean> = new EventEmitter();
   //codigo de slide vertical
-  slideNo = 0;
-  withAnim = true;
-  resetAnim = true;
   innerWidth: number;
 
   /*************************************
@@ -130,12 +127,12 @@ export class ProductComponent implements OnInit, OnChanges {
   estado = true; // isDesktop
   products: IArticleResponse[] = [];
 
+  session: ISession;
+  isB2B: boolean;
+  selectedStore!: ISelectedStore;
   isProductOnList!: boolean;
   productWishlistsIds: string[] = [];
-  listaPredeterminada: IWishlist | null = null;
-
-  usuario: ISession;
-  isB2B: boolean;
+  defaultWishlist!: IWishlist | null;
 
   @Input() set layout(value: Layout) {
     this.dataLayout = value;
@@ -159,18 +156,12 @@ export class ProductComponent implements OnInit, OnChanges {
 
   quantity: FormControl = new FormControl(1);
 
-  addingToCart = false;
-  addingToWishlist = false;
-  disponibilidadSku: any;
-  headerLayout!: string;
+  addingToCart!: boolean;
+  addingToWishlist!: boolean;
 
-  today = Date.now();
-  stockMax = 0;
-  selectedStore!: ISelectedStore;
-  MODOS = { RETIRO_TIENDA: 'retiroTienda', DESPACHO: 'domicilio' };
   puntoQuiebre: number = 576;
-  showMobile: boolean = false;
-  formAvisoStock!: FormGroup;
+  showMobile!: boolean;
+  formProductRequest!: FormGroup;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -197,13 +188,10 @@ export class ProductComponent implements OnInit, OnChanges {
     this.carouselConfig = CarouselConfig;
     this.carouselOptions = CarouselOptions;
     this.isB2B = this.sessionService.isB2B();
-    this.usuario = this.sessionService.getSession();
+    this.session = this.sessionService.getSession();
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
-    this.route.data.subscribe((data) => {
-      this.headerLayout = data['headerLayout'];
-    });
     this.root.path = this.router
       .createUrlTree(['./'], { relativeTo: route })
       .toString();
@@ -247,7 +235,7 @@ export class ProductComponent implements OnInit, OnChanges {
           // this.addToCart();
         },
       });
-    this.buildRequestProductForm();
+    this.buildProductRequestForm();
   }
 
   ngOnChanges(): void {
@@ -360,12 +348,12 @@ export class ProductComponent implements OnInit, OnChanges {
   /**
    * Construye el formulario de solicitud de producto.
    */
-  private buildRequestProductForm(): void {
-    this.formAvisoStock = this.fb.group({
+  private buildProductRequestForm(): void {
+    this.formProductRequest = this.fb.group({
       sku: [this.product?.sku],
-      customerName: [, [Validators.required, Validators.maxLength(35)]],
+      customerName: ['', [Validators.required, Validators.maxLength(35)]],
       customerEmail: [
-        ,
+        '',
         [
           Validators.required,
           Validators.maxLength(50),
@@ -376,44 +364,52 @@ export class ProductComponent implements OnInit, OnChanges {
       ],
       customerPhone: ['', [Validators.required, Validators.maxLength(14)]],
     });
-    if (this.usuario.userRole != 'temp') {
-      this.formAvisoStock.controls['customerName'].setValue(
-        this.usuario.firstName + ' ' + this.usuario.lastName
+    if (this.session.userRole != 'temp') {
+      this.formProductRequest.controls['customerName'].setValue(
+        this.session.firstName + ' ' + this.session.lastName
       );
-      this.formAvisoStock.controls['customerEmail'].setValue(
-        this.usuario.email
+      this.formProductRequest.controls['customerEmail'].setValue(
+        this.session.email
       );
-      this.formAvisoStock.controls['customerPhone'].setValue(
-        this.usuario.phone
+      this.formProductRequest.controls['customerPhone'].setValue(
+        this.session.phone
       );
     }
   }
 
-  enviarCorreo() {
-    if (this.formAvisoStock.valid) {
-      let valor_formulario = this.formAvisoStock.value;
-      valor_formulario.sku = this.product?.sku;
-      this.inventoryService.requestForStock(valor_formulario).subscribe({
-        next: () => {
-          this.toast.success(
-            'Mensaje enviado con éxito. Te contactaremos a la brevedad'
-          );
-        },
-        error: (err) => {
-          console.log(err);
-          this.toast.warning('No ha sido posible enviar el mensaje');
-        },
-      });
-    }
+  /**
+   * Enviar correo electrónico solicitando un producto.
+   * @returns
+   */
+  sendEmail(): void {
+    if (!this.formProductRequest.valid) return;
+
+    let valor_formulario = this.formProductRequest.value;
+    valor_formulario.sku = this.product?.sku;
+    this.inventoryService.requestForStock(valor_formulario).subscribe({
+      next: () => {
+        this.toast.success(
+          'Mensaje enviado con éxito. Te contactaremos a la brevedad'
+        );
+      },
+      error: (err) => {
+        console.error(err);
+        this.toast.warning('No ha sido posible enviar el mensaje');
+      },
+    });
   }
 
-  enviarWhatsapp(): void {
+  /**
+   * Enviar mensaje por whatsapp solicitando producto.
+   */
+  sendWhatsappMessage(): void {
     const phoneNumber = '56932633571';
-    let url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=`;
-    let mensaje = `Hola, necesito el siguiente producto ${
+    const message = `Hola, necesito el siguiente producto ${
       this.product?.name
     } de SKU: ${this.product!.sku}. Para que me atienda un ejecutivo.`;
-    window.open(url + mensaje);
+    window.open(
+      `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`
+    );
   }
 
   /*************************************************
@@ -434,6 +430,12 @@ export class ProductComponent implements OnInit, OnChanges {
     GalleryUtils.formatActiveImage(this.images, activeImageId);
   }
 
+  /**
+   * Ampliar imagen seleccionada.
+   * @param event
+   * @param image
+   * @returns
+   */
   openPhotoSwipe(event: MouseEvent, image: IProductImage): void {
     if (this.layout === 'quickview') return;
     event.preventDefault();
@@ -466,7 +468,7 @@ export class ProductComponent implements OnInit, OnChanges {
   }
 
   /*************************************************
-   * Métodos lista de deseos.
+   * Métodos de lista de deseos.
    *************************************************/
   /**
    * Actualizar los ids de las listas que contienen el producto actual.
@@ -488,87 +490,100 @@ export class ProductComponent implements OnInit, OnChanges {
     this.cd.markForCheck();
   }
 
+  /**
+   * Añadir un producto a una lista o eliminar el producto de todas las listas
+   * dependiendo si el producto ya se encuentra en una lista.
+   */
   addToWishlist(): void {
     if (this.isProductOnList) {
-      this.wishlistApiService
-        .deleteProductFromAllWishlists(
-          this.usuario.documentId,
-          this.product.sku
-        )
-        .subscribe({
-          next: () => {
-            this.isProductOnList = false;
-            this.cd.markForCheck();
-            this.wishlistService
-              .setWishlistOnStorage(this.usuario.documentId)
-              .subscribe({
-                next: () => {
-                  this.refreshProductWishlistsIds();
-                  this.toast.success('Se eliminó de todas las listas');
-                },
-              });
-          },
-        });
+      this.deleteProductFromAllWishlists();
     } else {
-      let listas: IWishlist[] = [];
-      this.wishlistApiService.getWishlists(this.usuario.documentId).subscribe({
-        next: (wishlists) => {
-          listas = wishlists;
-          if (!wishlists.length) return;
-          const listaPredeterminada = listas.find((l) => l.default);
+      this.addProductToDefaultWishlist();
+    }
+  }
 
-          this.wishlistApiService
-            .addProductsToWishlist({
-              documentId: this.usuario.documentId,
-              wishlistId: listaPredeterminada?.id || '',
-              skus: [this.product.sku],
-            })
+  /**
+   * Eliminar producto de todas las listas de deseos.
+   */
+  private deleteProductFromAllWishlists(): void {
+    this.wishlistApiService
+      .deleteProductFromAllWishlists(this.session.documentId, this.product.sku)
+      .subscribe({
+        next: () => {
+          this.isProductOnList = false;
+          this.cd.markForCheck();
+          this.wishlistService
+            .setWishlistsOnStorage(this.session.documentId)
             .subscribe({
               next: () => {
-                this.wishlistService
-                  .setWishlistOnStorage(this.usuario.documentId)
-                  .subscribe({
-                    next: () => {
-                      this.refreshProductWishlistsIds();
-                      this.toast.success(
-                        `Se agregó a la lista ${listaPredeterminada?.name}.`
-                      );
-                      this.cd.markForCheck();
-                      this.listaPredeterminada = listaPredeterminada || null;
-                    },
-                  });
+                this.refreshProductWishlistsIds();
+                this.toast.success('Se eliminó de todas las listas');
               },
             });
         },
       });
+  }
 
-      const modal = this.modalService.show(WishListModalComponent, {
-        class: 'modal-sm2 modal-dialog-centered',
-        ignoreBackdropClick: true,
-        initialState: {
-          productSku: this.product.sku,
-          wishlists: [],
-          productWishlistsIds: this.productWishlistsIds,
-        },
-      });
-      modal.content?.event.subscribe(() => {
-        this.refreshProductWishlistsIds();
-        this.cd.markForCheck();
-      });
-    }
+  /**
+   * Añadir producto a la lista de deseos por defecto.
+   */
+  private addProductToDefaultWishlist(): void {
+    this.wishlistApiService.getWishlists(this.session.documentId).subscribe({
+      next: (wishlists) => {
+        if (!wishlists.length) return;
+        const defaultWishlist = wishlists.find((wishlist) => wishlist.default);
+
+        this.wishlistApiService
+          .addProductsToWishlist({
+            documentId: this.session.documentId,
+            wishlistId: defaultWishlist?.id || '',
+            skus: [this.product.sku],
+          })
+          .subscribe({
+            next: () => {
+              this.wishlistService
+                .setWishlistsOnStorage(this.session.documentId)
+                .subscribe({
+                  next: () => {
+                    this.refreshProductWishlistsIds();
+                    this.toast.success(
+                      `Se agregó a la lista ${defaultWishlist?.name}.`
+                    );
+                    this.cd.markForCheck();
+                    this.defaultWishlist = defaultWishlist || null;
+                  },
+                });
+            },
+          });
+      },
+    });
+
+    const modal = this.modalService.show(WishListModalComponent, {
+      class: 'modal-sm2 modal-dialog-centered',
+      ignoreBackdropClick: true,
+      initialState: {
+        productSku: this.product.sku,
+        wishlists: [],
+        productWishlistsIds: this.productWishlistsIds,
+      },
+    });
+    modal.content?.event.subscribe(() => {
+      this.refreshProductWishlistsIds();
+      this.cd.markForCheck();
+    });
   }
 
   /**
    * Abrir modal con las listas de deseos.
    */
   addToWishlistOptions(): void {
-    this.wishlistApiService.getWishlists(this.usuario.documentId).subscribe({
+    this.wishlistApiService.getWishlists(this.session.documentId).subscribe({
       next: (wishlists) => {
         const modal = this.modalService.show(WishListModalComponent, {
           class: 'modal-sm2 modal-dialog-centered',
           initialState: {
-            productSku: this.product.sku,
             wishlists,
+            productSku: this.product.sku,
             productWishlistsIds: this.productWishlistsIds,
           },
         });

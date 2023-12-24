@@ -276,7 +276,7 @@
             <div class="my-2">
               <button
                 type="button"
-                (click)="enviarWhatsapp()"
+                (click)="sendWhatsappMessage()"
                 class="btn btn-md w-100 text-center"
                 style="background-color: #27a844; color: white"
               >
@@ -286,7 +286,7 @@
             </div>
           </div>
           <div style="width: 46%">
-            <form [formGroup]="formAvisoStock">
+            <form [formGroup]="formProductRequest">
               <div style="height: 198px">
                 <div class="row" style="gap: 1rem">
                   <div class="col-md-12">
@@ -336,9 +336,9 @@
                         class="invalid-feedback"
                         style="margin-bottom: 10px"
                         *ngIf="
-                          (formAvisoStock.get('customerEmail')?.touched ||
-                            formAvisoStock.get('customerEmail')?.dirty) &&
-                          formAvisoStock.get('customerEmail')?.invalid
+                          (formProductRequest.get('customerEmail')?.touched ||
+                            formProductRequest.get('customerEmail')?.dirty) &&
+                          formProductRequest.get('customerEmail')?.invalid
                         "
                       >
                         Correo no es válido
@@ -351,9 +351,9 @@
             <div class="my-2">
               <button
                 type="button"
-                (click)="enviarCorreo()"
+                (click)="sendEmail()"
                 class="btn btn-md btn-secondary w-100 text-center"
-                [disabled]="formAvisoStock.invalid"
+                [disabled]="formProductRequest.invalid"
               >
                 Enviar
               </button>
@@ -417,7 +417,7 @@
                   >
 
                   <span class="text-civa">
-                    {{ usuario.preferences.iva ? 'c/iva' : 's/iva' }}
+                    {{ session.preferences.iva ? 'c/iva' : 's/iva' }}
                   </span>
                 </div>
               </div>
@@ -584,7 +584,7 @@
                   >
 
                   <span class="text-civa">
-                    {{ usuario.preferences.iva ? 'c/iva' : 's/iva' }}
+                    {{ session.preferences.iva ? 'c/iva' : 's/iva' }}
                   </span>
                 </div>
               </div>
@@ -678,7 +678,7 @@
               <div class="my-2">
                 <button
                   type="button"
-                  (click)="enviarWhatsapp()"
+                  (click)="sendWhatsappMessage()"
                   class="btn btn-md w-100 text-center"
                   style="background-color: #27a844; color: white"
                 >
@@ -692,7 +692,7 @@
             </div>
 
             <div class="mt-3">
-              <form [formGroup]="formAvisoStock">
+              <form [formGroup]="formProductRequest">
                 <div style="height: 198px">
                   <div class="row" style="gap: 1rem">
                     <div class="col-md-12">
@@ -744,9 +744,11 @@
                           class="invalid-feedback"
                           style="margin-bottom: 10px"
                           *ngIf="
-                            (formAvisoStock.get('customerEmail')?.touched ||
-                              formAvisoStock.get('customerEmail')?.dirty) &&
-                            formAvisoStock.get('customerEmail')?.invalid
+                            (formProductRequest.get('customerEmail')
+                              ?.touched ||
+                              formProductRequest.get('customerEmail')
+                                ?.dirty) &&
+                            formProductRequest.get('customerEmail')?.invalid
                           "
                         >
                           Correo no es válido
@@ -759,9 +761,9 @@
               <div class="my-2">
                 <button
                   type="button"
-                  (click)="enviarCorreo()"
+                  (click)="sendEmail()"
                   class="btn btn-md btn-secondary w-100 text-center"
-                  [disabled]="formAvisoStock.invalid"
+                  [disabled]="formProductRequest.invalid"
                 >
                   Enviar
                 </button>

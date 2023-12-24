@@ -85,7 +85,7 @@ export class WishListModalComponent implements OnInit {
       .subscribe({
         next: () => {
           this.wishlistService
-            .setWishlistOnStorage(this.session.documentId)
+            .setWishlistsOnStorage(this.session.documentId)
             .subscribe({
               next: () => {
                 this.refreshProductWishlistsIds();
@@ -113,7 +113,7 @@ export class WishListModalComponent implements OnInit {
         .subscribe({
           next: () => {
             this.wishlistService
-              .setWishlistOnStorage(this.session.documentId)
+              .setWishlistsOnStorage(this.session.documentId)
               .subscribe({
                 next: () => {
                   this.refreshProductWishlistsIds();
@@ -132,7 +132,7 @@ export class WishListModalComponent implements OnInit {
         .subscribe({
           next: () => {
             this.wishlistService
-              .setWishlistOnStorage(this.session.documentId)
+              .setWishlistsOnStorage(this.session.documentId)
               .subscribe({
                 next: () => {
                   this.refreshProductWishlistsIds();

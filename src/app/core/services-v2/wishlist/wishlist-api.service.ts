@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 // Rxjs
 import { Observable, map } from 'rxjs';
-// Environment
+// Env
 import { environment } from '@env/environment';
 // Models
 import {
@@ -21,7 +21,7 @@ export class WishlistApiService {
   constructor(private http: HttpClient) {}
 
   /**
-   * Obtener las listas de deseos de un cliente.
+   * Obtener listas de deseos de un cliente.
    * @param documentId
    * @returns
    */
@@ -31,6 +31,28 @@ export class WishlistApiService {
       .pipe(map((res) => res.articleList || []));
   }
 
+  /**
+   * Crear lista de deseos.
+   * @param params
+   * @returns
+   */
+  createWishlist(params: {
+    documentId: string;
+    name: string;
+    skus?: string[];
+  }): Observable<void> {
+    const { documentId, name, skus } = params;
+    return this.http.post<void>(`${API_CUSTOMER}/${documentId}/article-list`, {
+      name,
+      skus: skus || [],
+    });
+  }
+
+  /**
+   * Actualizar el nombre de una lista de deseos.
+   * @param params
+   * @returns
+   */
   updateWishlist(params: {
     documentId: string;
     wishlistId: string;
@@ -85,6 +107,12 @@ export class WishlistApiService {
     );
   }
 
+  /**
+   * Establecer lista de deseos por defecto.
+   * @param documentId
+   * @param wishlistId
+   * @returns
+   */
   setDefaultWishlist(
     documentId: string,
     wishlistId: string
@@ -95,18 +123,11 @@ export class WishlistApiService {
     );
   }
 
-  createWishlist(params: {
-    documentId: string;
-    name: string;
-    skus?: string[];
-  }): Observable<void> {
-    const { documentId, name, skus } = params;
-    return this.http.post<void>(`${API_CUSTOMER}/${documentId}/article-list`, {
-      name,
-      skus: skus || [],
-    });
-  }
-
+  /**
+   * Agregar productos a la lista de deseos.
+   * @param params
+   * @returns
+   */
   addProductsToWishlist(params: {
     documentId: string;
     wishlistId: string;
@@ -119,6 +140,11 @@ export class WishlistApiService {
     );
   }
 
+  /**
+   * Agregar productos a la lista de deseos desde un archivo excel.
+   * @param params
+   * @returns
+   */
   addProductsFromFileToWishlist(params: {
     documentId: string;
     wishlistId: string;

@@ -13,7 +13,12 @@ export class WishlistService {
     private readonly wishlistStorage: WishlistStorageService
   ) {}
 
-  setWishlistOnStorage(documentId: string): Observable<IWishlist[]> {
+  /**
+   * Obtener listas de deseos desde el API y guardarlas en el localstorage.
+   * @param documentId
+   * @returns
+   */
+  setWishlistsOnStorage(documentId: string): Observable<IWishlist[]> {
     return this.wishlistApiService
       .getWishlists(documentId)
       .pipe(tap((wishlists) => this.wishlistStorage.set(wishlists)));

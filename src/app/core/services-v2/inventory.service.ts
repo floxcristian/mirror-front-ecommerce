@@ -1,7 +1,7 @@
 // Angular
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-// Environment
+// Envs
 import { environment } from '@env/environment';
 
 const API_INVENTORY = `${environment.apiEcommerce}/api/v1/inventory`;

@@ -113,7 +113,7 @@ export class LoginComponent implements OnInit {
 
           // Se carga lista de favoritos
           this.wishlistService
-            .setWishlistOnStorage(res.user.documentId)
+            .setWishlistsOnStorage(res.user.documentId)
             .subscribe({
               next: () => {},
             });
