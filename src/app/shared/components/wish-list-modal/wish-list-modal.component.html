@@ -15,7 +15,7 @@
 <div class="modal-body px-4">
   <div
     class="form-check align-items-center d-flex"
-    *ngFor="let item of listas"
+    *ngFor="let item of wishlists"
   >
     <div class="flex-shrink-1 flex-grow-1">
       <input
@@ -30,25 +30,26 @@
       }}</label>
     </div>
   </div>
-  <div *ngIf="listas.length === 0">No tiene listas creadas</div>
+  <div *ngIf="!wishlists.length">No tiene listas creadas</div>
 </div>
 
 <div class="modal-footer">
-  <div *ngIf="!creandoLista" class="col-12">
+  <div *ngIf="!creatingWishlist" class="col-12">
     <button
       class="btn btn-link btn-sm w-100 text-decoration-none"
-      (click)="creandoLista = !creandoLista"
+      (click)="creatingWishlist = !creatingWishlist"
     >
       <i class="fas fa-plus fa-lg fa-fw me-2"></i>Crear nueva lista
     </button>
   </div>
-  <div *ngIf="creandoLista" class="col-12">
+
+  <!-- Start::crear lista de deseos -->
+  <div *ngIf="creatingWishlist" class="col-12">
     <div class="input-group">
       <input
         type="search"
         class="form-control form-control-sm"
         maxlength="40"
-        (search)="cantCaracteres = nombre.length"
         (keyup)="ingresaNombre()"
         (keydown)="ingresaNombre()"
         (keypress)="ingresaNombre()"
@@ -58,9 +59,7 @@
       />
       <div class="w-100 d-flex justify-content-end mt-1">
         <div class="validacion d-none">Ingrese un nombre</div>
-        <div class="max-caracteres">
-          {{ cantCaracteres }} / {{ maxCaracteres }}
-        </div>
+        <div class="max-caracteres">{{ nombre.length }} / 40</div>
       </div>
     </div>
     <button
@@ -70,4 +69,5 @@
       Crear
     </button>
   </div>
+  <!-- End::crear lista de deseos -->
 </div>

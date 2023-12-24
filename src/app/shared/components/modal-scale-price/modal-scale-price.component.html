@@ -29,7 +29,6 @@
         <tbody class="table_paga" *ngIf="scalePrices.length">
           <ng-container *ngFor="let precio of scalePrices; let i = index">
             <tr
-              *ngIf="i > 0"
               style="color: #00549d"
               [ngStyle]="{
                 'background-color': (i + 1) % 2 !== 0 ? '#ffff' : '#efefef'
@@ -43,7 +42,7 @@
                 style="width: 50%; border-left: solid 2px; color: #00549d"
               >
                 {{
-                  (user.preferences.iva ? precio.price : precio.netPrice)
+                  (session.preferences.iva ? precio.price : precio.netPrice)
                     | currencyFormat
                 }}
               </td>

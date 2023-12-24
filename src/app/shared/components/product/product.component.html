@@ -527,12 +527,16 @@
                 type="button"
                 appClick
                 (click)="addToWishlistOptions()"
-                [ngStyle]="{ color: favorito ? '#10753d' : '#3d464d' }"
+                [ngStyle]="{
+                  color: isWishlistProduct ? '#10753d' : '#3d464d'
+                }"
                 [ngClass]="{ 'btn-loading': addingToWishlist }"
               >
                 <i class="fa-solid fa-list-check fa-lg me-2"></i>
                 {{
-                  favorito ? 'Agregado a tus listas' : 'Agregar a una lista'
+                  isWishlistProduct
+                    ? 'Agregado a tus listas'
+                    : 'Agregar a una lista'
                 }}
               </button>
             </div>
@@ -820,10 +824,14 @@
               type="button"
               appClick
               (click)="addToWishlist()"
-              [ngStyle]="{ color: favorito ? '#10753d' : '#3d464d' }"
+              [ngStyle]="{ color: isWishlistProduct ? '#10753d' : '#3d464d' }"
               [ngClass]="{ 'btn-loading': addingToWishlist }"
             >
-              {{ favorito ? 'Agregado a tus listas' : 'Agregar a una lista' }}
+              {{
+                isWishlistProduct
+                  ? 'Agregado a tus listas'
+                  : 'Agregar a una lista'
+              }}
             </button>
             <button
               name="addingToWishlistOptions"

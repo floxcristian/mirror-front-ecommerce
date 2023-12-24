@@ -1,7 +1,5 @@
 // Angular
-import { Component, OnInit } from '@angular/core';
-// Envs
-import { environment } from '@env/environment';
+import { Component } from '@angular/core';
 // Libs
 import { BsModalRef } from 'ngx-bootstrap/modal';
 // Models
@@ -15,20 +13,14 @@ import { SessionService } from '@core/services-v2/session/session.service';
   templateUrl: './modal-scale-price.component.html',
   styleUrls: ['./modal-scale-price.component.scss'],
 })
-export class ModalScalePriceComponent implements OnInit {
-  IVA: number;
-  user: ISession;
+export class ModalScalePriceComponent {
+  session: ISession;
   scalePrices!: IScalePrice[];
 
   constructor(
     public readonly modalRef: BsModalRef,
     private readonly sessionService: SessionService
   ) {
-    this.IVA = environment.IVA;
-    this.user = this.sessionService.getSession();
-  }
-
-  ngOnInit() {
-    console.log('scalePrices: ', this.scalePrices);
+    this.session = this.sessionService.getSession();
   }
 }

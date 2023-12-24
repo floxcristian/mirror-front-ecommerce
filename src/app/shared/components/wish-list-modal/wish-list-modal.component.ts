@@ -5,10 +5,8 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { IWishlist } from '@core/services-v2/wishlist/models/wishlist-response.interface';
 // Services
-import { isVacio } from '../../utils/utilidades';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { WishlistStorageService } from '@core/storage/wishlist-storage.service';
 import { WishlistApiService } from '@core/services-v2/wishlist/wishlist-api.service';
@@ -20,17 +18,15 @@ import { WishlistService } from '@core/services-v2/wishlist/wishlist.service';
   styleUrls: ['./wish-list-modal.component.scss'],
 })
 export class WishListModalComponent implements OnInit {
-  producto!: IArticleResponse;
-  listas!: (IWishlist & { checked?: boolean })[];
+  productSku!: string;
+
+  wishlists!: (IWishlist & { checked?: boolean })[];
   listasEnQueExiste!: IWishlist[];
 
-  creandoLista = false;
+  creatingWishlist!: boolean;
   nombre = '';
 
-  cantCaracteres = 0;
-  maxCaracteres = 40;
-
-  usuario!: ISession;
+  session!: ISession;
 
   event: EventEmitter<any> = new EventEmitter();
 
@@ -45,71 +41,67 @@ export class WishListModalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.usuario = this.sessionService.getSession();
+    this.session = this.sessionService.getSession();
 
-    this.listas = this.listas.map((l) => {
-      l.checked = !isVacio(
-        this.listasEnQueExiste.find((wishlist) => wishlist.id === l.id)
-      )
-        ? true
-        : false;
-      return l;
-    });
+    this.wishlists = this.formatCheckedWishlists(this.wishlists);
   }
 
-  getListas() {
-    this.wishlistApiService.getWishlists(this.usuario.documentId).subscribe({
+  private getWishlists(): void {
+    this.wishlistApiService.getWishlists(this.session.documentId).subscribe({
       next: (wishlists) => {
-        this.listas = wishlists.map((wishlist) => {
-          const isProductOnList = this.listasEnQueExiste.some(
-            (_wishlist) => _wishlist.id === wishlist.id
-          );
-          return { ...wishlist, checked: isProductOnList };
-        });
+        this.wishlists = this.formatCheckedWishlists(wishlists);
       },
     });
   }
 
+  private formatCheckedWishlists(wishlists: IWishlist[]) {
+    return wishlists.map((wishlist) => {
+      const isProductOnList = this.listasEnQueExiste.some(
+        (_wishlist) => _wishlist.id === wishlist.id
+      );
+      return { ...wishlist, checked: isProductOnList };
+    });
+  }
+
   ingresaNombre() {
-    this.cantCaracteres = this.nombre.length;
     document.querySelector('.validacion')?.classList.remove('d-block');
     document.querySelector('.validacion')?.classList.add('d-none');
   }
 
   crearLista() {
-    if (this.nombre.length === 0) {
+    if (!this.nombre.length) {
       document.querySelector('.validacion')?.classList.remove('d-none');
       document.querySelector('.validacion')?.classList.add('d-block');
       return;
     }
     this.wishlistApiService
       .createWishlist({
-        documentId: this.usuario.documentId,
+        documentId: this.session.documentId,
         name: this.nombre,
       })
       .subscribe({
         next: () => {
           this.wishlistService
-            .setWishlistOnStorage(this.usuario.documentId)
+            .setWishlistOnStorage(this.session.documentId)
             .subscribe({
               next: () => {
                 this.refreshListasEnQueExiste();
                 this.toast.success(`Se creó la lista: ${this.nombre}`);
-                this.getListas();
+                this.getWishlists();
               },
             });
         },
       });
     this.nombre = '';
-    this.creandoLista = false;
+    this.creatingWishlist = false;
   }
 
-  listaPredeterminada(lista: IWishlist) {
+  listaPredeterminada(lista: IWishlist): void {
     this.wishlistApiService
-      .setDefaultWishlist(this.usuario.documentId, lista.id)
+      .setDefaultWishlist(this.session.documentId, lista.id)
       .subscribe({
         next: () => {
-          this.getListas();
+          this.getWishlists();
         },
       });
   }
@@ -121,14 +113,14 @@ export class WishListModalComponent implements OnInit {
     if (objHTML.checked) {
       this.wishlistApiService
         .addProductsToWishlist({
-          documentId: this.usuario.documentId,
+          documentId: this.session.documentId,
           wishlistId: wishlist.id,
-          skus: [this.producto.sku],
+          skus: [this.productSku],
         })
         .subscribe({
           next: () => {
             this.wishlistService
-              .setWishlistOnStorage(this.usuario.documentId)
+              .setWishlistOnStorage(this.session.documentId)
               .subscribe({
                 next: () => {
                   this.refreshListasEnQueExiste();
@@ -140,14 +132,14 @@ export class WishListModalComponent implements OnInit {
     } else {
       this.wishlistApiService
         .deleteProductFromWishlist({
-          documentId: this.usuario.documentId,
+          documentId: this.session.documentId,
           wishlistId: wishlist.id,
-          sku: this.producto.sku,
+          sku: this.productSku,
         })
         .subscribe({
           next: () => {
             this.wishlistService
-              .setWishlistOnStorage(this.usuario.documentId)
+              .setWishlistOnStorage(this.session.documentId)
               .subscribe({
                 next: () => {
                   this.refreshListasEnQueExiste();
@@ -185,7 +177,7 @@ export class WishListModalComponent implements OnInit {
     if (wishlists?.length) {
       wishlists.forEach((wishlist) => {
         const isProductOnList = wishlist.articles.find(
-          (product) => product.sku === this.producto.sku
+          (product) => product.sku === this.productSku
         );
         if (isProductOnList) {
           this.listasEnQueExiste.push(wishlist);

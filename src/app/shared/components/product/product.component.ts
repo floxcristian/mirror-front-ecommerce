@@ -35,8 +35,6 @@ import { CarouselComponent, SlidesOutputData } from 'ngx-owl-carousel-o';
 import { OwlCarouselOConfig } from 'ngx-owl-carousel-o/lib/carousel/owl-carousel-o-config';
 // Rxjs
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-// Envs
-import { environment } from '@env/environment';
 // Constants
 import { CarouselConfig, CarouselOptions } from './constants/carousel-config';
 // Models
@@ -44,7 +42,6 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { IProductImage } from './models/image.interface';
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
-import { IScalePriceItem } from './models/scale-price-item.interface';
 import { IDeliverySupply } from '@core/models-v2/cms/special-reponse.interface';
 import { IWishlist } from '@core/services-v2/wishlist/models/wishlist-response.interface';
 // Services
@@ -52,7 +49,6 @@ import { CartService } from '../../services/cart.service';
 import { PhotoSwipeService } from '../../services/photo-swipe.service';
 import { RootService } from '../../services/root.service';
 import { WishListModalComponent } from '../wish-list-modal/wish-list-modal.component';
-import { isVacio } from '../../utils/utilidades';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { InventoryService } from '@core/services-v2/inventory.service';
 import { WishlistApiService } from '@core/services-v2/wishlist/wishlist-api.service';
@@ -60,9 +56,9 @@ import { WishlistStorageService } from '@core/storage/wishlist-storage.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { WishlistService } from '@core/services-v2/wishlist/wishlist.service';
 import { GalleryUtils } from './services/gallery-utils.service';
+import { ProductPriceApiService } from '@core/services-v2/product-price/product-price.service';
 // Modals
 import { ModalScalePriceComponent } from '../modal-scale-price/modal-scale-price.component';
-import { ProductPriceApiService } from '@core/services-v2/product-price/product-price.service';
 
 export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
 
@@ -74,6 +70,11 @@ export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
 export class ProductComponent implements OnInit, OnChanges {
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
   @ViewChild('myCarousel', { static: false }) myCarousel!: NguCarousel<any>;
+  @ViewChild('featuredCarousel', { read: CarouselComponent, static: false })
+  featuredCarousel!: CarouselComponent;
+  @ViewChildren('imageElement', { read: ElementRef })
+  imageElements!: QueryList<ElementRef>;
+
   @Input() stock!: boolean;
   @Input() origen!: string[];
   @Input() set product(value: IArticleResponse) {
@@ -129,21 +130,12 @@ export class ProductComponent implements OnInit, OnChanges {
   estado = true; // isDesktop
   products: IArticleResponse[] = [];
 
-  favorito = false;
+  isWishlistProduct!: boolean;
   listasEnQueExiste: IWishlist[] = [];
   listaPredeterminada: IWishlist | null = null;
 
   usuario: ISession;
   isB2B: boolean;
-  IVA = environment.IVA;
-  isVacio = isVacio;
-
-  @ViewChild('featuredCarousel', { read: CarouselComponent, static: false })
-  featuredCarousel!: CarouselComponent;
-  @ViewChildren('imageElement', { read: ElementRef })
-  imageElements!: QueryList<ElementRef>;
-  // Others
-  preciosEscalas: IScalePriceItem[] = [];
 
   @Input() set layout(value: Layout) {
     this.dataLayout = value;
@@ -483,7 +475,7 @@ export class ProductComponent implements OnInit, OnChanges {
           (product) => product.sku === this.product.sku
         );
         if (isProductOnList) {
-          this.favorito = true;
+          this.isWishlistProduct = true;
           this.listasEnQueExiste.push(wishlist);
         }
       });
@@ -492,7 +484,7 @@ export class ProductComponent implements OnInit, OnChanges {
   }
 
   addToWishlist(): void {
-    if (this.favorito) {
+    if (this.isWishlistProduct) {
       this.wishlistApiService
         .deleteProductFromAllWishlists(
           this.usuario.documentId,
@@ -500,7 +492,7 @@ export class ProductComponent implements OnInit, OnChanges {
         )
         .subscribe({
           next: () => {
-            this.favorito = false;
+            this.isWishlistProduct = false;
             this.cd.markForCheck();
             this.wishlistService
               .setWishlistOnStorage(this.usuario.documentId)
@@ -536,7 +528,7 @@ export class ProductComponent implements OnInit, OnChanges {
                       this.toast.success(
                         `Se agregó a la lista ${listaPredeterminada?.name}.`
                       );
-                      this.favorito = true;
+                      this.isWishlistProduct = true;
                       this.cd.markForCheck();
                       this.listaPredeterminada = listaPredeterminada || null;
                     },
@@ -550,14 +542,14 @@ export class ProductComponent implements OnInit, OnChanges {
         class: 'modal-sm2 modal-dialog-centered',
         ignoreBackdropClick: true,
         initialState: {
-          producto: this.product!,
-          listas: [],
+          productSku: this.product.sku,
+          wishlists: [],
           listasEnQueExiste: this.listasEnQueExiste,
         },
       });
       modal.content?.event.subscribe((res: any) => {
         this.refreshListasEnQueExiste();
-        this.favorito = res;
+        this.isWishlistProduct = res;
         this.cd.markForCheck();
       });
     }
@@ -572,14 +564,14 @@ export class ProductComponent implements OnInit, OnChanges {
         const modal = this.modalService.show(WishListModalComponent, {
           class: 'modal-sm2 modal-dialog-centered',
           initialState: {
-            producto: this.product!,
-            listas: wishlists,
+            productSku: this.product.sku,
+            wishlists,
             listasEnQueExiste: this.listasEnQueExiste,
           },
         });
         modal.content?.event.subscribe((res: any) => {
           this.refreshListasEnQueExiste();
-          this.favorito = res;
+          this.isWishlistProduct = res;
           this.cd.markForCheck();
         });
       },
