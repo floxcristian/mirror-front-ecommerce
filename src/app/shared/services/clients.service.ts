@@ -3,14 +3,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 // Rxjs
 import { Observable } from 'rxjs';
-import { map, retry } from 'rxjs/operators';
-// Environment
+// Env
 import { environment } from '@env/environment';
 
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 import { Flota } from '../interfaces/flota';
-import { isVacio } from '../utils/utilidades';
 import { ResponseApi } from '../interfaces/response-api';
 import { CargosContactoResponse } from '../interfaces/cargoContacto';
 
@@ -19,23 +17,6 @@ import { CargosContactoResponse } from '../interfaces/cargoContacto';
 })
 export class ClientsService {
   constructor(private http: HttpClient, private localS: LocalStorageService) {}
-
-  obtenerGiros(rut: string) {
-    return this.http
-      .get(`${environment.apiCustomer}girosSII`, {
-        params: {
-          rut,
-        },
-      })
-      .pipe(
-        map((res: any) => {
-          if (res.error)
-            throw new Error('Has error an occurred on giros SII.');
-          return res;
-        }),
-        retry(3)
-      );
-  }
 
   buscarOvsGeneradas() {
     const estado = 'generado';
@@ -96,32 +77,6 @@ export class ClientsService {
     return this.http.get(call);
   }
 
-  graficoVentaValorada(request: any) {
-    const url = `${environment.apiCustomer}graficos/ventaValorada?rutCliente=${request.rutCliente}&anio=${request.anio}`;
-    return this.http.get(url);
-  }
-
-  graficoVentasPorUen(request: any) {
-    let consulta = null;
-
-    const url = `${environment.apiCustomer}tablas/ventasPorUen?rutCliente=${request.rutCliente}`;
-    let params = '';
-    if (!isVacio(request.anio)) {
-      params = params + `&anio=${request.anio}`;
-    }
-    if (!isVacio(request.mes)) {
-      params = params + `&mes=${request.mes}`;
-    }
-    consulta = this.http.get(url + params);
-
-    return consulta;
-  }
-
-  buscarSaldo(rut: any) {
-    const call = environment.apiCustomer + `saldo?rut=${rut}`;
-    return this.http.get(call);
-  }
-
   buscarFacturas(rut: any) {
     const call = environment.apiCustomer + `facturas?rut=${rut}`;
     return this.http.get(call);
@@ -157,49 +112,9 @@ export class ClientsService {
     return this.http.post(environment.apiCustomer + `devolucion`, data);
   }
 
-  getCentrosCosto(rut: string): Observable<ResponseApi> {
-    return this.http.get<ResponseApi>(
-      environment.apiCustomer + `centroCosto?rut=${rut}`
-    );
-  }
-
-  setCentroCosto(request: any) {
-    return this.http.post(environment.apiCustomer + `centroCosto`, request);
-  }
-
-  updateCentroCosto(
-    nombre: string,
-    rut: string,
-    idCentro: string
-  ): Observable<ResponseApi> {
-    return this.http.put<ResponseApi>(
-      environment.apiCustomer + `centroCosto/${idCentro}`,
-      { nombre, rut }
-    );
-  }
-
-  deleteCentroCosto(rut: string, idCentro: string) {
-    const options = {
-      body: {
-        rut,
-      },
-    };
-    return this.http.delete(
-      environment.apiCustomer + `centroCosto/${idCentro}`,
-      options
-    );
-  }
-
   getCargosContacto(): Observable<CargosContactoResponse> {
     return this.http.get<CargosContactoResponse>(
       `${environment.apiCustomer}filtros/cargosContacto`
-    );
-  }
-
-  actualizaDireccion(request: any): Observable<ResponseApi> {
-    return this.http.put<ResponseApi>(
-      `${environment.apiCustomer}direccionCRM`,
-      request
     );
   }
 
@@ -217,40 +132,6 @@ export class ClientsService {
     return this.http.delete<ResponseApi>(
       `${environment.apiCustomer}direccionCRM/${rutCliente}/${recid}`,
       options
-    );
-  }
-
-  nuevoContacto(request: any): Observable<ResponseApi> {
-    return this.http.post<ResponseApi>(
-      `${environment.apiCustomer}contactoCRM`,
-      request
-    );
-  }
-
-  actualizaContacto(request: any): Observable<ResponseApi> {
-    return this.http.put<ResponseApi>(
-      `${environment.apiCustomer}contactoCRM`,
-      request
-    );
-  }
-
-  eliminaContacto(
-    request: any,
-    rutCliente: string,
-    contactoId: string
-  ): Observable<ResponseApi> {
-    const options = {
-      body: request,
-    };
-    return this.http.delete<ResponseApi>(
-      `${environment.apiCustomer}contactoCRM/${rutCliente}/${contactoId}`,
-      options
-    );
-  }
-
-  getBloqueo(rutCliente: string) {
-    return this.http.get(
-      `${environment.apiCustomer}bloqueo?rut=${rutCliente}`
     );
   }
 

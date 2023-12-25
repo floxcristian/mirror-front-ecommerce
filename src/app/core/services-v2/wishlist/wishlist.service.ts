@@ -1,8 +1,12 @@
+// Angular
 import { Injectable } from '@angular/core';
+// Rxjs
+import { Observable, tap } from 'rxjs';
+// Models
+import { IWishlist } from './models/wishlist-response.interface';
+// Services
 import { WishlistStorageService } from '@core/storage/wishlist-storage.service';
 import { WishlistApiService } from './wishlist-api.service';
-import { Observable, tap } from 'rxjs';
-import { IWishlist } from './models/wishlist-response.interface';
 
 @Injectable({
   providedIn: 'root',

@@ -1,3 +1,4 @@
+// Angular
 import {
   Component,
   PLATFORM_ID,
@@ -7,15 +8,16 @@ import {
   Input,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RootService } from '../../shared/services/root.service';
-import { Title } from '@angular/platform-browser';
-import { CanonicalService } from '../../shared/services/canonical.service';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { Title } from '@angular/platform-browser';
+// Env
 import { environment } from '@env/environment';
+// Services
+import { RootService } from '../../shared/services/root.service';
+import { CanonicalService } from '../../shared/services/canonical.service';
 @Component({
   selector: 'app-b2c',
   templateUrl: './b2c.component.html',
-  styleUrls: ['./b2c.component.scss'],
 })
 export class B2cComponent implements AfterViewInit {
   headerLayout!: 'classic' | 'compact';

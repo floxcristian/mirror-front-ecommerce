@@ -1,10 +1,9 @@
 // Angular
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Params } from '@angular/router';
 // Services
 import { LocalStorageService } from '../core/modules/local-storage/local-storage.service';
-import { CategoryService } from '../shared/services/category.service';
-import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/services-v2/session/session.service';
 
 @Component({
@@ -27,8 +26,10 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.scrollTop();
-    this.checkIsB2b();
     this.getQueryParams();
+    if (this.sessionService.isB2B()) {
+      this.tipo = 'b2b';
+    }
   }
 
   /**
@@ -39,16 +40,6 @@ export class LayoutComponent implements OnInit {
       document.body.scrollTop = 0; // Safari
       document.documentElement.scrollTop = 0; // Other
     }
-  }
-
-  /**
-   * Verifica si el usuario es B2B.
-   * @returns
-   */
-  checkIsB2b() {
-    const session = this.sessionService.getSession();
-    if (['supervisor', 'comprador'].includes(session.userRole))
-      this.tipo = 'b2b';
   }
 
   /**
