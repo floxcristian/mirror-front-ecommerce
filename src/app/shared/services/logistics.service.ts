@@ -8,7 +8,6 @@ import { Observable, Subject } from 'rxjs';
 import { environment } from '@env/environment';
 // Interfaces
 import { ArticuloResponse } from '../interfaces/articulos.response';
-import { ResponseApi } from '../interfaces/response-api';
 
 @Injectable({
   providedIn: 'root',
@@ -20,19 +19,6 @@ export class LogisticsService {
   readonly $stores: Observable<any> = this.storesSubject.asObservable();
 
   constructor(private http: HttpClient) {}
-
-  /**
-   * Eliminar.
-   * @returns
-   */
-  obtenerTiendas() {
-    return this.http.get<ResponseApi>(this.urlApi + `tiendas`).pipe(
-      map((r) => {
-        this.storesSubject.next(r);
-        return r;
-      })
-    );
-  }
 
   obtieneComunas() {
     return this.http.get(this.urlApi + `comunas`);

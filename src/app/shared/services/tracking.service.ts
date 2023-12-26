@@ -16,10 +16,6 @@ export class TrackingService {
     );
   }
 
-  DetalleOV(ov: string) {
-    return this.http.get(`${environment.apiMobile}detallePedido?folio=${ov}`);
-  }
-
   getClienteOv(params: any) {
     return this.http.post(`${environment.apiOms}oms/clienteOv`, params);
   }
