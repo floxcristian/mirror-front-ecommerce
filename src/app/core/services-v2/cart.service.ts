@@ -596,14 +596,14 @@ export class CartService {
     );
   }
 
-  setSaveCart(id: string | undefined, status: string): Observable<any> {
+  setSaveCart(id: string | undefined, status: string): Observable<boolean> {
     const usuario = this.sessionStorage.get();
     if (usuario?.login_temp) {
       this.toastrServise.warning('Debe iniciar sesion para guardar el carro');
       throw Error('Debe iniciar sesion para guardar el carro');
     }
 
-    return this.http.put(`${API_CART}/${id}/status/${status}`, {});
+    return this.http.put<boolean>(`${API_CART}/${id}/status/${status}`, {});
   }
 
   setNotificationContact(id: string, data: AddNotificacionContactRequest) {
