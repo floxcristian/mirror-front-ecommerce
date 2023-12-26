@@ -1,10 +1,10 @@
 // Angular
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-// Libs
-import { ToastrService } from 'ngx-toastr';
+// Models
+import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 // Services
-import { StoresService } from '../../../../shared/services/stores.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 
 @Component({
   selector: 'app-stores',
@@ -12,14 +12,13 @@ import { StoresService } from '../../../../shared/services/stores.service';
   styleUrls: ['./page-select-catalog.component.scss'],
 })
 export class PageSelectCatalogComponent {
-  isCollapsed = false;
-  rows: any[] = [];
   innerWidth: number;
-  tienda: any;
+  stores: IStore[] = [];
 
   constructor(
-    private stores: StoresService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly geolocationService: GeolocationServiceV2
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -27,18 +26,11 @@ export class PageSelectCatalogComponent {
   }
 
   ngOnInit(): void {
-    this.stores.obtieneTiendas().subscribe(
-      (r: any) => {
-        this.rows = r.data.map((result: any) => {
-          return result;
-        });
-        this.rows.sort((a: any, b: any) => (a['zona'] > b['zona'] ? 1 : -1));
+    this.geolocationService.stores$.subscribe({
+      next: (stores) => {
+        this.stores = stores.sort((a, b) => a.zone.localeCompare(b.zone));
       },
-      (error) => {
-        console.log(error);
-        // this.toastr.error('Error de conexión, para obtener tiendas');
-      }
-    );
+    });
   }
 
   onResize(event: any): void {

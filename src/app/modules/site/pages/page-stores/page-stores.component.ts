@@ -1,10 +1,10 @@
 // Angular
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-// Libs
-import { ToastrService } from 'ngx-toastr';
+// Models
+import { ICollapsableStore } from './collapsable-store.interface';
 // Services
-import { StoresService } from '../../../../shared/services/stores.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 
 @Component({
   selector: 'app-stores',
@@ -12,15 +12,15 @@ import { StoresService } from '../../../../shared/services/stores.service';
   styleUrls: ['./page-stores.component.scss'],
 })
 export class PageStoresComponent {
-  isCollapsed = false;
-  rows: any[] = [];
+  stores: ICollapsableStore[] = [];
+  selectedStore!: ICollapsableStore;
+  isCollapsed!: boolean;
   innerWidth: number;
-  tienda: any;
 
   constructor(
-    private stores: StoresService,
-    private toastr: ToastrService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private readonly geolocationService: GeolocationServiceV2
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -28,27 +28,25 @@ export class PageStoresComponent {
   }
 
   ngOnInit(): void {
-    this.stores.obtieneTiendas().subscribe(
-      (r: any) => {
-        this.rows = r.data.map((result: any) => {
-          result.colapse = true;
-          return result;
-        });
-        this.rows[0] ? (this.tienda = this.rows[0]) : null;
+    this.geolocationService.stores$.subscribe({
+      next: (stores) => {
+        this.stores = stores.map((store) => ({ ...store, isCollapsed: true }));
+        if (this.stores.length) {
+          this.selectedStore = this.stores[0];
+        }
       },
-      (error) => {
-        console.log(error);
-        this.toastr.error('Error de conexión, para obtener tiendas');
-      }
-    );
+    });
   }
 
-  mostrarTienda(tienda: any): void {
+  /**
+   * Mostrar información de la tienda seleccionada.
+   * @param store
+   */
+  showStoreDetail(store: ICollapsableStore): void {
     if (this.innerWidth < 427) {
-      tienda.colapse = !tienda.colapse;
+      store.isCollapsed = !store.isCollapsed;
     } else {
-      // this.tienda = null;
-      this.tienda = tienda;
+      this.selectedStore = store;
     }
     let x = document.querySelector('#informacionTienda');
     if (x) {

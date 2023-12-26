@@ -14,7 +14,6 @@ import { environment } from '@env/environment';
 // Models
 import { BuscadorB2B } from '../../shared/interfaces/buscadorB2B';
 // Services
-import { StoresService } from '../../shared/services/stores.service';
 import { isVacio } from '../../shared/utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
@@ -38,7 +37,6 @@ export class HeaderComponent implements AfterViewInit {
   }
 
   constructor(
-    public readonly stores: StoresService,
     private route: Router,
     private localS: LocalStorageService,
     @Inject(PLATFORM_ID) private platformId: Object

@@ -18,8 +18,10 @@
   <div class="row g-3">
     <div class="col-12 mb-3">
       <app-map
+        *ngIf="address"
         (clearAdress)="clearAddress()"
-        [tienda]="address"
+        [storeAddress]="address.direccion"
+        [storeZone]="address.zona"
         [autocompletado]="autocompletado"
         (setDireccion)="set_direccion($event)"
         (geolocalizacion)="geolocalizacion($event)"

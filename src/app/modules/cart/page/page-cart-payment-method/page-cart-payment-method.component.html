@@ -385,11 +385,16 @@
                   tooltip="Dirección"
                   *ngIf="selectedDocument === invoiceType.INVOICE && guest"
                 >
-                  <div class="col-12" style="padding: 0 !important">
+                  <div
+                    class="col-12"
+                    style="padding: 0 !important"
+                    *ngIf="tienda"
+                  >
                     <app-map
                       titulo="DIRECCIÓN"
                       (clearAdress)="clearAddress()"
-                      [tienda]="tienda"
+                      [storeAddress]="tienda.direccion"
+                      [storeZone]="tienda.zona"
                       [autocompletado]="autocompletado"
                       (setDireccion)="setAddress($event)"
                       (geolocalizacion)="geolocalizacion($event)"
@@ -2239,11 +2244,12 @@
                   tooltip="Dirección"
                   *ngIf="selectedDocument === invoiceType.INVOICE && guest"
                 >
-                  <div>
+                  <div *ngIf="tienda">
                     <app-map
                       titulo="DIRECCIÓN"
                       (clearAdress)="clearAddress()"
-                      [tienda]="tienda"
+                      [storeAddress]="tienda.direccion"
+                      [storeZone]="tienda.zona"
                       [autocompletado]="autocompletado"
                       (setDireccion)="setAddress($event)"
                       (geolocalizacion)="geolocalizacion($event)"

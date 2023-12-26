@@ -1,3 +1,4 @@
+// Angular
 import {
   Component,
   OnInit,
@@ -11,7 +12,9 @@ import {
   NgZone,
 } from '@angular/core';
 import { GoogleMap, MapGeocoder } from '@angular/google-maps';
+// Env
 import { environment } from '@env/environment';
+import { IMapStore } from './map-store.interface';
 
 export interface DireccionMap {
   direccion: string;
@@ -27,7 +30,8 @@ export interface DireccionMap {
 })
 export class MapComponent implements OnInit, OnChanges {
   @Input() titulo!: string;
-  @Input() tienda!: DireccionMap | null;
+  @Input() storeAddress!: string;
+  @Input() storeZone!: string;
   @Input() autocompletado!: boolean;
   @Input() infoWindowContent!: string;
   @ViewChild('search', { static: true }) searchElementRef!: ElementRef;
@@ -104,13 +108,13 @@ export class MapComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges() {
-    if (this.tienda && this.tienda.direccion != '') {
+    if (this.storeAddress) {
       this.geocoder
         .geocode({
-          address: `${this.tienda.direccion} ${this.tienda.zona}`,
+          address: `${this.storeAddress} ${this.storeZone}`,
         })
         .subscribe((location) => {
-          this.searchElementRef.nativeElement.value = this.tienda?.direccion;
+          this.searchElementRef.nativeElement.value = this.storeAddress;
           if (location.status === 'OK') {
             this.markerPositions = [];
             let center: google.maps.LatLngLiteral = {

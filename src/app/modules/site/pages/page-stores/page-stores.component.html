@@ -24,11 +24,14 @@
 <div class="container" (window:resize)="onResize($event)">
   <div class="row justify-content-center mb-5" *ngIf="innerWidth > 426">
     <div class="col-md-12 card-group">
-      <div class="card" *ngIf="tienda">
+      <div class="card" *ngIf="selectedStore">
         <div class="card-body">
           <div class="row">
             <div class="col-sm-12 col-md-6 col-lg-6">
-              <app-map [tienda]="tienda"></app-map>
+              <app-map
+                [storeAddress]="selectedStore.address"
+                [storeZone]="selectedStore.zone"
+              ></app-map>
             </div>
             <div
               class="col-sm-12 col-md-6 col-lg-6 px-0"
@@ -37,9 +40,9 @@
               <div
                 class="card-header bg-primary text-white text-center py-2 px-1"
               >
-                <h4>Tienda {{ tienda.zona }}</h4>
+                <h4>Tienda {{ selectedStore.zone }}</h4>
               </div>
-              <div class="card-body p-5" *ngIf="tienda">
+              <div class="card-body p-5" *ngIf="selectedStore">
                 <div class="row" style="font-size: large">
                   <div class="col-md-12 mt-3">
                     <div class="row ps-4">
@@ -53,7 +56,7 @@
                             'font-size': innerWidth <= 768 ? '15px' : '1em'
                           }"
                         >
-                          {{ tienda.direccion }}
+                          {{ selectedStore.address }}
                         </span>
                       </div>
                     </div>
@@ -84,7 +87,7 @@
                       <div class="col-6 col-sm-8 ps-2">
                         <a
                           class="ps-1"
-                          [href]="tienda.url_mapa"
+                          [href]="selectedStore.mapUrl"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -106,7 +109,7 @@
                             'font-size': innerWidth <= 768 ? '12px' : '1em'
                           }"
                         >
-                          {{ tienda.horarios }}
+                          {{ selectedStore.schedule }}
                         </span>
                       </div>
                     </div>
@@ -119,27 +122,35 @@
       </div>
     </div>
   </div>
-  <div class="row justify-content-center my-5" *ngIf="rows">
+
+  <div class="row justify-content-center my-5" *ngIf="stores.length">
     <div class="col-md-4 card-group">
       <div class="card p-0">
         <div class="card-header bg-primary text-white text-center py-2 px-1">
           <h6>ZONA NORTE</h6>
         </div>
         <div class="card-body px-1">
-          <div *ngFor="let tienda of rows | slice : 0 : 6; index as i">
+          <div *ngFor="let store of stores | slice : 0 : 6">
             <div
-              (click)="mostrarTienda(tienda)"
+              (click)="showStoreDetail(store)"
               aria-expanded="false "
               aria-controls="collapseExample "
               class="pointer box text-start"
             >
               <h4 class="tienda">
-                <img class="inline-icon lazyload" src="./assets/images/next.png " alt="Icono " />{{ tienda.zona }}
+                <img
+                  class="inline-icon lazyload"
+                  src="./assets/images/next.png "
+                  alt="Icono "
+                />{{ store.zone }}
               </h4>
             </div>
 
-            <div [collapse]="tienda.colapse" class="caja-detalle">
-              <app-colapse [tienda]="tienda" [innerWidth]="innerWidth"></app-colapse>
+            <div [collapse]="store.isCollapsed" class="caja-detalle">
+              <app-colapse
+                [tienda]="store"
+                [innerWidth]="innerWidth"
+              ></app-colapse>
             </div>
           </div>
         </div>
@@ -151,20 +162,27 @@
           <h6>ZONA CENTRO</h6>
         </div>
         <div class="card-body px-1">
-          <div *ngFor="let tienda of rows | slice : 6 : 16; index as i">
+          <div *ngFor="let store of stores | slice : 6 : 16">
             <div
-              (click)="mostrarTienda(tienda)"
+              (click)="showStoreDetail(store)"
               aria-expanded="false "
               aria-controls="collapseExample "
               class="pointer box text-start"
             >
               <h4 class="tienda">
-                <img class="inline-icon lazyload" src="./assets/images/next.png " alt="Icono " />{{ tienda.zona }}
+                <img
+                  class="inline-icon lazyload"
+                  src="./assets/images/next.png "
+                  alt="Icono "
+                />{{ store.zone }}
               </h4>
             </div>
 
-            <div [collapse]="tienda.colapse" class="caja-detalle">
-              <app-colapse [tienda]="tienda" [innerWidth]="innerWidth"></app-colapse>
+            <div [collapse]="store.isCollapsed" class="caja-detalle">
+              <app-colapse
+                [tienda]="store"
+                [innerWidth]="innerWidth"
+              ></app-colapse>
             </div>
           </div>
         </div>
@@ -176,20 +194,27 @@
           <h6>ZONA SUR</h6>
         </div>
         <div class="card-body">
-          <div *ngFor="let tienda of rows | slice : 16; index as i">
+          <div *ngFor="let store of stores | slice : 16">
             <div
-              (click)="mostrarTienda(tienda)"
+              (click)="showStoreDetail(store)"
               aria-expanded="false "
               aria-controls="collapseExample "
               class="pointer box text-start"
             >
               <h4 class="tienda">
-                <img class="inline-icon lazyload" src="./assets/images/next.png " alt="Icono " />{{ tienda.zona }}
+                <img
+                  class="inline-icon lazyload"
+                  src="./assets/images/next.png "
+                  alt="Icono "
+                />{{ store.zone }}
               </h4>
             </div>
 
-            <div [collapse]="tienda?.colapse" class="caja-detalle">
-              <app-colapse [tienda]="tienda" [innerWidth]="innerWidth"></app-colapse>
+            <div [collapse]="store.isCollapsed" class="caja-detalle">
+              <app-colapse
+                [tienda]="store"
+                [innerWidth]="innerWidth"
+              ></app-colapse>
             </div>
           </div>
         </div>

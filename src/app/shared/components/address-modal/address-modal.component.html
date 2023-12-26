@@ -19,7 +19,8 @@
     <div class="col-12">
       <app-map
         (clearAdress)="clearAddress()"
-        [tienda]="tienda"
+        [storeAddress]="tienda.direccion"
+        [storeZone]="tienda.zona"
         [autocompletado]="autocompletado"
         (setDireccion)="set_direccion($event)"
         (geolocalizacion)="geolocalizacion($event)"

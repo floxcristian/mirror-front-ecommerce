@@ -419,7 +419,8 @@
               <app-map
                 [autocompletado]="autocompletado"
                 (clearAdress)="clearAddress()"
-                [tienda]="direccion"
+                [storeAddress]="direccion.direccion"
+                [storeZone]="direccion.zona"
                 (setDireccion)="setDireccion($event)"
                 (geolocalizacion)="geolocalizacion($event)"
                 [titulo]="

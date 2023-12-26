@@ -26,8 +26,9 @@
 
 <div class="bg-light p-3 contenedor-select-catalogo text-center">
   <select name="selectCiudad" id="selectCiudad">
-    <option *ngFor="let row of rows; index as i" value="{{ row.url_catalogo }}">
-      {{ row.zona }}
+    <!-- FIXME: poner parámetro value=store.url_catalogo (catelogos se dejaron pendientes) -->
+    <option *ngFor="let row of stores" value="{{ row.mapUrl }}">
+      {{ row.zone }}
     </option>
   </select>
 
