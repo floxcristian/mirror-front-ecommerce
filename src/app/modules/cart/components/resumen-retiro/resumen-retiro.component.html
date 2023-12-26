@@ -9,7 +9,7 @@
   <div class="col-sm-12">
     <label>Dirección : </label> {{ direccion?.address ?? '' }}
   </div>
-  <div class="col-sm-12">
+  <div class="col-sm-12" *ngIf="direccion?.city">
     <label>Comuna : </label> {{ direccion?.city ?? '' }}
   </div>
   <div class="col-sm-12" *ngIf="!fechas">

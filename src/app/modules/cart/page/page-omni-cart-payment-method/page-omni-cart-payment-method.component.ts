@@ -11,13 +11,10 @@ import {
   IShoppingCart,
   IShoppingCartProduct,
 } from '@core/models-v2/cart/shopping-cart.interface';
-import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 // Services
 import { PaymentMethodOmniService } from '@core/services-v2/payment-method-omni.service';
 import { CartService } from '@core/services-v2/cart.service';
-import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
-import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { SHOPPING_CART_STATUS_TYPE } from '@core/enums/shopping-cart-status.enum';
 
 @Component({
@@ -48,17 +45,15 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
     private modalService: BsModalService,
     // Services V2
     private readonly cartService: CartService,
-    private readonly geolocationApiService: GeolocationApiService,
-    private readonly customerAddressService: CustomerAddressApiService,
     private readonly paymentMethodOmniService: PaymentMethodOmniService
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.loadCart = true;
-    this.route.queryParams.subscribe((params) => {
-      this.id = params['cart_id'];
+    this.route.queryParams.subscribe(async (params) => {
+      this.id = params['cart_id'] || params['shoppingCartId'];
+      await this.loadData();
     });
-    await this.loadData();
 
     this.cartService.total$.subscribe((r) => (this.totalCarro = r));
     this.paymentMethodOmniService.banco$.subscribe((r) => {
@@ -82,9 +77,9 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
       );
       this.cartSession = resp.shoppingCart;
       if (this.cartSession.status === SHOPPING_CART_STATUS_TYPE.OPEN) {
-        await this.getDireccion();
         this.shippingType = this.cartSession.shipment?.deliveryMode ?? '';
         this.productCart = this.cartSession.products;
+        this.setDireccion(this.cartSession);
         await this.cartService.loadOmni(this.id);
       } else {
         this.loadCart = false;
@@ -97,28 +92,27 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
     }
   }
 
-  private async getDireccion() {
-    if (
-      this.cartSession.shipment?.deliveryMode === DeliveryModeType.DELIVERY
-    ) {
-      const documentId = this.cartSession.customer?.documentId ?? '';
-      const addresses = await firstValueFrom(
-        this.customerAddressService.getDeliveryAddresses(documentId)
-      );
-      this.direccion = addresses.find(
-        (item) => item.id == this.cartSession.shipment?.addressId
-      );
-    } else {
-      const stores = await firstValueFrom(
-        this.geolocationApiService.getStores()
-      );
-      if (this.cartSession.groups?.length) {
-        this.direccion = stores.find(
-          (item) => item.id === this.cartSession.groups![0].shipment.addressId
-        );
-      }
-    }
+  setDireccion(shoppingCart: IShoppingCart) {
+    const shipment = shoppingCart.shipment;
+    this.direccion = {
+      address: shipment?.address ?? '',
+      city: '',
+      country: '',
+      departmentHouse: '',
+      id: shipment?.addressId ?? '',
+      lat: '',
+      lng: '',
+      location: '',
+      number: '',
+      province: '',
+      reference: '',
+      region: '',
+      street: '',
+      type: '',
+      typeCode: 0,
+    };
   }
+
   /**
    * Activa el botón de pago.
    * @param event
@@ -128,9 +122,9 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
   }
 
   payment(): void {
-    if (this.pago.cod == 'mercadopago') this.PaymentMercadoPago();
-    if (this.pago.cod == 'webPay') this.PaymentWebpay();
-    if (this.pago.cod == 'khipu') {
+    if (this.pago.code == 'mercadopago') this.PaymentMercadoPago();
+    if (this.pago.code == 'webPay') this.PaymentWebpay();
+    if (this.pago.code == 'khipu') {
       this.openModal();
     }
   }

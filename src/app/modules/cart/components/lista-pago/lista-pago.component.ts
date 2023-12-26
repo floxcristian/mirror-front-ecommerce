@@ -3,6 +3,7 @@ import { PaymentMethodService } from '@core/services-v2/payment-method.service';
 import { IPaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ToastrService } from 'ngx-toastr';
+import { PaymentMethodOmniService } from '@core/services-v2/payment-method-omni.service';
 
 @Component({
   selector: 'app-lista-pago',
@@ -19,13 +20,14 @@ export class ListaPagoComponent implements OnInit {
     private readonly toastr: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly paymentMethodService: PaymentMethodService
+    private readonly paymentMethodService: PaymentMethodService,
+    private readonly paymentMethodOmniService: PaymentMethodOmniService
   ) {}
 
   async ngOnInit() {
     const username = this.sessionService.getSession().username ?? '';
     if (this.omni) {
-      this.paymentMethodService.getPaymentMethods({ username }).subscribe({
+      this.paymentMethodOmniService.getPaymentMethods({ username }).subscribe({
         next: (data) => {
           this.paymentMethods = data;
           if (this.paymentMethods.length > 0)
