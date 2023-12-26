@@ -46,7 +46,6 @@ export class BlogComponent implements OnInit {
           ...item,
           collapsed: index === this.currentOpenItemIndex,
         }));
-        //console.log('this.blogs.length: ', this.blogs.length);
         if (this.blogs.length) {
           setInterval(() => {
             this.blogs[this.currentOpenItemIndex].collapsed = false;
@@ -62,24 +61,6 @@ export class BlogComponent implements OnInit {
         console.log(err);
       },
     });
-    // this.cmsService.obtenerPosts().subscribe((res) => {
-    //   this.blogs = res.slice(0, 4);
-    //   this.blogs = this.blogs.map((item, index) => ({
-    //     ...item,
-    //     collapsed: index === this.currentOpenItemIndex,
-    //   }));
-    //   //console.log('this.blogs.length: ', this.blogs.length);
-    //   if (this.blogs.length) {
-    //     setInterval(() => {
-    //       this.blogs[this.currentOpenItemIndex].collapsed = false;
-    //       this.currentOpenItemIndex =
-    //         this.currentOpenItemIndex === this.blogs.length - 1
-    //           ? 0
-    //           : this.currentOpenItemIndex + 1;
-    //       this.clickCollapse(this.currentOpenItemIndex);
-    //     }, 5000);
-    //   }
-    // });
   }
 
   clickCollapse(index: number) {

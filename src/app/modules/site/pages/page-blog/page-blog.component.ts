@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
-import { CmsService } from '../../../../shared/services/cms.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
+import { CmsService } from '@core/services-v2/cms.service';
+import { IBlog } from '@core/models-v2/cms/blog-response.interface';
 
 @Component({
   selector: 'app-page-blog',
@@ -10,15 +11,16 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./page-blog.component.scss'],
 })
 export class PageBlogComponent implements OnInit {
-  noticia!: string;
-  noticias: any[] = [];
+  noticia!: IBlog;
+  noticias: IBlog[] = [];
   innerWidth: number;
 
   constructor(
     private localStorage: LocalStorageService,
     private router: Router,
-    private cms: CmsService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    //ServicesV2
+    private readonly csmService:CmsService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -30,15 +32,20 @@ export class PageBlogComponent implements OnInit {
   }
 
   cargarPosts() {
-    this.cms.obtenerPosts().subscribe((r: any) => {
-      this.noticia = r[0];
-      this.noticias = r;
-    });
+    this.csmService.getPosts(0).subscribe({
+      next:(res)=>{
+        this.noticias = res.data
+        this.noticia = res.data[0]
+      },
+      error:(err)=>{
+        console.log(err)
+      }
+    })
   }
 
-  verNoticia(noticia: any) {
+  verNoticia(noticia: IBlog) {
     this.localStorage.set('noticia', noticia);
-    this.router.navigate(['/sitio/detail-news', noticia.page_id]);
+    this.router.navigate(['/sitio/detail-news', noticia.pageId]);
   }
 
   onResize(event: any) {

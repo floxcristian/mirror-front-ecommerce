@@ -84,6 +84,6 @@ export class CmsService {
   }
 
   getPostDetail(postId: string): Observable<IBlogResponse> {
-    return this.http.get<IBlogResponse>(`${API_CMS}/blog/posts/${postId}`);
+    return this.http.get<IBlogResponse>(`${API_CMS}/blog/post/${postId}`);
   }
 }
