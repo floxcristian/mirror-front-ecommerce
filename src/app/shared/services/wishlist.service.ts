@@ -4,8 +4,9 @@ import { isPlatformBrowser } from '@angular/common';
 // Rxjs
 import { Observable, Subject, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
-// Services
+// Models
 import { Product } from '../interfaces/product';
+// Services
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 interface WishlistData {

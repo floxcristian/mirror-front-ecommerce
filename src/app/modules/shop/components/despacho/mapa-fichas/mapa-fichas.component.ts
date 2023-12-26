@@ -1,6 +1,9 @@
+// Angular
 import { Component, Input, OnInit } from '@angular/core';
+// Rxjs
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+// Env
 import { environment } from '@env/environment';
 declare const L: any;
 
@@ -18,14 +21,14 @@ export class MapaFichasComponent implements OnInit {
   @Input() tiendaSeleccionada: any;
   @Input() stock: any = 0;
 
-  constructor() {}
- async ngOnInit() {
-     await this.tiendaSeleccionada;
+  async ngOnInit() {
+    await this.tiendaSeleccionada;
     fromEvent(window, 'resize')
       .pipe(debounceTime(200))
       .subscribe((event) => {});
-      this.initMap();
+    this.initMap();
   }
+
   ngOnChange() {
     window.dispatchEvent(new Event('resize'));
   }

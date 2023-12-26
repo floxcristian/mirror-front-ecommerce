@@ -1,18 +1,21 @@
+// Angular
+import { Router } from '@angular/router';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+// Libs
 import { ToastrService } from 'ngx-toastr';
-import { ResponseApi } from '../../../../shared/interfaces/response-api';
+// Models
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
+// Services
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { AuthApiService } from '@core/services-v2/auth.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
-import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
 import { WishlistService } from '@core/services-v2/wishlist/wishlist.service';
 import { GuestStorageService } from '@core/storage/guest-storage.service';
 import { CartService } from '@core/services-v2/cart.service';
-import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 
 @Component({
   selector: 'app-header-login',
@@ -20,7 +23,6 @@ import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  form: FormGroup;
   @Output() muestraLogin: EventEmitter<any> = new EventEmitter();
   @Input() class: any;
   @Input() linkRegister = false;
@@ -28,6 +30,7 @@ export class LoginComponent implements OnInit {
   @Input() showLabel = true;
   @Input() ruta: any;
   texto: boolean = false;
+  form!: FormGroup;
   Remember = false;
   contentRegister = false;
 
@@ -45,6 +48,10 @@ export class LoginComponent implements OnInit {
     private readonly wishlistService: WishlistService,
     private readonly guestStorage: GuestStorageService
   ) {
+    this.buildLoginForm();
+  }
+
+  buildLoginForm(): void {
     this.form = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
@@ -61,7 +68,7 @@ export class LoginComponent implements OnInit {
       .then(() => this.router.navigate([uri]));
   }
 
-  entrar() {
+  entrar(): void {
     const user = this.sessionStorage.get();
 
     let userIdOld: any = null;

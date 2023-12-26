@@ -1,3 +1,4 @@
+// Angular
 import {
   AfterViewInit,
   Component,
@@ -5,14 +6,17 @@ import {
   Input,
   PLATFORM_ID,
 } from '@angular/core';
-import { StoresService } from '../../shared/services/stores.service';
-import { environment } from '@env/environment';
-import { Router } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 import { HostListener } from '@angular/core';
+import { Router } from '@angular/router';
+// Env
+import { environment } from '@env/environment';
+// Models
 import { BuscadorB2B } from '../../shared/interfaces/buscadorB2B';
+// Services
+import { StoresService } from '../../shared/services/stores.service';
 import { isVacio } from '../../shared/utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-header',

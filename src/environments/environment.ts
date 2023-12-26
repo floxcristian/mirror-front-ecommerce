@@ -5,7 +5,6 @@ export const environment = {
   // APIs
   apiShoppingCart: 'https://dev-api.implementos.cl/api/carro/',
   apiElastic: 'https://dev-api.implementos.cl/api/articulo/',
-  apiElastic2: 'https://dev-api.implementos.cl/api/articulo-web',
   apiCMS: 'https://dev-api.implementos.cl/cms/',
   apiOms: 'https://dev-api.implementos.cl/api/oms/',
   apiPromesa: 'https://dev-api.implementos.cl/api/promesa-entrega/',
@@ -13,34 +12,22 @@ export const environment = {
   apiCatalogo: 'https://dev-api.implementos.cl/api/catalogo/',
   apiCustomer: 'https://dev-api.implementos.cl/api/cliente/',
   apiLogistic: 'https://dev-api.implementos.cl/api/logistica/',
-  apiImplementosPagos: 'https://dev-api.implementos.cl/api/pagos/',
   // Images Urls
   urlFotoOmnichannel:
     'http://replicacion.implementos.cl/siteomnichannel/fotos/',
-  urlFotoFichaProducto:
-    'https://firebasestorage.googleapis.com/v0/b/imagenimplementos.appspot.com/o/FICHA%2F',
-  urlFotoListadoProductos:
-    'https://firebasestorage.googleapis.com/v0/b/imagenimplementos.appspot.com/o/450%2F',
-  urlFotowidgetProductos:
-    'https://firebasestorage.googleapis.com/v0/b/imagenimplementos.appspot.com/o/150%2F',
   // Images
   logoSrcWhite: 'assets/images/logos/logo_white.PNG',
   logoSrc: 'assets/images/logos/logo_header.svg',
   logoSrcFooter: 'assets/images/logos/logo_header2.PNG',
   // Base
   canonical: 'https://dev.implementos.cl',
-  apib2b: 'https://dev-api.implementos.cl',
 
   urlPagosImplementos: 'https://pagos.implementos.cl/',
-  urlMercadoPago: 'https://dev-api.implementos.cl/api/pagos/mpago/link_pago',
   // Carro de compras
-  urlPaymentVoucher:
-    'https://dev.implementos.cl/carro-compra/gracias-por-tu-compra/',
   urlNotificaciones: 'https://dev-api.implementos.cl/api/notificaciones',
   // No Env.
   urlPaymentOmniCanceled:
     'https://dev.implementos.cl/carro-compra/omni-forma-de-pago',
-  urlPaymentCanceled: 'https://dev.implementos.cl/carro-compra/forma-de-pago/',
   urlPaymentOmniVoucher:
     'https://dev.implementos.cl/carro-compra/omni-gracias-por-tu-compra/',
   // Nuevo Ecommerce
