@@ -1,23 +1,15 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
   Component,
-  Inject,
   OnInit,
-  PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { Observable, Subject } from 'rxjs';
-import { environment } from '@env/environment';
 import { RootService } from '../../../../shared/services/root.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-class DataTablesResponse {
-  data!: any[];
-  draw!: number;
-  recordsFiltered!: number;
-  recordsTotal!: number;
-}
+import { CustomerService } from '@core/services-v2/customer.service';
+import { IArticlePrice } from '@core/models-v2/customer/customer.interface';
 @Component({
   selector: 'app-page-lista-precios',
   templateUrl: './page-lista-precios.component.html',
@@ -27,13 +19,13 @@ export class PageListaPreciosComponent implements OnInit {
   @ViewChild(DataTableDirective, { static: false })
   datatableElement!: DataTableDirective;
   innerWidth: number;
-  precios!: any[];
+  precios!: IArticlePrice[];
   loadingData = true;
-  paginaActual = 1;
+  paginaActual:number = 1;
   totalPaginas!: number;
-  preciosPorPagina = 20;
+  preciosPorPagina:number = 20;
   iva = true;
-  categoria = null;
+  categoria:string = '';
 
   dtOptions: DataTables.Settings = {};
 
@@ -45,12 +37,11 @@ export class PageListaPreciosComponent implements OnInit {
     this.localizacion$.asObservable();
 
   constructor(
-    private httpClient: HttpClient,
     public root: RootService,
-    @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly geolocationService: GeolocationServiceV2
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly customerService:CustomerService
   ) {
     this.innerWidth = window.innerWidth;
     // cambio de sucursal
@@ -103,12 +94,7 @@ export class PageListaPreciosComponent implements OnInit {
     this.showLoading = true;
     console.log('getSelectedStore desde buscarPrecios');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-
     const user = this.sessionService.getSession();
-    let parametros: any = {
-      rut: user.documentId,
-      sucursal: tiendaSeleccionada.code,
-    };
 
     this.dtOptions = {
       pagingType: 'full_numbers',
@@ -125,39 +111,31 @@ export class PageListaPreciosComponent implements OnInit {
         processing: 'Cargando Ordenes de ventas..',
       },
       ajax: (dataTablesParameters: any, callback) => {
-        //datos set de ordenamiento//
         this.loadingData = true;
-        parametros.data_sort =
-          dataTablesParameters.columns[
-            dataTablesParameters.order[0].column
-          ].data;
-        parametros.data_order = dataTablesParameters.order[0].dir;
-        if (this.categoria) {
-          parametros.categoria = this.categoria;
-        } else parametros.categoria = null;
-        let params = Object.assign(dataTablesParameters, parametros);
-        let url = environment.apiCustomer + 'listaPreciosPorRut';
-        let username: String = 'services';
-        let password: String = '0.=j3D2ss1.w29-';
-        let authdata = window.btoa(username + ':' + password);
-        let head = {
-          Authorization: `Basic ${authdata}`,
-          'Access-Control-Allow-Headers':
-            'Authorization, Access-Control-Allow-Headers',
+        let page_actual =
+          dataTablesParameters.start === 0
+            ? 1
+            : dataTablesParameters.start / dataTablesParameters.length + 1;
+        let params: any = {
+          branchCode: tiendaSeleccionada.code,
+          page: page_actual,
+          limit: dataTablesParameters.length,
+          search: dataTablesParameters.search.value,
+          urlCategory:this.categoria
         };
-        let headers = new HttpHeaders(head);
-        this.httpClient
-          .post<DataTablesResponse>(url, params, { headers: headers })
-          .subscribe(async (resp: any) => {
-            this.precios = resp.data;
+
+        this.customerService.getCustomerPriceList(user.documentId ,params).subscribe({
+          next:async(res)=>{
+            console.log('response customer price list',res)
+            this.precios = res.data;
             this.precios = await Promise.all(
               this.precios.map((p) => {
-                if (p._id.precio > p.precioMeson) p._id.precio = p.precioMeson;
-                p['_id']['precioBruto'] = Math.round(
-                  p._id.precio / (1 + this.IVA)
+                if (p.price > p.commonPrice) p.price = p.commonPrice;
+                p.priceBruto = Math.round(
+                  p.price / (1 + this.IVA)
                 );
-                p['precioMesonBruto'] = Math.round(
-                  p.precioMeson / (1 + this.IVA)
+                p.commonPriceBruto = Math.round(
+                  p.commonPrice / (1 + this.IVA)
                 );
                 return { ...p };
               })
@@ -165,11 +143,15 @@ export class PageListaPreciosComponent implements OnInit {
             this.showLoading = false;
             this.loadingData = false;
             callback({
-              recordsTotal: resp.totalRegistros,
-              recordsFiltered: resp.totalRegistros,
+              recordsTotal: res.total,
+              recordsFiltered: res.total,
               data: [],
             });
-          });
+          },
+          error:(err)=>{
+            console.log(err)
+          }
+        })
       },
     };
   }
@@ -177,6 +159,7 @@ export class PageListaPreciosComponent implements OnInit {
   busquedaCategoria(event: any) {
     this.categoria = event;
     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      console.log('event pa',event)
       dtInstance.draw();
     });
   }

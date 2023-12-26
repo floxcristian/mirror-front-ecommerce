@@ -65,3 +65,27 @@ export interface ICustomerCredit {
   used: number;
   balance: number;
 }
+
+export interface ICustomerPriceListResponse {
+  total: number;
+  found: number;
+  limit: number;
+  page: number;
+  firstPage: number;
+  lastPage: number;
+  data: IArticlePrice[];
+}
+
+export interface IArticlePrice {
+  identifier: string;
+  sku: string;
+  name: string;
+  brand: string;
+  preview: string;
+  price: number;
+  commonPrice: number;
+  discount: number;
+  customerCode: string;
+  priceBruto?:number;
+  commonPriceBruto?:number
+}
