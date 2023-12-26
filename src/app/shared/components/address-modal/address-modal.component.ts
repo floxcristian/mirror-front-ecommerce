@@ -1,3 +1,4 @@
+// Angular
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {
   FormBuilder,
@@ -5,13 +6,19 @@ import {
   Validators,
   FormControl,
 } from '@angular/forms';
-import { LogisticsService } from '../../services/logistics.service';
+// Libs
 import { ToastrService } from 'ngx-toastr';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+// Constants
+import { AddressType } from '@core/enums/address-type.enum';
+// Models
+import { IError } from '@core/models-v2/error/error.interface';
+// Services
+import { LogisticsService } from '../../services/logistics.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
-import { IError } from '@core/models-v2/error/error.interface';
-import { AddressType } from '@core/enums/address-type.enum';
+import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
+import { ICity } from '@core/services-v2/geolocation/models/city.interface';
 
 @Component({
   selector: 'app-address-modal',
@@ -23,6 +30,7 @@ export class AddressModalComponent implements OnInit {
   @Output() respuesta = new EventEmitter<any>();
 
   comunas!: any[];
+  cities!: ICity[];
   localidades!: any[];
   formDireccion: FormGroup;
   // tienda: DireccionMap;
@@ -37,7 +45,8 @@ export class AddressModalComponent implements OnInit {
     private toastr: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly customerAddressService: CustomerAddressApiService
+    private readonly customerAddressService: CustomerAddressApiService,
+    private readonly geolocationApiService: GeolocationApiService
   ) {
     this.formDireccion = this.fb.group({
       calle: new FormControl(
@@ -57,8 +66,8 @@ export class AddressModalComponent implements OnInit {
     this.tienda = null;
   }
 
-  ngOnInit() {
-    this.loadComunas();
+  ngOnInit(): void {
+    this.getCities();
   }
 
   set_direccion(data: any[]) {
@@ -222,20 +231,15 @@ export class AddressModalComponent implements OnInit {
     };
   }
 
-  loadComunas() {
-    this.logisticsService.obtieneComunas().subscribe(
-      (r: any) => {
-        this.coleccionComuna = r.data;
-        this.comunas = r.data.map((record: any) => {
-          const v =
-            record.comuna + '@' + record.provincia + '@' + record.region;
-          return { id: v, value: record.comuna };
-        });
+  /**
+   * Obtener ciudades.
+   */
+  private getCities(): void {
+    this.geolocationApiService.getCities().subscribe({
+      next: (cities) => {
+        this.cities = cities.sort((a, b) => a.city.localeCompare(b.city));
       },
-      (error) => {
-        this.toastr.error(error.error.msg);
-      }
-    );
+    });
   }
 
   obtenerLocalidades(event: any) {

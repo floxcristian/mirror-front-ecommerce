@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
+import { ICity } from '@core/services-v2/geolocation/models/city.interface';
 // Services
 import { ClientsService } from '../../services/clients.service';
 import { ToastrService } from 'ngx-toastr';
@@ -23,7 +24,6 @@ import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service
 import { CartService } from '@core/services-v2/cart.service';
 import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
-import { ICity } from '@core/services-v2/geolocation/models/city.interface';
 
 @Component({
   selector: 'app-register',
@@ -37,7 +37,6 @@ export class RegisterComponent implements OnInit {
 
   businessLines!: IBusinessLine[];
   cities!: ICity[];
-  // comunas!: any[];
   tipo_fono = '+569';
   coleccionComuna!: any[];
   localidades!: any[];

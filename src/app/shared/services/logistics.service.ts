@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 // Rxjs
 import { map } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 // Env
 import { environment } from '@env/environment';
 // Interfaces
@@ -13,16 +13,7 @@ import { ArticuloResponse } from '../interfaces/articulos.response';
   providedIn: 'root',
 })
 export class LogisticsService {
-  private urlApi = environment.apiLogistic;
-
-  private storesSubject: Subject<any> = new Subject();
-  readonly $stores: Observable<any> = this.storesSubject.asObservable();
-
   constructor(private http: HttpClient) {}
-
-  obtieneComunas() {
-    return this.http.get(this.urlApi + `comunas`);
-  }
 
   obtenerMultiDespachos(data: any) {
     let consulta: any = this.http.post(

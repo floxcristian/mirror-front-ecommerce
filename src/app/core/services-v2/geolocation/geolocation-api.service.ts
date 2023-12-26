@@ -2,7 +2,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 // Rxjs
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 // Environment
 import { environment } from '@env/environment';
 // Models
@@ -43,6 +43,13 @@ export class GeolocationApiService {
    * Obtener ciudades.
    */
   getCities(): Observable<ICity[]> {
-    return this.http.get<ICity[]>(`${API_LOGISTIC}/cities`);
+    return this.http.get<ICity[]>(`${API_LOGISTIC}/cities`).pipe(
+      map((cities) =>
+        cities.map((item) => ({
+          ...item,
+          id: `${item.city}@${item.provinceCode}@${item.regionCode}`,
+        }))
+      )
+    );
   }
 }

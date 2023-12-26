@@ -1,3 +1,4 @@
+// Angular
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import {
   FormBuilder,
@@ -5,10 +6,14 @@ import {
   Validators,
   FormControl,
 } from '@angular/forms';
-import { LogisticsService } from '../../services/logistics.service';
+// Libs
 import { ToastrService } from 'ngx-toastr';
+// Services
+import { LogisticsService } from '../../services/logistics.service';
 import { ClientsService } from '../../services/clients.service';
 import { SessionService } from '@core/services-v2/session/session.service';
+import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
+import { ICity } from '@core/services-v2/geolocation/models/city.interface';
 
 @Component({
   selector: 'app-add-address',
@@ -20,7 +25,7 @@ export class AddAddressComponent implements OnInit {
   @Output() public respuestaInvitado = new EventEmitter<any>();
   @Input() public invitado: boolean = false;
 
-  comunas!: any[];
+  cities!: ICity[];
   localidades!: any[];
   formDireccion: FormGroup;
   tienda: any;
@@ -34,7 +39,8 @@ export class AddAddressComponent implements OnInit {
     private toastr: ToastrService,
     private clientsService: ClientsService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly geolocationApiService: GeolocationApiService
   ) {
     this.formDireccion = this.fb.group({
       calle: new FormControl(null, {
@@ -56,8 +62,7 @@ export class AddAddressComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadComunas();
-
+    this.getCities();
     //this.formDireccion.statusChanges(value=>console.log('value',value))
   }
 
@@ -67,7 +72,7 @@ export class AddAddressComponent implements OnInit {
     /* if(this.getAddressData(data[0], 'street_number')){ */
     const buscar = this.getAddressData(data[0], 'locality').toUpperCase();
 
-    const existe = this.comunas.filter((comuna) => comuna.value == buscar);
+    const existe = this.cities.filter((item) => item.city == buscar);
 
     if (existe.length != 0) {
       this.formDireccion.controls['comuna'].setValue(
@@ -117,8 +122,8 @@ export class AddAddressComponent implements OnInit {
     if (nombre != '') {
       nombre = this.quitarAcentos(nombre);
 
-      var result = this.comunas.find(
-        (data) => this.quitarAcentos(data.value) === nombre
+      var result = this.cities.find(
+        (item) => this.quitarAcentos(item.city) === nombre
       );
 
       if (result && result.id) {
@@ -242,21 +247,15 @@ export class AddAddressComponent implements OnInit {
     };
   }
 
-  loadComunas() {
-    this.logisticsService.obtieneComunas().subscribe(
-      (r: any) => {
-        this.coleccionComuna = r.data;
-        this.comunas = r.data.map((record: any) => {
-          // console.log('r.data',r.data);
-          const v =
-            record.comuna + '@' + record.provincia + '@' + record.region;
-          return { id: v, value: record.comuna };
-        });
+  /**
+   * Obtener ciudades.
+   */
+  private getCities(): void {
+    this.geolocationApiService.getCities().subscribe({
+      next: (cities) => {
+        this.cities = cities.sort((a, b) => a.city.localeCompare(b.city));
       },
-      (error) => {
-        this.toastr.error(error.error.msg);
-      }
-    );
+    });
   }
 
   obtenerLocalidades(event: any) {

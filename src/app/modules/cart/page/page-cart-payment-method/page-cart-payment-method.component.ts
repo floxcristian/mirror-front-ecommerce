@@ -10,7 +10,6 @@ import {
   Inject,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { Usuario } from '../../../../shared/interfaces/login';
 import {
   FormGroup,
@@ -72,6 +71,7 @@ import { IError } from '@core/models-v2/error/error.interface';
 import { IPaymentPurchaseOrder } from '@core/models-v2/payment-method/payment-purchase-order.interface';
 import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
 import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';
+import { ICity } from '@core/services-v2/geolocation/models/city.interface';
 
 declare const $: any;
 export interface Archivo {
@@ -167,7 +167,6 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private modalService: BsModalService,
     private toastr: ToastrService,
-    private logistics: LogisticsService,
     private readonly gtmService: GoogleTagManagerService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
@@ -312,7 +311,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       this.documentOptions.push({ id: InvoiceType.INVOICE, name: 'FACTURA' });
     }
     if (this.guest) {
-      this.loadComunas();
+      this.getCities();
       this.tienda = null;
       this.buildForm();
     }
@@ -1208,7 +1207,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   /*********************************************************************
    * Dirección
    *********************************************************************/
-  comunas!: any[];
+  cities!: ICity[];
   localidades!: any[];
   formDireccion!: FormGroup;
   tienda!: DireccionMap | null;
@@ -1303,33 +1302,28 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.localidades = localidades;
   }
 
-  loadComunas() {
-    this.logistics.obtieneComunas().subscribe(
-      (r: any) => {
-        this.coleccionComuna = r.data;
-        this.comunas = (r.data as any[]).map((record) => {
-          const v =
-            record.comuna + '@' + record.provincia + '@' + record.region;
-          return { id: v, value: record.comuna };
-        });
+  /**
+   * Obtener ciudades.
+   */
+  private getCities(): void {
+    this.geolocationApiService.getCities().subscribe({
+      next: (cities) => {
+        this.cities = cities.sort((a, b) => a.city.localeCompare(b.city));
       },
-      (error) => {
-        this.toastr.error(error.error.msg);
-      }
-    );
+    });
   }
 
   findCommune(nombre: string) {
     if (nombre != '') {
       nombre = this.quitarAcentos(nombre);
 
-      var result = this.comunas.find(
-        (data) => this.quitarAcentos(data.value) === nombre
+      var result = this.cities.find(
+        (item) => this.quitarAcentos(item.city) === nombre
       );
 
       if (result && result.id) {
         this.obtenerLocalidades(result);
-        this.findComunaLozalizacion(result.value);
+        this.findComunaLozalizacion(result.city);
         return result.id;
       } else {
         return '';

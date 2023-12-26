@@ -29,9 +29,9 @@ export class CustomerPreferenceService {
       return of(preferences);
     }
 
-    const session = this.sessionService.getSession();
+    const { documentId } = this.sessionService.getSession();
     return this.customerAddressApiService
-      .getDeliveryAddresses(session.documentId)
+      .getDeliveryAddresses(documentId)
       .pipe(
         map((addresses) => {
           if (addresses.length) {
