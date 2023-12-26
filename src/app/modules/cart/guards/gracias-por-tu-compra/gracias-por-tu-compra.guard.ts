@@ -31,6 +31,10 @@ export class GraciasPorTuCompraGuard {
     let haveAccess = false;
     const queryParams = route.queryParams;
 
+    if (this.isPaymentWait(queryParams)) {
+      return true;
+    }
+
     if (this.isPaymentApproved(queryParams)) {
       const shoppingCartId = queryParams['shoppingCartId'];
       return this.cartService.thanksForYourPurchase({ shoppingCartId }).pipe(
@@ -60,5 +64,15 @@ export class GraciasPorTuCompraGuard {
       : null;
 
     return query['shoppingCartId'] && status && status == 'approved';
+  }
+
+  isPaymentWait(query: Params): boolean {
+    let action = query['action'] ? query['action'] : null;
+
+    return (
+      query['shoppingCartId'] &&
+      action &&
+      (action == 'wait' || action == 'verify')
+    );
   }
 }

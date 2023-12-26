@@ -431,6 +431,9 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   private setDireccionOrTiendaRetiro() {
     // LOGICA PARA OBTENER DESPACHO A MOSTRAR
+    if (!this.cartSession.shipment) {
+      return;
+    }
     const shipment = this.cartSession.shipment;
     switch (shipment && shipment.deliveryMode) {
       case 'TIENDA':

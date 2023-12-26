@@ -123,6 +123,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     this.verifyingPayment = true;
     let done = false;
     let count = 0;
+    let redirectUrl = '';
     while (!done || count < this.maxVerifyTries) {
       try {
         const result = await firstValueFrom(
@@ -130,8 +131,8 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
         );
         if (result.ok) {
           done = true;
-          const redirectUrl = result.redirectUrl;
-          window.location.href = redirectUrl;
+          redirectUrl = result.redirectUrl;
+          break;
         }
       } catch (e) {
         console.error(e);
@@ -140,6 +141,9 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
       await this.wait(3000);
     }
     this.verifyingPayment = false;
+    if (redirectUrl) {
+      window.location.href = redirectUrl;
+    }
   }
 
   wait(ms: number) {
