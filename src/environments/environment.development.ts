@@ -1,5 +1,5 @@
 export const environment = {
-  production: true,
+  production: false,
   country: 'cl',
   IVA: 0.19,
   // APIs
