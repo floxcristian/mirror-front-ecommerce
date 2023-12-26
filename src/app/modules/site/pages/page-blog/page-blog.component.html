@@ -20,13 +20,13 @@
           *ngFor="let noticia of noticias"
         >
           <div class="card">
-            <img [src]="noticia.imagen" class="card-img-top" alt="" />
+            <img [src]="noticia.image" class="card-img-top" alt="" />
             <div
               class="card-body mt-5 d-flex flex-column justify-content-between"
             >
               <div>
-                <h5 class="card-title">{{ noticia.titulo }}</h5>
-                <p class="card-text mb-3">{{ noticia.bajada }}</p>
+                <h5 class="card-title">{{ noticia.title }}</h5>
+                <p class="card-text mb-3">{{ noticia.titleDrop }}</p>
               </div>
               <div>
                 <a

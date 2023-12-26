@@ -13,11 +13,18 @@ export const brandsB2c: any = [
     image: 'https://images.implementos.cl/marcas/frasle.jpg',
   },
   {
+    brand: 'scanis',
+    image: 'https://images.implementos.cl/marcas/scania2.png',
+  },
+  {
     brand: 'agrale',
     image: 'https://images.implementos.cl/marcas/agrale.jpg',
   },
   { brand: 'alcoa', image: 'https://images.implementos.cl/marcas/alcoa.jpg' },
-  { brand: 'kinedyne', image: '/assets/images/marca_producto/kinedyne2.png' },
+  {
+    brand: 'kinedyne',
+    image: 'https://images.implementos.cl/marcas/kinedyne2.png',
+  },
   {
     brand: 'trogrim',
     image: 'https://images.implementos.cl/marcas/trogrim.jpg',

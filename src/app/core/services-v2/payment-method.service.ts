@@ -9,6 +9,7 @@ import { environment } from '@env/environment';
 import { Observable, Subject } from 'rxjs';
 
 const API_PAYMENT = `${environment.apiEcommerce}/api/v1/payment`;
+const API_GATEWAY = `${environment.apiEcommerce}`;
 
 @Injectable({
   providedIn: 'root',
@@ -60,6 +61,9 @@ export class PaymentMethodService {
   }
 
   verifyPayment(url: string): Observable<IConfirmedPayment> {
+    if (!url.startsWith('http')) {
+      url = `${API_GATEWAY}${url}`;
+    }
     return this.http.get<IConfirmedPayment>(url);
   }
 

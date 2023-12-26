@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CmsService } from '../../../../shared/services/cms.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-
-declare let iframely: any;
+import { CmsService } from '@core/services-v2/cms.service';
 
 @Component({
   selector: 'app-detail-news',
@@ -13,28 +10,31 @@ declare let iframely: any;
 })
 export class DetailNewsComponent implements OnInit {
   constructor(
-    private localStorage: LocalStorageService,
-    private cmsService: CmsService,
     private route: ActivatedRoute,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    //ServicesV2
+    private readonly cmsService:CmsService
   ) {}
   noticia: any = {};
 
   ngOnInit() {
-    let body = '';
-    this.noticia.page_id = this.route.snapshot.params['id'];
-    this.cmsService.obtenerPost(this.noticia).subscribe((resp) => {
-      this.noticia = resp;
-
-      this.noticia.texto = this.noticia.texto.replace(
+    let pageId = this.route.snapshot.params['id'];
+    this.cmsService.getPostDetail(pageId).subscribe({
+      next:(res)=>{
+        this.noticia = res.data
+          this.noticia.text = this.noticia.text.replace(
         /<h4>/g,
         `<h4 style="font-size:19px !important">`
-      );
-      this.noticia.texto = this.prueba(this.noticia.texto);
-    });
+        );
+        this.noticia.text = this.prueba(this.noticia.text);
+      },
+      error:(err)=>{
+        console.log(err)
+      }
+    })
   }
   prueba(html: any) {
-    const embed = this.noticia.texto;
+    const embed = this.noticia.text;
 
     const parentEmbed = this.stringToHTML(embed);
 
