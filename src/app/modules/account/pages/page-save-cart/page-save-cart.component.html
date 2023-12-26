@@ -76,27 +76,31 @@
                     class="col-md-2 col-sm-3 d-none d-sm-flex align-items-center"
                   >
                     <i class="fas fa fa-shopping-cart me-1"></i
-                    >{{ cart.productos.length
+                    >{{ cart.products.length
                     }}<span class="d-none d-xl-inline ms-1">artículo(s)</span>
                   </div>
                   <div class="col-md-3 d-none d-md-block">
-                    {{ cart.creacion | date : "dd-MM-yyyy" }}
+                    {{ cart.createdAt | date : 'dd-MM-yyyy' }}
                   </div>
                   <div class="col-md-3 col-sm-4 col-5 text-nowrap fw-bolder">
-                    {{ getTotalCart(cart.productos) | currencyFormat }}
+                    {{ getTotalCart(cart.products) | currencyFormat }}
                   </div>
                   <div class="col-md-3 col-sm-4 d-none d-xl-block">
                     <button
                       class="btn btn-sm btn-secondary me-2"
                       style="font-size: 12px"
-                      (click)="updateCart(cart._id, 'abierto')"
+                      (click)="
+                        updateCart(cart.id, SHOPPING_CART_STATUS_TYPE.OPEN)
+                      "
                     >
                       Activar
                     </button>
                     <button
                       class="btn btn-sm btn-danger"
                       style="font-size: 12px"
-                      (click)="updateCart(cart._id, 'eliminado')"
+                      (click)="
+                        updateCart(cart.id, SHOPPING_CART_STATUS_TYPE.DELETED)
+                      "
                     >
                       Eliminar
                     </button>
@@ -108,7 +112,9 @@
                       class="btn btn-secondary btn-sm me-sm-2 me-1"
                       style="font-size: 12px"
                       title="Activar Carro"
-                      (click)="updateCart(cart._id, 'abierto')"
+                      (click)="
+                        updateCart(cart.id, SHOPPING_CART_STATUS_TYPE.OPEN)
+                      "
                     >
                       <i class="far fa-check-circle"></i>
                     </button>
@@ -116,7 +122,9 @@
                       class="btn btn-danger btn-sm"
                       style="font-size: 12px"
                       title="Borrar Carro"
-                      (click)="updateCart(cart._id, 'eliminado')"
+                      (click)="
+                        updateCart(cart.id, SHOPPING_CART_STATUS_TYPE.DELETED)
+                      "
                     >
                       <i class="far fa-trash-alt"></i>
                     </button>
@@ -126,16 +134,16 @@
                       class="fas fa-search me-1"
                       style="cursor: pointer"
                       data-bs-toggle="collapse"
-                      [attr.data-target]="'#ID' + cart._id"
+                      [attr.data-bs-target]="'#ID' + cart.id"
                       aria-expanded="false"
-                      [attr.aria-controls]="'ID' + cart._id"
+                      [attr.aria-controls]="'ID' + cart.id"
                     ></span>
                   </div>
                 </div>
               </div>
 
               <div
-                [id]="'ID' + cart._id"
+                [id]="'ID' + cart.id"
                 class="collapse"
                 data-parent="#DetalleCarro"
               >
@@ -144,22 +152,22 @@
                 >
                   <div
                     class="d-sm-flex d-block align-items-center flex-grow-1 flex-shrink-1 border-bottom"
-                    *ngFor="let item of cart.productos"
+                    *ngFor="let item of cart.products"
                   >
                     <div class="col-12 d-block d-sm-none text-center">
                       <span class="product-title">
-                        {{ item.nombre | titlecase }} <b>X</b>
-                        {{ item.cantidad }}
+                        {{ item.name | titlecase }} <b>X</b>
+                        {{ item.quantity }}
                       </span>
                     </div>
                     <div
                       class="col-xs-12 col-sm-2 text-center align-items-center"
                     >
-                      <a [routerLink]="root.product(item.sku, item.nombre)">
+                      <a [routerLink]="root.product(item.sku, item.name)">
                         <img
                           class="cart-img lazyload"
                           [src]="root.getUrlImagenMiniatura(item)"
-                          [alt]="item.nombre"
+                          [alt]="item.name"
                         />
                       </a>
                     </div>
@@ -167,7 +175,7 @@
                       class="col-8 col-sm-5 col-xl-6 d-flex align-items-center"
                     >
                       <span class="product-title d-none d-sm-block">
-                        {{ item.nombre | titlecase }}
+                        {{ item.name | titlecase }}
                       </span>
                       <span
                         class="product-sku text-gray-2 ms-2 d-none d-xl-block"
@@ -177,7 +185,7 @@
                       <span
                         class="product-sku text-gray-2 ms-2 d-none d-xl-block"
                       >
-                        {{ item.marca }}
+                        {{ item.brand }}
                       </span>
                       <div class="clearfix"></div>
                     </div>
@@ -185,10 +193,10 @@
                       class="col-3 col-sm-2 d-flex align-items-center text-nowrap"
                     >
                       <span class="precio d-none d-md-block me-1">{{
-                        item.precio | currencyFormat
+                        item.price | currencyFormat
                       }}</span
                       ><span class="cantidad d-none d-sm-block">
-                        x {{ item.cantidad }}
+                        x {{ item.quantity }}
                       </span>
                     </div>
                     <div
@@ -201,7 +209,7 @@
                         >Sub Total</span
                       >
                       <span class="cart-price-value ms-2">{{
-                        item.precio * item.cantidad | currencyFormat
+                        item.price * item.quantity | currencyFormat
                       }}</span>
                     </div>
                   </div>

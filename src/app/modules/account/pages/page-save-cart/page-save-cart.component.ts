@@ -1,19 +1,29 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { CartService } from '../../../../shared/services/cart.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { ToastrService } from 'ngx-toastr';
-import { Product } from '../../../../shared/interfaces/product';
 import {
   DataModal,
   ModalComponent,
   TipoIcon,
   TipoModal,
 } from '../../../../shared/components/modal/modal.component';
-import { CartData } from '../../../../shared/interfaces/cart-item';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { isPlatformBrowser } from '@angular/common';
+import { CartService } from '@core/services-v2/cart.service';
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { SessionService } from '@core/services-v2/session/session.service';
+import { SHOPPING_CART_STATUS_TYPE } from '@core/enums/shopping-cart-status.enum';
+import {
+  IOrderDetail,
+  IOrderDetailResponse,
+} from '@core/models-v2/cart/order-details.interface';
+import {
+  IShoppingCart,
+  IShoppingCartProduct,
+} from '@core/models-v2/cart/shopping-cart.interface';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-page-save-cart',
@@ -22,18 +32,22 @@ import { isPlatformBrowser } from '@angular/common';
 })
 export class PageSaveCartComponent implements OnInit {
   innerWidth: number;
-  lstCart: any;
+  lstCart: IOrderDetail[] = [];
   paginaActual = 1;
   totalPaginas!: number;
   carrosPorPagina = 8;
   showLoading = true;
+  usuario!: ISession;
+  SHOPPING_CART_STATUS_TYPE = SHOPPING_CART_STATUS_TYPE;
   constructor(
-    private cartService: CartService,
     public root: RootService,
     private localS: LocalStorageService,
     private toast: ToastrService,
     private modalService: BsModalService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    // Services V2
+    private cartService: CartService,
+    private readonly sessionService: SessionService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -41,17 +55,16 @@ export class PageSaveCartComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    if (!this.usuario.hasOwnProperty('username')) {
+      this.usuario.username = this.usuario.email;
+    }
     this.buscarCarrosGuardados();
   }
 
   async updateCart(id: any, estado: any) {
-    const objeto: any = {
-      id,
-      estado,
-    };
-
     switch (estado) {
-      case 'eliminado':
+      case SHOPPING_CART_STATUS_TYPE.DELETED:
         const initialState: DataModal = {
           titulo: 'Confirmación',
           mensaje:
@@ -64,92 +77,101 @@ export class PageSaveCartComponent implements OnInit {
         });
         bsModalRef.content.event.subscribe(async (res: any) => {
           if (res) {
-            const respuesta: any = await this.cartService
-              .setSaveCart(objeto)
-              .toPromise();
-            if (!respuesta.error) {
-              this.toast.success('Carro eliminado exitosamente');
+            try {
+              const respuesta: any = lastValueFrom(
+                await this.cartService.setSaveCart(id, estado)
+              );
+
+              if (respuesta) {
+                this.toast.success('Carro eliminado exitosamente');
+                window.scrollTo({ top: 0 });
+                // Si es el ultimo carro de la pagina se resta 1 a la pagina actual
+                if (this.lstCart.length - 1 === 0) {
+                  this.paginaActual--;
+                }
+                this.buscarCarrosGuardados();
+              }
+            } catch (e) {
+              console.log(e);
+              this.toast.error(
+                'Ocurrio un error al actualizar el estado del carro.'
+              );
+            }
+          }
+        });
+        break;
+      case SHOPPING_CART_STATUS_TYPE.OPEN:
+        const cartSession: IShoppingCart = this.localS.get('carroCompraB2B');
+        try {
+          // Si existe un carro con productos actualmente
+          if ((cartSession?.products?.length || 0) > 0) {
+            const initialState: DataModal = {
+              titulo: 'Alerta',
+              mensaje: `Actualmente tiene un carro con ${
+                cartSession.products?.length || 0
+              } artículo(s)<br>¿Que desea hacer con este carro?`,
+              tipoIcon: TipoIcon.WARNING,
+              tipoModal: TipoModal.QUESTION,
+              textoBotonNO: 'Eliminar',
+              textoBotonSI: 'Guardar',
+            };
+            const bsModalRef: BsModalRef = this.modalService.show(
+              ModalComponent,
+              { initialState }
+            );
+            bsModalRef.content.event.subscribe(async (res: boolean) => {
+              if (res) {
+                // se guarda el carro actual
+                await lastValueFrom(
+                  this.cartService.setSaveCart(
+                    cartSession._id,
+                    SHOPPING_CART_STATUS_TYPE.SAVED
+                  )
+                );
+              } else {
+                // se elimina el carro actual
+                await lastValueFrom(
+                  this.cartService.setSaveCart(
+                    cartSession._id,
+                    SHOPPING_CART_STATUS_TYPE.DELETED
+                  )
+                );
+              }
+
+              const respuesta: any = await lastValueFrom(
+                this.cartService.setSaveCart(id, estado)
+              );
+
+              if (respuesta) {
+                this.toast.success('Carro activado exitosamente');
+                window.scrollTo({ top: 0 });
+                // Si es el ultimo carro de la pagina se resta 1 a la pagina actual
+                if (this.lstCart.length - 1 === 0 && !res) {
+                  this.paginaActual--;
+                }
+                this.buscarCarrosGuardados();
+              }
+            });
+          } else {
+            const respuesta: any = await lastValueFrom(
+              this.cartService.setSaveCart(id, estado)
+            );
+
+            if (respuesta) {
+              this.toast.success('Carro activado exitosamente');
               window.scrollTo({ top: 0 });
               // Si es el ultimo carro de la pagina se resta 1 a la pagina actual
               if (this.lstCart.length - 1 === 0) {
                 this.paginaActual--;
               }
               this.buscarCarrosGuardados();
-            } else {
-              this.toast.error(respuesta.msg);
             }
           }
-        });
-        break;
-      case 'abierto':
-        const cartSession: CartData = this.localS.get('carroCompraB2B');
-        // Si existe un carro con productos actualmente
-        if ((cartSession.productos?.length || 0) > 0) {
-          const initialState: DataModal = {
-            titulo: 'Alerta',
-            mensaje: `Actualmente tiene un carro con ${
-              cartSession.productos?.length || 0
-            } artículo(s)<br>¿Que desea hacer con este carro?`,
-            tipoIcon: TipoIcon.WARNING,
-            tipoModal: TipoModal.QUESTION,
-            textoBotonNO: 'Eliminar',
-            textoBotonSI: 'Guardar',
-          };
-          const bsModalRef: BsModalRef = this.modalService.show(
-            ModalComponent,
-            { initialState }
+        } catch (e) {
+          console.log(e);
+          this.toast.error(
+            'Ocurrio un error al actualizar el estado del carro.'
           );
-          bsModalRef.content.event.subscribe(async (res: any) => {
-            if (res) {
-              // se guarda el carro actual
-              const resp: any = await this.cartService
-                .setSaveCart({ id: cartSession._id, estado: 'guardado' })
-                .toPromise();
-              if (resp.error) {
-                this.toast.error(resp.msg);
-                return;
-              }
-            } else {
-              // se elimina el carro actual
-              const resp: any = await this.cartService
-                .setSaveCart({ id: cartSession._id, estado: 'eliminado' })
-                .toPromise();
-              if (resp.error) {
-                this.toast.error(resp.msg);
-                return;
-              }
-            }
-
-            const respuesta: any = await this.cartService
-              .setSaveCart(objeto)
-              .toPromise();
-            if (!respuesta.error) {
-              this.toast.success('Carro activado exitosamente');
-              window.scrollTo({ top: 0 });
-              // Si es el ultimo carro de la pagina se resta 1 a la pagina actual
-              if (this.lstCart.length - 1 === 0 && !res) {
-                this.paginaActual--;
-              }
-              this.buscarCarrosGuardados();
-            } else {
-              this.toast.error(respuesta.msg);
-            }
-          });
-        } else {
-          const respuesta: any = await this.cartService
-            .setSaveCart(objeto)
-            .toPromise();
-          if (!respuesta.error) {
-            this.toast.success('Carro activado exitosamente');
-            window.scrollTo({ top: 0 });
-            // Si es el ultimo carro de la pagina se resta 1 a la pagina actual
-            if (this.lstCart.length - 1 === 0) {
-              this.paginaActual--;
-            }
-            this.buscarCarrosGuardados();
-          } else {
-            this.toast.error(respuesta.msg);
-          }
         }
         break;
     }
@@ -181,30 +203,33 @@ export class PageSaveCartComponent implements OnInit {
 
   async buscarCarrosGuardados() {
     this.showLoading = true;
-    const resp: any = await this.cartService
-      .getSaveCart(this.paginaActual, this.carrosPorPagina)
-      .toPromise();
+    this.cartService
+      .getOrderDetails({
+        user: this.usuario.username ? this.usuario.username : '',
+        statuses: [SHOPPING_CART_STATUS_TYPE.SAVED],
+      })
+      .subscribe((resp: IOrderDetailResponse) => {
+        if (resp.data && resp.data.length > 0) {
+          this.lstCart = resp.data.filter(
+            (cart: IOrderDetail) => cart.products.length > 0
+          );
 
-    if (resp.data && resp.data.length > 0) {
-      this.lstCart = resp.data.filter(
-        (cart: any) => cart.productos.length > 0
-      );
-
-      this.paginaActual = resp.paginaActual;
-      this.totalPaginas = resp.totalPaginas;
-      this.cartService.load();
-      this.showLoading = false;
-    } else {
-      this.showLoading = false;
-      this.lstCart = [];
-    }
+          this.paginaActual = resp.page;
+          this.totalPaginas = resp.lastPage;
+          this.showLoading = false;
+        } else {
+          this.showLoading = false;
+          this.lstCart = [];
+        }
+        this.cartService.load();
+      });
   }
 
-  getTotalCart(productos: Product[]) {
+  getTotalCart(productos: IShoppingCartProduct[]) {
     let total = 0;
-    productos.forEach((producto: any) => {
-      if (!isVacio(producto.precio) && !isVacio(producto.cantidad)) {
-        total += Number(producto.precio) * producto.cantidad;
+    productos.forEach((producto: IShoppingCartProduct) => {
+      if (!isVacio(producto.price) && !isVacio(producto.quantity)) {
+        total += Number(producto.price) * producto.quantity;
       }
     });
     return total;

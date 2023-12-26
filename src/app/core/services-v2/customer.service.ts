@@ -5,7 +5,10 @@ import { ILoginResponse } from '@core/models-v2/auth/login-response.interface';
 import { ICreateGuest } from '@core/models-v2/customer/create-guest.interface';
 import { ICustomerBlocked } from '@core/models-v2/customer/customer-blocked.interface';
 import { IUsersDetail } from '@core/models-v2/customer/users-detail.interface';
-import { ICustomerCredit } from '@core/models-v2/customer/customer.interface';
+import {
+  ICustomerCredit,
+  ICustomerPriceListResponse,
+} from '@core/models-v2/customer/customer.interface';
 // Environment
 import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
@@ -127,5 +130,21 @@ export class CustomerService {
   createGuest(params: ICreateGuest): Observable<ICustomerCredit> {
     const url = `${API_CUSTOMER}/new-guest`;
     return this.http.post<ICustomerCredit>(url, params);
+  }
+
+  getCustomerPriceList(
+    documentId: string,
+    params: {
+      branchCode: string;
+      page: number;
+      limit: number;
+      search?: string;
+      urlCategory?: string;
+    }
+  ): Observable<ICustomerPriceListResponse> {
+    return this.http.get<ICustomerPriceListResponse>(
+      `${API_CUSTOMER}/${documentId}/price-list`,
+      { params }
+    );
   }
 }

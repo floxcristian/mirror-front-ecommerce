@@ -1,3 +1,5 @@
+import { IShoppingCartProduct } from './shopping-cart.interface';
+
 export interface IOrderDetailResponse {
   total: number;
   found: number;
@@ -21,6 +23,7 @@ export interface IOrderDetail {
   total: number;
   productQuantity: number;
   saler: string;
+  products: IShoppingCartProduct[];
 }
 
 export interface IPurchaseOrder {

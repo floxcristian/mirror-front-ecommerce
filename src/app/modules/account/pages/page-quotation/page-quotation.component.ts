@@ -43,7 +43,7 @@ export class PageQuotationComponent implements OnInit {
   orders!: IOrderDetail[];
   urlDonwloadOC = environment.apiShoppingCart + 'getoc?id=';
   innerWidth: any;
-  columns = ['modificacion', 'folio', 'totalOv', 'usuario'];
+  columns = ['createdAt', 'salesId', 'total', 'deliveryMode', 'vendedor'];
 
   constructor(
     private http: HttpClient,
@@ -101,7 +101,7 @@ export class PageQuotationComponent implements OnInit {
             salesDocumentType: 1,
             statuses: [
               SHOPPING_CART_STATUS_TYPE.GENERATED,
-              SHOPPING_CART_STATUS_TYPE.FINALIZED,
+              // SHOPPING_CART_STATUS_TYPE.FINALIZED,
             ],
             sort: `${that.columns[dataTablesParameters.order[0].column]}|${
               dataTablesParameters.order[0].dir

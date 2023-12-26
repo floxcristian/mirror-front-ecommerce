@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { CategoryService } from '../../../../shared/services/category.service';
+import { IChildren } from '@core/models-v2/cms/categories-response.interface';
+import { CmsService } from '@core/services-v2/cms.service';
 
 @Component({
   selector: 'app-filtro-categorias',
@@ -7,28 +8,36 @@ import { CategoryService } from '../../../../shared/services/category.service';
   styleUrls: ['./filtro-categorias.component.scss'],
 })
 export class FiltroCategoriasComponent implements OnInit {
-  categoria: any = [];
-  categoria2: any = [];
-  categoria3: any = [];
-  level1 = null;
-  level2 = null;
-  level3 = null;
+  categorias: IChildren[] = [];
+  categoria2: IChildren[] = [];
+  categoria3: IChildren[] = [];
+  level1: string | null = null;
+  level2: string | null = null;
+  level3: string | null = null;
   @Output() url: EventEmitter<any> = new EventEmitter();
-  constructor(private cmsService: CategoryService) {}
+  constructor(private readonly cmsService: CmsService) {}
 
   async ngOnInit() {
-    let consulta: any = await this.cmsService
-      .obtieneCategoriasHeader()
-      .toPromise();
-    this.categoria = consulta.data;
+    this.obtenerCategorias();
+  }
+
+  obtenerCategorias() {
+    this.cmsService.getCategories().subscribe({
+      next: (res) => {
+        this.categorias = res.data;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   changeSelect() {
     this.categoria2 = [];
     this.categoria3 = [];
     if (this.level1 != null) {
-      let consulta: any = this.categoria.filter(
-        (item: any) => item.url === this.level1
+      let consulta: IChildren[] = this.categorias.filter(
+        (item: IChildren) => item.url === this.level1
       );
       this.categoria2 = consulta[0].children;
     } else {
@@ -42,8 +51,8 @@ export class FiltroCategoriasComponent implements OnInit {
     if (this.level2 == null) {
       this.level3 = null;
     } else {
-      let consulta: any = this.categoria2.filter(
-        (item: any) => item.url === this.level2
+      let consulta: IChildren[] = this.categoria2.filter(
+        (item: IChildren) => item.url === this.level2
       );
       this.categoria3 = consulta[0].children;
     }

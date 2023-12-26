@@ -1,5 +1,5 @@
 // Angular
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IPreference } from '@core/models-v2/customer/customer-preference.interface';
 import {
@@ -7,6 +7,8 @@ import {
   ISalesBySbuResponse,
   ISalesMonthResponse,
 } from '@core/models-v2/customer/customer-sale.interface';
+import { IOrders } from '@core/models-v2/customer/orders.interface';
+import { IPaginated } from '@core/models-v2/shared/paginated.interface';
 // Environment
 import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
@@ -39,5 +41,14 @@ export class CustomerSaleService {
       `${API_CUSTOMER_SALE}/report/last-sales-by-month`,
       { params: { year } }
     );
+  }
+  getSales(params: {
+    search: string;
+    page: number;
+    limit: number;
+  }): Observable<IPaginated<IOrders>> {
+    return this.http.get<IPaginated<IOrders>>(`${API_CUSTOMER_SALE}/sales`, {
+      params: params,
+    });
   }
 }
