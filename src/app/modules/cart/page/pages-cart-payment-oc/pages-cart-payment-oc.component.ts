@@ -284,34 +284,30 @@ export class PagesCartPaymentOcComponent implements OnInit {
     this.loadingPage = true;
     //modificar pasos
 
-    this.paymentMethodPurchaseOrderRequestService
-      .approve({
+    try {
+      const r = await firstValueFrom(
+        this.paymentMethodPurchaseOrderRequestService.approve({
+          shoppingCartId: this.cartSession._id!.toString(),
+        })
+      );
+
+      this.purchaseOrderId = r._id.toString();
+      this.loadingPage = false;
+
+      let params = {
+        status: 'approved',
+        paymentMethod: 'OC',
         shoppingCartId: this.cartSession._id!.toString(),
-      })
-      .subscribe({
-        next: (r) => {
-          this.purchaseOrderId = r._id.toString();
-          this.loadingPage = false;
+        shoppingCartNumber: this.cartSession.cartNumber,
+      };
 
-          let params = {
-            status: 'approved',
-            paymentMethod: 'OC',
-            shoppingCartId: this.cartSession._id!.toString(),
-            shoppingCartNumber: this.cartSession.cartNumber,
-          };
-
-          this.router.navigate(
-            ['/', 'carro-compra', 'gracias-por-tu-compra'],
-            {
-              queryParams: { ...params },
-            }
-          );
-        },
-        error: (e) => {
-          console.error(e);
-          this.toastr.error('No se pudo confirmar la orden de compra');
-        },
+      this.router.navigate(['/', 'carro-compra', 'gracias-por-tu-compra'], {
+        queryParams: { ...params },
       });
+    } catch (e) {
+      console.error(e);
+      this.toastr.error('No se pudo confirmar la orden de compra');
+    }
   }
 
   agregar_lista(event: IShoppingCartProduct[]) {
