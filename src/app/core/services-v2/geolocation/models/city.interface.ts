@@ -1,12 +1,12 @@
 export interface ICity {
   id: string;
   city: string;
-  localities: ILocation[];
   provinceCode: string;
   regionCode: string;
+  localities: ILocality[];
 }
 
-export interface ILocation {
+export interface ILocality {
   id: string;
   initials: string;
   location: string;

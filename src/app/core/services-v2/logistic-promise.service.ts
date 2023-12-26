@@ -1,8 +1,6 @@
 // Angular
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
-import { ICity } from '@core/models-v2/logistic/city.interface';
 // Environment
 import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
@@ -13,18 +11,25 @@ const API_LOGISTIC = `${environment.apiEcommerce}/api/v1/logistic/`;
   providedIn: 'root',
 })
 export class LogisticPromiseService {
-
-  private http = inject(HttpClient)
+  private http = inject(HttpClient);
 
   getStores(): Observable<any> {
     return this.http.get<any>(`${API_LOGISTIC_PROMISE}stores`);
   }
 
-  getLogisticPromise(mode: string, location: any, products: any): Observable<any> {
-    console.log("🚀 ~ file: promesa.service.ts:33 ~ PromesaService ~ getpromesa ~ localidad:", location)
-    const article = products[0]
-    return this.http.post<any>(`${API_LOGISTIC_PROMISE}${mode}`, {location, article });
+  getLogisticPromise(
+    mode: string,
+    location: any,
+    products: any
+  ): Observable<any> {
+    console.log(
+      '🚀 ~ file: promesa.service.ts:33 ~ PromesaService ~ getpromesa ~ localidad:',
+      location
+    );
+    const article = products[0];
+    return this.http.post<any>(`${API_LOGISTIC_PROMISE}${mode}`, {
+      location,
+      article,
+    });
   }
 }
-
-

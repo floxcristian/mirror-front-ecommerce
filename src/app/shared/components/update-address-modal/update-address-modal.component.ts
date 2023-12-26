@@ -13,8 +13,11 @@ import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 import { AddressType } from '@core/enums/address-type.enum';
 import { IError } from '@core/models-v2/error/error.interface';
-import { LogisticService } from '@core/services-v2/logistic.service';
-import { ICity, ILocation } from '@core/models-v2/logistic/city.interface';
+import {
+  ICity,
+  ILocality,
+} from '@core/services-v2/geolocation/models/city.interface';
+import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 
 @Component({
   selector: 'app-update-address-modal',
@@ -28,7 +31,7 @@ export class UpdateAddressModalComponent implements OnInit {
 
   comunas!: any[];
   coleccionComuna!: ICity[];
-  localidades!: ILocation[];
+  localidades!: ILocality[];
   address!: DireccionMap | null;
   formDireccion!: FormGroup;
   autocompletado = true;
@@ -40,7 +43,7 @@ export class UpdateAddressModalComponent implements OnInit {
     // Services V2
     private readonly sessionService: SessionService,
     private readonly customerAddressService: CustomerAddressApiService,
-    private readonly logisticService: LogisticService
+    private readonly geolocationApiService: GeolocationApiService
   ) {}
 
   ngOnInit(): void {
@@ -242,7 +245,7 @@ export class UpdateAddressModalComponent implements OnInit {
   }
 
   loadComunas() {
-    this.logisticService.getCities().subscribe(
+    this.geolocationApiService.getCities().subscribe(
       (data) => {
         this.coleccionComuna = data;
         this.comunas = data.map((record) => {

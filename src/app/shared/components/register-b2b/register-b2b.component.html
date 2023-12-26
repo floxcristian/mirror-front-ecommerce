@@ -8,7 +8,7 @@
         ></app-loading-element>
 
         <h3 class="card-title">Solicitud de nuevo usuario b2b</h3>
-        <form [formGroup]="formUsuario">
+        <form [formGroup]="userForm">
           <div class="row">
             <h2 class="form-title col-md-12">Datos Empresa</h2>
 
@@ -26,7 +26,7 @@
                 />
 
                 <p
-                  *ngIf="(formUsuario.controls['rut'].errors?.['invalidRut'] && formUsuario.controls['rut'].touched)"
+                  *ngIf="(userForm.controls['rut'].errors?.['invalidRut'] && userForm.controls['rut'].touched)"
                   class="text-error-form-2 pull-right"
                 >
                   El RUT ingresado no es válido
@@ -47,13 +47,12 @@
             </div>
             <div class="col-md-12">
               <div class="mb-3">
-                <!-- <label>Email</label> -->
                 <ng-select
                   [clearable]="false"
                   [searchable]="true"
-                  [items]="giros"
-                  bindLabel="nombre"
-                  bindValue="codigo"
+                  [items]="businessLines"
+                  bindLabel="name"
+                  bindValue="code"
                   formControlName="giro"
                   class="form-control-select"
                   placeholder="Giro*"
@@ -102,7 +101,7 @@
                     >
                       <i
                         [ngClass]="
-                          tipo_fono == '+569'
+                          tipo_fono === '+569'
                             ? 'fa-solid fa-mobile-screen'
                             : 'fa-solid fa-phone'
                         "
@@ -139,8 +138,8 @@
 
                 <p
                   *ngIf="
-                    formUsuario.controls['telefono'].invalid &&
-                    formUsuario.controls['telefono'].touched
+                    userForm.controls['telefono'].invalid &&
+                    userForm.controls['telefono'].touched
                   "
                   class="text-error-form-2"
                 >
@@ -161,8 +160,8 @@
 
                 <p
                   *ngIf="
-                    formUsuario.controls['email'].invalid &&
-                    formUsuario.controls['email'].touched
+                    userForm.controls['email'].invalid &&
+                    userForm.controls['email'].touched
                   "
                   class="text-error-form-2"
                 >
@@ -216,8 +215,8 @@
                 <ng-select
                   [clearable]="false"
                   [searchable]="true"
-                  [items]="comunas"
-                  bindLabel="value"
+                  [items]="cities"
+                  bindLabel="city"
                   bindValue="id"
                   formControlName="comuna"
                   class="form-control-select"
@@ -235,7 +234,7 @@
           name="REGISTRARSE"
           (click)="registerUser()"
           type="button"
-          [disabled]="!formUsuario.valid || loadingForm"
+          [disabled]="!userForm.valid || loadingForm"
           class="btn btn-lg btn-secondary w-100 text-center"
         >
           ENVIAR SOLICITUD

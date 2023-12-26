@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 // Models
 import { IStore } from './models/store.interface';
+import { ICity } from './models/city.interface';
 
 const API_LOGISTIC = `${environment.apiEcommerce}/api/v1/logistic`;
 
@@ -36,5 +37,12 @@ export class GeolocationApiService {
    */
   getStores(): Observable<IStore[]> {
     return this.http.get<IStore[]>(`${API_LOGISTIC}/stores`);
+  }
+
+  /**
+   * Obtener ciudades.
+   */
+  getCities(): Observable<ICity[]> {
+    return this.http.get<ICity[]>(`${API_LOGISTIC}/cities`);
   }
 }

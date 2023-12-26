@@ -99,7 +99,7 @@
           </div>
         </div>
 
-        <form [formGroup]="formUsuario">
+        <form [formGroup]="userForm">
           <div class="row">
             <!-- rut -->
             <ng-container *ngIf="isInvoice">
@@ -142,8 +142,8 @@
                 </div>
                 <p
                   *ngIf="
-                    formUsuario.controls['rut'].invalid &&
-                    formUsuario.controls['rut'].touched
+                    userForm.controls['rut'].invalid &&
+                    userForm.controls['rut'].touched
                   "
                   class="text-error-form-2 float-start"
                 >
@@ -163,13 +163,12 @@
               </div>
               <div class="col-md-12">
                 <div class="mb-3">
-                  <!-- <label>Email</label> -->
                   <ng-select
                     [clearable]="false"
                     [searchable]="true"
-                    [items]="giros"
-                    bindLabel="nombre"
-                    bindValue="codigo"
+                    [items]="businessLines"
+                    bindLabel="name"
+                    bindValue="code"
                     formControlName="giro"
                     class="form-control-select"
                     placeholder="Giro*"
@@ -219,8 +218,8 @@
               </div>
               <p
                 *ngIf="
-                  formUsuario.controls['rut'].invalid &&
-                  formUsuario.controls['rut'].touched
+                  userForm.controls['rut'].invalid &&
+                  userForm.controls['rut'].touched
                 "
                 class="text-error-form-2 float-start"
               >
@@ -243,8 +242,8 @@
               </div>
               <p
                 *ngIf="
-                  formUsuario.controls['contactRut'].invalid &&
-                  formUsuario.controls['contactRut'].touched
+                  userForm.controls['contactRut'].invalid &&
+                  userForm.controls['contactRut'].touched
                 "
                 class="text-danger float-start"
               >
@@ -349,8 +348,8 @@
 
                 <p
                   *ngIf="
-                    formUsuario.controls['telefono'].invalid &&
-                    formUsuario.controls['telefono'].touched
+                    userForm.controls['telefono'].invalid &&
+                    userForm.controls['telefono'].touched
                   "
                   class="text-error-form-2"
                 >
@@ -380,8 +379,8 @@
                 />
                 <p
                   *ngIf="
-                    formUsuario.controls['pwd'].invalid &&
-                    formUsuario.controls['pwd'].touched
+                    userForm.controls['pwd'].invalid &&
+                    userForm.controls['pwd'].touched
                   "
                   class="text-error-form-2"
                 >
@@ -400,14 +399,14 @@
                 />
                 <p
                   class="text-error-form-2"
-                  *ngIf="formUsuario.errors?.['doesMatchPassword']"
+                  *ngIf="userForm.errors?.['doesMatchPassword']"
                 >
                   Las contraseñas no son iguales, por favor intente nuevamente.
                 </p>
 
                 <p
                   class="text-error-form-2"
-                  *ngIf="formUsuario.controls['confirmPwd'].errors?.['required'] && formUsuario.controls['confirmPwd'].touched"
+                  *ngIf="userForm.controls['confirmPwd'].errors?.['required'] && userForm.controls['confirmPwd'].touched"
                 >
                   El campo confirme contraseña es requerido
                 </p>
@@ -480,8 +479,8 @@
                 <ng-select
                   [clearable]="false"
                   [searchable]="true"
-                  [items]="comunas"
-                  bindLabel="value"
+                  [items]="cities"
+                  bindLabel="city"
                   bindValue="id"
                   formControlName="comuna"
                   class="form-control-select"
@@ -578,7 +577,7 @@
             (click)="registerUser(emailValidate)"
             type="button"
             [disabled]="
-              !formUsuario.valid ||
+              !userForm.valid ||
               !checkBoxTerminos ||
               loadingForm ||
               !emailValidate.correoValido
@@ -609,9 +608,7 @@
               (click)="registerUser(emailValidate)"
               type="button"
               [disabled]="
-                !formUsuario.valid ||
-                loadingForm ||
-                !emailValidate.correoValido
+                !userForm.valid || loadingForm || !emailValidate.correoValido
               "
               class="btn btn-lg btn-secondary w-100 text-center"
             >

@@ -66,11 +66,12 @@ import { environment } from '@env/environment';
 import { GuestStorageService } from '@core/storage/guest-storage.service';
 import { IGuest } from '@core/models-v2/storage/guest.interface';
 import { ReceiveStorageService } from '@core/storage/receive-storage.service';
-import { IBusinessLine } from '@core/models-v2/customer/business-line.interface';
 import { CustomerCostCenterService } from '@core/services-v2/customer-cost-center.service';
 import { ICostCenter } from '@core/models-v2/customer/customer-cost-center.interface';
 import { IError } from '@core/models-v2/error/error.interface';
 import { IPaymentPurchaseOrder } from '@core/models-v2/payment-method/payment-purchase-order.interface';
+import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
+import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';
 
 declare const $: any;
 export interface Archivo {
@@ -179,6 +180,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private readonly paymentMethodPurchaseOrderRequestService: PaymentMethodPurchaseOrderRequestService,
     public readonly cartService: CartService,
     private readonly customerService: CustomerService,
+    private readonly customerBusinessLineApiService: CustomerBusinessLineApiService,
     private readonly customerAddressService: CustomerAddressApiService,
     private readonly customerCostCenterService: CustomerCostCenterService
   ) {
@@ -233,7 +235,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
     if (this.isValidRut(rut ?? '')) {
       this.cargandoGiros = true;
-      this.customerService.getBusinessLines().subscribe({
+      this.customerBusinessLineApiService.getBusinessLines().subscribe({
         next: (businessLines) => {
           this.girosOptions = businessLines || [];
 
@@ -257,7 +259,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
           this.cargandoGiros = false;
         },
       });
-      this.customerService.getBusinessLines().subscribe(
+      this.customerBusinessLineApiService.getBusinessLines().subscribe(
         (res: any) => {
           this.girosOptions = res.giros || [];
 

@@ -1,8 +1,14 @@
 <div class="container" (window:resize)="onResize($event)">
-    <div class="row  justify-content-center py-5">
-        <div class="col-6" [class.col-md-12]="innerWidth < 769" [class.col-12]="innerWidth < 427">
-            <app-register-b2b [linkLogin]="true" [innerWidth]="innerWidth"></app-register-b2b>
-        </div>
-
+  <div class="row justify-content-center py-5">
+    <div
+      class="col-6"
+      [class.col-md-12]="innerWidth < 769"
+      [class.col-12]="innerWidth < 427"
+    >
+      <app-register-b2b
+        [linkLogin]="true"
+        [innerWidth]="innerWidth"
+      ></app-register-b2b>
     </div>
+  </div>
 </div>

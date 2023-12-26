@@ -12,9 +12,9 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 // Services
 import { MpSimuladorHeaderFiltrosMagicos } from './mp-simulador-header.filtros-magicos';
-import { LogisticService } from '@core/services-v2/logistic.service';
 import { LogisticPromiseService } from '@core/services-v2/logistic-promise.service';
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 
 @Component({
   selector: 'app-despacho',
@@ -47,8 +47,8 @@ export class DespachoComponent implements OnInit {
     private modalService: BsModalService,
     private cd: ChangeDetectorRef,
     // V2
-    private logisticService: LogisticService,
-    private logisticPromiseService: LogisticPromiseService
+    private logisticPromiseService: LogisticPromiseService,
+    private readonly geolocationApiService: GeolocationApiService
   ) {}
 
   ngOnInit(): void {
@@ -139,12 +139,12 @@ export class DespachoComponent implements OnInit {
     this.modo = modo;
     this.filtrosMagicosRetiroTienda = MpSimuladorHeaderFiltrosMagicos(
       this.MODOS.RETIRO_TIENDA,
-      this.logisticService,
+      this.geolocationApiService,
       this.tiendaActual
     );
     this.filtrosMagicosDespacho = MpSimuladorHeaderFiltrosMagicos(
       this.MODOS.DESPACHO,
-      this.logisticService,
+      this.geolocationApiService,
       this.tiendaActual
     );
     this.modalRef = this.modalService.show(template, {

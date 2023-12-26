@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 // Rxjs
 import { map } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
-// Environment
+// Env
 import { environment } from '@env/environment';
 // Interfaces
 import { ArticuloResponse } from '../interfaces/articulos.response';

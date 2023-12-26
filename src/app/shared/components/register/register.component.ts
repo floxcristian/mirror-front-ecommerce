@@ -1,25 +1,29 @@
+// Angular
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+// Models
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
+import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
+// Services
 import { ClientsService } from '../../services/clients.service';
 import { ToastrService } from 'ngx-toastr';
-import { LogisticsService } from '../../services/logistics.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ResponseApi } from '../../interfaces/response-api';
 import { PasswordValidator } from '../../validations/password';
-import { Router } from '@angular/router';
 import {
   CargoContacto,
   CargosContactoResponse,
 } from '../../interfaces/cargoContacto';
 import { rutValidator } from '../../utils/utilidades';
 import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete/angular-email-autocomplete.component';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { getDomainsToAutocomplete } from './domains-autocomplete';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthApiService } from '@core/services-v2/auth.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
-import { ISession } from '@core/models-v2/auth/session.interface';
 import { CartService } from '@core/services-v2/cart.service';
-import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
+import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';
+import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
+import { ICity } from '@core/services-v2/geolocation/models/city.interface';
 
 @Component({
   selector: 'app-register',
@@ -30,12 +34,14 @@ export class RegisterComponent implements OnInit {
   @Output() returnLoginEvent: EventEmitter<any> = new EventEmitter();
   @Input() linkLogin!: any;
   @Input() innerWidth!: number;
-  giros!: any[];
-  comunas!: any[];
+
+  businessLines!: IBusinessLine[];
+  cities!: ICity[];
+  // comunas!: any[];
   tipo_fono = '+569';
   coleccionComuna!: any[];
   localidades!: any[];
-  formUsuario!: FormGroup;
+  userForm!: FormGroup;
   passwordFormGroup!: FormGroup;
   isInvoice = true;
   loadingForm = false;
@@ -57,28 +63,28 @@ export class RegisterComponent implements OnInit {
   constructor(
     private clientService: ClientsService,
     private toastr: ToastrService,
-    private logisticsService: LogisticsService,
     private fb: FormBuilder,
-    private localS: LocalStorageService,
     private router: Router,
     // Services V2
     private cartService: CartService,
     private readonly sessionStorage: SessionStorageService,
     private readonly authService: AuthApiService,
-    private readonly authStateService: AuthStateServiceV2
+    private readonly authStateService: AuthStateServiceV2,
+    private readonly customerBusinessLineApiService: CustomerBusinessLineApiService,
+    private readonly geolocationApiService: GeolocationApiService
   ) {}
 
-  ngOnInit() {
-    this.loadGiro();
-    this.loadComunas();
-    this.formDefault();
+  ngOnInit(): void {
+    this.getBusinessLines();
+    this.getCities();
+    this.buildUserForm();
     this.domains = getDomainsToAutocomplete();
     this.getCargos();
     this.formBlock();
   }
 
-  formDefault() {
-    this.formUsuario = this.fb.group(
+  private buildUserForm(): void {
+    this.userForm = this.fb.group(
       {
         rut: [, [Validators.required, rutValidator]],
         contactRut: [, [Validators.required, rutValidator]],
@@ -109,31 +115,26 @@ export class RegisterComponent implements OnInit {
     this.Select_fono(this.tipo_fono);
   }
 
-  loadGiro() {
-    this.clientService.buscarGiros().subscribe(
-      (r: any) => {
-        this.giros = r;
+  /**
+   * Obtener giros.
+   */
+  private getBusinessLines(): void {
+    this.customerBusinessLineApiService.getBusinessLines().subscribe({
+      next: (businessLines) => {
+        this.businessLines = businessLines;
       },
-      (error) => {
-        this.toastr.error(error.error.msg);
-      }
-    );
+    });
   }
 
-  loadComunas() {
-    this.logisticsService.obtieneComunas().subscribe(
-      (r: any) => {
-        this.coleccionComuna = r.data;
-        this.comunas = r.data.map((record: any) => {
-          const v =
-            record.comuna + '@' + record.provincia + '@' + record.region;
-          return { id: v, value: record.comuna };
-        });
+  /**
+   * Obtener ciudades.
+   */
+  private getCities(): void {
+    this.geolocationApiService.getCities().subscribe({
+      next: (cities) => {
+        this.cities = cities.sort((a, b) => a.city.localeCompare(b.city));
       },
-      (error) => {
-        this.toastr.error(error.error.msg);
-      }
-    );
+    });
   }
 
   getCargos() {
@@ -149,7 +150,7 @@ export class RegisterComponent implements OnInit {
   registerUser(email: AngularEmailAutocompleteComponent) {
     this.loadingForm = true;
     const emailValidado = email.inputValue;
-    const dataSave = { ...this.formUsuario.value };
+    const dataSave = { ...this.userForm.value };
 
     dataSave.password = dataSave.pwd;
     dataSave.telefono = this.tipo_fono + dataSave.telefono;
@@ -162,9 +163,9 @@ export class RegisterComponent implements OnInit {
     // validamos si es boleta o factura
     if (this.isInvoice) {
       dataSave.tipoCliente = 2;
-      dataSave.nombreGiro = this.giros.find(
-        (g) => g.codigo === dataSave.giro
-      ).nombre;
+      dataSave.nombreGiro =
+        this.businessLines.find((item) => item.code === dataSave.giro)?.name ||
+        '';
     } else {
       dataSave.tipoCliente = 1;
       dataSave.contactRut = this.rut;
@@ -196,7 +197,7 @@ export class RegisterComponent implements OnInit {
 
         const dataLogin = {
           username: dataSave.email,
-          password: this.formUsuario.value.pwd,
+          password: this.userForm.value.pwd,
         };
 
         this.authService
@@ -239,7 +240,7 @@ export class RegisterComponent implements OnInit {
   fake(email: AngularEmailAutocompleteComponent) {
     this.loadingForm = true;
     const emailValidado = email.inputValue;
-    const dataSave = { ...this.formUsuario.value };
+    const dataSave = { ...this.userForm.value };
 
     dataSave.password = dataSave.pwd;
 
@@ -251,9 +252,9 @@ export class RegisterComponent implements OnInit {
     // validamos si es boleta o factura
     if (this.isInvoice) {
       dataSave.tipoCliente = 2;
-      dataSave.nombreGiro = this.giros.find(
-        (g) => g.codigo === dataSave.giro
-      ).nombre;
+      dataSave.nombreGiro =
+        this.businessLines.find((item) => item.code === dataSave.giro)?.name ||
+        '';
     } else {
       dataSave.tipoCliente = 1;
       dataSave.contactRut = this.rut;
@@ -271,8 +272,8 @@ export class RegisterComponent implements OnInit {
     }
 
     const dataLogin = {
-      username: this.formUsuario.value.email,
-      password: this.formUsuario.value.pwd,
+      username: this.userForm.value.email,
+      password: this.userForm.value.pwd,
     };
     this.authService.login(dataLogin.username, dataLogin.password).subscribe({
       next: (res) => {
@@ -313,8 +314,8 @@ export class RegisterComponent implements OnInit {
     }
 
     const dataLogin = {
-      username: this.formUsuario.value.email,
-      password: this.formUsuario.value.pwd,
+      username: this.userForm.value.email,
+      password: this.userForm.value.pwd,
     };
 
     this.authService.login(dataLogin.username, dataLogin.password).subscribe({
@@ -353,26 +354,24 @@ export class RegisterComponent implements OnInit {
     this.checkBoxPersona = !this.checkBoxPersona;
     if (this.isInvoice) {
       window.scrollTo({ top: 0 });
-      this.formUsuario.get('rut')?.setValue(null);
-      this.formUsuario.get('contactRut')?.setValue(null);
-      this.formUsuario
+      this.userForm.get('rut')?.setValue(null);
+      this.userForm.get('contactRut')?.setValue(null);
+      this.userForm
         .get('contactRut')
         ?.setValidators([Validators.required, rutValidator]);
-      this.formUsuario.get('cargo')?.setValidators([Validators.required]);
-      this.formUsuario
-        .get('razonsocial')
-        ?.setValidators([Validators.required]);
-      this.formUsuario.get('giro')?.setValidators([Validators.required]);
+      this.userForm.get('cargo')?.setValidators([Validators.required]);
+      this.userForm.get('razonsocial')?.setValidators([Validators.required]);
+      this.userForm.get('giro')?.setValidators([Validators.required]);
     } else {
-      this.formUsuario.get('rut')?.setValue(null);
-      this.formUsuario.get('contactRut')?.setValue(null);
-      this.formUsuario.get('contactRut')?.clearValidators();
-      this.formUsuario.get('cargo')?.clearValidators();
-      this.formUsuario.get('razonsocial')?.clearValidators();
-      this.formUsuario.get('giro')?.clearValidators();
+      this.userForm.get('rut')?.setValue(null);
+      this.userForm.get('contactRut')?.setValue(null);
+      this.userForm.get('contactRut')?.clearValidators();
+      this.userForm.get('cargo')?.clearValidators();
+      this.userForm.get('razonsocial')?.clearValidators();
+      this.userForm.get('giro')?.clearValidators();
     }
 
-    this.formUsuario.markAsUntouched();
+    this.userForm.markAsUntouched();
     this.isValidRut = false;
     this.formBlock();
   }
@@ -383,7 +382,7 @@ export class RegisterComponent implements OnInit {
 
   validateCustomer(e: any) {
     let value = e.target.value;
-    if (this.formUsuario.controls['rut'].status === 'VALID') {
+    if (this.userForm.controls['rut'].status === 'VALID') {
       value = value.replace(/\./g, '');
       this.clientService.validateCustomer(value).subscribe(
         (r: any) => {
@@ -413,43 +412,43 @@ export class RegisterComponent implements OnInit {
   formBlock() {
     if (this.isValidRut) {
       this.rutDisabled = true;
-      this.formUsuario.get('rut')?.disable();
-      this.formUsuario.get('contactRut')?.enable();
-      this.formUsuario.get('cargo')?.enable();
-      this.formUsuario.get('nombre')?.enable();
-      this.formUsuario.get('apellido')?.enable();
-      this.formUsuario.get('telefono')?.enable();
-      this.formUsuario.get('pwd')?.enable();
-      this.formUsuario.get('confirmPwd')?.enable();
-      this.formUsuario.get('calle')?.enable();
-      this.formUsuario.get('comuna')?.enable();
-      this.formUsuario.get('numero')?.enable();
-      this.formUsuario.get('departamento')?.enable();
-      this.formUsuario.get('referencia')?.enable();
+      this.userForm.get('rut')?.disable();
+      this.userForm.get('contactRut')?.enable();
+      this.userForm.get('cargo')?.enable();
+      this.userForm.get('nombre')?.enable();
+      this.userForm.get('apellido')?.enable();
+      this.userForm.get('telefono')?.enable();
+      this.userForm.get('pwd')?.enable();
+      this.userForm.get('confirmPwd')?.enable();
+      this.userForm.get('calle')?.enable();
+      this.userForm.get('comuna')?.enable();
+      this.userForm.get('numero')?.enable();
+      this.userForm.get('departamento')?.enable();
+      this.userForm.get('referencia')?.enable();
 
       if (this.isInvoice) {
-        this.formUsuario.get('razonsocial')?.enable();
-        this.formUsuario.get('giro')?.enable();
+        this.userForm.get('razonsocial')?.enable();
+        this.userForm.get('giro')?.enable();
       }
     } else {
       this.rutDisabled = false;
-      this.formUsuario.get('rut')?.enable();
-      this.formUsuario.get('contactRut')?.disable();
-      this.formUsuario.get('cargo')?.disable();
-      this.formUsuario.get('nombre')?.disable();
-      this.formUsuario.get('apellido')?.disable();
-      this.formUsuario.get('telefono')?.disable();
-      this.formUsuario.get('pwd')?.disable();
-      this.formUsuario.get('confirmPwd')?.disable();
-      this.formUsuario.get('calle')?.disable();
-      this.formUsuario.get('numero')?.disable();
-      this.formUsuario.get('comuna')?.disable();
-      this.formUsuario.get('departamento')?.disable();
-      this.formUsuario.get('referencia')?.disable();
+      this.userForm.get('rut')?.enable();
+      this.userForm.get('contactRut')?.disable();
+      this.userForm.get('cargo')?.disable();
+      this.userForm.get('nombre')?.disable();
+      this.userForm.get('apellido')?.disable();
+      this.userForm.get('telefono')?.disable();
+      this.userForm.get('pwd')?.disable();
+      this.userForm.get('confirmPwd')?.disable();
+      this.userForm.get('calle')?.disable();
+      this.userForm.get('numero')?.disable();
+      this.userForm.get('comuna')?.disable();
+      this.userForm.get('departamento')?.disable();
+      this.userForm.get('referencia')?.disable();
 
       if (this.isInvoice) {
-        this.formUsuario.get('razonsocial')?.disable();
-        this.formUsuario.get('giro')?.disable();
+        this.userForm.get('razonsocial')?.disable();
+        this.userForm.get('giro')?.disable();
       }
     }
   }
@@ -461,27 +460,27 @@ export class RegisterComponent implements OnInit {
       this.disableDireccion = false;
 
       if (this.getAddressData(data[0], 'locality')) {
-        this.formUsuario.controls['comuna'].setValue(
+        this.userForm.controls['comuna'].setValue(
           this.findComuna(this.getAddressData(data[0], 'locality'))
         );
       } else {
-        this.formUsuario.controls['comuna'].setValue(
+        this.userForm.controls['comuna'].setValue(
           this.findComuna(
             this.getAddressData(data[0], 'administrative_area_level_3')
           )
         );
       }
-      this.formUsuario.controls['calle'].setValue(
+      this.userForm.controls['calle'].setValue(
         this.getAddressData(data[0], 'route')
       );
-      this.formUsuario.controls['numero'].setValue(
+      this.userForm.controls['numero'].setValue(
         this.getAddressData(data[0], 'street_number')
       );
-      this.formUsuario.controls['latitud'].setValue(data[1].lat);
-      this.formUsuario.controls['longitud'].setValue(data[1].lng);
+      this.userForm.controls['latitud'].setValue(data[1].lat);
+      this.userForm.controls['longitud'].setValue(data[1].lng);
 
       this.obtenerLocalidades({
-        id: this.formUsuario.controls['comuna'].value,
+        id: this.userForm.controls['comuna'].value,
       });
       this.cargarDireccion();
     }
@@ -529,13 +528,13 @@ export class RegisterComponent implements OnInit {
     if (nombre != '') {
       nombre = this.quitarAcentos(nombre);
 
-      const result = this.comunas.find(
-        (data) => this.quitarAcentos(data.value) === nombre
+      const result = this.cities.find(
+        (city) => this.quitarAcentos(city.city) === nombre
       );
 
-      if (result && result.id) {
+      if (result) {
         this.obtenerLocalidades(result);
-        this.findComunaLocalizacion(result.value);
+        this.findComunaLocalizacion(result.city);
         return result.id;
       } else {
         return '';
@@ -554,38 +553,38 @@ export class RegisterComponent implements OnInit {
       );
 
       if (result && result.localidad) {
-        this.formUsuario.controls['localizacion'].setValue(result.localidad);
+        this.userForm.controls['localizacion'].setValue(result.localidad);
       }
     }
   }
 
   clearAddress() {
-    this.formUsuario.controls['comuna'].setValue('');
-    this.formUsuario.controls['calle'].setValue(null);
-    this.formUsuario.controls['numero'].setValue(null);
-    this.formUsuario.controls['departamento'].setValue(null);
-    this.formUsuario.controls['referencia'].setValue('');
-    this.formUsuario.controls['localizacion'].setValue('');
-    this.formUsuario.controls['latitud'].setValue('');
-    this.formUsuario.controls['longitud'].setValue('');
+    this.userForm.controls['comuna'].setValue('');
+    this.userForm.controls['calle'].setValue(null);
+    this.userForm.controls['numero'].setValue(null);
+    this.userForm.controls['departamento'].setValue(null);
+    this.userForm.controls['referencia'].setValue('');
+    this.userForm.controls['localizacion'].setValue('');
+    this.userForm.controls['latitud'].setValue('');
+    this.userForm.controls['longitud'].setValue('');
   }
 
   clearRut() {
     this.isValidRut = false;
     this.formBlock();
-    this.formUsuario.get('rut')?.setValue(null);
-    this.formUsuario.get('rut')?.markAsUntouched();
+    this.userForm.get('rut')?.setValue(null);
+    this.userForm.get('rut')?.markAsUntouched();
     this.rut = '';
   }
 
   cargarDireccion() {
     this.direccion = null;
     if (
-      this.formUsuario.controls['calle'].value != '' &&
-      this.formUsuario.controls['comuna'].value != '' &&
-      this.formUsuario.controls['numero'].value != ''
+      this.userForm.controls['calle'].value != '' &&
+      this.userForm.controls['comuna'].value != '' &&
+      this.userForm.controls['numero'].value != ''
     ) {
-      const { calle, numero, comuna, localizacion } = this.formUsuario.value;
+      const { calle, numero, comuna, localizacion } = this.userForm.value;
       const comunaArr = comuna.split('@');
 
       this.direccion = {
@@ -610,27 +609,27 @@ export class RegisterComponent implements OnInit {
   }
 
   geolocalizacion(event: any) {
-    this.formUsuario.controls['latitud'].setValue(event.lat);
-    this.formUsuario.controls['longitud'].setValue(event.lng);
+    this.userForm.controls['latitud'].setValue(event.lat);
+    this.userForm.controls['longitud'].setValue(event.lng);
   }
 
   Select_fono(tipo: any) {
     this.tipo_fono = tipo;
 
     if (this.tipo_fono === '+569')
-      this.formUsuario.controls['telefono'].setValidators([
+      this.userForm.controls['telefono'].setValidators([
         Validators.required,
         Validators.minLength(8),
         Validators.maxLength(8),
       ]);
     else
-      this.formUsuario.controls['telefono'].setValidators([
+      this.userForm.controls['telefono'].setValidators([
         Validators.required,
         Validators.minLength(9),
         Validators.maxLength(9),
       ]);
 
-    this.formUsuario.get('telefono')?.updateValueAndValidity();
+    this.userForm.get('telefono')?.updateValueAndValidity();
   }
 
   registrar() {

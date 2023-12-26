@@ -1,10 +1,16 @@
+// Angular
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ClientsService } from '../../services/clients.service';
-import { ToastrService } from 'ngx-toastr';
-import { LogisticsService } from '../../services/logistics.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ResponseApi } from '../../interfaces/response-api';
+// Libs
+import { ToastrService } from 'ngx-toastr';
+// Models
+import { ICity } from '@core/services-v2/geolocation/models/city.interface';
+import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
+// Services
+import { ClientsService } from '../../services/clients.service';
 import { rutValidator } from '../../utils/utilidades';
+import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
+import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';
 
 @Component({
   selector: 'app-register-b2b',
@@ -15,32 +21,37 @@ export class Registerb2bComponent implements OnInit {
   @Output() returnLoginEvent: EventEmitter<any> = new EventEmitter();
   @Input() linkLogin!: any;
   @Input() innerWidth!: number;
-  giros!: any[];
-  comunas!: any[];
+  cities!: ICity[];
+  businessLines!: IBusinessLine[];
+
   tipo_fono = '+569';
-  formUsuario!: FormGroup;
   isInvoice = true;
   mensajeExito = false;
   loadingForm = false;
   blockedForm = true;
   isValidRut = false;
+  userForm!: FormGroup;
 
   constructor(
     private clientService: ClientsService,
     private toastr: ToastrService,
-    private logisticsService: LogisticsService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private readonly geolocationApiService: GeolocationApiService,
+    private readonly customerBusinessLineApiService: CustomerBusinessLineApiService
   ) {}
 
   ngOnInit() {
-    this.loadGiro();
-    this.loadComunas();
-    this.formDefault();
+    this.getBusinessLines();
+    this.getCities();
+    this.buildUserForm();
     this.formBlock(true);
   }
 
-  formDefault() {
-    this.formUsuario = this.fb.group({
+  /**
+   * Construir formulario para crear usuario B2B.
+   */
+  private buildUserForm(): void {
+    this.userForm = this.fb.group({
       rut: [, [Validators.required, rutValidator]],
       nombre: [, Validators.required],
       apellido: [, Validators.required],
@@ -57,34 +68,33 @@ export class Registerb2bComponent implements OnInit {
     this.Select_fono(this.tipo_fono);
   }
 
-  loadGiro() {
-    this.clientService.buscarGiros().subscribe(
-      (r: any) => {
-        this.giros = r;
+  /**
+   * Obtener giros.
+   */
+  private getBusinessLines(): void {
+    this.customerBusinessLineApiService.getBusinessLines().subscribe({
+      next: (businessLines) => {
+        this.businessLines = businessLines;
       },
-      (error) => {
-        this.toastr.error(error.error.msg);
-      }
-    );
+    });
   }
 
-  loadComunas() {
-    this.logisticsService.obtieneComunas().subscribe(
-      (r: any) => {
-        this.comunas = r.data.map((record: any) => {
-          const v =
-            record.comuna + '@' + record.provincia + '@' + record.region;
-          return { id: v, value: record.comuna };
-        });
+  /**
+   * Obtener ciudades.
+   */
+  private getCities(): void {
+    this.geolocationApiService.getCities().subscribe({
+      next: (cities) => {
+        this.cities = cities.sort((a, b) => a.city.localeCompare(b.city));
       },
-      (error) => {
-        this.toastr.error(error.error.msg);
-      }
-    );
+    });
   }
 
+  /**
+   * Registrar usuario B2B.
+   */
   registerUser() {
-    const dataSave = { ...this.formUsuario.value };
+    const dataSave = { ...this.userForm.value };
     this.loadingForm = true;
 
     dataSave.password = 'qwert1234';
@@ -99,7 +109,7 @@ export class Registerb2bComponent implements OnInit {
 
     // Se setea correo en minuscula
     dataSave.email = String(dataSave.email).toLowerCase();
-    this.formUsuario.controls['email'].setValue(dataSave.email);
+    this.userForm.controls['email'].setValue(dataSave.email);
 
     this.clientService.registerb2b(dataSave).subscribe(
       (r: any) => {
@@ -122,7 +132,7 @@ export class Registerb2bComponent implements OnInit {
 
   validateCustomer(e: any) {
     let value = e.target.value;
-    if (this.formUsuario.controls['rut'].status === 'VALID') {
+    if (this.userForm.controls['rut'].status === 'VALID') {
       value = value.replace(/\./g, '');
       this.clientService.validateCustomerb2b(value).subscribe(
         (r: any) => {
@@ -155,44 +165,44 @@ export class Registerb2bComponent implements OnInit {
     }
 
     if (this.isValidRut) {
-      this.formUsuario.get('nombre')?.enable();
-      this.formUsuario.get('apellido')?.enable();
-      this.formUsuario.get('telefono')?.enable();
-      this.formUsuario.get('email')?.enable();
-      this.formUsuario.get('calle')?.enable();
-      this.formUsuario.get('numero')?.enable();
-      this.formUsuario.get('comuna')?.enable();
-      this.formUsuario.get('razonsocial')?.enable();
-      this.formUsuario.get('giro')?.enable();
+      this.userForm.get('nombre')?.enable();
+      this.userForm.get('apellido')?.enable();
+      this.userForm.get('telefono')?.enable();
+      this.userForm.get('email')?.enable();
+      this.userForm.get('calle')?.enable();
+      this.userForm.get('numero')?.enable();
+      this.userForm.get('comuna')?.enable();
+      this.userForm.get('razonsocial')?.enable();
+      this.userForm.get('giro')?.enable();
     } else {
-      this.formUsuario.get('nombre')?.disable();
-      this.formUsuario.get('apellido')?.disable();
-      this.formUsuario.get('telefono')?.disable();
-      this.formUsuario.get('email')?.disable();
-      this.formUsuario.get('calle')?.disable();
-      this.formUsuario.get('numero')?.disable();
-      this.formUsuario.get('comuna')?.disable();
-      this.formUsuario.get('razonsocial')?.disable();
-      this.formUsuario.get('giro')?.disable();
+      this.userForm.get('nombre')?.disable();
+      this.userForm.get('apellido')?.disable();
+      this.userForm.get('telefono')?.disable();
+      this.userForm.get('email')?.disable();
+      this.userForm.get('calle')?.disable();
+      this.userForm.get('numero')?.disable();
+      this.userForm.get('comuna')?.disable();
+      this.userForm.get('razonsocial')?.disable();
+      this.userForm.get('giro')?.disable();
     }
   }
 
-  Select_fono(tipo: any) {
+  Select_fono(tipo: any): void {
     this.tipo_fono = tipo;
 
     if (this.tipo_fono === '+569')
-      this.formUsuario.controls['telefono'].setValidators([
+      this.userForm.controls['telefono'].setValidators([
         Validators.required,
         Validators.minLength(8),
         Validators.maxLength(8),
       ]);
     else
-      this.formUsuario.controls['telefono'].setValidators([
+      this.userForm.controls['telefono'].setValidators([
         Validators.required,
         Validators.minLength(9),
         Validators.maxLength(9),
       ]);
 
-    this.formUsuario.get('telefono')?.updateValueAndValidity();
+    this.userForm.get('telefono')?.updateValueAndValidity();
   }
 }
