@@ -1,3 +1,4 @@
+// Angular
 import {
   Component,
   OnDestroy,
@@ -7,13 +8,18 @@ import {
   PLATFORM_ID,
   Inject,
 } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
+import { isPlatformBrowser } from '@angular/common';
+// Rxjs
 import { Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+// Libs
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+// Env
+import { environment } from '@env/environment';
+// Services
 import { MobileMenuService } from '../../../../shared/services/mobile-menu.service';
 import { mobileMenu } from '../../../../../data/mobile-menu';
 import { MobileMenuItem } from '../../../../shared/interfaces/mobile-menu-item';
-import { environment } from '@env/environment';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { NavigationLink } from '../../../../shared/interfaces/navigation-link';
 import { CategoryApi } from '../../../../shared/interfaces/category-api';
 import { CategoryService } from '../../../../shared/services/category.service';
@@ -22,7 +28,6 @@ import { DropdownDirective } from '../../../../shared/directives/dropdown.direct
 import { DireccionDespachoComponent } from '../../../header/components/search-vin-b2b/components/direccion-despacho/direccion-despacho.component';
 
 import { isVacio } from '../../../../shared/utils/utilidades';
-import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
@@ -90,13 +95,12 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
     this.isB2B = this.sessionService.isB2B();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.mobilemenu.isOpen$
       .pipe(takeUntil(this.destroy$))
       .subscribe((isOpen) => (this.isOpen = isOpen));
     this.subscribeLogin();
     this.updateLink();
-    console.log('getSelectedStore desde MobileMenuComponent');
     this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
     this.geolocationService.selectedStore$.subscribe({
