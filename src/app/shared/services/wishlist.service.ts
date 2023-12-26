@@ -55,15 +55,12 @@ export class WishlistService {
 
   private save(): void {
     this.localS.set('wishlistItems', this.data.items as any);
-
-    //this.itemsSubject$.next(this.data.items);
   }
 
   private load(): void {
     const items: Product[] = this.localS.get('wishlistItems') as any;
     if (items) {
       this.data.items = items;
-      //this.itemsSubject$.next(this.data.items);
     }
   }
 }

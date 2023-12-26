@@ -1,7 +1,10 @@
+// Angular
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
-import { StoresService } from '../../../../shared/services/stores.service';
-import { ToastrService } from 'ngx-toastr';
 import { isPlatformBrowser } from '@angular/common';
+// Libs
+import { ToastrService } from 'ngx-toastr';
+// Services
+import { StoresService } from '../../../../shared/services/stores.service';
 
 @Component({
   selector: 'app-stores',
@@ -24,7 +27,7 @@ export class PageStoresComponent {
       : 900;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.stores.obtieneTiendas().subscribe(
       (r: any) => {
         this.rows = r.data.map((result: any) => {
@@ -40,7 +43,7 @@ export class PageStoresComponent {
     );
   }
 
-  mostrarTienda(tienda: any) {
+  mostrarTienda(tienda: any): void {
     if (this.innerWidth < 427) {
       tienda.colapse = !tienda.colapse;
     } else {
@@ -52,7 +55,8 @@ export class PageStoresComponent {
       x.scrollIntoView();
     }
   }
-  onResize(event: any) {
+
+  onResize(event: any): void {
     this.innerWidth = event.target.innerWidth;
   }
 }
