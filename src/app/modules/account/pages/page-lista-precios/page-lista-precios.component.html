@@ -19,7 +19,7 @@
       (change)="iva = !iva"
       style="cursor: pointer"
     />
-    <label class="form-check-label" for="iva" style="cursor: pointer">{{
+    <label class="form-check-label" for="iva" style="cursor: pointer; margin-left:10px">{{
       iva ? "c/IVA" : "s/IVA"
     }}</label>
   </div>
@@ -77,48 +77,40 @@
           >
             <div class="col-12 d-block d-sm-none text-center">
               <span class="product-title">
-                {{ item.producto.nombre | titlecase }} </span
+                {{ item.name | titlecase }} </span
               ><br />
               <span class="product-sku text-gray-2"
-                >{{
-                  item.producto.codigos && item.producto.codigos.length > 0
-                    ? item.producto.codigos[0].codigoCliente
-                    : ""
-                }}
-                - {{ item.producto.sku }}</span
+                >{{ item.customerCode }}
+                - {{ item.sku }}</span
               >
             </div>
 
             <div class="col-xs-12 col-sm-2 text-center align-items-center">
               <a
                 [routerLink]="
-                  root.product(item.producto.sku, item.producto.nombre)
+                  root.product(item.sku, item.name)
                 "
               >
                 <img
                   class="precio-img lazyload"
-                  [src]="root.getUrlImagenMiniatura(item.producto)"
-                  [alt]="item.producto.nombre"
+                  [src]="root.getUrlImagenMiniatura(item)"
+                  [alt]="item.name"
                 />
               </a>
             </div>
             <div class="col-8 col-sm-5 d-flex align-items-center">
               <span class="product-title d-none d-sm-block">
-                {{ item.producto.nombre | titlecase }}
+                {{ item.name | titlecase }}
               </span>
             </div>
             <div
               class="col-8 col-sm-2 flex-sm-column justify-content-xl-end justify-content-center d-flex align-items-center"
             >
               <span class="product-sku ms-2 d-none d-sm-block">
-                {{
-                  item.producto.codigos && item.producto.codigos.length > 0
-                    ? item.producto.codigos[0].codigoCliente
-                    : ""
-                }}
+                {{ item.customerCode }}
               </span>
               <span class="product-sku text-gray-2 ms-2 d-none d-sm-block">
-                {{ item.producto.sku }}
+                {{ item.sku }}
               </span>
             </div>
             <div
@@ -127,16 +119,16 @@
               <span class="precio-price-value"
                 ><span class="precio-meson">{{
                   iva
-                    ? (item.precioMeson | currencyFormat)
-                    : (item.precioMesonBruto | currencyFormat)
+                    ? (item.commonPrice | currencyFormat)
+                    : (item.commonPriceBruto | currencyFormat)
                 }}</span>
                 {{ iva ? "c/iva" : "s/iva" }}</span
               >
               <span class="precio-price-value text-danger ms-3 ms-sm-0"
                 >{{
                   iva
-                    ? (item._id.precio | currencyFormat)
-                    : (item._id.precioBruto | currencyFormat)
+                    ? (item.price | currencyFormat)
+                    : (item.priceBruto | currencyFormat)
                 }}
                 {{ iva ? "c/iva" : "s/iva" }}</span
               >
@@ -190,39 +182,35 @@
                   <td class="text-center">
                     <a
                       [routerLink]="
-                        root.product(item.producto.sku, item.producto.nombre)
+                        root.product(item.sku, item.name)
                       "
                     >
                       <img
                         class="precio-img lazyload"
-                        [src]="root.getUrlImagenMiniatura(item.producto)"
-                        [alt]="item.producto.nombre"
+                        [src]="root.getUrlImagenMiniatura(item)"
+                        [alt]="item.name"
                       />
                     </a>
                   </td>
-                  <td nowrap>{{ item.producto.nombre | titlecase }}</td>
-                  <td class="text-center">{{ item.producto.marca }}</td>
+                  <td nowrap>{{ item.name | titlecase }}</td>
+                  <td class="text-center">{{ item.brand }}</td>
                   <td class="text-center">
-                    {{
-                      item.producto.codigos && item.producto.codigos.length > 0
-                        ? item.producto.codigos[0].codigoCliente
-                        : ""
-                    }}
+                    {{ item.customerCode }}
                   </td>
-                  <td class="text-center">{{ item.producto.sku }}</td>
+                  <td class="text-center">{{ item.sku }}</td>
                   <td class="text-center">
                     <span class="precio-meson">{{
                       iva
-                        ? (item.precioMeson | currencyFormat)
-                        : (item.precioMesonBruto | currencyFormat)
+                        ? (item.commonPrice | currencyFormat)
+                        : (item.commonPriceBruto | currencyFormat)
                     }}</span>
                     {{ iva ? "c/iva" : "s/iva" }}
                   </td>
                   <td class="text-center text-danger">
                     {{
                       iva
-                        ? (item._id.precio | currencyFormat)
-                        : (item._id.precioBruto | currencyFormat)
+                        ? (item.price | currencyFormat)
+                        : (item.priceBruto | currencyFormat)
                     }}
                     {{ iva ? "c/iva" : "s/iva" }}
                   </td>
