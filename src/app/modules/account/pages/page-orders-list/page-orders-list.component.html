@@ -48,27 +48,27 @@
                   <td align="center">
                     <a
                       routerLink="/carro-compra/downloadpdf"
-                      [queryParams]="{ numero: order.ordenVenta }"
+                      [queryParams]="{ numero: order.salesId }"
                       target="_blank"
-                      >{{ order.ordenVenta }}</a
+                      >{{ order.salesId }}</a
                     >
                   </td>
                   <!-- <td align="center"><a href="https://b2b-api.implementos.cl/api/carro/getoc?id={{ order._id }}" target="_blank">{{ order.ordenCompra }}</a></td> -->
-                  <td align="center" nowrap>{{ order.ordenCompra || "0" }}</td>
+                  <td align="center" nowrap>{{ order.purchaseOrder || "0" }}</td>
                   <td align="center" nowrap>
                     <ng-container
                       *ngIf="
-                        order.ordenCompra != 0 && order.ordenCompra != null
+                        order.purchaseOrder != 0 && order.purchaseOrder != null
                       "
                     >
                       <ng-container
-                        *ngIf="order.carros != null && order.carros.ordenCompra"
+                        *ngIf="order.carros != null && order.carros.purchaseOrder"
                       >
-                        {{ order.carros.ordenCompra.centroCosto }}
+                        {{ order.purchaseOrder }}
                       </ng-container>
                       <ng-container
                         *ngIf="
-                          order.carros == null || !order.carros.ordenCompra
+                          order.purchaseOrder == null || !order.purchaseOrder
                         "
                       >
                         <font color="red">{{ "S/CC" }}</font>
@@ -77,7 +77,7 @@
 
                     <ng-container
                       *ngIf="
-                        order.ordenCompra == null || order.ordenCompra == 0
+                        order.purchaseOrder == null || order.purchaseOrder == 0
                       "
                     >
                       <font color="red"> S/CC</font>
@@ -87,20 +87,20 @@
                     <a
                       routerLink="/carro-compra/downloadpdf"
                       [queryParams]="{
-                        numero: order.documento,
+                        numero: order.invoiceNumber,
                         tipo: 'factura'
                       }"
                       target="_blank"
-                      >{{ order.documento }}</a
+                      >{{ order.invoiceNumber }}</a
                     >
                   </td>
                   <td align="center">
-                    {{ order.fecha | date : "dd-MM-yy hh:mm" }}
+                    {{ order.invoiceDate | date : "dd-MM-yy hh:mm" }}
                   </td>
-                  <td align="center">{{ order.sucursal }}</td>
-                  <td>{{ order.vendedor }}</td>
-                  <td align="right">${{ order.neto }}</td>
-                  <td align="right">${{ order.iva }}</td>
+                  <td align="center">{{ order.branch }}</td>
+                  <td>{{ order.seller ? order.seller.name : '' }}</td>
+                  <td align="right">${{ order.lineAmount }}</td>
+                  <td align="right">${{ order.ivaAmount }}</td>
                   <td align="right">${{ order.total }}</td>
                 </tr>
               </tbody>

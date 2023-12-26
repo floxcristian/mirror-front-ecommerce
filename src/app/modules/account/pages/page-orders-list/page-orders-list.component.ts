@@ -1,19 +1,13 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { Subject } from 'rxjs';
-import { environment } from '@env/environment';
-
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DataTableDirective } from 'angular-datatables';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { CustomerSaleService } from '@core/services-v2/customer-sale.service';
 
-class DataTablesResponse {
-  data!: any[];
-  draw!: number;
-  recordsFiltered!: number;
-  recordsTotal!: number;
-}
+
+
 
 @Component({
   selector: 'app-page-orders-list',
@@ -25,15 +19,15 @@ export class PageOrdersListComponent implements OnInit {
   loadingData = true;
   rows: any[] = [];
   datatableElement!: DataTableDirective;
-  dtOptions: any = {};
+  dtOptions:  DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
   innerWidth: any;
 
   constructor(
-    private httpClient: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly customerSaleService: CustomerSaleService,
   ) {
     this.usuario = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
     this.loadingData = false;
@@ -43,69 +37,48 @@ export class PageOrdersListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.construir_tabla();
+    this.initializeTable();
   }
 
   onResize(event: any) {
     this.innerWidth = event.target.innerWidth;
   }
 
-  async construir_tabla() {
-    let user: any = {
-      rut: this.usuario.documentId,
-    };
 
+
+  async initializeTable() {
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
-      lengthMenu: [
-        [10, 50, 100],
-        [10, 50, 100],
-      ],
+      lengthMenu: [10, 25, 50, 100],
       serverSide: true,
-
       responsive: true,
       searching: true,
       order: [[3, 'desc']],
       language: {
-        url: '//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json',
+        url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json',
         processing: 'Cargando Ordenes de ventas..',
       },
-
       ajax: (dataTablesParameters: any, callback: any) => {
-        //datos set de ordenamiento//
         this.loadingData = true;
-
-        user.data_sort =
-          dataTablesParameters.columns[
-            dataTablesParameters.order[0].column
-          ].data;
-        user.data_order = dataTablesParameters.order[0].dir;
-        this.rows = [];
-        let params = Object.assign(dataTablesParameters, user);
-        let url = environment.apiCustomer + 'ventas';
-        let username: String = 'services';
-        let password: String = '0.=j3D2ss1.w29-';
-        let authdata = window.btoa(username + ':' + password);
-        let head = {
-          Authorization: `Basic ${authdata}`,
-          'Access-Control-Allow-Headers':
-            'Authorization, Access-Control-Allow-Headers',
+        let params = {
+          page: Math.floor(dataTablesParameters.start / dataTablesParameters.length) + 1,
+          search: dataTablesParameters.search.value,
+          limit: dataTablesParameters.length,
         };
-        let headers = new HttpHeaders(head);
-        this.httpClient
-          .post<DataTablesResponse>(url, params, { headers: headers })
-          .subscribe((resp: any) => {
-            this.rows = resp.data;
-
-            this.loadingData = false;
-            callback({
-              recordsTotal: resp.totalRegistros[0].count,
-              recordsFiltered: resp.totalRegistros[0].count,
-              data: [],
-            });
+        this.customerSaleService.getSales(params).subscribe((resp: any) => {
+          this.loadingData = false;
+          this.rows = resp.data
+          this.loadingData = false;
+          callback({
+            recordsTotal: resp.total,
+            recordsFiltered: resp.limit,
+            data: []
           });
+        });
+
       },
+
       columns: [
         { data: 'ordenVenta', width: '15%' },
         { data: 'ordenCompra' },
@@ -119,4 +92,10 @@ export class PageOrdersListComponent implements OnInit {
       ],
     };
   }
+
 }
+
+
+
+
+
