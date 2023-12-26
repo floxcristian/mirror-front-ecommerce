@@ -1,3 +1,4 @@
+<pre style="background-color: yellow">HOLI</pre>
 <ng-container *ngIf="innerWidth > 426">
   <app-scroll-top> </app-scroll-top>
   <ng-container *ngIf="banners">
@@ -103,7 +104,6 @@
         <app-product-card-b2c-cms
           [origen]="['catalogo-especial', ruta[2], nombre?.trim(), '']"
           [product]="product"
-          [grid]="layout"
           [cartClass]="true"
         >
         </app-product-card-b2c-cms>

@@ -520,18 +520,6 @@
         >
           <div class="text-center" style="font-size: 14px">AGREGAR</div>
         </button>
-        <button
-          name="addingToWishlist"
-          *ngIf="grid == 'list'"
-          ngbTooltip="Tooltip on top"
-          class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist"
-          type="button"
-          appClick
-          (click)="addToWishlist()"
-          [ngClass]="{ 'btn-loading': addingToWishlist }"
-        >
-          <i class="far fa-heart"></i>
-        </button>
       </div>
       <div
         class="product-card__buttons"
@@ -561,18 +549,6 @@
           [ngClass]="{ 'btn-loading': addingToCart }"
         >
           <div class="text-center" style="font-size: 14px">AGREGAR</div>
-        </button>
-        <button
-          name="addingToWishlist"
-          *ngIf="grid == 'list'"
-          ngbTooltip="Tooltip on top"
-          class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist"
-          type="button"
-          appClick
-          (click)="addToWishlist()"
-          [ngClass]="{ 'btn-loading': addingToWishlist }"
-        >
-          <i class="far fa-heart"></i>
         </button>
       </div>
       <div

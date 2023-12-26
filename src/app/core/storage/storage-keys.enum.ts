@@ -23,7 +23,6 @@ export enum StorageKey {
   buscadorB2B = 'buscadorB2B',
   bannersMarca = 'bannersMarca',
   favoritos = 'favoritos',
-  wishlistItems = 'wishlistItems',
   utm_campaign = 'utm_campaign',
   tokens = '_t',
   idCarro = 'id_carro',

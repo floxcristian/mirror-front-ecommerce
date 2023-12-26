@@ -1,3 +1,4 @@
+// Angular
 import {
   ChangeDetectorRef,
   Component,
@@ -8,24 +9,28 @@ import {
   TemplateRef,
   Output,
 } from '@angular/core';
-import { WishlistService } from '../../services/wishlist.service';
-import { CompareService } from '../../services/compare.service';
-import { QuickviewService } from '../../services/quickview.service';
-import { RootService } from '../../services/root.service';
-import { CurrencyService } from '../../services/currency.service';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { environment } from '@env/environment';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { isVacio } from '../../utils/utilidades';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+// Env
+import { environment } from '@env/environment';
+// Rxjs
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+// Libs
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { SessionService } from '@core/services-v2/session/session.service';
+// Models
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { IShoppingCartProductOrigin } from '@core/models-v2/cart/shopping-cart.interface';
+// Services
+import { CompareService } from '../../services/compare.service';
+import { QuickviewService } from '../../services/quickview.service';
+import { RootService } from '../../services/root.service';
+import { CurrencyService } from '../../services/currency.service';
+import { isVacio } from '../../utils/utilidades';
+import { SessionService } from '@core/services-v2/session/session.service';
 import { CartService } from '@core/services-v2/cart.service';
 import { CartV2Service } from '@core/services-v2/cart/cart.service';
 
@@ -35,7 +40,7 @@ import { CartV2Service } from '@core/services-v2/cart/cart.service';
   styleUrls: ['./product-card-b2c-ficha.component.scss'],
 })
 export class ProductCardB2cFichaComponent implements OnInit {
-  IVA = environment.IVA || 0.19;
+  IVA = environment.IVA;
   private destroy$: Subject<void> = new Subject();
   @Input() isOnProductPage!: boolean;
   @Input() home: boolean = false;
@@ -75,14 +80,12 @@ export class ProductCardB2cFichaComponent implements OnInit {
     | 'horizontal'
     | any
     | null = null;
-  @Input() grid!: any;
   @Input() paramsCategory!: any;
   @Input() origen!: string[];
   @Input() tipoOrigen: string = '';
   usuario!: ISession;
   porcentaje = 0;
   addingToCart = false;
-  addingToWishlist = false;
   addingToCompare = false;
   showingQuickview = false;
   urlImage = environment.urlFotoOmnichannel;
@@ -97,7 +100,6 @@ export class ProductCardB2cFichaComponent implements OnInit {
     public root: RootService,
     public cart: CartService,
     private route: Router,
-    public wishlist: WishlistService,
     public compare: CompareService,
     public quickview: QuickviewService,
     public currency: CurrencyService,
@@ -185,22 +187,6 @@ export class ProductCardB2cFichaComponent implements OnInit {
       this.addingToCart = false;
       this.cd.markForCheck();
     });
-  }
-
-  addToWishlist(): void {
-    if (this.addingToWishlist) {
-      return;
-    }
-
-    this.addingToWishlist = true;
-    //FIXME: ARREGLAR AGREGAR LISTA
-
-    // this.wishlist.add(this.productData).subscribe({
-    //   complete: () => {
-    //     this.addingToWishlist = false;
-    //     this.cd.markForCheck();
-    //   },
-    // });
   }
 
   addToCompare(): void {
