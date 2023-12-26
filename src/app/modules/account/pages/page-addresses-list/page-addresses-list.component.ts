@@ -1,5 +1,8 @@
+// Angular
 import { Component } from '@angular/core';
+// Models
 import { Address } from '../../../../shared/interfaces/address';
+// Constants
 import { addresses } from '../../../../../data/account-addresses';
 
 @Component({
@@ -9,6 +12,4 @@ import { addresses } from '../../../../../data/account-addresses';
 })
 export class PageAddressesListComponent {
   addresses: Address[] = addresses;
-
-  constructor() {}
 }

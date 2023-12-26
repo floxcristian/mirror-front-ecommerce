@@ -11,19 +11,6 @@ export interface AtributosEspeciales {
   url: string;
 }
 
-export interface ProductFeaturesSection {
-  name: string;
-  features: ProductFeature[];
-}
-
-export interface ProductReview {
-  avatar: string;
-  author: string;
-  rating: number;
-  date: string;
-  text: string;
-}
-
 export interface ProductPrecio {
   precio: number;
   sucursal?: string;
