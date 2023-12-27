@@ -607,7 +607,7 @@ export class CartService {
   }
 
   setNotificationContact(id: string, data: AddNotificacionContactRequest) {
-    return this.http.put(`${API_CART}/notificactionContact/${id}`, data);
+    return this.http.put(`${API_CART}/notification-contact/${id}`, data);
   }
 
   setGuestUser(user: string, data: IShoppingCartGuest) {

@@ -6,11 +6,8 @@ import {
   EventEmitter,
   OnChanges,
 } from '@angular/core';
-import { ClientsService } from '../../services/clients.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ResponseApi } from '../../interfaces/response-api';
-import { Usuario } from '../../interfaces/login';
 import { rutValidator } from '../../../shared/utils/utilidades';
 import { Router } from '@angular/router';
 import { SessionStorageService } from '@core/storage/session-storage.service';
@@ -18,12 +15,13 @@ import { AuthApiService } from '@core/services-v2/auth.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { CartService } from '@core/services-v2/cart.service';
-import {
-  IShoppingCart,
-  IShoppingCartGuest,
-} from '@core/models-v2/cart/shopping-cart.interface';
+import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
 import { IGuest } from '@core/models-v2/storage/guest.interface';
+import { CustomerService } from '@core/services-v2/customer.service';
+import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';
+import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-register-visit',
@@ -35,7 +33,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
   @Input() linkLogin!: any;
   @Input() innerWidth!: number;
   @Input() invitado!: IEcommerceUser | IGuest;
-  giros!: any[];
+  giros: IBusinessLine[] = [];
   comunas!: any[];
   slices = 8;
   formVisita!: FormGroup;
@@ -47,7 +45,6 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
   isValidRut = false;
 
   constructor(
-    private clientService: ClientsService,
     private toastr: ToastrService,
     private fb: FormBuilder,
     private router: Router,
@@ -55,7 +52,9 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     private cartService: CartService,
     private readonly sessionStorage: SessionStorageService,
     private readonly authService: AuthApiService,
-    private readonly authStateService: AuthStateServiceV2
+    private readonly authStateService: AuthStateServiceV2,
+    private readonly customerService: CustomerService,
+    private readonly customerBusinessLineService: CustomerBusinessLineApiService
   ) {
     this.formDefault();
   }
@@ -91,56 +90,62 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
   }
 
   loadGiro() {
-    this.clientService.buscarGiros().subscribe(
-      (r: any) => {
+    this.customerBusinessLineService.getBusinessLines().subscribe({
+      next: (r) => {
         this.giros = r;
       },
-      (error) => {
-        this.toastr.error(error.error.msg);
-      }
-    );
+      error: (e) => {
+        console.error(e);
+        this.toastr.error('No se pudieron traer los giros comerciales');
+      },
+    });
   }
 
   async registerUser() {
     const dataSave = { ...this.formVisita.value };
 
-    let resp: any = await this.clientService.ValidarCorreo(
-      String(dataSave.email).toLowerCase()
-    );
-
-    if (!resp.error || (resp.error && resp.data == 2)) {
-      this.loadingForm = true;
-
-      dataSave.tipoCliente = 1;
-      dataSave.telefono = this.tipo_fono + dataSave.telefono;
-      const user = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario');
-
-      let usuarioVisita: IEcommerceUser;
-      usuarioVisita = this.setUsuario(dataSave);
-
-      // FIXME: antes se usaba, y ahora??
-      // usuarioVisita._id = user._id;
-      if (user) {
-        const guest: IGuest = {
-          documentId: usuarioVisita.documentId,
-          firstName: usuarioVisita.firstName,
-          lastName: usuarioVisita.lastName,
-          phone: usuarioVisita.phone,
-          email: usuarioVisita.email,
-          street: '',
-          number: '',
-          commune: '',
-        };
-        this.cartService
-          .setGuestUser(user.email, guest)
-          .subscribe((r: any) => {});
-      }
-
-      this.returnLoginEvent.emit(usuarioVisita);
-    } else if (resp.error && resp.data != 2) {
-      this.toastr.warning(
-        'Hemos detectado que el email ingresado esta registrado, por favor inicie sesión para continuar'
+    const email = String(dataSave.email).toLowerCase();
+    try {
+      const resp = await firstValueFrom(
+        this.customerService.checkEmail(email)
       );
+      if (!resp.exists) {
+        this.loadingForm = true;
+
+        dataSave.tipoCliente = 1;
+        dataSave.telefono = this.tipo_fono + dataSave.telefono;
+        const user = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario');
+
+        let usuarioVisita: IEcommerceUser;
+        usuarioVisita = this.setUsuario(dataSave);
+
+        // FIXME: antes se usaba, y ahora??
+        // usuarioVisita._id = user._id;
+        if (user) {
+          const guest: IGuest = {
+            documentId: usuarioVisita.documentId,
+            firstName: usuarioVisita.firstName,
+            lastName: usuarioVisita.lastName,
+            phone: usuarioVisita.phone,
+            email: usuarioVisita.email,
+            street: '',
+            number: '',
+            commune: '',
+          };
+          await firstValueFrom(
+            this.cartService.setGuestUser(user.email, guest)
+          );
+        }
+
+        this.returnLoginEvent.emit(usuarioVisita);
+      } else {
+        this.toastr.warning(
+          'Hemos detectado que el email ingresado esta registrado, por favor inicie sesión para continuar'
+        );
+      }
+    } catch (e) {
+      console.error(e);
+      this.toastr.error('Ocurrió un error intentado validar correo');
     }
   }
 
