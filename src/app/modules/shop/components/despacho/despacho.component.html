@@ -10,9 +10,10 @@
 
 <!-- Start::desktop y tablet -->
 <div class="row d-none d-sm-flex">
+  <!-- (click)="openModal(despacho, 'delivery')" -->
   <div
     class="col-4 d-flex align-items-center justify-content-center"
-    (click)="openModal(despacho, 'delivery')"
+    (click)="openDeliveryModal()"
     style="cursor: pointer"
   >
     <div class="me-2">
@@ -194,11 +195,7 @@
     >
     </app-filtro-magico>
     <hr />
-    <div
-      *ngIf="promesas.length > 0"
-      class="col-sm-12"
-      style="margin-bottom: 10px"
-    >
+    <div *ngIf="promesas.length" class="col-sm-12" style="margin-bottom: 10px">
       <app-mapa-fichas
         *ngIf="!loadPromesas"
         [tiendaSeleccionada]="filtrosRetiroTienda.tienda"

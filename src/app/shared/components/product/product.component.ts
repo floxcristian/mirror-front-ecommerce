@@ -44,6 +44,7 @@ import { IProductImage } from './models/image.interface';
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { IDeliverySupply } from '@core/models-v2/cms/special-reponse.interface';
 import { IWishlist } from '@core/services-v2/wishlist/models/wishlist-response.interface';
+import { IShoppingCartProductOrigin } from '@core/models-v2/cart/shopping-cart.interface';
 // Services
 import { PhotoSwipeService } from '../../services/photo-swipe.service';
 import { RootService } from '../../services/root.service';
@@ -56,10 +57,9 @@ import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.
 import { WishlistService } from '@core/services-v2/wishlist/wishlist.service';
 import { GalleryUtils } from './services/gallery-utils.service';
 import { ProductPriceApiService } from '@core/services-v2/product-price/product-price.service';
+import { CartService } from '@core/services-v2/cart.service';
 // Modals
 import { ModalScalePriceComponent } from '../modal-scale-price/modal-scale-price.component';
-import { CartService } from '@core/services-v2/cart.service';
-import { IShoppingCartProductOrigin } from '@core/models-v2/cart/shopping-cart.interface';
 
 export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
 
@@ -290,7 +290,7 @@ export class ProductComponent implements OnInit, OnChanges {
       return;
     }
 
-    if (!this.addingToCart && this.product && this.quantity.value > 0) {
+    if (!this.addingToCart && this.product && this.quantity.value) {
       this.product.origin = {} as IShoppingCartProductOrigin;
 
       if (this.origen) {

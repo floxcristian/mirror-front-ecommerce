@@ -509,7 +509,7 @@
               <app-despacho
                 *ngIf="selectedStore"
                 [product]="product"
-                [tiendaActual]="selectedStore"
+                [selectedStore]="selectedStore"
                 [cantidad]="quantity.value"
               ></app-despacho>
             </div>
@@ -796,7 +796,7 @@
               <app-despacho
                 *ngIf="selectedStore && !estado"
                 [product]="product"
-                [tiendaActual]="selectedStore"
+                [selectedStore]="selectedStore"
                 [cantidad]="quantity.value"
               ></app-despacho>
             </div>

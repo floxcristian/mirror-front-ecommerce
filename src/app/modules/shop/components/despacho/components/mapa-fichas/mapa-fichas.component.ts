@@ -13,23 +13,22 @@ declare const L: any;
   styleUrls: ['./mapa-fichas.component.scss'],
 })
 export class MapaFichasComponent implements OnInit {
+  @Input() tiendaSeleccionada: any;
+  @Input() stock: number = 0;
+
   accessToken = environment.tokenMapbox;
   map: any;
   Layer: any;
-  index = 0;
-  popup: any = L.popup();
-  @Input() tiendaSeleccionada: any;
-  @Input() stock: any = 0;
 
-  async ngOnInit() {
-    await this.tiendaSeleccionada;
+  ngOnInit(): void {
+    this.tiendaSeleccionada;
     fromEvent(window, 'resize')
       .pipe(debounceTime(200))
       .subscribe((event) => {});
     this.initMap();
   }
 
-  ngOnChange() {
+  ngOnChange(): void {
     window.dispatchEvent(new Event('resize'));
   }
 
@@ -52,7 +51,7 @@ export class MapaFichasComponent implements OnInit {
     this.getpointer();
   }
 
-  getpointer() {
+  private getpointer(): void {
     const array: any = [];
     const jsonFeatures: any = [];
     array.push(this.tiendaSeleccionada);
@@ -80,11 +79,5 @@ export class MapaFichasComponent implements OnInit {
     this.map.addLayer(this.Layer);
     this.map.fitBounds(this.Layer.getBounds());
     this.Layer.on('click', (e: any) => {});
-  }
-
-  onMapClick(e: any) {
-    this.popup
-      .setContent('You clicked the map at ' + e.latlng.toString())
-      .openOn(this.map);
   }
 }

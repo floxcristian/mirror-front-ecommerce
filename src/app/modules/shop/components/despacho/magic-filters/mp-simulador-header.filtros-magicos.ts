@@ -1,11 +1,16 @@
+// Rxjs
 import { map } from 'rxjs/operators';
-import { PromesaService } from '../../services/promesa.service';
+// Models
+import { ICity } from '@core/services-v2/geolocation/models/city.interface';
+import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
+// Services
+import { PromesaService } from '../../../services/promesa.service';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 
 export const MpSimuladorHeaderFiltrosMagicos = (
   modo: string,
   promesaService: GeolocationApiService,
-  tiendaActual: any
+  tiendaActual: ISelectedStore
 ): any => {
   if (modo === 'pickup') {
     return {
@@ -63,15 +68,15 @@ export const MpSimuladorHeaderFiltrosMagicos = (
               cities.flatMap((city) =>
                 city.localities.map((locality) => ({
                   id: locality.id,
-                  nombre: locality.location + ', ' + city.city,
                   cityId: city.id,
                   provinceCode: city.provinceCode,
                   regionCode: city.regionCode,
+                  region: '-',
                 }))
               )
             )
           ),
-          opcionSelect: (item: any) => item.nombre,
+          opcionSelect: (item: ICity) => `${item.city}`,
         },
       ],
       mostrarBotonFiltrar: false,

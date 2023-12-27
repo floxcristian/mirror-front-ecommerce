@@ -12,9 +12,10 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 // Services
-import { MpSimuladorHeaderFiltrosMagicos } from './mp-simulador-header.filtros-magicos';
-import { LogisticPromiseService } from '@core/services-v2/logistic-promise.service';
+import { MpSimuladorHeaderFiltrosMagicos } from './magic-filters/mp-simulador-header.filtros-magicos';
+import { LogisticPromiseApiService } from '@core/services-v2/logistic-promise/logistic-promise.service';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
+import { ModalDeliveryComponent } from './components/modal-delivery/modal-delivery.component';
 
 @Component({
   selector: 'app-despacho',
@@ -23,7 +24,7 @@ import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation
 })
 export class DespachoComponent implements OnInit {
   @Input() product!: IArticle;
-  @Input() tiendaActual!: ISelectedStore;
+  @Input() selectedStore!: ISelectedStore;
   @Input() cantidad: number = 0;
 
   tiendaSeleccionada: any = [];
@@ -37,21 +38,21 @@ export class DespachoComponent implements OnInit {
   modalRef!: BsModalRef;
   promesas: any = [];
   modo: string = this.MODOS.DESPACHO;
-  stockMax: any = 0;
+  stockMax: number = 0;
 
   constructor(
     private modalService: BsModalService,
     private cd: ChangeDetectorRef,
     // V2
-    private logisticPromiseService: LogisticPromiseService,
+    private logisticPromiseService: LogisticPromiseApiService,
     private readonly geolocationApiService: GeolocationApiService
   ) {}
 
   ngOnInit(): void {
     this.cd.detectChanges();
-    console.log('[-] product: ', this.product);
-    console.log('[-] tiendaActual: ', this.tiendaActual);
-    console.log('[-] cantidad: ', this.cantidad);
+    console.log('[x] product: ', this.product);
+    console.log('[x] selectedStore: ', this.selectedStore);
+    console.log('[x] cantidad: ', this.cantidad);
   }
 
   private async generateChangeGeneralData(): Promise<void> {
@@ -98,7 +99,7 @@ export class DespachoComponent implements OnInit {
         )
         .toPromise();
 
-      if (consulta.data != null) {
+      if (consulta.data) {
         let item = consulta.data.bodegas;
         let max = 0;
         consulta.data.bodegasCandidatas.forEach((bodega: any) => {
@@ -120,8 +121,9 @@ export class DespachoComponent implements OnInit {
       };
     }
 
-    if (data.codTienda != '') this.promesa(data.codTienda);
-    else this.promesas = [];
+    if (data.codTienda) {
+      this.promesa(data.codTienda);
+    } else this.promesas = [];
   }
 
   private async promesa(codTienda: any): Promise<void> {
@@ -150,25 +152,6 @@ export class DespachoComponent implements OnInit {
     } else this.filtrosDespacho = null;
   }
   /// FIXME: fix, no funciona bien
-  openModal(template: TemplateRef<any>, modo: any): void {
-    console.log('openForm...');
-    this.modo = modo;
-    this.filtrosMagicosRetiroTienda = MpSimuladorHeaderFiltrosMagicos(
-      this.MODOS.RETIRO_TIENDA,
-      this.geolocationApiService,
-      this.tiendaActual
-    );
-    this.filtrosMagicosDespacho = MpSimuladorHeaderFiltrosMagicos(
-      this.MODOS.DESPACHO,
-      this.geolocationApiService,
-      this.tiendaActual
-    );
-    this.modalRef = this.modalService.show(template, {
-      class: 'modal-despacho modal-dialog-centered',
-      backdrop: 'static',
-      keyboard: false,
-    });
-  }
 
   onFiltrosCambiadosRetiroTienda(filtros: any): void {
     this.filtrosRetiroTienda = filtros;
@@ -178,5 +161,42 @@ export class DespachoComponent implements OnInit {
   Close(): void {
     this.modalRef.hide();
     this.promesas = [];
+  }
+
+  /**
+   * Abre modal de despacho, retiro en tienda o retira hoy.
+   * @param template
+   * @param modo
+   */
+  openModal(template: TemplateRef<any>, modo: any): void {
+    console.log('openForm...');
+    this.modo = modo;
+    this.filtrosMagicosRetiroTienda = MpSimuladorHeaderFiltrosMagicos(
+      this.MODOS.RETIRO_TIENDA,
+      this.geolocationApiService,
+      this.selectedStore
+    );
+    this.filtrosMagicosDespacho = MpSimuladorHeaderFiltrosMagicos(
+      this.MODOS.DESPACHO,
+      this.geolocationApiService,
+      this.selectedStore
+    );
+    this.modalRef = this.modalService.show(template, {
+      class: 'modal-despacho modal-dialog-centered',
+      backdrop: 'static',
+      keyboard: false,
+    });
+  }
+
+  openDeliveryModal(): void {
+    this.modalService.show(ModalDeliveryComponent, {
+      class: 'modal-despacho modal-dialog-centered',
+      backdrop: 'static',
+      keyboard: false,
+      initialState: {
+        productSku: this.product.sku,
+        productQuantity: this.cantidad,
+      },
+    });
   }
 }

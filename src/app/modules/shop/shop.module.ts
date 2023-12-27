@@ -16,7 +16,7 @@ import { PageProductComponent } from './pages/page-product/page-product.componen
 import { PageCategoryComponent } from './pages/page-category/page-category.component';
 // Components
 import { ComentariosComponent } from './components/comentarios/comentarios.component';
-import { MapaFichasComponent } from './components/despacho/mapa-fichas/mapa-fichas.component';
+import { MapaFichasComponent } from './components/despacho/components/mapa-fichas/mapa-fichas.component';
 import { DespachoComponent } from './components/despacho/despacho.component';
 import { DetalleTecnicosComponent } from './components/detalle-tecnicos/detalle-tecnicos.component';
 import { FechasPromesasComponent } from './components/fechas-promesas/fechas-promesas.component';
@@ -24,6 +24,7 @@ import { FechasPromesasComponent } from './components/fechas-promesas/fechas-pro
 //shared
 import { ProductComponent } from '../../shared/components/product/product.component';
 import { ProductStockComponent } from '../../shared/components/product-stock/product-stock.component';
+import { ModalDeliveryComponent } from './components/despacho/components/modal-delivery/modal-delivery.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { ProductStockComponent } from '../../shared/components/product-stock/pro
     MapaFichasComponent,
     DetalleTecnicosComponent,
     ComentariosComponent,
+    ModalDeliveryComponent,
   ],
   imports: [
     CommonModule,

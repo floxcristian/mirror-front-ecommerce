@@ -1,0 +1,58 @@
+<div class="modal-header">
+  <h5 class="modal-title pull-left">
+    <font color="#0063b9">
+      <i class="fas fa-truck me-1" style="color: #00549d"></i> Despacho a
+      domicilio
+    </font>
+  </h5>
+  <button type="button" class="btn" (click)="modalRef.hide()">
+    <i class="fas fa-times-circle" style="color: #00549d; font-size: 18px"></i>
+  </button>
+</div>
+<div class="modal-body">
+  <app-filtro-magico
+    [filtros]="magicFilters"
+    [closeOnSelect]="true"
+    (onFiltrosCambiados)="onSelectCity($event)"
+  >
+  </app-filtro-magico>
+
+  <hr />
+  <div
+    *ngIf="!deliveryAvailabilities.length && !filters"
+    class="dia-container-habilitado"
+  >
+    <div style="font-size: 14px; color: #00549d">
+      <i class="fas fa-info-circle fa-lg me-1"></i> Seleccione Localidad
+    </div>
+  </div>
+  <div
+    *ngIf="!deliveryAvailabilities.length && filters"
+    class="dia-container-habilitado"
+  >
+    <div style="font-size: 14px; color: #00549d">
+      <i class="fas fa-info-circle fa-lg me-1"></i> Lo sentimos el producto no
+      tiene despacho para esta localidad, por favor intente con otra dirección
+    </div>
+  </div>
+  <app-fechas-promesas
+    *ngIf="!isLoading"
+    [promesas]="deliveryAvailabilities"
+  ></app-fechas-promesas>
+  <div
+    *ngIf="!isLoading && deliveryAvailabilities.length"
+    style="margin-top: 10px; background-color: #efefef"
+    class="alert alert-secondary"
+    role="alert"
+  >
+    <strong> 08:00 a 19:00 hrs</strong>
+  </div>
+</div>
+<div class="modal-footer justify-content-start">
+  <div class="row">
+    <div class="col-sm-12" style="font-size: 14px; margin-bottom: 10px">
+      <i class="fas fa-info-circle fa-lg me-1" style="color: #00549d"></i> La
+      información de disponibilidad puede variar durante la compra.
+    </div>
+  </div>
+</div>
