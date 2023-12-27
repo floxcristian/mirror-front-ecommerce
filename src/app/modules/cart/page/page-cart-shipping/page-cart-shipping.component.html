@@ -121,7 +121,7 @@
         </div>
       </div>
     </div>
-    <div class="container ms-4" *ngIf="innerWidth < 450">
+    <!-- <div class="container ms-4" *ngIf="innerWidth < 450">
       <div
         class="cart-address-container ms-3 col-12 col-lg-12 pt-3 pb-2 ps-2"
         style="color: #0063b9; margin-bottom: 10px"
@@ -157,7 +157,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div
       class="col-lg-7 col-xl-8 col-xs-12"
       *ngIf="!select_grupos && (usuarioInvitado || isLogin)"
@@ -223,9 +223,9 @@
                   [ngStyle]="{ width: innerWidth > 450 ? '96%' : '92%' }"
                 >
                   <div class="row">
-                    <div class="col-2 d-flex justify-content-center">
+                    <div class="col-2 d-flex justify-content-center align-items-center">
                       <i
-                        class="fa-solid fa-store"
+                        class="fa-solid fa-store m-0"
                         style="font-size: 21px !important; color: #0063b9"
                       ></i>
                     </div>
@@ -236,7 +236,7 @@
                         </div>
                         <div
                           class="col-sm-6"
-                          style="font-weight: bold; font-size: 18px"
+                          style="font-weight: bold; font-size: 15px"
                         >
                           {{ retiro | uppercase }}
                         </div>
@@ -524,8 +524,8 @@
                         >
                           <div class="col-12 col-sm-6">
                             <i
-                              class="fa-solid fa-location-dot"
-                              style="margin-right: 10px; font-size: 20px"
+                              class="fa-solid fa-location-dot fa-fw"
+                              style="font-size: 20px"
                             ></i>
                             {{ direccion.fullAddress }}
                           </div>
@@ -544,7 +544,7 @@
                               "
                             >
                               <i
-                                class="fa-solid fa-pen-to-square"
+                                class="fa-solid fa-pen-to-square fa-fw"
                                 style="
                                   font-size: 20px !important;
                                   margin-right: 10px;
@@ -566,7 +566,7 @@
                               (click)="deleteAddress(direccion)"
                             >
                               <i
-                                class="fas fa-trash-alt text-danger mr-2"
+                                class="fas fa-trash-alt text-danger fa-fw"
                                 style="font-size: 16px !important"
                               ></i>
                             </button>
@@ -1323,7 +1323,7 @@
       <div class="card-header" style="margin-bottom: 1px !important">
         <div (click)="setShowDetalleProductos(!showDetalleProductos)">
           <div class="ms-1 text-justify" style="color: #0063b9">
-            <strong> Resumen de tu compra</strong>
+            <strong> Resumen de tu compra ({{ items.length }})</strong>
           </div>
         </div>
         <hr />
@@ -1359,7 +1359,7 @@
               class="col-9 text-justify"
               style="font-size: 16px; margin-bottom: -20px; color: #0063b9"
             >
-              <strong>Resumen de tu Compra</strong>
+              <strong>Resumen de tu Compra ({{ items.length }})</strong>
             </div>
             <div *ngIf="HideResumen()" class="col-3 text-end">
               <i

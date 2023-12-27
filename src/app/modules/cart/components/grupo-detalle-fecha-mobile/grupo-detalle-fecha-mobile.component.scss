@@ -49,7 +49,7 @@ table thead th {
   margin-bottom: 4px;
 }
 
-.dia-container-habilitado > div {
+.dia-container-habilitado {
   width: 100% !important;
   height: 70px !important;
   padding: 8px;
@@ -59,19 +59,19 @@ table thead th {
   font-size: 12px;
 }
 
-.dia-container-habilitado > div > div {
-  padding: 8px;
-  width: 100% !important;
-  height: 70px !important;
-  display: table-cell;
-  text-align: center;
-  vertical-align: middle;
-}
+// .dia-container-habilitado > div > div {
+//   padding: 8px;
+//   width: 100% !important;
+//   height: 70px !important;
+//   display: table-cell;
+//   text-align: center;
+//   vertical-align: middle;
+// }
 
 .dia-container-activado {
   padding-bottom: 8px;
 
-  display: block;
+  // display: block;
   text-align: center;
 
   border: 1px solid #f4f4f4;
@@ -81,8 +81,8 @@ table thead th {
 
 .dia-container-deshabilitado > div {
   width: 100% !important;
-  height: 70px !important;
-  border: 1px solid #f4f4f4;
+  // height: 70px !important;
+  // border: 1px solid #f4f4f4;
   background-color: #f4f4f4;
   color: #0063b9;
   border-radius: 4px;
@@ -90,10 +90,10 @@ table thead th {
 }
 
 .dia-container-deshabilitado > div > div {
-  padding-top: 8px;
-  padding-bottom: 15px;
+  // padding-top: 8px;
+  // padding-bottom: 15px;
   width: 100% !important;
-  height: 70px !important;
+  // height: 70px !important;
   display: table-cell;
   text-align: center;
   vertical-align: middle;

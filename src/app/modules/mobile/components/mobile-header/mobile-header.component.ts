@@ -10,7 +10,6 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { RootService } from '../../../../shared/services/root.service';
 
 import { FormControl } from '@angular/forms';
-import { CartService } from '../../../../shared/services/cart.service';
 import { Subject } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
 import { MobileMenuService } from '../../../../shared/services/mobile-menu.service';
@@ -18,6 +17,7 @@ import { environment } from '@env/environment';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { ModalStoresComponent } from 'src/app/modules/header/components/modal-stores/modal-stores.component';
+import { CartService } from '@core/services-v2/cart.service';
 
 @Component({
   selector: 'app-mobile-header',

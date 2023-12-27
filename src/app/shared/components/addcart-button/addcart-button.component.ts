@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CartService } from '../../services/cart.service';
+import { CartService } from '@core/services-v2/cart.service';
 
 @Component({
   selector: 'app-addcart-button',

@@ -45,7 +45,6 @@ import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation
 import { IDeliverySupply } from '@core/models-v2/cms/special-reponse.interface';
 import { IWishlist } from '@core/services-v2/wishlist/models/wishlist-response.interface';
 // Services
-import { CartService } from '../../services/cart.service';
 import { PhotoSwipeService } from '../../services/photo-swipe.service';
 import { RootService } from '../../services/root.service';
 import { WishListModalComponent } from '../wish-list-modal/wish-list-modal.component';
@@ -59,6 +58,8 @@ import { GalleryUtils } from './services/gallery-utils.service';
 import { ProductPriceApiService } from '@core/services-v2/product-price/product-price.service';
 // Modals
 import { ModalScalePriceComponent } from '../modal-scale-price/modal-scale-price.component';
+import { CartService } from '@core/services-v2/cart.service';
+import { IShoppingCartProductOrigin } from '@core/models-v2/cart/shopping-cart.interface';
 
 export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
 
@@ -165,7 +166,6 @@ export class ProductComponent implements OnInit, OnChanges {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private cart: CartService,
     private photoSwipe: PhotoSwipeService,
     public root: RootService,
     public toast: ToastrService,
@@ -177,6 +177,7 @@ export class ProductComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private readonly gtmService: GoogleTagManagerService,
     // Services V2
+    private cart: CartService,
     private readonly sessionService: SessionService,
     private readonly inventoryService: InventoryService,
     private readonly geolocationService: GeolocationServiceV2,
@@ -232,7 +233,7 @@ export class ProductComponent implements OnInit, OnChanges {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          // this.addToCart();
+          this.addToCart();
         },
       });
     this.buildProductRequestForm();
@@ -279,49 +280,39 @@ export class ProductComponent implements OnInit, OnChanges {
       });
   }
 
-  // addToCart(): void {
-  //   const usuario = this.sessionService.getSession();
-  //   if (!usuario) {
-  //     this.toast.warning(
-  //       'Debe iniciar sesion para poder comprar',
-  //       'Información'
-  //     );
-  //     return;
-  //   }
+  addToCart(): void {
+    const usuario = this.sessionService.getSession();
+    if (!usuario) {
+      this.toast.warning(
+        'Debe iniciar sesion para poder comprar',
+        'Información'
+      );
+      return;
+    }
 
-  //   if (!this.addingToCart && this.product && this.quantity.value > 0) {
-  //     this.product.origin = {} as ProductOrigen;
+    if (!this.addingToCart && this.product && this.quantity.value > 0) {
+      this.product.origin = {} as IShoppingCartProductOrigin;
 
-  //     if (this.origen) {
-  //       this.product.origen.origen = this.origen[0] ? this.origen[0] : '';
-  //       this.product.origen.subOrigen = this.origen[1] ? this.origen[1] : '';
-  //       this.product.origen.seccion = this.origen[2] ? this.origen[2] : '';
-  //       this.product.origen.recomendado = this.origen[3] ? this.origen[3] : '';
-  //       this.product.origen.ficha = true;
-  //       this.product.origen.cyber = this.product.cyber
-  //         ? this.product.cyber
-  //         : 0;
-  //     }
+      if (this.origen) {
+        // Seteamos el origen de donde se hizo click a add cart.
+        const origin: IShoppingCartProductOrigin = {
+          origin: this.origen[0] || '',
+          subOrigin: this.origen[1] || '',
+          section: this.origen[2] || '',
+          recommended: this.origen[3],
+          sheet: false,
+          cyber: this.product.cyber || 0,
+        };
+        this.product.origin = origin;
+      }
 
-  //     this.addingToCart = true;
+      this.addingToCart = true;
 
-  //     this.cart
-  //       .add(this.product, this.quantity.value)
-  //       .subscribe(
-  //         (r) => {},
-  //         (e) => {
-  //           this.toast.warning(
-  //             'Ha ocurrido un error en el proceso',
-  //             'Información'
-  //           );
-  //           this.addingToCart = false;
-  //         },
-  //         () => {
-  //           this.addingToCart = false;
-  //         }
-  //       );
-  //   }
-  // }
+      this.cart.add(this.product, this.quantity.value).finally(() => {
+        this.addingToCart = false;
+      });
+    }
+  }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
