@@ -13,7 +13,7 @@ export const brandsB2c: any = [
     image: 'https://images.implementos.cl/marcas/frasle.jpg',
   },
   {
-    brand: 'scanis',
+    brand: 'scania',
     image: 'https://images.implementos.cl/marcas/scania2.png',
   },
   {
