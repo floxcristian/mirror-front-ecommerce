@@ -10,19 +10,13 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { SharedModule } from '../../shared/shared.module';
 import { HeaderModule } from '../header/header.module';
 // Components
-import { MobileMenuComponent } from './components/mobile-menu/mobile-menu.component';
-import { MobileCategoriasComponent } from './components/mobile-categorias/mobile-categorias.component';
 import { MobileHeaderComponent } from './components/mobile-header/mobile-header.component';
 import { MobileHeaderAccountComponent } from './components/mobile-header-account/mobile-header-account.component';
-import { MobileLinksComponent } from './components/mobile-links/mobile-links.component';
 import { TopbarMobileComponent } from '../header/components/topbar-mobile/topbar-mobile.component';
 
 @NgModule({
   declarations: [
     MobileHeaderComponent,
-    MobileLinksComponent,
-    MobileMenuComponent,
-    MobileCategoriasComponent,
     MobileHeaderAccountComponent,
     TopbarMobileComponent,
   ],
@@ -36,6 +30,6 @@ import { TopbarMobileComponent } from '../header/components/topbar-mobile/topbar
     BsDropdownModule.forRoot(),
     TooltipModule.forRoot(),
   ],
-  exports: [MobileHeaderComponent, MobileMenuComponent],
+  exports: [MobileHeaderComponent],
 })
 export class MobileModule {}
