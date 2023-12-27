@@ -78,233 +78,129 @@
       <label>Resultado: </label>
       <div [class]="alertClass" role="alert">
         <strong>{{ mensaje }} </strong
-        ><span *ngIf="carroGuardado?.guardado"
+        ><span *ngIf="carroGuardado.saved"
           >Se guardó un carro de compra previo con
-          {{ carroGuardado.cantidad }} producto(s).</span
+          {{ carroGuardado.quantity }} producto(s).</span
         >
       </div>
-      <ng-container *ngIf="!isExcel">
-        <label>Orden de compra: </label>
-        <table border="0" class="ms-3">
-          <tr>
-            <th style="width: 75px">Número:</th>
-            <td>{{ OC.orden_compra }}</td>
-          </tr>
-          <tr>
-            <th>Total:</th>
-            <td>{{ OC.total | currencyFormat }}</td>
-          </tr>
-          <!-- <li><strong>N°:&nbsp;</strong>{{ OC.orden_compra }}</li>
-                <li><strong>Total:&nbsp;</strong>{{ OC.total | currencyFormat }}</li> -->
-        </table>
-      </ng-container>
       <div class="alert alert-danger" *ngIf="totalesDistintos" role="alert">
         <strong>Los montos totales son diferentes.</strong>
       </div>
-
       <div
         *ngIf="productosCargados.length > 0 || productosNoCargados.length > 0"
         [class.mt-3]="!totalesDistintos"
       >
         <label>Detalle Resultados: </label><br />
-        <div class="accordion" id="DetalleResultados">
-          <div *ngIf="productosCargados.length > 0">
-            <div class="border accordion-header">
-              <div
-                class="mb-0 d-flex"
-                style="cursor: pointer"
+        <div class="accordion mb-3">
+          <div class="accordion-item" *ngIf="productosCargados.length > 0">
+            <h2 class="accordion-header" id="detalleResultados">
+              <button
+                class="accordion-button"
+                type="button"
                 data-bs-toggle="collapse"
-                data-target="#productosOK"
-                aria-expanded="false"
-                aria-controls="productosOK"
+                data-bs-target="#collapsedetalleResultados"
+                aria-expanded="true"
+                aria-controls="collapsedetalleResultados"
               >
-                <div
-                  class="text-success p-2 ms-3 collapsed"
-                  style="font-size: 15px; font-weight: 500"
-                >
-                  {{ productosCargados.length }}
-                  <span *ngIf="productosCargados.length == 1"
-                    >Producto cargado</span
-                  ><span *ngIf="productosCargados.length > 1"
-                    >Productos cargados</span
-                  >
-                  correctamente
-                </div>
-                <div
-                  class="d-flex justify-content-end align-items-center flex-grow-1 flex-shrink-1 me-4"
-                  style="font-size: 15px; color: black; font-weight: bold"
-                >
-                  <span>Total: {{ total | currencyFormat }}</span>
-                </div>
-                <div
-                  style="float: right"
-                  class="me-3 d-flex align-items-center"
-                >
+                <span class="accordion-button-content">
                   <span
-                    class="fas fa-search me-1"
-                    style="cursor: pointer"
-                  ></span>
-                </div>
-              </div>
-            </div>
-
-            <div
-              id="productosOK"
-              class="collapse"
-              data-parent="#DetalleResultados"
-            >
-              <div
-                class="border-start border-end border-bottom pt-2 pb-2 ps-3 ps-3 d-flex flex-wrap justify-content-center"
-              >
-                <div class="producto" *ngFor="let item of productosCargados">
-                  <div>
-                    <div class="col-sm-12">
-                      <span class="product-sku text-gray-2">
-                        {{ item.marca }}
-                      </span>
-                    </div>
-                    <div class="col-sm-12">
-                      <span class="product-title">
-                        {{ item.nombre | titlecase }}
-                      </span>
-                    </div>
-                    <div class="col-sm-12">
-                      <span
-                        class="product-sku text-gray-2"
-                        style="font-size: 75%"
-                        >Precio: {{ item.precio | currencyFormat }}</span
-                      >
-                      <span
-                        class="product-sku text-gray-2 float-end"
-                        style="font-size: 75%"
-                        >Cantidad: {{ item.cantidad }}</span
-                      >
-                    </div>
-                    <div class="col-sm-12">
-                      <span
-                        class="product-sku text-gray-2"
-                        style="font-size: 75%"
-                        >SKU: {{ item.sku }}</span
-                      >
-                    </div>
-
-                    <div class="col-12">
-                      <div
-                        class="item float-start"
-                        style="color: #b2b2b2"
-                        placement="bottom"
-                        [tooltip]="
-                          item.entregas.despacho
-                            ? 'Con despacho a domicilio'
-                            : 'Sin despacho a domicilio'
-                        "
-                      >
-                        <i
-                          [ngClass]="
-                            item.entregas.despacho
-                              ? 'fas fa-truck text-success me-1'
-                              : 'fas fa-truck me-1'
-                          "
-                          style="font-size: 18px"
-                        ></i>
-                      </div>
-                      <div
-                        class="item float-start"
-                        style="color: #b2b2b2"
-                        placement="bottom"
-                        [tooltip]="
-                          item.entregas.retiroTienda
-                            ? 'Con retiro en tienda'
-                            : 'Sin retiro en tienda'
-                        "
-                      >
-                        <i
-                          [ngClass]="
-                            item.entregas.retiroTienda
-                              ? 'fas fa-store text-success me-1'
-                              : 'fas fa-store me-1'
-                          "
-                          style="font-size: 18px"
-                        ></i>
-                      </div>
-                      <div
-                        class="float-end"
-                        style="font-size: 14px; color: black"
-                      >
-                        {{ item.precio * item.cantidad | currencyFormat }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="productosNoDisponibles.length > 0">
-            <div class="border accordion-header">
-              <div
-                class="mb-0 d-flex"
-                style="cursor: pointer"
-                data-bs-toggle="collapse"
-                data-target="#productosERROR2"
-                aria-expanded="false"
-                aria-controls="productosERROR2"
-              >
-                <div
-                  class="text-danger p-2 ms-3 flex-grow-1 flex-shrink-1 collapsed"
-                  style="font-size: 15px; font-weight: 500"
-                >
-                  {{ productosNoDisponibles.length }}
-                  <span *ngIf="productosNoDisponibles.length == 1"
-                    >Producto No disponible</span
-                  ><span *ngIf="productosNoDisponibles.length > 1"
-                    >Productos No disponibles</span
+                    >Productos cargados ({{ productosCargados.length }})</span
                   >
-                  para despacho o retiro en tienda
-                </div>
-                <div
-                  style="float: right"
-                  class="me-3 d-flex align-items-center"
-                >
-                  <span
-                    class="fas fa-search me-1"
-                    style="cursor: pointer"
-                  ></span>
-                </div>
-              </div>
-            </div>
+                  <strong>Total: {{ total | currencyFormat }} &nbsp;</strong>
+                </span>
+              </button>
+            </h2>
             <div
-              id="productosERROR2"
-              class="collapse"
-              data-parent="#DetalleResultados"
+              id="collapsedetalleResultados"
+              class="accordion-collapse collapse show"
+              aria-labelledby="detalleResultados"
             >
-              <div
-                class="border-start border-end border-bottom pt-2 pb-2 ps-3 ps-3 d-flex flex-wrap justify-content-center"
-              >
-                <div
-                  class="producto"
-                  *ngFor="let item of productosNoDisponibles"
-                >
-                  <div>
-                    <div class="col-sm-12">
-                      <span class="product-sku text-gray-2">
-                        {{ item.marca }}
-                      </span>
+              <div class="accordion-body">
+                <!-- Detalles de los productos cargados -->
+                <div *ngFor="let item of productosCargados">
+                  <div class="row align-items-center mb-3">
+                    <div class="col-2 col-md-2 d-none d-md-block">
+                      <img
+                        [src]="item.images['150'][0]"
+                        width="80px"
+                        height="80px"
+                        alt="Ecommerce"
+                        class="img-fluid"
+                      />
                     </div>
-                    <div class="col-sm-12">
-                      <span class="product-title">
-                        {{ item.nombre | titlecase }}
-                      </span>
-                    </div>
-                    <div class="col-sm-12">
+                    <div class="col-5 col-md-5">
+                      <h6
+                        class="mb-0 product-sku text-gray-2"
+                        *ngIf="item.brand"
+                      >
+                        {{ item.brand }}
+                      </h6>
+                      <h6 class="mb-0">{{ item.name | titlecase }}</h6>
                       <span
-                        class="product-sku text-gray-2"
-                        style="font-size: 75%"
-                        >SKU: {{ item.sku }}</span
+                        ><small class="text-muted"
+                          >Precio: {{ item.price | currencyFormat }}</small
+                        ></span
+                      >
+                      <br />
+                      <span
+                        ><small class="text-muted"
+                          >SKU: {{ item.sku }}</small
+                        ></span
+                      ><br />
+                      <span
+                        ><small class="text-muted"
+                          >Cantidad: {{ item.quantity }}</small
+                        ></span
                       >
                     </div>
-                    <div class="col-sm-12">
-                      <span class="text-danger" style="font-size: 75%"
-                        >Producto no disponible</span
+                    <div class="col-2 col-md-2 text-center text-muted">
+                      <div
+                        class="d-flex justify-content-center align-items-center"
+                      >
+                        <div
+                          class="item"
+                          *ngIf="item.delivery"
+                          [tooltip]="
+                            item.delivery.homeDelivery
+                              ? 'Con despacho a domicilio'
+                              : 'Sin despacho a domicilio'
+                          "
+                        >
+                          <i
+                            [ngClass]="
+                              item.delivery.homeDelivery
+                                ? 'fas fa-truck text-success me-1'
+                                : 'fas fa-truck me-1'
+                            "
+                            style="font-size: 18px"
+                          ></i>
+                        </div>
+                        <div
+                          class="item"
+                          *ngIf="item.delivery"
+                          [tooltip]="
+                            item.delivery.pickup
+                              ? 'Con retiro en tienda'
+                              : 'Sin retiro en tienda'
+                          "
+                        >
+                          <i
+                            [ngClass]="
+                              item.delivery.pickup
+                                ? 'fas fa-store text-success me-1'
+                                : 'fas fa-store me-1'
+                            "
+                            style="font-size: 18px"
+                          ></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="col-5 col-md-2 text-lg-end text-start text-md-end col-md-3"
+                    >
+                      <span class="fw-bold font-size-sm-12">
+                        Total:
+                        {{ item.price * item.quantity | currencyFormat }}</span
                       >
                     </div>
                   </div>
@@ -312,71 +208,116 @@
               </div>
             </div>
           </div>
-          <div *ngIf="productosNoCargados.length > 0">
-            <div class="border accordion-header">
-              <div
-                class="mb-0 d-flex"
-                style="cursor: pointer"
+        </div>
+        <div class="accordion mb-3 accordion-two ">
+          <div
+            class="accordion-item"
+            *ngIf="productosNoDisponibles.length > 0"
+          >
+            <h2 class="accordion-header" id="detalleResultadosNoDisponible">
+              <button
+                class="accordion-button"
+                type="button"
                 data-bs-toggle="collapse"
-                data-target="#productosERROR"
-                aria-expanded="false"
-                aria-controls="productosERROR"
+                data-bs-target="#collapsedetalleResultadosNoDisponible"
+                aria-expanded="true"
+                aria-controls="collapsedetalleResultadosNoDisponible"
               >
-                <div
-                  class="text-danger p-2 ms-3 flex-grow-1 flex-shrink-1 collapsed"
-                  style="font-size: 15px; font-weight: 500"
-                >
-                  {{ productosNoCargados.length }}
-                  <span *ngIf="productosNoCargados.length == 1"
-                    >Producto No encontrado</span
-                  ><span *ngIf="productosNoCargados.length > 1"
-                    >Productos No encontrados</span
-                  >
-                </div>
-                <div
-                  style="float: right"
-                  class="me-3 d-flex align-items-center"
-                >
-                  <span
-                    class="fas fa-search me-1"
-                    style="cursor: pointer"
-                  ></span>
+                Productos no disponibles ({{ productosNoDisponibles.length }})
+              </button>
+            </h2>
+            <div
+              id="collapsedetalleResultadosNoDisponible"
+              class="accordion-collapse collapse show"
+              aria-labelledby="detalleResultadosNoDisponible"
+            >
+              <div class="accordion-body">
+                <div *ngFor="let item of productosNoDisponibles">
+                  <div class="row align-items-center">
+                    <div class="col-2 col-md-2 d-none d-md-block">
+                      <img
+                        [src]="item.images['150'][0]"
+                        width="80px"
+                        height="80px"
+                        alt="Ecommerce"
+                        class="img-fluid"
+                      />
+                    </div>
+                    <div class="col-5 col-md-5">
+                      <div>
+                        <div class="col-sm-12">
+                          <span class="product-sku text-gray-2">
+                            {{ item.brand }}
+                          </span>
+                        </div>
+                        <div class="col-sm-12">
+                          <span class="product-title">
+                            {{ item.name | titlecase }}
+                          </span>
+                        </div>
+                        <div class="col-sm-12">
+                          <span
+                            class="product-sku text-gray-2"
+                            style="font-size: 75%"
+                            >SKU: {{ item.sku }}</span
+                          >
+                        </div>
+                        <div class="col-sm-12">
+                          <span class="text-danger" style="font-size: 75%"
+                            >Producto no disponible</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <div
-              id="productosERROR"
-              class="collapse"
-              data-parent="#DetalleResultados"
-            >
-              <div
-                class="border-start border-end border-bottom pt-2 pb-2 ps-3 ps-3 d-flex flex-wrap justify-content-center"
+          </div>
+        </div>
+        <div class="accordion mb-3 accordion-tree ">
+          <div class="accordion-item" *ngIf="productosNoCargados.length > 0">
+            <h2 class="accordion-header" id="detalleResultadosNoCargado">
+              <button
+                class="accordion-button"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapsedetalleResultadosNoCargado"
+                aria-expanded="true"
+                aria-controls="collapsedetalleResultadosNoCargado"
               >
-                <div class="producto" *ngFor="let item of productosNoCargados">
-                  <div>
-                    <div *ngIf="isExcel" class="col-sm-12">
-                      <span class="product-sku text-gray-2"
-                        >Celda: {{ item.celda }}
-                      </span>
-                    </div>
-                    <div *ngIf="isExcel" class="col-sm-12">
-                      <span
-                        class="product-sku text-gray-2"
-                        style="font-size: 75%"
-                        >SKU: {{ item.sku }}</span
-                      >
-                    </div>
-                    <div *ngIf="!isExcel" class="col-sm-12">
-                      <span
-                        class="product-sku text-gray-2"
-                        style="font-size: 75%"
-                        >Código: {{ item.codigo }}</span
-                      >
-                    </div>
-                    <div class="col-sm-12">
-                      <span class="text-danger" style="font-size: 75%"
-                        >Producto no encontrado</span
-                      >
+                <span *ngIf="productosNoCargados.length == 1"
+                  >Producto no encontrado&nbsp;</span
+                ><span *ngIf="productosNoCargados.length > 1"
+                  >Productos no encontrados&nbsp;</span
+                >
+                ({{ productosNoCargados.length }})
+              </button>
+            </h2>
+            <div
+              id="collapsedetalleResultadosNoCargado"
+              class="accordion-collapse collapse show"
+              aria-labelledby="detalleResultadosNoCargado"
+            >
+              <div class="accordion-body">
+                <div *ngFor="let item of productosNoCargados">
+                  <div class="row align-items-center">
+                    <div class="col-5 col-md-5">
+                      <div>
+                        <div class="col-sm-12">
+                          <span
+                            class="product-sku text-gray-2"
+                            style="font-size: 75%"
+                            >SKU: {{ item.sku }}</span
+                          >
+                        </div>
+
+                        <div class="col-sm-12">
+                          <span class="text-danger" style="font-size: 75%"
+                            >Producto no encontrado</span
+                          >
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

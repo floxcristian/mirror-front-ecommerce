@@ -155,12 +155,12 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.showAlertCart();
       }
     );
-
-    this.compare.onAdding$.subscribe((product) => {
-      this.toastr.success(
-        `Producto "${product.nombre}" agregado para comparar!`
-      );
-    });
+    //FIXME: revisar mejor
+    // this.compare.onAdding$.subscribe((product) => {
+    //   this.toastr.success(
+    //     `Producto "${product.nombre}" agregado para comparar!`
+    //   );
+    // });
   }
 
   private onChangeStore(): void {

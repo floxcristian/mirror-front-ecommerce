@@ -25,8 +25,6 @@ import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { IShoppingCartProductOrigin } from '@core/models-v2/cart/shopping-cart.interface';
 // Services
-import { CompareService } from '../../services/compare.service';
-import { QuickviewService } from '../../services/quickview.service';
 import { RootService } from '../../services/root.service';
 import { CurrencyService } from '../../services/currency.service';
 import { isVacio } from '../../utils/utilidades';
@@ -60,17 +58,6 @@ export class ProductCardB2cFichaComponent implements OnInit {
     // this.quality = this.root.setQuality(this.productData);
     // this.root.limpiaAtributos(value);
   }
-  //*inicio
-  // @Input() set product(value: IArticleResponse) {
-  //   this.productData = value;
-  //   // this.productData.nombre = this.root.limpiarNombres(
-  //   //   this.productData.nombre
-  //   // );
-
-  //   this.quality = this.root.setQuality(value);
-  //   this.root.limpiaAtributos(value);
-  // }
-  //**fin */
 
   @Input() layout:
     | 'grid-sm'
@@ -100,8 +87,6 @@ export class ProductCardB2cFichaComponent implements OnInit {
     public root: RootService,
     public cart: CartService,
     private route: Router,
-    public compare: CompareService,
-    public quickview: QuickviewService,
     public currency: CurrencyService,
     public sanitizer: DomSanitizer,
     // Services V2
@@ -115,7 +100,7 @@ export class ProductCardB2cFichaComponent implements OnInit {
     this.currency.changes$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.cd.markForCheck();
     });
-    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
     this.cargaPrecio();
     if (this.productData.priceInfo.hasScalePrice)
       this.preciosEscalas = this.productData.priceInfo.scalePrice;
@@ -187,36 +172,6 @@ export class ProductCardB2cFichaComponent implements OnInit {
       this.addingToCart = false;
       this.cd.markForCheck();
     });
-  }
-
-  addToCompare(): void {
-    if (this.addingToCompare) {
-      return;
-    }
-
-    this.addingToCompare = true;
-    // FIXME: ARREGLAR AGREGAR COMPARAR
-    // this.compare.add(this.productData).subscribe({
-    //   complete: () => {
-    //     this.addingToCompare = false;
-    //     this.cd.markForCheck();
-    //   },
-    // });
-  }
-
-  showQuickview(): void {
-    if (this.showingQuickview) {
-      return;
-    }
-
-    this.showingQuickview = true;
-    //FIXME: ARREGLAR VISTA RAPIDA
-    // this.quickview.show(this.productData).subscribe({
-    //   complete: () => {
-    //     this.showingQuickview = false;
-    //     this.cd.markForCheck();
-    //   },
-    // });
   }
 
   porcentaje_descuento() {

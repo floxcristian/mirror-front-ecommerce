@@ -51,6 +51,7 @@ import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
 import { IProduct } from '@core/models-v2/oms/order.interface';
 import { IOrderDetailResponse } from '@core/models-v2/cart/order-details.interface';
 import { UserRoleType } from '@core/enums/user-role-type.enum';
+import { IUploadResponse } from '@core/models-v2/responses/file-upload.response';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -607,7 +608,7 @@ export class CartService {
   }
 
   setNotificationContact(id: string, data: AddNotificacionContactRequest) {
-    return this.http.put(`${API_CART}/notificactionContact/${id}`, data);
+    return this.http.put(`${API_CART}/notification-contact/${id}`, data);
   }
 
   setGuestUser(user: string, data: IShoppingCartGuest) {
@@ -964,4 +965,21 @@ export class CartService {
       observation,
     });
   }
+
+
+
+
+  uploadExcel(data:any ): Observable<IUploadResponse>  {
+    const formData: FormData = new FormData();
+    formData.append('username', data.username);
+    formData.append('branch', data.branch);
+    formData.append('documentId', data.documentId);
+    formData.append('action', data.action);
+    if (data.file) {
+      formData.append('file', data.file);
+    }
+   return this.http.post<IUploadResponse>(`${API_CART}/upload-article-excel`, formData);
+  }
+
+
 }

@@ -5,9 +5,9 @@ import {
   FormControl,
   Validators,
 } from '@angular/forms';
-import { ContactUsService } from '../../../../shared/services/contact-us.service';
 import { ToastrService } from 'ngx-toastr';
 import { rutValidator } from 'src/app/shared/utils/utilidades';
+import { NotificationService } from '@core/services-v2/notification.service';
 
 @Component({
   selector: 'app-contact-us',
@@ -20,7 +20,8 @@ export class PageContactUsComponent {
   constructor(
     private formGroup: FormBuilder,
     private toastr: ToastrService,
-    private contactUService: ContactUsService
+    //ServicesV2
+    private readonly notificationService:NotificationService
   ) {
     this.formContacto = this.formGroup.group({
       nombre: new FormControl(null, Validators.required),
@@ -47,52 +48,27 @@ export class PageContactUsComponent {
       rutAux = rutAux.substring(0, rutAux.length - 1);
       rut = `${rutAux}-${dv}`;
     }
-    let cliente = para;
 
-    para = await this.agregarEmail();
-    let cuerpo = rut
-      ? `
-        <strong>Rut: </strong>
-        <br />${rut}<br />
-        <strong>Nombre: </strong>
-        <br />${nombre}<br />
-        <strong>Correo: </strong>
-        <br />${cliente}<br />
-        <strong>Telefono: </strong>
-        <br />${telefono}<br />
-        <strong>Asunto: </strong>
-        <br />${asunto}<br />
-        <strong>Mensaje: </strong>
-        <p> ${html}</p>`
-      : `
-        <strong>Nombre: </strong>
-        <br />${nombre}<br />
-        <strong>Correo: </strong>
-        <br />${cliente}<br />
-        <strong>Asunto: </strong>
-        <br />${asunto}<br />
-        <strong>Mensaje: </strong>
-        <p> ${html}</p>`;
-    html = cuerpo;
-    let respuesta = await this.contactUService.enviarCorreoContacto({
-      nombre,
-      para,
-      asunto,
-      html,
-    });
-    if (respuesta == 'ok') {
-      this.toastr.success(`Correo Enviado correctamente`);
-      this.formContacto.reset();
-    } else {
-      this.toastr.error(`No se logro enviar el correo`);
+    let params = {
+      documentId:rut,
+      phone:telefono,
+      name:nombre,
+      email:para,
+      subject:asunto,
+      text:html
     }
-  }
 
-  async agregarEmail() {
-    let correos =
-      'ruben.espinoza@implementos.cl;freddy.rodriguez@implementos.cl;claudio.montoya@implementos.cl';
-
-    return correos;
+    this.notificationService.sendContactFormEmail(params).subscribe({
+      next:(res)=>{
+        console.log('res envio correo',res)
+        this.toastr.success(`Correo Enviado correctamente`);
+        this.formContacto.reset();
+      },
+      error:(err)=>{
+        console.log(err)
+        this.toastr.error(`No se logro enviar el correo`);
+      }
+    })
   }
 
   tipoAsunto(event: any) {

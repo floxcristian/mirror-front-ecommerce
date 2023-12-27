@@ -8,10 +8,10 @@ import {
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DirectionService } from '../../../shared/services/direction.service';
-import { SlidesService } from '../../../shared/services/slides.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { isPlatformBrowser } from '@angular/common';
 import { CmsService } from '@core/services-v2/cms.service';
+import { ISlider } from '@core/models-v2/cms/slider-reponse.interface';
 
 @Component({
   selector: 'app-block-slideshow',
@@ -39,14 +39,13 @@ export class BlockSlideshowComponent implements OnInit {
     rtl: this.direction.isRTL(),
     autoplaySpeed: 1000,
   };
-  slides: any[] = [];
+  slides: ISlider[] = [];
 
   isBrowser;
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,
     public sanitizer: DomSanitizer,
     private direction: DirectionService,
-    private slidesService: SlidesService,
     private modalService: BsModalService,
     // Servicios V2
     private readonly cmsService: CmsService
@@ -58,9 +57,6 @@ export class BlockSlideshowComponent implements OnInit {
   }
 
   cargarGaleria() {
-    // this.slidesService.obtieneSlides().subscribe((r: any) => {
-    //   this.slides = r.data;
-    // });
     this.cmsService.getSliders().subscribe({
       next: (res) => {
         this.slides = res.data;

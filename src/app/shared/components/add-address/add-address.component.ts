@@ -9,11 +9,12 @@ import {
 // Libs
 import { ToastrService } from 'ngx-toastr';
 // Services
-import { LogisticsService } from '../../services/logistics.service';
-import { ClientsService } from '../../services/clients.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { ICity } from '@core/services-v2/geolocation/models/city.interface';
+import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
+import { firstValueFrom } from 'rxjs';
+import { AddressType } from '@core/enums/address-type.enum';
 
 @Component({
   selector: 'app-add-address',
@@ -35,12 +36,11 @@ export class AddAddressComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private logisticsService: LogisticsService,
     private toastr: ToastrService,
-    private clientsService: ClientsService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly geolocationApiService: GeolocationApiService
+    private readonly geolocationApiService: GeolocationApiService,
+    private readonly customerAddressService: CustomerAddressApiService
   ) {
     this.formDireccion = this.fb.group({
       calle: new FormControl(null, {
@@ -58,7 +58,10 @@ export class AddAddressComponent implements OnInit {
       longitud: new FormControl(null),
       referencia: new FormControl(null),
     });
-    this.tienda = null;
+    this.tienda = {
+      direccion: '',
+      zona: '',
+    };
   }
 
   ngOnInit() {
@@ -200,36 +203,31 @@ export class AddAddressComponent implements OnInit {
     const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
 
     const direccion = {
-      rut: usuario.documentId,
-      tipo: 'DES',
+      documentId: usuario.documentId,
+      addressType: AddressType.DELIVERY,
+      location: localizacion,
+      city: comunaArr[0],
       region: comunaArr[2],
-      comuna: comunaArr[0],
-      numero: numero.toString(),
-      provincia: comunaArr[1],
-      direccion: calle,
-      localidad: localizacion,
-      latitud: latitud.toString(),
-      longitud: longitud.toString(),
-      deptoCasa: depto,
-      referencia,
-      codPostal: '0',
-      codEmpleado: 0,
-      codUsuario: 0,
-      cuentaUsuario: usuario.username,
-      rutUsuario: usuario.documentId,
-      nombreUsuario: `${usuario.firstName} ${usuario.lastName}`,
+      province: comunaArr[1],
+      number: numero.toString(),
+      street: calle,
+      departmentOrHouse: depto,
+      reference: referencia,
+      latitude: latitud,
+      longitude: longitud,
     };
 
-    const resultado: any = await this.clientsService
-      .addAdreess(direccion)
-      .toPromise();
+    try {
+      await firstValueFrom(
+        this.customerAddressService.createAddress(direccion)
+      );
 
-    if (resultado.error) {
-      this.toastr.error('No se logro agregar la direccion');
-      this.respuesta.emit(false);
-    } else {
       this.toastr.success('Se agrego con exito la dirección');
       this.respuesta.emit(true);
+    } catch (e) {
+      console.error(e);
+      this.toastr.error('No se logro agregar la direccion');
+      this.respuesta.emit(false);
     }
   }
 
@@ -259,7 +257,7 @@ export class AddAddressComponent implements OnInit {
   obtenerLocalidades(event: any) {
     const localidades: any[] = [];
     const comunaArr = event.id.split('@');
-    const comunas: any[] = this.coleccionComuna.filter(
+    const comunas: any[] = (this.coleccionComuna || []).filter(
       (comuna) => comuna.comuna == comunaArr[0]
     );
     comunas.map((comuna) =>
@@ -301,6 +299,7 @@ export class AddAddressComponent implements OnInit {
       comuna: arr[0],
       numero: dataSave.numero,
       depto: dataSave.depto,
+      referencia: dataSave.referencia,
     };
     this.respuestaInvitado.emit(direccion);
   }
