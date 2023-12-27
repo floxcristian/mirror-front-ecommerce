@@ -644,9 +644,9 @@
                         >
                           <div class="col-12 col-sm-7">
                             <div>
-                              {{ usuarioInv.calle }} {{ usuarioInv.numero }},
-                              depto/casa: {{ usuarioInv.depto }},
-                              {{ usuarioInv.comuna }}
+                              {{ usuarioInv.street }} {{ usuarioInv.number }},
+                              depto/casa: {{ usuarioInv.department }},
+                              {{ usuarioInv.commune }}
                             </div>
                             <!-- <div *ngIf="usuarioInv.depto.length <= 0"> {{usuarioInv.calle}} {{usuarioInv.numero}}, {{usuarioInv.comuna}} </div> -->
                           </div>
@@ -976,83 +976,6 @@
                 <!-- End::agregar dirección -->
               </tab>
               <!-- End::tab despacho a domicilio -->
-
-              <!-- retiro chilexpress -->
-              <tab *ngIf="false" (selectTab)="onSelect($event, 'sucursal')">
-                <ng-template tabHeading>
-                  <i class="fas fa-store-alt"></i>
-                  <span class="title">Oficinas Chilexpress</span>
-                </ng-template>
-                <div
-                  class="row"
-                  style="margin-top: 15px; margin-left: 5px; margin-right: 0px"
-                >
-                  <div class="col-12">
-                    <h3>Oficinas Chilexpress</h3>
-                  </div>
-                </div>
-                <hr />
-                <app-page-cart-chilexpress
-                  *ngIf="loadingSucursal"
-                  [shippingStore]="stores"
-                  (chilexpress)="obtieneChilexpress(true, $event)"
-                ></app-page-cart-chilexpress>
-                <div class="row" style="margin-left: 0px; margin-right: 0px">
-                  <div
-                    *ngIf="
-                      (shippingDays.length > 0 &&
-                        !select_grupos &&
-                        recibeType == 'otra' &&
-                        recibeOtraname.length > 0) ||
-                      recibeType == 'yo'
-                    "
-                    class="col-12"
-                  >
-                    <ng-container
-                      *ngFor="let item_0 of shippingDays; let i = index"
-                    >
-                      <div *ngIf="i == 0" style="margin-bottom: 30px">
-                        <app-grupo-detalle-fechas
-                          *ngIf="innerWidth > 1720"
-                          [DIAS_SEMANA]="10"
-                          (itemSeleccionado)="
-                            setSeleccionarEnvioChilexpress($event, i)
-                          "
-                          [index]="i"
-                          [fletes]="item_0.fechas"
-                        ></app-grupo-detalle-fechas>
-                        <app-grupo-detalle-fechas
-                          *ngIf="innerWidth > 1420 && innerWidth <= 1720"
-                          [DIAS_SEMANA]="8"
-                          (itemSeleccionado)="
-                            setSeleccionarEnvioChilexpress($event, i)
-                          "
-                          [index]="i"
-                          [fletes]="item_0.fechas"
-                        ></app-grupo-detalle-fechas>
-                        <app-grupo-detalle-fechas
-                          *ngIf="innerWidth > 450 && innerWidth <= 1420"
-                          [DIAS_SEMANA]="7"
-                          (itemSeleccionado)="
-                            setSeleccionarEnvioChilexpress($event, i)
-                          "
-                          [index]="i"
-                          [fletes]="item_0.fechas"
-                        ></app-grupo-detalle-fechas>
-                        <app-grupo-detalle-fechas-mobile
-                          *ngIf="innerWidth <= 450"
-                          (itemSeleccionado)="
-                            setSeleccionarEnvioChilexpress($event, i)
-                          "
-                          [index]="i"
-                          [fletes]="item_0.fechas"
-                        ></app-grupo-detalle-fechas-mobile>
-                      </div>
-                    </ng-container>
-                  </div>
-                </div>
-              </tab>
-              <!-- End chilexpress -->
             </tabset>
           </div>
         </div>
@@ -1134,10 +1057,13 @@
                 <div class="mt-3 col-6 ps-0 ps-1">
                   <button
                     name="next"
-                    *ngIf="userSession.userRole != 'comprador'"
+                    *ngIf="
+                      userSession.userRole != 'comprador' &&
+                      userSession.userRole != 'buyer'
+                    "
                     [disabled]="
                       shippingSelected == null ||
-                      cartSession?.recidDireccion == 0 ||
+                      !cartSession.shipment?.addressId ||
                       !productsValidate.length ||
                       recibeOtra
                     "
@@ -1149,7 +1075,10 @@
 
                   <button
                     name="selectedShippingId"
-                    *ngIf="userSession.userRole == 'comprador'"
+                    *ngIf="
+                      userSession.userRole == 'comprador' ||
+                      userSession.userRole == 'buyer'
+                    "
                     [disabled]="shippingSelected == null"
                     (click)="next()"
                     class="btn btn-lg btn-secondary w-100 text-center"
@@ -1165,6 +1094,7 @@
               *ngIf="
                 documentType != 'cotizacion' &&
                 userSession.userRole !== 'compradorb2c' &&
+                userSession.userRole !== 'b2c' &&
                 !invitado
               "
             >
@@ -1265,10 +1195,13 @@
                 <div class="mt-3 col-6 ps-0 ps-1">
                   <button
                     name="next"
-                    *ngIf="userSession.userRole != 'comprador'"
+                    *ngIf="
+                      userSession.userRole != 'comprador' &&
+                      userSession.userRole != 'buyer'
+                    "
                     [disabled]="
                       shippingSelected == null ||
-                      cartSession?.recidDireccion == 0 ||
+                      !cartSession.shipment?.addressId ||
                       !productsValidate.length ||
                       recibeOtra
                     "
@@ -1280,7 +1213,10 @@
 
                   <button
                     name="selectedShippingId"
-                    *ngIf="userSession.userRole == 'comprador'"
+                    *ngIf="
+                      userSession.userRole == 'comprador' ||
+                      userSession.userRole == 'buyer'
+                    "
                     [disabled]="shippingSelected == null"
                     (click)="next()"
                     class="btn btn-lg btn-secondary w-100 text-center"
@@ -1415,10 +1351,13 @@
           <div class="mt-3 col-12 ps-0 ps-1">
             <button
               name="next"
-              *ngIf="userSession.userRole != 'comprador'"
+              *ngIf="
+                userSession.userRole != 'comprador' &&
+                userSession.userRole != 'buyer'
+              "
               [disabled]="
                 shippingSelected == null ||
-                cartSession?.recidDireccion == 0 ||
+                !cartSession.shipment?.addressId ||
                 !productsValidate.length ||
                 recibeOtra ||
                 !select_grupos
@@ -1431,7 +1370,10 @@
 
             <button
               name="selectedShippingId"
-              *ngIf="userSession.userRole == 'comprador'"
+              *ngIf="
+                userSession.userRole == 'comprador' ||
+                userSession.userRole == 'buyer'
+              "
               [disabled]="shippingSelected == null"
               (click)="next()"
               class="btn btn-lg btn-secondary w-100 text-center"

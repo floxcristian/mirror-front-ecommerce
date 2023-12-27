@@ -383,15 +383,17 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
     /* Se cargan los centros de costo */
     const documentId = this.userSession?.documentId ?? '';
-    this.customerCostCenterService.getCostCenters(documentId).subscribe({
-      next: (costCenters) => {
-        this.centrosCosto = costCenters;
-      },
-      error: (e) => {
-        console.error(e);
-        this.toastr.error('No se pudo obtener los centros de costo');
-      },
-    });
+    if (!this.guest) {
+      this.customerCostCenterService.getCostCenters(documentId).subscribe({
+        next: (costCenters) => {
+          this.centrosCosto = costCenters;
+        },
+        error: (e) => {
+          console.error(e);
+          this.toastr.error('No se pudo obtener los centros de costo');
+        },
+      });
+    }
 
     setTimeout(() => {
       this.cartService.dropCartActive$.next(false);
@@ -432,7 +434,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   private setDireccionOrTiendaRetiro() {
     // LOGICA PARA OBTENER DESPACHO A MOSTRAR
-    if (!this.cartSession.shipment) {
+    if (!this.cartSession || !this.cartSession.shipment) {
       return;
     }
     const shipment = this.cartSession.shipment;
@@ -820,89 +822,78 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
    */
   async prepararCarroPrePago(): Promise<void> {
     if (this.guest) {
-      this.guest.documentId = this.getValidRutFormat(
-        this.guest.documentId ?? ''
-      );
+      try {
+        this.guest.documentId = this.getValidRutFormat(
+          this.guest.documentId ?? ''
+        );
 
-      const isValidAddress =
-        this.selectedDocument === InvoiceType.INVOICE &&
-        this.formDireccion &&
-        this.formDireccion.value &&
-        this.formDireccion.value.calle &&
-        this.formDireccion.value.numero &&
-        this.formDireccion.value.comuna;
-      if (isValidAddress) {
-        this.guest.street = this.formDireccion.value.calle;
-        this.guest.number = this.formDireccion.value.numero;
-        this.guest.completeComune = this.formDireccion.value.comuna;
+        const isValidAddress =
+          this.selectedDocument === InvoiceType.INVOICE &&
+          this.formDireccion &&
+          this.formDireccion.value &&
+          this.formDireccion.value.calle &&
+          this.formDireccion.value.numero &&
+          this.formDireccion.value.comuna;
+        if (isValidAddress) {
+          this.guest.street = this.formDireccion.value.calle;
+          this.guest.number = this.formDireccion.value.numero;
+          this.guest.completeComune = this.formDireccion.value.comuna;
+        }
+
+        this.guest.businessLine = this.selectedGiro || '';
+
+        const createGuestRequest: ICreateGuest = {
+          email: this.guest.email ?? '',
+          documentId: this.guest.documentId ?? '',
+          documentType: environment.country.toUpperCase(),
+          firstName: this.guest.firstName ?? '',
+          lastName: this.guest.lastName ?? '',
+          phone: this.guest.phone ?? '',
+          address: {
+            location: '',
+            city: '',
+            region: '',
+            province: '',
+            number: '',
+            street: '',
+            departmentOrHouse: '',
+            reference: '',
+            latitude: 0,
+            longitude: 0,
+          },
+        };
+
+        await firstValueFrom(
+          this.customerService.createGuest(createGuestRequest)
+        );
+
+        let user: IGuest = this.guest;
+
+        await firstValueFrom(
+          this.cartService.saveTemp({
+            shoppingCartId: user.cartId ? user.cartId.toString() : '',
+            documentId: user.documentId,
+            email: user.email,
+          })
+        );
+
+        let userCambio = this.sessionService.getSession();
+        // let userCambio: any = this.root.getDataSesionUsuario();
+        //userCambio._id = user.email;
+        userCambio.email = user.email;
+        userCambio.userRole = UserRoleType.B2C;
+        userCambio.documentId = user.documentId;
+        userCambio.login_temp = true;
+        userCambio.firstName = this.formVisita.value.nombre || '';
+        userCambio.lastName = this.formVisita.value.apellido || '';
+        this.sessionStorage.set(userCambio);
+        // this.localS.set('usuario', userCambio);
+      } catch (e) {
+        console.error(e);
+        this.toastr.error('No puedo guardarse los datos del invitado');
+
+        throw e;
       }
-
-      this.guest.businessLine = this.selectedGiro || '';
-
-      const createGuestRequest: ICreateGuest = {
-        email: this.guest.email ?? '',
-        documentId: this.guest.documentId ?? '',
-        documentType: environment.country.toUpperCase(),
-        firstName: this.guest.firstName ?? '',
-        lastName: this.guest.lastName ?? '',
-        phone: this.guest.phone ?? '',
-        address: {
-          location: this.guest.completeComune ?? '',
-          city: this.guest.completeComune
-            ? this.guest.completeComune.split('@')[0]
-            : 'SAN BERNARDO',
-          region: this.guest.completeComune
-            ? this.guest.completeComune.split('@')[2]
-            : '13',
-          province: this.guest.completeComune
-            ? this.guest.completeComune.split('@')[1]
-            : '134',
-          number: this.guest.number ?? '',
-          street: this.guest.street ?? '',
-          departmentOrHouse: '',
-          reference: '',
-          latitude: 0,
-          longitude: 0,
-        },
-      };
-
-      this.customerService.createGuest(createGuestRequest).subscribe({
-        next: () => {
-          let user: IGuest = this.guest;
-
-          this.cartService
-            .saveTemp({
-              shoppingCartId: user.cartId ? user.cartId.toString() : '',
-              documentId: user.documentId,
-              email: user.email,
-            })
-            .subscribe({
-              next: () => {
-                let userCambio = this.sessionService.getSession();
-                // let userCambio: any = this.root.getDataSesionUsuario();
-                //userCambio._id = user.email;
-                userCambio.email = user.email;
-                userCambio.userRole = UserRoleType.B2C;
-                userCambio.documentId = user.documentId;
-                userCambio.login_temp = true;
-                userCambio.firstName = this.formVisita.value.nombre || '';
-                userCambio.lastName = this.formVisita.value.apellido || '';
-                this.sessionStorage.set(userCambio);
-                // this.localS.set('usuario', userCambio);
-              },
-              error: (e) => {
-                console.error(e);
-                this.toastr.error(
-                  'No se pudo guardar datos temporales del carro'
-                );
-              },
-            });
-        },
-        error: (e) => {
-          console.error(e);
-          this.toastr.error('No puedo crearse el invitado');
-        },
-      });
     }
   }
 

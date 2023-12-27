@@ -12,6 +12,7 @@ import {
 // Environment
 import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
+import { IExistsEmail } from '@core/models-v2/customer/exists-email.interface';
 
 const API_AUTH = `${environment.apiEcommerce}/api/v1/auth`;
 const API_CUSTOMER = `${environment.apiEcommerce}/api/v1/customer`;
@@ -47,8 +48,8 @@ export class CustomerService {
     return this.http.get(`${API_AUTH}/check-document-id/${documentId}`);
   }
 
-  checkEmail(email: string) {
-    return this.http.get(`${API_AUTH}/check-email/${email}`);
+  checkEmail(email: string): Observable<IExistsEmail> {
+    return this.http.get<IExistsEmail>(`${API_AUTH}/check-email/${email}`);
   }
 
   checkUsername(username: string) {
@@ -127,9 +128,9 @@ export class CustomerService {
     );
   }
 
-  createGuest(params: ICreateGuest): Observable<ICustomerCredit> {
+  createGuest(params: ICreateGuest) {
     const url = `${API_CUSTOMER}/new-guest`;
-    return this.http.post<ICustomerCredit>(url, params);
+    return this.http.post(url, params);
   }
 
   getCustomerPriceList(
