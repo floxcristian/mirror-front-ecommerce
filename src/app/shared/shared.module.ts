@@ -31,7 +31,6 @@ import {
   CollapseDirective,
   CollapseItemDirective,
 } from './directives/collapse.directive';
-import { DepartmentsAreaDirective } from './directives/departments-area.directive';
 import { DropdownDirective } from './directives/dropdown.directive';
 import { OwlPreventClickDirective } from './directives/owl-prevent-click.directive';
 import { DragDropDirective } from './directives/drag-drop.directive';
@@ -114,7 +113,6 @@ const NGU_CAROUSEL_MODULES = [
     CollapseContentDirective,
     CollapseDirective,
     CollapseItemDirective,
-    DepartmentsAreaDirective,
     DropdownDirective,
     OwlPreventClickDirective,
     DragDropDirective,
@@ -210,7 +208,6 @@ const NGU_CAROUSEL_MODULES = [
     CollapseContentDirective,
     CollapseDirective,
     CollapseItemDirective,
-    DepartmentsAreaDirective,
     DropdownDirective,
     OwlPreventClickDirective,
     LazyImgDirective,

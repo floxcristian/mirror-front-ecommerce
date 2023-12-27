@@ -114,16 +114,12 @@ export class MobileMenuComponent implements OnDestroy, OnInit {
       },
     });
     this.customerPreferenceService.getCustomerPreferences().subscribe({
-      next: (preferences) => {
-        this.direccion = preferences.deliveryAddress;
-      },
+      next: (preferences) => (this.direccion = preferences.deliveryAddress),
     });
 
     this.despachoCliente =
       this.customerAddressService.customerAddress$.subscribe(
-        (customerAddress) => {
-          this.direccion = customerAddress;
-        }
+        (customerAddress) => (this.direccion = customerAddress)
       );
   }
 

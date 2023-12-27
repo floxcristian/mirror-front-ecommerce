@@ -84,11 +84,11 @@ export class UpdateAddressModalComponent implements OnInit {
 
     if (existe.length != 0) {
       this.formDireccion.controls['comuna'].setValue(
-        this.findComuna(this.getAddressData(data[0], 'locality'))
+        this.getCityId(this.getAddressData(data[0], 'locality'))
       );
     } else {
       this.formDireccion.controls['comuna'].setValue(
-        this.findComuna(
+        this.getCityId(
           this.getAddressData(data[0], 'administrative_area_level_3')
         )
       );
@@ -125,21 +125,23 @@ export class UpdateAddressModalComponent implements OnInit {
     return value;
   }
 
-  findComuna(nombre: string) {
-    if (nombre != '') {
-      nombre = this.quitarAcentos(nombre);
+  /**
+   * Obtener id de una ciudad.
+   * @param city
+   * @returns
+   */
+  private getCityId(city: string): string {
+    if (!city) return '';
 
-      const result = this.cities.find(
-        (item) => this.quitarAcentos(item.city) === nombre
-      );
+    city = this.quitarAcentos(city);
+    const result = this.cities.find(
+      (item) => this.quitarAcentos(item.city) === city
+    );
 
-      if (result && result.id) {
-        this.obtenerLocalidades(result);
-        this.findComunaLocalizacion(result.city);
-        return result.id;
-      } else {
-        return '';
-      }
+    if (result && result.id) {
+      this.obtenerLocalidades(result);
+      this.findComunaLocalizacion(result.city);
+      return result.id;
     } else {
       return '';
     }
@@ -200,11 +202,11 @@ export class UpdateAddressModalComponent implements OnInit {
       referencia,
     } = this.formDireccion.value;
     const comunaArr = comuna.split('@');
-    const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
+    const { documentId } = this.sessionService.getSession();
 
     const direccion: any = {
       addressId: this.direccion.id,
-      documentId: usuario.documentId,
+      documentId: documentId,
       addressType: AddressType.DELIVERY,
       region: comunaArr[2],
       city: comunaArr[0],
@@ -248,15 +250,17 @@ export class UpdateAddressModalComponent implements OnInit {
   }
 
   /**
-   * Obtener ciudades.
+   * Obtener ciudades y establecer la ciudad actual en el formulario.
    */
   private getCities(): void {
     this.geolocationApiService.getCities().subscribe({
       next: (cities) => {
         this.cities = cities;
-        const city = cities.find((item) => item.city === this.direccion.city);
-        if (city) {
-          this.formDireccion.controls['comuna'].setValue(city.id);
+        const currentAddress = cities.find(
+          (item) => item.city === this.direccion.city
+        );
+        if (currentAddress) {
+          this.formDireccion.controls['comuna'].setValue(currentAddress.id);
         }
       },
     });

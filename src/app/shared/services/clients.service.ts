@@ -6,8 +6,6 @@ import { Observable } from 'rxjs';
 // Env
 import { environment } from '@env/environment';
 
-import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
-
 import { Flota } from '../interfaces/flota';
 import { ResponseApi } from '../interfaces/response-api';
 import { CargosContactoResponse } from '../interfaces/cargoContacto';
@@ -16,7 +14,7 @@ import { CargosContactoResponse } from '../interfaces/cargoContacto';
   providedIn: 'root',
 })
 export class ClientsService {
-  constructor(private http: HttpClient, private localS: LocalStorageService) {}
+  constructor(private http: HttpClient) {}
 
   buscarOvsGeneradas() {
     const estado = 'generado';
