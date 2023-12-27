@@ -10,10 +10,10 @@ import {
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 // Models
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
+import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 // Services
 import { MpSimuladorHeaderFiltrosMagicos } from './mp-simulador-header.filtros-magicos';
 import { LogisticPromiseService } from '@core/services-v2/logistic-promise.service';
-import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 
 @Component({
@@ -27,21 +27,17 @@ export class DespachoComponent implements OnInit {
   @Input() cantidad: number = 0;
 
   tiendaSeleccionada: any = [];
-  stock: any = 0;
-  stock_bodega: any = 0;
+
   MODOS = { RETIRO_TIENDA: 'pickup', DESPACHO: 'delivery' };
   filtrosMagicosRetiroTienda: any;
   filtrosMagicosDespacho: any;
   filtrosDespacho: any = null;
   filtrosRetiroTienda: any = {};
   loadPromesas: boolean = false;
-  encontrado: boolean = false;
   modalRef!: BsModalRef;
-  consulta: any = [];
   promesas: any = [];
   modo: string = this.MODOS.DESPACHO;
   stockMax: any = 0;
-  localidad: any = [];
 
   constructor(
     private modalService: BsModalService,
@@ -58,7 +54,7 @@ export class DespachoComponent implements OnInit {
     console.log('[-] cantidad: ', this.cantidad);
   }
 
-  async generateChangeGeneralData() {
+  private async generateChangeGeneralData(): Promise<void> {
     let data: any;
     console.log(
       '🚀 ~ file: despacho.component.ts:63 ~ DespachoComponent ~ generateChangeGeneralData ~ this.modo:',
@@ -128,33 +124,7 @@ export class DespachoComponent implements OnInit {
     else this.promesas = [];
   }
 
-  onFiltrosCambiadosDespacho(filtros: any) {
-    this.filtrosDespacho = filtros;
-    if (this.filtrosDespacho.localidad != null) {
-      this.generateChangeGeneralData();
-    } else this.filtrosDespacho = null;
-  }
-  /// FIXME: fix, no funciona bien
-  openForm(template: TemplateRef<any>, modo: any) {
-    this.modo = modo;
-    this.filtrosMagicosRetiroTienda = MpSimuladorHeaderFiltrosMagicos(
-      this.MODOS.RETIRO_TIENDA,
-      this.geolocationApiService,
-      this.tiendaActual
-    );
-    this.filtrosMagicosDespacho = MpSimuladorHeaderFiltrosMagicos(
-      this.MODOS.DESPACHO,
-      this.geolocationApiService,
-      this.tiendaActual
-    );
-    this.modalRef = this.modalService.show(template, {
-      class: 'modal-despacho modal-dialog-centered',
-      backdrop: 'static',
-      keyboard: false,
-    });
-  }
-
-  async promesa(codTienda: any) {
+  private async promesa(codTienda: any): Promise<void> {
     this.loadPromesas = true;
     this.promesas = [];
     let productos = [
@@ -173,9 +143,35 @@ export class DespachoComponent implements OnInit {
     this.loadPromesas = false;
   }
 
-  onFiltrosCambiadosRetiroTienda(filtros: any) {
+  onFiltrosCambiadosDespacho(filtros: any): void {
+    this.filtrosDespacho = filtros;
+    if (this.filtrosDespacho.localidad != null) {
+      this.generateChangeGeneralData();
+    } else this.filtrosDespacho = null;
+  }
+  /// FIXME: fix, no funciona bien
+  openModal(template: TemplateRef<any>, modo: any): void {
+    console.log('openForm...');
+    this.modo = modo;
+    this.filtrosMagicosRetiroTienda = MpSimuladorHeaderFiltrosMagicos(
+      this.MODOS.RETIRO_TIENDA,
+      this.geolocationApiService,
+      this.tiendaActual
+    );
+    this.filtrosMagicosDespacho = MpSimuladorHeaderFiltrosMagicos(
+      this.MODOS.DESPACHO,
+      this.geolocationApiService,
+      this.tiendaActual
+    );
+    this.modalRef = this.modalService.show(template, {
+      class: 'modal-despacho modal-dialog-centered',
+      backdrop: 'static',
+      keyboard: false,
+    });
+  }
+
+  onFiltrosCambiadosRetiroTienda(filtros: any): void {
     this.filtrosRetiroTienda = filtros;
-    this.encontrado = false;
     this.generateChangeGeneralData();
   }
 
