@@ -1310,9 +1310,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
    */
   private getCities(): void {
     this.geolocationApiService.getCities().subscribe({
-      next: (cities) => {
-        this.cities = cities.sort((a, b) => a.city.localeCompare(b.city));
-      },
+      next: (cities) => (this.cities = cities),
     });
   }
 

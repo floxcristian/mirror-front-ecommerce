@@ -1,5 +1,5 @@
 // Angular
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 // Libs
 import { ToastrService } from 'ngx-toastr';
@@ -18,19 +18,15 @@ import { CustomerBusinessLineApiService } from '@core/services-v2/customer-busin
   styleUrls: ['./register-b2b.component.scss'],
 })
 export class Registerb2bComponent implements OnInit {
-  @Output() returnLoginEvent: EventEmitter<any> = new EventEmitter();
-  @Input() linkLogin!: any;
   @Input() innerWidth!: number;
   cities!: ICity[];
   businessLines!: IBusinessLine[];
+  userForm!: FormGroup;
+  phoneCode: string;
 
-  tipo_fono = '+569';
-  isInvoice = true;
   mensajeExito = false;
   loadingForm = false;
-  blockedForm = true;
   isValidRut = false;
-  userForm!: FormGroup;
 
   constructor(
     private clientService: ClientsService,
@@ -38,9 +34,11 @@ export class Registerb2bComponent implements OnInit {
     private fb: FormBuilder,
     private readonly geolocationApiService: GeolocationApiService,
     private readonly customerBusinessLineApiService: CustomerBusinessLineApiService
-  ) {}
+  ) {
+    this.phoneCode = '+569';
+  }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getBusinessLines();
     this.getCities();
     this.buildUserForm();
@@ -52,20 +50,19 @@ export class Registerb2bComponent implements OnInit {
    */
   private buildUserForm(): void {
     this.userForm = this.fb.group({
-      rut: [, [Validators.required, rutValidator]],
-      nombre: [, Validators.required],
-      apellido: [, Validators.required],
-      telefono: [, [Validators.required]],
-      email: [, [Validators.required, Validators.email]],
-      calle: [, Validators.required],
-      numero: [, Validators.required],
-      comuna: [, Validators.required],
+      documentId: ['', [Validators.required, rutValidator]],
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
+      telefono: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      calle: ['', Validators.required],
+      numero: ['', Validators.required],
+      comuna: ['', Validators.required],
       razonsocial: [],
       giro: [],
       departamento: [],
     });
-
-    this.Select_fono(this.tipo_fono);
+    this.changePhoneCode(this.phoneCode);
   }
 
   /**
@@ -73,9 +70,7 @@ export class Registerb2bComponent implements OnInit {
    */
   private getBusinessLines(): void {
     this.customerBusinessLineApiService.getBusinessLines().subscribe({
-      next: (businessLines) => {
-        this.businessLines = businessLines;
-      },
+      next: (businessLines) => (this.businessLines = businessLines),
     });
   }
 
@@ -84,20 +79,19 @@ export class Registerb2bComponent implements OnInit {
    */
   private getCities(): void {
     this.geolocationApiService.getCities().subscribe({
-      next: (cities) =>
-        (this.cities = cities.sort((a, b) => a.city.localeCompare(b.city))),
+      next: (cities) => (this.cities = cities),
     });
   }
 
   /**
    * Registrar usuario B2B.
    */
-  registerUser() {
+  registerUser(): void {
     const dataSave = { ...this.userForm.value };
     this.loadingForm = true;
 
     dataSave.password = 'qwert1234';
-    dataSave.telefono = this.tipo_fono + dataSave.telefono;
+    dataSave.telefono = this.phoneCode + dataSave.telefono;
     // formateamos rut
     const rut = dataSave.rut;
     dataSave.rut =
@@ -129,9 +123,9 @@ export class Registerb2bComponent implements OnInit {
     );
   }
 
-  validateCustomer(e: any) {
+  validateCustomer(e: any): void {
     let value = e.target.value;
-    if (this.userForm.controls['rut'].status === 'VALID') {
+    if (this.userForm.controls['documentId'].status === 'VALID') {
       value = value.replace(/\./g, '');
       this.clientService.validateCustomerb2b(value).subscribe(
         (r: any) => {
@@ -140,7 +134,7 @@ export class Registerb2bComponent implements OnInit {
               this.isValidRut = false;
               this.formBlock();
               this.toastr.warning(
-                'El RUT ingresado ya se encuentra registrado en nuestros sistemas '
+                'El número de documento ingresado ya se encuentra registrado en nuestros sistemas.'
               );
             } else {
               this.isValidRut = true;
@@ -158,7 +152,7 @@ export class Registerb2bComponent implements OnInit {
     }
   }
 
-  formBlock(force = false) {
+  private formBlock(force = false): void {
     if (force) {
       this.isValidRut = true;
     }
@@ -186,10 +180,14 @@ export class Registerb2bComponent implements OnInit {
     }
   }
 
-  Select_fono(tipo: any): void {
-    this.tipo_fono = tipo;
+  /**
+   * Cambiar código teléfonico y setear validación del input telefónico.
+   * @param phoneCode
+   */
+  changePhoneCode(phoneCode: string): void {
+    this.phoneCode = phoneCode;
 
-    if (this.tipo_fono === '+569')
+    if (this.phoneCode === '+569')
       this.userForm.controls['telefono'].setValidators([
         Validators.required,
         Validators.minLength(8),

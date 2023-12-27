@@ -1,3 +1,4 @@
+// Angular
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
@@ -5,13 +6,16 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+// Libs
 import { ToastrService } from 'ngx-toastr';
-import { DireccionMap } from '../map/map.component';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+// Models
+import { AddressType } from '@core/enums/address-type.enum';
+// Services
+import { DireccionMap } from '../map/map.component';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
-import { AddressType } from '@core/enums/address-type.enum';
 import { IError } from '@core/models-v2/error/error.interface';
 import {
   ICity,
@@ -29,8 +33,7 @@ export class UpdateAddressModalComponent implements OnInit {
   @Input() direccion!: ICustomerAddress;
   @Output() respuesta = new EventEmitter<boolean>();
 
-  comunas!: any[];
-  coleccionComuna!: ICity[];
+  cities!: ICity[];
   localidades!: ILocality[];
   address!: DireccionMap | null;
   formDireccion!: FormGroup;
@@ -47,7 +50,7 @@ export class UpdateAddressModalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadComunas();
+    this.getCities();
 
     const { street, number, city, location } = this.direccion;
     const comunaArr = city.split('@');
@@ -77,7 +80,7 @@ export class UpdateAddressModalComponent implements OnInit {
 
   set_direccion(data: any[]) {
     const buscar = this.getAddressData(data[0], 'locality').toUpperCase();
-    const existe = this.comunas.filter((comuna) => comuna.value == buscar);
+    const existe = this.cities.filter((item) => item.city == buscar);
 
     if (existe.length != 0) {
       this.formDireccion.controls['comuna'].setValue(
@@ -126,13 +129,13 @@ export class UpdateAddressModalComponent implements OnInit {
     if (nombre != '') {
       nombre = this.quitarAcentos(nombre);
 
-      const result = this.comunas.find(
-        (data) => this.quitarAcentos(data.value) === nombre
+      const result = this.cities.find(
+        (item) => this.quitarAcentos(item.city) === nombre
       );
 
       if (result && result.id) {
         this.obtenerLocalidades(result);
-        this.findComunaLocalizacion(result.value);
+        this.findComunaLocalizacion(result.city);
         return result.id;
       } else {
         return '';
@@ -244,33 +247,25 @@ export class UpdateAddressModalComponent implements OnInit {
     };
   }
 
-  loadComunas() {
-    this.geolocationApiService.getCities().subscribe(
-      (data) => {
-        this.coleccionComuna = data;
-        this.comunas = data.map((record) => {
-          const v =
-            record.city + '@' + record.provinceCode + '@' + record.regionCode;
-          return { id: v, value: record.city };
-        });
-
-        const comuna = this.comunas.find(
-          (c) => c.value === this.direccion.city
-        );
-        if (comuna) {
-          this.formDireccion.controls['comuna'].setValue(comuna.id);
+  /**
+   * Obtener ciudades.
+   */
+  private getCities(): void {
+    this.geolocationApiService.getCities().subscribe({
+      next: (cities) => {
+        this.cities = cities;
+        const city = cities.find((item) => item.city === this.direccion.city);
+        if (city) {
+          this.formDireccion.controls['comuna'].setValue(city.id);
         }
       },
-      (error) => {
-        this.toastr.error(error.error.msg);
-      }
-    );
+    });
   }
 
   obtenerLocalidades(event: any) {
     const localidades: any[] = [];
     const comunaArr = event.id.split('@');
-    const comunas = this.coleccionComuna.filter(
+    const comunas = this.cities.filter(
       (comuna) => comuna.city == comunaArr[0]
     );
     comunas.map((comuna) =>

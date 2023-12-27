@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 // Routing
 import { SiteRoutingModule } from './site-routing.module';
 // Modules
@@ -56,6 +57,7 @@ import { Registerb2bComponent } from '../../shared/components/register-b2b/regis
     SiteRoutingModule,
     ReactiveFormsModule,
     FormsModule,
+    BsDropdownModule,
   ],
 })
 export class SiteModule {}

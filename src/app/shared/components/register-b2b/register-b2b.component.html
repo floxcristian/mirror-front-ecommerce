@@ -15,18 +15,17 @@
             <!-- rut -->
             <div class="col-md-6">
               <div class="mb-3">
-                <!-- <label>RUT</label> -->
                 <input
-                  formControlName="rut"
+                  formControlName="documentId"
                   class="form-control"
-                  placeholder="RUT*"
+                  placeholder="RUT/DNI*"
                   (focusout)="validateCustomer($event)"
                   formatRut
                   appRutChars
                 />
 
                 <p
-                  *ngIf="(userForm.controls['rut'].errors?.['invalidRut'] && userForm.controls['rut'].touched)"
+                  *ngIf="(userForm.controls['documentId'].errors?.['invalidRut'] && userForm.controls['documentId'].touched)"
                   class="text-error-form-2 pull-right"
                 >
                   El RUT ingresado no es válido
@@ -36,7 +35,6 @@
 
             <div class="col-md-12">
               <div class="mb-3">
-                <!-- <label>Email</label> -->
                 <input
                   formControlName="razonsocial"
                   type="text"
@@ -65,7 +63,6 @@
             <!-- nombre -->
             <div class="col-md-6">
               <div class="mb-3">
-                <!-- <label>Nombre</label> -->
                 <input
                   formControlName="nombre"
                   type="text"
@@ -77,7 +74,6 @@
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <!-- <label>Apellido</label> -->
                 <input
                   formControlName="apellido"
                   type="text"
@@ -91,33 +87,41 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <div class="input-group">
-                  <div class="input-group-prepend">
+                  <div class="input-group-prepend" dropdown>
                     <button
-                      class="btn btn-outline-secondary dropdown-toggle"
+                      id="button-basic"
+                      dropdownToggle
                       type="button"
-                      data-bs-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
+                      class="btn btn-outline-secondary dropdown-toggle"
+                      aria-controls="dropdown-basic"
                     >
                       <i
                         [ngClass]="
-                          tipo_fono === '+569'
+                          phoneCode === '+569'
                             ? 'fa-solid fa-mobile-screen'
                             : 'fa-solid fa-phone'
                         "
                         style="margin-right: 1px"
                       ></i>
-                      {{ tipo_fono }}
+                      {{ phoneCode }}
                     </button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" (click)="Select_fono('+569')"
+                    <div
+                      id="dropdown-basic"
+                      *dropdownMenu
+                      class="dropdown-menu"
+                      role="menu"
+                      aria-labelledby="button-basic"
+                    >
+                      <a
+                        class="dropdown-item"
+                        (click)="changePhoneCode('+569')"
                         ><i
                           class="fa-solid fa-mobile-screen"
                           style="margin-right: 1px"
                         ></i
                         >+569</a
                       >
-                      <a class="dropdown-item" (click)="Select_fono('+56')"
+                      <a class="dropdown-item" (click)="changePhoneCode('+56')"
                         ><i
                           class="fa-solid fa-phone"
                           style="margin-right: 1px"
@@ -149,7 +153,6 @@
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <!-- <label>Email</label> -->
                 <input
                   formControlName="email"
                   type="email"

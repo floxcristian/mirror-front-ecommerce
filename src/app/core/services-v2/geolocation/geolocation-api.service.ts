@@ -45,10 +45,12 @@ export class GeolocationApiService {
   getCities(): Observable<ICity[]> {
     return this.http.get<ICity[]>(`${API_LOGISTIC}/cities`).pipe(
       map((cities) =>
-        cities.map((item) => ({
-          ...item,
-          id: `${item.city}@${item.provinceCode}@${item.regionCode}`,
-        }))
+        cities
+          .map((item) => ({
+            ...item,
+            id: `${item.city}@${item.provinceCode}@${item.regionCode}`,
+          }))
+          .sort((a, b) => a.city.localeCompare(b.city))
       )
     );
   }
