@@ -12,6 +12,11 @@ const API_NOTIFICATION = `${environment.apiEcommerce}/api/v1/notification`;
 export class NotificationService {
   constructor(private http: HttpClient) {}
 
+  /***********************************
+   *  NOTIFICATION
+   *
+   **********************************/
+
   sendEmail(params: {
     to: string[];
     cc: string[];
@@ -49,6 +54,11 @@ export class NotificationService {
     return this.http.post(`${API_NOTIFICATION}/send-sms`, params);
   }
 
+  /***********************************
+   *  OTP
+   *
+   **********************************/
+
   generateOtp(params: {
     reference: string;
     digits: number;
@@ -63,4 +73,21 @@ export class NotificationService {
   validateOtp(params: { reference: string; otp: string }) {
     return this.http.get(`${API_NOTIFICATION}/validate-otp`, { params });
   }
+
+  /***********************************
+   *  ECOMMERCE
+   *
+   **********************************/
+
+  sendContactFormEmail(params:{
+    documentId:string;
+    phone:string;
+    name:string;
+    email:string;
+    subject:string;
+    text:string;
+  }){
+    return this.http.post(`${API_NOTIFICATION}/contact-form`,params)
+  }
+
 }

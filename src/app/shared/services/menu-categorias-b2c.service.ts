@@ -66,16 +66,4 @@ export class MenuCategoriasB2cService {
       }
     }
   }
-  //NO SE UTILIZA
-  // toggle(nivel: number | null = null): void {
-  //   if (nivel === null) {
-  //     this.openSubject$.next(!this.openSubject$.value);
-  //   } else {
-  //     if (nivel === 2) {
-  //       this.openNivel2Subject$.next(!this.openNivel2Subject$.value);
-  //     } else if (nivel === 3) {
-  //       this.openNivel3Subject$.next(!this.openNivel3Subject$.value);
-  //     }
-  //   }
-  // }
 }
