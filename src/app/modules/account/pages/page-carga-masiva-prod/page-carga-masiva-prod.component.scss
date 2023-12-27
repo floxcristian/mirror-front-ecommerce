@@ -105,3 +105,17 @@
   border-bottom-right-radius: 10px !important;
   border-bottom-left-radius: 10px !important;
 }
+.accordion-button-content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.accordion-two  {
+ --bs-accordion-btn-bg: #ffffde;
+}
+
+.accordion-tree  {
+ --bs-accordion-btn-bg: #ffc2c2;;
+ --bs-accordion-bg: #524a4e;
+ --bs-accordion-color: white;
+}

@@ -7,11 +7,15 @@ import {
 } from '../../../../shared/utils/utilidades';
 import { CartData } from '../../../../shared/interfaces/cart-item';
 import { ResponseApi } from '../../../../shared/interfaces/response-api';
-import { CartService } from '../../../../shared/services/cart.service';
 import { v1 as uuidv1 } from 'uuid';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
+// Import V2
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { CartService } from '@core/services-v2/cart.service';
+import { ISavedCart, IUploadResponse } from '@core/models-v2/responses/file-upload.response';
+
 declare var $: any;
 
 export interface Archivo {
@@ -31,12 +35,11 @@ export class PageCargaMasivaProdComponent implements OnInit {
 
   userSession!: ISession;
   cartSession!: CartData;
-
+  isCollapsed = false;
   productosCargados: any[] = [];
   productosNoCargados: any[] = [];
   productosNoDisponibles: any[] = [];
-  carroGuardado: any;
-  OC: any;
+  carroGuardado!: ISavedCart;
   total = 0;
 
   procesando = false;
@@ -46,15 +49,17 @@ export class PageCargaMasivaProdComponent implements OnInit {
   isExcel = false;
   totalesDistintos = false;
   idArchivo!: string;
-
   isVacio = isVacio;
 
   constructor(
-    private cartService: CartService,
+    // private cartService: CartService,
     private localS: LocalStorageService,
     private toast: ToastrService,
     // ServicesV2
-    private readonly sessionService: SessionService
+
+    private readonly sessionService: SessionService,
+    private readonly cartService: CartService,
+    private readonly geolocationServiceV2: GeolocationServiceV2
   ) {}
 
   ngOnInit() {
@@ -87,113 +92,58 @@ export class PageCargaMasivaProdComponent implements OnInit {
     if (this.procesando) {
       return;
     }
-    if (!this.extensionValida(this.archivo?.extension)) {
-      this.toast.error('Debe seleccionar un archivo Excel o PDF.');
+    if (!this.isValidExtension(this.archivo!.extension)) {
+      this.toast.error('Debe seleccionar un archivo Excel');
       return;
     }
 
-    this.userSession = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.userSession = this.sessionService.getSession();
     this.cartSession = this.localS.get('carroCompraB2B');
+    const selectedStore = this.geolocationServiceV2.getSelectedStore();
 
     const data = {
+      username: this.userSession.username ?? this.userSession.email,
+      branch: selectedStore.code,
+      documentId: this.userSession.documentId,
+      action: 'save', // Action (guardar,save or eliminar,delete)
       file: this.archivo?.archivo,
-      usuario: this.userSession.hasOwnProperty('username')
-        ? this.userSession.username
-        : this.userSession.email,
-      rut: this.userSession.documentId,
-      accion: 'guardar',
     };
 
     this.procesando = true;
     this.procesado = false;
-    if (this.isExcel) {
-      this.cartService.uploadExcel(data).subscribe(
-        async (resp: ResponseApi) => {
-          await this.procesaRespuesta(resp);
-        },
-        (e) => {
-          this.alertClass = 'alert alert-danger';
-          this.mensaje = 'Ha ocurrido un error al conectarse al servidor';
-          this.procesando = false;
-          this.procesado = true;
-        }
-      );
-    } else {
-      this.cartService.uploadOC(data).subscribe(
-        async (resp: ResponseApi) => {
-          await this.procesaRespuesta(resp);
-        },
-        (e) => {
-          this.alertClass = 'alert alert-danger';
-          this.mensaje = 'Ha ocurrido un error al conectarse al servidor';
-          this.procesando = false;
-          this.procesado = true;
-        }
-      );
-    }
+
+    this.cartService.uploadExcel(data).subscribe({
+      next: async (resp: IUploadResponse) => {
+        await this.procesaRespuesta(resp);
+      },
+      error: (e) => {
+        this.alertClass = 'alert alert-danger';
+        this.mensaje = 'Ha ocurrido un error al conectarse al servidor';
+        this.procesando = false;
+        this.procesado = true;
+      },
+    });
   }
 
-  extensionValida(extension: any) {
-    if (
-      extension.toLowerCase() === 'xls' ||
-      extension.toLowerCase() === 'xlsx'
-    ) {
-      this.isExcel = true;
-      return true;
-    } else if (extension.toLowerCase() === 'pdf') {
-      return true;
-    } else {
-      return false;
-    }
+  isValidExtension(extension: string) {
+    return (
+      extension.toLowerCase() === 'xls' || extension.toLowerCase() === 'xlsx'
+    );
   }
 
-  async procesaRespuesta(r: any) {
-    if (r.error) {
-      this.alertClass = 'alert alert-danger';
-      this.mensaje =
-        r.errorDetalle === 'Error: limite'
-          ? 'Ha llegado al límite de 17 artículos en el carro.'
-          : r.msg;
-      this.procesando = false;
-      this.procesado = true;
-      return;
-    }
+  async procesaRespuesta(response: IUploadResponse) {
+    this.productosCargados = response.data.products;
+    this.productosNoCargados = response.productsNotFound;
+    this.carroGuardado = response.savedCart;
 
-    this.productosCargados = r.data.productos;
-    this.productosNoCargados = r['productosNoEncontrados'];
-    this.carroGuardado = r['carroGuardado'];
-    this.OC = r['OC'];
+    this.productosNoDisponibles = response.data.products.filter((prod) => {
+      return !prod.delivery.homeDelivery && !prod.delivery.pickup;
+    });
+
     this.total = this.productosCargados.reduce(
-      (acum: any, prod: any) => acum + prod.precio * prod.cantidad,
+      (acum: any, prod: any) => acum + prod.price * prod.quantity,
       0
     );
-
-    /* Se guarda datos de OC en localStorage junto con PDF */
-    if (!this.isExcel) {
-      const obj = {
-        pdf: await filetoBase64(this.archivo?.archivo),
-        nombre: this.archivo?.nombre,
-        numero: this.OC.orden_compra,
-        total: this.OC.total,
-      };
-      this.localS.set('ordenCompraCargada', obj);
-      if (this.total != this.OC.total) {
-        this.totalesDistintos = true;
-      }
-    }
-
-    /*  Se validan totales */
-    /* Se filtran los productos no disponibles */
-    this.productosNoDisponibles = this.productosCargados.filter(
-      (p) => !p.entregas.despacho && !p.entregas.retiroTienda
-    );
-    // const aux = this.productosCargados;
-    // this.productosNoDisponibles = this.productosCargados.filter((p, i) => {
-    //     if (!p.entregas.despacho && !p.entregas.retiroTienda) {
-    //         this.productosCargados.splice(i, 1);
-    //         return p;
-    //     }
-    // });
 
     if (
       this.productosCargados.length > 0 &&
@@ -201,9 +151,7 @@ export class PageCargaMasivaProdComponent implements OnInit {
     ) {
       this.alertClass = 'alert alert-success';
       this.mensaje = 'Se cargaron todos los productos correctamente.';
-    }
-
-    if (
+    } else if (
       this.productosCargados.length > 0 &&
       this.productosNoCargados.length > 0
     ) {
@@ -211,9 +159,7 @@ export class PageCargaMasivaProdComponent implements OnInit {
       this.mensaje = `Se cargaron ${this.productosCargados.length} de ${
         this.productosCargados.length + this.productosNoCargados.length
       } productos.`;
-    }
-
-    if (
+    } else if (
       this.productosCargados.length === 0 &&
       this.productosNoCargados.length > 0
     ) {
