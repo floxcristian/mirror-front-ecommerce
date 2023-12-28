@@ -69,7 +69,7 @@ export type IArticleResponse = IArticle & {
   lineBossId: string; // +
   manufacturer: string; // +
   matrix: IMatrixItem[]; // +
-  metaTags: MetaTag[]; // +
+  // metaTags: MetaTag[]; // +
   partNumber: string; // +
   popularity: number; // +
   price: number; // +

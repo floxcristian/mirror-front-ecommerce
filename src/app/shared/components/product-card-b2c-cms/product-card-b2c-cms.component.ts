@@ -30,6 +30,7 @@ import { isVacio } from '../../utils/utilidades';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { CartService } from '@core/services-v2/cart.service';
 import { CartV2Service } from '@core/services-v2/cart/cart.service';
+import { MetaTag } from '@core/models-v2/article/article-response.interface';
 
 @Component({
   selector: 'app-product-card-b2c-cms',
@@ -51,9 +52,7 @@ export class ProductCardB2cCmsComponent implements OnInit {
   @Input() set product(value: IArticle) {
     this.productData = value;
     this.productData.name = this.root.limpiarNombres(this.productData.name);
-    //comentado por el momento
-    // this.quality = this.root.setQuality(this.productData);
-    // this.root.limpiaAtributos(value);
+    this.generateTags(this.productData.metaTags)
   }
 
   @Input() layout:
@@ -70,16 +69,13 @@ export class ProductCardB2cCmsComponent implements OnInit {
   usuario!: ISession;
   porcentaje = 0;
   addingToCart = false;
-  addingToCompare = false;
-  showingQuickview = false;
   urlImage = environment.urlFotoOmnichannel;
-  // productData!: Product & { url?: SafeUrl; gimage?: SafeUrl };
-  // productData!: any  // momentaneo
-  productData!: IArticle;
-  quality: any = 0;
-  precioProducto = 0;
+  productData!:  IArticle & { url?: SafeUrl; gimage?: SafeUrl }
   today = Date.now();
   IVA = 0.19;
+
+  cyber:number = 0
+  cyberMonday:number = 0
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -111,14 +107,16 @@ export class ProductCardB2cCmsComponent implements OnInit {
     this.destroy$.complete();
   }
 
-  cargaPrecio() {
-    //necesario todavia realizar esta acción ????
-    if (this.productData.priceInfo.commonPrice === undefined) {
-      this.productData.priceInfo.commonPrice =
-        this.productData.priceInfo.commonPrice;
-      // this.productData.precio_escala = this.productData.precio.precio_escala;
+  generateTags(tags:MetaTag[] | undefined){
+    if(tags){
+      tags.forEach((tag:MetaTag) =>{
+        if(tag.code === 'cyber') this.cyber = tag.value
+        if(tag.code === 'cyberMonday') this.cyberMonday = tag.value
+      })
     }
+  }
 
+  cargaPrecio() {
     if (this.home) {
       if (
         (this.productData.priceInfo.commonPrice || 0) >
@@ -145,10 +143,9 @@ export class ProductCardB2cCmsComponent implements OnInit {
       'https://images.implementos.cl/img/watermarked/' +
       this.productData.sku +
       '-watermarked.jpg';
-    // FIXME: revisar si se utilizan estas variables
-    // this.productData.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    // this.productData.gimage =
-    //   this.sanitizer.bypassSecurityTrustResourceUrl(gimage);
+    this.productData.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    this.productData.gimage =
+      this.sanitizer.bypassSecurityTrustResourceUrl(gimage);
   }
 
   addToCart(): void {
