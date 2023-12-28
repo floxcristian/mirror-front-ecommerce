@@ -15,11 +15,9 @@ import {
   ViewChild,
 } from '@angular/core';
 // Libs
-import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import * as $ from 'jquery';
 // Services
-import { CompareService } from './shared/services/compare.service';
 import { CurrencyService } from './shared/services/currency.service';
 import { SeoService } from './shared/services/seo.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
@@ -52,8 +50,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: Object,
     public router: Router,
-    private toastr: ToastrService,
-    private compare: CompareService,
     private zone: NgZone,
     private scroller: ViewportScroller,
     private currency: CurrencyService,
@@ -155,12 +151,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.showAlertCart();
       }
     );
-    //FIXME: revisar mejor
-    // this.compare.onAdding$.subscribe((product) => {
-    //   this.toastr.success(
-    //     `Producto "${product.nombre}" agregado para comparar!`
-    //   );
-    // });
   }
 
   private onChangeStore(): void {
