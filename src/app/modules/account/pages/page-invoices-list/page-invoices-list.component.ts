@@ -40,7 +40,7 @@ export class PageInvoicesListComponent implements OnInit {
     // Services V2
     private readonly sessionService: SessionService
   ) {
-    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
 
     this.clients.buscarFacturas(this.usuario.documentId).subscribe(
       (r: any) => {

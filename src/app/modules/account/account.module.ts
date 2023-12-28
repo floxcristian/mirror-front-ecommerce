@@ -12,7 +12,6 @@ import { AccountRoutingModule } from './account-routing.module';
 // Modules
 import { SharedModule } from '../../shared/shared.module';
 // Pages
-import { PageAddressesListComponent } from './pages/page-addresses-list/page-addresses-list.component';
 import { PageDashboardComponent } from './pages/page-dashboard/page-dashboard.component';
 import { PageLoginComponent } from './pages/page-login/page-login.component';
 import { PageOrdersListComponent } from './pages/page-orders-list/page-orders-list.component';
@@ -61,7 +60,6 @@ import { CardDashboardNoChartComponent } from '../../shared/components/card-dash
 @NgModule({
   declarations: [
     LayoutComponent,
-    PageAddressesListComponent,
     PageDashboardComponent,
     PageLoginComponent,
     PageOrdersListComponent,

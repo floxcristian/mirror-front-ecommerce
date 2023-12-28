@@ -10,7 +10,6 @@ import { PageInvoicesListComponent } from './pages/page-invoices-list/page-invoi
 import { PageOvsListComponent } from './pages/page-ovs-list/page-ovs-list.component';
 import { PageUsuariosComponent } from './pages/page-usuarios/page-usuarios.component';
 import { PageProductsCategoriesComponent } from './pages/page-products-categories/page-products-categories.component';
-import { PageAddressesListComponent } from './pages/page-addresses-list/page-addresses-list.component';
 import { PageProfileComponent } from './pages/page-profile/page-profile.component';
 import { PagePasswordComponent } from './pages/page-password/page-password.component';
 import { PagePendingOrdersComponent } from './pages/page-pending-orders/page-pending-orders.component';
@@ -48,10 +47,6 @@ const routes: Routes = [
       {
         path: 'portal-de-pagos',
         component: PagePaymentPortalComponent,
-      },
-      {
-        path: 'mis-direcciones',
-        component: PageAddressesListComponent,
       },
       {
         path: 'historial-de-compras',
