@@ -30,7 +30,7 @@
             class="text-truncate"
             (click)="seleccionar()"
             [routerLink]="item.url"
-            [queryParams]="{ filter_MARCA: item.url.at(-1) }"
+            [queryParams]="{ filter_MARCA: item.url.at(-1), tiendaOficial: 1 }"
           >
             {{ item.label | titlecase }}
           </div>

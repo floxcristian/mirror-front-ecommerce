@@ -26,4 +26,12 @@ export class BlockBrandsB2cComponent {
     rtl: this.direction.isRTL(),
   };
   constructor(private direction: DirectionService) {}
+
+  getParamTiendaOficial(brand: string) {
+    if (['marcopolo', 'scania', 'randon'].includes(brand)) {
+      return '&tiendaOficial=1';
+    } else {
+      return '';
+    }
+  }
 }
