@@ -16,6 +16,7 @@ import { MpSimuladorHeaderFiltrosMagicos } from './magic-filters/mp-simulador-he
 import { LogisticPromiseApiService } from '@core/services-v2/logistic-promise/logistic-promise.service';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { ModalDeliveryComponent } from './components/modal-delivery/modal-delivery.component';
+import { ModalPickupComponent } from './components/modal-pickup/modal-pickup.component';
 
 @Component({
   selector: 'app-despacho',
@@ -27,12 +28,8 @@ export class DespachoComponent implements OnInit {
   @Input() selectedStore!: ISelectedStore;
   @Input() cantidad: number = 0;
 
-  tiendaSeleccionada: any = [];
-
   MODOS = { RETIRO_TIENDA: 'pickup', DESPACHO: 'delivery' };
   filtrosMagicosRetiroTienda: any;
-  filtrosMagicosDespacho: any;
-  filtrosDespacho: any = null;
   filtrosRetiroTienda: any = {};
   loadPromesas: boolean = false;
   modalRef!: BsModalRef;
@@ -57,14 +54,6 @@ export class DespachoComponent implements OnInit {
 
   private async generateChangeGeneralData(): Promise<void> {
     let data: any;
-    console.log(
-      '🚀 ~ file: despacho.component.ts:63 ~ DespachoComponent ~ generateChangeGeneralData ~ this.modo:',
-      this.modo
-    );
-    console.log(
-      '🚀 ~ file: despacho.component.ts:63 ~ DespachoComponent ~ generateChangeGeneralData ~ this.MODOS.RETIRO_TIENDA:',
-      this.MODOS.RETIRO_TIENDA
-    );
     if (this.modo === this.MODOS.RETIRO_TIENDA) {
       this.loadPromesas = true;
       data = {
@@ -112,13 +101,6 @@ export class DespachoComponent implements OnInit {
       }
 
       this.loadPromesas = false;
-    } else if (this.modo === this.MODOS.DESPACHO) {
-      data = {
-        modo: this.modo,
-        codTienda: this.filtrosDespacho.localidad
-          ? this.filtrosDespacho.localidad.nombre
-          : '',
-      };
     }
 
     if (data.codTienda) {
@@ -145,14 +127,6 @@ export class DespachoComponent implements OnInit {
     this.loadPromesas = false;
   }
 
-  onFiltrosCambiadosDespacho(filtros: any): void {
-    this.filtrosDespacho = filtros;
-    if (this.filtrosDespacho.localidad != null) {
-      this.generateChangeGeneralData();
-    } else this.filtrosDespacho = null;
-  }
-  /// FIXME: fix, no funciona bien
-
   onFiltrosCambiadosRetiroTienda(filtros: any): void {
     this.filtrosRetiroTienda = filtros;
     this.generateChangeGeneralData();
@@ -176,11 +150,6 @@ export class DespachoComponent implements OnInit {
       this.geolocationApiService,
       this.selectedStore
     );
-    this.filtrosMagicosDespacho = MpSimuladorHeaderFiltrosMagicos(
-      this.MODOS.DESPACHO,
-      this.geolocationApiService,
-      this.selectedStore
-    );
     this.modalRef = this.modalService.show(template, {
       class: 'modal-despacho modal-dialog-centered',
       backdrop: 'static',
@@ -188,12 +157,31 @@ export class DespachoComponent implements OnInit {
     });
   }
 
+  /**
+   * Abrir modal con fechas de disponibilidad de despacho a domicilio.
+   */
   openDeliveryModal(): void {
     this.modalService.show(ModalDeliveryComponent, {
       class: 'modal-despacho modal-dialog-centered',
       backdrop: 'static',
       keyboard: false,
       initialState: {
+        productSku: this.product.sku,
+        productQuantity: this.cantidad,
+      },
+    });
+  }
+
+  /**
+   * Abrir modal con fechas de disponibilidad de retiro en tienda.
+   */
+  openPickupModal(): void {
+    this.modalService.show(ModalPickupComponent, {
+      class: 'modal-despacho modal-dialog-centered',
+      backdrop: 'static',
+      keyboard: false,
+      initialState: {
+        selectedStore: this.selectedStore,
         productSku: this.product.sku,
         productQuantity: this.cantidad,
       },

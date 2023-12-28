@@ -5,6 +5,8 @@ import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 // Env
 import { environment } from '@env/environment';
+// Models
+import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 declare const L: any;
 
 @Component({
@@ -13,15 +15,14 @@ declare const L: any;
   styleUrls: ['./mapa-fichas.component.scss'],
 })
 export class MapaFichasComponent implements OnInit {
-  @Input() tiendaSeleccionada: any;
-  @Input() stock: number = 0;
+  @Input() selectedStore!: IStore;
+  @Input() stock!: number;
 
   accessToken = environment.tokenMapbox;
   map: any;
   Layer: any;
 
   ngOnInit(): void {
-    this.tiendaSeleccionada;
     fromEvent(window, 'resize')
       .pipe(debounceTime(200))
       .subscribe((event) => {});
@@ -51,33 +52,21 @@ export class MapaFichasComponent implements OnInit {
     this.getpointer();
   }
 
+  /**
+   * Setear marcador de la tienda en el mapa.
+   */
   private getpointer(): void {
-    const array: any = [];
-    const jsonFeatures: any = [];
-    array.push(this.tiendaSeleccionada);
+    const feature = {
+      type: 'Feature',
+      properties: this.selectedStore,
+      geometry: {
+        type: 'Point',
+        coordinates: [this.selectedStore.lng, this.selectedStore.lat],
+      },
+    };
 
-    for (let i = 0; i < array.length; i++) {
-      const item: any = array[i];
-
-      const lat = item.lat;
-      const lon = item.lon;
-
-      const feature = {
-        type: 'Feature',
-        properties: item,
-        geometry: {
-          type: 'Point',
-          coordinates: [lon, lat],
-        },
-      };
-
-      jsonFeatures.push(feature);
-    }
-
-    const geoJson = { type: 'FeatureCollection', features: jsonFeatures };
-    this.Layer = L.geoJson(geoJson);
+    this.Layer = L.geoJson({ type: 'FeatureCollection', features: [feature] });
     this.map.addLayer(this.Layer);
     this.map.fitBounds(this.Layer.getBounds());
-    this.Layer.on('click', (e: any) => {});
   }
 }

@@ -1,10 +1,13 @@
+// Angular
 import { Component, Input, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+// Models
+import { IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
+// Libs
 import { ToastrService } from 'ngx-toastr';
-
+// Services
 import { RootService } from '../../../../shared/services/root.service';
 import { CartService } from '@core/services-v2/cart.service';
-import { IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
-import { FormControl } from '@angular/forms';
 
 interface Item {
   ProductCart: IShoppingCartProduct;
