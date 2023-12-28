@@ -26,6 +26,7 @@ import { ProductComponent } from '../../shared/components/product/product.compon
 import { ProductStockComponent } from '../../shared/components/product-stock/product-stock.component';
 import { ModalDeliveryComponent } from './components/despacho/components/modal-delivery/modal-delivery.component';
 import { ModalPickupComponent } from './components/despacho/components/modal-pickup/modal-pickup.component';
+import { ModalPickupTodayComponent } from './components/despacho/components/modal-pickup-today/modal-pickup-today.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { ModalPickupComponent } from './components/despacho/components/modal-pic
     ComentariosComponent,
     ModalDeliveryComponent,
     ModalPickupComponent,
+    ModalPickupTodayComponent,
   ],
   imports: [
     CommonModule,
