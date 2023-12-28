@@ -43,31 +43,6 @@ export class WidgetFiltersComponent {
     }
   }
 
-  @Input() set removableFiltersFlota(arr: any) {
-    this.removableFiltersFlotaArray = [];
-    console.log('arr filters flota', arr);
-    if (arr) {
-      console.log('arr filters flota', arr);
-      Object.keys(arr).map((field, index) => {
-        if (Array.isArray(arr[field])) {
-          arr[field].map((e: any) => {
-            const obj = {
-              field,
-              value: e,
-            };
-            this.removableFiltersFlotaArray.push(obj);
-          });
-        } else {
-          const obj = {
-            field,
-            value: arr[field],
-          };
-          this.removableFiltersFlotaArray.push(obj);
-        }
-      });
-    }
-  }
-
   @Input() removableCategory: any = [];
 
   @Output() filtersSelected: EventEmitter<any> = new EventEmitter();
@@ -75,7 +50,6 @@ export class WidgetFiltersComponent {
   @Output() clearAll: EventEmitter<any> = new EventEmitter();
 
   removableFiltersArray: any = [];
-  removableFiltersFlotaArray: any = [];
 
   isPlatformBrowser = isPlatformBrowser(this.platformId);
   rightToLeft = false;
