@@ -65,6 +65,7 @@ import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
 import { environment } from '@env/environment';
 import { ICreateGuest } from '@core/models-v2/customer/create-guest.interface';
 import { CustomerService } from '@core/services-v2/customer.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
 
 export let browserRefresh = false;
 declare let dataLayer: any;
@@ -1015,15 +1016,11 @@ export class PageCartShippingComponent implements OnInit {
     this.recibeOtraname = '';
   }
 
-  reciboPedido(recibe: any) {
+  reciboPedido(recibe: IReceive) {
     this.recibeOtra = false;
     this.recibeOtraname =
-      recibe.first_name +
-      ' ' +
-      recibe.last_name +
-      ', Celular: ' +
-      recibe.phone;
-    this.localS.set('recibe', recibe);
+      recibe.firstName + ' ' + recibe.lastName + ', Celular: ' + recibe.phone;
+    this.localS.set(StorageKey.recibe, recibe);
   }
 
   removeDespacho() {
