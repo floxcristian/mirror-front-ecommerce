@@ -22,7 +22,6 @@ import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
-import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { IShoppingCartProductOrigin } from '@core/models-v2/cart/shopping-cart.interface';
 // Services
 import { RootService } from '../../services/root.service';
@@ -31,6 +30,7 @@ import { isVacio } from '../../utils/utilidades';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { CartService } from '@core/services-v2/cart.service';
 import { CartV2Service } from '@core/services-v2/cart/cart.service';
+import { MetaTag } from '@core/models-v2/article/article-response.interface';
 
 @Component({
   selector: 'app-product-card-b2c-ficha',
@@ -54,9 +54,7 @@ export class ProductCardB2cFichaComponent implements OnInit {
   @Input() set product(value: any) {
     this.productData = value;
     this.productData.name = this.root.limpiarNombres(this.productData.name);
-    //comentado por el momento
-    // this.quality = this.root.setQuality(this.productData);
-    // this.root.limpiaAtributos(value);
+    this.generateTags(this.productData.metaTags)
   }
 
   @Input() layout:
@@ -73,14 +71,12 @@ export class ProductCardB2cFichaComponent implements OnInit {
   usuario!: ISession;
   porcentaje = 0;
   addingToCart = false;
-  addingToCompare = false;
-  showingQuickview = false;
   urlImage = environment.urlFotoOmnichannel;
-  productData!: IArticle;
-  // productData!: IArticleResponse & { url?: SafeUrl; gimage?: SafeUrl };
-  quality: any = 0;
-  precioProducto = 0;
+  productData!: IArticle  & { url?: SafeUrl; gimage?: SafeUrl };
   today = Date.now();
+
+  cyber:number = 0
+  cyberMonday:number = 0
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -111,12 +107,16 @@ export class ProductCardB2cFichaComponent implements OnInit {
     this.destroy$.complete();
   }
 
-  cargaPrecio() {
-    // if (this.productData.priceInfo.commonPrice === undefined) {
-    //   this.productData.priceInfo.commonPrice = this.productData.priceInfo.commonPrice;
-    //   this.productData.priceInfo.scalePrice = this.productData.priceInfo.scalePrice;
-    // }
+  generateTags(tags:MetaTag[] | undefined){
+    if(tags){
+      tags.forEach((tag:MetaTag) =>{
+        if(tag.code === 'cyber') this.cyber = tag.value
+        if(tag.code === 'cyberMonday') this.cyberMonday = tag.value
+      })
+    }
+  }
 
+  cargaPrecio() {
     if (this.home) {
       if (
         this.productData.priceInfo.commonPrice ||
@@ -143,10 +143,9 @@ export class ProductCardB2cFichaComponent implements OnInit {
       'https://images.implementos.cl/img/watermarked/' +
       this.productData.sku +
       '-watermarked.jpg';
-    // FIXME: revisar si se utilizan estas variables
-    // this.productData.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    // this.productData.gimage =
-    //   this.sanitizer.bypassSecurityTrustResourceUrl(gimage);
+    this.productData.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    this.productData.gimage =
+      this.sanitizer.bypassSecurityTrustResourceUrl(gimage);
   }
 
   addToCart(): void {

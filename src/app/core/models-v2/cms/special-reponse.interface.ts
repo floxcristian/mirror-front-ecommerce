@@ -1,3 +1,4 @@
+import { MetaTag } from '../article/article-response.interface';
 import { IShoppingCartProductOrigin } from '../cart/shopping-cart.interface';
 
 export interface ISpecialResponse {
@@ -54,6 +55,7 @@ export interface IArticle {
   origin: IShoppingCartProductOrigin; // + /// ESTO LO AGREGARON A MANO?
   cyber: number; // +
   description: string; // +
+  metaTags?: MetaTag[];
 }
 
 export interface IImage {
