@@ -13,7 +13,7 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <input
-                  formControlName="nombre"
+                  formControlName="firstName"
                   type="text"
                   class="form-control"
                   placeholder="Nombres*"
@@ -24,7 +24,7 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <input
-                  formControlName="apellido"
+                  formControlName="lastName"
                   type="text"
                   class="form-control"
                   placeholder="Apellidos*"
@@ -73,7 +73,7 @@
                     </div>
                   </div>
                   <input
-                    formControlName="telefono"
+                    formControlName="phone"
                     type="text"
                     maxLength="9"
                     class="form-control"
@@ -83,8 +83,8 @@
 
                 <p
                   *ngIf="
-                    formRecibe.controls['telefono'].invalid &&
-                    formRecibe.controls['telefono'].touched
+                    formRecibe.controls['phone'].invalid &&
+                    formRecibe.controls['phone'].touched
                   "
                   class="text-error-form-2"
                 >
@@ -97,7 +97,7 @@
                 <label style="color: #0063b9">Rut*</label>
                 <input
                   type="text"
-                  formControlName="rut"
+                  formControlName="documentId"
                   class="form-control"
                   placeholder="Rut*"
                   formatRut
@@ -110,7 +110,7 @@
                   El RUT ingresado no es válido
                 </p> -->
                 <p
-                  *ngIf="formRecibe.controls['rut'].touched"
+                  *ngIf="formRecibe.controls['documentId'].touched"
                   class="text-error-form-2 pull-right"
                 >
                   El RUT ingresado no es válido

@@ -966,10 +966,25 @@ export class CartService {
     });
   }
 
+  updateReceive(params: {
+    shoppingCartId: string;
+    receive?: {
+      documentId?: string;
+      firstName?: string;
+      lastName?: string;
+      phone?: string;
+    };
+  }): Observable<IShoppingCart> {
+    const { shoppingCartId } = params;
+    return this.http.put<IShoppingCart>(
+      `${API_CART}/${shoppingCartId}/receive`,
+      {
+        receive: params.receive,
+      }
+    );
+  }
 
-
-
-  uploadExcel(data:any ): Observable<IUploadResponse>  {
+  uploadExcel(data: any): Observable<IUploadResponse> {
     const formData: FormData = new FormData();
     formData.append('username', data.username);
     formData.append('branch', data.branch);
@@ -978,8 +993,9 @@ export class CartService {
     if (data.file) {
       formData.append('file', data.file);
     }
-   return this.http.post<IUploadResponse>(`${API_CART}/upload-article-excel`, formData);
+    return this.http.post<IUploadResponse>(
+      `${API_CART}/upload-article-excel`,
+      formData
+    );
   }
-
-
 }

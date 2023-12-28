@@ -335,8 +335,9 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.cartService.load();
 
     const subscription = this.cartService.cartDataSubject$.subscribe(
-      (cartSession) => {
+      async (cartSession) => {
         this.cartSession = cartSession;
+        await this.updateReceive();
         this.setDireccionOrTiendaRetiro();
       }
     );
@@ -432,6 +433,28 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     }
   }
 
+  private async updateReceive() {
+    if (!this.cartSession) {
+      return;
+    }
+    const shoppingCartId = this.cartSession._id!.toString();
+    const receive = this.receiveStorageService.get();
+    const shoppingCart = await firstValueFrom(
+      this.cartService.updateReceive({
+        shoppingCartId,
+        receive: receive?.documentId
+          ? {
+              documentId: receive.documentId,
+              firstName: receive.firstName ?? '',
+              lastName: receive.lastName ?? '',
+              phone: receive.phone ?? '',
+            }
+          : {},
+      })
+    );
+    this.cartSession = shoppingCart;
+  }
+
   private setDireccionOrTiendaRetiro() {
     // LOGICA PARA OBTENER DESPACHO A MOSTRAR
     if (!this.cartSession || !this.cartSession.shipment) {
@@ -459,9 +482,9 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         }
         if (this.guest) {
           //si es usuario invitado, se obtiene la direccion
-          this.direccionDespacho.street = this.guest.street ?? '';
-          this.direccionDespacho.city = this.guest.commune ?? '';
-          this.direccionDespacho.number = this.guest.number ?? '';
+          this.direccionDespacho.street = this.guest?.street ?? '';
+          this.direccionDespacho.city = this.guest?.commune ?? '';
+          this.direccionDespacho.number = this.guest?.number ?? '';
           break;
         }
         break;
