@@ -9,7 +9,6 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
 // Libs
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,7 +16,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { ProductFilter } from '../../../shared/interfaces/product-filter';
 // Services
 import { DirectionService } from '../../../shared/services/direction.service';
-import { ProductsService } from '../../../shared/services/products.service';
 
 @Component({
   selector: 'app-widget-filters',
@@ -61,10 +59,7 @@ export class WidgetFiltersComponent {
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,
     private direction: DirectionService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private modalService: BsModalService,
-    private productsService: ProductsService
+    private modalService: BsModalService
   ) {
     this.rightToLeft = this.direction.isRTL();
     this.id = uuidv4();
