@@ -62,6 +62,9 @@ export class ModalDeliveryComponent {
           this.isLoading = false;
           this.deliveryAvailabilities = availabilities;
         },
+        error: () => {
+          this.isLoading = false;
+        },
       });
   }
 }

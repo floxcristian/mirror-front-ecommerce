@@ -26,11 +26,11 @@ export class LogisticPromiseApiService {
    * Obtener tiendas.
    * @returns
    */
-  getStores(): Observable<any> {
+  /*getStores(): Observable<any> {
     return this.http
       .get<any>(`${API_LOGISTIC_PROMISE}/stores`)
       .pipe(map((res) => res.data));
-  }
+  }*/
 
   /**
    * Obtener localidades.
@@ -46,7 +46,7 @@ export class LogisticPromiseApiService {
    * @param products
    * @returns
    */
-  getLogisticPromise(
+  /*getLogisticPromise(
     mode: string,
     location: any,
     products: IProductRequest[]
@@ -60,7 +60,7 @@ export class LogisticPromiseApiService {
       location,
       article,
     });
-  }
+  }*/
 
   /**
    * Obtener disponibilidad de despacho a domicilio.
