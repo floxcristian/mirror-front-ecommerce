@@ -4,7 +4,7 @@
   <owl-carousel-o class="marcas" [options]="carouselOptions" appOwlPreventClick>
     <ng-container *ngFor="let item of brands" >
         <ng-template carouselSlide>
-          <a href="/inicio/productos/todos?filter_MARCA={{ item.brand | uppercase }}">
+          <a href="/inicio/productos/todos?filter_MARCA={{ item.brand | uppercase }}{{ getParamTiendaOficial(item.brand) }}">
             <img [src]="item.image" alt="marcas" class="lazyload" style="width: 100px" />
           </a>
         </ng-template>

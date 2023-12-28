@@ -55,14 +55,14 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   breadcrumbs: any[] = [];
   productosTemp = [];
   // Paginacion
-  totalPaginas = 0;
-  PagDesde = 0;
-  PagHasta = 0;
-  PagTotalRegistros = 0;
-  productosPorPagina = 12;
-  cargandoCatalogo = true;
-  cargandoProductos = false;
-  currentPage = 1;
+  totalPaginas:number = 0;
+  PagDesde:number = 0;
+  PagHasta:number = 0;
+  PagTotalRegistros:number = 0;
+  productosPorPagina:number = 12;
+  cargandoCatalogo:boolean = true;
+  cargandoProductos:boolean = false;
+  currentPage:number = 1;
 
   // Filtro
   parametrosBusqueda!: IElasticSearch;
@@ -86,8 +86,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     'TIPO ESTADO',
   ];
 
-  visibleFilter = false;
-  filtrosOculto = true;
+  visibleFilter:boolean = false;
+  filtrosOculto:boolean = true;
   scrollPosition!: number;
   innerWidth: number;
 
@@ -149,18 +149,21 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe((query) => {
       // Seteamos el origen del buscador
       this.setOrigenes();
-      this.marca_tienda = query['filter_MARCA'] || '';
-
-      if (this.marca_tienda) {
-        let banner_local: any = this.localS.get('bannersMarca');
-        if (
-          banner_local &&
-          banner_local.marca?.toLowerCase() ===
-            this.marca_tienda.toLocaleLowerCase()
-        )
-          this.banners = banner_local;
-        else this.banners = null;
-      } else this.banners = null;
+      if (query['tiendaOficial']) {
+        this.marca_tienda = query['filter_MARCA'] ? query['filter_MARCA'] : '';
+        if (this.marca_tienda) {
+          let banner_local: any = this.localS.get('bannersMarca');
+          if (
+            banner_local &&
+            banner_local.marca?.toLowerCase() ===
+              this.marca_tienda.toLocaleLowerCase()
+          )
+            this.banners = banner_local;
+          else this.banners = null;
+        } else this.banners = null;
+      }else {
+        this.marca_tienda = '';
+      }
 
       this.buscadorService.filtrosVisibles(false);
 
@@ -710,7 +713,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     for (const key in query) {
       if (Object.prototype.hasOwnProperty.call(query, key)) {
         const element = query[key];
-        resp = { ...resp, ...{ [key]: element } };
+        if (key !== 'tiendaOficial') {
+            resp = { ...resp, ...{ [key]: element } };
+        }
       }
     }
     return resp;
@@ -768,7 +773,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
 
   armaQueryParams(queryParams: any) {
     if (this.marca_tienda !== '')
-      queryParams = { ...queryParams, ...{ filter_MARCA: this.marca_tienda } };
+      queryParams = { ...queryParams, ...{ filter_MARCA: this.marca_tienda, tiendaOficial: 1 } };
     return queryParams;
   }
 
