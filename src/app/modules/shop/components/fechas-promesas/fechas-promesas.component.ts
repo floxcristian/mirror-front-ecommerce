@@ -1,7 +1,7 @@
 // Angular
 import { Component, Input } from '@angular/core';
 // Models
-import { ITripDate } from '@core/services-v2/logistic-promise/models/delivery-availability-response.interface';
+import { ITripDate } from '@core/services-v2/logistic-promise/models/availability-response.interface';
 
 @Component({
   selector: 'app-fechas-promesas',

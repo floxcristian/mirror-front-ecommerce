@@ -1,4 +1,4 @@
-export interface IDeliveryAvailabilityResponse {
+export interface IAvailabilityResponse {
   type: string;
   suppliedSkus: string[];
   unsuppliedSkus: string[];

@@ -362,6 +362,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         this.items = items;
       });
     this.cartSession = this.localS.get(StorageKey.carroCompraB2B);
+    await this.updateReceive();
     if (this.cartSession == null || this.cartSession.products?.length === 0) {
       this.router.navigate(['/', 'carro-compra']);
     }
