@@ -437,10 +437,26 @@ export class CartService {
   logisticPromise(
     request: GetLogisticPromiseRequest
   ): Observable<GetLogisticPromiseResponse> {
-    return this.http.post<GetLogisticPromiseResponse>(
-      `${API_CART}/logistic-promise`,
-      request
-    );
+    return this.http
+      .post<GetLogisticPromiseResponse>(
+        `${API_CART}/logistic-promise`,
+        request
+      )
+      .pipe(
+        map((r) => {
+          this.CartData = r.shoppingCart;
+
+          this.data.products = this.CartData.products;
+          /* se limpia OV cargada */
+          this.save();
+          this.calc();
+
+          return r;
+        }),
+        catchError((e) => {
+          throw new Error(e.message);
+        })
+      );
   }
 
   updateShippingType(type: any) {
