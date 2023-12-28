@@ -5,7 +5,7 @@ import { RootService } from '../../services/root.service';
 import { CartService } from '@core/services-v2/cart.service';
 import { IShoppingCartDetail } from '@core/models-v2/cart/shopping-cart-detail.interface';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
-import { IStore } from '@core/models-v2/logistic/store.interface';
+import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 
 @Component({
   selector: 'app-order-details',
@@ -24,21 +24,22 @@ export class OrderDetailsComponent {
   constructor(
     public root: RootService,
     // Services V2
-    private readonly geolocationApiService:GeolocationApiService,
-    private readonly cartService:CartService
+    private readonly geolocationApiService: GeolocationApiService,
+    private readonly cartService: CartService
   ) {}
 
   async getData(id: any) {
-
     this.cartService.getOneById(id).subscribe({
-      next: async(res)=>{
+      next: async (res) => {
         this.data = res;
         if (res.shoppingCart.shipment?.deliveryMode == 'delivery') {
           this.deliveryText = 'Despacho';
         } else {
-          let tiendas:IStore[] | any = await this.geolocationApiService.getStores().toPromise()
-          console.log('tieeendas',tiendas)
-          if(tiendas){
+          let tiendas: IStore[] | any = await this.geolocationApiService
+            .getStores()
+            .toPromise();
+          console.log('tieeendas', tiendas);
+          if (tiendas) {
             let tienda = tiendas.filter(
               (item: any) => item.code === this.data.shoppingCart.branchCode
             );
@@ -46,9 +47,9 @@ export class OrderDetailsComponent {
           }
         }
       },
-      error:(err)=>{
-        console.log(err)
-      }
-    })
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 }

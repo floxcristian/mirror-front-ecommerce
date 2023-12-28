@@ -3,12 +3,12 @@ import { Component } from '@angular/core';
 // Libs
 import { BsModalRef } from 'ngx-bootstrap/modal';
 // Models
-import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
-import { ITripDate } from '@core/services-v2/logistic-promise/models/delivery-availability-response.interface';
+import { ITripDate } from '@core/services-v2/logistic-promise/models/availability-response.interface';
 import { FiltrosMagicos } from '@shared/components/filtro-magico/interfaces/filtro-magico.interface';
 // Services
 import { LogisticPromiseApiService } from '@core/services-v2/logistic-promise/logistic-promise.service';
 import { DeliveryMagicFilter } from './delivery-magic-filter';
+import { ILocality } from '@core/services-v2/logistic-promise/models/locality.interface';
 
 @Component({
   selector: 'app-modal-delivery',
@@ -16,15 +16,12 @@ import { DeliveryMagicFilter } from './delivery-magic-filter';
   styleUrls: ['./modal-delivery.component.scss'],
 })
 export class ModalDeliveryComponent {
-  selectedStore!: ISelectedStore;
   productSku!: string;
   productQuantity!: number;
   magicFilters: FiltrosMagicos;
   deliveryAvailabilities: ITripDate[] = [];
-
   isLoading!: boolean;
-
-  filters: any;
+  selectedLocality!: ILocality;
 
   constructor(
     public readonly modalRef: BsModalRef,
@@ -40,29 +37,33 @@ export class ModalDeliveryComponent {
   onSelectCity(filters: any): void {
     console.log('onFiltersChange: ', filters);
     console.log(typeof filters);
-    this.filters = filters?.localidad ? filters : null;
-    if (this.filters) {
+    this.selectedLocality = filters?.localidad || null;
+    if (this.selectedLocality) {
       this.getAvailability();
-      // this.generateChangeGeneralData();
     }
   }
 
   /**
-   * Obtener fechas de disponibilidad.
+   * Obtener fechas de disponibilidad para despacho a domicilio.
    */
   getAvailability(): void {
-    this.isLoading = true;
     this.deliveryAvailabilities = [];
+    if (!this.selectedLocality) return;
+
+    this.isLoading = true;
     this.logisticPromiseApiService
       .getDeliveryAvailability({
-        location: this.filters.localidad.name,
-        regionCode: this.filters.localidad.regionCode,
+        location: this.selectedLocality.name,
+        regionCode: this.selectedLocality.regionCode.toString(),
         articles: [{ sku: this.productSku, quantity: this.productQuantity }],
       })
       .subscribe({
-        next: (dates) => {
+        next: (availabilities) => {
           this.isLoading = false;
-          this.deliveryAvailabilities = dates;
+          this.deliveryAvailabilities = availabilities;
+        },
+        error: () => {
+          this.isLoading = false;
         },
       });
   }

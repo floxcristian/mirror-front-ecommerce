@@ -10,7 +10,6 @@ import { environment } from '@env/environment';
 // Services
 import { RootService } from './root.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { isVacio } from '../utils/utilidades';
 // Libs
 import { ToastrService } from 'ngx-toastr';
 // Interfaces
@@ -101,7 +100,7 @@ export class CartService {
 
   tiendaPrecio: any = null;
   shippingType!: string;
-  IVA = environment.IVA || 0.19;
+  IVA = environment.IVA;
 
   constructor(
     private http: HttpClient,

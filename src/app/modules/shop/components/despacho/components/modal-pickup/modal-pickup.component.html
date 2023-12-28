@@ -1,8 +1,7 @@
 <div class="modal-header">
   <h5 class="modal-title pull-left">
     <font color="#0063b9">
-      <i class="fas fa-truck me-1" style="color: #00549d"></i> Despacho a
-      domicilio
+      <i class="fas fa-store me-1" style="color: #00549d"></i> Retiro en Tienda
     </font>
   </h5>
   <button type="button" class="btn" (click)="modalRef.hide()">
@@ -13,39 +12,54 @@
   <app-filtro-magico
     [filtros]="magicFilters"
     [closeOnSelect]="true"
-    (onFiltrosCambiados)="onSelectCity($event)"
+    (onFiltrosCambiados)="onSelectStore($event)"
   >
   </app-filtro-magico>
-
   <hr />
+
   <div
-    *ngIf="!deliveryAvailabilities.length && !selectedLocality"
+    *ngIf="availabilities.length"
+    class="col-sm-12"
+    style="margin-bottom: 10px"
+  >
+    <app-mapa-fichas
+      *ngIf="!isLoading"
+      [selectedStore]="currentSelectedStore"
+      [stock]="maxStock"
+    >
+    </app-mapa-fichas>
+  </div>
+
+  <div
+    *ngIf="!availabilities.length && !isLoading"
     class="dia-container-habilitado"
   >
     <div style="font-size: 14px; color: #00549d">
-      <i class="fas fa-info-circle fa-lg me-1"></i> Seleccione Localidad
+      <i class="fas fa-info-circle fa-lg me-1"></i> Retiro a Tienda no
+      disponible
     </div>
   </div>
-  <div
-    *ngIf="!deliveryAvailabilities.length && selectedLocality && !isLoading"
-    class="dia-container-habilitado"
-  >
+
+  <div *ngIf="isLoading" class="dia-container-habilitado">
     <div style="font-size: 14px; color: #00549d">
-      <i class="fas fa-info-circle fa-lg me-1"></i> Lo sentimos el producto no
-      tiene despacho para esta localidad, por favor intente con otra dirección
+      <i class="fas fa-info-circle fa-lg me-1"></i> Cargando Información
     </div>
   </div>
+
   <app-fechas-promesas
     *ngIf="!isLoading"
-    [promesas]="deliveryAvailabilities"
+    [promesas]="availabilities"
   ></app-fechas-promesas>
+
   <div
-    *ngIf="!isLoading && deliveryAvailabilities.length"
+    *ngIf="!isLoading"
     style="margin-top: 10px; background-color: #efefef"
     class="alert alert-secondary"
     role="alert"
   >
-    <strong> 08:00 a 19:00 hrs</strong>
+    <strong *ngIf="currentSelectedStore?.schedule">{{
+      currentSelectedStore.schedule
+    }}</strong>
   </div>
 </div>
 <div class="modal-footer justify-content-start">

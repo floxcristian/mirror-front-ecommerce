@@ -36,7 +36,9 @@ export class GeolocationApiService {
    * Obtener tiendas.
    */
   getStores(): Observable<IStore[]> {
-    return this.http.get<IStore[]>(`${API_LOGISTIC}/stores`);
+    return this.http
+      .get<IStore[]>(`${API_LOGISTIC}/stores`)
+      .pipe(map((stores) => stores.sort((a, b) => a.order - b.order)));
   }
 
   /**

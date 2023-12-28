@@ -25,6 +25,8 @@ import { FechasPromesasComponent } from './components/fechas-promesas/fechas-pro
 import { ProductComponent } from '../../shared/components/product/product.component';
 import { ProductStockComponent } from '../../shared/components/product-stock/product-stock.component';
 import { ModalDeliveryComponent } from './components/despacho/components/modal-delivery/modal-delivery.component';
+import { ModalPickupComponent } from './components/despacho/components/modal-pickup/modal-pickup.component';
+import { ModalPickupTodayComponent } from './components/despacho/components/modal-pickup-today/modal-pickup-today.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,8 @@ import { ModalDeliveryComponent } from './components/despacho/components/modal-d
     DetalleTecnicosComponent,
     ComentariosComponent,
     ModalDeliveryComponent,
+    ModalPickupComponent,
+    ModalPickupTodayComponent,
   ],
   imports: [
     CommonModule,
