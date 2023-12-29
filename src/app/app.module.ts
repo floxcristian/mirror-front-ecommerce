@@ -22,6 +22,8 @@ import { WidgetsModule } from './modules/widgets/widgets.module';
 // Interceptor
 import { LocalStorageService } from './core/modules/local-storage/local-storage.service';
 import { LocalStorageModule } from './core/modules/local-storage/local-storage.module';
+// SSR
+import { provideClientHydration } from '@angular/platform-browser';
 
 @NgModule({
   declarations: [AppComponent],
@@ -40,6 +42,7 @@ import { LocalStorageModule } from './core/modules/local-storage/local-storage.m
     CoreModule,
   ],
   providers: [
+    provideClientHydration(),
     { provide: 'googleTagManagerId', useValue: 'GTM-M6TH726' },
     { provide: LOCALE_ID, useValue: 'CLP' },
 

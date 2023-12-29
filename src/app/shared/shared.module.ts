@@ -87,7 +87,6 @@ import { LoadingElementComponent } from './components/loading-element/loading-el
 import { ProductCardB2cFichaComponent } from './components/product-card-b2c-ficha/product-card-b2c-ficha.component';
 import { AddContactModalComponent } from './components/add-contact-modal/add-contact-modal.component';
 import { UpdateContactModalComponent } from './components/update-contact-modal/update-contact-modal.component';
-import { CountdownTimerModule } from './../../../projects/countdown-timer/src/lib/countdown-timer.module';
 import { ProductCardB2cCmsComponent } from './components/product-card-b2c-cms/product-card-b2c-cms.component';
 import { ButtonsSlideshowComponent } from './components/buttons-slideshow/buttons-slideshow.component';
 import { ButtonComponent } from './components/buttons-slideshow/components/button/button.component';
@@ -96,6 +95,7 @@ import { PipesModule } from './pipes/pipes.module';
 import { BlockHeaderComponent } from '../modules/blocks/components/block-header/block-header.component';
 import { ModalScalePriceComponent } from './components/modal-scale-price/modal-scale-price.component';
 import { RelativeTimePipe } from './pipes-v2/relative-time.pipe';
+import { CountdownTimerModule } from './components/countdown-timer/countdown-timer.module';
 
 const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
 const NGU_CAROUSEL_MODULES = [

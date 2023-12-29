@@ -1,44 +1,81 @@
-<div *ngIf="!this.confirmar" class="alert alert-danger" style="margin-bottom:10px" role="alert">
-    <i class="fa-solid fa-triangle-exclamation" style="margin-right: 10px;"></i>
-    ¡Clave erronea intentelo nuevamente!
+<div
+  *ngIf="!this.confirmar"
+  class="alert alert-danger"
+  style="margin-bottom: 10px"
+  role="alert"
+>
+  <i class="fa-solid fa-triangle-exclamation" style="margin-right: 10px"></i>
+  ¡Clave erronea intentelo nuevamente!
 </div>
-<div *ngIf="this.reenviar_codigo" class="alert alert-info" style="margin-bottom:10px" role="alert">
-
-
-    <h5><i class="fa-solid fa-hourglass-end" style="margin-right: 10px;"></i> ¡Tiempo limite excedido!</h5>
-    <hr />
-    <div> Estimado usuario haz clic en el boton "Reenviar" para obtener otro codigo de validación</div>
+<div
+  *ngIf="this.reenviar_codigo"
+  class="alert alert-info"
+  style="margin-bottom: 10px"
+  role="alert"
+>
+  <h5>
+    <i class="fa-solid fa-hourglass-end" style="margin-right: 10px"></i>
+    ¡Tiempo limite excedido!
+  </h5>
+  <hr />
+  <div>
+    Estimado usuario haz clic en el boton "Reenviar" para obtener otro codigo
+    de validación
+  </div>
 </div>
 
-
-<div class="col-sm-12 d-flex justify-content-center" style="margin-top:10px">
-    <!-- <ctimer-countdown-timer *ngIf="!this.reenviar_codigo" [finishDateString]="finishDateString"
-        (dateEnd)="timeout($event)">
-    </ctimer-countdown-timer> -->
+<div class="col-sm-12 d-flex justify-content-center" style="margin-top: 10px">
+  <ctimer-countdown-timer
+    *ngIf="!this.reenviar_codigo"
+    [finishDateString]="finishDateString"
+    (dateEnd)="timeout($event)"
+  >
+  </ctimer-countdown-timer>
 </div>
-<div *ngIf="!this.reenviar_codigo" class="col-sm-12" style="margin-top:2px">
-
-    <form [formGroup]="formulario">
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <div class="input-group-text">Cod</div>
-            </div>
-            <input type="text" class="form-control form-control-lg" id="codigo" maxlength="6" formControlName="codigo">
-        </div>
-    </form>
+<div *ngIf="!this.reenviar_codigo" class="col-sm-12" style="margin-top: 2px">
+  <form [formGroup]="formulario">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <div class="input-group-text">Cod</div>
+      </div>
+      <input
+        type="text"
+        class="form-control form-control-lg"
+        id="codigo"
+        maxlength="6"
+        formControlName="codigo"
+      />
+    </div>
+  </form>
 </div>
 <hr />
-<div class="col-sm-12 d-flex justify-content-center" style="margin-top:10px">
-    <button type="button" class="btn btn-border-primary btn-lg" style="margin-right:10px" (click)="Atras_codigo()"><i
-            class="fa-solid fa-angle-left" style="margin-right:10px"></i>Atras</button>
+<div class="col-sm-12 d-flex justify-content-center" style="margin-top: 10px">
+  <button
+    type="button"
+    class="btn btn-border-primary btn-lg"
+    style="margin-right: 10px"
+    (click)="Atras_codigo()"
+  >
+    <i class="fa-solid fa-angle-left" style="margin-right: 10px"></i>Atras
+  </button>
 
-    <button type="button" class="btn btn-secondary btn-lg" *ngIf="!this.reenviar_codigo" [disabled]="!formulario.valid"
-        (click)="Verificar_codigo()">
-        Confirmar <i class="fa-solid fa-circle-check" style="margin-left:10px"></i>
-    </button>
+  <button
+    type="button"
+    class="btn btn-secondary btn-lg"
+    *ngIf="!this.reenviar_codigo"
+    [disabled]="!formulario.valid"
+    (click)="Verificar_codigo()"
+  >
+    Confirmar
+    <i class="fa-solid fa-circle-check" style="margin-left: 10px"></i>
+  </button>
 
-    <button type="button" class="btn btn-secondary btn-lg" *ngIf="this.reenviar_codigo" (click)="reenvio_codigo()">
-        Reenviar <i class="fa-solid fa-circle-check" style="margin-left:10px"></i>
-    </button>
-
+  <button
+    type="button"
+    class="btn btn-secondary btn-lg"
+    *ngIf="this.reenviar_codigo"
+    (click)="reenvio_codigo()"
+  >
+    Reenviar <i class="fa-solid fa-circle-check" style="margin-left: 10px"></i>
+  </button>
 </div>
