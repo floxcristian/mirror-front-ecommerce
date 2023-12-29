@@ -24,12 +24,6 @@ export class MenuService {
         },
         {
           type: 'link',
-          label: 'Mi Flota',
-          url: ['/', 'mi-cuenta', 'mi-flota'],
-          icon: 'fas fa-warehouse',
-        },
-        {
-          type: 'link',
           label: 'Centros de costo',
           url: ['/', 'mi-cuenta', 'mis-centros-costos'],
           icon: 'fas fa-hand-holding-usd',
@@ -97,12 +91,6 @@ export class MenuService {
       menuItems = [
         MenuItem.OVERVIEW_ITEM_MENU(),
         MenuItem.PROFILE_ITEM_MENU(),
-        {
-          type: 'link',
-          label: 'Mi Flota',
-          url: ['/', 'mi-cuenta', 'mi-flota'],
-          icon: 'fas fa-warehouse',
-        },
         {
           type: 'link',
           label: 'Centros de costo',
