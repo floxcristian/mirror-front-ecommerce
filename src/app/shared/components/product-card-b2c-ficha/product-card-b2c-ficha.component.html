@@ -176,7 +176,6 @@
         productData.stockSummary.companyStock !== undefined
       "
     >
-      <!-- <div class="product-card__prices text-end ps-0" style="padding-top: 8px !important" *ngIf="productData?.stockTienda > 0 || productData.stockEmpresa > 0"> -->
       <div
         class="product-card__prices text-end ps-0"
         style="padding-top: 4px !important; height: 40px"
@@ -247,7 +246,6 @@
         productData.stockSummary.companyStock === undefined
       "
     >
-      <!-- <div class="product-card__prices text-end ps-0" style="padding-top: 8px !important"> -->
       <div
         class="product-card__prices text-end ps-0"
         style="padding-top: 4px !important; height: 40px"
@@ -306,8 +304,8 @@
     *ngIf="
       productData.deliverySupply.deliveryLocation !== null &&
       productData.deliverySupply.pickupLocation !== null &&
-      productData.stockSummary.branchStock > 0 &&
-      productData.stockSummary.companyStock > 0
+      (productData.stockSummary.branchStock > 0 ||
+      productData.stockSummary.companyStock > 0 )
     "
   >
     <div
