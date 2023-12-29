@@ -86,14 +86,16 @@ export class GeolocationServiceV2 {
         city: defaultStore.city,
       };
     } else {
-      const firstLocation = stores[0];
-      this.geolocation = {
-        isChangeToNearestStore: false,
-        isSelectedByClient: false,
-        zone: firstLocation.zone,
-        code: firstLocation.code,
-        city: firstLocation.city,
-      };
+      if (stores.length > 0) {
+        const firstLocation = stores[0];
+        this.geolocation = {
+          isChangeToNearestStore: false,
+          isSelectedByClient: false,
+          zone: firstLocation.zone,
+          code: firstLocation.code,
+          city: firstLocation.city,
+        };
+      }
     }
 
     this.geolocationStorage.set(this.geolocation);
