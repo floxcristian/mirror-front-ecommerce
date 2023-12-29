@@ -50,7 +50,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
 
   removedItems: IShoppingCart[] = [];
   items: Item[] = [];
-  updating = false;
+  updating:boolean = false;
   saveTimer: any;
   innerWidth: number;
   banners: Banner[] = [];
@@ -61,7 +61,6 @@ export class PageCartComponent implements OnInit, OnDestroy {
 
   recommendedProducts: IArticle[] = [];
   user!: ISession;
-  isB2B!: boolean;
   SumaTotal = 0;
   carouselOptions = {
     items: 6,
@@ -102,8 +101,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
     public root: RootService,
     private toast: ToastrService,
 
-    // private productoService: ProductsService,
-    private direction: DirectionService, // @Inject(WINDOW) private window: Window
+    private direction: DirectionService,
     private readonly gtmService: GoogleTagManagerService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
@@ -124,7 +122,6 @@ export class PageCartComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const _this = this;
-    //this.user = this.root.getDataSesionUsuario();
     this.user = this.sessionService.getSession();
     this.shoppingCartService.items$
       .pipe(
@@ -159,9 +156,6 @@ export class PageCartComponent implements OnInit, OnDestroy {
         pagePath: window.location.href,
       });
     }
-    this.isB2B = ['supervisor', 'comprador'].includes(
-      this.user?.userRole || ''
-    );
   }
 
   ngOnDestroy(): void {
@@ -269,6 +263,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
           documentId: rut,
           branchCode: tiendaSeleccionada.code,
           quantityToSuggest: 6,
+          location:localidad
         })
         .subscribe(
           (r: IArticleResponse[]) => {
