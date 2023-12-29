@@ -25,7 +25,6 @@ import { PageSaveCartComponent } from './pages/page-save-cart/page-save-cart.com
 import { PageCargaMasivaProdComponent } from './pages/page-carga-masiva-prod/page-carga-masiva-prod.component';
 import { DetalleTrakingOvComponent } from './pages/page-detalle-traking-ov/page-detalle-traking-ov.component';
 import { PageListaPreciosComponent } from './pages/page-lista-precios/page-lista-precios.component';
-import { PageFlotaComponent } from './pages/page-flota/page-flota.component';
 import { PageListasDeProductosComponent } from './pages/page-listas-de-productos/page-listas-de-productos.component';
 import { PageCentrosCostoComponent } from './pages/page-centros-costo/page-centros-costo.component';
 import { AddCentroCostoModalComponent } from './pages/page-centros-costo/components/add-centro-costo-modal/add-centro-costo-modal.component';
@@ -75,7 +74,6 @@ import { CardDashboardNoChartComponent } from '../../shared/components/card-dash
     PageCargaMasivaProdComponent,
     DetalleTrakingOvComponent,
     PageListaPreciosComponent,
-    PageFlotaComponent,
     CardDashboardLineChartComponent,
     CardDashboardHorizontalBarChartComponent,
     PageTrackingOvComponent,

@@ -15,7 +15,6 @@ import { PageTrackingComponent } from './pages/page-tracking/page-tracking.compo
 import { PageSaveCartComponent } from './pages/page-save-cart/page-save-cart.component';
 import { PageCargaMasivaProdComponent } from './pages/page-carga-masiva-prod/page-carga-masiva-prod.component';
 import { PageListaPreciosComponent } from './pages/page-lista-precios/page-lista-precios.component';
-import { PageFlotaComponent } from './pages/page-flota/page-flota.component';
 import { PageListasDeProductosComponent } from './pages/page-listas-de-productos/page-listas-de-productos.component';
 import { PageCentrosCostoComponent } from './pages/page-centros-costo/page-centros-costo.component';
 import { PageGestionUsuarioComponent } from './pages/page-gestion-usuario/page-gestion-usuario.component';
@@ -83,10 +82,6 @@ const routes: Routes = [
       {
         path: 'lista-precios',
         component: PageListaPreciosComponent,
-      },
-      {
-        path: 'mi-flota',
-        component: PageFlotaComponent,
       },
       {
         path: 'listas-de-productos',
