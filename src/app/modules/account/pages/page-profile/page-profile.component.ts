@@ -20,7 +20,6 @@ import {
   TipoModal,
 } from '../../../../shared/components/modal/modal.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { SessionService } from '@core/services-v2/session/session.service';
@@ -39,6 +38,8 @@ import { CustomerPreferenceApiService } from '@core/services-v2/customer-prefere
 import { AddressType } from '@core/enums/address-type.enum';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
+import { ConfigService } from '@core/config/config.service';
+import { IConfig } from '@core/config/config.interface';
 
 @Component({
   selector: 'app-page-profile',
@@ -81,11 +82,11 @@ export class PageProfileComponent implements OnDestroy, OnInit {
   contactoSeleccionada!: ICustomerContact;
 
   ADDRESS_TYPE = AddressType;
+  config!: IConfig;
 
   constructor(
     private root: RootService,
     private toastr: ToastrService,
-    private localS: LocalStorageService,
     private modalService: BsModalService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Storage
@@ -97,12 +98,14 @@ export class PageProfileComponent implements OnDestroy, OnInit {
     private readonly customerAddressService: CustomerAddressApiService,
     private readonly customerPreferenceApiService: CustomerPreferenceApiService,
     private readonly customerPreferencesStorage: CustomerPreferencesStorageService,
-    private readonly customerPreferenceService: CustomerPreferenceService
+    private readonly customerPreferenceService: CustomerPreferenceService,
+    private readonly configService: ConfigService
   ) {
     this.usuario = this.sessionService.getSession();
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
+    this.config = this.configService.getConfig();
   }
   ngOnInit(): void {
     this.getDataClient();

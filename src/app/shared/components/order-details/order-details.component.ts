@@ -1,11 +1,14 @@
 // Angular
 import { Component, Input } from '@angular/core';
+// Models
+import { IStore } from '@core/services-v2/geolocation/models/store.interface';
+import { IShoppingCartDetail } from '@core/models-v2/cart/shopping-cart-detail.interface';
 // Services
 import { RootService } from '../../services/root.service';
 import { CartService } from '@core/services-v2/cart.service';
-import { IShoppingCartDetail } from '@core/models-v2/cart/shopping-cart-detail.interface';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
-import { IStore } from '@core/services-v2/geolocation/models/store.interface';
+import { ConfigService } from '@core/config/config.service';
+import { IConfig } from '@core/config/config.interface';
 
 @Component({
   selector: 'app-order-details',
@@ -21,12 +24,17 @@ export class OrderDetailsComponent {
   data!: IShoppingCartDetail;
   deliveryText: any;
 
+  config!: IConfig;
+
   constructor(
     public root: RootService,
     // Services V2
     private readonly geolocationApiService: GeolocationApiService,
-    private readonly cartService: CartService
-  ) {}
+    private readonly cartService: CartService,
+    private readonly configService: ConfigService
+  ) {
+    this.config = this.configService.getConfig();
+  }
 
   async getData(id: any) {
     this.cartService.getOneById(id).subscribe({

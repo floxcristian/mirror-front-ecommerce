@@ -1,4 +1,5 @@
 export interface IConfig {
+  documentName: string;
   storesPage: IStoresPage;
 }
 

@@ -1,4 +1,9 @@
+// Angular
 import { Component } from '@angular/core';
+// Models
+import { IConfig } from '@core/config/config.interface';
+// Services
+import { ConfigService } from '@core/config/config.service';
 
 @Component({
   selector: 'app-policy',
@@ -6,5 +11,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./page-policy.component.scss'],
 })
 export class PagePolicyComponent {
-  constructor() {}
+  config!: IConfig;
+
+  constructor(private readonly configService: ConfigService) {
+    this.config = this.configService.getConfig();
+  }
 }
