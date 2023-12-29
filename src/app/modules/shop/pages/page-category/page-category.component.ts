@@ -9,17 +9,13 @@ import { Subscription } from 'rxjs';
 // Environment
 import { environment } from '@env/environment';
 import { ProductFilterCategory } from '../../../../shared/interfaces/product-filter';
-import { ProductsService } from '../../../../shared/services/products.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
-import { CartService } from '../../../../shared/services/cart.service';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { CanonicalService } from '../../../../shared/services/canonical.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
-import { LogisticsService } from '../../../../shared/services/logistics.service';
 import { BuscadorService } from '../../../../shared/services/buscador.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
@@ -42,10 +38,6 @@ import { CustomerPreferenceService } from '@core/services-v2/customer-preference
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 
-// export interface IFilterMedium{
-//   name:string;
-//   values:any[];
-// }
 @Component({
   selector: 'app-grid',
   templateUrl: './page-category.component.html',
@@ -55,9 +47,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   products: IArticleResponse[] = [];
   filters: IProductFilter[] = [];
   filterQuery: any;
-  filterQueryVehicle: any;
   removableFilters: any = [];
-  removableFiltersFlota: any = [];
   removableCategory: any = [];
   columns: 3 | 4 | 5 = 3;
   viewMode: 'grid' | 'grid-with-features' | 'list' = 'grid';
@@ -65,32 +55,23 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   breadcrumbs: any[] = [];
   productosTemp = [];
   // Paginacion
-  totalPaginas = 0;
-  PagDesde = 0;
-  PagHasta = 0;
-  PagTotalRegistros = 0;
-  productosPorPagina = 12;
-  cargandoCatalogo = true;
-  cargandoProductos = false;
-  currentPage = 1;
+  totalPaginas:number = 0;
+  PagDesde:number = 0;
+  PagHasta:number = 0;
+  PagTotalRegistros:number = 0;
+  productosPorPagina:number = 12;
+  cargandoCatalogo:boolean = true;
+  cargandoProductos:boolean = false;
+  currentPage:number = 1;
 
   // Filtro
   parametrosBusqueda!: IElasticSearch;
-  textToSearch = '';
+  textToSearch:string = '';
   levelCategories: ICategoriesTree[] = [];
-  level = 0;
-  // filtros vehiculo
-  chassis: string[] = [];
-  anio = '';
-  marca = '';
-  modelo = '';
-  // filtrosFlota!: Flota[];
-  //filtrosBusquedas!: Flota[];
-  marca_tienda = '';
+  level:number = 0;
+  marca_tienda:string = '';
 
   despachoCliente!: Subscription;
-
-  filtersVehicle = ['chassis', 'anio', 'marca', 'modelo'];
 
   paramsCategory = {
     firstCategory: '',
@@ -105,9 +86,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     'TIPO ESTADO',
   ];
 
-  visibleFilter = false;
-  filtrosOculto = true;
-  filtrosVehiculoVisibles = false;
+  visibleFilter:boolean = false;
+  filtrosOculto:boolean = true;
   scrollPosition!: number;
   innerWidth: number;
 
@@ -120,18 +100,14 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
     private router: Router,
-    private productsService: ProductsService,
     private root: RootService,
     private localS: LocalStorageService,
     private capitalize: CapitalizeFirstPipe,
-    private cartService: CartService,
-    private logistic: LogisticsService,
     private titleService: Title,
     private seoService: SeoService,
     private canonicalService: CanonicalService,
     private buscadorService: BuscadorService,
     // Services V2
-    private readonly sessionStorage: SessionStorageService,
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
     private readonly articleService: ArticleService,
@@ -169,65 +145,26 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           : this.sidebarPosition;
     });
 
-    /*this.filtrosFlota = (
-      (await this.clientsService
-        .getFlota(this.usuario.rut || '0')
-        .toPromise()) as ResponseApi
-    ).data;*/
-
-    /*this.filtrosBusquedas = (
-      (await this.clientsService
-        .getBusquedasVin(this.usuario.rut || '0')
-        .toPromise()) as ResponseApi
-    ).data;*/
-
     let metadataCount = 0;
     this.route.queryParams.subscribe((query) => {
       // Seteamos el origen del buscador
       this.setOrigenes();
-      this.marca_tienda = query['filter_MARCA'] || '';
-
-      if (this.marca_tienda) {
-        let banner_local: any = this.localS.get('bannersMarca');
-        if (
-          banner_local &&
-          banner_local.marca?.toLowerCase() ===
-            this.marca_tienda.toLocaleLowerCase()
-        )
-          this.banners = banner_local;
-        else this.banners = null;
-      } else this.banners = null;
-
-      // Se cargan los queryParams entrantes
-      /*this.marca = query['marca'] ? query['marca'] : '';
-      this.modelo = query['modelo'] ? query['modelo'] : '';
-      this.anio = query['anio'] ? query['anio'] : '';*/
-      /*if (!isVacio(query['chassis'])) {
-        if (Array.isArray(query['chassis'])) {
-          query['chassis'].forEach((element) => {
-            this.chassis.push(element);
-          });
-        } else {
-          this.chassis.push(query['chassis']);
-        }
-      }*/
-
-      // control del componente filtros
-      if (
-        isVacio(this.chassis) &&
-        isVacio(this.marca) &&
-        isVacio(this.modelo) &&
-        isVacio(this.anio)
-      ) {
-        this.filtrosVehiculoVisibles = true;
-        /*if (this.buscadorService.isFiltroSeleccionado()) {
-          this.filtrosVehiculoVisibles = false;
-        } else {
-          this.filtrosVehiculoVisibles = true;
-        }*/
-      } else {
-        this.filtrosVehiculoVisibles = false;
+      if (query['tiendaOficial']) {
+        this.marca_tienda = query['filter_MARCA'] ? query['filter_MARCA'] : '';
+        if (this.marca_tienda) {
+          let banner_local: any = this.localS.get('bannersMarca');
+          if (
+            banner_local &&
+            banner_local.marca?.toLowerCase() ===
+              this.marca_tienda.toLocaleLowerCase()
+          )
+            this.banners = banner_local;
+          else this.banners = null;
+        } else this.banners = null;
+      }else {
+        this.marca_tienda = '';
       }
+
       this.buscadorService.filtrosVisibles(false);
 
       //this.route.queryParams.subscribe();
@@ -252,7 +189,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
 
       this.reinicaFiltros();
       this.filterQuery = this.getFiltersQuery(query);
-      this.filterQueryVehicle = this.getFiltersQuery(query, 'vehiculo');
 
       if (
         typeof this.parametrosBusqueda !== 'undefined' &&
@@ -265,12 +201,10 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         );
 
         this.removableFilters = this.filterQuery;
-        this.removableFiltersFlota = this.filterQueryVehicle;
 
         this.parametrosBusqueda = {
           ...params,
-          ...this.filterQuery,
-          ...this.filterQueryVehicle,
+          ...this.filterQuery
         };
         this.parametrosBusqueda.page = this.currentPage;
         this.cargarCatalogoProductos(this.parametrosBusqueda, '');
@@ -332,11 +266,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
 
         this.setBreadcrumbs();
         this.removableFilters = this.filterQuery;
-        this.removableFiltersFlota = this.filterQueryVehicle;
         this.parametrosBusqueda = {
           ...parametros,
-          ...this.filterQuery,
-          ...this.filterQueryVehicle,
+          ...this.filterQuery
         };
         this.parametrosBusqueda.page = this.currentPage;
 
@@ -383,11 +315,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
             };
           }
           this.removableFilters = this.filterQuery;
-          this.removableFiltersFlota = this.filterQueryVehicle;
           this.parametrosBusqueda = {
             ...parametros,
-            ...this.filterQuery,
-            ...this.filterQueryVehicle,
+            ...this.filterQuery
           };
           this.parametrosBusqueda.page = this.currentPage;
 
@@ -524,8 +454,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       }
     }
 
-    // this.isLoadingSlider = true;
-
     if (!scroll) {
       this.parametrosBusqueda.page = 1;
       this.currentPage = 1;
@@ -534,32 +462,20 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       this.cargandoProductos = true;
     }
 
-    if (
-      this.chassis.length > 0 ||
-      this.marca.length > 0 ||
-      this.modelo.length > 0 ||
-      this.anio.length > 0
-    ) {
-      this.productsService.buscaPorVimNum(parametros).subscribe((r: any) => {
-        this.SetProductos(r, texto, scroll);
-      });
-    } else {
-      this.articleService.search(parametros).subscribe({
-        next: (res) => {
-          this.SetProductos(res, texto, scroll);
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
-    }
+    this.articleService.search(parametros).subscribe({
+      next: (res) => {
+        this.SetProductos(res, texto, scroll);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   SetProductos(r: ISearchResponse, texto: string, scroll = false): void {
     this.cargandoCatalogo = false;
     this.cargandoProductos = false;
 
-    // this.isLoadingSlider = false;
     if (scroll) {
       r.articles.forEach((e: any) => {
         if (this.productosTemp.length > 0) {
@@ -582,7 +498,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     if (this.products.length == 0) this.breadcrumbs = [];
     this.formatoPaginacion(r, texto);
     this.filters = [];
-    // this.formatFiltersFlota();
     this.formatCategories(r.categoriesTree, r.levelFilter);
     this.formatFilters(r.filters);
     this.agregarMatrizProducto(r.articles);
@@ -591,7 +506,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       this.localS.set('bannersMarca', r.banners[0]);
     } else this.banners = null;
   }
-
+  //Trae productos matriz para cuando hay 1 solo article de resultado en la busqueda
   private agregarMatrizProducto(productos: IArticleResponse[]) {
     if (productos.length === 1) {
       const user = this.sessionService.getSession();
@@ -636,17 +551,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
 
     this.totalPaginas = r.totalPages;
     this.PagTotalRegistros = r.totalResult;
-    if (texto != '' && r != null) {
-      const user = this.sessionStorage.get();
-      if (user) {
-        const parametro = {
-          _id: user.email,
-          busqueda: texto,
-          resultado: this.PagTotalRegistros,
-        };
-        this.cartService.agregaBusqueda(parametro).subscribe((dat) => {}); // no trae nada por lo general, preguntar
-      }
-    }
   }
 
   private formatCategories(
@@ -658,7 +562,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         ? 'todos'
         : this.parametrosBusqueda.word;
     let collapsed = false;
-    // console.log(this.parametrosBusqueda);
     if (this.parametrosBusqueda.category !== '') {
       collapsed = false;
     }
@@ -674,11 +577,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.levelCategories = categorias;
     let queryParams = {};
     queryParams = this.armaQueryParams(queryParams);
-    if (!isVacio(this.chassis)) {
-      this.chassis.forEach((c) => {
-        queryParams = { ...queryParams, ...{ chassis: c } };
-      });
-    }
 
     this.levelCategories.map((lvl1) => {
       filtros.options.items?.push({
@@ -733,90 +631,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     });
     this.filters.push(filtros);
   }
-
-  /**
-   *
-   */
-  /*private formatFiltersFlota() {
-    const filtro: ProductFilterCheckboxFlota = {
-      name: 'MI FLOTA',
-      type: 'checkboxFlota',
-      collapsed: false,
-      options: {
-        items: [],
-      },
-    };
-
-    this.filtrosFlota.forEach((r) => {
-      let checked = false;
-      // revisamos el valor para marcarlo
-
-      let resultado;
-      if (
-        this.filterQueryVehicle.chassis &&
-        this.filterQueryVehicle.chassis.length > 0
-      ) {
-        if (Array.isArray(this.filterQueryVehicle.chassis)) {
-          resultado = this.filterQueryVehicle.chassis.find(
-            (e: any) => e === r.vehiculo?.chasis
-          );
-        } else {
-          resultado =
-            this.filterQueryVehicle.chassis === r.vehiculo?.chasis
-              ? this.filterQueryVehicle.chassis
-              : '';
-        }
-        if (!isVacio(resultado)) {
-          checked = true;
-        }
-      }
-
-      filtro.options.items.push({
-        label: r.alias || '',
-        chassis: r.vehiculo?.chasis || '',
-        tipo: 'flota',
-        checked,
-        count: 10,
-        disabled: false,
-      });
-    });
-
-    this.filtrosBusquedas.forEach((r) => {
-      let checked = false;
-      // revisamos el valor para marcarlo
-
-      let resultado;
-      if (
-        this.filterQueryVehicle.chassis &&
-        this.filterQueryVehicle.chassis.length > 0
-      ) {
-        if (Array.isArray(this.filterQueryVehicle.chassis)) {
-          resultado = this.filterQueryVehicle.chassis.find(
-            (e: any) => e === r.vehiculo?.chasis
-          );
-        } else {
-          resultado =
-            this.filterQueryVehicle.chassis === r.vehiculo?.chasis
-              ? this.filterQueryVehicle.chassis
-              : '';
-        }
-        if (!isVacio(resultado)) {
-          checked = true;
-        }
-      }
-
-      filtro.options.items.push({
-        label: r.vehiculo?.chasis || '',
-        chassis: r.vehiculo?.chasis || '',
-        tipo: 'busqueda',
-        checked,
-        count: 10,
-        disabled: false,
-      });
-    });
-
-    this.filters.push(filtro);
-  }*/
 
   private formatFilters(atr: IFilters[]) {
     const atributos = this.cleanFilters(atr);
@@ -889,7 +703,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     return atributos2;
   }
 
-  getFiltersQuery(query: any, tipo = 'otros') {
+  getFiltersQuery(query: any) {
     let resp = {};
 
     if (isVacio(query)) {
@@ -899,14 +713,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     for (const key in query) {
       if (Object.prototype.hasOwnProperty.call(query, key)) {
         const element = query[key];
-
-        const existe =
-          tipo === 'vehiculo'
-            ? this.filtersVehicle.includes(key.trim())
-            : !this.filtersVehicle.includes(key.trim());
-
-        if (existe) {
-          resp = { ...resp, ...{ [key]: element } };
+        if (key !== 'tiendaOficial') {
+            resp = { ...resp, ...{ [key]: element } };
         }
       }
     }
@@ -938,21 +746,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   clearCategory(e: any) {
     let queryParams = {};
     queryParams = this.armaQueryParams(queryParams);
-    if (!isVacio(this.chassis)) {
-      this.chassis.forEach((c) => {
-        queryParams = { ...queryParams, ...{ chassis: c } };
-      });
-    }
 
     if (this.textToSearch === '') {
       this.removableCategory = [];
-      if (this.chassis.length) {
-        this.router.navigate(['/', 'inicio', 'productos', 'todos'], {
-          queryParams,
-        });
-      } else {
-        this.router.navigate(['/', 'inicio']);
-      }
     } else {
       this.removableCategory = [];
       this.router.navigate(['/', 'inicio', 'productos', this.textToSearch], {
@@ -964,21 +760,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   clearAll(e: any) {
     let queryParams = {};
     queryParams = this.armaQueryParams(queryParams);
-    if (!isVacio(this.chassis)) {
-      this.chassis.forEach((c) => {
-        queryParams = { ...queryParams, ...{ chassis: c } };
-      });
-    }
 
     if (this.textToSearch === '') {
       this.removableCategory = [];
-      if (this.chassis.length > 0) {
-        this.router.navigate(['/', 'inicio', 'productos', 'todos'], {
-          queryParams,
-        });
-      } else {
-        this.router.navigate(['/', 'inicio']);
-      }
     } else {
       this.removableCategory = [];
       this.router.navigate(['/', 'inicio', 'productos', this.textToSearch], {
@@ -988,17 +772,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   }
 
   armaQueryParams(queryParams: any) {
-    /*if (this.marca !== '') {
-      queryParams = { ...queryParams, ...{ marca: this.marca } };
-    }
-    if (this.modelo !== '') {
-      queryParams = { ...queryParams, ...{ modelo: this.modelo } };
-    }
-    if (this.anio !== '') {
-      queryParams = { ...queryParams, ...{ anio: this.anio } };
-    }*/
     if (this.marca_tienda !== '')
-      queryParams = { ...queryParams, ...{ filter_MARCA: this.marca_tienda } };
+      queryParams = { ...queryParams, ...{ filter_MARCA: this.marca_tienda, tiendaOficial: 1 } };
     return queryParams;
   }
 

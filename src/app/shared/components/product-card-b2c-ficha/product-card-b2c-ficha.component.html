@@ -60,9 +60,9 @@
     </div>
   </div>
 
-  <!-- <div
+  <div
       class="product-card__badges-list-right"
-      *ngIf="productData.cyberMonday || 0 > 0"
+      *ngIf="(cyberMonday || 0) > 0"
     >
       <div
         class="badge_cyber float-end"
@@ -89,7 +89,7 @@
 
     <div
       class="product-card__badges-list-right"
-      *ngIf="productData.cyber || (0 > 0 && productData.cyberMonday === 0)"
+      *ngIf="(cyber || 0)  > 0 && cyberMonday === 0"
     >
       <div
         class="badge_cyber float-end"
@@ -114,7 +114,7 @@
           />
         </picture>
       </div>
-    </div> -->
+    </div>
 
   <div
     [ngClass]="
@@ -300,36 +300,14 @@
         </ng-container>
       </div>
     </ng-container>
-
-    <!-- <ul
-      *ngIf="productData.atributos?.length"
-      class="product-card__features-list"
-    >
-      <li *ngFor="let feature of productData.atributos | slice : 0 : 5">
-        <span class="producto-atributo-listado">{{
-          feature.nombre | titlecase
-        }}</span
-        >:
-        {{ feature.valor | titlecase }}
-      </li>
-
-      <li>
-        <a
-          (click)="cartService.setPreviousPathToProductDetail(origen)"
-          [routerLink]="
-            root.product(productData.sku, productData.nombre, paramsCategory)
-          "
-        >
-          Ver más...</a
-        >
-      </li>
-    </ul> -->
   </div>
   <!-- Momentaneo para ver "llega y retiro" -->
   <ng-container
     *ngIf="
       productData.deliverySupply.deliveryLocation !== null &&
-      productData.deliverySupply.pickupLocation !== null
+      productData.deliverySupply.pickupLocation !== null &&
+      productData.stockSummary.branchStock > 0 &&
+      productData.stockSummary.companyStock > 0
     "
   >
     <div
