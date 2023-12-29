@@ -190,7 +190,7 @@
       appOwlPreventClick
     >
       <ng-container
-        *ngFor="let prod of producto_selecionado.skus"
+        *ngFor="let prod of producto_selecionado.articles"
         class="products-list__item"
       >
         <ng-template carouselSlide>
@@ -198,7 +198,7 @@
             (mouseover)="over($event)"
             (mouseleave)="leave($event)"
             [product]="prod"
-            [origen]="[ruta, '', prod.nombre.trim(), '']"
+            [origen]="[ruta, '', prod.name.trim(), '']"
             [home]="true"
             [layout]="layout"
             [cartClass]="true"
