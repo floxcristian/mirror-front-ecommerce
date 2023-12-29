@@ -50,7 +50,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
 
   removedItems: IShoppingCart[] = [];
   items: Item[] = [];
-  updating = false;
+  updating:boolean = false;
   saveTimer: any;
   innerWidth: number;
   banners: Banner[] = [];
@@ -61,7 +61,6 @@ export class PageCartComponent implements OnInit, OnDestroy {
 
   recommendedProducts: IArticle[] = [];
   user!: ISession;
-  isB2B!: boolean;
   SumaTotal = 0;
   carouselOptions = {
     items: 6,
@@ -102,8 +101,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
     public root: RootService,
     private toast: ToastrService,
 
-    // private productoService: ProductsService,
-    private direction: DirectionService, // @Inject(WINDOW) private window: Window
+    private direction: DirectionService,
     private readonly gtmService: GoogleTagManagerService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
@@ -124,7 +122,6 @@ export class PageCartComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const _this = this;
-    //this.user = this.root.getDataSesionUsuario();
     this.user = this.sessionService.getSession();
     this.shoppingCartService.items$
       .pipe(
@@ -159,9 +156,6 @@ export class PageCartComponent implements OnInit, OnDestroy {
         pagePath: window.location.href,
       });
     }
-    this.isB2B = ['supervisor', 'comprador'].includes(
-      this.user?.userRole || ''
-    );
   }
 
   ngOnDestroy(): void {
@@ -192,11 +186,11 @@ export class PageCartComponent implements OnInit, OnDestroy {
     });
 
     this.shoppingCartService.saveCart(productos).subscribe((r) => {
-      for (const el of r.data.productos) {
+      for (const el of r.products) {
         if (el.sku == item.ProductCart.sku) {
-          item.ProductCart.deliveryConflict = el.conflictoEntrega;
-          item.ProductCart.delivery = el.entregas;
-          item.ProductCart.price = el.precio;
+          item.ProductCart.deliveryConflict = el.deliveryConflict;
+          item.ProductCart.delivery = el.delivery;
+          item.ProductCart.price = el.price;
         }
       }
       this.shoppingCartService.updateCart(productos);
@@ -269,6 +263,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
           documentId: rut,
           branchCode: tiendaSeleccionada.code,
           quantityToSuggest: 6,
+          location:localidad
         })
         .subscribe(
           (r: IArticleResponse[]) => {

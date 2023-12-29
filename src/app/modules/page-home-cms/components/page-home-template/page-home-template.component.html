@@ -22,8 +22,6 @@
         <br />
       </ng-container>
       <ng-container *ngIf="item.type === 'product-box'">
-        <!-- [lstProductos]="lstProductos" -->
-        <!-- [url]="url" -->
         <app-product-page-home
           *ngIf="!carga"
           [producto]="item.data"
@@ -41,15 +39,11 @@
         <br />
         <br />
       </ng-container>
-      <!-- Start:: especialCms -->
-      <!-- [lstProductos]="lstProductos1"
-        [url]="url1" -->
       <ng-container *ngIf="item.type === 'product-list'">
         <app-lista_producto [elemento]="item.data"> </app-lista_producto>
         <br />
         <br />
       </ng-container>
-      <!-- End:: especialCms -->
     </ng-container>
   </ng-container>
 </div>

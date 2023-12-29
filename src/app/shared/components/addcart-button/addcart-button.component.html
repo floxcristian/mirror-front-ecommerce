@@ -1,8 +1,8 @@
 <div class="container-addbutton" *ngIf="HideButton() === false">
-  <div class="row w-100">
+  <div class="row justify-content-between">
     <app-input-number
       aria-label="Quantity"
-      class="product__quantity number-quantity text-center w-50 mt-2 p-3"
+      class="product__quantity number-quantity text-center w-50 mt-2 p-3 col-6"
       size="lg"
       [min]="1"
       [formControl]="cantidad"
@@ -14,7 +14,7 @@
       name="Agregar"
       type="button"
       *ngIf="disponibilidad"
-      class="btn btn-secondary btn-lg w-100 text-center btn-add-cart button-primary-medium-large w-50"
+      class="btn btn-secondary btn-lg text-center btn-add-cart button-primary-medium-large col-6"
       [ngClass]="{ 'btn-loading': addingToCart }"
       appClick
       (click)="addToCart()"
@@ -27,7 +27,7 @@
       disabled
       name="Agregar "
       type="button"
-      class="btn btn-warning btn-lg w-100 text-center btn-add-cart w-50"
+      class="btn btn-warning btn-lg text-center btn-add-cart w-50 col-6"
       [ngClass]="{ 'btn-loading': addingToCart }"
       appClick
       style="background-color: #8a8984"

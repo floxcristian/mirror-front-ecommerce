@@ -161,6 +161,7 @@ export class ArticleService {
     documentId: string;
     branchCode: string;
     quantityToSuggest: number;
+    location:string;
   }): Observable<IArticleResponse[]> {
     let httpParams = new HttpParams();
     for (const sku of params.skus) {
@@ -169,7 +170,8 @@ export class ArticleService {
     httpParams = httpParams
       .append('documentId', params.documentId)
       .append('branchCode', params.branchCode)
-      .append('quantityToSuggest', params.quantityToSuggest);
+      .append('quantityToSuggest', params.quantityToSuggest)
+      .append('location', params.location)
 
     return this.http.get<IArticleResponse[]>(
       `${API_ARTICLE}/suggestion/article-suggestions`,

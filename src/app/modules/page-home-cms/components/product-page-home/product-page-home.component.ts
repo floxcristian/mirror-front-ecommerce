@@ -47,7 +47,7 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
   refresh2 = false;
   cargando = true;
   bsModalRef?: BsModalRef;
-  producto_selecionado: any;
+  producto_selecionado!: IElement1;
   index_seleccionado = 0;
   sPosition = 0;
   screenWidth: any;
@@ -110,7 +110,7 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.index_seleccionado = this.sPosition;
     this.ruta = this.router.url === '/inicio' ? 'home' : this.router.url;
-    this.user = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.user = this.sessionService.getSession();
     this.cargarHome();
   }
 
@@ -200,6 +200,7 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
     });
     this.refresh = false;
     this.producto_selecionado = this.tipo_producto[index];
+    console.log('proget',this.producto_selecionado)
     this.index_seleccionado = index;
   }
 
@@ -215,6 +216,7 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
     });
     this.refresh2 = false;
     this.producto_selecionado = this.tipo_producto[index];
+    console.log('proget2',this.producto_selecionado)
     this.index_seleccionado = index;
   }
 }
