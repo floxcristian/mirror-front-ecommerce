@@ -1237,12 +1237,6 @@ export class CartService {
     );
   }
 
-  confirmarOV(idCarro: any) {
-    return this.http.post(environment.apiShoppingCart + `confirmar`, {
-      id: idCarro,
-    });
-  }
-
   /**
    * Actualiza el giro y usuario del carro, previo al pago.
    * @param params

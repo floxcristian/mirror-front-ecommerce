@@ -22,7 +22,6 @@ export interface ITokenResponse {
 }
 
 export type IUserRole =
-  | 'superadmin'
   | 'comprador'
   | 'cms'
   | 'compradorb2c'

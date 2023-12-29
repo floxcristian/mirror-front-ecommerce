@@ -16,14 +16,6 @@ import { CargosContactoResponse } from '../interfaces/cargoContacto';
 export class ClientsService {
   constructor(private http: HttpClient) {}
 
-  buscarOvsGeneradas() {
-    const estado = 'generado';
-    const call =
-      environment.apiShoppingCart +
-      `busquedaAll?estado=${estado}&carroPorPagina=100000&pagina=1`;
-    return this.http.get(call);
-  }
-
   /**
    * Recuperar contraseña.
    * @param data
@@ -41,16 +33,6 @@ export class ClientsService {
   buscarUsuario(id: string) {
     const call = environment.apiCMS + `users/${id}`;
     return this.http.get(call);
-  }
-
-  crearUsuario(data: any) {
-    const call = environment.apiCMS + `users/ingresar`;
-    return this.http.post(call, data);
-  }
-
-  updateUsuario(data: any) {
-    const call = environment.apiCMS + `users/` + data._id;
-    return this.http.patch(call, data);
   }
 
   addAdreess(request: any): Observable<ResponseApi> {
@@ -72,11 +54,6 @@ export class ClientsService {
 
   buscarGiros() {
     const call = environment.apiCustomer + `giros`;
-    return this.http.get(call);
-  }
-
-  buscarFacturas(rut: any) {
-    const call = environment.apiCustomer + `facturas?rut=${rut}`;
     return this.http.get(call);
   }
 

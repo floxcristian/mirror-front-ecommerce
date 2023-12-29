@@ -6,12 +6,7 @@ import { PageLoginComponent } from './pages/page-login/page-login.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { PageDashboardComponent } from './pages/page-dashboard/page-dashboard.component';
 import { PageOrdersListComponent } from './pages/page-orders-list/page-orders-list.component';
-import { PageInvoicesListComponent } from './pages/page-invoices-list/page-invoices-list.component';
-import { PageOvsListComponent } from './pages/page-ovs-list/page-ovs-list.component';
-import { PageUsuariosComponent } from './pages/page-usuarios/page-usuarios.component';
-import { PageProductsCategoriesComponent } from './pages/page-products-categories/page-products-categories.component';
 import { PageProfileComponent } from './pages/page-profile/page-profile.component';
-import { PagePasswordComponent } from './pages/page-password/page-password.component';
 import { PagePendingOrdersComponent } from './pages/page-pending-orders/page-pending-orders.component';
 import { PageQuotationComponent } from './pages/page-quotation/page-quotation.component';
 import { PurchaseRequestComponent } from './pages/purchase-request/purchase-request.component';
@@ -57,32 +52,12 @@ const routes: Routes = [
         component: PageCargaMasivaProdComponent,
       },
       {
-        path: 'facturacion',
-        component: PageInvoicesListComponent,
-      },
-      {
-        path: 'ordenes',
-        component: PageOvsListComponent,
-      },
-      {
-        path: 'contraseña',
-        component: PagePasswordComponent,
-      },
-      {
         path: 'pedidos-pendientes',
         component: PagePendingOrdersComponent,
       },
       {
         path: 'cotizaciones',
         component: PageQuotationComponent,
-      },
-      {
-        path: 'usuarios',
-        component: PageUsuariosComponent,
-      },
-      {
-        path: 'productos-categorias',
-        component: PageProductsCategoriesComponent,
       },
       {
         path: 'solicitudes-de-compras',

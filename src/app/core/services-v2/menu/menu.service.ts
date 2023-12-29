@@ -12,37 +12,7 @@ import { MenuItem } from './menu-items';
 export class MenuService {
   get(profile: IUserRole): IMenuItem[] {
     let menuItems = [];
-    if (profile === 'superadmin') {
-      menuItems = [
-        MenuItem.PROFILE_ITEM_MENU(),
-        {
-          type: 'link',
-          label: 'Órdenes de Venta',
-          url: ['/', 'mi-cuenta', 'ordenes'],
-          icon: 'far fa-file-alt',
-        },
-        {
-          type: 'link',
-          label: 'Carros Guardados',
-          url: ['/', 'mi-cuenta', 'carros-guardados'],
-          icon: 'fas fa-cart-arrow-down',
-        },
-        MenuItem.TRACKING_ITEM_MENU(),
-        {
-          type: 'link',
-          label: 'Usuarios',
-          url: ['/', 'mi-cuenta', 'usuarios'],
-          icon: 'fas fa-users',
-        },
-        {
-          type: 'link',
-          label: 'Cargar Masiva Productos',
-          url: ['/', 'mi-cuenta', 'carga-masiva-prod'],
-          icon: 'fas fa-file-upload',
-        },
-        MenuItem.LOGOUT_ITEM_MENU(),
-      ];
-    } else if (profile === 'supervisor') {
+    if (profile === 'supervisor') {
       menuItems = [
         MenuItem.OVERVIEW_ITEM_MENU(),
         MenuItem.PROFILE_ITEM_MENU(),

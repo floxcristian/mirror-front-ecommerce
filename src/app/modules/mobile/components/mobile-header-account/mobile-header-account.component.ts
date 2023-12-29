@@ -47,22 +47,6 @@ export class MobileHeaderAccountComponent implements OnInit {
     this.usuario = this.sessionStorage.get();
 
     this.authStateService.session$.subscribe((user) => {
-      if (user.userRole === 'superadmin') {
-        this.linkMiCuenta = [
-          {
-            label: 'Órdenes de Venta',
-            url: ['/', 'mi-cuenta', 'ordenes'],
-            icon: 'far fa-file-alt',
-          },
-          {
-            label: 'Cerrar sesión',
-            url: ['/', 'mi-cuenta', 'login'],
-            icon: 'fas fa-power-off',
-            dark: true,
-          },
-        ];
-      }
-
       this.usuario = user;
       this.mostrarMenu = true;
       this.mostrarBienvenida = true;

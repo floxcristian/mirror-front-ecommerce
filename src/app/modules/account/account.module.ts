@@ -15,11 +15,6 @@ import { SharedModule } from '../../shared/shared.module';
 import { PageDashboardComponent } from './pages/page-dashboard/page-dashboard.component';
 import { PageLoginComponent } from './pages/page-login/page-login.component';
 import { PageOrdersListComponent } from './pages/page-orders-list/page-orders-list.component';
-import { PageInvoicesListComponent } from './pages/page-invoices-list/page-invoices-list.component';
-import { PageOvsListComponent } from './pages/page-ovs-list/page-ovs-list.component';
-import { PageUsuariosComponent } from './pages/page-usuarios/page-usuarios.component';
-import { PageProductsCategoriesComponent } from './pages/page-products-categories/page-products-categories.component';
-import { PagePasswordComponent } from './pages/page-password/page-password.component';
 import { PageProfileComponent } from './pages/page-profile/page-profile.component';
 import { PagePendingOrdersComponent } from './pages/page-pending-orders/page-pending-orders.component';
 import { PageQuotationComponent } from './pages/page-quotation/page-quotation.component';
@@ -63,11 +58,6 @@ import { CardDashboardNoChartComponent } from '../../shared/components/card-dash
     PageDashboardComponent,
     PageLoginComponent,
     PageOrdersListComponent,
-    PageInvoicesListComponent,
-    PageOvsListComponent,
-    PageUsuariosComponent,
-    PageProductsCategoriesComponent,
-    PagePasswordComponent,
     PageProfileComponent,
     PagePendingOrdersComponent,
     PageQuotationComponent,
