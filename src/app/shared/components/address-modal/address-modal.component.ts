@@ -14,7 +14,6 @@ import { AddressType } from '@core/enums/address-type.enum';
 // Models
 import { IError } from '@core/models-v2/error/error.interface';
 // Services
-import { LogisticsService } from '../../services/logistics.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
@@ -41,7 +40,6 @@ export class AddressModalComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private logisticsService: LogisticsService,
     private toastr: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,

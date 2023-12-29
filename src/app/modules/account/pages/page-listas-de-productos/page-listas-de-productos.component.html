@@ -50,7 +50,7 @@
         <div class="text-center mb-2"><strong>Mis listas</strong></div>
       </div>
       <div class="card-body">
-        <div style="max-height: 450px; overflow-y: auto; padding-right: 10px">
+        <div style="max-height: 450px; padding-right: 10px">
           <div class="list-group" id="listas" role="tablist">
             <ng-container *ngFor="let lista of listas; let i = index">
               <a
@@ -220,10 +220,10 @@
                     >
                       <button
                         class="btn btn-sm btn-link"
-                        tooltip="Agregar prodcuto"
+                        tooltip="Agregar articulo al carro"
                         placement="left"
                         container="body"
-                        (click)="addCart(product)"
+                        (click)="addtoCart(product)"
                       >
                         <i
                           class="fa-solid fa-cart-arrow-down"
@@ -236,7 +236,7 @@
                     >
                       <button
                         class="btn btn-sm btn-link"
-                        tooltip="Eliminar producto"
+                        tooltip="Eliminar articulo"
                         placement="left"
                         container="body"
                         (click)="deleteProductFromWishlist(lista, product.sku)"
@@ -249,7 +249,7 @@
                   <div class="class-sm-12 d-flex justify-content-center">
                     <button
                       class="btn btn-secondary mt-3"
-                      (click)="addToCart(lista)"
+                      (click)="addAllToCart(lista)"
                     >
                       <i
                         class="fa-solid fa-cart-plus"

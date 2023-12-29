@@ -22,6 +22,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -170,7 +171,7 @@ export class CartService {
           this.onAddingSubject$.next(productoCart);
           this.data.productos = this.CartData.productos;
           /* se limpia OV cargada */
-          this.localS.remove('ordenCompraCargada');
+          this.localS.remove(StorageKey.ordenCompraCargada);
           this.save();
           this.calc();
         } else {
@@ -234,7 +235,7 @@ export class CartService {
         if (r.error !== true) {
           this.data.productos = this.CartData.productos;
           /* se limpia OV cargada */
-          this.localS.remove('ordenCompraCargada');
+          this.localS.remove(StorageKey.ordenCompraCargada);
           this.save();
           this.calc();
         } else {
@@ -330,11 +331,11 @@ export class CartService {
   }
 
   private save(): void {
-    this.localS.set('carroCompraB2B', this.CartData as any);
+    this.localS.set(StorageKey.carroCompraB2B, this.CartData as any);
   }
 
   private saveOmni(): void {
-    this.localS.set('carroCompraOMNI', this.CartData as any);
+    this.localS.set(StorageKey.carroCompraOMNI, this.CartData as any);
   }
 
   load(): void {
@@ -821,7 +822,7 @@ export class CartService {
 
             this.data.productos = this.CartData.productos;
             /* se limpia OV cargada */
-            this.localS.remove('ordenCompraCargada');
+            this.localS.remove(StorageKey.ordenCompraCargada);
             this.save();
             this.calc();
           }
@@ -855,7 +856,7 @@ export class CartService {
 
             this.data.productos = this.CartData.productos;
             /* se limpia OV cargada */
-            this.localS.remove('ordenCompraCargada');
+            this.localS.remove(StorageKey.ordenCompraCargada);
             this.save();
             this.calc();
           }

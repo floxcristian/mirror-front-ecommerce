@@ -10,6 +10,7 @@ import { CurrencyService } from '../../../../shared/services/currency.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
 
 @Component({
   selector: 'app-header-topbar',
@@ -62,7 +63,7 @@ export class TopbarComponent {
   }
 
   async validarCuenta() {
-    this.localS.set('ruta', ['/', 'mi-cuenta', 'seguimiento']);
+    this.localS.set(StorageKey.ruta, ['/', 'mi-cuenta', 'seguimiento']);
     let usuario = this.usuario;
 
     if (!usuario) {

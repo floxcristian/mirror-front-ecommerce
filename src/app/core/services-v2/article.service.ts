@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import {
   IArticleResponse,
   ISearchResponse,
+  ISlimSearch,
 } from '@core/models-v2/article/article-response.interface';
 import {
   IComment,
@@ -41,6 +42,12 @@ export class ArticleService {
   }): Observable<ISearchResponse> {
     return this.http.get<ISearchResponse>(`${API_ARTICLE}/search`, {
       params,
+    });
+  }
+
+  slimSearch(search: string): Observable<ISlimSearch>  {
+    return this.http.get<ISlimSearch>(`${API_ARTICLE}/slim-search`, {
+      params: { search },
     });
   }
 

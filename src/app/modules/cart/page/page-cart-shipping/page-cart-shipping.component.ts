@@ -472,7 +472,7 @@ export class PageCartShippingComponent implements OnInit {
 
     this.tienda = resultado;
     this.cambiarTienda(this.tienda);
-    this.localS.set('tiendaRetiro', resultado);
+    this.localS.set(StorageKey.tiendaRetiro, resultado);
 
     let disponible = resultado;
     const data: GetLogisticPromiseRequest = {
@@ -659,8 +659,8 @@ export class PageCartShippingComponent implements OnInit {
     // guardamos el despacho y vericamos si tiene descuento o no
     this.saveShipping(pos, item.index);
     this.fechas[pos] = this.shippingSelected?.fecha;
-    this.localS.set('fechas', this.fechas);
-    this.localS.remove('tiendaRetiro');
+    this.localS.set(StorageKey.fechas, this.fechas);
+    this.localS.remove(StorageKey.tiendaRetiro);
   }
   /** */
   /**
@@ -687,7 +687,7 @@ export class PageCartShippingComponent implements OnInit {
 
     // guardamos el despacho y vericamos si tiene descuento o no
     this.saveShipping(pos, item.index);
-    this.localS.set('fechas', this.fechas);
+    this.localS.set(StorageKey.fechas, this.fechas);
   }
 
   addShipping(data: IShoppingCart) {
@@ -804,7 +804,7 @@ export class PageCartShippingComponent implements OnInit {
     this.grupos = 0;
     this.fechas = [];
 
-    this.localS.remove('fechas');
+    this.localS.remove(StorageKey.fechas);
     if (formaEntrega == 'sucursal') {
       this.loadingSucursal = true;
       formaEntrega = 'despacho';
@@ -1014,7 +1014,7 @@ export class PageCartShippingComponent implements OnInit {
     this.recibeType == 'otra'
       ? (this.recibeOtra = true)
       : (this.recibeOtra = false);
-    this.localS.set('recibe', {});
+    this.localS.set(StorageKey.recibe, {});
     this.recibeOtraname = '';
   }
 

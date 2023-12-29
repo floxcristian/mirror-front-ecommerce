@@ -13,7 +13,6 @@ import { RootService } from '../../../../shared/services/root.service';
 import { EditarListaProductosComponent } from '../../../../shared/components/editar-lista-productos/editar-lista-productos.component';
 import { AgregarListaProductosMasivaModalComponent } from '../../../../shared/components/agregar-lista-productos-masiva-modal/agregar-lista-productos-masiva-modal.component';
 import { AgregarListaProductosUnitariaModalComponent } from '../../../../shared/components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
-import { CartService } from '../../../../shared/services/cart.service';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
@@ -24,6 +23,8 @@ import {
   IProductWishlist,
   IWishlist,
 } from '@core/services-v2/wishlist/models/wishlist-response.interface';
+import { CartService } from '@core/services-v2/cart.service';
+import { IProduct } from '@core/models-v2/oms/order.interface';
 
 @Component({
   selector: 'app-page-listas-de-productos',
@@ -44,12 +45,12 @@ export class PageListasDeProductosComponent implements OnInit {
     public rootService: RootService,
     private toastr: ToastrService,
     private modalService: BsModalService,
-    private cart: CartService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly geolocationService: GeolocationServiceV2,
-    private readonly wishlistApiService: WishlistApiService
+    private readonly wishlistApiService: WishlistApiService,
+    public readonly cartService: CartService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -244,37 +245,68 @@ export class PageListasDeProductosComponent implements OnInit {
     });
   }
 
-  addToCart(lista: any) {
+  addAllToCart(itemObject: any): void {
     if (this.addingToCart) {
       return;
     }
 
     this.addingToCart = true;
-    this.cart.addLista(lista.detalleSkus).subscribe((resp) => {
-      this.addingToCart = false;
-      if (!resp.error) {
-        this.toastr.success(
-          `Productos de la lista <strong>${lista.nombre}</strong> agregados al carro correctamente.`
+    const itemsToAdd = this.prepareItemsForCart(itemObject.articles);
+
+    this.cartService.addLista(itemsToAdd).subscribe({
+      next: (cart) => {
+        this.addingToCart = false;
+        this.toastr.success('Productos agregados al carrito correctamente.');
+      },
+      error: (error) => {
+        this.addingToCart = false;
+        this.toastr.error(
+          'Hubo un error al agregar los productos al carrito.'
         );
-      }
+        console.error('Error al agregar al carrito:', error);
+      },
     });
   }
 
-  addCart(item: any) {
+  addtoCart(item: any): void {
     if (this.addingToCart) {
       return;
     }
-
     this.addingToCart = true;
-    this.cart.add(item, 1).subscribe((resp) => {
+
+    const itemToAdd: any = [
       {
+        sku: item.sku,
+        name: item.name,
+        origin: null,
+        images: item.images,
+        quantity: 1,
+        price: 0,
+      },
+    ];
+
+    this.cartService.addLista(itemToAdd).subscribe({
+      next: () => {
         this.addingToCart = false;
-        if (!resp.error) {
-          this.toastr.success(
-            `Producto <strong>${item.sku}</strong> agregado al carro correctamente.`
-          );
-        }
-      }
+        this.toastr.success(
+          `Producto ${item.sku} agregado al carro correctamente.`
+        );
+      },
+      error: (error) => {
+        this.addingToCart = false;
+        this.toastr.error('Hubo un error al agregar el producto al carro.');
+        console.error('Error al agregar al carro:', error);
+      },
     });
+  }
+
+  prepareItemsForCart(articles: any[]): any[] {
+    return articles.map((article) => ({
+      sku: article.sku,
+      name: article.name,
+      origin: null,
+      images: [article.preview],
+      quantity: 1,
+    }));
   }
 }

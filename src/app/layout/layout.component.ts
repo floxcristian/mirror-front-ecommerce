@@ -5,6 +5,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 // Services
 import { LocalStorageService } from '../core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/services-v2/session/session.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
 
 @Component({
   selector: 'app-layout',
@@ -50,17 +51,17 @@ export class LayoutComponent implements OnInit {
     this.route.queryParams.subscribe((params: Params) => {
       if (params['utm_campaign']) {
         this.utm_campaign = params['utm_campaign'];
-        this.localS.set('utm_campaign', this.utm_campaign);
+        this.localS.set(StorageKey.utm_campaign, this.utm_campaign);
       } else this.utm_campaign = undefined;
 
       if (params['gclid']) {
         this.gclid = params['gclid'];
-        this.localS.set('gclid', this.gclid);
+        this.localS.set(StorageKey.gclid, this.gclid);
       }
 
       if (params['fbclid']) {
         this.fbclid = params['fbclid'];
-        this.localS.set('fbclid', this.fbclid);
+        this.localS.set(StorageKey.fbclid, this.fbclid);
       } else this.fbclid = undefined;
     });
   }
