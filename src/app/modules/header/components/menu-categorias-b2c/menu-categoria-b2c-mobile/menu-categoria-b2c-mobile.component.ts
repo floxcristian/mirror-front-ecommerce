@@ -6,7 +6,6 @@ import { takeUntil } from 'rxjs/operators';
 import { NavigationLink } from '../../../../../shared/interfaces/navigation-link';
 import { MenuCategoriasB2cService } from '../../../../../shared/services/menu-categorias-b2c.service';
 import { RootService } from '../../../../../shared/services/root.service';
-import { LogisticsService } from '../../../../../shared/services/logistics.service';
 import { CartService } from '../../../../../shared/services/cart.service';
 import { DropdownDirective } from '../../../../../shared/directives/dropdown.directive';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -21,6 +20,7 @@ import {
   IThirdLvl,
 } from '@core/models-v2/cms/categories-response.interface';
 import { CmsService } from '@core/services-v2/cms.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
 @Component({
   selector: 'app-menu-categoria-b2c-mobile',
   templateUrl: './menu-categoria-b2c-mobile.component.html',
@@ -229,7 +229,7 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
   }
 
   async validarCuenta() {
-    this.localS.set('ruta', ['/', 'mi-cuenta', 'seguimiento']);
+    this.localS.set(StorageKey.ruta, ['/', 'mi-cuenta', 'seguimiento']);
     // // @ts-ignore
     this.router.navigate(['/mi-cuenta', 'seguimiento']);
   }
