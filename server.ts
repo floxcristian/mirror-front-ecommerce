@@ -3,6 +3,7 @@ import 'zone.js/node';
 import { APP_BASE_HREF } from '@angular/common';
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import * as express from 'express';
+import * as compression from 'compression';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { AppServerModule } from './src/main.server';
@@ -10,10 +11,22 @@ import { AppServerModule } from './src/main.server';
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
   const server = express();
-  const distFolder = join(process.cwd(), 'dist/front-ecommerce/browser');
+  server.use(compression());
+  const distFolder = join(process.cwd(), 'dist/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html'))
     ? 'index.original.html'
     : 'index';
+
+  // configuracion variable windows
+  const domino = require('domino');
+  const win = domino.createWindow();
+  global['window'] = win;
+  global['document'] = win.document;
+
+  global['Event'] = win.Event;
+  global['Event']['prototype'] = win.Event.prototype;
+  global['KeyboardEvent'] = win.Event;
+  global['MouseEvent'] = win.Event;
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/main/modules/express-engine)
   server.engine(

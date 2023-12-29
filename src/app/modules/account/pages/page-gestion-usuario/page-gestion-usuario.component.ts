@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { calculaIcono } from '../../../../shared/utils/utilidades';
 
 import { UsersService } from '../../service/users.service';
@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SubAccountService } from '@core/services-v2/sub-account.service';
+import { isPlatformBrowser } from '@angular/common';
 export interface Archivo {
   archivo: File;
   nombre: string;
@@ -22,6 +23,7 @@ export class PageGestionUsuarioComponent implements OnInit {
   nuevo: any = [];
   existe: any = [];
   constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
     private userService: UsersService,
 
     private toast: ToastrService,
@@ -50,7 +52,9 @@ export class PageGestionUsuarioComponent implements OnInit {
       };
 
       this.archivo = aux;
-      $('#' + this.idArchivo).val('');
+      if (isPlatformBrowser(this.platformId)) {
+        $('#' + this.idArchivo).val('');
+      }
     }
   }
 

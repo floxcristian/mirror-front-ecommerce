@@ -44,12 +44,9 @@ export class AngularEmailAutocompleteComponent {
   handleSelect = (value: string) => {
     this.inputValue = value;
     this.ValidaCorreo();
-    // $('.dropdown-menu').hide();
   };
 
-  ocultaMenuDropdown = (event: any) => {
-    // $('.dropdown-menu').hide();
-  };
+  ocultaMenuDropdown = (event: any) => {};
 
   activaFiltro = (event: any) => {
     this.toggleDropDown = true;
@@ -102,18 +99,8 @@ export class AngularEmailAutocompleteComponent {
         }
         // valueToDisplay = this.inputValue.indexOf("@") == -1 ? `${this.inputValue }@${domainName.value}` : `${this.inputValue }${domainName.value}`;
       });
-      // } else {
-      //   this.toggleDropDown = false;
-      // }
-
-      // if(this.dropDownValues.length == 0){
-      //   $('.dropdown-menu').hide();
-      // } else {
-      //   $('.dropdown-menu').show();
-      // }
     } else {
       this.toggleDropDown = false;
-      // $('.dropdown-menu').hide();
     }
     this.ValidaCorreo();
   };

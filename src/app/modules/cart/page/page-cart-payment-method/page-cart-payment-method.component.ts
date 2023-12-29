@@ -624,8 +624,10 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     if (files.length) {
       this.archivo = this.cargaArchivo(files[0]);
 
-      $('#' + this.idArchivo).val(null);
-      $('#' + this.idArchivoMobile).val(null);
+      if (isPlatformBrowser(this.platformId)) {
+        $('#' + this.idArchivo).val(null);
+        $('#' + this.idArchivoMobile).val(null);
+      }
     }
   }
 

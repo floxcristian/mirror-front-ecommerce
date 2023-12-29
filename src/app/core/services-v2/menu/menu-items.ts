@@ -44,26 +44,35 @@ const LOGOUT_ITEM_MENU: IMenuItem = {
 
 export class MenuItem {
   static OVERVIEW_ITEM_MENU(): IMenuItem {
-    return structuredClone(OVERVIEW_ITEM_MENU);
+    return MenuItem.copyMenuitem(OVERVIEW_ITEM_MENU);
   }
 
   static PROFILE_ITEM_MENU(): IMenuItem {
-    return structuredClone(PROFILE_ITEM_MENU);
+    return MenuItem.copyMenuitem(PROFILE_ITEM_MENU);
   }
 
   static PURCHASE_HISTORY_ITEM_MENU(): IMenuItem {
-    return structuredClone(PURCHASE_HISTORY_ITEM_MENU);
+    return MenuItem.copyMenuitem(PURCHASE_HISTORY_ITEM_MENU);
   }
 
   static TRACKING_ITEM_MENU(): IMenuItem {
-    return structuredClone(TRACKING_ITEM_MENU);
+    return MenuItem.copyMenuitem(TRACKING_ITEM_MENU);
   }
 
   static MY_PURCHASE_ITEM_MENU(): IMenuItem {
-    return structuredClone(MY_PURCHASE_ITEM_MENU);
+    return MenuItem.copyMenuitem(MY_PURCHASE_ITEM_MENU);
   }
 
   static LOGOUT_ITEM_MENU(): IMenuItem {
-    return structuredClone(LOGOUT_ITEM_MENU);
+    return MenuItem.copyMenuitem(LOGOUT_ITEM_MENU);
+  }
+
+  private static copyMenuitem(item: IMenuItem): IMenuItem {
+    return {
+      icon: item.icon,
+      label: item.label,
+      type: item.type,
+      url: item.url,
+    };
   }
 }

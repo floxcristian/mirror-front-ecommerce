@@ -99,43 +99,57 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('pdp');
           this.document.body.classList.add('carrito');
           this.document.body.classList.remove('categoria');
-          $('.webchatStartButtonContainer').hide();
+          if (isPlatformBrowser(this.platformId)) {
+            $('.webchatStartButtonContainer').hide();
+          }
         } else if (event.url.includes('/catalogos')) {
           this.document.body.classList.remove('home');
           this.document.body.classList.remove('pdp');
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('categoria');
-          $('.webchatStartButtonContainer').hide();
+          if (isPlatformBrowser(this.platformId)) {
+            $('.webchatStartButtonContainer').hide();
+          }
         } else if (event.url.includes('/categoria')) {
           this.document.body.classList.remove('home');
           this.document.body.classList.remove('pdp');
           this.document.body.classList.remove('carrito');
           this.document.body.classList.add('categoria');
-          $('.webchatStartButtonContainer').hide();
+          if (isPlatformBrowser(this.platformId)) {
+            $('.webchatStartButtonContainer').hide();
+          }
         } else if (this.sessionService.isB2B()) {
           this.document.body.classList.remove('home');
           this.document.body.classList.remove('pdp');
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('categoria');
-          $('.webchatStartButtonContainer').hide();
+          if (isPlatformBrowser(this.platformId)) {
+            $('.webchatStartButtonContainer').hide();
+          }
         } else if (event.url.includes('/ficha')) {
           this.document.body.classList.remove('home');
           this.document.body.classList.remove('categoria');
           this.document.body.classList.remove('carrito');
           this.document.body.classList.add('pdp');
-          $('.webchatStartButtonContainer').show();
+          if (isPlatformBrowser(this.platformId)) {
+            $('.webchatStartButtonContainer').show();
+          }
         } else if (event.url.includes('/especial/')) {
           this.document.body.classList.add('home');
           this.document.body.classList.remove('categoria');
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('pdp');
-          $('.webchatStartButtonContainer').show();
+          if (isPlatformBrowser(this.platformId)) {
+            $('.webchatStartButtonContainer').show();
+          }
         } else {
           this.document.body.classList.add('home');
           this.document.body.classList.remove('pdp');
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('categoria');
-          $('.webchatStartButtonContainer').show();
+          if (isPlatformBrowser(this.platformId)) {
+            $('.webchatStartButtonContainer').show();
+          }
         }
         if (event.url.includes('/omni-forma-de-pago')) {
           this.isOmni = true;

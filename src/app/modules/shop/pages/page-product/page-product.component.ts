@@ -370,15 +370,17 @@ export class PageProductComponent implements OnInit, OnDestroy {
   }
 
   abrirTabEvaluacion(): void {
-    $('#descripcion-tab').removeClass('active');
-    $('#detallesTecnicos-tab').removeClass('active');
-    $('#evaluacion-tab').addClass('active');
+    if (isPlatformBrowser(this.platformId)) {
+      $('#descripcion-tab').removeClass('active');
+      $('#detallesTecnicos-tab').removeClass('active');
+      $('#evaluacion-tab').addClass('active');
 
-    $('#descripcion').removeClass('active show');
-    $('#detallesTecnicos').removeClass('active show');
-    $('#evaluacion').addClass('active show');
+      $('#descripcion').removeClass('active show');
+      $('#detallesTecnicos').removeClass('active show');
+      $('#evaluacion').addClass('active show');
 
-    $('#evaluacion').tab('show');
+      $('#evaluacion').tab('show');
+    }
     document.querySelector('#ancla')?.scrollIntoView();
   }
 
