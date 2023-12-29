@@ -1,4 +1,8 @@
 {
   "documentName": "Rut",
-  "phoneCodes": ["569"]
+  "phoneCodes": ["569"],
+  "storesPage": {
+    "title": "29 TIENDAS A LO LARGO DE CHILE",
+    "subtitle": "Desde Arica a Punta Arenas"
+  }
 }

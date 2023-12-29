@@ -5,19 +5,19 @@
 <div class="row" class="bg-primary">
   <a id="informacionTienda"></a>
   <h1 class="text-center text-white py-2 mb-0" *ngIf="innerWidth > 768">
-    29 TIENDAS A LO LARGO DE CHILE
+    {{ pageConfig.title }}
   </h1>
   <h4 class="text-center text-white py-2 mb-0" *ngIf="innerWidth <= 768">
-    29 TIENDAS A LO LARGO DE CHILE
+    {{ pageConfig.title }}
   </h4>
 </div>
 
 <div class="row" class="text-white bg-dark">
   <h1 class="text-center py-2" *ngIf="innerWidth > 768">
-    Desde Arica a Punta Arenas
+    {{ pageConfig.subtitle }}
   </h1>
   <h5 class="text-center py-2" *ngIf="innerWidth <= 768">
-    Desde Arica a Punta Arenas
+    {{ pageConfig.subtitle }}
   </h5>
 </div>
 

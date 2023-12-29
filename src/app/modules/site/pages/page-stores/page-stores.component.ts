@@ -5,6 +5,8 @@ import { isPlatformBrowser } from '@angular/common';
 import { ICollapsableStore } from './collapsable-store.interface';
 // Services
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { ConfigService } from '@core/config/config.service';
+import { IConfig, IStoresPage } from '@core/config/config.interface';
 
 @Component({
   selector: 'app-stores',
@@ -16,15 +18,18 @@ export class PageStoresComponent {
   selectedStore!: ICollapsableStore;
   isCollapsed!: boolean;
   innerWidth: number;
+  pageConfig!: IStoresPage;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
-    private readonly geolocationService: GeolocationServiceV2
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly configService: ConfigService
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
+    this.pageConfig = this.configService.getConfig().storesPage;
   }
 
   ngOnInit(): void {
