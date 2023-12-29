@@ -7,7 +7,6 @@ export const environment = {
   apiElastic: 'https://dev-api.implementos.cl/api/articulo/',
   apiCMS: 'https://dev-api.implementos.cl/cms/',
   apiOms: 'https://dev-api.implementos.cl/api/oms/',
-  apiMobile: 'https://dev-api.implementos.cl/api/mobile/',
   apiCatalogo: 'https://dev-api.implementos.cl/api/catalogo/',
   apiCustomer: 'https://dev-api.implementos.cl/api/cliente/',
   apiLogistic: 'https://dev-api.implementos.cl/api/logistica/',

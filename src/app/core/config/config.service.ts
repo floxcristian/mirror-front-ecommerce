@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 // Models
 import { IConfig } from './config.interface';
 // Rxjs
-import { tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Injectable()
 export class ConfigService {
@@ -12,11 +12,13 @@ export class ConfigService {
 
   constructor(private http: HttpClient) {}
 
-  loadConfig() {
-    return this.http
-      .get<IConfig>('./assets/config/config.json')
-      .pipe(tap((config) => (this.config = config)))
-      .toPromise();
+  loadConfig(): Observable<IConfig> {
+    return this.http.get<IConfig>('./assets/config/config.json').pipe(
+      tap((config) => {
+        this.config = config;
+        console.log('config: ', config);
+      })
+    );
   }
 
   getConfig(): IConfig {

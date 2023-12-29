@@ -15,17 +15,18 @@ export const configFactory = (configService: ConfigService) => {
   declarations: [],
   imports: [BrowserAnimationsModule, HttpClientModule],
   providers: [
+    ConfigService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
     },
-    /*{
+    {
       provide: APP_INITIALIZER,
       useFactory: configFactory,
       multi: true,
       deps: [ConfigService],
-    },*/
+    },
   ],
 })
 export class CoreModule {}

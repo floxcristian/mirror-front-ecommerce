@@ -10,11 +10,14 @@ import { ICustomHomePage } from '@core/models-v2/cms/customHomePage-response.int
 import { IHomePageResponse } from '@core/models-v2/cms/homePage-response.interface';
 import { ISliderResponse } from '@core/models-v2/cms/slider-reponse.interface';
 import { ISpecialResponse } from '@core/models-v2/cms/special-reponse.interface';
-import { IValueBoxResponse } from '@core/models-v2/cms/valueBox-response.interface';
+import {
+  IValueBox,
+  IValueBoxResponse,
+} from '@core/models-v2/cms/valueBox-response.interface';
 import { IWorldResponse } from '@core/models-v2/cms/world-response.interface';
 // Environment
 import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 const API_CMS = `${environment.apiEcommerce}/api/v1/cms`;
 
@@ -35,8 +38,10 @@ export class CmsService {
     return this.http.get<ISliderResponse>(`${API_CMS}/sliders`);
   }
 
-  getValueBoxes(): Observable<IValueBoxResponse> {
-    return this.http.get<IValueBoxResponse>(`${API_CMS}/value-boxes`);
+  getValueBoxes(): Observable<IValueBox[]> {
+    return this.http
+      .get<IValueBoxResponse>(`${API_CMS}/value-boxes`)
+      .pipe(map((res) => res.data));
   }
 
   getWorlds(): Observable<IWorldResponse> {

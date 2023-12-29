@@ -1,5 +1,6 @@
+// Angular
 import { Component, Input, EventEmitter, OnInit, Output } from '@angular/core';
-import { PageHomeService } from '../../services/pageHome.service';
+// Services
 import { CmsService } from '@core/services-v2/cms.service';
 
 @Component({
@@ -26,7 +27,6 @@ export class BlogComponent implements OnInit {
   currentOpenItemIndex = 0;
   @Output() elementoEvent: EventEmitter<any> = new EventEmitter();
   constructor(
-    // private cmsService: CmsService
     //Services V2
     private readonly cmsService: CmsService
   ) {}

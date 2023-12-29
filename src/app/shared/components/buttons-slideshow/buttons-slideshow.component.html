@@ -27,10 +27,10 @@
     appOwlPreventClick
     [ngClass]="{ item: true }"
   >
-    <ng-container *ngFor="let item of botones1">
+    <ng-container *ngFor="let item of botones1; let i = index">
       <ng-template
         carouselSlide
-        [id]="'id-' + item._id"
+        [id]="'id-' + i"
         style="height: 300px !important"
       >
         <a [href]="item.url">
