@@ -15,14 +15,6 @@ import { ArticuloResponse } from '../interfaces/articulos.response';
 export class LogisticsService {
   constructor(private http: HttpClient) {}
 
-  obtenerMultiDespachos(data: any) {
-    let consulta: any = this.http.post(
-      environment.apiLogistic + 'despachocarro3/',
-      data
-    );
-    return consulta;
-  }
-
   articulos(search: string = ''): Observable<ArticuloResponse> {
     return this.http
       .get<ArticuloResponse>(

@@ -1262,7 +1262,7 @@ export class PageCartShippingComponent implements OnInit {
       (address) => address.id == this.selectedShippingId
     );
 
-    const usuario: ISession = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
+    const usuario: ISession = this.sessionService.getSession();
     let request: IRemoveGroupRequest = {};
     if (this.shippingType === ShippingType.DESPACHO) {
       request = {
@@ -1368,7 +1368,7 @@ export class PageCartShippingComponent implements OnInit {
     });
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res) {
-        const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
+        const usuario = this.sessionService.getSession();
         const request = {
           codEmpleado: 0,
           codUsuario: 0,
