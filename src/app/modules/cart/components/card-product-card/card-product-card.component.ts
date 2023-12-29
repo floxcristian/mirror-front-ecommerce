@@ -43,11 +43,11 @@ export class CardProductCardComponent implements OnInit {
     });
 
     this.cart.saveCart(productos).subscribe((r) => {
-      for (const el of r.data.productos) {
+      for (const el of r.products) {
         if (el.sku == item.ProductCart.sku) {
-          item.ProductCart.deliveryConflict = el.conflictoEntrega;
-          item.ProductCart.delivery = el.entregas;
-          item.ProductCart.price = el.precio;
+          item.ProductCart.deliveryConflict = el.deliveryConflict;
+          item.ProductCart.delivery = el.delivery;
+          item.ProductCart.price = el.price;
         }
       }
       this.cart.updateCart(productos);

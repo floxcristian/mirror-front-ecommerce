@@ -100,17 +100,29 @@ export class DropcartComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  async updateCart(cantidad: any, item: any) {
+  async updateCart(cantidad: any, item: Item) {
     if (cantidad < 1) {
       cantidad = 1;
       this.toast.error('No se permiten números negativos en la cantidad');
     }
 
-    item.ProductCart.cantidad = cantidad;
+    item.ProductCart.quantity = cantidad;
     const productos: IShoppingCartProduct[] = [];
     this.items.map((r) => {
       productos.push(r.ProductCart);
     });
+
+    this.shoppingCartService.saveCart(productos).subscribe((r) => {
+      for (const el of r.products) {
+        if (el.sku == item.ProductCart.sku) {
+          item.ProductCart.deliveryConflict = el.deliveryConflict;
+          item.ProductCart.delivery = el.delivery;
+          item.ProductCart.price = el.price;
+        }
+      }
+      this.shoppingCartService.updateCart(productos);
+    });
+    /*
     clearTimeout(this.saveTimerLocalCart);
     this.saveTimerLocalCart = setTimeout(() => {
       this.shoppingCartService.saveCart(productos).subscribe((r) => {
@@ -123,7 +135,7 @@ export class DropcartComponent implements OnInit, OnDestroy {
         }
         this.shoppingCartService.updateCart(productos);
       });
-    }, 100);
+    }, 100);*/
   }
 
   // saveCart() {
