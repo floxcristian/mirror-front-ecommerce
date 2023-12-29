@@ -735,6 +735,7 @@ export class PageCartShippingComponent implements OnInit {
       );
       this.getDireccionName(this.shippingSelected?.tipoenvio || '');
     } else {
+      this.loadingResumen = false;
       if (redirect) {
         this.router.navigate(['/', 'carro-compra', 'forma-de-pago']);
       }
@@ -862,6 +863,7 @@ export class PageCartShippingComponent implements OnInit {
     this.cardShippingActive = 0;
     //this.selectedShippingId = null;
     this.shippingSelected = null;
+    this.loadingResumen = false;
   }
 
   usuarioVisita(invitado: any) {

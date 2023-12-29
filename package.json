@@ -9,7 +9,8 @@
     "test": "ng test",
     "dev:ssr": "ng run front-ecommerce:serve-ssr",
     "serve:ssr": "node dist/front-ecommerce/server/main.js",
-    "build:ssr": "ng build && ng run front-ecommerce:server",
+    "build:ssr": "npm run build:client-and-server-bundles",
+    "build:client-and-server-bundles": "node --max_old_space_size=4000 ./node_modules/@angular/cli/bin/ng build --aot=true && ng run front-ecommerce:server && gzipper compress ./dist",
     "prerender": "ng run front-ecommerce:prerender",
     "format": "prettier --write \"**/*.+(ts|md|css|scss|json)\"",
     "prepare": "husky install"
@@ -69,6 +70,7 @@
     "@types/node": "^16.11.7",
     "@types/page-flip": "^2.0.0",
     "@types/uuid": "^9.0.2",
+    "gzipper": "^7.2.0",
     "husky": "^8.0.0",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
