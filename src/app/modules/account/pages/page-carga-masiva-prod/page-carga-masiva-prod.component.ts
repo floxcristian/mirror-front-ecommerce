@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import {
   calculaIcono,
@@ -14,7 +14,11 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 // Import V2
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { CartService } from '@core/services-v2/cart.service';
-import { ISavedCart, IUploadResponse } from '@core/models-v2/responses/file-upload.response';
+import {
+  ISavedCart,
+  IUploadResponse,
+} from '@core/models-v2/responses/file-upload.response';
+import { isPlatformBrowser } from '@angular/common';
 
 declare var $: any;
 
@@ -52,6 +56,7 @@ export class PageCargaMasivaProdComponent implements OnInit {
   isVacio = isVacio;
 
   constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
     // private cartService: CartService,
     private localS: LocalStorageService,
     private toast: ToastrService,
@@ -79,7 +84,9 @@ export class PageCargaMasivaProdComponent implements OnInit {
       };
 
       this.archivo = aux;
-      $('#' + this.idArchivo).val(null);
+      if (isPlatformBrowser(this.platformId)) {
+        $('#' + this.idArchivo).val(null);
+      }
     }
   }
 
