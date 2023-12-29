@@ -580,12 +580,15 @@ export class CartService {
       products,
     };
 
-    return this.http.post(`${API_CART}/article`, data).pipe(
-      map((r: any) => {
-        this.CartData.shipment = r.data.despacho;
+    return this.http.post<IShoppingCart>(`${API_CART}/article`, data).pipe(
+      map((r) => {
+        this.CartData.shipment = r.shipment;
 
         let nombre = '';
-        if (this.CartData.shipment?.serviceType == 'TIENDA') {
+        if (
+          this.CartData.shipment?.serviceType == 'TIENDA' ||
+          this.CartData.shipment?.deliveryMode === DeliveryModeType.PICKUP
+        ) {
           nombre =
             `Retiro en tienda ` +
             this.datePipe.transform(
