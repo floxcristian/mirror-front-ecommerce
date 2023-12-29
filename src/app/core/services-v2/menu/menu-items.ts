@@ -72,7 +72,7 @@ export class MenuItem {
       icon: item.icon,
       label: item.label,
       type: item.type,
-      url: item.url,
+      url: [...item.url],
     };
   }
 }
