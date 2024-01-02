@@ -39,8 +39,8 @@ export class ConfigService {
   }
 
   private getFullUrl() {
-    const protocol = this.request.protocol; // 'http' or 'https'
-    const host = this.request.headers.host;
-    return `${protocol}://${host}`; // Constructs the full URL
+    const port = process.env['PORT'] || 4200;
+    const url = `http://localhost:${port}`;
+    return url;
   }
 }
