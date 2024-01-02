@@ -16,6 +16,7 @@ import { BuscadorB2B } from '../../shared/interfaces/buscadorB2B';
 // Services
 import { isVacio } from '../../shared/utils/utilidades';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
 
 @Component({
   selector: 'app-header',
@@ -39,14 +40,14 @@ export class HeaderComponent implements AfterViewInit {
     private localS: LocalStorageService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    const buscadorB2B = this.localS.get('buscadorB2B');
+    const buscadorB2B = this.localS.get(StorageKey.buscadorB2B);
     if (!buscadorB2B) {
       const data: BuscadorB2B = {
         indicadores: null,
         collapsed: null,
         vinBuscado: null,
       };
-      this.localS.set('buscadorB2B', data);
+      this.localS.set(StorageKey.buscadorB2B, data);
     }
   }
   ngAfterViewInit(): void {

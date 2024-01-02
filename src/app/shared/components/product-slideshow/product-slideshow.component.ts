@@ -15,7 +15,6 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 // Services
 import { DirectionService } from '../../services/direction.service';
-import { LogisticsService } from '../../services/logistics.service';
 import { isVacio } from '../../utils/utilidades';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { CmsService } from '@core/services-v2/cms.service';

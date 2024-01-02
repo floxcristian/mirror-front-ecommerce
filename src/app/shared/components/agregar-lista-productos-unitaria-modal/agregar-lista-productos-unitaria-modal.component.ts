@@ -71,9 +71,9 @@ export class AgregarListaProductosUnitariaModalComponent implements OnInit {
     );
     if (!currentSelectedSkus.includes(articulo.sku)) {
       this.selectedProducts.push({
-        image: articulo.image,
+        image: articulo.images['250'][0],
         sku: articulo.sku,
-        name: articulo.nombre,
+        name: articulo.name,
       });
     } else {
       this.toastr.error(

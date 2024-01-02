@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import {
   IArticleResponse,
   ISearchResponse,
+  ISlimSearch,
 } from '@core/models-v2/article/article-response.interface';
 import {
   IComment,
@@ -41,6 +42,12 @@ export class ArticleService {
   }): Observable<ISearchResponse> {
     return this.http.get<ISearchResponse>(`${API_ARTICLE}/search`, {
       params,
+    });
+  }
+
+  slimSearch(search: string): Observable<ISlimSearch> {
+    return this.http.get<ISlimSearch>(`${API_ARTICLE}/slim-search`, {
+      params: { search },
     });
   }
 
@@ -161,7 +168,7 @@ export class ArticleService {
     documentId: string;
     branchCode: string;
     quantityToSuggest: number;
-    location:string;
+    location: string;
   }): Observable<IArticleResponse[]> {
     let httpParams = new HttpParams();
     for (const sku of params.skus) {
@@ -171,7 +178,7 @@ export class ArticleService {
       .append('documentId', params.documentId)
       .append('branchCode', params.branchCode)
       .append('quantityToSuggest', params.quantityToSuggest)
-      .append('location', params.location)
+      .append('location', params.location);
 
     return this.http.get<IArticleResponse[]>(
       `${API_ARTICLE}/suggestion/article-suggestions`,

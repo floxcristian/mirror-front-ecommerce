@@ -8,6 +8,7 @@ import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service
 import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 import { WishlistStorageService } from '@core/storage/wishlist-storage.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
 
 @Component({
   selector: 'app-login',
@@ -29,8 +30,8 @@ export class PageLoginComponent {
     this.sessionStorage.remove();
     this.sessionTokenStorage.remove();
     this.customerPreferenceStorage.remove();
-    this.localS.remove('ordenCompraCargada');
-    this.localS.remove('buscadorB2B');
+    this.localS.remove(StorageKey.ordenCompraCargada);
+    this.localS.remove(StorageKey.buscadorB2B);
     this.wishlistStorage.remove();
     this.authStateService.setSession(null);
 

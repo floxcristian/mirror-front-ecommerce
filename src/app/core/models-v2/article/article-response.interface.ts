@@ -1,4 +1,4 @@
-import { IArticle } from '../cms/special-reponse.interface';
+import { IArticle, IImage } from '../cms/special-reponse.interface';
 
 export interface CategoryDetail {
   _id: string;
@@ -158,4 +158,20 @@ export interface IElasticSearch {
   order: string;
   brand: string;
   filters: string;
+}
+
+export interface ISlimSearch {
+  sku: string;
+  name: string;
+  category: string;
+  status: string;
+  manufacturer: string;
+  line: string;
+  brand: string;
+  sbu: string;
+  description: string | null;
+  images: IImage;
+  dropshipmentType: string;
+  dropshipment: number;
+  partNumber: string;
 }

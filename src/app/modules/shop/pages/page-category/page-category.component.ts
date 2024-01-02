@@ -37,6 +37,7 @@ import { ICustomerPreference } from '@core/services-v2/customer-preference/model
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
 
 @Component({
   selector: 'app-grid',
@@ -503,7 +504,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.agregarMatrizProducto(r.articles);
     if (r.banners && r.banners.length > 0) {
       this.banners = r.banners[0];
-      this.localS.set('bannersMarca', r.banners[0]);
+      this.localS.set(StorageKey.bannersMarca, r.banners[0]);
     } else this.banners = null;
   }
   //Trae productos matriz para cuando hay 1 solo article de resultado en la busqueda

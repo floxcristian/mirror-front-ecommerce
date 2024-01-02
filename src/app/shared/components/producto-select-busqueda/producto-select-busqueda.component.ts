@@ -11,7 +11,10 @@ import {
 } from '@angular/core';
 import { Subject, Observable, of, concat } from 'rxjs';
 import { Articulo } from '../../interfaces/articulos.response';
-import { LogisticsService } from '../../services/logistics.service';
+import { ArticleService } from '@core/services-v2/article.service';
+import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
+import { ToastrService } from 'ngx-toastr';
+//import { LogisticsService } from '../../services/logistics.service';
 
 @Component({
   selector: 'app-producto-select-busqueda',
@@ -26,13 +29,16 @@ export class ProductoSelectBusquedaComponent
 
   articuloLoading = false;
   articuloInput$ = new Subject<string>();
-  articulosSelect$!: Observable<Articulo[]>;
+  articulosSelect$!: Observable<IArticle[]>;
 
   @Input() nuevosArticulos: Articulo[] = [];
   articulos: Articulo[] = [];
   @Output() articulosSeleccionados = new EventEmitter<Articulo[]>();
 
-  constructor(private logisticService: LogisticsService) {}
+  constructor(
+    private logisticService: ArticleService,
+    private toast: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.buscarArticulo();
@@ -53,17 +59,9 @@ export class ProductoSelectBusquedaComponent
           this.articuloInput$.next(search);
           this.articulos = [...this.nuevosArticulos];
         } else {
-          // Vienen solo los sku
-          const search = this.nuevosArticulos.map((x) => x.sku).join(',');
-          this.articuloInput$.next(search);
-          const response = await this.logisticService
-            .articulos(search)
-            .toPromise();
-          if (response) {
-            this.articulosSelect$ = of(response.data);
-            this.articulos = [...response.data];
-            this.articulosCambiados();
-          }
+          this.toast.success(
+            'El articulo no se pudo encontrar, por favor ingrese intente mas tardes'
+          );
         }
       }
     }
@@ -96,8 +94,8 @@ export class ProductoSelectBusquedaComponent
         distinctUntilChanged(),
         tap(() => (this.articuloLoading = true)),
         switchMap((search) =>
-          this.logisticService.articulos(search).pipe(
-            map((r) => r.data),
+          this.logisticService.slimSearch(search).pipe(
+            map((r: any) => r),
             tap(() => (this.articuloLoading = false))
           )
         )

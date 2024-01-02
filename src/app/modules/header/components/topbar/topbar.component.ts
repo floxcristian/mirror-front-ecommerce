@@ -12,6 +12,7 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { ConfigService } from '@core/config/config.service';
 import { IConfig } from '@core/config/config.interface';
+import { StorageKey } from '@core/storage/storage-keys.enum';
 
 @Component({
   selector: 'app-header-topbar',
@@ -51,7 +52,7 @@ export class TopbarComponent {
   }
 
   async validarCuenta() {
-    this.localS.set('ruta', ['/', 'mi-cuenta', 'seguimiento']);
+    this.localS.set(StorageKey.ruta, ['/', 'mi-cuenta', 'seguimiento']);
     let usuario = this.usuario;
 
     if (!usuario) {

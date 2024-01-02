@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CatalogoService } from '../../../../shared/services/catalogo.service';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
 
 @Component({
   selector: 'app-page-catalogo',
@@ -23,7 +24,7 @@ export class PageCatalogoComponent implements OnInit {
   }
 
   verCatalogo(catalogo: any) {
-    this.localS.set('catalogo', catalogo);
+    this.localS.set(StorageKey.catalogo, catalogo);
     if (
       typeof catalogo !== 'undefined' &&
       catalogo.hasOwnProperty('dinamico')

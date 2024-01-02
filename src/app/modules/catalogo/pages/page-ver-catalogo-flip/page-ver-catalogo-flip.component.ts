@@ -12,6 +12,7 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
 
 @Component({
   selector: 'app-page-ver-catalogo-flip',
@@ -578,7 +579,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     console.log('tags: ', this.tags);
     this.tags = this.tags.filter((item) => item);
     console.log('tags: ', this.tags);
-    this.localS.set('tags', this.tags);
+    this.localS.set(StorageKey.tags, this.tags);
   }
 
   cambiarPaginaPreview(pag: any) {
@@ -606,7 +607,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       });
     });
     this.tags = this.tags.filter((item) => item);
-    this.localS.set('tags', this.tags);
+    this.localS.set(StorageKey.tags, this.tags);
   }
   cargaPrecio(productData: any) {
     if (productData.precioComun === undefined) {

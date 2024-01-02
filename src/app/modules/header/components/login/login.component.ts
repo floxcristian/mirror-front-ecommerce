@@ -16,6 +16,7 @@ import { SessionTokenStorageService } from '@core/storage/session-token-storage.
 import { WishlistService } from '@core/services-v2/wishlist/wishlist.service';
 import { GuestStorageService } from '@core/storage/guest-storage.service';
 import { CartService } from '@core/services-v2/cart.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
 
 @Component({
   selector: 'app-header-login',
@@ -85,10 +86,10 @@ export class LoginComponent implements OnInit {
         next: (res) => {
           // Variable para saber la ruta de la pagina.
           // Si esta en seguimiento este debe dirigirse a la pagina seguimiento en login.
-          const url: any = this.localStorage.get('ruta');
+          const url: any = this.localStorage.get(StorageKey.ruta);
           this.ruta = url || ['/inicio'];
 
-          let queryParams: any = this.localStorage.get('queryParams');
+          let queryParams: any = this.localStorage.get(StorageKey.queryParams);
           queryParams = queryParams || {};
 
           let sub;

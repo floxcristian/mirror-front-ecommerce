@@ -5,7 +5,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 // Models
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 // Services
-import { LogisticsService } from '../../../../../../shared/services/logistics.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
@@ -24,7 +23,6 @@ export class DireccionDespachoComponent implements OnInit {
 
   constructor(
     public ModalRef: BsModalRef,
-    private logisticsService: LogisticsService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly customerAddressApiService: CustomerAddressApiService,
