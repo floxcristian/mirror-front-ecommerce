@@ -35,28 +35,6 @@ export class ClientsService {
     return this.http.get(call);
   }
 
-  addAdreess(request: any): Observable<ResponseApi> {
-    return this.http.post<ResponseApi>(
-      `${environment.apiCustomer}direccionCRM`,
-      request
-    );
-  }
-
-  async ValidarCorreo(data: any) {
-    let consulta = null;
-    const endpoint = `${environment.apiCustomer}buscarCorreo`;
-    const params = `?correo=${data}`;
-    const url = `${endpoint}${params}`;
-    consulta = await this.http.get(url).toPromise();
-
-    return consulta;
-  }
-
-  buscarGiros() {
-    const call = environment.apiCustomer + `giros`;
-    return this.http.get(call);
-  }
-
   register(data: any) {
     return this.http.post(environment.apiCustomer + `nuevo`, data);
   }
@@ -70,9 +48,6 @@ export class ClientsService {
 
   validateCustomerb2b(rut: any) {
     return this.http.get(environment.apiCustomer + `rutb2b?rut=${rut}`);
-  }
-  getDataClient(data: any) {
-    return this.http.post(environment.apiCustomer + `GetDatosCliente`, data);
   }
 
   getCustomerDebt(data: any) {
@@ -110,53 +85,4 @@ export class ClientsService {
     );
   }
 
-  // NOVA
-  deleteBusquedaVin(busqueda: Flota) {
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-      body: {
-        idFlota: busqueda._id,
-      },
-    };
-    return this.http.delete(environment.apiCustomer + `busquedaVin`, options);
-  }
-
-  // NOVA
-  deleteFlota(flota: Flota) {
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-      body: {
-        idFlota: flota._id,
-      },
-    };
-    return this.http.delete(environment.apiCustomer + `flota`, options);
-  }
-
-  // NOVA
-  updateFlota(request: any) {
-    return this.http.put(environment.apiCustomer + `flota`, request);
-  }
-
-  // NOVA
-  getBusquedasVin(rut: string): Observable<ResponseApi> {
-    return this.http.get<ResponseApi>(
-      environment.apiCustomer + `busquedasVin?rutCliente=${rut}`
-    );
-  }
-
-  // NOVA
-  getFlota(rut: string): Observable<ResponseApi> {
-    return this.http.get<ResponseApi>(
-      environment.apiCustomer + `flota?rutCliente=${rut}`
-    );
-  }
-
-  // NOVA
-  setFlota(request: any) {
-    return this.http.post(environment.apiCustomer + `flota`, request);
-  }
 }

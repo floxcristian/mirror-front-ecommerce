@@ -128,22 +128,6 @@ export class RootService {
     return str.replace(char, char2);
   }
 
-  setQuality(product: IArticleResponse) {
-    if (
-      typeof product !== 'undefined' &&
-      typeof product.attributes !== 'undefined' &&
-      product.attributes !== null
-    ) {
-      return (
-        product.attributes.find((item: any) => item.nombre === 'CALIDAD') || {
-          valor: 0,
-        }
-      );
-    } else {
-      return { valor: 0 };
-    }
-  }
-
   limpiarNombres(str: any) {
     if (str !== undefined) {
       return str.replace(/['"]+/g, '');
