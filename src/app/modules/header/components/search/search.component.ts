@@ -41,7 +41,7 @@ import { DireccionDespachoComponent } from '../search-vin-b2b/components/direcci
 import { ModalStoresComponent } from '../modal-stores/modal-stores.component';
 import { RootService } from '@shared/services/root.service';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
-
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-header-search',
   templateUrl: './search.component.html',
@@ -100,7 +100,8 @@ export class SearchComponent implements OnInit, OnDestroy {
     private readonly customerPreferenceService: CustomerPreferenceService,
     private readonly customerAddressService: CustomerAddressService,
     private readonly articleService: ArticleService,
-    public readonly shoppingCartService: CartService
+    public readonly shoppingCartService: CartService,
+    public readonly modalServices: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -269,7 +270,7 @@ export class SearchComponent implements OnInit, OnDestroy {
    * Abrir modal con las tiendas.
    */
   showStores(): void {
-    this.modalService.show(ModalStoresComponent);
+    this.modalServices.open(ModalStoresComponent, { size: 'md' } );
   }
 
   private onChangeSearchInput(): void {
