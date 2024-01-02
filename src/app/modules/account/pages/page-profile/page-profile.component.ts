@@ -115,11 +115,6 @@ export class PageProfileComponent implements OnDestroy, OnInit {
       .subscribe((preferences) => {
         this.direccionDespacho = preferences.deliveryAddress;
       });
-    /*this.root
-      .getPreferenciasCliente()
-      .then((preferencias: PreferenciasCliente) => {
-        this.direccionDespacho = preferencias.direccionDespacho;
-      });*/
   }
 
   getDataClient() {

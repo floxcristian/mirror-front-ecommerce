@@ -18,6 +18,7 @@ import { SessionService } from '@core/services-v2/session/session.service';
 import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { ICity } from '@core/services-v2/geolocation/models/city.interface';
+import { DireccionMap } from '../map/map.component';
 
 @Component({
   selector: 'app-address-modal',
@@ -32,8 +33,8 @@ export class AddressModalComponent implements OnInit {
   cities!: ICity[];
   localidades!: any[];
   formDireccion: FormGroup;
-  // tienda: DireccionMap;
-  tienda: any;
+  tienda: DireccionMap | null
+  // tienda: any;
   coleccionComuna!: any[];
   autocompletado = true;
   loadingForm = false;
@@ -51,7 +52,7 @@ export class AddressModalComponent implements OnInit {
         { value: null, disabled: true },
         { validators: [Validators.required] }
       ),
-      depto: new FormControl(null),
+      depto: new FormControl(""),
       numero: new FormControl(null),
       comuna: new FormControl(null, { validators: [Validators.required] }),
       localizacion: new FormControl(null, {
@@ -69,6 +70,7 @@ export class AddressModalComponent implements OnInit {
   }
 
   set_direccion(data: any[]) {
+    console.log('data map',data)
     this.clearAddress();
 
     if (this.getAddressData(data[0], 'street_number')) {
@@ -76,11 +78,11 @@ export class AddressModalComponent implements OnInit {
 
       if (this.getAddressData(data[0], 'locality')) {
         this.formDireccion.controls['comuna'].setValue(
-          this.findComuna(this.getAddressData(data[0], 'locality'))
+          this.getCityId(this.getAddressData(data[0], 'locality'))
         );
       } else {
         this.formDireccion.controls['comuna'].setValue(
-          this.findComuna(
+          this.getCityId(
             this.getAddressData(data[0], 'administrative_area_level_3')
           )
         );
@@ -98,7 +100,7 @@ export class AddressModalComponent implements OnInit {
     }
   }
 
-  getAddressData(address_components: any, tipo: string) {
+  getAddressData(address_components: any[], tipo: string) {
     let value = '';
 
     address_components.forEach((element: any) => {
@@ -120,7 +122,7 @@ export class AddressModalComponent implements OnInit {
 
       if (result && result.id) {
         this.obtenerLocalidades(result);
-        this.findComunaLozalizacion(result.value);
+        this.findComunaLocalizacion(result.value);
         return result.id;
       } else {
         return '';
@@ -130,16 +132,38 @@ export class AddressModalComponent implements OnInit {
     }
   }
 
-  findComunaLozalizacion(nombre: string) {
+  /**
+   * Obtener id de una ciudad.
+   * @param city
+   * @returns
+   */
+  private getCityId(city: string): string {
+    if (!city) return '';
+
+    city = this.quitarAcentos(city);
+    const result = this.cities.find(
+      (item) => this.quitarAcentos(item.city) === city
+    );
+
+    if (result && result.id) {
+      this.obtenerLocalidades(result);
+      this.findComunaLocalizacion(result.city);
+      return result.id;
+    } else {
+      return '';
+    }
+  }
+
+  findComunaLocalizacion(nombre: string) {
     if (nombre != '') {
       nombre = this.quitarAcentos(nombre);
 
       var result = this.localidades.find(
-        (data) => this.quitarAcentos(data.localidad) === nombre
+        (data) => this.quitarAcentos(data.location) === nombre
       );
 
-      if (result && result.localidad) {
-        this.formDireccion.controls['localizacion'].setValue(result.localidad);
+      if (result && result.location) {
+        this.formDireccion.controls['localizacion'].setValue(result.location);
       }
     }
   }
@@ -196,7 +220,7 @@ export class AddressModalComponent implements OnInit {
       location: localizacion,
       latitude: latitud,
       longitude: longitud,
-      departmentOrHouse: depto,
+      departmentOrHouse: depto || "",
       reference: referencia,
     };
 
@@ -241,11 +265,11 @@ export class AddressModalComponent implements OnInit {
   obtenerLocalidades(event: any) {
     const localidades: any = [];
     const comunaArr = event.id.split('@');
-    const comunas = this.coleccionComuna.filter(
-      (comuna) => comuna.comuna == comunaArr[0]
+    const comunas = this.cities.filter(
+      (comuna) => comuna.city == comunaArr[0]
     );
     comunas.map((comuna) =>
-      comuna.localidades.map((localidad: any) => localidades.push(localidad))
+      comuna.localities.map((localidad: any) => localidades.push(localidad))
     );
     this.localidades = localidades;
   }

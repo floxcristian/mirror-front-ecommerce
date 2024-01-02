@@ -216,7 +216,7 @@ export class UpdateAddressModalComponent implements OnInit {
       location: localizacion,
       latitude: latitud,
       longitude: longitud,
-      departmentOrHouse: depto,
+      departmentOrHouse: depto || "",
       reference: referencia,
     };
 
