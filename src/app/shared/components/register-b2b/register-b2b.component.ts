@@ -6,11 +6,13 @@ import { ToastrService } from 'ngx-toastr';
 // Models
 import { ICity } from '@core/services-v2/geolocation/models/city.interface';
 import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
+import { IPhoneCodes } from '@core/config/config.interface';
 // Services
-import { ClientsService } from '../../services/clients.service';
 import { rutValidator } from '../../utils/utilidades';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';
+import { ConfigService } from '@core/config/config.service';
+import { CustomerApiService } from '@core/services-v2/customer/customer-api.service';
 
 @Component({
   selector: 'app-register-b2b',
@@ -23,19 +25,25 @@ export class Registerb2bComponent implements OnInit {
   businessLines!: IBusinessLine[];
   userForm!: FormGroup;
   phoneCode: string;
+  phoneCodes: IPhoneCodes;
+  documentName: string;
+  isLoading!: boolean;
 
-  mensajeExito = false;
-  loadingForm = false;
-  isValidRut = false;
+  private isValidDocumentId!: boolean;
+  isSuccessfullyRegistered!: boolean;
 
   constructor(
-    private clientService: ClientsService,
     private toastr: ToastrService,
     private fb: FormBuilder,
     private readonly geolocationApiService: GeolocationApiService,
-    private readonly customerBusinessLineApiService: CustomerBusinessLineApiService
+    private readonly customerBusinessLineApiService: CustomerBusinessLineApiService,
+    private readonly configService: ConfigService,
+    private readonly customerApiService: CustomerApiService
   ) {
-    this.phoneCode = '+569';
+    const { document, phoneCodes } = this.configService.getConfig();
+    this.documentName = document.name;
+    this.phoneCodes = phoneCodes;
+    this.phoneCode = this.phoneCodes.mobile.code;
   }
 
   ngOnInit(): void {
@@ -51,16 +59,16 @@ export class Registerb2bComponent implements OnInit {
   private buildUserForm(): void {
     this.userForm = this.fb.group({
       documentId: ['', [Validators.required, rutValidator]],
-      nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
-      telefono: ['', [Validators.required]],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      phone: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      calle: ['', Validators.required],
-      numero: ['', Validators.required],
-      comuna: ['', Validators.required],
-      razonsocial: [],
-      giro: [],
-      departamento: [],
+      street: ['', Validators.required],
+      addressNumber: ['', Validators.required],
+      city: [null, Validators.required],
+      businessName: [null, Validators.required],
+      businessLine: [null, Validators.required],
+      departmentOrHouse: [null],
     });
     this.changePhoneCode(this.phoneCode);
   }
@@ -87,96 +95,109 @@ export class Registerb2bComponent implements OnInit {
    * Registrar usuario B2B.
    */
   registerUser(): void {
-    const dataSave = { ...this.userForm.value };
-    this.loadingForm = true;
+    this.isLoading = true;
 
-    dataSave.password = 'qwert1234';
-    dataSave.telefono = this.phoneCode + dataSave.telefono;
-    // formateamos rut
-    const rut = dataSave.rut;
-    dataSave.rut =
-      rut.substring(0, rut.length - 1) +
-      '-' +
-      rut.substring(rut.length, rut.length - 1);
-    dataSave.tipoCliente = 3;
+    const {
+      firstName,
+      lastName,
+      businessLine,
+      businessName,
+      phone,
+      email,
+      documentId,
+      city,
+      street,
+      addressNumber,
+      departmentOrHouse,
+    } = this.userForm.value;
 
-    // Se setea correo en minuscula
-    dataSave.email = String(dataSave.email).toLowerCase();
-    this.userForm.controls['email'].setValue(dataSave.email);
-
-    this.clientService.registerb2b(dataSave).subscribe(
-      (r: any) => {
-        this.loadingForm = false;
-
-        if (r.error) {
-          this.toastr.error(r.msg);
-          return;
-        }
-        this.toastr.success(
-          'Se ha registrado existosamente, puede continuar con el proceso de compra'
-        );
-        this.mensajeExito = true;
-      },
-      (error) => {
-        this.toastr.error('Error de conexión con el servidor');
-      }
-    );
+    this.customerApiService
+      .registerUserB2B({
+        email,
+        firstName,
+        lastName,
+        city,
+        street,
+        addressNumber,
+        departmentOrHouse,
+        businessLine,
+        businessName,
+        documentId,
+        phone: `${this.phoneCode}${phone}`,
+      })
+      .subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.isSuccessfullyRegistered = true;
+          this.toastr.success(
+            `Se ha registrado existosamente, puede continuar con el proceso de compra.`
+          );
+        },
+        error: (err) => {
+          console.error(err);
+          this.isLoading = false;
+          this.toastr.error(`Ha ocurrido un error al registrar el usuario.`);
+        },
+      });
   }
 
-  validateCustomer(e: any): void {
-    let value = e.target.value;
+  /**
+   * Verifica si el documento ingresado ya existe.
+   * @param e
+   */
+  checkIfDocumentIdExists(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    console.log(
+      "this.userForm.controls['documentId']: ",
+      this.userForm.controls['documentId']
+    );
+
     if (this.userForm.controls['documentId'].status === 'VALID') {
-      value = value.replace(/\./g, '');
-      this.clientService.validateCustomerb2b(value).subscribe(
-        (r: any) => {
-          if (r.error === false) {
-            if (r.data) {
-              this.isValidRut = false;
-              this.formBlock();
-              this.toastr.warning(
-                'El número de documento ingresado ya se encuentra registrado en nuestros sistemas.'
-              );
-            } else {
-              this.isValidRut = true;
-              this.formBlock();
-            }
+      const documentId = input.value.replace(/\./g, '');
+      this.customerApiService.checkIfUserExists(documentId).subscribe({
+        next: (res) => {
+          if (res.exists) {
+            this.toastr.warning(
+              `El número de documento ingresado ya se encuentra registrado en nuestros sistemas.`
+            );
           }
+          this.isValidDocumentId = res.exists ? false : true;
+          this.formBlock();
         },
-        (error) => {
-          this.toastr.error('Error de conexión con el servidor');
-        }
-      );
+      });
     } else {
-      this.isValidRut = false;
+      this.isValidDocumentId = false;
       this.formBlock();
     }
   }
 
   private formBlock(force = false): void {
     if (force) {
-      this.isValidRut = true;
+      this.isValidDocumentId = true;
     }
 
-    if (this.isValidRut) {
-      this.userForm.get('nombre')?.enable();
-      this.userForm.get('apellido')?.enable();
-      this.userForm.get('telefono')?.enable();
+    if (this.isValidDocumentId) {
+      this.userForm.get('firstName')?.enable();
+      this.userForm.get('lastName')?.enable();
+      this.userForm.get('phone')?.enable();
       this.userForm.get('email')?.enable();
-      this.userForm.get('calle')?.enable();
-      this.userForm.get('numero')?.enable();
-      this.userForm.get('comuna')?.enable();
-      this.userForm.get('razonsocial')?.enable();
-      this.userForm.get('giro')?.enable();
+      this.userForm.get('street')?.enable();
+      this.userForm.get('addressNumber')?.enable();
+      this.userForm.get('city')?.enable();
+      this.userForm.get('departmentOrHouse')?.enable();
+      this.userForm.get('businessName')?.enable();
+      this.userForm.get('businessLine')?.enable();
     } else {
-      this.userForm.get('nombre')?.disable();
-      this.userForm.get('apellido')?.disable();
-      this.userForm.get('telefono')?.disable();
+      this.userForm.get('firstName')?.disable();
+      this.userForm.get('lastName')?.disable();
+      this.userForm.get('phone')?.disable();
       this.userForm.get('email')?.disable();
-      this.userForm.get('calle')?.disable();
-      this.userForm.get('numero')?.disable();
-      this.userForm.get('comuna')?.disable();
-      this.userForm.get('razonsocial')?.disable();
-      this.userForm.get('giro')?.disable();
+      this.userForm.get('street')?.disable();
+      this.userForm.get('addressNumber')?.disable();
+      this.userForm.get('city')?.disable();
+      this.userForm.get('departmentOrHouse')?.disable();
+      this.userForm.get('businessName')?.disable();
+      this.userForm.get('businessLine')?.disable();
     }
   }
 
@@ -187,19 +208,19 @@ export class Registerb2bComponent implements OnInit {
   changePhoneCode(phoneCode: string): void {
     this.phoneCode = phoneCode;
 
-    if (this.phoneCode === '+569')
-      this.userForm.controls['telefono'].setValidators([
+    if (this.phoneCode === this.phoneCodes.mobile.code)
+      this.userForm.controls['phone'].setValidators([
         Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(8),
+        Validators.minLength(this.phoneCodes.mobile.lengthRule),
+        Validators.maxLength(this.phoneCodes.mobile.lengthRule),
       ]);
     else
-      this.userForm.controls['telefono'].setValidators([
+      this.userForm.controls['phone'].setValidators([
         Validators.required,
-        Validators.minLength(9),
-        Validators.maxLength(9),
+        Validators.minLength(this.phoneCodes.landline.lengthRule),
+        Validators.maxLength(this.phoneCodes.landline.lengthRule),
       ]);
 
-    this.userForm.get('telefono')?.updateValueAndValidity();
+    this.userForm.get('phone')?.updateValueAndValidity();
   }
 }

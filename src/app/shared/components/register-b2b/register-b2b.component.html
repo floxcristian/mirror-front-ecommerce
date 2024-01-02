@@ -1,9 +1,9 @@
-<div class="row" *ngIf="!mensajeExito">
+<div class="row" *ngIf="!isSuccessfullyRegistered">
   <div class="col-md-12 d-flex">
     <div class="card m-0 shadow-none">
       <div class="card-body m-0">
         <app-loading-element
-          *ngIf="loadingForm"
+          *ngIf="isLoading"
           [text]="'Registrando la información'"
         ></app-loading-element>
 
@@ -12,23 +12,21 @@
           <div class="row">
             <h2 class="form-title col-md-12">Datos Empresa</h2>
 
-            <!-- rut -->
             <div class="col-md-6">
               <div class="mb-3">
                 <input
                   formControlName="documentId"
                   class="form-control"
-                  placeholder="RUT/DNI*"
-                  (focusout)="validateCustomer($event)"
+                  [placeholder]="documentName + '*'"
+                  (focusout)="checkIfDocumentIdExists($event)"
                   formatRut
                   appRutChars
                 />
-
                 <p
-                  *ngIf="(userForm.controls['documentId'].errors?.['invalidRut'] && userForm.controls['documentId'].touched)"
+                  *ngIf="(userForm.controls['documentId'].errors?.['invalidDocumentId'] && userForm.controls['documentId'].touched)"
                   class="text-error-form-2 pull-right"
                 >
-                  El RUT ingresado no es válido.
+                  El {{ documentName }} ingresado no es válido.
                 </p>
               </div>
             </div>
@@ -36,7 +34,7 @@
             <div class="col-md-12">
               <div class="mb-3">
                 <input
-                  formControlName="razonsocial"
+                  formControlName="businessName"
                   type="text"
                   class="form-control"
                   placeholder="Razón social*"
@@ -51,7 +49,7 @@
                   [items]="businessLines"
                   bindLabel="name"
                   bindValue="code"
-                  formControlName="giro"
+                  formControlName="businessLine"
                   class="form-control-select"
                   placeholder="Giro*"
                 >
@@ -60,11 +58,10 @@
             </div>
             <h2 class="form-title col-md-12">Contacto Empresa</h2>
             <div class="col-md-12"></div>
-            <!-- nombre -->
             <div class="col-md-6">
               <div class="mb-3">
                 <input
-                  formControlName="nombre"
+                  formControlName="firstName"
                   type="text"
                   class="form-control"
                   placeholder="Nombres*"
@@ -75,7 +72,7 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <input
-                  formControlName="apellido"
+                  formControlName="lastName"
                   type="text"
                   class="form-control"
                   placeholder="Apellidos*"
@@ -97,7 +94,7 @@
                     >
                       <i
                         [ngClass]="
-                          phoneCode === '+569'
+                          phoneCode === phoneCodes.mobile.code
                             ? 'fa-solid fa-mobile-screen'
                             : 'fa-solid fa-phone'
                         "
@@ -114,24 +111,26 @@
                     >
                       <a
                         class="dropdown-item"
-                        (click)="changePhoneCode('+569')"
+                        (click)="changePhoneCode(phoneCodes.mobile.code)"
                         ><i
                           class="fa-solid fa-mobile-screen"
                           style="margin-right: 1px"
                         ></i
-                        >+569</a
+                        >{{ phoneCodes.mobile.code }}</a
                       >
-                      <a class="dropdown-item" (click)="changePhoneCode('+56')"
+                      <a
+                        class="dropdown-item"
+                        (click)="changePhoneCode(phoneCodes.landline.code)"
                         ><i
                           class="fa-solid fa-phone"
                           style="margin-right: 1px"
                         ></i
-                        >+56</a
+                        >{{ phoneCodes.landline.code }}</a
                       >
                     </div>
                   </div>
                   <input
-                    formControlName="telefono"
+                    formControlName="phone"
                     type="text"
                     class="form-control"
                     placeholder="Teléfono*"
@@ -142,8 +141,8 @@
 
                 <p
                   *ngIf="
-                    userForm.controls['telefono'].invalid &&
-                    userForm.controls['telefono'].touched
+                    userForm.controls['phone'].invalid &&
+                    userForm.controls['phone'].touched
                   "
                   class="text-error-form-2"
                 >
@@ -182,7 +181,7 @@
                 [class.mb-3]="innerWidth < 427"
               >
                 <input
-                  formControlName="calle"
+                  formControlName="street"
                   type="text"
                   class="form-control"
                   placeholder="Dirección* "
@@ -191,7 +190,7 @@
 
               <div class="col-md-3 p-0">
                 <input
-                  formControlName="numero"
+                  formControlName="addressNumber"
                   type="text"
                   class="form-control"
                   placeholder="Número* "
@@ -207,7 +206,7 @@
                 [class.mb-3]="innerWidth < 427"
               >
                 <input
-                  formControlName="departamento"
+                  formControlName="departmentOrHouse"
                   type="text"
                   class="form-control"
                   placeholder="Departamento/Casa"
@@ -221,7 +220,7 @@
                   [items]="cities"
                   bindLabel="city"
                   bindValue="id"
-                  formControlName="comuna"
+                  formControlName="city"
                   class="form-control-select"
                   placeholder="Comuna*"
                 >
@@ -237,7 +236,7 @@
           name="REGISTRARSE"
           (click)="registerUser()"
           type="button"
-          [disabled]="!userForm.valid || loadingForm"
+          [disabled]="!userForm.valid || isLoading"
           class="btn btn-lg btn-secondary w-100 text-center"
         >
           ENVIAR SOLICITUD
@@ -247,11 +246,11 @@
   </div>
 </div>
 
-<div class="row mt" *ngIf="mensajeExito">
+<div class="row mt" *ngIf="isSuccessfullyRegistered">
   <div class="col-12 col-xl-10">
     <div style="background-color: white; margin: 10px; padding: 15px">
       <h1 class="about-us__title">
-        Solicitud Enviada Correctamente!!
+        Solicitud Enviada Correctamente!
         <i class="far fa-check-circle" style="color: green"></i>
       </h1>
       <div class="about-us__text typography">

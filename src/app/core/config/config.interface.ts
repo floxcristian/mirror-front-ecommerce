@@ -1,10 +1,18 @@
 export interface IConfig {
   country: string;
   document: IDocument;
-  phone: {
-    codes: string[];
-  };
+  phoneCodes: IPhoneCodes;
   storesPage: IStoresPage;
+}
+
+export interface IPhoneCodes {
+  mobile: IPhoneItem;
+  landline: IPhoneItem;
+}
+
+export interface IPhoneItem {
+  code: string;
+  lengthRule: number;
 }
 
 export interface IStoresPage {

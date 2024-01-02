@@ -94,7 +94,7 @@ export function rutValidator(
   const rexp = new RegExp(/^([0-9])+\-([kK0-9])+$/);
 
   if (rut === null) {
-    return { rutMalo: true };
+    return { invalidDocumentId: true };
   }
 
   if (rut.match(rexp)) {
@@ -118,10 +118,10 @@ export function rutValidator(
     if (dv === RUT[1].toLowerCase()) {
       return null;
     } else {
-      return { rutMalo: true };
+      return { invalidDocumentId: true };
     }
   } else {
-    return { rutMalo: true };
+    return { invalidDocumentId: true };
   }
 }
 
@@ -132,7 +132,7 @@ export function rutPersonaValidator(
   const rexp = new RegExp(/^([0-9])+\-([kK0-9])+$/);
 
   if (rut === null) {
-    return { rutMalo: true };
+    return { invalidDocumentId: true };
   }
 
   if (rut.match(rexp)) {
@@ -142,9 +142,9 @@ export function rutPersonaValidator(
     if (elRut < 50000000) {
       return null;
     } else {
-      return { rutMalo: true };
+      return { invalidDocumentId: true };
     }
   } else {
-    return { rutMalo: true };
+    return { invalidDocumentId: true };
   }
 }
