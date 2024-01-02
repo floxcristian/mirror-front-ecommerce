@@ -14,7 +14,6 @@ import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { CanonicalService } from '../../../../shared/services/canonical.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
-import { BuscadorService } from '../../../../shared/services/buscador.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/services-v2/session/session.service';
@@ -107,7 +106,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private seoService: SeoService,
     private canonicalService: CanonicalService,
-    private buscadorService: BuscadorService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
@@ -131,7 +129,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.buscadorService.filtrosVisibles(true);
     this.despachoCliente.unsubscribe();
   }
 
@@ -165,8 +162,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       } else {
         this.marca_tienda = '';
       }
-
-      this.buscadorService.filtrosVisibles(false);
 
       //this.route.queryParams.subscribe();
       // Verificamos si viene la pagina en un queryparams. sino la reseteamos a la pagina 1.

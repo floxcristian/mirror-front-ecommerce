@@ -42,17 +42,6 @@ export class ResourcesService {
     return () => Promise.all(tasks.map((task) => task())).then(() => {});
   }
 
-  constructor() {}
-
-  //NO SE UTILIZA
-  // loadScript(url: string): Promise<void> {
-  //   return this.scriptTask(url)();
-  // }
-
-  // loadStyle(url: string): Promise<void> {
-  //   return this.styleTask(url)();
-  // }
-
   loadLibrary(library: string): Promise<void> {
     return this.libraries[library]();
   }

@@ -4,7 +4,6 @@ import {
   PLATFORM_ID,
   Inject,
   OnInit,
-  OnDestroy,
   HostListener,
   DestroyRef,
   inject,
@@ -41,7 +40,6 @@ import {
 import { RootService } from '../../../../shared/services/root.service';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { CanonicalService } from '../../../../shared/services/canonical.service';
-import { BuscadorService } from '../../../../shared/services/buscador.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { ArticleService } from '@core/services-v2/article.service';
@@ -66,7 +64,7 @@ declare let fbq: any;
   templateUrl: './page-product.component.html',
   styleUrls: ['./page-product.component.scss'],
 })
-export class PageProductComponent implements OnInit, OnDestroy {
+export class PageProductComponent implements OnInit {
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
   product!: IArticleResponse;
   recommendedProducts: IArticleResponse[] = [];
@@ -122,7 +120,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
     private capitalize: CapitalizeFirstPipe,
     private seoService: SeoService,
     private canonicalService: CanonicalService,
-    private buscadorService: BuscadorService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
@@ -153,8 +150,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.setIsMobile();
-    this.buscadorService.filtrosVisibles(false);
-
     this.onRouteParamsChange();
     this.onSelectedStoreChange();
     this.onCustomerAddressChange();
@@ -230,13 +225,6 @@ export class PageProductComponent implements OnInit, OnDestroy {
         this.router.navigate(['/inicio/**']);
       }
     });
-  }
-
-  ngOnDestroy(): void {
-    /*if (!this.buscadorService.isFiltroSeleccionado()) {
-      this.buscadorService.filtrosVisibles(true);
-    }*/
-    this.buscadorService.filtrosVisibles(true);
   }
 
   setIsMobile(): void {
