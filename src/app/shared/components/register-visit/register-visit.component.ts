@@ -1,3 +1,4 @@
+// Angular
 import {
   Component,
   OnInit,
@@ -6,22 +7,28 @@ import {
   EventEmitter,
   OnChanges,
 } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { rutValidator } from '../../../shared/utils/utilidades';
 import { Router } from '@angular/router';
-import { SessionStorageService } from '@core/storage/session-storage.service';
-import { AuthApiService } from '@core/services-v2/auth.service';
-import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
+// Libs
+import { ToastrService } from 'ngx-toastr';
+// Rxjs
+import { firstValueFrom } from 'rxjs';
+// Models
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { CartService } from '@core/services-v2/cart.service';
 import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
 import { IGuest } from '@core/models-v2/storage/guest.interface';
+import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
+// Services
+import { rutValidator } from '../../../shared/utils/utilidades';
+import { SessionStorageService } from '@core/storage/session-storage.service';
+import { AuthApiService } from '@core/services-v2/auth.service';
+import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
+import { CartService } from '@core/services-v2/cart.service';
 import { CustomerService } from '@core/services-v2/customer.service';
 import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';
-import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
-import { firstValueFrom } from 'rxjs';
+import { IConfig } from '@core/config/config.interface';
+import { ConfigService } from '@core/config/config.service';
 
 @Component({
   selector: 'app-register-visit',
@@ -43,6 +50,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
   loadingForm = false;
   blockedForm = true;
   isValidRut = false;
+  config: IConfig;
 
   constructor(
     private toastr: ToastrService,
@@ -54,8 +62,10 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     private readonly authService: AuthApiService,
     private readonly authStateService: AuthStateServiceV2,
     private readonly customerService: CustomerService,
-    private readonly customerBusinessLineService: CustomerBusinessLineApiService
+    private readonly customerBusinessLineService: CustomerBusinessLineApiService,
+    private readonly configService: ConfigService
   ) {
+    this.config = this.configService.getConfig();
     this.formDefault();
   }
 
@@ -114,7 +124,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
 
         dataSave.tipoCliente = 1;
         dataSave.telefono = this.tipo_fono + dataSave.telefono;
-        const user = this.sessionStorage.get(); //: Usuario = this.localS.get('usuario');
+        const user = this.sessionStorage.get();
 
         let usuarioVisita: IEcommerceUser;
         usuarioVisita = this.setUsuario(dataSave);

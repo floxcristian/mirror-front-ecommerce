@@ -1,6 +1,12 @@
 {
-  "documentName": "Dni",
-  "phoneCodes": ["569"],
+  "country": "Perú",
+  "document": {
+    "name": "DNI",
+    "sample": ""
+  },
+  "phone": {
+    "codes": ["569"]
+  },
   "storesPage": {
     "title": "29 TIENDAS A LO LARGO DE CHILE",
     "subtitle": "Desde Arica a Punta Arenas"

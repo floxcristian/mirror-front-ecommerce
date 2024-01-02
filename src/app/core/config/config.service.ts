@@ -13,12 +13,9 @@ export class ConfigService {
   constructor(private http: HttpClient) {}
 
   loadConfig(): Observable<IConfig> {
-    return this.http.get<IConfig>('./assets/config/config.json').pipe(
-      tap((config) => {
-        this.config = config;
-        console.log('config: ', config);
-      })
-    );
+    return this.http
+      .get<IConfig>('./assets/config/config.json')
+      .pipe(tap((config) => (this.config = config)));
   }
 
   getConfig(): IConfig {

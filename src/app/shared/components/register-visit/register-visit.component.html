@@ -30,7 +30,7 @@
                   formControlName="rut"
                   type="text"
                   class="form-control"
-                  placeholder="Rut* "
+                  [placeholder]="config.document.name + '*'"
                   appLettersChar
                   autocomplete="off"
                 />
@@ -41,8 +41,9 @@
                   "
                   class="text-error-form-2"
                 >
-                  Rut no válido, estimado usario su rut debe ingresarse sin
-                  '.', Ejemplo rut valido (17007900-0)
+                  {{ config.document.name }} no válido, estimado usuario su
+                  {{ config.document }} debe ingresarse sin '.', Ejemplo rut
+                  válido (17007900-0)
                 </p>
               </div>
             </div>

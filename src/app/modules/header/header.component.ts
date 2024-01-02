@@ -25,8 +25,6 @@ import { LocalStorageService } from 'src/app/core/modules/local-storage/local-st
 export class HeaderComponent implements AfterViewInit {
   @Input() layout: 'classic' | 'compact' | any = 'classic';
   @Input() tipo: 'b2b' | 'b2c' | any = 'b2c';
-
-  countries: any[] = [];
   logoSrc = environment.logoSrc;
   innerWidth: any;
   @HostListener('window:resize', ['$event'])
@@ -41,13 +39,8 @@ export class HeaderComponent implements AfterViewInit {
     private localS: LocalStorageService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.countries.push({
-      label: 'Chile ',
-      img: 'assets/images/countries/cl.png',
-    });
-
     const buscadorB2B = this.localS.get('buscadorB2B');
-    if (buscadorB2B == null) {
+    if (!buscadorB2B) {
       const data: BuscadorB2B = {
         indicadores: null,
         collapsed: null,

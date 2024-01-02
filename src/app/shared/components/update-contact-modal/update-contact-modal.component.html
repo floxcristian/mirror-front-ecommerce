@@ -20,7 +20,7 @@
     <div class="row">
       <div class="col-6">
         <div class="mb-3 mb-0">
-          <label>Rut (*)</label>
+          <label>{{ config.document.name }} (*)</label>
           <input
             formControlName="contactRut"
             type="text"
@@ -34,7 +34,7 @@
           "
           class="text-danger float-start"
         >
-          El RUT ingresado no es válido
+          El {{ config.document.name }} ingresado no es válido.
         </p>
         <p class="float-end me-2">
           <i>Ej: 12345678-9</i>

@@ -32,7 +32,7 @@
             >{{ dataClient.name }}
           </div>
           <div>
-            <span class="title2">{{ config.documentName }}</span
+            <span class="title2">{{ config.document.name }}</span
             >{{ dataClient.documentId }}
           </div>
         </ng-template>
@@ -332,7 +332,7 @@
             <div class="dropcart__totals" *ngFor="let item of contacts">
               <table>
                 <tr>
-                  <th class="fw-bold titilo-w">{{ config.documentName }}</th>
+                  <th class="fw-bold titilo-w">{{ config.document.name }}</th>
                   <td class="text-start">{{ item.documentId }}</td>
                 </tr>
                 <tr>
@@ -415,7 +415,7 @@
             >
               <thead>
                 <tr>
-                  <th>{{ config.documentName }}</th>
+                  <th>{{ config.document.name }}</th>
                   <th>Nombre</th>
                   <th>Cargo</th>
                   <th>Telefono</th>
