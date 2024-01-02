@@ -54,7 +54,7 @@ export class ProductCardB2cFichaComponent implements OnInit {
   @Input() set product(value: any) {
     this.productData = value;
     this.productData.name = this.root.limpiarNombres(this.productData.name);
-    this.generateTags(this.productData.metaTags)
+    this.generateTags(this.productData.metaTags);
   }
 
   @Input() layout:
@@ -72,11 +72,11 @@ export class ProductCardB2cFichaComponent implements OnInit {
   porcentaje = 0;
   addingToCart = false;
   urlImage = environment.urlFotoOmnichannel;
-  productData!: IArticle  & { url?: SafeUrl; gimage?: SafeUrl };
+  productData!: IArticle & { url?: SafeUrl; gimage?: SafeUrl };
   today = Date.now();
 
-  cyber:number = 0
-  cyberMonday:number = 0
+  cyber: number = 0;
+  cyberMonday: number = 0;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -107,12 +107,14 @@ export class ProductCardB2cFichaComponent implements OnInit {
     this.destroy$.complete();
   }
 
-  generateTags(tags:MetaTag[] | undefined){
-    if(tags){
-      tags.forEach((tag:MetaTag) =>{
-        if(tag.code === 'cyber') this.cyber = tag.value
-        if(tag.code === 'cyberMonday') this.cyberMonday = tag.value
-      })
+  generateTags(tags: MetaTag[] | undefined) {
+    if (tags) {
+      tags.forEach((tag: MetaTag) => {
+        if (tag.code === 'cyber') this.cyber = tag.value;
+        else this.cyber = 0;
+        if (tag.code === 'cyberMonday') this.cyberMonday = tag.value;
+        else this.cyberMonday = 0;
+      });
     }
   }
 

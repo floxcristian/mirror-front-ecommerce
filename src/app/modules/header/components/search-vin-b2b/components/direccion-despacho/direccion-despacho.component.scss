@@ -1,14 +1,12 @@
 .modal-header {
-  padding: 0.5rem 1rem;
-  align-items: center;
-
-  .close {
-    margin: 0;
-    padding: 0 0.5rem;
+  .btn {
+    padding: 0 !important;
   }
 }
-
-.modal-body {
-  font-size: 15px;
-  min-height: auto !important;
+.manageAddresses-link {
+  cursor: pointer;
+}
+.manageAddresses-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
 }

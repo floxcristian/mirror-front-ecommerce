@@ -6,10 +6,6 @@ import { Router } from '@angular/router';
 import { SlugifyPipe } from '../pipes/slugify.pipe';
 // Models
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
-import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
-// Services
-import { SessionService } from '@core/services-v2/session/session.service';
-import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,10 +19,7 @@ export class RootService {
   constructor(
     public slugify: SlugifyPipe,
     public decimal: DecimalPipe,
-    private router: Router,
-    // Services V2
-    private readonly sessionService: SessionService,
-    private readonly customerAddressService: CustomerAddressApiService
+    private router: Router
   ) {
     this.setDataTableBasic();
   }
@@ -83,24 +76,6 @@ export class RootService {
     return this.path + url;
   }
 
-  limpiaAtributos(product: IArticleResponse): void {
-    if (!product.attributes) {
-      return;
-    }
-    const att = product.attributes.filter((val: any) => {
-      if (val.nombre === 'CERTIFICADO PDF') {
-        // product.certificadoPdf = val.valor;
-      }
-
-      // tslint:disable-next-line: triple-equals
-      if (val.interno == '0' && val.nombre !== 'CALIDAD') {
-        return val;
-      }
-    });
-
-    // product.atributos = att;
-  }
-
   getUrlImagenMiniatura(product: any) {
     if (Object.keys(product.images).length > 0) {
       if (product.images[0] == undefined) {
@@ -151,22 +126,6 @@ export class RootService {
 
   replaceAll(str: any, char: any, char2 = ' ') {
     return str.replace(char, char2);
-  }
-
-  setQuality(product: IArticleResponse) {
-    if (
-      typeof product !== 'undefined' &&
-      typeof product.attributes !== 'undefined' &&
-      product.attributes !== null
-    ) {
-      return (
-        product.attributes.find((item: any) => item.nombre === 'CALIDAD') || {
-          valor: 0,
-        }
-      );
-    } else {
-      return { valor: 0 };
-    }
   }
 
   limpiarNombres(str: any) {

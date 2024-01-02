@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 // Env
 import { environment } from '@env/environment';
 // Models
-import { Flota } from '../interfaces/flota';
 import { ResponseApi } from '../interfaces/response-api';
 import { CargosContactoResponse } from '../interfaces/cargoContacto';
 

@@ -9,6 +9,7 @@ import { SessionService } from '@core/services-v2/session/session.service';
 import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-direccion-despacho',
@@ -23,6 +24,7 @@ export class DireccionDespachoComponent implements OnInit {
 
   constructor(
     public ModalRef: BsModalRef,
+    public router: Router,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly customerAddressApiService: CustomerAddressApiService,
@@ -53,5 +55,11 @@ export class DireccionDespachoComponent implements OnInit {
 
   seleccionaDireccion(direccion: ICustomerAddress): void {
     this.direccionSeleccionada = direccion;
+  }
+
+  manageAddresses(event: Event) {
+    event.preventDefault();
+    this.ModalRef.hide();
+    this.router.navigate(['/', 'mi-cuenta', 'mi-perfil']);
   }
 }

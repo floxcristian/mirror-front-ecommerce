@@ -1,64 +1,42 @@
 <div class="modal-header">
-  <i
-    class="fa-solid fa-store"
-    style="
-      color: #0063b9;
-      margin-right: 10px;
-      font-size: 24px;
-      margin-top: -5px;
-    "
-  ></i>
-  <h4 style="color: #0063b9; font-size: 20px; font-weight: bold">Tiendas</h4>
-  <button
-    name="modalRef"
-    type="button"
-    class="btn-close pull-right"
-    aria-label="Close"
-    (click)="modalRef.hide()"
-  >
+  <h5 class="modal-title d-flex align-items-center">
     <i
-      class="fa-solid fa-circle-xmark"
-      style="color: #0063b9; margin-right: 5px; font-size: 24px"
+      class="fa-solid fa-store me-2"
+      style="color: #00549d; font-size: 1.5rem"
     ></i>
+    <span style="font-size: 16px; color: #0063b9">Tiendas</span>
+  </h5>
+  <button type="button" class="btn" (click)="activeModal.close()">
+    <i class="fas fa-times-circle" style="color: #00549d; font-size: 18px"></i>
   </button>
 </div>
-<div class="modificar">
-  <div class="modal-body">
-    <em
-      ><font
-        style="
-          color: #0063b9;
-          margin-right: 10px;
-          font-size: 14px;
-          font-weight: bold;
-        "
-        >Tienda Actual</font
-      ></em
-    >
-    <h5 class="text-blue">{{ tienda.zone | uppercase }}</h5>
-    <p class="mt-3" style="color: #0063b9; font-size: 14px; font-weight: bold">
-      Seleccione la tienda de su preferencia
-    </p>
 
-    <div class="mb-3">
-      <select
-        class="form-select w-100"
-        aria-label="Default select example"
-        [(ngModel)]="tiendaTemporal"
-        name="tiendaTemporal"
-      >
-        <option [ngValue]="null">
-          {{ 'Seleccione una tienda' | uppercase }}
-        </option>
-        <option *ngFor="let item of tiendas" [ngValue]="item">
-          {{ item.zone | uppercase }}
-        </option>
-      </select>
-      <p class="mt-4" style="font-size: 12px">
-        <i
-          class="fa-regular fa-circle-info"
-          style="margin-right: 5px; font-size: 16px; color: #0063b9"
-        ></i>
+<div class="modal-body p-3" style="min-height: auto">
+  <small class="fw-semibold" style="color: #0063b9">Tienda Actual</small>
+  <h5 class="text-blue">{{ tienda.zone | uppercase }}</h5>
+  <small class="fw-semibold" style="color: #0063b9; font-size: 14px"
+    >Seleccione la tienda de su preferencia</small
+  >
+  <div class="mb-3">
+    <select
+      class="form-select w-100"
+      aria-label="Default select example"
+      [(ngModel)]="tiendaTemporal"
+      name="tiendaTemporal"
+    >
+      <option [ngValue]="null">
+        {{ 'Seleccione una tienda' | uppercase }}
+      </option>
+      <option *ngFor="let item of tiendas" [ngValue]="item">
+        {{ item.zone | uppercase }}
+      </option>
+    </select>
+    <div class="d-flex align-items-start mt-4" style="font-size: 12px">
+      <i
+        class="fa-regular fa-circle-info"
+        style="margin-right: 5px; font-size: 16px; color: #0063b9"
+      ></i>
+      <p class="mb-0">
         Los precios de productos y despacho pueden variar según la ubicación de
         la tienda.
       </p>
@@ -75,7 +53,7 @@
       <button
         name="cancelar"
         class="btn btn-border-primary text-center btn-lg w-100"
-        (click)="modalRef.hide()"
+        (click)="activeModal.close()"
       >
         Cancelar
       </button>

@@ -1,22 +1,3 @@
-.close {
-  opacity: 1;
-}
-
-::ng-deep .modal-dialog {
-  @media (max-height: 650px) {
-    max-width: 650px;
-    min-width: 650px;
-    margin: 1.75rem auto;
-  }
-  @media (min-height: 650px) {
-    margin: 1.75rem auto;
-  }
-}
-
-::ng-deep .modificar .modal-body {
-  min-height: auto;
-}
-
 select {
   height: 3.5rem;
   border-radius: 4px;
@@ -31,6 +12,7 @@ select {
   text-align: left;
   font-weight: bold;
   padding: 0px 20px;
+  color: #0063b9;
 }
 
 .btn-border-primary,
@@ -58,28 +40,7 @@ select {
 }
 
 .modal-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 0rem 1rem;
-  padding-top: 1.3rem;
-  border-bottom: 1px solid #dee2e6;
-  border-top-left-radius: calc(0.3rem - 1px);
-  border-top-right-radius: calc(0.3rem - 1px);
-}
-
-select.form-select {
-  background-image: url('/assets/images/icon-select.png');
-  background-repeat: no-repeat;
-  background-position: right center !important;
-  background-size: 2rem;
-  padding-right: 32px !important;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -o-appearance: none;
-  appearance: none;
-}
-select.form-select::-ms-expand {
-  display: none;
-  /*Evita que se muestre la flecha por defecto en versiones de IE*/
+  .btn {
+    padding: 0 !important;
+  }
 }

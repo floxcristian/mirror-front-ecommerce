@@ -95,6 +95,14 @@ export class GeolocationServiceV2 {
           code: firstLocation.code,
           city: firstLocation.city,
         };
+      } else {
+        this.geolocation = {
+          isChangeToNearestStore: false,
+          isSelectedByClient: false,
+          zone: '',
+          code: '',
+          city: '',
+        };
       }
     }
 
