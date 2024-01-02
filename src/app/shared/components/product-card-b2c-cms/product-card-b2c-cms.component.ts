@@ -111,7 +111,9 @@ export class ProductCardB2cCmsComponent implements OnInit {
     if(tags){
       tags.forEach((tag:MetaTag) =>{
         if(tag.code === 'cyber') this.cyber = tag.value
+        else this.cyber = 0
         if(tag.code === 'cyberMonday') this.cyberMonday = tag.value
+        else this.cyberMonday = 0
       })
     }
   }

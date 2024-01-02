@@ -6,10 +6,6 @@ import { Router } from '@angular/router';
 import { SlugifyPipe } from '../pipes/slugify.pipe';
 // Models
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
-import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
-// Services
-import { SessionService } from '@core/services-v2/session/session.service';
-import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,9 +20,6 @@ export class RootService {
     public slugify: SlugifyPipe,
     public decimal: DecimalPipe,
     private router: Router,
-    // Services V2
-    private readonly sessionService: SessionService,
-    private readonly customerAddressService: CustomerAddressApiService
   ) {
     this.setDataTableBasic();
   }
@@ -81,24 +74,6 @@ export class RootService {
 
   url(url: string): string {
     return this.path + url;
-  }
-
-  limpiaAtributos(product: IArticleResponse): void {
-    if (!product.attributes) {
-      return;
-    }
-    const att = product.attributes.filter((val: any) => {
-      if (val.nombre === 'CERTIFICADO PDF') {
-        // product.certificadoPdf = val.valor;
-      }
-
-      // tslint:disable-next-line: triple-equals
-      if (val.interno == '0' && val.nombre !== 'CALIDAD') {
-        return val;
-      }
-    });
-
-    // product.atributos = att;
   }
 
   getUrlImagenMiniatura(product: any) {

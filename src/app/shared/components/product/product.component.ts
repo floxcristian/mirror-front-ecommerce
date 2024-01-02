@@ -39,7 +39,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CarouselConfig, CarouselOptions } from './constants/carousel-config';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
+import { IArticleResponse, MetaTag } from '@core/models-v2/article/article-response.interface';
 import { IProductImage } from './models/image.interface';
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { IDeliverySupply } from '@core/models-v2/cms/special-reponse.interface';
@@ -87,17 +87,8 @@ export class ProductComponent implements OnInit, OnChanges {
 
     this.dataProduct = value;
     console.log('[-] producto: ', value);
-    // this.dataProduct.name = this.dataProduct.name.replace(/("|')/g, '');
     this.images = GalleryUtils.formatImageSlider(value);
-    this.quality = this.root.setQuality(value);
-    this.root.limpiaAtributos(value);
-
-    /*const url: string = this.root.product(
-      this.dataProduct.sku,
-      this.dataProduct.name,
-      false
-    );
-    this.dataProduct.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);*/
+    this.generateTags(this.product.metaTags)
   }
 
   @Output() comentarioGuardado: EventEmitter<boolean> = new EventEmitter();
@@ -123,7 +114,6 @@ export class ProductComponent implements OnInit, OnChanges {
   showGallery = true;
   showGalleryTimeout!: number;
 
-  quality: any;
   isAvailable!: boolean;
   estado = true; // isDesktop
   products: IArticleResponse[] = [];
@@ -163,6 +153,9 @@ export class ProductComponent implements OnInit, OnChanges {
   puntoQuiebre: number = 576;
   showMobile!: boolean;
   formProductRequest!: FormGroup;
+
+  cyber:number = 0
+  cyberMonday:number = 0
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -237,6 +230,17 @@ export class ProductComponent implements OnInit, OnChanges {
         },
       });
     this.buildProductRequestForm();
+  }
+
+  generateTags(tags:MetaTag[] | undefined){
+    if(tags){
+      tags.forEach((tag:MetaTag) =>{
+        if(tag.code === 'cyber') this.cyber = tag.value
+        else this.cyber = 0
+        if(tag.code === 'cyberMonday') this.cyberMonday = tag.value
+        else this.cyberMonday = 0
+      })
+    }
   }
 
   ngOnChanges(): void {
