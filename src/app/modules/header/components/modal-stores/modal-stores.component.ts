@@ -9,6 +9,7 @@ import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.
 // Models
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-modal-stores',
@@ -24,12 +25,11 @@ export class ModalStoresComponent implements OnInit {
 
   constructor(
     // Services V2
-    public readonly modalRef: BsModalRef,
+    public readonly activeModal: NgbActiveModal,
     private readonly geolocationService: GeolocationServiceV2
   ) {}
 
   ngOnInit(): void {
-    console.log('getSelectedStore desde ModalStoresComponent');
     this.tienda = this.geolocationService.getSelectedStore();
 
     this.geolocationService.stores$.subscribe({
@@ -41,8 +41,6 @@ export class ModalStoresComponent implements OnInit {
     this.geoLocationServicePromise =
       this.geolocationService.selectedStore$.subscribe({
         next: (res) => {
-          console.log('selectedStore$: ', res);
-          console.log('getSelectedStore desde ModalStoresComponent 2');
           this.tienda = this.geolocationService.getSelectedStore();
         },
       });
@@ -60,9 +58,7 @@ export class ModalStoresComponent implements OnInit {
       code: this.tiendaTemporal.code,
       city: this.tiendaTemporal.city,
     });
-
-    console.log('getSelectedStore desde ModalStoresComponent 3');
     this.tienda = this.geolocationService.getSelectedStore();
-    this.modalRef.hide();
+    this.activeModal.close();
   }
 }
