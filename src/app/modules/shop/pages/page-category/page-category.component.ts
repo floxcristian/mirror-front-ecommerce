@@ -14,7 +14,6 @@ import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
 import { SeoService } from '../../../../shared/services/seo.service';
 import { CanonicalService } from '../../../../shared/services/canonical.service';
 import { isVacio } from '../../../../shared/utils/utilidades';
-import { BuscadorService } from '../../../../shared/services/buscador.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/services-v2/session/session.service';
@@ -56,21 +55,21 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   breadcrumbs: any[] = [];
   productosTemp = [];
   // Paginacion
-  totalPaginas:number = 0;
-  PagDesde:number = 0;
-  PagHasta:number = 0;
-  PagTotalRegistros:number = 0;
-  productosPorPagina:number = 12;
-  cargandoCatalogo:boolean = true;
-  cargandoProductos:boolean = false;
-  currentPage:number = 1;
+  totalPaginas: number = 0;
+  PagDesde: number = 0;
+  PagHasta: number = 0;
+  PagTotalRegistros: number = 0;
+  productosPorPagina: number = 12;
+  cargandoCatalogo: boolean = true;
+  cargandoProductos: boolean = false;
+  currentPage: number = 1;
 
   // Filtro
   parametrosBusqueda!: IElasticSearch;
-  textToSearch:string = '';
+  textToSearch: string = '';
   levelCategories: ICategoriesTree[] = [];
-  level:number = 0;
-  marca_tienda:string = '';
+  level: number = 0;
+  marca_tienda: string = '';
 
   despachoCliente!: Subscription;
 
@@ -87,8 +86,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     'TIPO ESTADO',
   ];
 
-  visibleFilter:boolean = false;
-  filtrosOculto:boolean = true;
+  visibleFilter: boolean = false;
+  filtrosOculto: boolean = true;
   scrollPosition!: number;
   innerWidth: number;
 
@@ -107,7 +106,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private seoService: SeoService,
     private canonicalService: CanonicalService,
-    private buscadorService: BuscadorService,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
@@ -131,7 +129,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.buscadorService.filtrosVisibles(true);
     this.despachoCliente.unsubscribe();
   }
 
@@ -162,11 +159,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
             this.banners = banner_local;
           else this.banners = null;
         } else this.banners = null;
-      }else {
+      } else {
         this.marca_tienda = '';
       }
-
-      this.buscadorService.filtrosVisibles(false);
 
       //this.route.queryParams.subscribe();
       // Verificamos si viene la pagina en un queryparams. sino la reseteamos a la pagina 1.
@@ -205,7 +200,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
 
         this.parametrosBusqueda = {
           ...params,
-          ...this.filterQuery
+          ...this.filterQuery,
         };
         this.parametrosBusqueda.page = this.currentPage;
         this.cargarCatalogoProductos(this.parametrosBusqueda, '');
@@ -269,7 +264,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         this.removableFilters = this.filterQuery;
         this.parametrosBusqueda = {
           ...parametros,
-          ...this.filterQuery
+          ...this.filterQuery,
         };
         this.parametrosBusqueda.page = this.currentPage;
 
@@ -318,7 +313,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           this.removableFilters = this.filterQuery;
           this.parametrosBusqueda = {
             ...parametros,
-            ...this.filterQuery
+            ...this.filterQuery,
           };
           this.parametrosBusqueda.page = this.currentPage;
 
@@ -715,7 +710,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       if (Object.prototype.hasOwnProperty.call(query, key)) {
         const element = query[key];
         if (key !== 'tiendaOficial') {
-            resp = { ...resp, ...{ [key]: element } };
+          resp = { ...resp, ...{ [key]: element } };
         }
       }
     }
@@ -774,7 +769,10 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
 
   armaQueryParams(queryParams: any) {
     if (this.marca_tienda !== '')
-      queryParams = { ...queryParams, ...{ filter_MARCA: this.marca_tienda, tiendaOficial: 1 } };
+      queryParams = {
+        ...queryParams,
+        ...{ filter_MARCA: this.marca_tienda, tiendaOficial: 1 },
+      };
     return queryParams;
   }
 

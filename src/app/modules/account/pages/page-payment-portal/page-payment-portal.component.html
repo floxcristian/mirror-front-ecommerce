@@ -69,7 +69,7 @@
           </div>
           <div class="col-lg-4 text-center">
             <h5>{{ user.company }}</h5>
-            <h6>Rut: {{ user.documentId }}</h6>
+            <h6>{{ config.document.name }}: {{ user.documentId }}</h6>
           </div>
           <div class="col-lg-4" [class.text-end]="innerWidth > 450">
             <span class="fw-bold">Pagar facturas vencidas </span>

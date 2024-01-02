@@ -1,5 +1,8 @@
+// Angular
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { IConfig } from '@core/config/config.interface';
+import { ConfigService } from '@core/config/config.service';
 
 @Component({
   selector: 'app-page-politicas-implementos',
@@ -10,7 +13,12 @@ export class PagePoliticasImplementosComponent implements OnInit {
   terminos = false;
   part1 = false;
   tipo: any = null;
-  constructor(private route: ActivatedRoute) {
+  config: IConfig;
+  constructor(
+    private route: ActivatedRoute,
+    private readonly configService: ConfigService
+  ) {
+    this.config = this.configService.getConfig();
     this.tipo = this.route.snapshot.paramMap.get('tipo');
   }
 

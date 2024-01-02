@@ -160,8 +160,6 @@ export interface IElasticSearch {
   filters: string;
 }
 
-
-
 export interface ISlimSearch {
   sku: string;
   name: string;
@@ -172,9 +170,8 @@ export interface ISlimSearch {
   brand: string;
   sbu: string;
   description: string | null;
-  images: IImage
+  images: IImage;
   dropshipmentType: string;
   dropshipment: number;
   partNumber: string;
 }
-

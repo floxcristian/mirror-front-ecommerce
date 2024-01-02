@@ -1,23 +1,25 @@
 <ng-select
-    class="selectArticulos"
-    [multiple]="multiple"
-    [compareWith]="compararArticulo"
-    [placeholder]="placeholder"
-    [minTermLength]="3"
-    typeToSearchText="Escriba 3 o más caracteres"
-    [notFoundText]="'No se encontraron registros'"
-    [loading]="articuloLoading"
-    [loadingText]="'Cargando...'"
-    [typeahead]="articuloInput$"
-    [(ngModel)]="articulos"
-    (change)="articulosCambiados()">
-    <ng-option *ngFor="let item of articulosSelect$ | async" [value]="item">
-        <img
-            [src]="item.images['150'][0]"
-            width="48px"
-            height="48px"
-            alt="image"
-            *ngIf="item.images['150'][0]"
-            > | {{item.sku}} | {{item.name}}
-    </ng-option>
+  class="selectArticulos"
+  [multiple]="multiple"
+  [compareWith]="compararArticulo"
+  [placeholder]="placeholder"
+  [minTermLength]="3"
+  typeToSearchText="Escriba 3 o más caracteres"
+  [notFoundText]="'No se encontraron registros'"
+  [loading]="articuloLoading"
+  [loadingText]="'Cargando...'"
+  [typeahead]="articuloInput$"
+  [(ngModel)]="articulos"
+  (change)="articulosCambiados()"
+>
+  <ng-option *ngFor="let item of articulosSelect$ | async" [value]="item">
+    <img
+      [src]="item.images['150'][0]"
+      width="48px"
+      height="48px"
+      alt="image"
+      *ngIf="item.images['150'][0]"
+    />
+    | {{ item.sku }} | {{ item.name }}
+  </ng-option>
 </ng-select>

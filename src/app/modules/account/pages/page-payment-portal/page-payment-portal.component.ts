@@ -1,3 +1,4 @@
+// Angular
 import {
   Component,
   Inject,
@@ -6,15 +7,22 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+// Rxjs
+import { Subject } from 'rxjs';
+// Libs
+import { ToastrService } from 'ngx-toastr';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+// Env
+import { environment } from '@env/environment';
+// Models
+import { ISession } from '@core/models-v2/auth/session.interface';
+// Services
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { RootService } from '../../../../shared/services/root.service';
-import { Subject } from 'rxjs';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { ToastrService } from 'ngx-toastr';
-import { environment } from '@env/environment';
-import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/services-v2/session/session.service';
-import { ISession } from '@core/models-v2/auth/session.interface';
+import { ConfigService } from '@core/config/config.service';
+import { IConfig } from '@core/config/config.interface';
 
 @Component({
   selector: 'app-page-payment-portal',
@@ -65,6 +73,7 @@ export class PagePaymentPortalComponent implements OnInit {
   loadingPayment = false;
   paymentMsgSuccess = false;
   innerWidth: any;
+  config!: IConfig;
 
   constructor(
     private clientsService: ClientsService,
@@ -73,8 +82,10 @@ export class PagePaymentPortalComponent implements OnInit {
     private toastr: ToastrService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly configService: ConfigService
   ) {
+    this.config = this.configService.getConfig();
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;

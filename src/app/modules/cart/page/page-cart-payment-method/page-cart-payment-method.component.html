@@ -529,7 +529,7 @@
                       <div class="row">
                         <div class="col-sm-12" style="margin-bottom: 11px">
                           <h4 class="card-title" style="color: #005db9">
-                            Rut *
+                            {{ config.document.name }} *
                           </h4>
                         </div>
                         <div class="col-sm-12">
@@ -1094,7 +1094,8 @@
                               "
                               class="text-error-form-2 pull-right"
                             >
-                              El RUT ingresado no es válido
+                              El {{ config.document.name }} ingresado no es
+                              válido.
                             </p>
                             <p
                               *ngIf="isInvoice"

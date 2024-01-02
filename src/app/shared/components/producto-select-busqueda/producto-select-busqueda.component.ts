@@ -35,10 +35,13 @@ export class ProductoSelectBusquedaComponent
   articulos: Articulo[] = [];
   @Output() articulosSeleccionados = new EventEmitter<Articulo[]>();
 
-  constructor(private logisticService: ArticleService, private toast: ToastrService,) {}
+  constructor(
+    private logisticService: ArticleService,
+    private toast: ToastrService
+  ) {}
 
   ngOnInit(): void {
-   this.buscarArticulo();
+    this.buscarArticulo();
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
@@ -56,7 +59,9 @@ export class ProductoSelectBusquedaComponent
           this.articuloInput$.next(search);
           this.articulos = [...this.nuevosArticulos];
         } else {
-          this.toast.success('El articulo no se pudo encontrar, por favor ingrese intente mas tardes');
+          this.toast.success(
+            'El articulo no se pudo encontrar, por favor ingrese intente mas tardes'
+          );
         }
       }
     }
@@ -90,8 +95,7 @@ export class ProductoSelectBusquedaComponent
         tap(() => (this.articuloLoading = true)),
         switchMap((search) =>
           this.logisticService.slimSearch(search).pipe(
-
-            map((r:any) => r),
+            map((r: any) => r),
             tap(() => (this.articuloLoading = false))
           )
         )

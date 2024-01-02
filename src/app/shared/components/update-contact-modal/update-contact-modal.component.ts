@@ -1,3 +1,4 @@
+// Angular
 import {
   Component,
   EventEmitter,
@@ -7,7 +8,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+// lIbs
 import { ToastrService } from 'ngx-toastr';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+// Models
+import { ICustomerContact } from '@core/models-v2/customer/customer.interface';
+import { IContactPosition } from '@core/models-v2/customer/contact-position.interface';
+import { IError } from '@core/models-v2/error/error.interface';
+// Services
 import { getDomainsToAutocomplete } from './domains-autocomplete';
 import {
   isVacio,
@@ -15,12 +23,10 @@ import {
   rutValidator,
 } from '../../utils/utilidades';
 import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete/angular-email-autocomplete.component';
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import { SessionService } from '@core/services-v2/session/session.service';
-import { ICustomerContact } from '@core/models-v2/customer/customer.interface';
 import { CustomerContactService } from '@core/services-v2/customer-contact.service';
-import { IContactPosition } from '@core/models-v2/customer/contact-position.interface';
-import { IError } from '@core/models-v2/error/error.interface';
+import { IConfig } from '@core/config/config.interface';
+import { ConfigService } from '@core/config/config.service';
 
 @Component({
   selector: 'app-update-contact-modal',
@@ -39,14 +45,18 @@ export class UpdateContactModalComponent implements OnInit {
   cargos: IContactPosition[] = [];
   tipo_fono = '+569';
   loadingForm = false;
+  config!: IConfig;
 
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly customerContactService: CustomerContactService
-  ) {}
+    private readonly customerContactService: CustomerContactService,
+    private readonly configService: ConfigService
+  ) {
+    this.config = this.configService.getConfig();
+  }
 
   ngOnInit(): void {
     this.domains = getDomainsToAutocomplete();
@@ -56,7 +66,7 @@ export class UpdateContactModalComponent implements OnInit {
 
   formDefault() {
     let largo = 8;
-    if (this.contacto.phone === undefined) {
+    if (!this.contacto.phone) {
       this.contacto.phone = '';
       this.tipo_fono = '+569';
     } else {
@@ -101,7 +111,7 @@ export class UpdateContactModalComponent implements OnInit {
     this.loadingForm = true;
     const data = { ...this.formContacto.value };
     const emailValidado = email.inputValue;
-    const usuario = this.sessionService.getSession(); //: Usuario = this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
 
     if (data.telefono !== '' || emailValidado !== '') {
       if (!isVacio(usuario)) {

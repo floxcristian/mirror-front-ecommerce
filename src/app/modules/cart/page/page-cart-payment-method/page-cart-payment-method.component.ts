@@ -10,68 +10,83 @@ import {
   Inject,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Usuario } from '../../../../shared/interfaces/login';
+import { isPlatformBrowser } from '@angular/common';
 import {
   FormGroup,
   FormBuilder,
   Validators,
   FormControl,
 } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
-import { TransBankToken } from '../../../../shared/interfaces/payment-method';
+// Env
+import { environment } from '@env/environment';
+// Rxjs
+import { Observable, Subject, Subscription, firstValueFrom } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { filter } from 'rxjs/internal/operators/filter';
+// Libs
+import { ToastrService } from 'ngx-toastr';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { v1 as uuidv1 } from 'uuid';
+// Models
 import { ShippingAddress } from '../../../../shared/interfaces/address';
+import { Usuario } from '../../../../shared/interfaces/login';
+import { TransBankToken } from '../../../../shared/interfaces/payment-method';
+import { ICostCenter } from '@core/models-v2/customer/customer-cost-center.interface';
+import { IError } from '@core/models-v2/error/error.interface';
+import { IPaymentPurchaseOrder } from '@core/models-v2/payment-method/payment-purchase-order.interface';
+import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
+import { ICity } from '@core/services-v2/geolocation/models/city.interface';
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { IPaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
+import { IStore } from '@core/services-v2/geolocation/models/store.interface';
+import { InvoiceType } from '@core/enums/invoice-type.enum';
+import { IValidateShoppingCartStockLineResponse } from '@core/models-v2/cart/validate-stock-response.interface';
+import { IKhipuBank } from '@core/models-v2/payment-method/khipu-bank.interface';
+import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
+import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
+import { ICreateGuest } from '@core/models-v2/customer/create-guest.interface';
+// Services
 import {
   calculaIcono,
   dataURLtoFile,
   isVacio,
   rutValidator,
 } from '../../../../shared/utils/utilidades';
-import { v1 as uuidv1 } from 'uuid';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+
 import { AgregarCentroCostoComponent } from '../../components/agregar-centro-costo/agregar-centro-costo.component';
-import { Observable, Subject, Subscription, firstValueFrom } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+
 import { DireccionMap } from 'src/app/shared/components/map/map.component';
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
-import { isPlatformBrowser } from '@angular/common';
+
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { SessionStorageService } from '@core/storage/session-storage.service';
-import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { PaymentMethodService } from '@core/services-v2/payment-method.service';
-import { IPaymentMethod } from '@core/models-v2/payment-method/payment-method.interface';
+
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
-import { IStore } from '@core/services-v2/geolocation/models/store.interface';
+
 import { UserRoleType } from '@core/enums/user-role-type.enum';
-import { IKhipuBank } from '@core/models-v2/payment-method/khipu-bank.interface';
-import { InvoiceType } from '@core/enums/invoice-type.enum';
-import { IValidateShoppingCartStockLineResponse } from '@core/models-v2/cart/validate-stock-response.interface';
 import {
   PaymentMethodCodeType,
   PaymentMethodType,
 } from '@core/enums/payment-method.enum';
 import { CartService } from '@core/services-v2/cart.service';
-import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
-import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
+
 import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 import { PaymentMethodPurchaseOrderRequestService } from '@core/services-v2/payment-method-purchase-order-request.service';
 import { DocumentType } from '@core/enums/document-type.enum';
 import { CustomerService } from '@core/services-v2/customer.service';
 import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
-import { ICreateGuest } from '@core/models-v2/customer/create-guest.interface';
-import { environment } from '@env/environment';
+
 import { GuestStorageService } from '@core/storage/guest-storage.service';
 import { IGuest } from '@core/models-v2/storage/guest.interface';
 import { ReceiveStorageService } from '@core/storage/receive-storage.service';
 import { CustomerCostCenterService } from '@core/services-v2/customer-cost-center.service';
-import { ICostCenter } from '@core/models-v2/customer/customer-cost-center.interface';
-import { IError } from '@core/models-v2/error/error.interface';
-import { IPaymentPurchaseOrder } from '@core/models-v2/payment-method/payment-purchase-order.interface';
-import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
+
 import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';
-import { ICity } from '@core/services-v2/geolocation/models/city.interface';
+import { ConfigService } from '@core/config/config.service';
+import { IConfig } from '@core/config/config.interface';
 
 declare const $: any;
 export interface Archivo {
@@ -159,6 +174,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   purchaseOrderId!: string;
 
   subscriptions: Subscription = new Subscription();
+  config!: IConfig;
 
   constructor(
     private router: Router,
@@ -181,8 +197,10 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private readonly customerService: CustomerService,
     private readonly customerBusinessLineApiService: CustomerBusinessLineApiService,
     private readonly customerAddressService: CustomerAddressApiService,
-    private readonly customerCostCenterService: CustomerCostCenterService
+    private readonly customerCostCenterService: CustomerCostCenterService,
+    private readonly configService: ConfigService
   ) {
+    this.config = this.configService.getConfig();
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;

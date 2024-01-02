@@ -10,6 +10,8 @@ import { CurrencyService } from '../../../../shared/services/currency.service';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
+import { ConfigService } from '@core/config/config.service';
+import { IConfig } from '@core/config/config.interface';
 import { StorageKey } from '@core/storage/storage-keys.enum';
 
 @Component({
@@ -20,25 +22,10 @@ import { StorageKey } from '@core/storage/storage-keys.enum';
 export class TopbarComponent {
   @Input() tipo: any = 'b2c'; // 'b2b' | 'b2c'
   @Input() desde: string = '';
-
-  languages = [
-    { name: 'English', image: 'language-1' },
-    { name: 'French', image: 'language-2' },
-    { name: 'German', image: 'language-3' },
-    { name: 'Russian', image: 'language-4' },
-    { name: 'Italian', image: 'language-5' },
-  ];
-
-  currencies = [
-    { name: '€ Euro', url: '', code: 'EUR', symbol: '€' },
-    { name: '£ Pound Sterling', url: '', code: 'GBP', symbol: '£' },
-    { name: '$ US Dollar', url: '', code: 'USD', symbol: '$' },
-    { name: '₽ Russian Ruble', url: '', code: 'RUB', symbol: '₽' },
-  ];
-
   @Input() logo: any;
   usuario: ISession | null;
   logoSrc = environment.logoSrc;
+  config!: IConfig;
 
   constructor(
     public currencyService: CurrencyService,
@@ -46,8 +33,10 @@ export class TopbarComponent {
     public localS: LocalStorageService,
     // Services V2
     private readonly sessionStorage: SessionStorageService,
-    private readonly authStateSession: AuthStateServiceV2
+    private readonly authStateSession: AuthStateServiceV2,
+    private readonly configService: ConfigService
   ) {
+    this.config = this.configService.getConfig();
     this.usuario = this.sessionStorage.get();
 
     this.authStateSession.session$.subscribe((user) => {
