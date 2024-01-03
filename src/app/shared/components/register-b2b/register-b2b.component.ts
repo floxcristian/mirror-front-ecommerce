@@ -143,14 +143,10 @@ export class Registerb2bComponent implements OnInit {
 
   /**
    * Verifica si el documento ingresado ya existe.
-   * @param e
+   * @param event
    */
   checkIfDocumentIdExists(event: Event): void {
     const input = event.target as HTMLInputElement;
-    console.log(
-      "this.userForm.controls['documentId']: ",
-      this.userForm.controls['documentId']
-    );
 
     if (this.userForm.controls['documentId'].status === 'VALID') {
       const documentId = input.value.replace(/\./g, '');

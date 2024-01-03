@@ -145,7 +145,6 @@ export interface IFilters {
   [index: string]: string[];
 }
 
-//Elastic search
 export interface IElasticSearch {
   word: string;
   documentId: string;

@@ -7,7 +7,7 @@
           class="ps-1"
           [ngStyle]="{ 'font-size': innerWidth <= 768 ? '15px' : '1em' }"
         >
-          {{ tienda.direccion }}
+          {{ store.address }}
         </span>
       </div>
     </div>
@@ -33,7 +33,7 @@
         <i class="fas fa-map-marker-alt"></i>
         <a
           class="ps-1"
-          [href]="tienda.url_mapa"
+          [href]="store.mapUrl"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -51,7 +51,7 @@
           class="ps-1"
           [ngStyle]="{ 'font-size': innerWidth <= 768 ? '12px' : '1em' }"
         >
-          {{ tienda.horarios }}
+          {{ store.schedule }}
         </span>
       </div>
     </div>
