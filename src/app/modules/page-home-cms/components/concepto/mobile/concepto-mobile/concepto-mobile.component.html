@@ -1,6 +1,6 @@
 <div class="card_concepto" *ngIf="caja">
   <img
-    [src]="caja.data.image"
+    [src]="caja?.data?.image"
     class="img-fluid-product-mobile"
     [alt]="caja?.data?.title"
   />
