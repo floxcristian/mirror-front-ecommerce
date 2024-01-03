@@ -1,12 +1,11 @@
 // Angular
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 // Rxjs
 import { Observable } from 'rxjs';
 // Env
 import { environment } from '@env/environment';
 // Models
-import { ResponseApi } from '../interfaces/response-api';
 import { CargosContactoResponse } from '../interfaces/cargoContacto';
 
 @Injectable({
@@ -61,23 +60,6 @@ export class ClientsService {
   getCargosContacto(): Observable<CargosContactoResponse> {
     return this.http.get<CargosContactoResponse>(
       `${environment.apiCustomer}filtros/cargosContacto`
-    );
-  }
-
-  eliminaDireccion(
-    request: any,
-    rutCliente: string,
-    recid: number
-  ): Observable<ResponseApi> {
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-      body: request,
-    };
-    return this.http.delete<ResponseApi>(
-      `${environment.apiCustomer}direccionCRM/${rutCliente}/${recid}`,
-      options
     );
   }
 }

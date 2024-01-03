@@ -4,8 +4,6 @@ import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 // Pipes
 import { SlugifyPipe } from '../pipes/slugify.pipe';
-// Models
-import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 
 @Injectable({
   providedIn: 'root',
