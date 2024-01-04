@@ -10,7 +10,7 @@
     "dev:ssr": "ng run front-ecommerce:serve-ssr",
     "serve:ssr": "node dist/server/main.js",
     "build:ssr": "npm run build:client-and-server-bundles",
-    "build:client-and-server-bundles": "node --max_old_space_size=4000 ./node_modules/@angular/cli/bin/ng build --aot=true && ng run front-ecommerce:server && gzipper compress ./dist",
+    "build:client-and-server-bundles": "node --max_old_space_size=4000 ./node_modules/@angular/cli/bin/ng build --aot=true && ng run front-ecommerce:server && gzipper compress ./dist --gzip --brotli",
     "prerender": "ng run front-ecommerce:prerender",
     "format": "prettier --write \"**/*.+(ts|md|css|scss|json)\"",
     "prepare": "husky install"
