@@ -2,7 +2,7 @@
   "country": "Perú",
   "document": {
     "name": "DNI",
-    "sample": ""
+    "sample": "11111111-1"
   },
   "phoneCodes": {
     "mobile": {
@@ -17,5 +17,8 @@
   "storesPage": {
     "title": "29 TIENDAS A LO LARGO DE CHILE",
     "subtitle": "Desde Arica a Punta Arenas"
+  },
+  "company": {
+    "phone": ""
   }
 }

@@ -3,7 +3,7 @@
     <div class="card m-0 shadow-none">
       <div class="card-body m-0">
         <app-loading-element
-          *ngIf="loadingForm"
+          *ngIf="isLoading"
           [text]="'Registrando la información'"
         ></app-loading-element>
 
@@ -16,7 +16,7 @@
                   <span class="form-check-input input-check">
                     <span class="input-check__body">
                       <input
-                        (click)="invoice()"
+                        (click)="changeUserType()"
                         name="tipoDocumento"
                         class="input-check__input"
                         type="checkbox"
@@ -50,7 +50,7 @@
                     <span class="input-check__body">
                       <input
                         name="tipoDocumento"
-                        (click)="invoice()"
+                        (click)="changeUserType()"
                         [checked]="checkBoxPersona"
                         class="input-check__input"
                         type="checkbox"
@@ -75,65 +75,41 @@
               </div>
             </div>
           </div>
-          <div class="col-md-12">
-            <div class="alert alert-info" *ngIf="!isInvoice">
-              <p class="text-center m-0">
-                <i
-                  class="fa-regular fa-circle-info"
-                  style="margin-right: 10px"
-                ></i>
-                Al registrarse como Persona, el tipo de documento siempre será:
-                BOLETA
-              </p>
-            </div>
-            <div class="alert alert-info" *ngIf="isInvoice">
-              <p class="text-center m-0" style="color: #0063b9">
-                <i
-                  class="fa-regular fa-circle-info"
-                  style="margin-right: 10px"
-                ></i>
-                Al registrarse como Empresa, el tipo de documento siempre será:
-                FACTURA
-              </p>
-            </div>
-          </div>
         </div>
 
         <form [formGroup]="userForm">
           <div class="row">
-            <!-- rut -->
             <ng-container *ngIf="isInvoice">
               <h2 class="form-title col-md-12" style="color: #0063b9">
                 Datos Empresa
               </h2>
               <div class="col-md-12">
                 <label style="color: #0063b9; font-weight: 100"
-                  >Rut *(ej:11111111-1)</label
+                  >{{ document.name }}* (ej: {{ document.sample }})</label
                 >
                 <div class="input-group">
-                  <!-- <label>RUT</label> -->
                   <input
-                    formControlName="rut"
+                    formControlName="documentId"
                     [(ngModel)]="rut"
                     class="form-control"
-                    [disabled]="rutDisabled"
-                    [placeholder]="isInvoice ? 'Rut Empresa*' : 'Rut'"
-                    (focusout)="validateCustomer($event)"
+                    [disabled]="isDisabledDocumentId"
+                    [placeholder]="isInvoice ? 'Rut Empresa*' : document.name"
+                    (focusout)="checkIfDocumentIdExists($event)"
                     [maxlength]="cantMaxRut"
                     appRutChars
                   />
-                  <span class="input-group-text">
+                  <span class="input-group-text" style="padding: 0">
                     <button
                       class="btn btn-sm btn-secondary"
-                      *ngIf="!rutDisabled"
+                      *ngIf="!isDisabledDocumentId"
                       type="button"
                     >
                       <i class="fa fa-search fa-lg"></i>
                     </button>
                     <button
                       class="btn btn-sm btn-secondary"
-                      (click)="clearRut()"
-                      *ngIf="rutDisabled"
+                      (click)="cleanDocumentId()"
+                      *ngIf="isDisabledDocumentId"
                       type="button"
                     >
                       <i class="fa fa-times fa-lg"></i>
@@ -142,19 +118,18 @@
                 </div>
                 <p
                   *ngIf="
-                    userForm.controls['rut'].invalid &&
-                    userForm.controls['rut'].touched
+                    userForm.controls['documentId'].invalid &&
+                    userForm.controls['documentId'].touched
                   "
                   class="text-error-form-2 float-start"
                 >
-                  El RUT ingresado no es válido
+                  El {{ document.name }} ingresado no es válido.
                 </p>
               </div>
               <div class="col-md-12 mt-3">
                 <div class="mb-3">
-                  <!-- <label>Email</label> -->
                   <input
-                    formControlName="razonsocial"
+                    formControlName="businessName"
                     type="text"
                     class="form-control"
                     placeholder="Razón social*"
@@ -169,7 +144,7 @@
                     [items]="businessLines"
                     bindLabel="name"
                     bindValue="code"
-                    formControlName="giro"
+                    formControlName="businessLine"
                     class="form-control-select"
                     placeholder="Giro*"
                   >
@@ -184,32 +159,33 @@
             </h2>
             <div class="col-md-12" *ngIf="!isInvoice">
               <label style="color: #0063b9; font-weight: 100"
-                >Rut *(ej:11111111-1)</label
+                >{{ document.name }}* (ej:{{ document.sample }})</label
               >
               <div class="input-group">
-                <!-- <label>RUT</label> -->
                 <input
-                  formControlName="rut"
+                  formControlName="documentId"
                   [(ngModel)]="rut"
                   class="form-control"
-                  [disabled]="rutDisabled"
-                  [placeholder]="isInvoice ? 'Rut Empresa*' : 'Rut*'"
-                  (focusout)="validateCustomer($event)"
+                  [disabled]="isDisabledDocumentId"
+                  [placeholder]="
+                    isInvoice ? 'Rut Empresa*' : document.name + '*'
+                  "
+                  (focusout)="checkIfDocumentIdExists($event)"
                   [maxlength]="cantMaxRut"
                   appRutChars
                 />
-                <span class="input-group-text">
+                <span class="input-group-text" style="padding: 0">
                   <button
                     class="btn btn-sm btn-secondary"
-                    *ngIf="!rutDisabled"
+                    *ngIf="!isDisabledDocumentId"
                     type="button"
                   >
                     <i class="fa fa-search fa-lg"></i>
                   </button>
                   <button
                     class="btn btn-sm btn-secondary"
-                    (click)="clearRut()"
-                    *ngIf="rutDisabled"
+                    (click)="cleanDocumentId()"
+                    *ngIf="isDisabledDocumentId"
                     type="button"
                   >
                     <i class="fa fa-times fa-lg"></i>
@@ -218,36 +194,36 @@
               </div>
               <p
                 *ngIf="
-                  userForm.controls['rut'].invalid &&
-                  userForm.controls['rut'].touched
+                  userForm.controls['documentId'].invalid &&
+                  userForm.controls['documentId'].touched
                 "
                 class="text-error-form-2 float-start"
               >
-                El RUT ingresado no es válido
+                El {{ document.name }} ingresado no es válido.
               </p>
             </div>
 
             <div class="col-12" *ngIf="isInvoice">
               <label style="color: #0063b9; font-weight: 100"
-                >Rut *(ej:11111111-1)</label
+                >{{ document.name }} *(ej:11111111-1)</label
               >
               <div class="input-group">
                 <input
-                  formControlName="contactRut"
+                  formControlName="contactDocumentId"
                   class="form-control"
-                  placeholder="Rut*"
+                  [placeholder]="document.name + '*'"
                   [maxlength]="cantMaxRut"
                   appRutChars
                 />
               </div>
               <p
                 *ngIf="
-                  userForm.controls['contactRut'].invalid &&
-                  userForm.controls['contactRut'].touched
+                  userForm.controls['contactDocumentId'].invalid &&
+                  userForm.controls['contactDocumentId'].touched
                 "
                 class="text-danger float-start"
               >
-                El RUT ingresado no es válido
+                El {{ document.name }} ingresado no es válido.
               </p>
             </div>
 
@@ -256,24 +232,22 @@
                 <ng-select
                   [clearable]="false"
                   [searchable]="true"
-                  [items]="cargos"
-                  bindLabel="titleid"
-                  bindValue="titleid"
-                  formControlName="cargo"
+                  [items]="contactPositions"
+                  bindLabel="title"
+                  bindValue="titleId"
+                  formControlName="position"
                   class="form-control-select"
-                  placeholder="Cargo *"
+                  placeholder="Cargo*"
                 >
                 </ng-select>
               </div>
             </div>
             <div class="col-md-12" *ngIf="!isInvoice"></div>
 
-            <!-- nombre -->
             <div class="col-md-12 mt-3">
               <div class="mb-3">
-                <!-- <label>Nombre</label> -->
                 <input
-                  formControlName="nombre"
+                  formControlName="firstName"
                   type="text"
                   class="form-control"
                   placeholder="Nombres*"
@@ -283,9 +257,8 @@
             </div>
             <div class="col-md-12">
               <div class="mb-3">
-                <!-- <label>Apellido</label> -->
                 <input
-                  formControlName="apellido"
+                  formControlName="lastName"
                   type="text"
                   class="form-control"
                   placeholder="Apellidos*"
@@ -297,63 +270,73 @@
             <div class="col-md-12">
               <div class="mb-3">
                 <label style="color: #0063b9; font-weight: 100"
-                  ><font style="margin-right: 10px">Codigo *</font>
-                  <font>Telefono Fijo/Celular</font></label
+                  ><font style="margin-right: 10px">Código*</font>
+                  <font>Teléfono Fijo/Celular</font></label
                 >
                 <div class="input-group">
-                  <div class="input-group-prepend">
+                  <div class="input-group-prepend" dropdown>
                     <button
-                      class="btn btn-outline-secondary dropdown-toggle"
+                      id="button-basic"
+                      dropdownToggle
                       type="button"
-                      data-bs-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
+                      class="btn btn-outline-secondary dropdown-toggle"
+                      aria-controls="dropdown-phone"
                     >
                       <i
                         [ngClass]="
-                          tipo_fono == '+569'
+                          phoneCode === phoneCodes.mobile.code
                             ? 'fa-solid fa-mobile-screen'
                             : 'fa-solid fa-phone'
                         "
                         style="margin-right: 1px"
                       ></i>
-                      {{ tipo_fono }}
+                      {{ phoneCode }}
                     </button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" (click)="Select_fono('+569')"
+                    <div
+                      id="dropdown-phone"
+                      *dropdownMenu
+                      class="dropdown-menu"
+                      role="menu"
+                      aria-labelledby="button-basic"
+                    >
+                      <a
+                        class="dropdown-item"
+                        (click)="changePhoneCode(phoneCodes.mobile.code)"
                         ><i
                           class="fa-solid fa-mobile-screen"
                           style="margin-right: 1px"
                         ></i
-                        >+569</a
+                        >{{ phoneCodes.mobile.code }}</a
                       >
-                      <a class="dropdown-item" (click)="Select_fono('+56')"
+                      <a
+                        class="dropdown-item"
+                        (click)="changePhoneCode(phoneCodes.landline.code)"
                         ><i
                           class="fa-solid fa-phone"
                           style="margin-right: 1px"
                         ></i
-                        >+56</a
+                        >{{ phoneCodes.landline.code }}</a
                       >
                     </div>
                   </div>
                   <input
-                    formControlName="telefono"
+                    formControlName="phone"
                     type="text"
                     class="form-control"
-                    placeholder="Número*"
-                    maxlength="9"
+                    placeholder="Teléfono*"
+                    maxLength="9"
                     appPhoneChar
                   />
                 </div>
 
                 <p
                   *ngIf="
-                    userForm.controls['telefono'].invalid &&
-                    userForm.controls['telefono'].touched
+                    userForm.controls['phone'].invalid &&
+                    userForm.controls['phone'].touched
                   "
                   class="text-error-form-2"
                 >
-                  El número de contacto no es válido
+                  El número de contacto no es válido.
                 </p>
               </div>
             </div>
@@ -362,7 +345,7 @@
                 <autocomplete
                   #emailValidate
                   givenPlaceHolder="Email"
-                  [disabled]="!isValidRut"
+                  [disabled]="!isValidDocumentId"
                   [domainNames]="domains"
                 >
                 </autocomplete>
@@ -373,14 +356,14 @@
               <div class="mb-3">
                 <input
                   type="password"
-                  formControlName="pwd"
+                  formControlName="password"
                   class="form-control"
                   placeholder="Contraseña"
                 />
                 <p
                   *ngIf="
-                    userForm.controls['pwd'].invalid &&
-                    userForm.controls['pwd'].touched
+                    userForm.controls['password'].invalid &&
+                    userForm.controls['password'].touched
                   "
                   class="text-error-form-2"
                 >
@@ -393,7 +376,7 @@
               <div class="mb-3">
                 <input
                   type="password"
-                  formControlName="confirmPwd"
+                  formControlName="confirmPassword"
                   class="form-control"
                   placeholder="Repita contraseña"
                 />
@@ -406,9 +389,9 @@
 
                 <p
                   class="text-error-form-2"
-                  *ngIf="userForm.controls['confirmPwd'].errors?.['required'] && userForm.controls['confirmPwd'].touched"
+                  *ngIf="userForm.controls['confirmPassword'].errors?.['required'] && userForm.controls['confirmPassword'].touched"
                 >
-                  El campo confirme contraseña es requerido
+                  El campo confirme contraseña es requerido.
                 </p>
               </div>
             </div>
@@ -417,10 +400,10 @@
             <div class="col-12">
               <app-map
                 [autocompletado]="autocompletado"
-                (clearAdress)="clearAddress()"
-                [storeAddress]="direccion.direccion"
-                [storeZone]="direccion.zona"
-                (setDireccion)="setDireccion($event)"
+                (clearAdress)="cleanAddress()"
+                [storeAddress]="selectedAddress?.address || ''"
+                [storeZone]="selectedAddress?.zone || ''"
+                (setDireccion)="setAddressFromMap($event)"
                 (geolocalizacion)="geolocalizacion($event)"
                 [titulo]="
                   isInvoice
@@ -439,22 +422,22 @@
                 [class.mb-3]="innerWidth < 427"
               >
                 <input
-                  formControlName="calle"
+                  formControlName="street"
                   type="text"
                   class="form-control"
-                  [attr.disabled]="disableDireccion"
-                  (blur)="cargarDireccion()"
-                  placeholder="Dirección* "
+                  [attr.disabled]="disableAddress"
+                  (blur)="setSelectedAddress()"
+                  placeholder="Dirección*"
                 />
               </div>
 
               <div class="col-md-3 p-0">
                 <input
-                  formControlName="numero"
+                  formControlName="streetNumber"
                   type="text"
                   class="form-control"
                   placeholder="Número* "
-                  (blur)="cargarDireccion()"
+                  (blur)="setSelectedAddress()"
                 />
               </div>
             </div>
@@ -468,7 +451,7 @@
                 [class.mb-3]="innerWidth < 427"
               >
                 <input
-                  formControlName="departamento"
+                  formControlName="departmentOrHouse"
                   type="text"
                   class="form-control"
                   placeholder="Departamento"
@@ -482,9 +465,9 @@
                   [items]="cities"
                   bindLabel="city"
                   bindValue="id"
-                  formControlName="comuna"
+                  formControlName="city"
                   class="form-control-select"
-                  (blur)="cargarDireccion()"
+                  (blur)="setSelectedAddress()"
                   placeholder="Comuna*"
                 >
                 </ng-select>
@@ -496,7 +479,7 @@
             <textarea
               class="form-control"
               placeholder="Ingrese una referencia para su dirección"
-              formControlName="referencia"
+              formControlName="reference"
             ></textarea>
           </div>
           <div class="row">
@@ -579,7 +562,7 @@
             [disabled]="
               !userForm.valid ||
               !checkBoxTerminos ||
-              loadingForm ||
+              isLoading ||
               !emailValidate.correoValido
             "
             class="btn btn-lg btn-secondary w-100 text-center"
@@ -608,7 +591,7 @@
               (click)="registerUser(emailValidate)"
               type="button"
               [disabled]="
-                !userForm.valid || loadingForm || !emailValidate.correoValido
+                !userForm.valid || isLoading || !emailValidate.correoValido
               "
               class="btn btn-lg btn-secondary w-100 text-center"
             >

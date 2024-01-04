@@ -7,7 +7,6 @@ import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 // Models
 import { ResponseApi } from '../interfaces/response-api';
-import { CargosContactoResponse } from '../interfaces/cargoContacto';
 
 @Injectable({
   providedIn: 'root',
@@ -34,14 +33,6 @@ export class ClientsService {
     return this.http.get(call);
   }
 
-  register(data: any) {
-    return this.http.post(environment.apiCustomer + `nuevo`, data);
-  }
-
-  validateCustomer(rut: any) {
-    return this.http.get(environment.apiCustomer + `rut?rut=${rut}`);
-  }
-
   getDataClient(data: any) {
     return this.http.post(environment.apiCustomer + `GetDatosCliente`, data);
   }
@@ -56,12 +47,6 @@ export class ClientsService {
 
   setDevolucion(data: any) {
     return this.http.post(environment.apiCustomer + `devolucion`, data);
-  }
-
-  getCargosContacto(): Observable<CargosContactoResponse> {
-    return this.http.get<CargosContactoResponse>(
-      `${environment.apiCustomer}filtros/cargosContacto`
-    );
   }
 
   eliminaDireccion(
