@@ -269,7 +269,7 @@ export class PageProfileComponent implements OnDestroy, OnInit {
 
   respuesta(event: any) {
     if (event) {
-      this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+      this.usuario = this.sessionService.getSession();
       this.getDataClient();
     }
   }
@@ -293,16 +293,10 @@ export class PageProfileComponent implements OnDestroy, OnInit {
     );
     bsModalRef.content.event.subscribe(async (res: any) => {
       const direccionDespacho = res;
-
       this.direccionDespacho = direccionDespacho;
       const preferences = this.customerPreferencesStorage.get();
       preferences.deliveryAddress = direccionDespacho;
       this.customerPreferencesStorage.set(preferences);
-      /*const preferencias: PreferenciasCliente = this.localS.get(
-        'preferenciasCliente'
-      );
-      preferencias.direccionDespacho = direccionDespacho;
-      this.localS.set('preferenciasCliente', preferencias);*/
     });
   }
 }

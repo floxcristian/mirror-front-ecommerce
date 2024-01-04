@@ -66,6 +66,7 @@ import { environment } from '@env/environment';
 import { ICreateGuest } from '@core/models-v2/customer/create-guest.interface';
 import { CustomerService } from '@core/services-v2/customer.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
+import { IError } from '@core/models-v2/error/error.interface';
 
 export let browserRefresh = false;
 declare let dataLayer: any;
@@ -1357,8 +1358,8 @@ export class PageCartShippingComponent implements OnInit {
     const initialState: DataModal = {
       titulo: 'Confirmación',
       mensaje: `¿Esta seguro que desea <strong>eliminar</strong> esta direccion?<br><br>
-                  Calle: <strong>${direccion.calle}</strong><br>
-                  Número: <strong>${direccion.numero}</strong>`,
+                  Calle: <strong>${direccion.street}</strong><br>
+                  Número: <strong>${direccion.number}</strong>`,
       tipoIcon: TipoIcon.QUESTION,
       tipoModal: TipoModal.QUESTION,
     };
@@ -1368,31 +1369,23 @@ export class PageCartShippingComponent implements OnInit {
     });
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res) {
-        const usuario = this.sessionService.getSession();
-        const request = {
-          codEmpleado: 0,
-          codUsuario: 0,
-          cuentaUsuario: usuario.username,
-          rutUsuario: usuario.documentId,
-          nombreUsuario: `${usuario.firstName} ${usuario.lastName}`,
-        };
-        const respuesta: any = await this.clientsService
-          .eliminaDireccion(
-            request,
-            this.userSession.documentId ?? '',
-            direccion.recid
-          )
-          .toPromise();
-        if (!respuesta.error) {
-          this.toast.success('Dirección eliminada exitosamente.');
-          if (
-            this.direccionConfigurada.deliveryAddress?.id === direccion.recid
-          )
-            this.cambioDireccionPreferenciaCliente(direccion.recid);
-          this.respuesta(true);
-        } else {
-          this.toast.error(respuesta.msg);
-        }
+        const documentId = this.userSession.documentId;
+        const addressId = direccion.id;
+        this.customerAddressApiService
+          .deleteAddress(documentId, addressId)
+          .subscribe({
+            next: (_) => {
+              this.toast.success('Dirección eliminada exitosamente.');
+              this.respuesta(true, true);
+              if (
+                this.direccionConfigurada.deliveryAddress?.id === direccion.id
+              )
+                this.cambioDireccionPreferenciaCliente(direccion.id);
+            },
+            error: (err: IError) => {
+              this.toast.error(err.message);
+            },
+          });
       }
     });
   }
@@ -1401,14 +1394,11 @@ export class PageCartShippingComponent implements OnInit {
    * Se activa si se elimina la dirección preferencia del cliente.
    * @param recid
    */
-  cambioDireccionPreferenciaCliente(addressId: any) {
+  cambioDireccionPreferenciaCliente(addressId: string) {
+    const preferences = this.customerPreferencesStorage.get();
     let nueva_preferencia =
       this.addresses.find((address) => address.id !== addressId) || null;
-    console.log('nueva', nueva_preferencia);
-    //this.customerAddressService.setCustomerAddress(nueva_preferencia);
-    /*this.customerPreferencesStorage.set({
-      deliveryAddress: nueva_preferencia,
-    });*/
-    //this.localS.set('preferenciasCliente', nueva_preferencia);
+    preferences.deliveryAddress = nueva_preferencia;
+    this.customerPreferencesStorage.set(preferences);
   }
 }

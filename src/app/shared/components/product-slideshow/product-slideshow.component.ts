@@ -69,6 +69,8 @@ export class ProductSlideshowComponent
     rtl: this.direction.isRTL(),
   };
 
+  lastCustomHomepageKey = '';
+
   constructor(
     // @Inject(WINDOW) private window: Window,
     public toast: ToastrService,
@@ -166,7 +168,13 @@ export class ProductSlideshowComponent
       : '';
     let localidad_limpia =
       localidad?.normalize('NFD').replace(/[\u0300-\u036f]/g, '') || '';
-    if (this.user?.documentId !== '0') {
+
+    const customHomepageKey = [rut, sucursal, localidad_limpia].join('-');
+    if (
+      this.user?.documentId !== '0' &&
+      this.lastCustomHomepageKey !== customHomepageKey
+    ) {
+      this.lastCustomHomepageKey = customHomepageKey;
       this.lstProductos = [];
       this.cmsService
         .getCustomHomePage(rut, sucursal, localidad_limpia)
@@ -178,6 +186,7 @@ export class ProductSlideshowComponent
           },
           error: (err) => {
             console.log(err);
+            this.lastCustomHomepageKey = '';
           },
         });
     } else {

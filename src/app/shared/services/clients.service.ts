@@ -1,12 +1,8 @@
 // Angular
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-// Rxjs
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 // Env
 import { environment } from '@env/environment';
-// Models
-import { ResponseApi } from '../interfaces/response-api';
 
 @Injectable({
   providedIn: 'root',
@@ -47,22 +43,5 @@ export class ClientsService {
 
   setDevolucion(data: any) {
     return this.http.post(environment.apiCustomer + `devolucion`, data);
-  }
-
-  eliminaDireccion(
-    request: any,
-    rutCliente: string,
-    recid: number
-  ): Observable<ResponseApi> {
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-      body: request,
-    };
-    return this.http.delete<ResponseApi>(
-      `${environment.apiCustomer}direccionCRM/${rutCliente}/${recid}`,
-      options
-    );
   }
 }

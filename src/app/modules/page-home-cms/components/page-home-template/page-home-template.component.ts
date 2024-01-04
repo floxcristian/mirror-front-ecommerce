@@ -1,7 +1,7 @@
 // Angular
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 // Rxjs
-import { first } from 'rxjs';
+import { Subscription, first } from 'rxjs';
 // Models
 
 // Services
@@ -21,13 +21,18 @@ import { CustomerAddressService } from '@core/services-v2/customer-address/custo
   templateUrl: './page-home-template.component.html',
   styleUrls: ['./page-home-template.component.scss'],
 })
-export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
+export class PageHomeTemplateComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   preferenciasCliente!: ICustomerPreference;
   user!: ISession;
 
   //declarando la variable para ver los tipos
   carga: boolean = true;
   pageHome: IPage[] = [];
+
+  lastLoadKey: string = '';
+  subscription: Subscription = new Subscription();
 
   constructor(
     // Services V2
@@ -41,7 +46,7 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.geolocationService.stores$
+    const storeSubscription = this.geolocationService.stores$
       .pipe(first((stores) => stores.length > 0))
       .subscribe({
         next: () => {
@@ -66,32 +71,44 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
           }
         },
       });
+
+    this.subscription.add(storeSubscription);
   }
 
   ngAfterViewInit(): void {
-    this.geolocationService.selectedStore$.subscribe({
-      next: (location) => {
-        console.log('location: ', location);
-        console.log('cargarPage 3');
-        this.cargarPage();
-      },
-    });
-
-    this.authStateService.session$.subscribe(() => {
-      this.customerPreferenceService.getCustomerPreferences().subscribe({
-        next: (preferences) => {
-          this.preferenciasCliente = preferences;
+    const selectedStoreSubscription =
+      this.geolocationService.selectedStore$.subscribe({
+        next: (location) => {
+          console.log('location: ', location);
+          console.log('cargarPage 3');
           this.cargarPage();
         },
       });
-    });
 
-    this.customerAddressService.customerAddress$.subscribe(
-      (customerAddress) => {
-        this.preferenciasCliente.deliveryAddress = customerAddress;
-        this.cargarPage();
+    this.subscription.add(selectedStoreSubscription);
+
+    const sessionSubscription = this.authStateService.session$.subscribe(
+      () => {
+        this.customerPreferenceService.getCustomerPreferences().subscribe({
+          next: (preferences) => {
+            this.preferenciasCliente = preferences;
+            this.cargarPage();
+          },
+        });
       }
     );
+
+    this.subscription.add(sessionSubscription);
+
+    const customerAddressSubscription =
+      this.customerAddressService.customerAddress$.subscribe(
+        (customerAddress) => {
+          this.preferenciasCliente.deliveryAddress = customerAddress;
+          this.cargarPage();
+        }
+      );
+
+    this.subscription.add(customerAddressSubscription);
   }
 
   async cargarPage() {
@@ -103,18 +120,29 @@ export class PageHomeTemplateComponent implements OnInit, AfterViewInit {
     const localidad = this.preferenciasCliente?.deliveryAddress
       ? this.preferenciasCliente.deliveryAddress.city
       : '';
-    this.csmService.getHomePage(rut, sucursal, localidad).subscribe({
-      next: (res) => {
-        this.pageHome = res.data[0].page;
-        this.carga = false;
-        this.scrollToTop();
-      },
-      error: (err) => {},
-    });
+
+    const loadKey = [rut, sucursal, localidad].join('-');
+    if (this.lastLoadKey !== loadKey) {
+      this.lastLoadKey = loadKey;
+      this.csmService.getHomePage(rut, sucursal, localidad).subscribe({
+        next: (res) => {
+          this.pageHome = res.data[0].page;
+          this.carga = false;
+          this.scrollToTop();
+        },
+        error: (err) => {
+          this.lastLoadKey = '';
+        },
+      });
+    }
   }
 
   scrollToTop(): void {
     document.body.scrollTop = 0; // Safari
     document.documentElement.scrollTop = 0; // Other
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }
