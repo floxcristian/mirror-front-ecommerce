@@ -12,8 +12,8 @@
               <div class="row g-0">
                 <div class="col-md-4 p-2 align-self-center box">
                   <img
-                    [src]="catalogo.portada"
-                    [alt]="catalogo.nombre"
+                    [src]="catalogo.frontPageUrl"
+                    [alt]="catalogo.name"
                     class="card-img"
                   />
                 </div>
@@ -22,14 +22,14 @@
                     <table style="font-size: 13px">
                       <tr>
                         <td colspan="2">
-                          <h5>{{ catalogo.nombre }}</h5>
+                          <h5>{{ catalogo.name }}</h5>
                         </td>
                       </tr>
                       <tr>
                         <td style="width: 110px">
                           <small class="text-muted">FECHA VIGENCIA: </small>
                         </td>
-                        <td>{{ catalogo.fechaVig | date : "dd/MM/yyyy" }}</td>
+                        <td>{{ catalogo.activationDate | date : "dd/MM/yyyy" }}</td>
                       </tr>
                       <tr>
                         <td>
@@ -37,7 +37,7 @@
                             >FECHA EXPIRACI&Oacute;N:
                           </small>
                         </td>
-                        <td>{{ catalogo.fechaEx | date : "dd/MM/yyyy" }}</td>
+                        <td>{{ catalogo.expirationDate | date : "dd/MM/yyyy" }}</td>
                       </tr>
                     </table>
                   </div>
