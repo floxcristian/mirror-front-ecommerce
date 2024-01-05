@@ -1,5 +1,6 @@
 import { IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
 
+/*
 export interface Address {
   default: boolean;
   firstName: string;
@@ -10,7 +11,7 @@ export interface Address {
   city: string;
   postcode: string;
   address: string;
-}
+}*/
 
 export interface ShippingAddress {
   codRegion?: string;

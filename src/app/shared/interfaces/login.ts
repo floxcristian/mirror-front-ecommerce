@@ -1,10 +1,11 @@
 import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
 import * as moment from 'moment';
 
+/*
 export interface Login {
   username: string;
   password: string;
-}
+}*/
 
 export interface Usuario {
   id?: number;

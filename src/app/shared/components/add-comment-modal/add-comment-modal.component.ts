@@ -1,8 +1,5 @@
 import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { ComentarioArticulo } from '../../interfaces/comentariosArticulo';
-import { Product } from '../../interfaces/product';
-import { ResponseApi } from '../../interfaces/response-api';
 import { CatalogoService } from '../../services/catalogo.service';
 import { isVacio } from '../../utils/utilidades';
 import { BsModalRef } from 'ngx-bootstrap/modal';

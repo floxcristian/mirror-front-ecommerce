@@ -8,9 +8,6 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ResumenComentario } from '../../interfaces/comentariosArticulo';
-import { Product } from '../../interfaces/product';
-import { ResponseApi } from '../../interfaces/response-api';
 import { CatalogoService } from '../../services/catalogo.service';
 import { AddCommentModalComponent } from '../add-comment-modal/add-comment-modal.component';
 import {

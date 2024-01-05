@@ -13,9 +13,3 @@ export interface ComentarioArticulo {
   tiempo?: number | string;
   unidadTiempo?: string;
 }
-
-export interface ResumenComentario {
-  cantidad: number;
-  estrellas: number;
-  porcentaje?: number;
-}

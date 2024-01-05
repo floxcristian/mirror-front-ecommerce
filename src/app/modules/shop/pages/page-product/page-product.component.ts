@@ -31,7 +31,7 @@ import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 import { IBreadcrumbItem } from './models/breadcrumb.interface';
 import { ICategoryParams } from './models/category-params.interface';
-import { Product, ProductOrigen } from '../../../../shared/interfaces/product';
+import { Product } from '../../../../shared/interfaces/product';
 import {
   IComparedAttribute,
   IComparedProduct,

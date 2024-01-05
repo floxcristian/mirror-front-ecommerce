@@ -5,12 +5,6 @@ export interface ProductFeature {
   recid: string;
 }
 
-export interface AtributosEspeciales {
-  texto: string;
-  icono: string;
-  url: string;
-}
-
 export interface ProductPrecio {
   precio: number;
   sucursal?: string;
