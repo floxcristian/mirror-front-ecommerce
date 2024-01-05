@@ -62,9 +62,9 @@ export interface ICatalogResponse {
     precio: number
     scalePrice: IScalePrice[]
     selected: boolean
-    sku: string
+    sku: string,
   }
-  
+
   export interface IAttribute {
     name: string
     value: string | number | any[]

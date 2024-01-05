@@ -38,7 +38,7 @@ export interface CustomerCode {
 
 export interface MetaTag {
   code: string;
-  value: any; // number??
+  value: number;
 }
 
 export interface Barcode {
