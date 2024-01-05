@@ -18,7 +18,7 @@ import { MetaTag } from '@core/models-v2/article/article-response.interface';
 })
 export class PageVerCatalogoComponent implements OnInit {
   isBrowser = false;
-  catalogo!: IBody[];
+  catalogo: IBody[] = [];
   catalogoMovil: any = [];
   skus!: Array<string>;
   objeto: any;

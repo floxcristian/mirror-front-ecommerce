@@ -35,7 +35,7 @@ export class CatalogService {
         branchCode:string
         skus:string[]
     }):Observable<IArticle[]>{
-        return this.http.post<IArticle[]>(`${API_CATALOG}/get-product-prices`,{params})
+        return this.http.post<IArticle[]>(`${API_CATALOG}/get-product-prices`,params)
     }
 
     /**********************************************
