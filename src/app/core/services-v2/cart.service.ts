@@ -1,17 +1,9 @@
 // Angular
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import {
-  ICartTotal,
-  IShoppingCart,
-  IShoppingCartGroup,
-  IShoppingCartGuest,
-  IShoppingCartProduct,
-} from '@core/models-v2/cart/shopping-cart.interface';
-// Environment
+// Env
 import { environment } from '@env/environment';
-import { GeolocationServiceV2 } from './geolocation/geolocation.service';
-import { SessionStorageService } from '@core/storage/session-storage.service';
+// Rxjs
 import { catchError, map, tap } from 'rxjs/operators';
 import {
   BehaviorSubject,
@@ -20,12 +12,25 @@ import {
   firstValueFrom,
   lastValueFrom,
 } from 'rxjs';
+// Models
+import {
+  ICartTotal,
+  IShoppingCart,
+  IShoppingCartGroup,
+  IShoppingCartGuest,
+  IShoppingCartProduct,
+} from '@core/models-v2/cart/shopping-cart.interface';
+import { ISession } from '@core/models-v2/auth/session.interface';
+// Services
+import { GeolocationServiceV2 } from './geolocation/geolocation.service';
+import { SessionStorageService } from '@core/storage/session-storage.service';
+
 import { DatePipe } from '@angular/common';
 import { ShoppingCartStorageService } from '@core/storage/shopping-cart-storage.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { IError } from '@core/models-v2/error/error.interface';
 import { ToastrService } from 'ngx-toastr';
-import { ISession } from '@core/models-v2/auth/session.interface';
+
 import { GuestStorageService } from '@core/storage/guest-storage.service';
 import { IGuest } from '@core/models-v2/storage/guest.interface';
 import { ReceiveStorageService } from '@core/storage/receive-storage.service';

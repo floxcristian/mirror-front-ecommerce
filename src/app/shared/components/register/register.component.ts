@@ -7,7 +7,6 @@ import { ToastrService } from 'ngx-toastr';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IDocument, IPhoneCodes } from '@core/config/config.interface';
-import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
 import {
   ICity,
@@ -15,7 +14,6 @@ import {
 } from '@core/services-v2/geolocation/models/city.interface';
 import { IContactPosition } from '@core/services-v2/customer-contact/models/contact-positions.interface';
 // Services
-import { ClientsService } from '../../services/clients.service';
 import { PasswordValidator } from '../../validations/password';
 import { rutValidator } from '../../utils/utilidades';
 import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete/angular-email-autocomplete.component';
@@ -29,6 +27,8 @@ import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation
 import { ConfigService } from '@core/config/config.service';
 import { CustomerContactApiService } from '@core/services-v2/customer-contact/customer-contact-api.service';
 import { CustomerApiService } from '@core/services-v2/customer/customer-api.service';
+import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
+import { GuestStorageService } from '@core/storage/guest-storage.service';
 
 @Component({
   selector: 'app-register',
@@ -66,7 +66,6 @@ export class RegisterComponent implements OnInit {
   contactPositions!: IContactPosition[];
 
   constructor(
-    private clientService: ClientsService,
     private toastr: ToastrService,
     private fb: FormBuilder,
     private router: Router,
@@ -79,7 +78,9 @@ export class RegisterComponent implements OnInit {
     private readonly geolocationApiService: GeolocationApiService,
     private readonly customerContactApiService: CustomerContactApiService,
     private readonly customerApiService: CustomerApiService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly sessionTokenStorage: SessionTokenStorageService,
+    private readonly guestStorage: GuestStorageService
   ) {
     const { document, phoneCodes } = this.configService.getConfig();
     this.document = document;
@@ -206,14 +207,13 @@ export class RegisterComponent implements OnInit {
         longitude,
       })
       .subscribe({
-        next: (res) => {
-          console.log('usuario registrado: ', res);
+        next: () => {
           this.isLoading = false;
           this.toastr.success(
             `Se ha registrado existosamente, puede continuar con el proceso de compra.`
           );
           this.authService.login(email, password).subscribe({
-            next: ({ user }) => {
+            next: ({ user, token }) => {
               const iva = user.preferences.iva ?? true;
               const session: ISession = {
                 ...user,
@@ -222,6 +222,9 @@ export class RegisterComponent implements OnInit {
               };
               this.sessionStorage.set(session);
               this.authStateService.setSession(session);
+              this.sessionTokenStorage.set(token);
+              this.guestStorage.remove();
+
               if (previousUser) {
                 this.cartService
                   .transferShoppingCart({
@@ -242,86 +245,6 @@ export class RegisterComponent implements OnInit {
           this.toastr.error(`Ha ocurrido un error al registrar el usuario.`);
         },
       });
-    /*
-
-    // Se setea correo en minuscula
-    dataSave.email = String(emailValidado).toLowerCase();
-
-    dataSave.documentId = this.rut;
-
-    // validamos si es boleta o factura
-    if (this.isInvoice) {
-      dataSave.tipoCliente = 2;
-      dataSave.nombreGiro =
-        this.businessLines.find((item) => item.code === dataSave.giro)?.name ||
-        '';
-    } else {
-      dataSave.tipoCliente = 1;
-      dataSave.contactDocumentId = this.rut;
-      dataSave.position = 'FACTURACION';
-    }
-
-    delete dataSave.password;
-    delete dataSave.confirmPassword;
-
-    const user = this.sessionStorage.get();
-    let userIdOld: any = null;
-    if (user) {
-      userIdOld = user.email;
-    }
-
-    this.clientService.register(dataSave).subscribe(
-      (r: any) => {
-        this.isLoading = false;
-
-        if (r.error) {
-          this.toastr.error(r.msg);
-          return;
-        }
-        this.toastr.success(
-          'Se ha registrado existosamente, puede continuar con el proceso de compra'
-        );
-
-        const dataLogin = {
-          username: dataSave.email,
-          password: this.userForm.value.password,
-        };
-
-        this.authService
-          .login(dataLogin.username, dataLogin.password)
-          .subscribe({
-            next: (res) => {
-              const iva = res.user.preferences.iva ?? true;
-              const session: ISession = {
-                ...res.user,
-                login_temp: false,
-                preferences: { iva },
-              };
-              this.sessionStorage.set(session);
-              this.authStateService.setSession(session);
-              if (userIdOld) {
-                this.cartService
-                  .transferShoppingCart({
-                    origin: userIdOld,
-                    destination: session.email,
-                  })
-                  .subscribe((res: IShoppingCart) => {
-                    this.cartService.load();
-                  });
-              } else {
-                this.cartService.load();
-              }
-              this.router.navigate(['/inicio']);
-            },
-            error: (err) => {
-              this.toastr.error(err.message);
-            },
-          });
-      },
-      (error) => {
-        this.toastr.error('Error de conexión con el servidor');
-      }
-    );*/
   }
 
   /**

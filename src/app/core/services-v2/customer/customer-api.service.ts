@@ -33,7 +33,7 @@ export class CustomerApiService {
     );
   }
 
-  createUser(params: ICustomerCreateParams) {
+  createUser(params: ICustomerCreateParams): Observable<void> {
     const documentType = environment.country.toUpperCase();
     const userType = 0;
     const {
