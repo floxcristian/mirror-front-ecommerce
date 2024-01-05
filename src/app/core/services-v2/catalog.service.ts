@@ -1,7 +1,7 @@
 // Angular
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ICatalogResponse, ICatalogsResponse } from '@core/models-v2/catalog/catalog-response.interface';
+import { ICatalogResponse, ICatalogsResponse, INewsletterResponse } from '@core/models-v2/catalog/catalog-response.interface';
 // Environment
 import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
@@ -33,7 +33,7 @@ export class CatalogService {
     /**********************************************
      * NEWSLETTER
      **********************************************/
-    getNewsletter(id:number){
-        return this.http.get(`${API_CATALOG}/newsletter/${id}`)
+    getNewsletter(id:number):Observable<INewsletterResponse>{
+        return this.http.get<INewsletterResponse>(`${API_CATALOG}/newsletter/${id}`)
     }
 }

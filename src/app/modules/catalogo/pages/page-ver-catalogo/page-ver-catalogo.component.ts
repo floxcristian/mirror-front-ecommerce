@@ -1,5 +1,4 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { CatalogoService } from '../../../../shared/services/catalogo.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { isPlatformBrowser } from '@angular/common';
 import { CartService } from '../../../../shared/services/cart.service';
@@ -8,6 +7,9 @@ import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+import { StorageKey } from '@core/storage/storage-keys.enum';
+import { ICatalog } from '@core/models-v2/catalog/catalog-response.interface';
+import { CatalogService } from '@core/services-v2/catalog.service';
 
 @Component({
   selector: 'app-page-ver-catalogo',
@@ -18,20 +20,17 @@ export class PageVerCatalogoComponent implements OnInit {
   isBrowser = false;
   catalogo: any = [];
   catalogoMovil: any = [];
-  skus!: Array<any>;
+  skus!: Array<string>;
   objeto: any;
-  objetoL: any;
-  auxObjeto: any;
   page: number;
   longitud!: number;
   hidden = true;
   innerWidth!: number;
   cargandoCat = true;
-  tipoCatalogo: any;
+  tipoCatalogo!: string;
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,
     private localS: LocalStorageService,
-    private catalogoService: CatalogoService,
 
     public root: RootService,
     private router: Router,
@@ -39,7 +38,8 @@ export class PageVerCatalogoComponent implements OnInit {
     private toast: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly geolocationService: GeolocationServiceV2
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly catalogService:CatalogService
   ) {
     this.page = 0;
     this.onResize();
@@ -53,44 +53,48 @@ export class PageVerCatalogoComponent implements OnInit {
     await this.validarParametros();
   }
   async validarParametros() {
-    let objeto = null;
-    let id = null;
+    let objeto:ICatalog | null = null;
+    let id :string | null = null;
     let url = this.router.parseUrl(this.router.url);
 
     id = url.queryParams['id'];
-
     if (id) {
       //llamada servicio para obtener catalogo por id
-      objeto = await this.catalogoService.obtenerCatalogoId(id);
+      this.catalogService.getCatalog(id).subscribe({
+        next:async(res)=>{
+          if (res.data.dynamic) {
+            this.router.navigate(['/', 'catalogos', 'ver-catalogo-flip'], {
+              queryParams: { id: id },
+            });
+          }
+          this.tipoCatalogo = res.data.catalogType;
+          this.skus = res.data.skus;
+          this.catalogo = res.data.body;
+          // await this.establecerPrecio();
+          this.objeto = this.catalogo[this.page];
+          this.longitud = this.catalogo.length;
+        },
+        error:(err)=>{
+          console.log(err)
+          this.toast.error('Error, el catalogo no se encuentra disponible');
+          this.router.navigate(['/', 'catalogos']);
+          return;
+        }
+      })
     } else {
-      objeto = this.localS.get('catalogo');
+      objeto = this.localS.get(StorageKey.catalogo);
+      if (!objeto) {
+        this.toast.error('Error, el catalogo no se encuentra disponible');
+        this.router.navigate(['/', 'catalogos']);
+        return;
+      }
+      this.tipoCatalogo = objeto.catalogType;
+      this.skus = objeto.skus;
+      this.catalogo = objeto.body;
+      // await this.establecerPrecio();
+      this.objeto = this.catalogo[this.page];
+      this.longitud = this.catalogo.length;
     }
-
-    // si es catalogo dinamico reemplazando al antiguo
-    if (objeto.dinamico && id) {
-      this.router.navigate(['/', 'catalogos', 'ver-catalogo-flip'], {
-        queryParams: { id: id },
-      });
-    }
-
-    if (!objeto) {
-      this.toast.error('Error, el catalogo no se encuentra disponible');
-      this.router.navigate(['/', 'catalogos']);
-      return;
-    }
-
-    this.tipoCatalogo = objeto.tipoCatalogo;
-    this.skus = objeto.skus;
-    this.catalogo = objeto.cuerpo;
-    //// console.log('this.catalogo', objeto);
-    // !objeto.estructura ? await this.establecerPrecio() : await this.establecerPrecioDinamico();
-    await this.establecerPrecio();
-    // this.objetoMovil();
-
-    // this.objeto = this.innerWidth > 426 ? this.catalogo[this.page] : this.catalogoMovil[this.page];
-    // this.longitud = this.innerWidth > 426 ? this.catalogo.length : this.catalogoMovil.length;
-    this.objeto = this.catalogo[this.page];
-    this.longitud = this.catalogo.length;
   }
 
   cambiarPagina(valor: any) {
@@ -103,64 +107,64 @@ export class PageVerCatalogoComponent implements OnInit {
     this.objeto = this.catalogo[this.page];
   }
 
-  async establecerPrecio() {
-    let user = this.sessionService.getSession();
-    let rut = user.documentId;
+  // async establecerPrecio() {
+  //   let user = this.sessionService.getSession();
+  //   let rut = user.documentId;
 
-    console.log('getSelectedStore desde PageVerCatalogoComponent');
-    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const params: any = {
-      sucursal: tiendaSeleccionada.code,
-      rut: user.documentId,
-      skus: this.skus,
-    };
+  //   console.log('getSelectedStore desde PageVerCatalogoComponent');
+  //   const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+  //   const params: any = {
+  //     sucursal: tiendaSeleccionada.code,
+  //     rut: user.documentId,
+  //     skus: this.skus,
+  //   };
 
-    let respuesta: any[] = await this.catalogoService.establecerPrecios(
-      params
-    );
+  //   let respuesta: any[] = await this.catalogoService.establecerPrecios(
+  //     params
+  //   );
 
-    respuesta.map((precio) => {
-      this.cargandoCat = false;
-      this.catalogo.map((objeto: any) => {
-        if (Array.isArray(objeto.productos)) {
-          objeto.productos.map((producto: any) => {
-            producto.rut = rut;
-            if (producto.sku == precio.sku && rut != '0') {
-              producto.precioEsp = precio.precioCliente;
-              producto.precio = precio.precioMeson;
-            } else if (producto.sku == precio.sku && rut == '0') {
-              producto.precioEsp = precio.precioCliente;
-              producto.precio = precio.precioMeson;
-            }
-            if (producto.sku == precio.sku) {
-              producto.precioEscala = precio.precioEscala;
-              producto.preciosScal = precio.preciosScal;
-              producto.cyber = precio.cyber;
-              producto.cyberMonday = precio.cyberMonday;
-            }
-          });
-        } else if (objeto.productos) {
-          objeto.productos.rut = rut;
-          objeto.cyber = precio.cyber;
-          objeto.cyberMonday = precio.cyberMonday;
+  //   respuesta.map((precio) => {
+  //     this.cargandoCat = false;
+  //     this.catalogo.map((objeto: any) => {
+  //       if (Array.isArray(objeto.productos)) {
+  //         objeto.productos.map((producto: any) => {
+  //           producto.rut = rut;
+  //           if (producto.sku == precio.sku && rut != '0') {
+  //             producto.precioEsp = precio.precioCliente;
+  //             producto.precio = precio.precioMeson;
+  //           } else if (producto.sku == precio.sku && rut == '0') {
+  //             producto.precioEsp = precio.precioCliente;
+  //             producto.precio = precio.precioMeson;
+  //           }
+  //           if (producto.sku == precio.sku) {
+  //             producto.precioEscala = precio.precioEscala;
+  //             producto.preciosScal = precio.preciosScal;
+  //             producto.cyber = precio.cyber;
+  //             producto.cyberMonday = precio.cyberMonday;
+  //           }
+  //         });
+  //       } else if (objeto.productos) {
+  //         objeto.productos.rut = rut;
+  //         objeto.cyber = precio.cyber;
+  //         objeto.cyberMonday = precio.cyberMonday;
 
-          if (objeto.productos.sku == precio.sku && rut != '0') {
-            objeto.productos.precioEsp = precio.precioCliente;
-            objeto.productos.precio = precio.precioMeson;
-          } else if (objeto.productos.sku == precio.sku && rut == '0') {
-            objeto.productos.precioEsp = precio.precioCliente;
-            objeto.productos.precio = precio.precioMeson;
-          }
-          if (objeto.productos.sku == precio.sku) {
-            objeto.productos.precioEscala = precio.precioEscala;
-            objeto.productos.preciosScal = precio.preciosScal;
-          }
-        }
-      });
-    });
+  //         if (objeto.productos.sku == precio.sku && rut != '0') {
+  //           objeto.productos.precioEsp = precio.precioCliente;
+  //           objeto.productos.precio = precio.precioMeson;
+  //         } else if (objeto.productos.sku == precio.sku && rut == '0') {
+  //           objeto.productos.precioEsp = precio.precioCliente;
+  //           objeto.productos.precio = precio.precioMeson;
+  //         }
+  //         if (objeto.productos.sku == precio.sku) {
+  //           objeto.productos.precioEscala = precio.precioEscala;
+  //           objeto.productos.preciosScal = precio.preciosScal;
+  //         }
+  //       }
+  //     });
+  //   });
 
-    console.log(this.catalogo, 'catalogo');
-  }
+  //   console.log(this.catalogo, 'catalogo');
+  // }
 
   objetoMovil() {
     let catalogoMovil = [];

@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CatalogoService } from '../../../../shared/services/catalogo.service';
 import { FlipSetting, PageFlip, SizeType } from 'page-flip';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { isPlatformBrowser } from '@angular/common';
+import { INewsletter, IPage } from '@core/models-v2/catalog/catalog-response.interface';
+import { CatalogService } from '@core/services-v2/catalog.service';
 
 @Component({
   selector: 'app-page-ver-newsletter',
@@ -16,20 +17,21 @@ export class PageVerNewsletterComponent implements OnInit {
   array = ['02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
   screenWidth!: number;
   screenHeight!: number;
-  pageTotal: any;
-  pageCurrent: any = 1;
+  pageTotal!: number;
+  pageCurrent: number = 1;
   pageState: any;
-  data!: any;
-  portada!: any;
-  contraportada!: any;
-  vertical!: any;
+  data!: INewsletter;
+  portada!: string;
+  contraportada!: string;
+  vertical!: boolean;
 
   constructor(
     private responsive: BreakpointObserver,
-    private catalogoService: CatalogoService,
     private route: ActivatedRoute,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    //Servicesv2
+    private readonly catalogService:CatalogService
   ) {}
 
   ngOnInit() {
@@ -74,15 +76,22 @@ export class PageVerNewsletterComponent implements OnInit {
       this.loadFlip();
     }, 1300);
   }
+
   async ObtenerDatos(id: any) {
     try {
-      let respuesta = await this.catalogoService.obtenerNewsletter(id);
-      if (!respuesta.data) this.router.navigate(['/not-found']);
-      this.portada = respuesta.data.paginas.shift();
-      this.contraportada = respuesta.data.paginas.pop();
-      this.portada = this.portada.imagen;
-      this.contraportada = this.contraportada.imagen;
-      this.data = respuesta.data;
+      this.catalogService.getNewsletter(id).subscribe({
+        next:(res)=>{
+          this.data = res.data
+          let page_portada:IPage = res.data.pages.shift() as IPage;
+          let page_contraportada:IPage = res.data.pages.pop() as IPage;
+          this.portada = page_portada.image;
+          this.contraportada = page_contraportada.image;
+        },
+        error:(err)=>{
+          console.log(err)
+          this.router.navigate(['/not-found']);
+        }
+      })
     } catch (error) {
       console.log(error);
     }
@@ -130,7 +139,6 @@ export class PageVerNewsletterComponent implements OnInit {
 
   loadFlip() {
     let duracion = 1000;
-
     if (this.dispositivo === 'smartphone') {
       const htmlElement = document.getElementById(
         'demoBookExample'
@@ -138,7 +146,7 @@ export class PageVerNewsletterComponent implements OnInit {
       const pageFlipSettings: Partial<FlipSetting> = {
         width: 500,
         height: 707,
-        size: SizeType.STRETCH,
+        size: 'stretch' as SizeType.STRETCH,
         minWidth: 315,
         maxWidth: 1000,
         minHeight: 420,
@@ -175,7 +183,7 @@ export class PageVerNewsletterComponent implements OnInit {
       const pageFlipSettings: Partial<FlipSetting> = {
         width,
         height,
-        size: SizeType.FIXED,
+        size: 'fixed' as SizeType,
         minWidth: 0,
         maxWidth: 0,
         minHeight: 0,
@@ -199,7 +207,7 @@ export class PageVerNewsletterComponent implements OnInit {
       const pageFlipSettings: Partial<FlipSetting> = {
         width: 550,
         height: 733,
-        size: SizeType.STRETCH,
+        size: 'stretch' as SizeType,
         minWidth: 315,
         maxWidth: 1000,
         minHeight: 420,

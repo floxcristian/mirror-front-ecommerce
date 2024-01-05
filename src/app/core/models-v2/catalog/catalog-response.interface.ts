@@ -169,3 +169,20 @@ export interface ICatalogResponse {
     date:number
     disabled:boolean
   }
+
+
+  export interface INewsletterResponse {
+    data: INewsletter
+  }
+  
+  export interface INewsletter {
+    _id: string
+    id: number
+    link: string
+    pages: IPage[]
+  }
+  
+  export interface IPage {
+    link: string
+    image: string
+  }

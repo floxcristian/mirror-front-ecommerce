@@ -28,7 +28,6 @@ export class PageCatalogoComponent implements OnInit {
     }
     this.catalogoService.getCatalogs(params).subscribe({
       next:(res)=>{
-        console.log(res)
         this.lstCatalogos = res.data.reverse()
       },
       error:(err)=>{
@@ -41,7 +40,7 @@ export class PageCatalogoComponent implements OnInit {
     this.localS.set(StorageKey.catalogo, catalogo);
     if (
       typeof catalogo !== 'undefined' &&
-      catalogo.hasOwnProperty('dynamic')
+      catalogo.hasOwnProperty('dynamic') && catalogo.dynamic
     ) {
       this.router.navigate(['/', 'catalogos', 'ver-catalogo-flip']);
     } else {

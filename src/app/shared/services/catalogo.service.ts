@@ -39,6 +39,11 @@ export class CatalogoService {
       return consulta.data;
     }
   }
+  async obtenerNewsletter(id: any) {
+    const call = `${environment.apiCatalogo}obtenerNewsletter`;
+    let consulta: any = await this.http.post(call, { id }).toPromise();
+    return consulta;
+  }
 
   async establecerPrecios(params: {
     sucursal: string;
@@ -49,42 +54,25 @@ export class CatalogoService {
     let consulta: any = await this.http.post(call, params).toPromise();
     return consulta;
   }
-
+  //no se usa
   guardarComentarioArticulo(
     request: ComentarioArticulo
   ): Observable<ResponseApi> {
     const call = environment.apiCatalogo + `comentarioArticulo`;
     return this.http.post<ResponseApi>(call, request);
   }
-
+  //no se usa
   getResumenComentarios(sku: string): Observable<ResponseApi> {
     const call = environment.apiCatalogo + `obtenerComentarios/${sku}/resumen`;
     return this.http.get<ResponseApi>(call);
   }
-
+  //no se usa
   getDetalleComentarios(sku: string, orden: string): Observable<ResponseApi> {
     const call =
       environment.apiCatalogo +
       `obtenerComentarios/${sku}/detalle?orden=${orden}`;
     return this.http.get<ResponseApi>(call);
   }
-  async obtenerNewsletter(id: any) {
-    const call = `${environment.apiCatalogo}obtenerNewsletter`;
-    let consulta: any = await this.http.post(call, { id }).toPromise();
-    return consulta;
-  }
-  getComparacionMatriz(
-    sku: string,
-    rut: string,
-    sucursal: string,
-    cantidad: any = 1
-  ) {
-    return this.http.get(
-      `${environment.apiCatalogo}compararmatrizproductoecommerce`,
-      {
-        headers: this.headers,
-        params: { sku, rut, sucursal, cantidad },
-      }
-    );
-  }
+  
+
 }

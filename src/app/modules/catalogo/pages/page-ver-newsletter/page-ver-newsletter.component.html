@@ -27,13 +27,13 @@
         </div>
 
         <ng-container
-          *ngFor="let item of data.paginas; let i = index; let ultimo = last"
+          *ngFor="let item of data.pages; let i = index; let ultimo = last"
         >
           <div class="page p-0" *ngIf="item.link">
             <a
               class="page-content img-menu"
               [ngStyle]="{
-                'background-image': 'url(\'' + item.imagen + '\')',
+                'background-image': 'url(\'' + item.image + '\')',
                 cursor: item.link !== '' ? 'pointer' : 'auto'
               }"
               (click)="abrirEnlace(item.link)"
@@ -43,7 +43,7 @@
             <div
               class="page-content img-menu"
               [ngStyle]="{
-                'background-image': 'url(\'' + item.imagen + '\')',
+                'background-image': 'url(\'' + item.image + '\')',
                 cursor: item.link !== '' ? 'pointer' : 'auto'
               }"
             ></div>
@@ -82,7 +82,7 @@
               "
             >
               <span>{{ pageCurrent }}</span> de
-              <span class="page-total">{{ data.paginas.length + 2 }}</span>
+              <span class="page-total">{{ data.pages.length + 2 }}</span>
             </div>
             <div class="col-2 text-center">
               <button
@@ -128,12 +128,12 @@
 
           <!-- Page -->
 
-          <div class="page" *ngFor="let item of data.paginas">
+          <div class="page" *ngFor="let item of data.pages">
             <div
               class="page-content img-menu"
               (click)="abrirEnlace(item.link)"
               [ngStyle]="{
-                'background-image': 'url(\'' + item.imagen + '\')',
+                'background-image': 'url(\'' + item.image + '\')',
                 cursor: item.link !== '' ? 'pointer' : 'auto'
               }"
             ></div>
@@ -169,7 +169,7 @@
     <div *ngIf="!cargandoCat" class="row">
       <div class="col-12 text-center mt-2 h6">
         <span>{{ pageCurrent }}</span> de
-        <span class="page-total">{{ data.paginas.length }}</span>
+        <span class="page-total">{{ data.pages.length }}</span>
       </div>
     </div>
   </div>
@@ -185,12 +185,12 @@
         </div>
 
         <!-- Page -->
-        <ng-container *ngFor="let item of data.paginas; let i = index">
+        <ng-container *ngFor="let item of data.pages; let i = index">
           <div class="page p-0" *ngIf="item.link">
             <a
               class="page-content img-menu"
               [ngStyle]="{
-                'background-image': 'url(\'' + item.imagen + '\')',
+                'background-image': 'url(\'' + item.image + '\')',
                 cursor: item.link !== '' ? 'pointer' : 'auto'
               }"
               (click)="abrirEnlace(item.link)"
@@ -200,7 +200,7 @@
             <div
               class="page-content img-menu"
               [ngStyle]="{
-                'background-image': 'url(\'' + item.imagen + '\')',
+                'background-image': 'url(\'' + item.image + '\')',
                 cursor: item.link !== '' ? 'pointer' : 'auto'
               }"
             ></div>
@@ -236,7 +236,7 @@
           "
         >
           <span>{{ pageCurrent }}</span> de
-          <span class="page-total">{{ data.paginas.length }}</span>
+          <span class="page-total">{{ data.pages.length }}</span>
         </div>
         <div class="col-4 text-center">
           <button
