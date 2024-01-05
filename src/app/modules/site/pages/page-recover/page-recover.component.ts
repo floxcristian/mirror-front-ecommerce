@@ -1,9 +1,12 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
-import { ClientsService } from '../../../../shared/services/clients.service';
-import { ToastrService } from 'ngx-toastr';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+// Angular
 import { Router } from '@angular/router';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
+// Libs
+import { ToastrService } from 'ngx-toastr';
+// Services
+import { AuthApiService } from '@core/services-v2/auth/auth.service';
 
 @Component({
   selector: 'app-recovering',
@@ -11,52 +14,37 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./page-recover.component.scss'],
 })
 export class PageRecoveringComponent {
-  isCollapsed = false;
-  rows: String[] = [];
-  innerWidth: number;
-  formRecoverpass!: FormGroup;
+  formRecoverPass!: FormGroup;
 
   constructor(
-    private clients: ClientsService,
     private toastr: ToastrService,
     private fb: FormBuilder,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private readonly authService: AuthApiService
   ) {
-    this.innerWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
+    this.buildFormRecoverPass();
   }
 
-  ngOnInit() {
-    this.formRecover();
-  }
-
-  formRecover() {
-    this.formRecoverpass = this.fb.group({
+  private buildFormRecoverPass(): void {
+    this.formRecoverPass = this.fb.group({
       email: ['', Validators.required],
     });
   }
 
-  recoverPass(data: any) {
-    if (this.formRecoverpass.valid) {
-      this.clients.recuperarPassword(data).subscribe(
-        (data: any) => {
-          if (data['status'] === 'OK') {
-            this.toastr.success('Link enviado exitosamente');
-            this.formRecover();
-            this.router.navigate(['/inicio']);
-          } else {
-            this.toastr.error(data['msg']);
-          }
-        },
-        (error) => {
-          console.log(error);
-          this.toastr.error('Error de conexión, para crear usuarios');
-        }
-      );
-    } else {
-      this.toastr.warning('Debe ingresar su e-mail');
-    }
+  recoverPass(data: any): void {
+    const { email } = data;
+    this.authService.sendRecoverPasswordLink(email).subscribe({
+      next: () => {
+        this.toastr.success(`Link enviado exitosamente.`);
+        this.router.navigate(['/inicio']);
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error(
+          `Ha ocurrido un error al enviar el link de recuperación de contraseña.`
+        );
+      },
+    });
   }
 }

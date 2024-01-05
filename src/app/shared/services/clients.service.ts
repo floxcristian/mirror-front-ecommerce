@@ -10,15 +10,6 @@ import { environment } from '@env/environment';
 export class ClientsService {
   constructor(private http: HttpClient) {}
 
-  /**
-   * Recuperar contraseña.
-   * @param data
-   * @returns
-   */
-  recuperarPassword(data: any) {
-    return this.http.post(environment.apiCMS + `users/recover-pass`, data);
-  }
-
   updatePassword(data: any) {
     const call = environment.apiCMS + `users/` + data.clientId;
     return this.http.patch(call, data);

@@ -19,6 +19,12 @@ const API_AUTH = `${environment.apiEcommerce}/api/v1/auth`;
 export class AuthApiService {
   constructor(private http: HttpClient) {}
 
+  /**
+   * Iniciar sesión.
+   * @param username
+   * @param password
+   * @returns
+   */
   login(username: string, password: string): Observable<ILoginResponse> {
     return this.http.post<ILoginResponse>(`${API_AUTH}/login`, {
       username,
@@ -46,12 +52,12 @@ export class AuthApiService {
   }
 
   /**
-   * Obtener link para recuperar la contraseña.
+   * Enviar email con el link para recuperar la contraseña.
    * @param email
    * @returns
    */
-  getRecoverPasswordLink(email: string) {
-    return this.http.get(`${API_AUTH}/recover-password/${email}`);
+  sendRecoverPasswordLink(email: string): Observable<void> {
+    return this.http.get<void>(`${API_AUTH}/recover-password/${email}`);
   }
 
   recoverPassword(params: { email: string; id: string; password: string }) {
