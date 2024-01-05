@@ -8,7 +8,7 @@ import {
 import { Observable, catchError, switchMap, throwError } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
-import { AuthApiService } from '@core/services-v2/auth.service';
+import { AuthApiService } from '@core/services-v2/auth/auth.service';
 var username: String = 'services';
 var password: String = '0.=j3D2ss1.w29-';
 

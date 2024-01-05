@@ -33,6 +33,11 @@ export class CustomerApiService {
     );
   }
 
+  /**
+   * Crear usuario.
+   * @param params
+   * @returns
+   */
   createUser(params: ICustomerCreateParams): Observable<void> {
     const documentType = environment.country.toUpperCase();
     const userType = 0;
@@ -61,8 +66,7 @@ export class CustomerApiService {
     const customerType = isCompanyUser ? 2 : 1;
 
     const formattedEmail = email.toLowerCase();
-    console.log('params: ', params);
-    console.log('_params: ', _params);
+
     return this.http.post<void>(`${API_CUSTOMER}/new`, {
       ..._params,
       documentId,
@@ -98,7 +102,7 @@ export class CustomerApiService {
   }
 
   /**
-   * Registrar usuario B2B.
+   * Crear usuario B2B.
    * @param params
    * @returns
    */

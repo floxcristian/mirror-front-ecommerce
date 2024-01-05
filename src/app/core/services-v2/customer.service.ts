@@ -1,7 +1,12 @@
 // Angular
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ILoginResponse } from '@core/models-v2/auth/login-response.interface';
+// Env
+import { environment } from '@env/environment';
+// Rxjs
+import { Observable } from 'rxjs';
+// Models
+import { ILoginResponse } from '@core/services-v2/auth/models/login-response.interface';
 import { ICreateGuest } from '@core/models-v2/customer/create-guest.interface';
 import { ICustomerBlocked } from '@core/models-v2/customer/customer-blocked.interface';
 import { IUsersDetail } from '@core/models-v2/customer/users-detail.interface';
@@ -9,9 +14,6 @@ import {
   ICustomerCredit,
   ICustomerPriceListResponse,
 } from '@core/models-v2/customer/customer.interface';
-// Environment
-import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
 import { IExistsEmail } from '@core/models-v2/customer/exists-email.interface';
 
 const API_AUTH = `${environment.apiEcommerce}/api/v1/auth`;
@@ -26,24 +28,6 @@ export class CustomerService {
   /**********************************************
    * AUTH
    **********************************************/
-  login(username: string, password: string): Observable<ILoginResponse> {
-    return this.http.post<ILoginResponse>(`${API_AUTH}/login`, {
-      username,
-      password,
-    });
-  }
-
-  refreshTokens(refreshToken: string) {
-    return this.http.post(`${API_AUTH}/refresh`, {
-      refreshToken,
-    });
-  }
-
-  // FIXME: add bearer token.
-  getUser() {
-    return this.http.get(`${API_AUTH}/me`);
-  }
-
   checkDocumentId(documentId: string) {
     return this.http.get(`${API_AUTH}/check-document-id/${documentId}`);
   }
@@ -91,19 +75,6 @@ export class CustomerService {
       email,
       phone,
     });
-  }
-
-  /**
-   * Get link to recover password.
-   * @param email
-   * @returns
-   */
-  getRecoverPasswordLink(email: string) {
-    return this.http.get(`${API_AUTH}/recover-password/${email}`);
-  }
-
-  recoverPassword(params: { email: string; id: string; password: string }) {
-    return this.http.post(`${API_AUTH}/recover-password`, params);
   }
 
   /**********************************************

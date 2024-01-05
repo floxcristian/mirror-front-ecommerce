@@ -25,7 +25,6 @@ export class PageGestionUsuarioComponent implements OnInit {
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private userService: UsersService,
-
     private toast: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
@@ -35,7 +34,7 @@ export class PageGestionUsuarioComponent implements OnInit {
   idArchivo!: string;
   isExcel: Boolean = false;
   ngOnInit() {
-    this.userSession = this.sessionService.getSession(); //this.rootService.getDataSesionUsuario();
+    this.userSession = this.sessionService.getSession();
   }
 
   onFileChange(event: any): void {

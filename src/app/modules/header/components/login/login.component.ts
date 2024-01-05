@@ -9,7 +9,7 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 // Services
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { AuthApiService } from '@core/services-v2/auth.service';
+import { AuthApiService } from '@core/services-v2/auth/auth.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';

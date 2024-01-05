@@ -4,12 +4,9 @@ export const environment = {
   IVA: 0.19,
   // APIs
   apiShoppingCart: 'https://dev-api.implementos.cl/api/carro/',
-  apiElastic: 'https://dev-api.implementos.cl/api/articulo/',
   apiCMS: 'https://dev-api.implementos.cl/cms/',
-  apiOms: 'https://dev-api.implementos.cl/api/oms/',
   apiCatalogo: 'https://dev-api.implementos.cl/api/catalogo/',
   apiCustomer: 'https://dev-api.implementos.cl/api/cliente/',
-  apiLogistic: 'https://dev-api.implementos.cl/api/logistica/',
   // Images Urls
   urlFotoOmnichannel:
     'http://replicacion.implementos.cl/siteomnichannel/fotos/',

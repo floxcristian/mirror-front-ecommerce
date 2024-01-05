@@ -1,4 +1,7 @@
-import { IUserEssentials, IUserOptionals } from './login-response.interface';
+import {
+  IUserEssentials,
+  IUserOptionals,
+} from '../../services-v2/auth/models/login-response.interface';
 
 type ISessionEssentials = {
   login_temp: boolean;

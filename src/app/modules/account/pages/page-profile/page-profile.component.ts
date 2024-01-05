@@ -25,7 +25,7 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
-import { AuthApiService } from '@core/services-v2/auth.service';
+import { AuthApiService } from '@core/services-v2/auth/auth.service';
 import {
   ICustomer,
   ICustomerAddress,
@@ -119,9 +119,9 @@ export class PageProfileComponent implements OnDestroy, OnInit {
 
   getDataClient() {
     this.loadingClient = true;
-    this.authService.me().subscribe((r) => {
-      this.dataUser = r.user;
-      this.dataClient = r.customer;
+    this.authService.me().subscribe(({ user, customer }) => {
+      this.dataUser = user;
+      this.dataClient = customer;
       this.setTableAddresses(this.dataClient.addresses);
       this.setTableContacts(this.dataClient.contacts);
       this.loadingClient = false;

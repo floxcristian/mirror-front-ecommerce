@@ -19,7 +19,7 @@ import { rutValidator } from '../../utils/utilidades';
 import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete/angular-email-autocomplete.component';
 import { getDomainsToAutocomplete } from './domains-autocomplete';
 import { SessionStorageService } from '@core/storage/session-storage.service';
-import { AuthApiService } from '@core/services-v2/auth.service';
+import { AuthApiService } from '@core/services-v2/auth/auth.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { CartService } from '@core/services-v2/cart.service';
 import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';

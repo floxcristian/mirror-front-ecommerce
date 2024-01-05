@@ -1,7 +1,7 @@
 // Angular
 import { Injectable } from '@angular/core';
 // Models
-import { IUserRole } from '@core/models-v2/auth/login-response.interface';
+import { IUserRole } from '@core/services-v2/auth/models/login-response.interface';
 import { IMenuItem } from './menu-item.interface';
 // Constants
 import { MenuItem } from './menu-items';
