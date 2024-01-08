@@ -1,9 +1,12 @@
-import { Component, ComponentFactoryResolver } from '@angular/core';
-import { ClientsService } from '../../../../shared/services/clients.service';
-import { ToastrService } from 'ngx-toastr';
+// Angular
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Router } from '@angular/router';
+// Libs
+import { ToastrService } from 'ngx-toastr';
+// Services
+import { ClientsService } from '../../../../shared/services/clients.service';
 
 @Component({
   selector: 'app-recovering',

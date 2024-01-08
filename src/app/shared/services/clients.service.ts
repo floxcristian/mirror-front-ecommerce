@@ -20,10 +20,6 @@ export class ClientsService {
     return this.http.get(call);
   }
 
-  getDataClient(data: any) {
-    return this.http.post(environment.apiCustomer + `GetDatosCliente`, data);
-  }
-
   getCustomerDebt(data: any) {
     return this.http.post(environment.apiCustomer + `deuda/listado`, data);
   }

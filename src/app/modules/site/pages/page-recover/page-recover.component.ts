@@ -1,8 +1,7 @@
 // Angular
 import { Router } from '@angular/router';
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { isPlatformBrowser } from '@angular/common';
 // Libs
 import { ToastrService } from 'ngx-toastr';
 // Services
@@ -20,7 +19,6 @@ export class PageRecoveringComponent {
     private toastr: ToastrService,
     private fb: FormBuilder,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object,
     private readonly authService: AuthApiService
   ) {
     this.buildFormRecoverPass();
