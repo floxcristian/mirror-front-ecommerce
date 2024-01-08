@@ -21,7 +21,8 @@ export class PageVerCatalogoComponent implements OnInit {
   catalogo: IBody[] = [];
   catalogoMovil: any = [];
   skus!: Array<string>;
-  objeto: any;
+  // objeto!: IBody;
+  objeto!:any;
   page: number;
   longitud!: number;
   hidden = true;
@@ -127,9 +128,9 @@ export class PageVerCatalogoComponent implements OnInit {
             if (Array.isArray(objeto.products)) {
               objeto.products.map((producto: any) => {
                 producto.rut = rut;
-                producto.precioEsp = precio.priceInfo.customerPrice;
-                producto.precio = precio.priceInfo.commonPrice;
                 if (producto.sku == precio.sku) {
+                  producto.precioEsp = precio.priceInfo.customerPrice;
+                  producto.precio = precio.priceInfo.commonPrice;
                   producto.precioEscala = precio.priceInfo.hasScalePrice;
                   producto.preciosScal = precio.priceInfo.scalePrice;
                   producto.cyber = this.generateTag(precio.metaTags,'cyber');
@@ -137,15 +138,16 @@ export class PageVerCatalogoComponent implements OnInit {
                 }
               });
             }
+            //revisar despues
             else if (objeto.products) {
               objeto.products.rut = rut;
-              objeto.cyber = this.generateTag(precio.metaTags,'cyber');;
-              objeto.cyberMonday = this.generateTag(precio.metaTags,'cyberMonday');
-              objeto.productos.precioEsp = precio.priceInfo.customerPrice;
-              objeto.productos.precio = precio.priceInfo.commonPrice;
               if (objeto.productos.sku == precio.sku) {
+                objeto.productos.precioEsp = precio.priceInfo.customerPrice;
+                objeto.productos.precio = precio.priceInfo.commonPrice;
                 objeto.productos.precioEscala = precio.priceInfo.hasScalePrice;
                 objeto.productos.preciosScal = precio.priceInfo.scalePrice;
+                objeto.cyber = this.generateTag(precio.metaTags,'cyber');;
+                objeto.cyberMonday = this.generateTag(precio.metaTags,'cyberMonday');
               }
             }
           });
@@ -155,46 +157,6 @@ export class PageVerCatalogoComponent implements OnInit {
         console.log(err)
       }
     })
-
-    // respuesta.map((precio) => {
-    //   this.cargandoCat = false;
-    //   this.catalogo.map((objeto: any) => {
-    //     if (Array.isArray(objeto.productos)) {
-    //       objeto.productos.map((producto: any) => {
-    //         producto.rut = rut;
-    //         if (producto.sku == precio.sku && rut != '0') {
-    //           producto.precioEsp = precio.precioCliente;
-    //           producto.precio = precio.precioMeson;
-    //         } else if (producto.sku == precio.sku && rut == '0') {
-    //           producto.precioEsp = precio.precioCliente;
-    //           producto.precio = precio.precioMeson;
-    //         }
-    //         if (producto.sku == precio.sku) {
-    //           producto.precioEscala = precio.precioEscala;
-    //           producto.preciosScal = precio.preciosScal;
-    //           producto.cyber = precio.cyber;
-    //           producto.cyberMonday = precio.cyberMonday;
-    //         }
-    //       });
-    //     } else if (objeto.productos) {
-    //       objeto.productos.rut = rut;
-    //       objeto.cyber = precio.cyber;
-    //       objeto.cyberMonday = precio.cyberMonday;
-
-    //       if (objeto.productos.sku == precio.sku && rut != '0') {
-    //         objeto.productos.precioEsp = precio.precioCliente;
-    //         objeto.productos.precio = precio.precioMeson;
-    //       } else if (objeto.productos.sku == precio.sku && rut == '0') {
-    //         objeto.productos.precioEsp = precio.precioCliente;
-    //         objeto.productos.precio = precio.precioMeson;
-    //       }
-    //       if (objeto.productos.sku == precio.sku) {
-    //         objeto.productos.precioEscala = precio.precioEscala;
-    //         objeto.productos.preciosScal = precio.preciosScal;
-    //       }
-    //     }
-    //   });
-    // });
     console.log(this.catalogo, 'catalogo');
   }
 

@@ -11,7 +11,7 @@ import { ICatalog } from '@core/models-v2/catalog/catalog-response.interface';
   styleUrls: ['./page-catalogo.component.scss'],
 })
 export class PageCatalogoComponent implements OnInit {
-  lstCatalogos!: any[];
+  lstCatalogos!: ICatalog[];
 
   constructor(
     private localS: LocalStorageService,

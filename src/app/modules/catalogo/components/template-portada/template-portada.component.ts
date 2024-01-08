@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { IBody } from '@core/models-v2/catalog/catalog-response.interface';
 
 @Component({
   selector: 'app-template-portada',
@@ -6,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./template-portada.component.scss'],
 })
 export class TemplatePortadaComponent implements OnInit {
-  @Input() objeto: any;
+  @Input() objeto!: IBody;
   @Input() innerWidth!: number;
   constructor() {}
 

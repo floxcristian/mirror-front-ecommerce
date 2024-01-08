@@ -63,6 +63,7 @@ export interface ICatalogResponse {
     scalePrice: IScalePrice[]
     selected: boolean
     sku: string,
+    url?:string
   }
 
   export interface IAttribute {

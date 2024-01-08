@@ -13,6 +13,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
+import { CatalogService } from '@core/services-v2/catalog.service';
 
 @Component({
   selector: 'app-page-ver-catalogo-flip',
@@ -58,7 +59,8 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly geolocationService: GeolocationServiceV2
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly catalogService:CatalogService
   ) {}
 
   getTags() {
@@ -112,7 +114,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       //LLAMADA SERVICIO PARA OBTENER CATALOGO POR ID
       objeto = await this.catalogoService.obtenerCatalogoId(id);
     } else {
-      objeto = await this.localS.get('catalogo');
+      objeto = await this.localS.get(StorageKey.catalogo);
     }
     if (!objeto) {
       this.toast.error('Error, el catalogo no se encuentra disponible');

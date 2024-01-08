@@ -7,6 +7,7 @@ import {
   IShoppingCartGroup,
   IShoppingCartGuest,
   IShoppingCartProduct,
+  IShoppingCartProductOrigin,
 } from '@core/models-v2/cart/shopping-cart.interface';
 // Environment
 import { environment } from '@env/environment';
@@ -52,6 +53,7 @@ import { IProduct } from '@core/models-v2/oms/order.interface';
 import { IOrderDetailResponse } from '@core/models-v2/cart/order-details.interface';
 import { UserRoleType } from '@core/enums/user-role-type.enum';
 import { IUploadResponse } from '@core/models-v2/responses/file-upload.response';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -73,6 +75,7 @@ export class CartService {
   private datePipe = inject(DatePipe);
   private toastrServise = inject(ToastrService);
   private root = inject(RootService);
+  private localS = inject(LocalStorageService)
 
   private data: IShoppingCart = {
     products: [],
@@ -1017,4 +1020,20 @@ export class CartService {
       formData
     );
   }
+
+  async setProducOrigin_cartDinamyc(product:any, tipoCat:string){
+    let catalogo: any = this.localS.get(StorageKey.catalogo);
+    const origin:IShoppingCartProductOrigin = {
+      origin:'catalogo-dinamico',
+      subOrigin:catalogo ? catalogo.nombre : '',
+      section:tipoCat ? tipoCat : '',
+      recommended:'',
+      sheet:false,
+      cyber:0
+    }
+    product.origin = origin
+    return product;
+  }
+
+
 }

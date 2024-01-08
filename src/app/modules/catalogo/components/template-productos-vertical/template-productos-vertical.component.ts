@@ -6,8 +6,9 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { CartService } from '../../../../shared/services/cart.service';
-import { Product } from '../../../../../app/shared/interfaces/product';
+import { IBody } from '@core/models-v2/catalog/catalog-response.interface';
+import { CartService } from '@core/services-v2/cart.service';
+
 
 @Component({
   selector: 'app-template-productos-vertical',
@@ -15,7 +16,8 @@ import { Product } from '../../../../../app/shared/interfaces/product';
   styleUrls: ['./template-productos-vertical.component.scss'],
 })
 export class TemplateProductosVerticalComponent implements OnChanges {
-  @Input() objeto: any;
+  // @Input() objeto!:IBody ;
+  @Input() objeto:any
   @Input() innerWidth!: number;
   @Input() page: number = 0;
   @Input() tipoCatalogo: any;
@@ -23,7 +25,11 @@ export class TemplateProductosVerticalComponent implements OnChanges {
   addingToCart = false;
   ght = `height:${window.innerHeight - 60}px !important`;
 
-  constructor(public cart: CartService, private cd: ChangeDetectorRef) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    //ServicesV2
+    private readonly cartService:CartService
+    ) {}
 
   ngOnInit(): void {
     console.log('tipoCatalogo', this.tipoCatalogo);
@@ -41,16 +47,11 @@ export class TemplateProductosVerticalComponent implements OnChanges {
     if (this.addingToCart) {
       return;
     }
-    producto = await this.cart.setProductoOrigen_catDinamicos(
-      producto,
-      'vertical'
-    );
+    producto = await this.cartService.setProducOrigin_cartDinamyc(producto,'vertical')
     this.addingToCart = true;
-    this.cart.add(producto, 1).subscribe({
-      complete: () => {
-        this.addingToCart = false;
-        this.cd.markForCheck();
-      },
-    });
+    this.cartService.add(producto,1).finally(() =>{
+      this.addingToCart = false;
+      this.cd.markForCheck();
+    })
   }
 }

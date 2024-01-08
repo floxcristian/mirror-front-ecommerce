@@ -42,38 +42,38 @@
   </div>
   <div class="body-producto px-2">
     <div
-      *ngIf="producto.atributos[5].valor == ''"
+      *ngIf="producto.attributes[5].value == ''"
       class="mb-0"
       style="color: #10753d; font-size: 1rem; font-weight: 700 !important"
     >
       <br />
     </div>
     <div
-      *ngIf="producto.atributos[5].valor != ''"
+      *ngIf="producto.attributes[5].value != ''"
       class="mb-0"
       style="color: #10753d; font-size: 1rem; font-weight: 700 !important"
     >
-      {{ producto.atributos[5].valor }}
+      {{ producto.attributes[5].value }}
     </div>
-    <ng-container *ngFor="let atributo of producto.atributos">
+    <ng-container *ngFor="let atributo of producto.attributes">
       <div
         class="mb-0"
-        *ngIf="atributo.nombre == 'nombre'"
+        *ngIf="atributo.name == 'nombre'"
         style="font-size: 0.9rem; font-family: AvenirLTStd, sans-serif"
       >
-        {{ atributo.valor }}
+        {{ atributo.value }}
       </div>
 
       <div
         class="mb-0"
-        *ngIf="atributo.nombre == 'descripcion'"
+        *ngIf="atributo.name == 'descripcion'"
         style="font-size: 0.6rem; font-family: AvenirLTStd, sans-serif"
       >
-        {{ atributo.valor }}
+        {{ atributo.value }}
       </div>
     </ng-container>
     <div class="mb-0" style="color: #4d4d4d; font-size: 0.7rem">
-      SKU: {{ producto.atributos[0].valor }}
+      SKU: {{ producto.attributes[0].value }}
     </div>
   </div>
 
@@ -163,15 +163,19 @@
           "
         >
           <td class="unitScal">
-            <em class="emScal" *ngIf="scala.hasta !== 'y mas.'"
-              >{{ scala.desde }} - {{ scala.hasta }}</em
+            <em class="emScal"
+              >{{ scala.fromQuantity }} - {{ scala.toQuantity }}</em
             >
-            <em class="emScal" *ngIf="scala.hasta === 'y mas.'"
-              >DESDE {{ scala.desde }}</em
+            <!-- FIXME:Arreglar dependiendo la respuesta ... (en espera..) -->
+            <!-- <em class="emScal" *ngIf="scala.toQuantity !== 'y mas.'"
+              >{{ scala.fromQuantity }} - {{ scala.toQuantity }}</em
             >
+            <em class="emScal" *ngIf="scala.toQuantity === 'y mas.'"
+              >DESDE {{ scala.fromQuantity }}</em
+            > -->
           </td>
           <td class="product-card__new-price-scala">
-            {{ scala.precio | currencyFormat }} <em> c/iva </em>
+            {{ scala.price | currencyFormat }} <em> c/iva </em>
           </td>
         </tr>
       </ng-container>

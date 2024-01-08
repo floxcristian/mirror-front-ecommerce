@@ -1,16 +1,17 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { CartService } from '../../../../shared/services/cart.service';
-import { Product } from 'src/app/shared/interfaces/product';
+import { IAttribute } from '@core/models-v2/catalog/catalog-response.interface';
+import { IScalePrice } from '@core/models-v2/cms/special-reponse.interface';
 
 interface IProductTemp {
-  preciosScal: any[];
-  precioEscala: any;
-  precio: any;
-  sku: any;
-  rut: any;
-  precioEsp: any;
-  cyber: any;
-  atributos: any[];
+  preciosScal: IScalePrice[]
+  precioEscala: boolean;
+  precio: number;
+  sku: string;
+  rut: string;
+  precioEsp: number;
+  cyber: number;
+  cyberMonday:number;
+  attributes: IAttribute[];
 }
 
 @Component({
@@ -22,10 +23,10 @@ export class ProductoVerticalComponent implements OnInit {
   @Input() producto!: IProductTemp;
   @Output() agregarCarro: EventEmitter<any> = new EventEmitter();
   @Input() innerWidth!: number;
-  @Input() tipoCatalogo: any;
+  @Input() tipoCatalogo!: string;
   precios: boolean = true;
   carro: boolean = true;
-  constructor(private _cartService: CartService) {}
+  constructor() {}
 
   ngOnInit() {
     switch (this.tipoCatalogo) {
@@ -39,10 +40,6 @@ export class ProductoVerticalComponent implements OnInit {
     }
   }
   async addToCart(producto: any) {
-    producto = await this._cartService.setProductoOrigen_catDinamicos(
-      producto,
-      'vertical'
-    );
     this.agregarCarro.emit(producto);
   }
 }
