@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { IConfig } from './config.interface';
 // Rxjs
 import { Observable, tap } from 'rxjs';
-import { REQUEST } from '@nguniversal/express-engine/tokens';
+import { REQUEST } from '../../../express.tokens';
 import { Request } from 'express';
 import { isPlatformServer } from '@angular/common';
 
@@ -39,7 +39,7 @@ export class ConfigService {
   }
 
   private getFullUrl() {
-    const port = process.env['PORT'] || 4200;
+    const port = process.env['PORT'] || 4000;
     const url = `http://localhost:${port}`;
     return url;
   }
