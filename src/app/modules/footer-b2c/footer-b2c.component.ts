@@ -1,13 +1,8 @@
-import {
-  Component,
-  HostListener,
-  Inject,
-  OnInit,
-  PLATFORM_ID,
-} from '@angular/core';
+// Angular
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+// Env
 import { environment } from '@env/environment';
-import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-footer-b2c',
@@ -15,21 +10,9 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./footer-b2c.component.scss'],
 })
 export class FooterB2cComponent implements OnInit {
-  screenWidth: any;
-  screenHeight: any;
   logoSrc = environment.logoSrcFooter;
-  load = false;
-  constructor(
-    public router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    this.screenWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-    this.screenHeight = isPlatformBrowser(this.platformId)
-      ? window.innerHeight
-      : 900;
-  }
+
+  constructor(public router: Router) {}
 
   async ngOnInit() {
     document.body.scrollTop = 0; // Safari
@@ -37,7 +20,7 @@ export class FooterB2cComponent implements OnInit {
   }
 
   // Funcion utilizada para ocultar footer para dispositivos mobiles en las pantallas de seleccion de despacho y pago.
-  HideFooter() {
+  HideFooter(): boolean {
     if (
       this.router.url.includes('/inicio') ||
       this.router.url.includes('/productos/ficha/') ||
@@ -48,16 +31,6 @@ export class FooterB2cComponent implements OnInit {
     } else {
       return true;
     }
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.screenWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-    this.screenHeight = isPlatformBrowser(this.platformId)
-      ? window.innerHeight
-      : 900;
   }
 
   HideFooter2() {

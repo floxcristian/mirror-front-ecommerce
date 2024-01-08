@@ -2,8 +2,7 @@
   <div class="container" style="background-color: white; padding-bottom: 50px">
     <div class="row justify-content-center">
       <div
-        class="col-3"
-        *ngIf="screenWidth >= 1025"
+        class="col-3 d-none d-lg-block"
         style="cursor: pointer"
         [routerLink]="['/sitio/politicas/cambios-devolucion']"
       >
@@ -21,13 +20,12 @@
             style="color: #094cac"
           >
             <span>Cambios y</span>
-            <span class="fw-bold">DEVOLUCIONES</span>
+            <span class="fw-bold">DEVOLUCIONES (LG - BIEN)</span>
           </div>
         </div>
       </div>
       <div
-        class="col-3"
-        *ngIf="screenWidth >= 500 && screenWidth < 1025"
+        class="col-3 d-none d-sm-block d-lg-none"
         style="cursor: pointer"
         [routerLink]="['/sitio/politicas/cambios-devolucion']"
       >
@@ -45,13 +43,12 @@
             style="color: #094cac"
           >
             <span>Cambios y</span>
-            <span class="fw-bold">DEVOLUCIONES</span>
+            <span class="fw-bold">DEVOLUCIONES (SM Y MD - MAL)</span>
           </div>
         </div>
       </div>
       <div
-        class="col-12"
-        *ngIf="screenWidth < 500"
+        class="col-12 d-block d-sm-none"
         style="cursor: pointer; margin-left: 10px; margin-bottom: 15px"
         [routerLink]="['/sitio/politicas/cambios-devolucion']"
       >
@@ -69,13 +66,12 @@
             style="color: #094cac"
           >
             <span>Cambios y</span>
-            <span class="fw-bold">DEVOLUCIONES</span>
+            <span class="fw-bold">DEVOLUCIONES (XS - BIEN)</span>
           </div>
         </div>
       </div>
       <div
-        class="col-3"
-        *ngIf="screenWidth >= 1025"
+        class="col-3 d-none d-lg-block"
         style="cursor: pointer"
         [routerLink]="['/sitio/tiendas']"
       >
@@ -92,13 +88,12 @@
             style="color: #094cac"
           >
             <span>Nuestras</span>
-            <span class="fw-bold">TIENDAS</span>
+            <span class="fw-bold">TIENDAS (LG)</span>
           </div>
         </div>
       </div>
       <div
-        class="col-3"
-        *ngIf="screenWidth >= 500 && screenWidth < 1025"
+        class="col-3 d-none d-sm-block d-lg-none"
         style="cursor: pointer"
         [routerLink]="['/sitio/tiendas']"
       >
@@ -115,13 +110,14 @@
             style="color: #094cac"
           >
             <span>Nuestras</span>
-            <span class="fw-bold">TIENDAS</span>
+            <span class="fw-bold">TIENDAS (SM Y MD)</span>
           </div>
         </div>
       </div>
+
+      <!-- Start::tiendas xs -->
       <div
-        class="col-12"
-        *ngIf="screenWidth < 500"
+        class="col-12 d-block d-sm-none"
         style="cursor: pointer; margin-left: 0px; margin-bottom: 15px"
         [routerLink]="['/sitio/tiendas']"
       >
@@ -138,11 +134,14 @@
             style="color: #094cac"
           >
             <span>Nuestras</span>
-            <span class="fw-bold">TIENDAS</span>
+            <span class="fw-bold">TIENDAS (XS)</span>
           </div>
         </div>
       </div>
-      <div class="col-3" *ngIf="screenWidth >= 1025" style="cursor: pointer">
+      <!-- End::tiendas xs -->
+
+      <!-- Start::catálogos lg -->
+      <div class="col-3 d-none d-lg-block" style="cursor: pointer">
         <a href="/catalogos/listado-catalogos" target="_blank">
           <div class="row">
             <div class="col-4">
@@ -157,16 +156,15 @@
               style="color: #094cac"
             >
               <span>Nuestros</span>
-              <span class="fw-bold">CATÁLOGOS</span>
+              <span class="fw-bold">CATÁLOGOS (LG)</span>
             </div>
           </div>
         </a>
       </div>
-      <div
-        class="col-3"
-        *ngIf="screenWidth >= 500 && screenWidth < 1025"
-        style="cursor: pointer"
-      >
+      <!-- End::catálogos lg -->
+
+      <!-- Start::catálogos sm y md -->
+      <div class="col-3 d-none d-sm-block d-lg-none" style="cursor: pointer">
         <a href="/catalogos/listado-catalogos" target="_blank">
           <div class="row">
             <div class="col-12">
@@ -181,14 +179,16 @@
               style="color: #094cac"
             >
               <span>Nuestros</span>
-              <span class="fw-bold">CATÁLOGOS</span>
+              <span class="fw-bold">CATÁLOGOS (SM Y MD)</span>
             </div>
           </div>
         </a>
       </div>
+      <!-- End::catálogos sm y md -->
+
+      <!-- Start::catálogos xs -->
       <div
-        class="col-12"
-        *ngIf="screenWidth < 500"
+        class="col-12 d-block d-sm-none"
         style="cursor: pointer; margin-left: 0px; margin-bottom: 10px"
       >
         <a href="/catalogos/listado-catalogos" target="_blank">
@@ -205,11 +205,12 @@
               style="color: #094cac"
             >
               <span>Nuestros</span>
-              <span class="fw-bold">CATÁLOGOS</span>
+              <span class="fw-bold">CATÁLOGOS (XS)</span>
             </div>
           </div>
         </a>
       </div>
+      <!-- End::catálogos xs -->
     </div>
   </div>
 </div>
@@ -233,11 +234,11 @@
       alt="newsletter"
     />
   </picture>
-  <!-- <img src="../../../../../assets/images/banners/Banner-implementos_01.png" class="bg" /> -->
+
   <div class="container position-absolute">
+    <!-- Start::newsletter +sm -->
     <div
-      *ngIf="screenWidth >= 600"
-      class="d-flex flex-column offset-5 col-7 align-items-center"
+      class="d-flex flex-column offset-5 col-7 align-items-center d-none d-sm-block"
     >
       <div class="text-center titulo">NEWSLETTER</div>
       <div class="text-center">
@@ -260,9 +261,11 @@
         <span style="text-decoration: underline">Términos y condiciones</span>
       </div>
     </div>
+    <!-- End::newsletter +sm -->
+
+    <!-- Start::newsletter xs -->
     <div
-      *ngIf="screenWidth < 600"
-      class="d-flex flex-column col-sm-12 align-items-center"
+      class="d-flex flex-column col-sm-12 align-items-center d-block d-sm-none"
     >
       <div class="text-center titulo">NEWSLETTER</div>
       <div class="text-center">
@@ -287,12 +290,13 @@
         <span style="text-decoration: underline">Términos y condiciones</span>
       </div>
     </div>
+    <!-- End::newsletter xs -->
   </div>
 </div>
 
+<!-- Start::footer +lg -->
 <div
-  class="site-footer"
-  *ngIf="screenWidth >= 1025"
+  class="site-footer d-none d-lg-block"
   [hidden]="HideFooter() ? true : false"
 >
   <div class="container">
@@ -322,14 +326,16 @@
 
   <div style="height: 30px; background-color: #000"></div>
 </div>
+<!-- End::footer +lg -->
 
+<!-- Start::footer xs, sm y md -->
 <div
-  class="site-footer"
-  *ngIf="screenWidth < 1025"
+  class="site-footer d-block d-lg-none"
   [hidden]="HideFooter() ? true : false"
 >
   <app-fotter-site-mobile>-</app-fotter-site-mobile>
 </div>
+<!-- End::footer xs, sm y md -->
 
 <div class="row" [hidden]="HideFooter2() ? true : false">
   <div
