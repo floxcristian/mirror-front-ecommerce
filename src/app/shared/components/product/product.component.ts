@@ -91,7 +91,6 @@ export class ProductComponent implements OnInit, OnChanges {
     this.quantity.setValue(1);
 
     this.dataProduct = value;
-    console.log('[-] producto: ', value);
     this.images = GalleryUtils.formatImageSlider(value);
     this.generateTags(this.product.metaTags);
   }
@@ -456,7 +455,6 @@ export class ProductComponent implements OnInit, OnChanges {
    * @param imageId
    */
   setActiveImage(imageId: string): void {
-    console.log("🚀 ~ ProductComponent ~ setActiveImage ~ imageId:", imageId)
     this.featuredCarousel.to(imageId);
     GalleryUtils.formatActiveImage(this.images, imageId);
   }
@@ -466,9 +464,7 @@ export class ProductComponent implements OnInit, OnChanges {
     const activeImageId = event.slides[0].id;
     GalleryUtils.formatActiveImage(this.images, activeImageId);
   }
-  syncMainCarousel(index: string): void {
-    this.featuredCarousel.to(index);
-  }
+
 
   /**
    * Ampliar imagen seleccionada.
