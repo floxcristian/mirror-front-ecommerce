@@ -10,16 +10,6 @@ import { environment } from '@env/environment';
 export class ClientsService {
   constructor(private http: HttpClient) {}
 
-  updatePassword(data: any) {
-    const call = environment.apiCMS + `users/` + data.clientId;
-    return this.http.patch(call, data);
-  }
-
-  buscarUsuario(id: string) {
-    const call = environment.apiCMS + `users/${id}`;
-    return this.http.get(call);
-  }
-
   getCustomerDebt(data: any) {
     return this.http.post(environment.apiCustomer + `deuda/listado`, data);
   }

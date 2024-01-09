@@ -6,7 +6,6 @@ import { environment } from '@env/environment';
 // Rxjs
 import { Observable } from 'rxjs';
 // Models
-import { ILoginResponse } from '@core/services-v2/auth/models/login-response.interface';
 import { ICreateGuest } from '@core/models-v2/customer/create-guest.interface';
 import { ICustomerBlocked } from '@core/models-v2/customer/customer-blocked.interface';
 import { IUsersDetail } from '@core/models-v2/customer/users-detail.interface';
@@ -40,7 +39,6 @@ export class CustomerService {
     return this.http.get(`${API_AUTH}/check-username/${username}`);
   }
 
-  // FIXME: add bearer token.
   updatePassword(params: {
     documentId: string;
     username: string;
@@ -48,17 +46,11 @@ export class CustomerService {
     newPassword: string;
   }) {
     const { documentId, username, currentPassword, newPassword } = params;
-    return this.http.put(
-      `${API_AUTH}/${documentId}/password`,
-      {
-        username,
-        newPassword,
-        actualPassword: currentPassword,
-      },
-      {
-        headers: {},
-      }
-    );
+    return this.http.put(`${API_AUTH}/${documentId}/password`, {
+      username,
+      newPassword,
+      actualPassword: currentPassword,
+    });
   }
 
   updateProfile(params: {

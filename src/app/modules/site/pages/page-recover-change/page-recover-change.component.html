@@ -1,14 +1,15 @@
 <div class="container mt-3">
   <div class="card flex-grow-1 col-12 col-md-6 mx-auto align-items-center">
-    <div class="card-body col-12 px-lg-5" *ngIf="!tokenValido">
+    <div class="card-body col-12 px-lg-5" *ngIf="!isValidEmail">
       <h5 class="pb-3">Modificar contraseña</h5>
 
       <p class="mb-4 text-justify">
-        Su token ya ha sido usado o no es válido.
+        El enlace utilizado no es válido.
+        <!-- Su token ya ha sido usado o no es válido. -->
       </p>
     </div>
 
-    <div class="card-body col-12 px-lg-5" *ngIf="tokenValido">
+    <div class="card-body col-12 px-lg-5" *ngIf="isValidEmail">
       <h5 class="pb-3">Modificar contraseña</h5>
 
       <p class="mb-4 text-justify">

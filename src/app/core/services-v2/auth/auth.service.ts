@@ -60,7 +60,16 @@ export class AuthApiService {
     return this.http.get<void>(`${API_AUTH}/recover-password/${email}`);
   }
 
-  recoverPassword(params: { email: string; id: string; password: string }) {
-    return this.http.post(`${API_AUTH}/recover-password`, params);
+  /**
+   * Setear nueva contraseña utilizando link de restauración.
+   * @param params
+   * @returns
+   */
+  recoverPassword(params: {
+    email: string;
+    id: string;
+    password: string;
+  }): Observable<void> {
+    return this.http.post<void>(`${API_AUTH}/recover-password`, params);
   }
 }
