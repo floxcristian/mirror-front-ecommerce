@@ -18,11 +18,6 @@ export class CatalogoService {
   });
   constructor(private http: HttpClient) {}
 
-  async obtenerCatalogos(estado: string): Promise<any> {
-    let url = `${environment.apiCatalogo}obtenerCatalogos?tipo=Web&datos=true&estado=${estado}`;
-    return this.http.get(url).toPromise();
-  }
-
   async obtenerCatalogoId(id: any) {
     let url = `${environment.apiCatalogo}obtenerCatalogo?id=${id}`;
     let consulta: any = await this.http.get(url).toPromise();
@@ -39,11 +34,6 @@ export class CatalogoService {
       return consulta.data;
     }
   }
-  async obtenerNewsletter(id: any) {
-    const call = `${environment.apiCatalogo}obtenerNewsletter`;
-    let consulta: any = await this.http.post(call, { id }).toPromise();
-    return consulta;
-  }
 
   async establecerPrecios(params: {
     sucursal: string;
@@ -54,25 +44,5 @@ export class CatalogoService {
     let consulta: any = await this.http.post(call, params).toPromise();
     return consulta;
   }
-  //no se usa
-  guardarComentarioArticulo(
-    request: ComentarioArticulo
-  ): Observable<ResponseApi> {
-    const call = environment.apiCatalogo + `comentarioArticulo`;
-    return this.http.post<ResponseApi>(call, request);
-  }
-  //no se usa
-  getResumenComentarios(sku: string): Observable<ResponseApi> {
-    const call = environment.apiCatalogo + `obtenerComentarios/${sku}/resumen`;
-    return this.http.get<ResponseApi>(call);
-  }
-  //no se usa
-  getDetalleComentarios(sku: string, orden: string): Observable<ResponseApi> {
-    const call =
-      environment.apiCatalogo +
-      `obtenerComentarios/${sku}/detalle?orden=${orden}`;
-    return this.http.get<ResponseApi>(call);
-  }
-  
 
 }

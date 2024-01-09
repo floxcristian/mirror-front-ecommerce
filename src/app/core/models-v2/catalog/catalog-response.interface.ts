@@ -79,33 +79,42 @@ export interface ICatalogResponse {
   }
   
   export interface ILeftSide {
-    id: string
+    id?: string
     type: string
-    size: number
-    products: IProduct3[]
+    size?: number
+    products: IFileProduct
+    titleLeft?:string// agregado opcional
   }
 
   export interface IRightSide {
-    id: string
-    type: string
-    size: number
-    products: IProduct3[]
+    id?: string
+    type?: string
+    size?: number
+    products: IFileProduct
+    titleRight?:string// agregado opcional
   }
 
   export interface IFileProduct {
-    id: number
-    category: string
-    sbu: string
-    type: string
-    product: string
-    name: string
-    attributes: IAttribute[]
+    id?: number
+    category?: string
+    sbu?: string
+    type?: string
+    product?: string
+    name?: string
+    attributes?: IAttribute[]
     date?: number
     disabled?: boolean
     precio?: number
     scalePrice?: IScalePrice[]
     selected?: boolean
     images?: string[][] | number[][] // en duda
+    rut?:string // agregado opcional
+    precioEsp?:number // agregado opcional
+    cyber?:number // agregado opcional
+    cyberMonday?:number // agregado opcional
+    precioEscala?:boolean // agregado opcional
+    preciosScal?:any[] // agregado opcional
+    url?:string // revisar en duda
   }
 
   export interface IFileCategory {

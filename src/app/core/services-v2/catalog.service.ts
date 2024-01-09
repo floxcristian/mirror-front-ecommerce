@@ -48,6 +48,6 @@ export class CatalogService {
      * PROPOSAL
      **********************************************/
     getProposal(proposalNumber:number){
-        return this.http.get(`${API_CATALOG}/proposals/${proposalNumber}`)
+        return this.http.get(`${API_CATALOG}/proposals/${proposalNumber}`).toPromise()
     }
 }

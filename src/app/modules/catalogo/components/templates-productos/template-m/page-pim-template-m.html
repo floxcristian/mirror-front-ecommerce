@@ -1,11 +1,11 @@
 <div
-  *ngIf="plana.productos.tipo == 'banner' || plana.productos.tipo == 'portadaImg' || plana.productos.tipo == 'contraPortadaImg'"
+  *ngIf="plana.products.type == 'banner' || plana.products.type == 'portadaImg' || plana.products.type == 'contraPortadaImg'"
 >
   <div>
     <img
       class="img-fluid"
       style="height: 370px; width: 100%"
-      src="{{plana.productos.url}}"
+      src="{{plana.products.url}}"
       onError="this.src='./assets/img/place-150x150.png'"
       alt=""
     />
@@ -13,11 +13,11 @@
 </div>
 
 <!-- Relleno en caso de template vacío con intención de dejar ese espacio -->
-<div *ngIf="!plana.productos.sku">
+<div *ngIf="!plana.products.product">
   <div style="padding: 0rem; height: 370px"></div>
 </div>
 
-<div *ngIf="plana.productos.tipo == 'producto'">
+<div *ngIf="plana.products.type == 'producto'">
   <div
     class="container rounded"
     style="
@@ -30,12 +30,12 @@
       class="row p-2"
       style="padding: 0rem; height: 370px; text-align: left"
     >
-      <div class="col-md-12 col-sm-12 p-0">
+      <!-- <div class="col-md-12 col-sm-12 p-0">
         <div class="col-md-12 col-sm-12 p-0">
           <img
             *ngIf="imagen"
-            src="https://images.implementos.cl/marcas/small/{{plana.productos.atributos[5].valor | uppercase}}.png"
-            alt="{{plana.productos.atributos[5].valor}}"
+            src="https://images.implementos.cl/marcas/small/{{plana.products.attributes[5].value | uppercase}}.png"
+            alt="{{plana.products.attributes[5].value}}"
             (error)="existeIMG()"
             style="height: 35px; text-align: left"
           />
@@ -43,7 +43,7 @@
 
         <div
           class="col-md-12 col-sm-12 p-0"
-          *ngIf="!imagen && plana.productos.atributos[5].valor != '0'"
+          *ngIf="!imagen && plana.products.attributes[5].value != '0'"
           style="
             color: #000000;
             font-size: 14px;
@@ -52,12 +52,12 @@
             margin-top: 0rem;
           "
         >
-          {{ plana.productos.atributos[5].valor }}
+          {{ plana.products.attributes[5].value }}
         </div>
 
         <div
           class="col-md-12 col-sm-12 p-0"
-          *ngIf="plana.productos.atributos[5].valor == '0'"
+          *ngIf="plana.products.attributes[5].value == '0'"
           style="
             color: #000000;
             font-size: 14px;
@@ -79,7 +79,7 @@
             line-height: 1;
           "
         >
-          <b>{{ plana.productos.atributos[1].valor | slice:0:45 }}</b>
+          <b>{{ plana.products.attributes[1].value | slice:0:45 }}</b>
         </div>
 
         <div
@@ -91,7 +91,7 @@
             color: black;
           "
         >
-          {{ plana.productos.atributos[2].valor | titlecase | slice:0:110 }}
+          {{ plana.products.attributes[2].value | titlecase | slice:0:110 }}
         </div>
 
         <div
@@ -103,9 +103,9 @@
             color: #000000;
           "
         >
-          SKU {{ plana.productos.atributos[0].valor | uppercase }}
+          SKU {{ plana.products.attributes[0].value | uppercase }}
         </div>
-      </div>
+      </div> -->
 
       <div
         class="row justify-content-around m-1 w-100"
@@ -115,7 +115,7 @@
           <img
             class="img-fluid"
             width="150px"
-            src="https://images.implementos.cl/img/450/{{plana.productos.producto}}-{{ordenImg1}}.jpg"
+            src="https://images.implementos.cl/img/450/{{plana.products.product}}-{{ordenImg1}}.jpg"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
@@ -125,7 +125,7 @@
           <img
             class="img-fluid"
             width="150px"
-            src="https://images.implementos.cl/img/450/{{plana.productos.producto}}-{{ordenImg2}}.jpg"
+            src="https://images.implementos.cl/img/450/{{plana.products.product}}-{{ordenImg2}}.jpg"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
           />
         </div>
@@ -134,14 +134,14 @@
           <img
             class="img-fluid"
             width="150px"
-            src="https://images.implementos.cl/img/450/{{plana.productos.producto}}-{{ordenImg3}}.jpg"
+            src="https://images.implementos.cl/img/450/{{plana.products.product}}-{{ordenImg3}}.jpg"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
           />
         </div>
       </div>
 
       <div
-        *ngIf="plana.productos.precioEscala && plana.productos.cyber === 1 && precios"
+        *ngIf="plana.products.precioEscala && plana.products.cyber === 1 && precios"
       >
         <div class="col-md-12 d-flex p-0">
           <img
@@ -188,7 +188,7 @@
       </div>
 
       <div
-        *ngIf="plana.productos.precioEscala && plana.productos.cyber == 0 && precios"
+        *ngIf="plana.products.precioEscala && plana.products.cyber == 0 && precios"
       >
         <img
           style="
@@ -211,7 +211,7 @@
           margin-left: 5px;
           z-index: 999;
         "
-        *ngIf="plana.productos.cyber === 1 && !plana.productos.precioEscala"
+        *ngIf="plana.products.cyber === 1 && !plana.products.precioEscala"
       >
         <!-- <img style="width: 50px" src="assets/images/cyberCircle.png" loading="lazy" /> -->
         <picture>
@@ -364,11 +364,11 @@
                 name="cart-20"
                 size="18"
                 class="icon-chat shadow-lg ps-2 pt-2 pointer me-3 mt-2"
-                (click)="addToCart(plana.productos)"
+                (click)="addToCart(plana.products)"
               ></app-icon>
               <app-share-button
                 *ngIf="carro"
-                [producto]="plana.productos"
+                [producto]="plana.products"
                 class="mt-2"
                 style="margin-top: 5px !important"
                 [catalogo]="true"

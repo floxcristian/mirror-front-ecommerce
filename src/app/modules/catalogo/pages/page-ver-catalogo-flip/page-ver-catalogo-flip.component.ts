@@ -6,7 +6,6 @@ import { PageFlip, SizeType } from 'page-flip';
 import { CartService } from '../../../../shared/services/cart.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { isVacio } from '../../../../shared/utils/utilidades';
 import { environment } from '@env/environment';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
@@ -14,6 +13,8 @@ import { SessionService } from '@core/services-v2/session/session.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
 import { CatalogService } from '@core/services-v2/catalog.service';
+import { IBody, ICatalog, ILeftSide } from '@core/models-v2/catalog/catalog-response.interface';
+import { MetaTag } from '@core/models-v2/article/article-response.interface';
 
 @Component({
   selector: 'app-page-ver-catalogo-flip',
@@ -29,13 +30,13 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   paginas: Array<any> = [];
   paginasMobile: Array<any> = [];
   articulos: Array<any> = [];
-  portada!: string;
-  contraPortada!: string;
+  portada!: string | undefined;
+  contraPortada!: string | undefined;
   screenWidth: any;
   screenHeight: any;
   estado: boolean = true;
   cargandoCat = true;
-  catalogo: any[] = [];
+  catalogo: IBody[] = [];
   skus!: Array<any>;
   dispositivo!: string;
   iva = true;
@@ -43,7 +44,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   paginasTemp: Array<any> = [];
   tipoCatalogo: string = '';
   tags: any[] = [];
-  rutCatalogo = '';
+  rutCatalogo:string = '';
   Generico = false;
   nombreCliente: string | null = '';
   folio: any;
@@ -106,249 +107,304 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   }
 
   async validarParametros() {
-    let objeto: any = null;
+    let objeto: ICatalog | null = null;
     let id = null;
     let url = this.router.parseUrl(this.router.url);
     id = url.queryParams['id'];
-    if (id) {
-      //LLAMADA SERVICIO PARA OBTENER CATALOGO POR ID
-      objeto = await this.catalogoService.obtenerCatalogoId(id);
-    } else {
-      objeto = await this.localS.get(StorageKey.catalogo);
-    }
-    if (!objeto) {
-      this.toast.error('Error, el catalogo no se encuentra disponible');
-      this.router.navigate(['/', 'catalogos']);
-      return;
-    } else {
-      this.propuesta = await this.catalogoService.obtenerPropuesta(
-        objeto.folioPropuesta
-      );
 
-      this.tipoCatalogo = objeto.tipoCatalogo;
-      this.folio = objeto.folioPropuesta;
-      this.nombreCliente = objeto.nombre;
+    if(id){
+      this.catalogService.getCatalog(id).subscribe({
+        next:async(res)=>{
+          if(res.data.proposalNumber != 0) this.propuesta = await this.catalogService.getProposal(res.data.proposalNumber);
+          this.tipoCatalogo = res.data.catalogType;
+          this.folio = res.data.proposalNumber;
+          this.nombreCliente = res.data.name;
 
-      if (this.nombreCliente === 'Catalogo para ') {
-        this.Generico = true;
-        this.nombreCliente = null;
-      }
-      if (this.tipoCatalogo === 'Automatico') {
-        this.rutCatalogo = objeto.clienteRut;
-      }
-    }
-    if (objeto.neto) this.iva = !objeto.neto;
-    this.skus = objeto.skus;
-    this.catalogo = objeto.cuerpo;
-    await this.establecerPrecio();
-    await this.cargarMarcas(objeto);
-    setTimeout(() => {
-      this.loadFlip();
-      this.cargandoCat = false;
-      if (this.dispositivo === 'smartphone') {
-        this.buscaTagsSmartphone(this.paginasMobile);
+          if (this.nombreCliente === 'Catalogo para ') {
+            this.Generico = true;
+            this.nombreCliente = null;
+          }
+          if (this.tipoCatalogo === 'Automatico') {
+            // this.rutCatalogo = objeto.clienteRut;
+          }
+          if (res.data.netPrice) this.iva = !res.data.netPrice;
+          this.skus = res.data.skus;
+          this.catalogo = res.data.body;
+          await this.establecerPrecio();
+          await this.cargarMarcas(res.data);
+          setTimeout(() => {
+            this.loadFlip();
+            this.cargandoCat = false;
+            if (this.dispositivo === 'smartphone') {
+              this.buscaTagsSmartphone(this.paginasMobile);
+            } else {
+              this.buscaTags(objeto?.body || []);
+            }
+          }, 1300);
+        },
+        error:(err)=>{
+          this.toast.error('Error, el catalogo no se encuentra disponible');
+          this.router.navigate(['/', 'catalogos']);
+          return;
+        }
+      })
+    }else{
+      objeto = this.localS.get(StorageKey.catalogo);
+      if (!objeto) {
+        this.toast.error('Error, el catalogo no se encuentra disponible');
+        this.router.navigate(['/', 'catalogos']);
+        return;
       } else {
-        this.buscaTags(objeto.cuerpo);
+        if(objeto.proposalNumber != 0) this.propuesta = await this.catalogService.getProposal(objeto.proposalNumber);
+        console.log(' propuestita: ',this.propuesta)
+        this.tipoCatalogo = objeto.catalogType;
+        this.folio = objeto.proposalNumber;
+        this.nombreCliente = objeto.name;
+        if (this.nombreCliente === 'Catalogo para ') {
+          this.Generico = true;
+          this.nombreCliente = null;
+        }
+        if (this.tipoCatalogo === 'Automatico') {
+          // this.rutCatalogo = objeto.clienteRut;  // FIXME: cuando trae clienterut??
+        }
+        if (objeto.netPrice) this.iva = !objeto.netPrice;
+        this.skus = objeto.skus;
+        this.catalogo = objeto.body;
+        await this.establecerPrecio();
+        await this.cargarMarcas(objeto);
+        setTimeout(() => {
+          this.loadFlip();
+          this.cargandoCat = false;
+          if (this.dispositivo === 'smartphone') {
+            this.buscaTagsSmartphone(this.paginasMobile);
+          } else {
+            this.buscaTags(objeto?.body || []);
+          }
+        }, 1300);
       }
-    }, 1300);
+    }
   }
-
+  generateTag(tags:MetaTag[] | undefined , code:string){
+    if (tags) {
+      let index = tags.findIndex( (tag:MetaTag) => tag.code === code)
+      if(index === -1){
+        return 0
+      }else{
+        return tags[index].value
+      }
+    }else{
+      return 0
+    }
+  }
   async establecerPrecio() {
     let user = this.sessionService.getSession();
     console.log('getSelectedStore desde PageVerCatalogoFlipComponent');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
     let params: any;
-    // MEJORAR RENDIMIENTO
-    console.log('test');
     console.log(this.tipoCatalogo);
 
     if (this.tipoCatalogo == 'Automatico') {
       console.log(this.rutCatalogo);
       params = {
-        sucursal: tiendaSeleccionada.code,
-        rut: this.rutCatalogo,
+        branchCode: tiendaSeleccionada.code,
+        documentId: this.rutCatalogo,
         skus: this.skus,
       };
     } else {
       params = {
-        sucursal: tiendaSeleccionada.code,
-        rut: user.documentId,
+        branchCode: tiendaSeleccionada.code,
+        documentId: user.documentId,
         skus: this.skus,
       };
     }
-    let respuesta: any[];
     if (!this.propuesta) {
-      respuesta = await this.catalogoService.establecerPrecios(params);
-      respuesta.map((precio) => {
-        this.catalogo.map((objeto) => {
-          for (let objA of objeto.ladoA) {
-            if (objA.productos.tipo == 'producto') {
-              if (this.tipoCatalogo == 'Automatico') {
-                objA.productos.rut = this.rutCatalogo;
-                if (
-                  objA.productos.producto == precio.sku &&
-                  this.rutCatalogo != '0'
-                ) {
-                  objA.productos.precioEsp = precio.precioCliente;
-                  objA.productos.precio = precio.precioMeson;
-                } else if (
-                  objA.productos.producto == precio.sku &&
-                  this.rutCatalogo == '0'
-                ) {
-                  objA.productos.precioEsp = precio.precioCliente;
-                  objA.productos.precio = precio.precioMeson;
-                }
-                if (objA.productos.producto == precio.sku) {
-                  objA.productos.precioEscala = precio.precioEscala;
-                  objA.productos.preciosScal = precio.preciosScal;
-                  objA.productos.cyber = precio.cyber;
-                  objA.productos.cyberMonday = precio.cyberMonday;
-                }
-              } else {
-                objA.productos.rut = user.documentId;
-                if (
-                  objA.productos.producto == precio.sku &&
-                  user.documentId != '0'
-                ) {
-                  objA.productos.precioEsp = precio.precioCliente;
-                  objA.productos.precio = precio.precioMeson;
-                } else if (
-                  objA.productos.producto == precio.sku &&
-                  user.documentId == '0'
-                ) {
-                  objA.productos.precioEsp = precio.precioCliente;
-                  objA.productos.precio = precio.precioMeson;
-                }
-                if (objA.productos.producto == precio.sku) {
-                  objA.productos.precioEscala = precio.precioEscala;
-                  objA.productos.preciosScal = precio.preciosScal;
-                  objA.productos.cyber = precio.cyber;
-                  objA.productos.cyberMonday = precio.cyberMonday;
-                }
-              }
-            }
-          }
-          for (let objB of objeto.ladoB) {
-            if (objB.productos.tipo == 'producto') {
-              if (this.tipoCatalogo == 'Automatico') {
-                objB.productos.rut = this.rutCatalogo;
-                if (
-                  objB.productos.producto == precio.sku &&
-                  this.rutCatalogo != '0'
-                ) {
-                  objB.productos.precioEsp = precio.precioCliente;
-                  objB.productos.precio = precio.precioMeson;
-                } else if (
-                  objB.productos.producto == precio.sku &&
-                  this.rutCatalogo == '0'
-                ) {
-                  objB.productos.precioEsp = precio.precioCliente;
-                  objB.productos.precio = precio.precioMeson;
-                }
-                if (objB.productos.producto == precio.sku) {
-                  objB.productos.precioEscala = precio.precioEscala;
-                  objB.productos.preciosScal = precio.preciosScal;
-                  objB.productos.cyber = precio.cyber;
-                  objB.productos.cyberMonday = precio.cyberMonday;
-                }
-              } else {
-                objB.productos.rut = user.documentId;
-                if (
-                  objB.productos.producto == precio.sku &&
-                  user.documentId != '0'
-                ) {
-                  objB.productos.precioEsp = precio.precioCliente;
-                  objB.productos.precio = precio.precioMeson;
-                } else if (
-                  objB.productos.producto == precio.sku &&
-                  user.documentId == '0'
-                ) {
-                  objB.productos.precioEsp = precio.precioCliente;
-                  objB.productos.precio = precio.precioMeson;
-                }
-                if (objB.productos.producto == precio.sku) {
-                  objB.productos.precioEscala = precio.precioEscala;
-                  objB.productos.preciosScal = precio.preciosScal;
-                  objB.productos.cyber = precio.cyber;
-                  objB.productos.cyberMonday = precio.cyberMonday;
+      this.catalogService.getCatalogsProductPrices(params).subscribe({
+        next:(res)=>{
+          res.map((precio)=>{
+            this.catalogo.map((objeto:IBody) => {
+              for (let objA of objeto.leftSide || []) {
+                if (objA.products.type == 'producto') {
+                  if (this.tipoCatalogo == 'Automatico') {
+                    objA.products.rut = this.rutCatalogo;
+                    if (
+                      objA.products.product == precio.sku &&
+                      this.rutCatalogo != '0'
+                    ) {
+                      objA.products.precioEsp = precio.priceInfo.customerPrice;
+                      objA.products.precio =precio.priceInfo.commonPrice;
+                    } else if (
+                      objA.products.product == precio.sku &&
+                      this.rutCatalogo == '0'
+                    ) {
+                      objA.products.precioEsp = precio.priceInfo.customerPrice;
+                      objA.products.precio = precio.priceInfo.commonPrice;
+                    }
+                    if (objA.products.product == precio.sku) {
+                      objA.products.precioEscala = precio.priceInfo.hasScalePrice;
+                      objA.products.preciosScal = precio.priceInfo.scalePrice;
+                      objA.products.cyber = this.generateTag(precio.metaTags,'cyber');
+                      objA.products.cyberMonday = this.generateTag(precio.metaTags,'cyberMonday');
+                    }
+                  } else {
+                    objA.products.rut = user.documentId;
+                    if (
+                      objA.products.product == precio.sku &&
+                      user.documentId != '0'
+                    ) {
+                      objA.products.precioEsp = precio.priceInfo.customerPrice;
+                      objA.products.precio = precio.priceInfo.commonPrice;
+                    } else if (
+                      objA.products.product == precio.sku &&
+                      user.documentId == '0'
+                    ) {
+                      objA.products.precioEsp = precio.priceInfo.customerPrice;
+                      objA.products.precio = precio.priceInfo.commonPrice;
+                    }
+                    if (objA.products.product == precio.sku) {
+                      objA.products.precioEscala = precio.priceInfo.hasScalePrice;
+                      objA.products.preciosScal = precio.priceInfo.scalePrice;
+                      objA.products.cyber = this.generateTag(precio.metaTags,'cyber');
+                      objA.products.cyberMonday = this.generateTag(precio.metaTags,'cyberMonday');;
+                    }
+                  }
                 }
               }
-            }
-          }
-        });
-      });
+              for (let objB of objeto.rightSide || []) {
+                if (objB.products.type == 'producto') {
+                  if (this.tipoCatalogo == 'Automatico') {
+                    objB.products.rut = this.rutCatalogo;
+                    if (
+                      objB.products.product == precio.sku &&
+                      this.rutCatalogo != '0'
+                    ) {
+                      objB.products.precioEsp = precio.priceInfo.customerPrice;
+                      objB.products.precio = precio.priceInfo.commonPrice;
+                    } else if (
+                      objB.products.product == precio.sku &&
+                      this.rutCatalogo == '0'
+                    ) {
+                      objB.products.precioEsp = precio.priceInfo.customerPrice;
+                      objB.products.precio = precio.priceInfo.commonPrice;
+                    }
+                    if (objB.products.product == precio.sku) {
+                      objB.products.precioEscala = precio.priceInfo.hasScalePrice;
+                      objB.products.preciosScal =precio.priceInfo.scalePrice;
+                      objB.products.cyber = this.generateTag(precio.metaTags,'cyber');
+                      objB.products.cyberMonday = this.generateTag(precio.metaTags,'cyberMonday');
+                    }
+                  } else {
+                    objB.products.rut = user.documentId;
+                    if (
+                      objB.products.product == precio.sku &&
+                      user.documentId != '0'
+                    ) {
+                      objB.products.precioEsp = precio.priceInfo.customerPrice;
+                      objB.products.precio = precio.priceInfo.commonPrice;
+                    } else if (
+                      objB.products.product == precio.sku &&
+                      user.documentId == '0'
+                    ) {
+                      objB.products.precioEsp = precio.priceInfo.customerPrice;
+                      objB.products.precio = precio.priceInfo.commonPrice;
+                    }
+                    if (objB.products.product == precio.sku) {
+                      objB.products.precioEscala = precio.priceInfo.hasScalePrice;
+                      objB.products.preciosScal = precio.priceInfo.scalePrice;
+                      objB.products.cyber = this.generateTag(precio.metaTags,'cyber');
+                      objB.products.cyberMonday = this.generateTag(precio.metaTags,'cyberMonday');
+                    }
+                  }
+                }
+              }
+            });
+          })
+        },
+        error:(err)=>{
+          console.log(err)
+        }
+      })
     } else {
-      this.catalogo.map((objeto) => {
-        for (let objA of objeto.ladoA) {
-          let propuestaPrecio = this.propuesta.articulos.find(
-            (x: any) => x.sku == objA.productos.producto
+      this.catalogo.map((objeto:IBody) => {
+        for (let objA of objeto.leftSide || []) {
+          let propuestaPrecio = this.propuesta.articles.find(
+            (x: any) => x.sku == objA.products.product
           );
           if (propuestaPrecio) {
-            objA.productos.precioEsp = propuestaPrecio.precio.precioCliente;
-            objA.productos.precio = propuestaPrecio.precio.precio;
-            if (propuestaPrecio.acuerdo)
-              objA.productos.cantidad = propuestaPrecio.acuerdo.cantidadMinima;
+            objA.products.precioEsp = propuestaPrecio.price.customerPrice;
+            objA.products.precio = propuestaPrecio.price.price;
+            //FIXME: acuerdo ?
+            // if (propuestaPrecio.acuerdo)
+            //   objA.products.cantidad = propuestaPrecio.acuerdo.cantidadMinima;
           }
         }
-        for (let objB of objeto.ladoB) {
+        for (let objB of objeto.rightSide || []) {
           let propuestaPrecio = this.propuesta.articulos.find(
-            (x: any) => x.sku == objB.productos.producto
+            (x: any) => x.sku == objB.products.product
           );
           if (propuestaPrecio) {
-            objB.productos.precioEsp = propuestaPrecio.precio.precioCliente;
-            objB.productos.precio = propuestaPrecio.precio.precio;
-            if (propuestaPrecio.acuerdo)
-              objB.productos.cantidad = propuestaPrecio.acuerdo.cantidadMinima;
+            objB.products.precioEsp = propuestaPrecio.price.customerPrice;
+            objB.products.precio = propuestaPrecio.price.price;
+            //FIXME: acuerdo ?
+            // if (propuestaPrecio.acuerdo)
+            //   objB.productos.cantidad = propuestaPrecio.acuerdo.cantidadMinima;
           }
         }
       });
     }
 
-    this.catalogo.map((pagina) => {
+    this.catalogo.map((pagina:IBody) => {
       //LADO A
-      if (pagina.ladoA[0]) {
-        if (pagina.ladoA[0].tipo != 'portada') {
-          pagina.ladoA.tituloA = pagina.tituloA;
-          this.paginas.push(pagina.ladoA);
-          this.paginasTemp.push(pagina.ladoA);
+      if (pagina.leftSide && pagina.leftSide[0]) {
+        if (pagina.leftSide[0].type != 'portada') {
+          // pagina.ladoA.tituloA = pagina.tituloA; //revisar pa
+          this.paginas.push(pagina.leftSide);
+          this.paginasTemp.push(pagina.leftSide);
         }
       } else {
-        pagina.ladoA[0] = {
-          productos: { tipo: 'dinamico' },
-          tipo: 'dinamico',
-          titulo: undefined,
-          tituloA: '',
-        };
-        this.paginas.push(pagina.ladoA);
+        if(pagina.leftSide){
+          pagina.leftSide[0] = {
+            products: { type: 'dinamico' },
+            type: 'dinamico',
+            //FIXME: revisar pa
+            // titulo: undefined,
+            // tituloA: '',
+          };
+          this.paginas.push(pagina.leftSide);
+        }
       }
       //LADO B
-      if (pagina.ladoB[0]) {
-        if (pagina.ladoB[0].tipo != 'portada') {
-          pagina.ladoB.tituloB = pagina.tituloB;
-          this.paginas.push(pagina.ladoB);
-          this.paginasTemp.push(pagina.ladoB);
+      if (pagina.rightSide && pagina.rightSide[0]) {
+        if (pagina.rightSide[0].type != 'portada') {
+          // pagina.ladoB.tituloB = pagina.tituloB;
+          this.paginas.push(pagina.rightSide);
+          this.paginasTemp.push(pagina.rightSide);
         }
       } else {
-        pagina.ladoB[0] = {
-          productos: { tipo: 'dinamico' },
-          tipo: 'dinamico',
-          titulo: undefined,
-          tituloB: '',
-        };
-        this.paginas.push(pagina.ladoB);
+        if(pagina.rightSide){
+          pagina.rightSide[0] = {
+            products: { type: 'dinamico' },
+              type: 'dinamico',
+              //FIXME: revisar pa
+              // titulo: undefined,
+              // tituloA: '',
+          };
+          this.paginas.push(pagina.rightSide);
+        }
       }
       //OBTENER PORTADA Y CONTRAPORTADA (INDEPENDIENTE DEL ORDEN)
       if (
-        pagina.ladoA[0].tipo === 'portada' &&
-        pagina.ladoA[0].productos.tipo === 'portadaImg'
+        pagina.leftSide &&
+        pagina.leftSide[0].type === 'portada' &&
+        pagina.leftSide[0].products.type === 'portadaImg'
       )
-        this.portada = pagina.ladoA[0].productos.url;
+        this.portada = pagina.leftSide[0].products.url;
       if (
-        pagina.ladoA[0].tipo === 'portada' &&
-        pagina.ladoA[0].productos.tipo === 'contraPortadaImg'
+        pagina.leftSide &&
+        pagina.leftSide[0].type === 'portada' &&
+        pagina.leftSide[0].products.type === 'contraPortadaImg'
       )
-        this.contraPortada = pagina.ladoA[0].productos.url;
+        this.contraPortada = pagina.leftSide[0].products.url;
     });
 
     if (this.dispositivo === 'smartphone') {
@@ -387,38 +443,38 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     }
     return output;
   }
-
+  //FIXME:REVISAR NUEVAMENTE !!!
   async cargarMarcas(objeto: any) {
     //LISTA DE MARCAS POR PÁGINA
-    for (let i = 0; i < objeto.cuerpo.length; i++) {
+    for (let i = 0; i < objeto.body.length; i++) {
       let marcas = [];
       // LADO A
-      for (let x = 0; x < objeto.cuerpo[i].ladoA.length; x++) {
-        if (objeto.cuerpo[i].ladoA[x].tipo != 'portada') {
-          if (objeto.cuerpo[i].ladoA[x].productos.atributos) {
-            if (objeto.cuerpo[i].ladoA[x].productos.atributos[5].valor) {
-              let marca =
-                objeto.cuerpo[i].ladoA[x].productos.atributos[5].valor;
-              let existeEnArray = marcas.indexOf(marca);
-              if (existeEnArray == -1)
-                marcas.push(
-                  objeto.cuerpo[i].ladoA[x].productos.atributos[5].valor
-                );
+        for (let x = 0; x < (objeto.body[i]?.leftSide as ILeftSide[]).length; x++) {
+          if ((objeto.body[i].leftSide[x].type) != 'portada') {
+            if (objeto.body[i].leftSide[x].products.attributes) {
+              if (objeto.body[i].leftSide[x].products.attributes[5].value) {
+                let marca =
+                  objeto.body[i].leftSide[x].products.attributes[5].value;
+                let existeEnArray = marcas.indexOf(marca);
+                if (existeEnArray == -1)
+                  marcas.push(
+                    objeto.body[i].leftSide[x].products.attributes[5].value
+                  );
+              }
             }
           }
         }
-      }
       // LADO B
-      for (let z = 0; z < objeto.cuerpo[i].ladoB.length; z++) {
-        if (objeto.cuerpo[i].ladoB[z].tipo != 'portada') {
-          if (objeto.cuerpo[i].ladoB[z].productos.atributos) {
-            if (objeto.cuerpo[i].ladoB[z].productos.atributos[5].valor) {
+      for (let z = 0; z < objeto.body[i].rightSide.length; z++) {
+        if (objeto.body[i].rightSide[z].type != 'portada') {
+          if (objeto.body[i].rightSide[z].products.attributes) {
+            if (objeto.body[i].rightSide[z].products.attributes[5].value) {
               let marca =
-                objeto.cuerpo[i].ladoB[z].productos.atributos[5].valor;
+                objeto.body[i].rightSide[z].products.attributes[5].value;
               let existeEnArray = marcas.indexOf(marca);
               if (existeEnArray == -1)
                 marcas.push(
-                  objeto.cuerpo[i].ladoB[z].productos.atributos[5].valor
+                  objeto.body[i].rightSide[z].products.attributes[5].value
                 );
             }
           }
@@ -432,8 +488,8 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         }
       }
       //ASIGNO MISMAS MARCAS A LAS DOS CARAS
-      objeto.cuerpo[i].ladoA['marcas'] = marcas;
-      objeto.cuerpo[i].ladoB['marcas'] = marcas;
+      objeto.body[i].leftSide['marcas'] = marcas;
+      objeto.body[i].rightSide['marcas'] = marcas;
     }
   }
 
@@ -611,22 +667,22 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     this.tags = this.tags.filter((item) => item);
     this.localS.set(StorageKey.tags, this.tags);
   }
-  cargaPrecio(productData: any) {
-    if (productData.precioComun === undefined) {
-      productData.precioComun = productData.precio.precioComun;
-      productData.precio_escala = productData.precio.precio_escala;
-    }
+  // cargaPrecio(productData: any) {
+  //   if (productData.precioComun === undefined) {
+  //     productData.precioComun = productData.precio.precioComun;
+  //     productData.precio_escala = productData.precio.precio_escala;
+  //   }
 
-    this.calculaIVA(productData);
-  }
+  //   this.calculaIVA(productData);
+  // }
 
-  calculaIVA(producto: any) {
-    if (!isVacio(this.iva)) {
-      if (!this.iva) {
-        producto.precio.precio = producto.precio.precio / (1 + this.IVA);
-        producto.precioComun = producto.precioComun / (1 + this.IVA);
-      }
-    }
-    return producto;
-  }
+  // calculaIVA(producto: any) {
+  //   if (!isVacio(this.iva)) {
+  //     if (!this.iva) {
+  //       producto.precio.precio = producto.precio.precio / (1 + this.IVA);
+  //       producto.precioComun = producto.precioComun / (1 + this.IVA);
+  //     }
+  //   }
+  //   return producto;
+  // }
 }
