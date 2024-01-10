@@ -31,7 +31,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { NguCarouselConfig } from '@ngu/carousel';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
-import { CarouselComponent, SlidesOutputData } from 'ngx-owl-carousel-o';
+import { CarouselComponent, OwlOptions, SlidesOutputData } from 'ngx-owl-carousel-o';
 import { OwlCarouselOConfig } from 'ngx-owl-carousel-o/lib/carousel/owl-carousel-o-config';
 // Rxjs
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -78,6 +78,8 @@ export class ProductComponent implements OnInit, OnChanges {
   @ViewChildren('imageElement', { read: ElementRef })
   imageElements!: QueryList<ElementRef>;
 
+  @ViewChild('carouselThumbs') carouselThumbs!: ElementRef;
+
   @Input() stock!: boolean;
   @Input() origen!: string[];
   @Input() recommendedProducts!: IArticleResponse[];
@@ -89,7 +91,6 @@ export class ProductComponent implements OnInit, OnChanges {
     this.quantity.setValue(1);
 
     this.dataProduct = value;
-    console.log('[-] producto: ', value);
     this.images = GalleryUtils.formatImageSlider(value);
     this.generateTags(this.product.metaTags);
   }
@@ -104,6 +105,42 @@ export class ProductComponent implements OnInit, OnChanges {
    ************************************/
   carouselConfig: NguCarouselConfig;
   carouselOptions: Partial<OwlCarouselOConfig>;
+
+  customThumbsOptions: OwlOptions = {
+    loop: false,
+    items: 3,
+    dots: false,
+    autoplay: false,
+    mouseDrag: true,
+    touchDrag: true,
+    autoHeight: true,
+    autoWidth: true,
+    margin: 5,
+    nav: true,
+    navText: [
+      '<i class="fas fa-angle-left"></i>',
+      '<i class="fas fa-angle-right"></i>',
+    ],
+    navSpeed: 900,
+    responsive: {
+      0: {
+        items: 0,
+      },
+      400: {
+        items: 3,
+      },
+      740: {
+        items: 3,
+      },
+      940: {
+        items: 3,
+      },
+    },
+
+  };
+
+
+
 
   /**
    * Items para la imagen activa.
@@ -427,6 +464,7 @@ export class ProductComponent implements OnInit, OnChanges {
     const activeImageId = event.slides[0].id;
     GalleryUtils.formatActiveImage(this.images, activeImageId);
   }
+
 
   /**
    * Ampliar imagen seleccionada.
