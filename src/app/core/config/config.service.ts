@@ -8,6 +8,7 @@ import { Observable, tap } from 'rxjs';
 import { REQUEST } from '../../../express.tokens';
 import { Request } from 'express';
 import { isPlatformServer } from '@angular/common';
+import { environment } from '@env/environment';
 
 @Injectable()
 export class ConfigService {
@@ -20,7 +21,9 @@ export class ConfigService {
   ) {}
 
   loadConfig(): Observable<IConfig> {
-    let filePath = './assets/config/config.json';
+    const country = environment.country;
+    const file = `config.${country}.json`;
+    let filePath = `./assets/config/${file}`;
     if (isPlatformServer(this.platformId) && this.request) {
       filePath = this.getFullUrl() + '/assets/config/config.json';
     }
