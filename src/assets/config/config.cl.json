@@ -1,0 +1,24 @@
+{
+  "country": "Chile",
+  "document": {
+    "name": "RUT",
+    "sample": "11111111-1"
+  },
+  "phoneCodes": {
+    "mobile": {
+      "code": "+569",
+      "lengthRule": 8
+    },
+    "landline": {
+      "code": "+56",
+      "lengthRule": 9
+    }
+  },
+  "storesPage": {
+    "title": "29 TIENDAS A LO LARGO DE CHILE",
+    "subtitle": "Desde Arica a Punta Arenas"
+  },
+  "company": {
+    "phone": ""
+  }
+}
