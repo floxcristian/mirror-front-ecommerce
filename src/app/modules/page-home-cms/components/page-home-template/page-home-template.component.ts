@@ -3,15 +3,13 @@ import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 // Rxjs
 import { Subscription, first } from 'rxjs';
 // Models
-
+import { IPage } from '@core/models-v2/cms/homePage-response.interface';
+import { ISession } from '@core/models-v2/auth/session.interface';
 // Services
 import { SessionService } from '@core/services-v2/session/session.service';
-import { ISession } from '@core/models-v2/auth/session.interface';
 import { CmsService } from '@core/services-v2/cms.service';
-import { IPage } from '@core/models-v2/cms/homePage-response.interface';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
@@ -45,7 +43,7 @@ export class PageHomeTemplateComponent
     private readonly customerAddressService: CustomerAddressService
   ) {}
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     const storeSubscription = this.geolocationService.stores$
       .pipe(first((stores) => stores.length > 0))
       .subscribe({
@@ -59,15 +57,15 @@ export class PageHomeTemplateComponent
                 .subscribe({
                   next: (preferences) => {
                     this.preferenciasCliente = preferences;
-                    this.cargarPage();
+                    this.getHomePageItems();
                   },
                 });
             } else {
-              this.cargarPage();
+              this.getHomePageItems();
             }
           } else {
             console.log('cargarPage 2');
-            this.cargarPage();
+            this.getHomePageItems();
           }
         },
       });
@@ -81,7 +79,7 @@ export class PageHomeTemplateComponent
         next: (location) => {
           console.log('location: ', location);
           console.log('cargarPage 3');
-          this.cargarPage();
+          this.getHomePageItems();
         },
       });
 
@@ -92,7 +90,7 @@ export class PageHomeTemplateComponent
         this.customerPreferenceService.getCustomerPreferences().subscribe({
           next: (preferences) => {
             this.preferenciasCliente = preferences;
-            this.cargarPage();
+            this.getHomePageItems();
           },
         });
       }
@@ -104,17 +102,17 @@ export class PageHomeTemplateComponent
       this.customerAddressService.customerAddress$.subscribe(
         (customerAddress) => {
           this.preferenciasCliente.deliveryAddress = customerAddress;
-          this.cargarPage();
+          this.getHomePageItems();
         }
       );
 
     this.subscription.add(customerAddressSubscription);
   }
 
-  async cargarPage() {
+  private getHomePageItems(): void {
+    console.log('getHomePageItems...');
     this.carga = true;
     const rut = this.user.documentId;
-    console.log('getSelectedStore desde PageHomeTemplateComponent');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada.code;
     const localidad = this.preferenciasCliente?.deliveryAddress
@@ -131,6 +129,7 @@ export class PageHomeTemplateComponent
           this.scrollToTop();
         },
         error: (err) => {
+          console.error(err);
           this.lastLoadKey = '';
         },
       });
