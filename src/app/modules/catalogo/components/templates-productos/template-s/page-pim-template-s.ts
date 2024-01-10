@@ -8,6 +8,7 @@ import {
 import { environment } from '@env/environment';
 import { CartService } from '../../../../../shared/services/cart.service';
 import { isVacio } from '../../../../../shared/utils/utilidades';
+import { ILeftSide, IRightSide } from '@core/models-v2/catalog/catalog-response.interface';
 
 interface IAttributeTemp {
   valor: string;
@@ -37,7 +38,8 @@ interface IPlaneTemp {
   styleUrls: ['./page-pim-template-s.scss'],
 })
 export class PagePimTemplateS implements OnInit {
-  @Input() plana: IPlaneTemp = {} as IPlaneTemp;
+  // @Input() plana: IPlaneTemp = {} as IPlaneTemp;
+  @Input() plana!: ILeftSide | IRightSide;
   @Input() tipo: any = '';
   @Input() iva: any = true;
   @Input() folio: any;
@@ -67,46 +69,46 @@ export class PagePimTemplateS implements OnInit {
         break;
     }
 
-    this.plana.productos.sku = this.plana.productos.producto;
-    if (this.plana.productos.tipo == 'producto' && this.precios) {
+    // this.plana.products.sku = this.plana.productos.producto; // utilizar product = sku
+    if (this.plana.products.type == 'producto' && this.precios) {
       // Precio 1
       let objPrecio = {
         desde: '1',
         hasta: '1',
-        precio: this.plana.productos.precio,
+        precio: this.plana.products.precio,
       };
       if (
-        this.plana.productos.rut == 0 &&
-        this.plana.productos.precioEsp == 0
+        this.plana.products.rut == '0' &&
+        this.plana.products.precioEsp == 0
       ) {
-        objPrecio.precio = this.plana.productos.precio;
+        objPrecio.precio = this.plana.products.precio;
       }
       if (
-        this.plana.productos.rut != 0 &&
-        this.plana.productos.precio != this.plana.productos.precioEsp
+        this.plana.products.rut != '0' &&
+        this.plana.products.precio != this.plana.products.precioEsp
       ) {
-        objPrecio.precio = this.plana.productos.precioEsp;
+        objPrecio.precio = this.plana.products.precioEsp;
         this.precioEspecial = true;
       }
 
-      if (this.plana.productos.precio == this.plana.productos.precioEsp) {
-        objPrecio.precio = this.plana.productos.precio;
+      if (this.plana.products.precio == this.plana.products.precioEsp) {
+        objPrecio.precio = this.plana.products.precio;
       }
 
       //Precio normal con dto.
       if (
-        this.plana.productos.rut == 0 &&
-        this.plana.productos.precio > this.plana.productos.precioEsp
+        this.plana.products.rut == '0' &&
+        (this.plana.products.precio || 0) > (this.plana.products.precioEsp || 0)
       ) {
-        this.precioAnterior = this.plana.productos.precio;
-        objPrecio.precio = this.plana.productos.precioEsp;
+        this.precioAnterior = this.plana.products.precio;
+        objPrecio.precio = this.plana.products.precioEsp;
         this.precioEspecial = true;
       }
 
       this.preciosLista.push(objPrecio);
       // Precio escala último y penúltimo
-      if (this.plana.productos.precioEscala) {
-        this.preciosEscala = this.plana.productos.preciosScal;
+      if (this.plana.products.precioEscala) {
+        this.preciosEscala = this.plana.products.preciosScal || [];
         let contador = this.preciosEscala.length;
         if (contador >= 2) {
           this.preciosLista.push(this.preciosEscala[contador - 2]);
@@ -163,11 +165,17 @@ export class PagePimTemplateS implements OnInit {
     if (!isVacio(this.iva)) {
       if (!this.iva) {
         producto = producto / (1 + this.IVA);
-        this.plana.productos.precio =
-          this.plana.productos.precio / (1 + this.IVA);
+        this.plana.products.precio =
+          (this.plana.products.precio || 0) / (1 + this.IVA);
       }
     }
     return producto;
   }
   ngOnChanges(changes: SimpleChanges): void {}
+
+  isString(value:any){
+    if(typeof value === 'string')
+    return value
+    else return ''
+  }
 }

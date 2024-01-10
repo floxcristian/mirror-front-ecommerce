@@ -70,8 +70,10 @@ export class PagePimTemplateM implements OnInit {
       let objPrecio = {
         desde: '1',
         hasta: '1',
-        precio: this.plana.products.precio,
+        precio: this.plana.products,
       };
+      console.log('planaaaaaaaaaa',this.plana)
+      console.log('precio pues:', this.plana.products.rut)
       if (
         this.plana.products.rut == '0' &&
         this.plana.products.precioEsp == 0
@@ -105,6 +107,8 @@ export class PagePimTemplateM implements OnInit {
       }
 
       this.preciosLista.push(objPrecio);
+      console.log('plana pa: ',this.plana)
+      console.log('precios uwu: ',this.preciosLista)
 
       // Precio escala último y penúltimo
       if (this.plana.products.precioEscala) {
@@ -239,5 +243,11 @@ export class PagePimTemplateM implements OnInit {
         }
       }
     }
+  }
+
+  isString(value:any){
+    if(typeof value === 'string')
+    return value
+    else return ''
   }
 }

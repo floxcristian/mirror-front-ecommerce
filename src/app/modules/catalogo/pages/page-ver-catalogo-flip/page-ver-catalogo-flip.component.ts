@@ -14,7 +14,7 @@ import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.
 import { StorageKey } from '@core/storage/storage-keys.enum';
 import { CatalogService } from '@core/services-v2/catalog.service';
 import { IBody, ICatalog, ILeftSide } from '@core/models-v2/catalog/catalog-response.interface';
-import { MetaTag } from '@core/models-v2/article/article-response.interface';
+import { IAttribute, MetaTag } from '@core/models-v2/article/article-response.interface';
 
 @Component({
   selector: 'app-page-ver-catalogo-flip',
@@ -364,7 +364,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       } else {
         if(pagina.leftSide){
           pagina.leftSide[0] = {
-            products: { type: 'dinamico' },
+            products: { type: 'dinamico',attributes:[],},
             type: 'dinamico',
             //FIXME: revisar pa
             // titulo: undefined,
@@ -383,7 +383,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       } else {
         if(pagina.rightSide){
           pagina.rightSide[0] = {
-            products: { type: 'dinamico' },
+            products: { type: 'dinamico', attributes:[], },
               type: 'dinamico',
               //FIXME: revisar pa
               // titulo: undefined,

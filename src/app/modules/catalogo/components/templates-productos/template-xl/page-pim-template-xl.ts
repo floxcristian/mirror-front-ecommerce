@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CartService } from '../../../../../shared/services/cart.service';
+import { ILeftSide, IRightSide } from '@core/models-v2/catalog/catalog-response.interface';
 
 @Component({
   selector: 'app-template-xl',
@@ -7,7 +8,8 @@ import { CartService } from '../../../../../shared/services/cart.service';
   styleUrls: ['./page-pim-template-xl.scss'],
 })
 export class PagePimTemplateXL implements OnInit {
-  @Input() plana: any = {};
+  // @Input() plana: any = {};
+  @Input() plana!: ILeftSide | IRightSide;
   @Input() tipo: any = '';
   preciosEscala: any[] = [];
   preciosLista: any[] = [];
@@ -31,6 +33,7 @@ export class PagePimTemplateXL implements OnInit {
   constructor(public cart: CartService, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
+    console.log('plana xl',this.plana)
     this.ordenarIMG();
     this.quitarIMG();
     switch (this.tipo) {
@@ -42,51 +45,51 @@ export class PagePimTemplateXL implements OnInit {
         this.carro = false;
         break;
     }
-    this.plana.productos.sku = this.plana.productos.producto;
-    if (this.plana.productos.tipo == 'producto' && this.precios) {
+    // this.plana.products.sku = this.plana.products.product; //utilizar product = sku
+    if (this.plana.products.type == 'producto' && this.precios) {
       // Precio 1
       let objPrecio = {
         desde: '1',
         hasta: '1',
-        precio: this.plana.productos.precio,
+        precio: this.plana.products.precio,
       };
       if (
-        this.plana.productos.rut == 0 &&
-        this.plana.productos.precioEsp == 0
+        this.plana.products.rut == '0' &&
+        this.plana.products.precioEsp ==  0
       ) {
-        objPrecio.precio = this.plana.productos.precio;
+        objPrecio.precio = this.plana.products.precio;
       }
       if (
-        this.plana.productos.rut != 0 &&
-        this.plana.productos.precio != this.plana.productos.precioEsp
+        this.plana.products.rut != '0' &&
+        this.plana.products.precio != this.plana.products.precioEsp
       ) {
-        objPrecio.precio = this.plana.productos.precioEsp;
+        objPrecio.precio = this.plana.products.precioEsp;
         this.precioEspecial = true;
-        console.log('Precio especial: ', this.plana.productos);
+        console.log('Precio especial: ', this.plana.products);
       }
       if (
-        this.plana.productos.rut != 0 &&
-        this.plana.productos.precio != this.plana.productos.precioEsp
+        this.plana.products.rut != '0' &&
+        this.plana.products.precio != this.plana.products.precioEsp
       ) {
-        objPrecio.precio = this.plana.productos.precio;
+        objPrecio.precio = this.plana.products.precio;
       }
-      if (this.plana.productos.precio == this.plana.productos.precioEsp) {
-        objPrecio.precio = this.plana.productos.precio;
+      if (this.plana.products.precio == this.plana.products.precioEsp) {
+        objPrecio.precio = this.plana.products.precio;
       }
 
       //Precio normal con dto.
       if (
-        this.plana.productos.rut == 0 &&
-        this.plana.productos.precio > this.plana.productos.precioEsp
+        this.plana.products.rut == '0' &&
+        (this.plana.products.precio || 0) > (this.plana.products.precioEsp || 0)
       ) {
-        objPrecio.precio = this.plana.productos.precioEsp;
+        objPrecio.precio = this.plana.products.precioEsp;
         this.precioEspecial = true;
       }
 
       this.preciosLista.push(objPrecio);
       // Precio escala último y penúltimo
-      if (this.plana.productos.precioEscala) {
-        this.preciosEscala = this.plana.productos.preciosScal;
+      if (this.plana.products.precioEscala) {
+        this.preciosEscala = this.plana.products.preciosScal || [];
         let contador = this.preciosEscala.length;
         if (contador >= 2) {
           this.preciosLista.push(this.preciosEscala[contador - 2]);
@@ -153,8 +156,8 @@ export class PagePimTemplateXL implements OnInit {
 
   //PARCHE MEJORAR RENDIMEINTO
   ordenarIMG() {
-    if (this.plana.productos.imagenes && this.plana.productos.imagenes[1]) {
-      let imgs = this.plana.productos.imagenes[1];
+    if (this.plana.products.images && this.plana.products.images[1]) {
+      let imgs = this.plana.products.images[1];
       for (let i = 0; i <= imgs.length; i++) {
         if (imgs[i] == 1) {
           this.ordenImg1 = i + 1;
@@ -189,8 +192,8 @@ export class PagePimTemplateXL implements OnInit {
 
   //PARCHE MEJORAR RENDIMEINTO
   quitarIMG() {
-    if (this.plana.productos.imagenes && this.plana.productos.imagenes[0]) {
-      let imgs = this.plana.productos.imagenes[0];
+    if (this.plana.products.images && this.plana.products.images[0]) {
+      let imgs = this.plana.products.images[0];
       for (let i = 0; i < imgs.length; i++) {
         if (!imgs[i]) {
           if (i == 0) {
@@ -252,5 +255,11 @@ export class PagePimTemplateXL implements OnInit {
         }
       }
     }
+  }
+
+  isString(value:any){
+    if(typeof value === 'string')
+    return value
+    else return ''
   }
 }

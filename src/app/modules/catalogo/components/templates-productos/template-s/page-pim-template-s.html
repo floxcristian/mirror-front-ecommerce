@@ -1,11 +1,11 @@
 <div
-  *ngIf="plana.productos.tipo == 'banner' || plana.productos.tipo == 'portadaImg' || plana.productos.tipo == 'contraPortadaImg'"
+  *ngIf="plana.products.type == 'banner' || plana.products.type == 'portadaImg' || plana.products.type == 'contraPortadaImg'"
 >
   <div>
     <img
       class="img-fluid"
       style="height: 225px; width: 100%"
-      src="{{plana.productos.url}}"
+      src="{{plana.products.url}}"
       onError="this.src='./assets/img/place-150x150.png'"
       alt=""
     />
@@ -13,12 +13,12 @@
 </div>
 
 <!-- Relleno en caso de template vacío con intención de dejar ese espacio -->
-<div *ngIf="!plana.productos.sku">
+<div *ngIf="!plana.products.product">
   <div style="padding: 0rem; height: 225px"></div>
 </div>
 
 <div
-  *ngIf="plana.productos.tipo == 'producto' &&  !folio"
+  *ngIf="plana.products.type == 'producto' &&  !folio"
   [ngStyle]="{ 'font-family': folio ? 'Lato, sans-serif': 'AvenirLTStd, sans-serif' }"
 >
   <div
@@ -38,25 +38,25 @@
           >
             <img
               *ngIf="imagen"
-              src="https://images.implementos.cl/marcas/small/{{plana.productos.atributos[5].valor | uppercase}}.png"
-              alt="{{plana.productos.atributos[5].valor}}"
+              src="https://images.implementos.cl/marcas/small/{{ isString(plana.products.attributes[5].value) | uppercase}}.png"
+              alt="{{plana.products.attributes[5].value}}"
               (error)="existeIMG()"
               style="height: 35px"
             />
 
             <div
-              *ngIf="!imagen && plana.productos.atributos[5].valor != '0'"
+              *ngIf="!imagen && plana.products.attributes[5].value != '0'"
               style="
                 color: #000000;
                 font-size: 14px;
                 font-weight: 400 !important;
               "
             >
-              {{ plana.productos.atributos[5].valor }}
+              {{ plana.products.attributes[5].value }}
             </div>
 
             <div
-              *ngIf="plana.productos.atributos[5].valor == '0'"
+              *ngIf="plana.products.attributes[5].value == '0'"
               style="
                 color: #000000;
                 font-size: 14px;
@@ -75,7 +75,7 @@
                 color: black;
               "
             >
-              <b>{{ plana.productos.atributos[1].valor | slice:0:32 }}</b>
+              <b>{{ isString(plana.products.attributes[1].value) | slice:0:32 }}</b>
             </div>
             <div
               class="col-md-12 p-0 mt-1"
@@ -87,19 +87,19 @@
                 color: black;
               "
             >
-              {{ plana.productos.atributos[2].valor | titlecase | slice:0:100
+              {{ isString(plana.products.attributes[2].value) | titlecase | slice:0:100
               }}
             </div>
             <div
               class="col-md-12 p-0 mt-1"
               style="font-size: 14px; text-align: left; color: #000000"
             >
-              SKU {{ plana.productos.atributos[0].valor | uppercase }}
+              SKU {{ isString(plana.products.attributes[0].value) | uppercase }}
             </div>
           </div>
 
           <div
-            *ngIf="plana.productos.precioEscala && plana.productos.cyber === 1"
+            *ngIf="plana.products.precioEscala && plana.products.cyber === 1"
           >
             <div class="col-md-12 d-flex p-0">
               <img
@@ -109,19 +109,6 @@
               />
               <div class="div_img_cyber_escala">
                 <picture>
-                  <!-- <source
-                    srcset="assets/images/cyberCircle.webp"
-                    type="image/webp"
-                  />
-                  <source
-                    srcset="assets/images/cyberCircle.png"
-                    type="image/png"
-                  />
-                  <img
-                    src="assets/images/cyberCircle.png"
-                    style="width: 50px"
-                    loading="lazy"
-                  /> -->
                   <img
                     src="https://images.implementos.cl/uploads/cyber/cyber.webp"
                     style="width: 50px"
@@ -133,7 +120,7 @@
           </div>
 
           <div
-            *ngIf="plana.productos.precioEscala && plana.productos.cyber == 0 && precios"
+            *ngIf="plana.products.precioEscala && plana.products.cyber == 0 && precios"
           >
             <img
               style="width: 100px; border-radius: 2px"
@@ -144,19 +131,9 @@
 
           <div
             class="div_img_cyber"
-            *ngIf="plana.productos.cyber === 1 && !plana.productos.precioEscala"
+            *ngIf="plana.products.cyber === 1 && !plana.products.precioEscala"
           >
             <picture>
-              <!-- <source
-                srcset="assets/images/cyberCircle.webp"
-                type="image/webp"
-              />
-              <source srcset="assets/images/cyberCircle.png" type="image/png" />
-              <img
-                src="assets/images/cyberCircle.png"
-                style="width: 50px"
-                loading="lazy"
-              /> -->
               <img
                 src="https://images.implementos.cl/uploads/cyber/cyber.webp"
                 style="width: 50px"
@@ -374,10 +351,10 @@
                 </table>
               </div>
 
-              <div *ngIf="preciosLista.length === 1">
+              <!-- <div *ngIf="preciosLista.length === 1">
                 <table class="table2 p-0 m-0 borderless">
                   <tbody>
-                    <tr *ngIf="!plana.productos.cantidad">
+                    <tr *ngIf="!plana.products.cantidad">
                       <td class="p-0 txtNormal">&nbsp;</td>
                       <td class="p-0 pull-right txtNormal">&nbsp;</td>
                     </tr>
@@ -392,7 +369,7 @@
                         class="p-0 pull-right product-card__old-price"
                         title="Precio con descuento cliente"
                       >
-                        {{ this.plana.productos.precio|currencyFormat}}
+                        {{ this.plana.products.precio|currencyFormat}}
                         <em>
                           <span class="">
                             {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') :
@@ -422,14 +399,14 @@
                     <tr *ngIf="(!precioEspecial && tipo==='Automatico')">
                       <td
                         class="p-0 txtNormal fw-bold text-start"
-                        *ngIf="plana.productos.cantidad"
+                        *ngIf="plana.products.cantidad"
                       >
                         Precio
                       </td>
 
                       <td
                         class="p-0 txtNormal fw-bold text-start"
-                        *ngIf="!plana.productos.cantidad"
+                        *ngIf="!plana.products.cantidad"
                       >
                         Unidad
                       </td>
@@ -443,7 +420,7 @@
                         <span
                           style="font-size: xx-large"
                           class="text-start"
-                          *ngIf="plana.productos.cantidad"
+                          *ngIf="plana.products.cantidad"
                           >*</span
                         >
                         <em>
@@ -457,10 +434,10 @@
                       </td>
                     </tr>
                     <tr>
-                      <td *ngIf="plana.productos.cantidad" colspan="2">
+                      <td *ngIf="plana.products.cantidad" colspan="2">
                         <span style="font-size: xx-small">
                           *precio sujeto a la cantidad minima de
-                          {{plana.productos.cantidad}}</span
+                          {{plana.products.cantidad}}</span
                         >
                       </td>
                     </tr>
@@ -484,13 +461,13 @@
                     </tr>
                   </tbody>
                 </table>
-              </div>
+              </div> -->
             </div>
 
             <!-- COMPARTIR Y CARRO -->
-            <div
+            <!-- <div
               class="col-md-3 col-sm-3 p-0 pb-2"
-              *ngIf="!plana.productos.cantidad"
+              *ngIf="!plana.products.cantidad"
             >
               <div class="row h-100 w-100" style="align-items: flex-end">
                 <div class="col-md-12 d-flex">
@@ -499,11 +476,11 @@
                     name="cart-20"
                     size="18"
                     class="float-start icon-chat shadow-lg ps-2 pt-2 pointer me-3 mt-2"
-                    (click)="addToCart(plana.productos)"
+                    (click)="addToCart(plana.products)"
                   ></app-icon>
                   <app-share-button
                     *ngIf="carro"
-                    [producto]="plana.productos"
+                    [producto]="plana.products"
                     class="mt-2"
                     style="margin-top: 5px !important"
                     [catalogo]="true"
@@ -511,33 +488,33 @@
                   ></app-share-button>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
 
-      <ng-container *ngIf="plana.productos.imagenes; else anterior">
+      <ng-container *ngIf="plana.products.images; else anterior">
         <div class="col-md-4 col-sm-3 justify-content-between pt-3">
           <img
-            *ngIf="plana.productos.imagenes[0][0] == 1"
+            *ngIf="plana.products.images[0][0] == 1"
             class="img-fluid"
-            src="https://images.implementos.cl/img/450/{{plana.productos.producto}}-1.jpg"
+            src="https://images.implementos.cl/img/450/{{plana.products.product}}-1.jpg"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
 
           <img
-            *ngIf="plana.productos.imagenes[0][1] == 1"
+            *ngIf="plana.products.images[0][1] == 1"
             class="img-fluid"
-            src="https://images.implementos.cl/img/450/{{plana.productos.producto}}-2.jpg"
+            src="https://images.implementos.cl/img/450/{{plana.products.product}}-2.jpg"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
 
           <img
-            *ngIf="plana.productos.imagenes[0][2] == 1"
+            *ngIf="plana.products.images[0][2] == 1"
             class="img-fluid"
-            src="https://images.implementos.cl/img/450/{{plana.productos.producto}}-3.jpg"
+            src="https://images.implementos.cl/img/450/{{plana.products.product}}-3.jpg"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
@@ -552,7 +529,7 @@
           <img
             class="img-fluid"
             style="width: 11rem; height: 11rem"
-            src="https://images.implementos.cl/img/450/{{plana.productos.producto}}-1.jpg"
+            src="https://images.implementos.cl/img/450/{{plana.products.product}}-1.jpg"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
@@ -565,7 +542,7 @@
 <div
   class="p-1"
   style="min-height: 150px"
-  *ngIf="plana.productos.tipo == 'producto' &&  folio"
+  *ngIf="plana.products.type == 'producto' &&  folio"
   [ngStyle]="{ 'font-family': folio ? 'Lato, sans-serif': 'AvenirLTStd, sans-serif' }"
 >
   <div
@@ -594,28 +571,28 @@
                 height: 35px !important;
               "
             >
-              <b
-                >{{ plana.productos.atributos[1].valor | slice:0:32 |
+              <!-- <b
+                >{{ plana.products.attributes[1].value | slice:0:32 |
                 capitalizeFirst }}</b
-              >
+              > -->
               <img
-                *ngIf="imagen"
-                src="https://images.implementos.cl/marcas/small/{{plana.productos.atributos[5].valor | uppercase}}.png"
-                alt="{{plana.productos.atributos[5].valor}}"
+                *ngIf="imagen && plana.products.attributes[5].value === 'string'"
+                src="https://images.implementos.cl/marcas/small/{{plana.products.attributes[5].value | uppercase}}.png"
+                alt="{{plana.products.attributes[5].value}}"
                 (error)="existeIMG()"
                 style="height: 35px"
               />
               <span
-                *ngIf="!imagen && plana.productos.atributos[5].valor != '0'"
+                *ngIf="!imagen && plana.products.attributes[5].value != '0'"
                 style="
                   color: #0063b9;
                   font-size: 10px;
                   font-weight: bold !important;
                 "
-                >&nbsp;{{ plana.productos.atributos[5].valor }}</span
+                >&nbsp;{{ plana.products.attributes[5].value }}</span
               >
               <span
-                *ngIf="plana.productos.atributos[5].valor == '0'"
+                *ngIf="plana.products.attributes[5].value == '0'"
                 style="
                   color: #0063b9;
                   font-size: 10px;
@@ -635,7 +612,7 @@
                 color: black;
               "
             >
-              {{ plana.productos.atributos[2].valor | slice:0:60 |
+              {{ isString(plana.products.attributes[2].value) | slice:0:60 |
               capitalizeFirst }}
             </div>
             <div
@@ -643,13 +620,13 @@
               style="font-size: 10px; text-align: left; color: #000000"
             >
               <span>
-                {{ plana.productos.atributos[0].valor | uppercase }}</span
+                {{ isString(plana.products.attributes[0].value) | uppercase }}</span
               >
             </div>
           </div>
 
           <div class="col-md-12 col-sm-12 d-flex p-0">
-            <div *ngIf="precios" class="col-md-9 col-sm-9 p-0">
+            <!-- <div *ngIf="precios" class="col-md-9 col-sm-9 p-0">
               <div>
                 <table class="table2 p-0 m-0 borderless">
                   <tbody>
@@ -659,15 +636,15 @@
                         style="font-size: x-large"
                         title="Precio normal"
                         colspan="2"
-                        [ngClass]="plana.productos.precio > plana.productos.precioEsp?'txtDestacado':'txtNormal'"
+                        [ngClass]="plana.products.precio > plana.products.precioEsp?'txtDestacado':'txtNormal'"
                       >
                         <span>
-                          {{ plana.productos.precioEsp | currencyFormat}}
+                          {{ plana.products.precioEsp | currencyFormat}}
                         </span>
                         <span
                           style="font-size: large"
                           class="text-start"
-                          *ngIf="plana.productos.cantidad"
+                          *ngIf="plana.products.cantidad"
                           >*&nbsp;</span
                         >
                         <em>
@@ -682,14 +659,14 @@
                       </td>
                     </tr>
                     <tr
-                      *ngIf="plana.productos.precio > plana.productos.precioEsp"
+                      *ngIf="plana.products.precio > plana.products.precioEsp"
                     >
                       <td
                         class="p-0 pull-right product-card__old-price"
                         title="Precio con descuento cliente"
                         style="font-size: medium"
                       >
-                        {{plana.productos.precio|currencyFormat}}
+                        {{plana.products.precio|currencyFormat}}
                         <em>
                           <span class="" style="font-size: x-small">
                             {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') :
@@ -700,51 +677,51 @@
                     </tr>
 
                     <tr>
-                      <td *ngIf="plana.productos.cantidad" colspan="2">
+                      <td *ngIf="plana.products.cantidad" colspan="2">
                         <span style="font-size: xx-small">
                           *precio sujeto a la cantidad minima de
-                          {{plana.productos.cantidad}}</span
+                          {{plana.products.cantidad}}</span
                         >
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-            </div>
+            </div> -->
 
             <!-- COMPARTIR Y CARRO -->
           </div>
         </div>
       </div>
 
-      <ng-container *ngIf="plana.productos.imagenes; else anterior">
+      <ng-container *ngIf="plana.products.images; else anterior">
         <div
           class="col-md-3 col-sm-3 justify-content-between p-0 m-0 align-items"
           style="display: flex"
         >
           <img
-            *ngIf="plana.productos.imagenes[0][0] == 1"
+            *ngIf="plana.products.images[0][0] == 1"
             class="img-fluid"
             style="max-width: 70% !important; max-height: 130px"
-            src="https://images.implementos.cl/img/450/{{plana.productos.producto}}-1.jpg"
+            src="https://images.implementos.cl/img/450/{{plana.products.product}}-1.jpg"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
 
           <img
-            *ngIf="plana.productos.imagenes[0][1] == 1"
+            *ngIf="plana.products.images[0][1] == 1"
             class="img-fluid"
             style="max-width: 70% !important; max-height: 130px"
-            src="https://images.implementos.cl/img/450/{{plana.productos.producto}}-2.jpg"
+            src="https://images.implementos.cl/img/450/{{plana.products.product}}-2.jpg"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
 
           <img
-            *ngIf="plana.productos.imagenes[0][2] == 1"
+            *ngIf="plana.products.images[0][2] == 1"
             class="img-fluid"
             style="max-width: 70% !important; max-height: 130px"
-            src="https://images.implementos.cl/img/450/{{plana.productos.producto}}-3.jpg"
+            src="https://images.implementos.cl/img/450/{{plana.products.product}}-3.jpg"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
@@ -758,7 +735,7 @@
           <img
             class="img-fluid"
             style="width: 11rem; height: 11rem"
-            src="https://images.implementos.cl/img/450/{{plana.productos.producto}}-1.jpg"
+            src="https://images.implementos.cl/img/450/{{plana.products.product}}-1.jpg"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />

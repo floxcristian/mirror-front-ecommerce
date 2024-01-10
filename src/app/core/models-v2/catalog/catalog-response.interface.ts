@@ -101,7 +101,7 @@ export interface ICatalogResponse {
     type?: string
     product?: string
     name?: string
-    attributes?: IAttribute[]
+    attributes: IAttribute[]
     date?: number
     disabled?: boolean
     precio?: number
