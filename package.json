@@ -9,6 +9,7 @@
     "test": "ng test",
     "dev:ssr": "ng run front-ecommerce:serve-ssr",
     "serve:ssr": "node dist/server/main.js",
+    "build:ssr:original": "ng build && ng run front-ecommerce:server",
     "build:ssr": "npm run build:client-and-server-bundles",
     "build:client-and-server-bundles": "node --max_old_space_size=4000 ./node_modules/@angular/cli/bin/ng build --aot=true && ng run front-ecommerce:server && gzipper compress ./dist --gzip --brotli",
     "prerender": "ng run front-ecommerce:prerender",

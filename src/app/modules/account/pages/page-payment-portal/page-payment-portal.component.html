@@ -87,7 +87,6 @@
         </div>
         <hr />
         <ng-container *ngIf="innerWidth < 450">
-          <!-- <div class="dropcart__totals" [ngClass]="{'border-0': seeProducts==false}"*ngFor="let item of customerDebt"> -->
           <div
             class="dropcart__totals"
             [ngClass]="{ 'border-0': false }"
@@ -301,12 +300,7 @@
       (click)="setPaymentMethod(item)"
       [ngClass]="{ active: item.selected }"
     >
-      <img
-        class="bank-logo lazyload"
-        [src]="item.image"
-        [alt]="item.title"
-        [ngClass]="{ disabled: item.disabled }"
-      />
+      <img class="bank-logo lazyload" [src]="item.image" [alt]="item.title" />
     </div>
   </div>
 

@@ -4,7 +4,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { CustomerSaleService } from '@core/services-v2/customer-sale.service';
+import { CustomerSaleService } from '@core/services-v2/customer-sale/customer-sale.service';
 
 @Component({
   selector: 'app-page-orders-list',

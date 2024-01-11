@@ -17,12 +17,14 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { environment } from '@env/environment';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { IConfig } from '@core/config/config.interface';
 // Services
 import { ClientsService } from '../../../../shared/services/clients.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ConfigService } from '@core/config/config.service';
-import { IConfig } from '@core/config/config.interface';
+import { CustomerSaleService } from '@core/services-v2/customer-sale/customer-sale.service';
+import { IFormattedPaymentButton } from './models/formatted-payment-button.model';
 
 @Component({
   selector: 'app-page-payment-portal',
@@ -45,29 +47,7 @@ export class PagePaymentPortalComponent implements OnInit {
   totalExpired = 0;
   totalDocuments = 0;
   totalToPay = 0;
-  paymentBtns = [
-    {
-      id: 'bsantander',
-      title: 'Banco Satander',
-      image: 'assets/images/logo bancos/Logotipo_del_Banco_Santander.jpg',
-      selected: false,
-      disabled: false,
-    },
-    {
-      id: 'bchile',
-      title: 'Banco Chile',
-      image: 'assets/images/logo bancos/bancochile.jpg',
-      selected: false,
-      disabled: false,
-    },
-    {
-      id: 'bbci',
-      title: 'Banco BCI',
-      image: 'assets/images/logo bancos/bci.jpg',
-      selected: false,
-      disabled: false,
-    },
-  ];
+  paymentBtns!: IFormattedPaymentButton[];
 
   paymentSelected = '';
   loadingPayment = false;
@@ -83,20 +63,34 @@ export class PagePaymentPortalComponent implements OnInit {
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly customerSaleService: CustomerSaleService
   ) {
     this.config = this.configService.getConfig();
+    this.paymentBtns = this.config.salesDebtPage.paymentButtons.map(
+      (item) => ({ ...item, selected: false })
+    );
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
   }
 
-  ngOnInit() {
-    this.user = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
-    this.getData();
+  ngOnInit(): void {
+    this.user = this.sessionService.getSession();
     this.dtOptions = this.root.simpleDtOptions;
+    this.getSalesDebt();
   }
-  getData() {
+
+  /**
+   * Obtener deudas del cliente.
+   */
+  private getSalesDebt(): void {
+    this.customerSaleService.getCustomerSalesDebt().subscribe({
+      next: (res) => {
+        console.log('getCustomerSalesDebt: ', res);
+      },
+    });
+
     const data = {
       where: {
         rut: this.user.documentId,
