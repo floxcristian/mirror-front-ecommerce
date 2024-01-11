@@ -17,13 +17,6 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { NgChartsModule, ThemeService } from 'ng2-charts';
 import { GoogleMapsModule } from '@angular/google-maps';
-import {
-  NguCarousel,
-  NguCarouselDefDirective,
-  NguCarouselNextDirective,
-  NguCarouselPrevDirective,
-  NguItemComponent,
-} from '@ngu/carousel';
 // Directives
 import { ClickDirective } from './directives/click.directive';
 import {
@@ -98,14 +91,6 @@ import { RelativeTimePipe } from './pipes-v2/relative-time.pipe';
 import { CountdownTimerModule } from './components/countdown-timer/countdown-timer.module';
 
 const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
-const NGU_CAROUSEL_MODULES = [
-  NguCarousel,
-  NguCarousel,
-  NguCarouselDefDirective,
-  NguCarouselNextDirective,
-  NguCarouselPrevDirective,
-  NguItemComponent,
-];
 
 @NgModule({
   declarations: [
@@ -191,7 +176,6 @@ const NGU_CAROUSEL_MODULES = [
     CollapseModule.forRoot(),
     NgxPaginationModule,
     CountdownTimerModule,
-    ...NGU_CAROUSEL_MODULES,
     NgChartsModule,
     FiltroMagicoModule,
     InfiniteScrollModule,
@@ -252,7 +236,6 @@ const NGU_CAROUSEL_MODULES = [
     CarouselModule,
     FiltroMagicoModule,
     MenuCategoriaComponent,
-    ...NGU_CAROUSEL_MODULES,
     BlockHeaderComponent,
     RelativeTimePipe,
   ],

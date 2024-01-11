@@ -29,14 +29,17 @@ import { DomSanitizer } from '@angular/platform-browser';
 // Libs
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { NguCarouselConfig } from '@ngu/carousel';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
-import { CarouselComponent, OwlOptions, SlidesOutputData } from 'ngx-owl-carousel-o';
+import {
+  CarouselComponent,
+  OwlOptions,
+  SlidesOutputData,
+} from 'ngx-owl-carousel-o';
 import { OwlCarouselOConfig } from 'ngx-owl-carousel-o/lib/carousel/owl-carousel-o-config';
 // Rxjs
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 // Constants
-import { CarouselConfig, CarouselOptions } from './constants/carousel-config';
+import { CarouselOptions } from './constants/carousel-config';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
 import {
@@ -103,7 +106,6 @@ export class ProductComponent implements OnInit, OnChanges {
   /*************************************
    * Variables de carousel.
    ************************************/
-  carouselConfig: NguCarouselConfig;
   carouselOptions: Partial<OwlCarouselOConfig>;
 
   customThumbsOptions: OwlOptions = {
@@ -136,11 +138,7 @@ export class ProductComponent implements OnInit, OnChanges {
         items: 3,
       },
     },
-
   };
-
-
-
 
   /**
    * Items para la imagen activa.
@@ -219,7 +217,6 @@ export class ProductComponent implements OnInit, OnChanges {
     private readonly wishlistService: WishlistService,
     private readonly productPriceApiService: ProductPriceApiService
   ) {
-    this.carouselConfig = CarouselConfig;
     this.carouselOptions = CarouselOptions;
     this.isB2B = this.sessionService.isB2B();
     this.session = this.sessionService.getSession();
@@ -464,7 +461,6 @@ export class ProductComponent implements OnInit, OnChanges {
     const activeImageId = event.slides[0].id;
     GalleryUtils.formatActiveImage(this.images, activeImageId);
   }
-
 
   /**
    * Ampliar imagen seleccionada.

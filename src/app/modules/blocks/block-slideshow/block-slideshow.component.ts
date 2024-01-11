@@ -19,7 +19,7 @@ export class BlockSlideshowComponent implements OnInit {
   modalRef!: BsModalRef;
 
   options = {
-    lazyLoad: true,
+    lazyLoad: false,
     dots: true,
     dragging: false,
     loop: true,

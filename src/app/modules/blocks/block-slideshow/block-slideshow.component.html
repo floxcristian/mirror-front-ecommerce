@@ -6,7 +6,7 @@
   >
     <ng-container *ngFor="let slide of slides; let i = index">
       <ng-template carouselSlide [id]="slide.imageClassic">
-        <a [href]="slide.buttonUrl" style="border: 4px dotted red">
+        <a [href]="slide.buttonUrl">
           <img
             [src]="slide.imageMobile"
             [alt]="slide.alt"
