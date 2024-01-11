@@ -8,6 +8,7 @@ import { ISlider } from '@core/models-v2/cms/slider-reponse.interface';
 // Services
 import { DirectionService } from '../../../shared/services/direction.service';
 import { CmsService } from '@core/services-v2/cms.service';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 
 @Component({
   selector: 'app-block-slideshow',
@@ -18,10 +19,10 @@ export class BlockSlideshowComponent implements OnInit {
   @Input() withDepartments = false;
   modalRef!: BsModalRef;
 
-  options = {
-    lazyLoad: false,
+  options: OwlOptions = {
+    // lazyLoad: false,
     dots: true,
-    dragging: false,
+    //dragging: false,
     loop: true,
     autoplay: true,
     autoplayHoverPause: true,
