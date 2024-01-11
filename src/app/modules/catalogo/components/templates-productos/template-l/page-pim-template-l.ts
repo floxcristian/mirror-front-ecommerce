@@ -8,24 +8,23 @@ import { ILeftSide, IRightSide } from '@core/models-v2/catalog/catalog-response.
   styleUrls: ['./page-pim-template-l.scss'],
 })
 export class PagePimTemplateL implements OnInit {
-  // @Input() plana: any = {};
   @Input() plana!: ILeftSide | IRightSide;
-  @Input() tipo: any = '';
+  @Input() tipo: string = '';
   preciosEscala: any[] = [];
   preciosLista: any[] = [];
   addingToCart = false;
   precioEspecial: boolean = false;
-  existeImagen1 = true;
-  existeImagen2 = true;
-  precios: boolean = true;
-  carro: boolean = true;
-  imagen: boolean = true;
-  ordenImg1 = 1;
-  ordenImg2 = 2;
-  ordenImg3 = 3;
-  visibleImg1 = true;
-  visibleImg2 = true;
-  visibleImg3 = true;
+  existeImagen1:boolean = true;
+  existeImagen2:boolean = true;
+  precios:boolean = true;
+  carro:boolean = true;
+  imagen:boolean = true;
+  ordenImg1:number = 1;
+  ordenImg2:number = 2;
+  ordenImg3:number = 3;
+  visibleImg1:boolean = true;
+  visibleImg2:boolean = true;
+  visibleImg3:boolean = true;
 
   constructor(public cart: CartService, private cd: ChangeDetectorRef) {}
 
@@ -41,7 +40,7 @@ export class PagePimTemplateL implements OnInit {
         this.carro = false;
         break;
     }
-    // this.plana.products.sku = this.plana.products.product;  // utilizar product = sku
+    this.plana.products.sku = this.plana.products.product;
     if (this.plana.products.type == 'producto' && this.precios) {
       // Precio 1
       let objPrecio = {
@@ -61,7 +60,6 @@ export class PagePimTemplateL implements OnInit {
       ) {
         objPrecio.precio = this.plana.products.precioEsp;
         this.precioEspecial = true;
-        console.log('Precio especial: ', this.plana.products);
       }
       if (
         this.plana.products.rut != '0' &&
@@ -144,7 +142,6 @@ export class PagePimTemplateL implements OnInit {
   }
 
   existeIMG() {
-    //console.log('ERROR');
     this.imagen = false;
   }
 

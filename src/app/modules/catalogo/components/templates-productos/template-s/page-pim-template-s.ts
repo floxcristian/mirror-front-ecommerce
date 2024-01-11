@@ -10,40 +10,16 @@ import { CartService } from '../../../../../shared/services/cart.service';
 import { isVacio } from '../../../../../shared/utils/utilidades';
 import { ILeftSide, IRightSide } from '@core/models-v2/catalog/catalog-response.interface';
 
-interface IAttributeTemp {
-  valor: string;
-}
-
-interface IPlaneTemp {
-  productos: {
-    sku: any;
-    url: string;
-    tipo: any;
-    precio: any;
-    cantidad: any;
-    cyber: any;
-    producto: any;
-    rut: any;
-    precioEsp: any;
-    imagenes: any[];
-    precioEscala: any;
-    preciosScal: any;
-    atributos: IAttributeTemp[];
-  };
-}
-
 @Component({
   selector: 'app-template-s',
   templateUrl: './page-pim-template-s.html',
   styleUrls: ['./page-pim-template-s.scss'],
 })
 export class PagePimTemplateS implements OnInit {
-  // @Input() plana: IPlaneTemp = {} as IPlaneTemp;
   @Input() plana!: ILeftSide | IRightSide;
-  @Input() tipo: any = '';
+  @Input() tipo: string = '';
   @Input() iva: any = true;
   @Input() folio: any;
-  @Input() minimo: any;
 
   precioAnterior!: any;
   preciosEscala: any[] = [];
@@ -69,7 +45,7 @@ export class PagePimTemplateS implements OnInit {
         break;
     }
 
-    // this.plana.products.sku = this.plana.productos.producto; // utilizar product = sku
+    this.plana.products.sku = this.plana.products.product;
     if (this.plana.products.type == 'producto' && this.precios) {
       // Precio 1
       let objPrecio = {

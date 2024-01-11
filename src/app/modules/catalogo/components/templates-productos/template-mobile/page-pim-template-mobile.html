@@ -1,19 +1,19 @@
-<div *ngIf="plana.productos.tipo == 'banner'">
+<div *ngIf="plana.products.type == 'banner'">
   <div style="height: 130px">
     <img
       class="img-fluid"
-      src="{{plana.productos.url}}"
+      src="{{plana.products.url}}"
       onError="this.src='./assets/img/place-150x150.png'"
     />
   </div>
 </div>
 <div
-  *ngIf="plana.productos.tipo == 'producto' "
+  *ngIf="plana.products.type == 'producto' "
   class="container rounded text-dark border bg-mobile"
   [ngClass]="folio? 'new' : esWeb ? 'esWeb' : 'noWeb'"
   style="border-color: rgb(214, 214, 214)"
   [ngStyle]="{ 'font-family': folio ? 'Lato, sans-serif': 'AvenirLTStd, sans-serif' }"
-  (click)="abrirEnlace('https://www.implementos.cl/inicio/productos/ficha/'+plana.productos.atributos[0].valor,folio)"
+  (click)="abrirEnlace('https://www.implementos.cl/inicio/productos/ficha/'+plana.products.attributes[0].value,folio)"
 >
   <div class="row p-0 m-0">
     <!-- IMAGENES -->
@@ -23,7 +23,7 @@
       *ngIf="!folio"
     >
       <div
-        *ngIf="plana.productos.precioEscala && plana.productos.cyber === 1 && precios"
+        *ngIf="plana.products.precioEscala && plana.products.cyber === 1 && precios"
       >
         <!-- LOGO ESCALA -->
         <div class="div_img_escala">
@@ -35,13 +35,6 @@
         <!-- LOGO CYBER -->
         <div class="div_img_cyber">
           <picture>
-            <!-- <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
-            <source srcset="assets/images/cyberCircle.png" type="image/png" />
-            <img
-              src="assets/images/cyberCircle.png"
-              style="margin-top: 70px !important"
-              loading="lazy"
-            /> -->
             <img
               src="https://images.implementos.cl/uploads/cyber/cyber.webp"
               style="margin-top: 70px !important"
@@ -54,7 +47,7 @@
       <!-- LOGO ESCALA -->
       <div
         class="div_img_escala"
-        *ngIf="plana.productos.precioEscala && plana.productos.cyber == 0 && precios && !folio"
+        *ngIf="plana.products.precioEscala && plana.products.cyber == 0 && precios && !folio"
       >
         <img
           src="assets/images/catalogo/llevaMasPagaMenos/lleva_mas_paga_menos.SVG"
@@ -65,12 +58,9 @@
       <!-- LOGO CYBER -->
       <div
         class="div_img_cyber"
-        *ngIf="plana.productos.cyber === 1 && !plana.productos.precioEscala && !folio"
+        *ngIf="plana.products.cyber === 1 && !plana.products.precioEscala && !folio"
       >
         <picture>
-          <!-- <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
-          <source srcset="assets/images/cyberCircle.png" type="image/png" />
-          <img src="assets/images/cyberCircle.png" loading="lazy" /> -->
           <img
             src="https://images.implementos.cl/uploads/cyber/cyber.webp"
             loading="lazy"
@@ -80,7 +70,7 @@
 
       <img
         class="img-fluid"
-        src="https://images.implementos.cl/img/250/{{plana.productos.producto}}-{{img}}.jpg"
+        src="https://images.implementos.cl/img/250/{{plana.products.product}}-{{img}}.jpg"
         onError="this.src='./assets/images/catalogo/place-150x150.png'"
         alt=""
       />
@@ -93,7 +83,7 @@
     >
       <img
         class="img-fluid3"
-        src="https://images.implementos.cl/img/250/{{plana.productos.producto}}-{{img}}.jpg"
+        src="https://images.implementos.cl/img/250/{{plana.products.product}}-{{img}}.jpg"
         onError="this.src='./assets/images/catalogo/place-150x150.png'"
         alt=""
       />
@@ -107,23 +97,23 @@
         <img
           class="img-fluid"
           style="max-height: 40px"
-          src="https://images.implementos.cl/marcas/small/{{plana.productos.atributos[5].valor | uppercase}}.png"
-          alt="{{plana.productos.atributos[5].valor}}"
+          src="https://images.implementos.cl/marcas/small/{{isString(plana.products.attributes[5].value) | uppercase}}.png"
+          alt="{{plana.products.attributes[5].value}}"
           (error)="existeIMG()"
         />
       </div>
       <div
-        *ngIf="!imagen && plana.productos.atributos[5].valor != '0'"
+        *ngIf="!imagen && plana.products.attributes[5].value != '0'"
         class="marca"
       >
-        <b>{{ plana.productos.atributos[5].valor }}</b>
+        <b>{{ plana.products.attributes[5].value }}</b>
       </div>
-      <div *ngIf="plana.productos.atributos[5].valor == '0'" class="marca">
+      <div *ngIf="plana.products.attributes[5].value == '0'" class="marca">
         <b>IMPLEMENTOS</b>
       </div>
       <div class="nombre">
         <b
-          >{{ plana.productos.atributos[1].valor | slice:0:30 | capitalizeFirst
+          >{{ isString(plana.products.attributes[1].value) | slice:0:30 | capitalizeFirst
           }}</b
         >
       </div>
@@ -132,10 +122,10 @@
         style="font-size: 12px !important"
         *ngIf="folio"
       >
-        {{ plana.productos.atributos[2].valor | slice:0:50 | capitalizeFirst }}
+        {{ isString(plana.products.attributes[2].value) | slice:0:50 | capitalizeFirst }}
       </div>
       <div class="sku" *ngIf="!folio">
-        SKU {{ plana.productos.atributos[0].valor | uppercase }}
+        SKU {{ isString(plana.products.attributes[0].value) | uppercase }}
       </div>
     </div>
 
@@ -337,7 +327,7 @@
             *ngIf="precioEspecial"
             class="col-12 col-sm-12 p-0 precioDestacado product-card__old-price"
           >
-            {{ this.plana.productos.precio|currencyFormat}}
+            {{ this.plana.products.precio|currencyFormat}}
             <em>
               <span>
                 {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva')
@@ -378,7 +368,7 @@
             class="col-12 col-sm-12 p-0 precioNormalB"
           >
             {{ preciosLista[0].precio | currencyFormat }}
-            {{plana.productos.cantidad}}
+            {{plana.products.cantidad}}
             <em>
               <span
                 [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
@@ -394,7 +384,7 @@
             *ngIf="precioEspecial"
             class="col-12 col-sm-12 p-0 precioDestacado product-card__old-price"
           >
-            {{ this.plana.productos.precio|currencyFormat}}
+            {{ this.plana.products.precio|currencyFormat}}
             <em>
               <span>
                 {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva')
@@ -422,10 +412,10 @@
               >
             </em>
           </div>
-          <div *ngIf="plana.productos.cantidad" colspan="2">
+          <div *ngIf="plana.products.cantidad" colspan="2">
             <span style="font-size: xx-small">
               *precio sujeto a la cantidad minima de
-              {{plana.productos.cantidad}}</span
+              {{plana.products.cantidad}}</span
             >
           </div>
         </div>
@@ -450,7 +440,7 @@
       <div class="col-sm-12 p-0">
         <div *ngIf="tipo==='Automatico' && folio">
           <div class="col-sm-12 p-0 precioDestacado">
-            {{ plana.productos.precioEsp | currencyFormat }}
+            {{ plana.products.precioEsp | currencyFormat }}
             <em>
               <span
                 [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
@@ -461,10 +451,10 @@
             </em>
           </div>
           <div
-            *ngIf="plana.productos.precio > plana.productos.precioEsp"
+            *ngIf="(plana.products.precio || 0) > (plana.products.precioEsp || 0)"
             class="col-sm-12 p-0 precioDestacado product-card__old-price"
           >
-            {{ plana.productos.precio|currencyFormat}}
+            {{ plana.products.precio|currencyFormat}}
             <em>
               <span>
                 {{ (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva')
@@ -473,10 +463,10 @@
             </em>
           </div>
 
-          <div *ngIf="plana.productos.cantidad" colspan="2">
+          <div *ngIf="plana.products.cantidad" colspan="2">
             <span style="font-size: xx-small">
               *precio sujeto a la cantidad minima de
-              {{plana.productos.cantidad}}</span
+              {{plana.products.cantidad}}</span
             >
           </div>
         </div>
@@ -505,7 +495,7 @@
     >
       <div class="row justify-content-around">
         <app-share-button
-          [producto]="plana.productos"
+          [producto]="plana.products"
           [catalogo]="true"
           style="font-size: 24px; margin-top: 10px"
         ></app-share-button>
@@ -515,7 +505,7 @@
           name="cart-20"
           size="22"
           class="float-start icon-chat ps-3 pt-3 pointer"
-          (click)="addToCart(plana.productos)"
+          (click)="addToCart(plana.products)"
         >
         </app-icon>
       </div>

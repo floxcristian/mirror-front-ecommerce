@@ -2,57 +2,33 @@ import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CartService } from '../../../../../shared/services/cart.service';
 import { ILeftSide, IRightSide } from '@core/models-v2/catalog/catalog-response.interface';
 
-interface IAttributeTemp {
-  valor: string;
-}
-
-interface IPlaneTemp {
-  productos: {
-    sku: any;
-    url: string;
-    tipo: any;
-    precio: any;
-    cantidad: any;
-    cyber: any;
-    producto: any;
-    rut: any;
-    precioEsp: any;
-    imagenes: any[];
-    precioEscala: any[];
-    preciosScal: any;
-    atributos: IAttributeTemp[];
-  };
-}
-
 @Component({
   selector: 'app-template-m',
   templateUrl: './page-pim-template-m.html',
   styleUrls: ['./page-pim-template-m.scss'],
 })
 export class PagePimTemplateM implements OnInit {
-  // @Input() plana: IPlaneTemp = {} as IPlaneTemp;
   @Input() plana!: ILeftSide | IRightSide;
-  @Input() tipo: any = '';
+  @Input() tipo: string = '';
   preciosEscala: any[] = [];
   preciosLista: any[] = [];
-  addingToCart = false;
+  addingToCart: boolean = false;
   precioEspecial: boolean = false;
-  existeImagen1 = true;
-  existeImagen2 = true;
+  existeImagen1: boolean = true;
+  existeImagen2: boolean = true;
   precios: boolean = true;
   carro: boolean = true;
   imagen: boolean = true;
-  ordenImg1 = 1;
-  ordenImg2 = 2;
-  ordenImg3 = 3;
-  visibleImg1 = true;
-  visibleImg2 = true;
-  visibleImg3 = true;
+  ordenImg1:number = 1;
+  ordenImg2:number = 2;
+  ordenImg3:number = 3;
+  visibleImg1: boolean = true;
+  visibleImg2: boolean = true;
+  visibleImg3: boolean = true;
 
   constructor(public cart: CartService, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
-    console.log('plana m',this.plana)
     this.ordenarIMG();
     this.quitarIMG();
     switch (this.tipo) {
@@ -64,16 +40,14 @@ export class PagePimTemplateM implements OnInit {
         this.carro = false;
         break;
     }
-    // this.plana.productos.sku = this.plana.productos.producto; // utilizar product = sku
+    this.plana.products.sku = this.plana.products.product;
     if (this.plana.products.type == 'producto' && this.precios) {
       // Precio 1
       let objPrecio = {
         desde: '1',
         hasta: '1',
-        precio: this.plana.products,
+        precio: this.plana.products.precio,
       };
-      console.log('planaaaaaaaaaa',this.plana)
-      console.log('precio pues:', this.plana.products.rut)
       if (
         this.plana.products.rut == '0' &&
         this.plana.products.precioEsp == 0
@@ -107,8 +81,6 @@ export class PagePimTemplateM implements OnInit {
       }
 
       this.preciosLista.push(objPrecio);
-      console.log('plana pa: ',this.plana)
-      console.log('precios uwu: ',this.preciosLista)
 
       // Precio escala último y penúltimo
       if (this.plana.products.precioEscala) {
@@ -171,7 +143,6 @@ export class PagePimTemplateM implements OnInit {
   }
 
   existeIMG() {
-    //console.log('ERROR');
     this.imagen = false;
   }
 

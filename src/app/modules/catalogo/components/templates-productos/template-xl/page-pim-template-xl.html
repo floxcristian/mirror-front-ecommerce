@@ -9,15 +9,10 @@
       onError="this.src='./assets/img/place-150x150.png'"
       alt=""
     />
-    <!-- height: 46.4rem; -->
   </div>
 </div>
 
 <!-- Relleno en caso de template vacío con intención de dejar ese espacio -->
-<!-- FIXME:REVISAR  -->
-<!-- <div *ngIf="plana.products.length == 0">
-  <div style="padding: 0rem; height: 750px"></div>
-</div> -->
 <div *ngIf="!plana.products.product">
   <div style="padding: 0rem; height: 370px"></div>
 </div>

@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { CatalogoService } from '../../../../shared/services/catalogo.service';
 import { PageFlip, SizeType } from 'page-flip';
 import { CartService } from '../../../../shared/services/cart.service';
 import { RootService } from '../../../../shared/services/root.service';
@@ -13,7 +12,7 @@ import { SessionService } from '@core/services-v2/session/session.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
 import { CatalogService } from '@core/services-v2/catalog.service';
-import { IBody, ICatalog, ILeftSide } from '@core/models-v2/catalog/catalog-response.interface';
+import { IBody, ICatalog, ILeftSide, IRightSide } from '@core/models-v2/catalog/catalog-response.interface';
 import { IAttribute, MetaTag } from '@core/models-v2/article/article-response.interface';
 
 @Component({
@@ -42,6 +41,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   iva = true;
   IVA = environment.IVA || 0.19;
   paginasTemp: Array<any> = [];
+  // paginasTemp:  Array<ILeftSide[] | IRightSide[]> = [];
   tipoCatalogo: string = '';
   tags: any[] = [];
   rutCatalogo:string = '';
@@ -49,9 +49,9 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   nombreCliente: string | null = '';
   folio: any;
   propuesta: any;
+  isLoadPrecio = false
   constructor(
     private localS: LocalStorageService,
-    private catalogoService: CatalogoService,
     private router: Router,
     private toast: ToastrService,
     public cart: CartService,
@@ -125,7 +125,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
             this.nombreCliente = null;
           }
           if (this.tipoCatalogo === 'Automatico') {
-            // this.rutCatalogo = objeto.clienteRut;
+            // this.rutCatalogo = objeto.clienteRut; // no vienen en consulta
           }
           if (res.data.netPrice) this.iva = !res.data.netPrice;
           this.skus = res.data.skus;
@@ -165,7 +165,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
           this.nombreCliente = null;
         }
         if (this.tipoCatalogo === 'Automatico') {
-          // this.rutCatalogo = objeto.clienteRut;  // FIXME: cuando trae clienterut??
+          this.rutCatalogo = objeto.customerDocumentId;
         }
         if (objeto.netPrice) this.iva = !objeto.netPrice;
         this.skus = objeto.skus;
@@ -319,6 +319,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
               }
             });
           })
+          this.armaCatalogo()
         },
         error:(err)=>{
           console.log(err)
@@ -333,9 +334,8 @@ export class PageVerCatalogoFlipComponent implements OnInit {
           if (propuestaPrecio) {
             objA.products.precioEsp = propuestaPrecio.price.customerPrice;
             objA.products.precio = propuestaPrecio.price.price;
-            //FIXME: acuerdo ?
-            // if (propuestaPrecio.acuerdo)
-            //   objA.products.cantidad = propuestaPrecio.acuerdo.cantidadMinima;
+            if (propuestaPrecio.agreement)
+              objA.products.cantidad = propuestaPrecio.agreement.minimumQuantity;
           }
         }
         for (let objB of objeto.rightSide || []) {
@@ -345,30 +345,33 @@ export class PageVerCatalogoFlipComponent implements OnInit {
           if (propuestaPrecio) {
             objB.products.precioEsp = propuestaPrecio.price.customerPrice;
             objB.products.precio = propuestaPrecio.price.price;
-            //FIXME: acuerdo ?
-            // if (propuestaPrecio.acuerdo)
-            //   objB.productos.cantidad = propuestaPrecio.acuerdo.cantidadMinima;
+            if (propuestaPrecio.agreement)
+              objB.products.cantidad = propuestaPrecio.agreement.minimumQuantity;
           }
         }
       });
+      this.armaCatalogo()
     }
+  }
 
+  armaCatalogo(){
     this.catalogo.map((pagina:IBody) => {
+      // this.catalogo.map((pagina:any) => {
       //LADO A
       if (pagina.leftSide && pagina.leftSide[0]) {
         if (pagina.leftSide[0].type != 'portada') {
-          // pagina.ladoA.tituloA = pagina.tituloA; //revisar pa
+          // pagina.leftSide.tituloA = pagina.leftTitle; //revisar
           this.paginas.push(pagina.leftSide);
           this.paginasTemp.push(pagina.leftSide);
         }
       } else {
         if(pagina.leftSide){
           pagina.leftSide[0] = {
-            products: { type: 'dinamico',attributes:[],},
+            products: { type: 'dinamico',attributes:[], precio:0 , precioEsp:0},
             type: 'dinamico',
-            //FIXME: revisar pa
+            //FIXME: Revisar
             // titulo: undefined,
-            // tituloA: '',
+            tituloA: '',
           };
           this.paginas.push(pagina.leftSide);
         }
@@ -376,18 +379,18 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       //LADO B
       if (pagina.rightSide && pagina.rightSide[0]) {
         if (pagina.rightSide[0].type != 'portada') {
-          // pagina.ladoB.tituloB = pagina.tituloB;
+          // pagina.rightSide.tituloB = pagina.rightTitle; //revisar
           this.paginas.push(pagina.rightSide);
           this.paginasTemp.push(pagina.rightSide);
         }
       } else {
         if(pagina.rightSide){
           pagina.rightSide[0] = {
-            products: { type: 'dinamico', attributes:[], },
+            products: { type: 'dinamico', attributes:[], precio:0 , precioEsp:0},
               type: 'dinamico',
-              //FIXME: revisar pa
+              //FIXME:  Revisar
               // titulo: undefined,
-              // tituloA: '',
+              tituloB: '',
           };
           this.paginas.push(pagina.rightSide);
         }
@@ -411,11 +414,12 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       // OBTENGO TODOS LOS ARTICULOS
       for (let i = 0; i < this.paginasTemp.length; i++) {
         for (let x = 0; x < this.paginasTemp[i].length; x++) {
-          if (this.paginasTemp[i][x].productos.length !== 0) {
+          console.log('paginaTemp:',this.paginasTemp)
+          if (this.paginasTemp[i][x].products) {
             let titulo = '';
-            this.paginasTemp[i].tituloA
-              ? (titulo = this.paginasTemp[i].tituloA)
-              : (titulo = this.paginasTemp[i].tituloB);
+            this.paginasTemp[i].leftTitle
+              ? (titulo = this.paginasTemp[i].leftTitle)
+              : (titulo = this.paginasTemp[i].rightTitle);
             this.paginasTemp[i][x].titulo = titulo;
             this.articulos.push(this.paginasTemp[i][x]);
           }
@@ -432,6 +436,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         ? (this.pageTotal = this.paginas.length + 2)
         : (this.pageTotal = 0);
     }
+    this.isLoadPrecio = true
   }
 
   agrupar(array: any, chunkSize: any) {
@@ -667,22 +672,4 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     this.tags = this.tags.filter((item) => item);
     this.localS.set(StorageKey.tags, this.tags);
   }
-  // cargaPrecio(productData: any) {
-  //   if (productData.precioComun === undefined) {
-  //     productData.precioComun = productData.precio.precioComun;
-  //     productData.precio_escala = productData.precio.precio_escala;
-  //   }
-
-  //   this.calculaIVA(productData);
-  // }
-
-  // calculaIVA(producto: any) {
-  //   if (!isVacio(this.iva)) {
-  //     if (!this.iva) {
-  //       producto.precio.precio = producto.precio.precio / (1 + this.IVA);
-  //       producto.precioComun = producto.precioComun / (1 + this.IVA);
-  //     }
-  //   }
-  //   return producto;
-  // }
 }

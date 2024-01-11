@@ -83,7 +83,7 @@ export interface ICatalogResponse {
     type: string
     size?: number
     products: IFileProduct
-    titleLeft?:string// agregado opcional
+    tituloA?:string// agregado opcional
   }
 
   export interface IRightSide {
@@ -91,7 +91,7 @@ export interface ICatalogResponse {
     type?: string
     size?: number
     products: IFileProduct
-    titleRight?:string// agregado opcional
+    tituloB?:string// agregado opcional
   }
 
   export interface IFileProduct {
@@ -115,6 +115,8 @@ export interface ICatalogResponse {
     precioEscala?:boolean // agregado opcional
     preciosScal?:any[] // agregado opcional
     url?:string // revisar en duda
+    sku?:string // para carrito
+    cantidad?:number // para acuerdo
   }
 
   export interface IFileCategory {

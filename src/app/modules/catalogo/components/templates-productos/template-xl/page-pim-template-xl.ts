@@ -8,32 +8,30 @@ import { ILeftSide, IRightSide } from '@core/models-v2/catalog/catalog-response.
   styleUrls: ['./page-pim-template-xl.scss'],
 })
 export class PagePimTemplateXL implements OnInit {
-  // @Input() plana: any = {};
   @Input() plana!: ILeftSide | IRightSide;
-  @Input() tipo: any = '';
+  @Input() tipo: string = '';
   preciosEscala: any[] = [];
   preciosLista: any[] = [];
   addingToCart = false;
   precioEspecial: boolean = false;
-  existeImagen1 = true;
-  existeImagen2 = true;
-  existeImagen3 = true;
-  precios: boolean = true;
-  carro: boolean = true;
-  imagen: boolean = true;
-  ordenImg1 = 1;
-  ordenImg2 = 2;
-  ordenImg3 = 3;
-  ordenImg4 = 4;
-  visibleImg1 = true;
-  visibleImg2 = true;
-  visibleImg3 = true;
-  visibleImg4 = true;
+  existeImagen1:boolean = true;
+  existeImagen2:boolean = true;
+  existeImagen3:boolean = true;
+  precios:boolean = true;
+  carro:boolean = true;
+  imagen:boolean = true;
+  ordenImg1:number = 1;
+  ordenImg2:number = 2;
+  ordenImg3:number = 3;
+  ordenImg4:number = 4;
+  visibleImg1:boolean = true;
+  visibleImg2:boolean = true;
+  visibleImg3:boolean = true;
+  visibleImg4:boolean = true;
 
   constructor(public cart: CartService, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
-    console.log('plana xl',this.plana)
     this.ordenarIMG();
     this.quitarIMG();
     switch (this.tipo) {
@@ -45,7 +43,7 @@ export class PagePimTemplateXL implements OnInit {
         this.carro = false;
         break;
     }
-    // this.plana.products.sku = this.plana.products.product; //utilizar product = sku
+    this.plana.products.sku = this.plana.products.product;
     if (this.plana.products.type == 'producto' && this.precios) {
       // Precio 1
       let objPrecio = {
@@ -65,7 +63,6 @@ export class PagePimTemplateXL implements OnInit {
       ) {
         objPrecio.precio = this.plana.products.precioEsp;
         this.precioEspecial = true;
-        console.log('Precio especial: ', this.plana.products);
       }
       if (
         this.plana.products.rut != '0' &&

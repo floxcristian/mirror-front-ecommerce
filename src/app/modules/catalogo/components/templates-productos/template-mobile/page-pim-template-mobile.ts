@@ -2,28 +2,7 @@ import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { environment } from '@env/environment';
 import { CartService } from '../../../../../shared/services/cart.service';
 import { isVacio } from '../../../../../shared/utils/utilidades';
-
-interface IAttributeTemp {
-  valor: string;
-}
-
-interface IPlaneTemp {
-  productos: {
-    sku: any;
-    url: string;
-    tipo: any;
-    precio: any;
-    cantidad: any;
-    cyber: any;
-    producto: any;
-    rut: any;
-    precioEsp: any;
-    imagenes: any[];
-    precioEscala: any;
-    preciosScal: any;
-    atributos: IAttributeTemp[];
-  };
-}
+import { ILeftSide, IRightSide } from '@core/models-v2/catalog/catalog-response.interface';
 
 @Component({
   selector: 'app-template-mobile',
@@ -31,19 +10,19 @@ interface IPlaneTemp {
   styleUrls: ['./page-pim-template-mobile.scss'],
 })
 export class PagePimTemplateMobile implements OnInit {
-  @Input() plana: IPlaneTemp = {} as IPlaneTemp;
-  @Input() tipo: any = '';
+  @Input() plana!: ILeftSide | IRightSide;
+  @Input() tipo: string = '';
   @Input() iva: any = true;
   @Input() folio = null;
   preciosEscala: any[] = [];
   preciosLista: any[] = [];
-  addingToCart = false;
+  addingToCart:boolean = false;
   precioEspecial: boolean = false;
   precios: boolean = true;
   carro: boolean = true;
   imagen: boolean = true;
   noTieneIMGPreferida: boolean = false;
-  img = 1;
+  img:number = 1;
   esWeb: boolean = false;
   isVacio = isVacio;
   IVA = environment.IVA || 0.19;
@@ -61,43 +40,43 @@ export class PagePimTemplateMobile implements OnInit {
         this.carro = false;
         break;
     }
-    this.plana.productos.sku = this.plana.productos.producto;
-    if (this.plana.productos.tipo == 'producto' && this.precios) {
+    this.plana.products.sku = this.plana.products.product;
+    if (this.plana.products.type == 'producto' && this.precios) {
       // Precio 1
       let objPrecio = {
         desde: '1',
         hasta: '1',
-        precio: this.plana.productos.precio,
+        precio: this.plana.products.precio,
       };
       if (
-        this.plana.productos.rut == 0 &&
-        this.plana.productos.precioEsp == 0
+        this.plana.products.rut == '0' &&
+        this.plana.products.precioEsp == 0
       ) {
-        objPrecio.precio = this.plana.productos.precio;
+        objPrecio.precio = this.plana.products.precio;
       }
       if (
-        this.plana.productos.rut != 0 &&
-        this.plana.productos.precio != this.plana.productos.precioEsp
+        this.plana.products.rut != '0' &&
+        this.plana.products.precio != this.plana.products.precioEsp
       ) {
-        objPrecio.precio = this.plana.productos.precioEsp;
+        objPrecio.precio = this.plana.products.precioEsp;
         this.precioEspecial = true;
       }
 
-      if (this.plana.productos.precio == this.plana.productos.precioEsp) {
-        objPrecio.precio = this.plana.productos.precio;
+      if (this.plana.products.precio == this.plana.products.precioEsp) {
+        objPrecio.precio = this.plana.products.precio;
       }
       //Precio normal con dto.
       if (
-        this.plana.productos.rut == 0 &&
-        this.plana.productos.precio > this.plana.productos.precioEsp
+        this.plana.products.rut == '0' &&
+        (this.plana.products.precio || 0) > (this.plana.products.precioEsp || 0)
       ) {
-        objPrecio.precio = this.plana.productos.precioEsp;
+        objPrecio.precio = this.plana.products.precioEsp;
         this.precioEspecial = true;
       }
       this.preciosLista.push(objPrecio);
       // Precio escala último y penúltimo
-      if (this.plana.productos.precioEscala) {
-        this.preciosEscala = this.plana.productos.preciosScal;
+      if (this.plana.products.precioEscala) {
+        this.preciosEscala = this.plana.products.preciosScal || [];
         let contador = this.preciosEscala.length;
         if (contador >= 2) {
           this.preciosLista.push(this.preciosEscala[contador - 2]);
@@ -159,20 +138,20 @@ export class PagePimTemplateMobile implements OnInit {
   }
 
   comprobarIMGPreferida() {
-    if (this.plana.productos.imagenes) {
-      if (this.plana.productos.imagenes[1]) {
-        for (let i = 0; i < this.plana.productos.imagenes[1].length; i++) {
-          if (this.plana.productos.imagenes[1][i] == 1) {
+    if (this.plana.products.images) {
+      if (this.plana.products.images[1]) {
+        for (let i = 0; i < this.plana.products.images[1].length; i++) {
+          if (this.plana.products.images[1][i] == 1) {
             this.img = i + 1;
           }
         }
       }
       if (
-        !this.plana.productos.imagenes[1] &&
-        this.plana.productos.imagenes[0]
+        !this.plana.products.images[1] &&
+        this.plana.products.images[0]
       ) {
-        for (let i = 0; i < this.plana.productos.imagenes[0].length; i++) {
-          if (this.plana.productos.imagenes[0][i] == 1) {
+        for (let i = 0; i < this.plana.products.images[0].length; i++) {
+          if (this.plana.products.images[0][i] == 1) {
             this.img = i + 1;
           }
         }
@@ -183,8 +162,8 @@ export class PagePimTemplateMobile implements OnInit {
     if (!isVacio(this.iva)) {
       if (!this.iva) {
         producto.precio = producto.precio / (1 + this.IVA);
-        this.plana.productos.precio =
-          this.plana.productos.precio / (1 + this.IVA);
+        this.plana.products.precio =
+          (this.plana.products.precio || 0) / (1 + this.IVA);
 
         //producto.precioComun = producto.precioComun / (1 + this.IVA);
       }
@@ -193,5 +172,11 @@ export class PagePimTemplateMobile implements OnInit {
   }
   abrirEnlace(link: any, folio: any) {
     if (folio) window.open(link, '_blank');
+  }
+
+  isString(value:any){
+    if(typeof value === 'string')
+    return value
+    else return ''
   }
 }

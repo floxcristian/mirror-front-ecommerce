@@ -351,7 +351,7 @@
                 </table>
               </div>
 
-              <!-- <div *ngIf="preciosLista.length === 1">
+              <div *ngIf="preciosLista.length === 1">
                 <table class="table2 p-0 m-0 borderless">
                   <tbody>
                     <tr *ngIf="!plana.products.cantidad">
@@ -461,11 +461,11 @@
                     </tr>
                   </tbody>
                 </table>
-              </div> -->
+              </div>
             </div>
 
             <!-- COMPARTIR Y CARRO -->
-            <!-- <div
+            <div
               class="col-md-3 col-sm-3 p-0 pb-2"
               *ngIf="!plana.products.cantidad"
             >
@@ -488,7 +488,7 @@
                   ></app-share-button>
                 </div>
               </div>
-            </div> -->
+            </div>
           </div>
         </div>
       </div>
@@ -626,7 +626,7 @@
           </div>
 
           <div class="col-md-12 col-sm-12 d-flex p-0">
-            <!-- <div *ngIf="precios" class="col-md-9 col-sm-9 p-0">
+            <div *ngIf="precios" class="col-md-9 col-sm-9 p-0">
               <div>
                 <table class="table2 p-0 m-0 borderless">
                   <tbody>
@@ -636,7 +636,7 @@
                         style="font-size: x-large"
                         title="Precio normal"
                         colspan="2"
-                        [ngClass]="plana.products.precio > plana.products.precioEsp?'txtDestacado':'txtNormal'"
+                        [ngClass]="(plana.products.precio || 0) > (plana.products.precioEsp || 0)?'txtDestacado':'txtNormal'"
                       >
                         <span>
                           {{ plana.products.precioEsp | currencyFormat}}
@@ -659,7 +659,7 @@
                       </td>
                     </tr>
                     <tr
-                      *ngIf="plana.products.precio > plana.products.precioEsp"
+                      *ngIf="(plana.products.precio || 0) > (plana.products.precioEsp || 0)"
                     >
                       <td
                         class="p-0 pull-right product-card__old-price"
@@ -687,7 +687,7 @@
                   </tbody>
                 </table>
               </div>
-            </div> -->
+            </div>
 
             <!-- COMPARTIR Y CARRO -->
           </div>
