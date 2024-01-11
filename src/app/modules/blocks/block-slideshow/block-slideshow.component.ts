@@ -1,17 +1,13 @@
-import {
-  Component,
-  Input,
-  TemplateRef,
-  PLATFORM_ID,
-  Inject,
-  OnInit,
-} from '@angular/core';
+// Angular
+import { Component, Input, TemplateRef, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { DirectionService } from '../../../shared/services/direction.service';
+// Libs
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { isPlatformBrowser } from '@angular/common';
-import { CmsService } from '@core/services-v2/cms.service';
+// Models
 import { ISlider } from '@core/models-v2/cms/slider-reponse.interface';
+// Services
+import { DirectionService } from '../../../shared/services/direction.service';
+import { CmsService } from '@core/services-v2/cms.service';
 
 @Component({
   selector: 'app-block-slideshow',
@@ -22,7 +18,6 @@ export class BlockSlideshowComponent implements OnInit {
   @Input() withDepartments = false;
   modalRef!: BsModalRef;
 
-  innerWidth: number;
   options = {
     lazyLoad: true,
     dots: true,
@@ -31,7 +26,6 @@ export class BlockSlideshowComponent implements OnInit {
     autoplay: true,
     autoplayHoverPause: true,
     autoplayTimeout: 8000,
-
     nav: false,
     responsive: {
       0: { items: 1 },
@@ -41,20 +35,13 @@ export class BlockSlideshowComponent implements OnInit {
   };
   slides: ISlider[] = [];
 
-  isBrowser;
   constructor(
-    @Inject(PLATFORM_ID) private platformId: any,
     public sanitizer: DomSanitizer,
     private direction: DirectionService,
     private modalService: BsModalService,
     // Servicios V2
     private readonly cmsService: CmsService
-  ) {
-    this.innerWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-    this.isBrowser = isPlatformBrowser('b2b');
-  }
+  ) {}
 
   cargarGaleria() {
     this.cmsService.getSliders().subscribe({
@@ -65,10 +52,6 @@ export class BlockSlideshowComponent implements OnInit {
         console.error(err);
       },
     });
-  }
-
-  onResize(event: any) {
-    this.innerWidth = event.target.innerWidth;
   }
 
   openForm(template: TemplateRef<any>) {

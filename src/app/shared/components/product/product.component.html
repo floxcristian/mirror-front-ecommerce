@@ -9,24 +9,28 @@
     <!-- Imagenes -->
     <div class="product__gallery mb-0 col-12 col-lg-6 ps-lg-0">
       <div class="product-gallery" *ngIf="showGallery">
-        <div class="row ">
-
-          <div class="col-sm-3 d-none d-lg-flex justify-content-center align-items-center">
-
+        <div class="row">
+          <div
+            class="col-sm-3 d-none d-lg-flex justify-content-center align-items-center"
+          >
             <div class="w-100 h-100 p-2 relative">
-              <div class="d-block vertical-owl-carousel" *ngIf="images.length > 1" >
+              <div
+                class="d-block vertical-owl-carousel"
+                *ngIf="images.length > 1"
+              >
                 <owl-carousel-o [options]="customThumbsOptions">
                   <ng-container *ngFor="let slide of images">
                     <ng-template class="w-100 h-100" carouselSlide>
-                        <img (click)="setActiveImage(slide.id)"  [alt]="product.name" [src]="slide.url"  >
+                      <img
+                        (click)="setActiveImage(slide.id)"
+                        [alt]="product.name"
+                        [src]="slide.url"
+                      />
                     </ng-template>
                   </ng-container>
                 </owl-carousel-o>
               </div>
             </div>
-
-
-
           </div>
           <div class="col-12 col-lg-9 ps-lg-0">
             <div
@@ -712,7 +716,7 @@
         </ng-container>
         <!-- End::texto sin stock y formulario de contacto -->
 
-        <hr class="mb-0" />
+        <!-- <hr class="mb-0" /> -->
         <div
           class="row justify-content-start px-3 my-2"
           *ngIf="dataProduct.priceInfo.scalePrice.length > 1 && !isB2B"
@@ -728,7 +732,7 @@
 
       <div class="clearfix"></div>
 
-      <h1>stock</h1>
+      <!-- <h1>stock</h1> -->
 
       <div *ngIf="stock">
         <div class="product__sidebar col-12 p-0">

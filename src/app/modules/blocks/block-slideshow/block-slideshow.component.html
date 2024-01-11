@@ -1,4 +1,4 @@
-<div class="block-slideshow" (window:resize)="onResize($event)" id="divSlider">
+<div class="block-slideshow" id="divSlider">
   <owl-carousel-o
     [options]="options"
     appOwlPreventClick
@@ -6,24 +6,21 @@
   >
     <ng-container *ngFor="let slide of slides; let i = index">
       <ng-template carouselSlide [id]="slide.imageClassic">
-        <a [href]="slide.buttonUrl">
+        <a [href]="slide.buttonUrl" style="border: 4px dotted red">
           <img
-            *ngIf="innerWidth < 450"
             [src]="slide.imageMobile"
             [alt]="slide.alt"
-            class="lazyload"
+            class="d-block d-sm-none"
           />
           <img
-            *ngIf="innerWidth > 450 && innerWidth < 1025"
             [src]="slide.imageClassic"
             [alt]="slide.alt"
-            class="lazyload"
+            class="d-none d-sm-block d-lg-none"
           />
           <img
-            *ngIf="innerWidth > 1025"
             [src]="slide.imageClassic"
             [alt]="slide.alt"
-            class="lazyload"
+            class="d-none d-lg-block"
           />
         </a>
       </ng-template>
