@@ -30,10 +30,6 @@ import { HeaderCatalogoComponent } from './components/header-catalogo/header-cat
 import { FooterCatalogoComponent } from './components/footer-catalogo/footer-catalogo.component';
 import { ProductoVerticalComponent } from './components/producto-vertical/producto-vertical.component';
 import { TemplateProductosDinamicoComponent } from './components/template-productos-dinamico/template-productos-dinamico.component';
-import { ProductosCatalogTvComponent } from './components/productos-catalog-tv/productos-catalog-tv.component';
-import { TemplateCardProductoTvComponent } from './components/template-card-producto-tv/template-card-producto-tv.component';
-import { TemplateCardVideoTvComponent } from './components/template-card-video-tv/template-card-video-tv.component';
-import { TemplateCardImagenesTvComponent } from './components/template-card-imagenes-tv/template-card-imagenes-tv.component';
 import { TemplateMenuCatalogoComponent } from './components/template-menu-catalogo/template-menu-catalogo.component';
 
 @NgModule({
@@ -50,16 +46,12 @@ import { TemplateMenuCatalogoComponent } from './components/template-menu-catalo
     FooterCatalogoComponent,
     ProductoVerticalComponent,
     TemplateProductosDinamicoComponent,
-    ProductosCatalogTvComponent,
     PagePimTemplateS,
     PagePimTemplateM,
     PagePimTemplateL,
     PagePimTemplateXL,
     PagePimTemplateMobile,
     PageVerCatalogoFlipComponent,
-    TemplateCardProductoTvComponent,
-    TemplateCardVideoTvComponent,
-    TemplateCardImagenesTvComponent,
     TemplateMenuCatalogoComponent,
     PageVerNewsletterComponent,
   ],

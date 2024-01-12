@@ -201,8 +201,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
     let params: any;
-    console.log(this.tipoCatalogo);
-
     if (this.tipoCatalogo == 'Automatico') {
       console.log(this.rutCatalogo);
       params = {
@@ -355,7 +353,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
 
   armaCatalogo(){
     this.catalogo.map((pagina:IBody) => {
-      // this.catalogo.map((pagina:any) => {
       //LADO A
       if (pagina.leftSide && pagina.leftSide[0]) {
         if (pagina.leftSide[0].type != 'portada') {
@@ -639,9 +636,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         })
       ),
     ];
-    console.log('tags: ', this.tags);
     this.tags = this.tags.filter((item) => item);
-    console.log('tags: ', this.tags);
     this.localS.set(StorageKey.tags, this.tags);
   }
 

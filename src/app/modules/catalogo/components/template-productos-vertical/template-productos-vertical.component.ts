@@ -6,7 +6,6 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { IBody } from '@core/models-v2/catalog/catalog-response.interface';
 import { CartService } from '@core/services-v2/cart.service';
 
 
@@ -16,7 +15,6 @@ import { CartService } from '@core/services-v2/cart.service';
   styleUrls: ['./template-productos-vertical.component.scss'],
 })
 export class TemplateProductosVerticalComponent implements OnChanges {
-  // @Input() objeto!:IBody ;
   @Input() objeto:any
   @Input() innerWidth!: number;
   @Input() page: number = 0;

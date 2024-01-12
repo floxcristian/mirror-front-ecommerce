@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { environment } from '@env/environment';
-import { CartService } from '../../../../../shared/services/cart.service';
 import { isVacio } from '../../../../../shared/utils/utilidades';
 import { ILeftSide, IRightSide } from '@core/models-v2/catalog/catalog-response.interface';
+import { CartService } from '@core/services-v2/cart.service';
 
 @Component({
   selector: 'app-template-mobile',
@@ -27,7 +27,11 @@ export class PagePimTemplateMobile implements OnInit {
   isVacio = isVacio;
   IVA = environment.IVA || 0.19;
 
-  constructor(public cart: CartService, private cd: ChangeDetectorRef) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    //ServicesV2
+    private readonly cartService:CartService
+    ) {}
 
   ngOnInit() {
     this.comprobarIMGPreferida();
@@ -113,26 +117,6 @@ export class PagePimTemplateMobile implements OnInit {
     }
   }
 
-  addToCart(producto: any): void {
-    producto.sku = producto.producto;
-    producto.images = [
-      {
-        150: [`https://images.implementos.cl/img/150/${producto.sku}-1.jpg`],
-      },
-    ];
-    if (this.addingToCart) {
-      return;
-    }
-    this.addingToCart = true;
-
-    this.cart.add(producto, 1).subscribe({
-      complete: () => {
-        this.addingToCart = false;
-        this.cd.markForCheck();
-      },
-    });
-  }
-
   existeIMG() {
     this.imagen = false;
   }
@@ -178,5 +162,37 @@ export class PagePimTemplateMobile implements OnInit {
     if(typeof value === 'string')
     return value
     else return ''
+  }
+  addToCart(producto: any): void {
+    producto.images = [
+      {
+        150: [`https://images.implementos.cl/img/150/${producto.sku}-1.jpg`],
+      },
+    ];
+    if (this.addingToCart) {
+        return;
+    }
+    this.addingToCart = true;
+    this.cartService.add(producto,1).finally(() =>{
+        this.addingToCart = false;
+        this.cd.markForCheck();
+    })
+    // producto.sku = producto.producto;
+    // producto.images = [
+    //   {
+    //     150: [`https://images.implementos.cl/img/150/${producto.sku}-1.jpg`],
+    //   },
+    // ];
+    // if (this.addingToCart) {
+    //   return;
+    // }
+    // this.addingToCart = true;
+
+    // this.cart.add(producto, 1).subscribe({
+    //   complete: () => {
+    //     this.addingToCart = false;
+    //     this.cd.markForCheck();
+    //   },
+    // });
   }
 }
