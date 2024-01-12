@@ -13,7 +13,7 @@ import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.
 import { StorageKey } from '@core/storage/storage-keys.enum';
 import { CatalogService } from '@core/services-v2/catalog.service';
 import { IBody, ICatalog, ILeftSide, IRightSide } from '@core/models-v2/catalog/catalog-response.interface';
-import { IAttribute, MetaTag } from '@core/models-v2/article/article-response.interface';
+import { MetaTag } from '@core/models-v2/article/article-response.interface';
 
 @Component({
   selector: 'app-page-ver-catalogo-flip',
@@ -41,7 +41,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   iva = true;
   IVA = environment.IVA || 0.19;
   paginasTemp: Array<any> = [];
-  // paginasTemp:  Array<ILeftSide[] | IRightSide[]> = [];
   tipoCatalogo: string = '';
   tags: any[] = [];
   rutCatalogo:string = '';
@@ -125,7 +124,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
             this.nombreCliente = null;
           }
           if (this.tipoCatalogo === 'Automatico') {
-            // this.rutCatalogo = objeto.clienteRut; // no vienen en consulta
+            this.rutCatalogo = res.data.customerDocumentId;
           }
           if (res.data.netPrice) this.iva = !res.data.netPrice;
           this.skus = res.data.skus;
@@ -138,7 +137,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
             if (this.dispositivo === 'smartphone') {
               this.buscaTagsSmartphone(this.paginasMobile);
             } else {
-              this.buscaTags(objeto?.body || []);
+              this.buscaTags(res.data?.body || []);
             }
           }, 1300);
         },
@@ -328,7 +327,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     } else {
       this.catalogo.map((objeto:IBody) => {
         for (let objA of objeto.leftSide || []) {
-          let propuestaPrecio = this.propuesta.articles.find(
+          let propuestaPrecio = this.propuesta.data.articles.find(
             (x: any) => x.sku == objA.products.product
           );
           if (propuestaPrecio) {
@@ -339,7 +338,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
           }
         }
         for (let objB of objeto.rightSide || []) {
-          let propuestaPrecio = this.propuesta.articulos.find(
+          let propuestaPrecio = this.propuesta.data.articles.find(
             (x: any) => x.sku == objB.products.product
           );
           if (propuestaPrecio) {
@@ -470,7 +469,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
           }
         }
       // LADO B
-      for (let z = 0; z < objeto.body[i].rightSide.length; z++) {
+      for (let z = 0; z < (objeto.body[i].rightSide as IRightSide[]).length; z++) {
         if (objeto.body[i].rightSide[z].type != 'portada') {
           if (objeto.body[i].rightSide[z].products.attributes) {
             if (objeto.body[i].rightSide[z].products.attributes[5].value) {
@@ -498,9 +497,10 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     }
   }
 
-  minimo = false;
-  medio = false;
+  minimo:boolean = false;
+  medio:boolean = false;
   loadFlip() {
+    console.log('dispositivo pe:',this.dispositivo)
     if (this.dispositivo === 'smartphone') {
       let porcentaje = 1.9;
       if (this.screenWidth > 400 && this.screenWidth < 420) porcentaje = 5.4; //ok

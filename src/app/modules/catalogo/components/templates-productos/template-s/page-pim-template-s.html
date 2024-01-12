@@ -571,13 +571,13 @@
                 height: 35px !important;
               "
             >
-              <!-- <b
-                >{{ plana.products.attributes[1].value | slice:0:32 |
+              <b
+                >{{ isString(plana.products.attributes[1].value) | slice:0:32 |
                 capitalizeFirst }}</b
-              > -->
+              >
               <img
-                *ngIf="imagen && plana.products.attributes[5].value === 'string'"
-                src="https://images.implementos.cl/marcas/small/{{plana.products.attributes[5].value | uppercase}}.png"
+                *ngIf="imagen"
+                src="https://images.implementos.cl/marcas/small/{{isString(plana.products.attributes[5].value) | uppercase}}.png"
                 alt="{{plana.products.attributes[5].value}}"
                 (error)="existeIMG()"
                 style="height: 35px"
@@ -609,7 +609,7 @@
                 text-align: left;
                 line-height: 1;
                 font-weight: 400;
-                color: black;
+                color: #000000;
               "
             >
               {{ isString(plana.products.attributes[2].value) | slice:0:60 |
@@ -678,7 +678,7 @@
 
                     <tr>
                       <td *ngIf="plana.products.cantidad" colspan="2">
-                        <span style="font-size: xx-small">
+                        <span style="font-size: xx-small; color:#000000">
                           *precio sujeto a la cantidad minima de
                           {{plana.products.cantidad}}</span
                         >
