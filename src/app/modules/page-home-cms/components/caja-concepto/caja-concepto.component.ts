@@ -1,13 +1,11 @@
-import { isPlatformBrowser } from '@angular/common';
 import {
   Component,
-  HostListener,
-  Inject,
   Input,
+  OnDestroy,
   OnInit,
-  PLATFORM_ID,
 } from '@angular/core';
 import { CarouselConfig } from 'ngx-bootstrap/carousel';
+
 
 @Component({
   selector: 'app-caja-concepto',
@@ -20,13 +18,8 @@ import { CarouselConfig } from 'ngx-bootstrap/carousel';
   ],
   styleUrls: ['./caja-concepto.component.scss'],
 })
-export class CajaConceptoComponent implements OnInit {
-  @Input() set caja_concepto(value: any) {
-    this.concepto = value;
-  }
+export class CajaConceptoComponent implements OnInit, OnDestroy {
   concepto: any;
-  grid_class_Css: any;
-  grid_galery: any;
   carouselOptions = {
     items: 1,
     nav: false,
@@ -37,32 +30,25 @@ export class CajaConceptoComponent implements OnInit {
     autoplay: false,
     autoplayTimeout: 4000,
   };
-  grid_layout: any = [];
-  concepto_array: any = [];
+  grid_layout: any[] = [];
+  concepto_array: any[] = [];
   row: any;
-  screenWidth: any;
-  screenHeight: any;
-  //construira al regla de la caja de concepto
-  elementos: any;
-  //variables para el slide
-  noWrapSlides = false;
-  showIndicator = true;
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    this.screenWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-    this.screenHeight = isPlatformBrowser(this.platformId)
-      ? window.innerHeight
-      : 900;
-    //aqui comenzamos a realizar el width de elementos
-    this.construir_grid();
+
+  @Input() set caja_concepto(value: any) {
+    this.concepto = value;
   }
 
   ngOnInit() {
-    this.construir();
+    this.buildGridStyles();
   }
 
-  construir() {
+
+  ngOnDestroy() {
+    this.grid_layout.splice(0, this.grid_layout.length);
+    this.concepto_array.splice(0, this.concepto_array.length);
+  }
+
+  buildGridStyles() {
     let h = 0;
     let y_array: any = [
       ...new Set(this.concepto.element.data.layout.map((item: any) => item.y)),
@@ -73,61 +59,53 @@ export class CajaConceptoComponent implements OnInit {
         (item: any) => item.y == itemy
       );
 
-      this.row.forEach((element: any) => {
-        if (element.h <= 15) h = 4;
-        else h = 8;
-        if (element.y >= 15) element.y = 3;
-        if (element.x != 0) element.x = element.x * 2;
-        let Stylecss: any = {
-          'grid-column-start': element.x + 1,
-          'grid-column-end': element.w + element.x + 1,
-          'grid-row-start': element.y + 1,
-          'grid-row-end': element.y + h,
-        };
-        //if (element.x != 0) Stylecss['margin-left.px'] = 10;
-        this.grid_layout.push(Stylecss);
+      this.row.forEach((element: any, index: any) => {
+        const grid = this.getGridStyleById(element.id);
+        this.grid_layout.push(grid);
         this.concepto_array.push(element);
       });
     });
   }
+  gridStyles: any = {
+    '0': {
+      'grid-column-start': 5,
+      'grid-column-end': 6,
+      'grid-row-start': 4,
+      'grid-row-end': 7,
+    },
+    '2': {
+      'grid-column-start': 9,
+      'grid-column-end': 10,
+      'grid-row-start': 4,
+      'grid-row-end': 7,
+    },
+    '7': {
+      'grid-column-start': 7,
+      'grid-column-end': 8,
+      'grid-row-start': 4,
+      'grid-row-end': 7,
+    },
+    '1': {
+      'grid-column-start': 1,
+      'grid-column-end': 3,
+      'grid-row-start': 1,
+      'grid-row-end': 8,
+    },
+    '4': {
+      'grid-column-start': 9,
+      'grid-column-end': 10,
+      'grid-row-start': 1,
+      'grid-row-end': 4,
+    },
+    '6': {
+      'grid-column-start': 5,
+      'grid-column-end': 7,
+      'grid-row-start': 1,
+      'grid-row-end': 4,
+    },
+  };
 
-  construir_grid() {
-    if (this.screenWidth > 1040) {
-      this.grid_galery = {
-        display: 'grid',
-        'grid-template-columns': 'repeat(8, 113px)',
-        'grid-template-rows': 'repeat(6, 100px)',
-        'row-gap': '5px',
-        'column-gap': '5px',
-        'margin-left': '25px',
-      };
-    } else if (this.screenWidth <= 1040 && this.screenWidth > 768) {
-      this.grid_galery = {
-        display: 'grid',
-        'grid-template-columns': 'repeat(8, 92px)',
-        'grid-template-rows': 'repeat(6, 77px)',
-        'row-gap': '1px',
-        'column-gap': '5px',
-      };
-    } else if (this.screenWidth <= 768) {
-      this.grid_galery = {
-        display: 'grid',
-        'grid-template-columns': 'repeat(8, 75px)',
-        'grid-template-rows': 'repeat(6, 77px)',
-        'row-gap': '1px',
-        'column-gap': '1px',
-      };
-    }
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.screenWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-    this.screenHeight = isPlatformBrowser(this.platformId)
-      ? window.innerHeight
-      : 900;
-    this.construir_grid();
+  getGridStyleById(id: number) {
+    return this.gridStyles[id] || {};
   }
 }
