@@ -9,25 +9,18 @@
         @if(i === 0){
         <a [href]="slide.buttonUrl">
           <div
-            class="slide_container"
-            style="aspect-ratio: 138/139; position: relative"
+            class="slide_container d-block d-sm-none"
+            style="aspect-ratio: 138/139"
           >
-            <img
-              [ngSrc]="slide.imageMobile"
-              [alt]="slide.alt"
-              class="d-block d-sm-none slide"
-              fill
-              priority
-            />
+            <img [ngSrc]="slide.imageMobile" [alt]="slide.alt" fill priority />
           </div>
           <div
-            class="slide_container"
-            style="aspect-ratio: 10/3; position: relative"
+            class="slide_container d-none d-sm-block"
+            style="aspect-ratio: 10/3"
           >
             <img
               [ngSrc]="slide.imageClassic"
               [alt]="slide.alt"
-              class="d-none d-sm-block slide"
               fill
               priority
             />
@@ -36,26 +29,16 @@
         } @else {
         <a [href]="slide.buttonUrl">
           <div
-            class="slide_container"
-            style="aspect-ratio: 138/139; position: relative"
+            class="slide_container d-block d-sm-none"
+            style="aspect-ratio: 138/139"
           >
-            <img
-              [ngSrc]="slide.imageMobile"
-              [alt]="slide.alt"
-              class="d-block d-sm-none slide"
-              fill
-            />
+            <img [ngSrc]="slide.imageMobile" [alt]="slide.alt" fill />
           </div>
           <div
-            class="slide_container"
-            style="aspect-ratio: 10/3; position: relative"
+            class="slide_container mobile d-none d-sm-block"
+            style="aspect-ratio: 10/3"
           >
-            <img
-              [ngSrc]="slide.imageClassic"
-              [alt]="slide.alt"
-              class="d-none d-sm-block slide"
-              fill
-            />
+            <img [ngSrc]="slide.imageClassic" [alt]="slide.alt" fill />
           </div>
         </a>
         }
