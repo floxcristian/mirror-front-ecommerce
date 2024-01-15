@@ -71,13 +71,9 @@
 }
 
 ::ng-deep.carouselConcepto .owl-carousel .owl-item {
-  //   padding: 0px 10px;
-
   display: flex;
-  //   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 20px;
   margin-right: 10px;
-  // align-items: center
 }
 
 ::ng-deep.carouselConcepto .owl-carousel .owl-stage {
@@ -108,3 +104,57 @@
 ::ng-deep.carouselConcepto .owl-dot.active {
   background: #094cac;
 }
+
+
+.customized-title {
+  text-align: center;
+  font-size: 39px;
+  font-weight: 900;
+  line-height: 53px;
+  letter-spacing: 0px;
+  border-bottom: 1px solid #0d61bb;
+  color: #0d61bb;
+  margin-top: -10px;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    margin: 0;
+  }
+}
+
+.customized-title-h4 {
+  margin-top: 10px;
+  text-align: center;
+  font: normal medium 900 39px/53px Avenir;
+  letter-spacing: 0px;
+  color: #0d61bb;
+
+  @media (max-width: 768px) {
+    margin-top: 10px;
+    color: #0d61bb;
+    font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 1.5
+  }
+}
+@mixin grid-gallery($columns, $column-width, $rows, $row-height, $row-gap, $column-gap, $margin-left: 0) {
+  display: grid;
+  grid-template-columns: repeat($columns, $column-width);
+  grid-template-rows: repeat($rows, $row-height);
+  row-gap: $row-gap;
+  column-gap: $column-gap;
+  margin-left: $margin-left;
+}
+
+.grid-gallery {
+  @include grid-gallery(8, 113px, 6, 100px, 5px, 5px, 25px);
+
+  @media (max-width: 1040px) and (min-width: 769px) {
+    @include grid-gallery(8, 92px, 6, 77px, 1px, 5px);
+  }
+
+  @media (max-width: 768px) {
+    @include grid-gallery(8, 75px, 6, 77px, 1px, 1px);
+  }
+}
+
