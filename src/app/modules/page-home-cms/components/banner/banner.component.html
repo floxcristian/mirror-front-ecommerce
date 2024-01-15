@@ -1,4 +1,5 @@
-<div class="col-sm-12 p-0" *ngIf="screenWidth > 1024">
+<!-- Start::banner (lg+) -->
+<div class="col-sm-12 p-0 d-none d-lg-block">
   <a [href]="bannerCms.buttonUrl">
     <img
       [src]="bannerCms.imageClassic"
@@ -8,7 +9,10 @@
     />
   </a>
 </div>
-<div *ngIf="screenWidth <= 1024" class="col-sm-12 d-flex p-0">
+<!-- End::banner (lg+) -->
+
+<!-- Start::banner (xs, sm y md) -->
+<div class="col-sm-12 d-flex p-0 d-block d-lg-none">
   <a [href]="bannerCms.buttonUrl">
     <img
       [src]="bannerCms.imageMobile"
@@ -18,3 +22,4 @@
     />
   </a>
 </div>
+<!-- Start::banner (xs, sm y md) -->
