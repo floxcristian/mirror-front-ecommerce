@@ -72,6 +72,7 @@ export class ConceptoComponent implements OnInit {
     let center = (-1 * calculoy) / 2;
     this.style_title['margin-top.px'] = center;
     this.style_overlay['margin-top.px'] = -1 * calculoy;
+    console.log('style: ', this.style);
   }
 
   SetCalcularSlide() {

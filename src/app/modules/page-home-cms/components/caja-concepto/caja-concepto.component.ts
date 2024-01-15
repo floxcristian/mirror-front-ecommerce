@@ -1,11 +1,5 @@
-import {
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CarouselConfig } from 'ngx-bootstrap/carousel';
-
 
 @Component({
   selector: 'app-caja-concepto',
@@ -38,18 +32,21 @@ export class CajaConceptoComponent implements OnInit, OnDestroy {
     this.concepto = value;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.buildGridStyles();
   }
 
-
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.grid_layout.splice(0, this.grid_layout.length);
     this.concepto_array.splice(0, this.concepto_array.length);
   }
 
-  buildGridStyles() {
-    let h = 0;
+  buildGridStyles(): void {
+    // let h = 0;
+    console.log(
+      'this.concepto.element.data.layout: ',
+      this.concepto.element.data.layout
+    );
     let y_array: any = [
       ...new Set(this.concepto.element.data.layout.map((item: any) => item.y)),
     ];
@@ -59,7 +56,7 @@ export class CajaConceptoComponent implements OnInit, OnDestroy {
         (item: any) => item.y == itemy
       );
 
-      this.row.forEach((element: any, index: any) => {
+      this.row.forEach((element: any, index: number) => {
         const grid = this.getGridStyleById(element.id);
         this.grid_layout.push(grid);
         this.concepto_array.push(element);
