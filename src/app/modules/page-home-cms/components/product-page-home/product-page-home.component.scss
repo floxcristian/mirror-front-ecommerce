@@ -64,6 +64,7 @@ a {
 
 .img-fluid-product {
   max-width: 100%;
+  width: 100%;
   border-radius: 20px;
   margin-bottom: 15px;
   height: 100%;
@@ -72,6 +73,7 @@ a {
 
 .img-fluid-product-mobile {
   width: 50%;
+  height: auto;
   border-radius: 20px;
   margin-bottom: 15px;
   object-fit: cover;
@@ -533,6 +535,7 @@ a {
 ::ng-deep.carouselImagen .owl-carousel .owl-item img {
   display: block;
   width: 100% !important;
+  height: auto !important;
 }
 
 ::ng-deep.carouselImagen .owl-prev:hover {

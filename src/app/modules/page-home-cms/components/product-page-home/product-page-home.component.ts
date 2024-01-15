@@ -88,7 +88,7 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
     rtl: this.direction.isRTL(),
   };
   carouselOptions3 = {
-    nav: true,
+    nav: false,
     autowidth: true,
     responsiveClass: true,
     startPosition: 0,
@@ -98,7 +98,7 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
   };
 
   carouselOptions2 = {
-    nav: true,
+    nav: false,
     autowidth: true,
     responsiveClass: true,
     loop: true,
