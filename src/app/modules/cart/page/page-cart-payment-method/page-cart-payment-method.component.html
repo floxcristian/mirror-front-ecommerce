@@ -2,6 +2,7 @@
   class="container container-cart site_b2c"
   (window:resize)="onResize($event)"
   style="margin-bottom: 40px"
+  *ngIf="cartSession"
 >
   <app-guided-steps [step]="3"></app-guided-steps>
 
@@ -799,7 +800,7 @@
 
                 <form
                   [formGroup]="formOv"
-                  *ngIf="paymentMethodActive == 'ordenCompra'"
+                  *ngIf="formOv && paymentMethodActive == 'ordenCompra'"
                 >
                   <div class="row mt-2" style="margin-top: 10px">
                     <div class="mb-3 col-md-6">
