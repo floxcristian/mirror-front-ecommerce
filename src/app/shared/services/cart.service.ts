@@ -185,13 +185,6 @@ export class CartService {
     );
   }
 
-  // seleccion de la pestaña de despachos
-  updateShippingType(type: any) {
-    this.shippingTypeSubject$.next(type);
-    this.shippingType = type;
-    this.calc();
-  }
-
   calc(totalesFull = false): void {
     // let quantity = 0;
     let subtotal = 0;
@@ -264,11 +257,6 @@ export class CartService {
 
   private save(): void {
     this.localS.set(StorageKey.carroCompraB2B, this.CartData as any);
-  }
-
-  addTotalShipping(envio: any) {
-    this.shipping = envio;
-    this.calc();
   }
 
   /**

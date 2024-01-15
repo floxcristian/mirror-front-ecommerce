@@ -219,24 +219,6 @@ export class PagePimTemplateM implements OnInit {
         this.addingToCart = false;
         this.cd.markForCheck();
     })
-
-    // producto.sku = producto.producto;
-    // producto.images = [
-    //   {
-    //     150: [`https://images.implementos.cl/img/150/${producto.sku}-1.jpg`],
-    //   },
-    // ];
-    // if (this.addingToCart) {
-    //   return;
-    // }
-    // this.addingToCart = true;
-
-    // this.cart.add(producto, 1).subscribe({
-    //   complete: () => {
-    //     this.addingToCart = false;
-    //     this.cd.markForCheck();
-    //   },
-    // });
   }
 
 }
