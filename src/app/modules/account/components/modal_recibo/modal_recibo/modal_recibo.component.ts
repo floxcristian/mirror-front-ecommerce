@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { PhotoSwipeService } from '../../../../../shared/services/photo-swipe.service';
-import { environment } from '@env/environment';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -17,7 +16,6 @@ export class Modal_reciboComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {}
   data?: any;
-  PODImageUrl: string = environment.apiLogistic + '/PODImage';
   urlGuiaMostrar!: SafeUrl;
   urlGuiaMostrarNotSanitized!: string;
   pdfBase64: any = null;

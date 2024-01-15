@@ -1,12 +1,7 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import {
-  calculaIcono,
-  filetoBase64,
-  isVacio,
-} from '../../../../shared/utils/utilidades';
+import { calculaIcono, isVacio } from '../../../../shared/utils/utilidades';
 import { CartData } from '../../../../shared/interfaces/cart-item';
-import { ResponseApi } from '../../../../shared/interfaces/response-api';
 import { v1 as uuidv1 } from 'uuid';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/services-v2/session/session.service';
@@ -57,11 +52,9 @@ export class PageCargaMasivaProdComponent implements OnInit {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    // private cartService: CartService,
     private localS: LocalStorageService,
     private toast: ToastrService,
     // ServicesV2
-
     private readonly sessionService: SessionService,
     private readonly cartService: CartService,
     private readonly geolocationServiceV2: GeolocationServiceV2

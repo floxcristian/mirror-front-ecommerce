@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 // Services
-import { isVacio, rutValidator } from '../../shared/utils/utilidades';
+import { rutValidator } from '../../shared/utils/utilidades';
 import { ClientsService } from '../../shared/services/clients.service';
 import { DevolucionOkModalComponent } from '../components/devolucion-ok-modal/devolucion-ok-modal.component';
 
@@ -63,13 +63,15 @@ export class PageDevolucionesComponent implements OnInit {
     private toast: ToastrService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     console.log('entro en devoluciones');
     this.route.queryParams.subscribe((params) => {
       this.data = params['data'];
+      console.log('data: ', this.data);
 
-      if (isVacio(this.data)) {
+      if (!this.data) {
         this.router.navigate(['/', 'inicio']);
+        return;
       }
 
       try {

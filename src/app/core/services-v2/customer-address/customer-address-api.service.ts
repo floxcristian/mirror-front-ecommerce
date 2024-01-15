@@ -40,6 +40,7 @@ export class CustomerAddressApiService {
   }
 
   getDeliveryAddresses(documentId: string): Observable<ICustomerAddress[]> {
+    console.log('getDeliveryAddresses...');
     return this.http.get<ICustomerAddress[]>(
       `${API_CUSTOMER}/${documentId}/addresses`,
       {

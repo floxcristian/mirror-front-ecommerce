@@ -1,13 +1,8 @@
-import {
-  Component,
-  HostListener,
-  Inject,
-  OnInit,
-  PLATFORM_ID,
-} from '@angular/core';
+// Angular
+import { Component, OnInit } from '@angular/core';
+// Services
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { DirectionService } from '../../../../shared/services/direction.service';
-import { isPlatformBrowser } from '@angular/common';
 import { CmsService } from '@core/services-v2/cms.service';
 
 @Component({
@@ -16,7 +11,6 @@ import { CmsService } from '@core/services-v2/cms.service';
   styleUrls: ['./slide-mundo.component.scss'],
 })
 export class SlideMundoComponent implements OnInit {
-  innerWidth: any;
   style: any = [];
   isVacio = isVacio;
   carouselOptions = {
@@ -46,23 +40,12 @@ export class SlideMundoComponent implements OnInit {
   slides: any[] = [];
   constructor(
     private direction: DirectionService,
-    @Inject(PLATFORM_ID) private platformId: Object,
     //Services V2
     private readonly cmsService: CmsService
-  ) {
-    this.innerWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-  }
+  ) {}
 
   ngOnInit() {
     this.Carga_mundo();
-  }
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.innerWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
   }
 
   async Carga_mundo() {

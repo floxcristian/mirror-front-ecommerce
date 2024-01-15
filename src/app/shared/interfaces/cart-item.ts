@@ -1,5 +1,3 @@
-import { Product } from './product';
-
 export interface ProductCart {
   _id?: string;
   sku?: string;

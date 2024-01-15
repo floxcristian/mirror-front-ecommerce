@@ -1,13 +1,6 @@
-import {
-  Component,
-  HostListener,
-  Inject,
-  OnInit,
-  PLATFORM_ID,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
@@ -18,7 +11,6 @@ import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service
   styleUrls: ['./mi-cuenta.component.scss'],
 })
 export class MiCuentaComponent implements OnInit {
-  screenWidth: any;
   terminos = false;
   usuario!: ISession;
   links = [
@@ -32,17 +24,12 @@ export class MiCuentaComponent implements OnInit {
   constructor(
     private router: Router,
     private localStorage: LocalStorageService,
-    @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2
-  ) {
-    this.screenWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-  }
+  ) {}
 
-  async ngOnInit() {
+  ngOnInit() {
     this.usuario = this.sessionService.getSession();
 
     this.authStateService.session$.subscribe((user) => {
@@ -62,12 +49,5 @@ export class MiCuentaComponent implements OnInit {
     } else {
       this.router.navigate(['sitio', 'iniciar-sesion']);
     }
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.screenWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
   }
 }

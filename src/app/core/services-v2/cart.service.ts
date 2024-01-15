@@ -1,18 +1,9 @@
 // Angular
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import {
-  ICartTotal,
-  IShoppingCart,
-  IShoppingCartGroup,
-  IShoppingCartGuest,
-  IShoppingCartProduct,
-  IShoppingCartProductOrigin,
-} from '@core/models-v2/cart/shopping-cart.interface';
-// Environment
+// Env
 import { environment } from '@env/environment';
-import { GeolocationServiceV2 } from './geolocation/geolocation.service';
-import { SessionStorageService } from '@core/storage/session-storage.service';
+// Rxjs
 import { catchError, map, tap } from 'rxjs/operators';
 import {
   BehaviorSubject,
@@ -21,12 +12,26 @@ import {
   firstValueFrom,
   lastValueFrom,
 } from 'rxjs';
+// Models
+import {
+  ICartTotal,
+  IShoppingCart,
+  IShoppingCartGroup,
+  IShoppingCartGuest,
+  IShoppingCartProduct,
+  IShoppingCartProductOrigin,
+} from '@core/models-v2/cart/shopping-cart.interface';
+import { ISession } from '@core/models-v2/auth/session.interface';
+// Services
+import { GeolocationServiceV2 } from './geolocation/geolocation.service';
+import { SessionStorageService } from '@core/storage/session-storage.service';
+
 import { DatePipe } from '@angular/common';
 import { ShoppingCartStorageService } from '@core/storage/shopping-cart-storage.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { IError } from '@core/models-v2/error/error.interface';
 import { ToastrService } from 'ngx-toastr';
-import { ISession } from '@core/models-v2/auth/session.interface';
+
 import { GuestStorageService } from '@core/storage/guest-storage.service';
 import { IGuest } from '@core/models-v2/storage/guest.interface';
 import { ReceiveStorageService } from '@core/storage/receive-storage.service';
@@ -75,7 +80,7 @@ export class CartService {
   private datePipe = inject(DatePipe);
   private toastrServise = inject(ToastrService);
   private root = inject(RootService);
-  private localS = inject(LocalStorageService)
+  private localS = inject(LocalStorageService);
 
   private data: IShoppingCart = {
     products: [],
@@ -218,147 +223,7 @@ export class CartService {
       )
       .subscribe({
         next: (response: IShoppingCart) => {
-          this.isLoadingCart = false;
-
-          this.CartData = response;
-          this.cartTempData = response;
-          this.cartDataSubject$.next(this.CartData);
-          this.data.products = this.CartData.products;
-
-          // obtenemos el despacho desde el carro
-          const shipment = this.CartData.shipment;
-          if (shipment) {
-            let nombre = '';
-            const isPickup =
-              shipment.serviceType == 'TIENDA' ||
-              shipment.deliveryMode === DeliveryModeType.PICKUP;
-            const isDelivery =
-              shipment.serviceType != 'TIENDA' ||
-              shipment.deliveryMode === DeliveryModeType.DELIVERY;
-            if (isPickup) {
-              if (
-                this.cartTempData.groups &&
-                this.cartTempData.groups.length > 1
-              ) {
-                //ver quien tiene la mayor fecha para el despacho
-                let temp: any[] = [];
-
-                this.cartTempData.groups.forEach(
-                  (item: IShoppingCartGroup) => {
-                    temp.push(item.shipment.requestedDate);
-                  }
-                );
-
-                temp = temp.sort(
-                  (a, b) => new Date(b).getTime() - new Date(a).getTime()
-                );
-
-                nombre =
-                  `Retiro en tienda ` +
-                  this.datePipe.transform(temp[0], 'EEEE dd MMM');
-              } else {
-                nombre =
-                  `Retiro en tienda ` +
-                  this.datePipe.transform(
-                    shipment.requestedDate,
-                    'EEEE dd MMM'
-                  );
-              }
-
-              this.updateShippingType('retiro');
-            } else if (isDelivery) {
-              if (
-                this.cartTempData.groups &&
-                this.cartTempData.groups.length > 1
-              ) {
-                //ver quien tiene la mayor fecha para el despacho
-                let temp: any[] = [];
-                this.cartTempData.groups.forEach(
-                  (item: IShoppingCartGroup) => {
-                    temp.push(item.shipment.requestedDate);
-                  }
-                );
-
-                temp = temp.sort(
-                  (a, b) => new Date(b).getTime() - new Date(a).getTime()
-                );
-
-                nombre =
-                  `Despacho ` +
-                  this.datePipe.transform(temp[0], 'EEEE dd MMM');
-                this.updateShippingType('despacho');
-              } else {
-                nombre =
-                  `Despacho ` +
-                  this.datePipe.transform(
-                    shipment.requestedDate,
-                    'EEEE dd MMM'
-                  );
-                this.updateShippingType('despacho');
-              }
-            } else if (shipment.serviceType == '') {
-              nombre = `Seleccione Fecha `;
-            }
-
-            let suma = 0;
-            let array_precio: any = [];
-            if (
-              shipment.serviceType == 'STD' ||
-              shipment.serviceType == 'TIENDA' ||
-              shipment.serviceType == 'EXP'
-            ) {
-              this.cartTempData.groups?.forEach((item: IShoppingCartGroup) => {
-                let precio: number = 0;
-                suma = Number(suma + item.shipment.price);
-
-                // calculando el total
-                item.products.forEach((prod: IShoppingCartProduct) => {
-                  precio = Number(precio + prod.price * prod.quantity);
-                });
-
-                array_precio.push(precio);
-              });
-            }
-
-            this.shipping = {
-              price: suma,
-              title: nombre,
-              type: 'shipping',
-            };
-
-            // si existe descuento de despacho se agrega
-            let descuento = 0;
-            this.discount = null;
-            let index = 0;
-            this.cartTempData.groups?.forEach((item: IShoppingCartGroup) => {
-              if (
-                array_precio[index] >= 60000 ||
-                (usuario.userRole != 'compradorb2c' &&
-                  usuario.userRole != 'temp' &&
-                  usuario.userRole != UserRoleType.BUYER)
-              ) {
-                descuento = descuento + item.shipment.discount;
-              }
-
-              index = index + 1;
-            });
-
-            if (
-              descuento > 0 &&
-              (shipment.serviceType == 'STD' ||
-                shipment.serviceType == 'TIENDA' ||
-                shipment.serviceType == 'EXP')
-            ) {
-              this.discount = {
-                price: descuento * -1,
-                title: 'Descuento Despacho',
-                type: 'discount',
-              };
-            }
-          }
-
-          this.calc();
-          this.save();
+          this.recalculateShoppingCart(response);
         },
         error: (error: any) => {
           console.log('error', JSON.stringify(error));
@@ -368,6 +233,141 @@ export class CartService {
           // }
         },
       });
+  }
+
+  recalculateShoppingCart(response: IShoppingCart) {
+    const usuario = this.sessionStorage.get();
+    if (!usuario) {
+      return;
+    }
+
+    if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
+    if (!usuario.hasOwnProperty('documentId')) usuario.documentId = '0';
+
+    this.isLoadingCart = false;
+
+    this.CartData = response;
+    this.cartTempData = response;
+    this.cartDataSubject$.next(this.CartData);
+    this.data.products = this.CartData.products;
+
+    // obtenemos el despacho desde el carro
+    const shipment = this.CartData.shipment;
+    if (shipment) {
+      let nombre = '';
+      const isPickup =
+        shipment.serviceType == 'TIENDA' ||
+        shipment.deliveryMode === DeliveryModeType.PICKUP;
+      const isDelivery =
+        shipment.serviceType != 'TIENDA' ||
+        shipment.deliveryMode === DeliveryModeType.DELIVERY;
+      if (isPickup) {
+        if (this.cartTempData.groups && this.cartTempData.groups.length > 1) {
+          //ver quien tiene la mayor fecha para el despacho
+          let temp: any[] = [];
+
+          this.cartTempData.groups.forEach((item: IShoppingCartGroup) => {
+            temp.push(item.shipment.requestedDate);
+          });
+
+          temp = temp.sort(
+            (a, b) => new Date(b).getTime() - new Date(a).getTime()
+          );
+
+          nombre =
+            `Retiro en tienda ` +
+            this.datePipe.transform(temp[0], 'EEEE dd MMM');
+        } else {
+          nombre =
+            `Retiro en tienda ` +
+            this.datePipe.transform(shipment.requestedDate, 'EEEE dd MMM');
+        }
+
+        this.updateShippingType('retiro');
+      } else if (isDelivery) {
+        if (this.cartTempData.groups && this.cartTempData.groups.length > 1) {
+          //ver quien tiene la mayor fecha para el despacho
+          let temp: any[] = [];
+          this.cartTempData.groups.forEach((item: IShoppingCartGroup) => {
+            temp.push(item.shipment.requestedDate);
+          });
+
+          temp = temp.sort(
+            (a, b) => new Date(b).getTime() - new Date(a).getTime()
+          );
+
+          nombre =
+            `Despacho ` + this.datePipe.transform(temp[0], 'EEEE dd MMM');
+          this.updateShippingType('despacho');
+        } else {
+          nombre =
+            `Despacho ` +
+            this.datePipe.transform(shipment.requestedDate, 'EEEE dd MMM');
+          this.updateShippingType('despacho');
+        }
+      } else if (shipment.serviceType == '') {
+        nombre = `Seleccione Fecha `;
+      }
+
+      let suma = 0;
+      let array_precio: any = [];
+      if (
+        shipment.serviceType == 'STD' ||
+        shipment.serviceType == 'TIENDA' ||
+        shipment.serviceType == 'EXP'
+      ) {
+        this.cartTempData.groups?.forEach((item: IShoppingCartGroup) => {
+          let precio: number = 0;
+          suma = Number(suma + item.shipment.price);
+
+          // calculando el total
+          item.products.forEach((prod: IShoppingCartProduct) => {
+            precio = Number(precio + prod.price * prod.quantity);
+          });
+
+          array_precio.push(precio);
+        });
+      }
+
+      this.shipping = {
+        price: suma,
+        title: nombre,
+        type: 'shipping',
+      };
+
+      // si existe descuento de despacho se agrega
+      let descuento = 0;
+      this.discount = null;
+      let index = 0;
+      this.cartTempData.groups?.forEach((item: IShoppingCartGroup) => {
+        if (
+          array_precio[index] >= 60000 ||
+          (usuario.userRole != 'compradorb2c' &&
+            usuario.userRole != 'temp' &&
+            usuario.userRole != UserRoleType.BUYER)
+        ) {
+          descuento = descuento + item.shipment.discount;
+        }
+
+        index = index + 1;
+      });
+
+      if (
+        descuento > 0 &&
+        (shipment.serviceType == 'STD' ||
+          shipment.serviceType == 'TIENDA' ||
+          shipment.serviceType == 'EXP')
+      ) {
+        this.discount = {
+          price: descuento * -1,
+          title: 'Descuento Despacho',
+          type: 'discount',
+        };
+      }
+    }
+
+    this.calc();
+    this.save();
   }
 
   getOneById(id: string): Observable<IShoppingCartDetail> {
@@ -450,6 +450,7 @@ export class CartService {
           this.CartData = r.shoppingCart;
 
           this.data.products = this.CartData.products;
+          this.recalculateShoppingCart(this.CartData);
           /* se limpia OV cargada */
           this.save();
           this.calc();
@@ -1021,19 +1022,17 @@ export class CartService {
     );
   }
 
-  async setProducOrigin_cartDinamyc(product:any, tipoCat:string){
+  async setProducOrigin_cartDinamyc(product: any, tipoCat: string) {
     let catalogo: any = this.localS.get(StorageKey.catalogo);
-    const origin:IShoppingCartProductOrigin = {
-      origin:'catalogo-dinamico',
-      subOrigin:catalogo ? catalogo.nombre : '',
-      section:tipoCat ? tipoCat : '',
-      recommended:'',
-      sheet:false,
-      cyber:0
-    }
-    product.origin = origin
+    const origin: IShoppingCartProductOrigin = {
+      origin: 'catalogo-dinamico',
+      subOrigin: catalogo ? catalogo.nombre : '',
+      section: tipoCat ? tipoCat : '',
+      recommended: '',
+      sheet: false,
+      cyber: 0,
+    };
+    product.origin = origin;
     return product;
   }
-
-
 }

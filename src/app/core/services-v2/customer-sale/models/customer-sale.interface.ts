@@ -17,10 +17,3 @@ export interface ISalesBySbu {
   total: number;
   skus: number;
 }
-
-export interface IDebtSales {
-  dueCustomerSales: any[];
-  overdueCustomerSales: any[];
-  totalDueAmount: number;
-  totalOverdueAmount: number;
-}

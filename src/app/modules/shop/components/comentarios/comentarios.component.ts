@@ -1,10 +1,4 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { AddCommentModalComponent } from '../../../../shared/components/add-comment-modal/add-comment-modal.component';
 import {
@@ -14,8 +8,6 @@ import {
   TipoModal,
 } from '../../../../shared/components/modal/modal.component';
 import { ComentarioArticulo } from '../../../../shared/interfaces/comentariosArticulo';
-import { ResponseApi } from '../../../..//shared/interfaces/response-api';
-import { CatalogoService } from '../../../..//shared/services/catalogo.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
@@ -45,7 +37,6 @@ export class ComentariosComponent implements OnChanges {
 
   constructor(
     private modalService: BsModalService,
-    private catalogoService: CatalogoService,
     private toastrService: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
@@ -114,7 +105,7 @@ export class ComentariosComponent implements OnChanges {
   }
 
   escribirComentario() {
-    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
 
     if (usuario.userRole !== 'temp') {
       const initialState = {

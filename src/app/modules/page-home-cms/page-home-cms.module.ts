@@ -1,6 +1,6 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 // Libs
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
@@ -28,6 +28,7 @@ import { ConceptoMobileComponent } from './components/concepto/mobile/concepto-m
     PageHomeCmsRoutesModule,
     NgbModule,
     CarouselModule,
+    NgOptimizedImage,
   ],
   declarations: [
     SlideMundoComponent,

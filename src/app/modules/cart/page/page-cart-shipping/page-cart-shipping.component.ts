@@ -179,7 +179,7 @@ export class PageCartShippingComponent implements OnInit {
     private readonly shoppingCartStorage: ShoppingCartStorageService,
     private readonly receiveStorage: ReceiveStorageService,
     private readonly customerService: CustomerService,
-    private readonly customerAddressApiService: CustomerAddressApiService,
+    private readonly customerAddressApiService: CustomerAddressApiService
   ) {
     this.receiveStorage.set({} as IReceive);
     this.innerWidth = window.innerWidth;
@@ -1369,15 +1369,17 @@ export class PageCartShippingComponent implements OnInit {
     });
     bsModalRef.content.event.subscribe(async (res: any) => {
       if (res) {
-        const documentId = this.userSession.documentId
-        const addressId = direccion.id
+        const documentId = this.userSession.documentId;
+        const addressId = direccion.id;
         this.customerAddressApiService
           .deleteAddress(documentId, addressId)
           .subscribe({
             next: (_) => {
               this.toast.success('Dirección eliminada exitosamente.');
-              this.respuesta(true,true);
-              if (this.direccionConfigurada.deliveryAddress?.id === direccion.id)
+              this.respuesta(true, true);
+              if (
+                this.direccionConfigurada.deliveryAddress?.id === direccion.id
+              )
                 this.cambioDireccionPreferenciaCliente(direccion.id);
             },
             error: (err: IError) => {
@@ -1394,7 +1396,8 @@ export class PageCartShippingComponent implements OnInit {
    */
   cambioDireccionPreferenciaCliente(addressId: string) {
     const preferences = this.customerPreferencesStorage.get();
-    let nueva_preferencia = this.addresses.find((address) => address.id !== addressId) || null;
+    let nueva_preferencia =
+      this.addresses.find((address) => address.id !== addressId) || null;
     preferences.deliveryAddress = nueva_preferencia;
     this.customerPreferencesStorage.set(preferences);
   }

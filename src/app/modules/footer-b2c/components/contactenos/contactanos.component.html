@@ -1,4 +1,5 @@
-<div *ngIf="screenWidth >= 1025">
+<!-- Start::menu item (lg+) -->
+<div class="d-none d-lg-block">
   <h6 class="fw-bold">Contáctanos</h6>
   <hr class="my-2" style="background-color: #646462" />
 
@@ -94,7 +95,10 @@
     </ul>
   </div>
 </div>
-<div *ngIf="screenWidth < 1025">
+<!-- End::menu item (lg+) -->
+
+<!-- Start::menu item (xs, sm y md) -->
+<div class="d-block d-lg-none">
   <div
     class="col-sm-12"
     data-bs-toggle="collapse"
@@ -211,3 +215,4 @@
     <hr class="my-2" style="background-color: #646462" />
   </div>
 </div>
+<!-- End::menu item (xs, sm y md) -->

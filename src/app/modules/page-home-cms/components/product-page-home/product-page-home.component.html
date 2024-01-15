@@ -1,6 +1,6 @@
 <div class="cargandoCent text-center" *ngIf="cargando">
   <i
-    class="fas fa-implementos fa-bounce"
+    class="fak fa-implementos fa-bounce"
     style="font-size: 48px; color: #0063b9"
   ></i>
   <div
@@ -15,15 +15,16 @@
   </div>
 </div>
 
-<ng-container *ngIf="!cargando && screenWidth > 1024 && tipo_producto">
+<!-- Start::navbar slideshow (lg+) -->
+<div *ngIf="!cargando && tipo_producto" class="d-none d-lg-block">
   <ul ngbNav #nav="ngbNav" class="nav-tabs">
     <li ngbNavItem *ngFor="let item of tipo_producto; let i = index">
       <button style="font-size: 30px" ngbNavLink>{{ item.title }}</button>
       <ng-template ngbNavContent>
         <div class="row" style="margin-top: 20px">
-          <div *ngIf="screenWidth > 1024" class="col-sm-6 d-flex">
+          <div class="col-sm-6 d-flex">
             <a [href]="item.url">
-              <div class="container-image" *ngIf="item.image != undefined">
+              <div class="container-image" *ngIf="item.image">
                 <div
                   class="overlay d-flex flex-column justify-content-center align-items-center"
                 >
@@ -43,7 +44,7 @@
 
                 <img
                   [src]="item.image"
-                  class="img-fluid-product lazyload"
+                  class="img-fluid-product"
                   alt="Ver más"
                 />
               </div>
@@ -52,7 +53,7 @@
               <div
                 class="overlay d-flex justify-content-center align-items-center"
               >
-                <a [href]="item.url"> Ver mas </a>
+                <a [href]="item.url"> Ver más </a>
               </div>
               <a [href]="item.url">
                 <img
@@ -64,10 +65,7 @@
           </div>
           <!-- cambio de pantalla-->
 
-          <div
-            *ngIf="screenWidth > 1024"
-            class="col-sm-6 d-flex justify-content-center"
-          >
+          <div class="col-sm-6 d-flex justify-content-center">
             <div class="row">
               <div
                 class="col-6-producto d-flex"
@@ -100,9 +98,11 @@
     </li>
   </ul>
   <div [ngbNavOutlet]="nav"></div>
-</ng-container>
+</div>
+<!-- End::navbar slideshow (lg+) -->
 
-<div *ngIf="screenWidth <= 1024 && tipo_producto">
+<!-- Start::navbar slideshow (xs, sm y md) -->
+<div *ngIf="tipo_producto" class="d-block d-lg-none">
   <div *ngIf="refresh" class="w-100" style="min-height: 50px"></div>
   <div
     *ngIf="!refresh"
@@ -133,8 +133,10 @@
     </owl-carousel-o>
   </div>
 </div>
+<!-- End::navbar slideshow (xs, sm y md) -->
 
-<div *ngIf="screenWidth <= 1024 && tipo_producto">
+<!-- Start::imagen portada slideshow (xs, sm y md) -->
+<div *ngIf="tipo_producto" class="d-block d-lg-none">
   <div
     *ngIf="refresh2"
     class="w-100"
@@ -145,7 +147,7 @@
       style="min-height: 320px"
     >
       <i
-        class="fas fa-implementos fa-bounce"
+        class="fak fa-implementos fa-bounce"
         style="font-size: 78px; color: #0063b9"
       ></i>
     </div>
@@ -177,8 +179,10 @@
     </owl-carousel-o>
   </div>
 </div>
+<!-- End::imagen portada slideshow (xs, sm y md) -->
 
-<div *ngIf="screenWidth <= 1024 && producto_selecionado">
+<!-- Start::listado productos slideshow (xs, sm y md) -->
+<div *ngIf="producto_selecionado" class="d-block d-lg-none">
   <div
     class="products-view__list products-list"
     data-layout="grid-5-full"
@@ -208,3 +212,4 @@
     </owl-carousel-o>
   </div>
 </div>
+<!-- End::listado productos slideshow (xs, sm y md) -->

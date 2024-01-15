@@ -3,6 +3,7 @@
   appDropdown="indicator--opened"
   #menuUser="appDropdown"
 >
+  <!-- Start::botón usuario B2C -->
   <span
     *ngIf="tipo === 'b2c'"
     class="indicator__button flex-column"
@@ -15,21 +16,18 @@
         style="width: 35px; height: 40px"
       />
     </span>
-    <span
-      class="icon-title mt-1"
-      *ngIf="this.usuario == null || this.usuario.login_temp == true"
-    >
-      Mi Cuenta
-    </span>
-    <span
-      class="icon-title mt-1"
-      *ngIf="this.usuario != null && this.usuario.login_temp == false"
-    >
+    @if(usuario.login_temp == false){
+    <span class="icon-title mt-1">
       {{ usuario.firstName | capitalizeFirst : true }}
       {{ usuario.lastName | capitalizeFirst : true }}
     </span>
+    } @else {
+    <span class="icon-title mt-1"> Mi Cuenta </span>
+    }
   </span>
+  <!-- End::botón usuario B2C -->
 
+  <!-- Start::botón usuario B2B -->
   <span
     *ngIf="tipo === 'b2b'"
     class="indicator__button"
@@ -39,21 +37,16 @@
     <span class="indicator__area">
       <i class="far fa-user-circle"></i>
     </span>
-    <span
-      class="icon-title mt-1"
-      *ngIf="this.usuario == null || this.usuario.login_temp == true"
-    >
-      Ingresar
-    </span>
-    <span
-      class="icon-title mt-1"
-      style="font-size: 0.95rem"
-      *ngIf="this.usuario != null && this.usuario.login_temp == false"
-    >
+    @if(usuario.login_temp == false){
+    <span class="icon-title mt-1" style="font-size: 0.95rem">
       Hola!
       <strong>{{ usuario.firstName | capitalizeFirst : true }}</strong></span
     >
+    } @else {
+    <span class="icon-title mt-1"> Ingresar </span>
+    }
   </span>
+  <!-- End::botón usuario B2B -->
 
   <div
     class="indicator__dropdown"
@@ -77,7 +70,7 @@
     >
       <p class="fw-bold title-sesion">
         Bienvenido
-        <span *ngIf="this.usuario != null">
+        <span *ngIf="usuario">
           {{ usuario.firstName | capitalizeFirst : true }}
           {{ usuario.lastName | capitalizeFirst : true }}
         </span>

@@ -420,3 +420,82 @@ table thead th {
   font-size: 0.9375rem;
   padding: 8px 15px !important;
 }
+
+.relative {
+  position: relative;
+  z-index: 1;
+}
+
+::ng-deep .vertical-owl-carousel .owl-carousel {
+  z-index: 2;
+  transform: rotate(90deg);
+  width: 270px;
+  transform-origin: center;
+  height: 270px;
+  position: absolute;
+  top: 50%;
+  transform: translate(-36%, -49%) rotate(90deg);
+  @media screen and (max-width: 1236px) {
+    transform: translate(-42%, -49%) rotate(90deg);
+  }
+  @media screen and (max-width: 1111px) {
+    transform: translate(-44%, -49%) rotate(90deg);
+  }
+}
+
+::ng-deep .vertical-owl-carousel .owl-carousel .owl-item {
+  transform-origin: center;
+  height: 275px;
+  z-index: 3;
+}
+
+::ng-deep .vertical-owl-carousel .owl-item img {
+  transform: rotate(-90deg);
+  transform-origin: top left;
+  position: absolute;
+  top: 50%;
+  left: 9px;
+  width: 85%;
+  max-width: 75px;
+  height: auto;
+  object-fit: contain;
+  border: 1px solid #b4b4b4;
+  z-index: 4;
+}
+
+::ng-deep .vertical-owl-carousel .owl-nav {
+  .owl-prev,
+  .owl-next {
+    font-size: 36px;
+    bottom: 15px;
+    border: none;
+    top: 5px;
+    right: 42%;
+  }
+}
+
+::ng-deep .vertical-owl-carousel .owl-carousel .owl-nav {
+  position: absolute;
+  transform: translateX(-50%);
+  left: 26%;
+  top: 36%;
+  width: 100%;
+  display: block;
+  justify-content: space-between;
+  .owl-prev {
+    color: #094cac;
+    left: -66px;
+    display: flex;
+    font-size: 1.2em;
+    align-items: center;
+    justify-content: center;
+  }
+  .owl-next {
+    color: #094cac;
+    right: -90px;
+    display: flex;
+    font-size: 1.2em;
+    align-items: center;
+    justify-content: center;
+  }
+}

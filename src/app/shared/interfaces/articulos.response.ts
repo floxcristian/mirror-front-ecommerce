@@ -1,9 +1,3 @@
-export interface ArticuloResponse {
-  error: boolean;
-  msg: string;
-  data: Articulo[];
-}
-
 export interface Articulo {
   _id: string;
   sku: string;

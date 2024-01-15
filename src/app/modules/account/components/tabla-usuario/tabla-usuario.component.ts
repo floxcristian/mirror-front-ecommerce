@@ -1,9 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { ToastrService } from 'ngx-toastr';
 import { UsersService } from '../../service/users.service';
-import { environment } from '@env/environment';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SubAccountService } from '@core/services-v2/sub-account.service';
 import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
@@ -29,7 +27,6 @@ export class TablaUsuarioComponent implements OnInit {
   users: IEcommerceUser[] = [];
   editUser = false;
   constructor(
-    private httpClient: HttpClient,
     private toastr: ToastrService,
     private userService: UsersService,
     // Services V2

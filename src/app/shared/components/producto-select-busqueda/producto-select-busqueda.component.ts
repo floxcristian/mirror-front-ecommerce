@@ -1,3 +1,4 @@
+// Angular
 import { distinctUntilChanged, switchMap, tap, map } from 'rxjs/operators';
 import {
   Component,
@@ -9,12 +10,15 @@ import {
   SimpleChanges,
   OnDestroy,
 } from '@angular/core';
+// Rxjs
 import { Subject, Observable, of, concat } from 'rxjs';
-import { Articulo } from '../../interfaces/articulos.response';
-import { ArticleService } from '@core/services-v2/article.service';
-import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
+// Libs
 import { ToastrService } from 'ngx-toastr';
-//import { LogisticsService } from '../../services/logistics.service';
+// Models
+import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
+import { Articulo } from '../../interfaces/articulos.response';
+// Services
+import { ArticleService } from '@core/services-v2/article.service';
 
 @Component({
   selector: 'app-producto-select-busqueda',

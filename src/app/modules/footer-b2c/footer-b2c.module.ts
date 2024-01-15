@@ -1,6 +1,6 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 // Routing
 import { RouterModule } from '@angular/router';
 // Components
@@ -20,7 +20,7 @@ import { FotterSiteMobileComponent } from './components/fotter-site-mobile/fotte
     MiCuentaComponent,
     ContactanosComponent,
   ],
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NgOptimizedImage],
   exports: [FooterB2cComponent],
 })
 export class FooterB2cModule {}

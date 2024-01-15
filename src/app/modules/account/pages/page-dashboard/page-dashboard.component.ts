@@ -7,11 +7,11 @@ import { isVacio } from '../../../../shared/utils/utilidades';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { CustomerSaleService } from '@core/services-v2/customer-sale.service';
+import { CustomerSaleService } from '@core/services-v2/customer-sale/customer-sale.service';
 import {
   ISalesBySbu,
   ISalesMonth,
-} from '@core/models-v2/customer/customer-sale.interface';
+} from '@core/services-v2/customer-sale/models/customer-sale.interface';
 import { CustomerService } from '@core/services-v2/customer.service';
 
 @Component({

@@ -19,11 +19,4 @@ export class ChilexpressService {
   getSucursales(params: any) {
     return this.http.get(this.API_URL + 'offices', { params: params });
   }
-
-  getOmsPromesa(tipo: any, comuna: any, productos: any) {
-    return this.http.post(
-      environment.apiOms + 'promesa-entrega/' + tipo + '/' + comuna,
-      productos
-    );
-  }
 }

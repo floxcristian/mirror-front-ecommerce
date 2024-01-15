@@ -1,11 +1,14 @@
-<div *ngIf="screenWidth >= 1025">
+<!-- Start::menu item (lg+) -->
+<div class="d-none d-lg-block">
   <h6 class="fw-bold ps-3">Mi cuenta</h6>
   <hr class="my-2" style="background-color: #646462" />
 
   <div>
     <ul>
       <li class="ps-3" *ngFor="let link of links">
-        <span class="link" (click)="validarCuenta(link)">{{ link.label }}</span>
+        <span class="link" (click)="validarCuenta(link)">{{
+          link.label
+        }}</span>
       </li>
     </ul>
   </div>
@@ -15,11 +18,19 @@
     <picture>
       <source srcset="assets/images/mutual_01.webp" type="image/webp" />
       <source srcset="assets/images/mutual_01.png" type="image/png" />
-      <img src="assets/images/mutual_01.png" style="width: 60px" alt="mutual" />
+      <img
+        src="assets/images/mutual_01.png"
+        style="width: 60px"
+        alt="mutual"
+      />
     </picture>
   </div>
 </div>
-<div *ngIf="screenWidth < 1025">
+
+<!-- End::menu item (lg+) -->
+
+<!-- Start::menu item (xs, sm y md) -->
+<div class="d-block d-lg-none">
   <div
     class="col-sm-12"
     data-bs-toggle="collapse"
@@ -54,3 +65,4 @@
     <hr class="my-2" style="background-color: #646462" />
   </div>
 </div>
+<!-- End::menu item (xs, sm y md) -->

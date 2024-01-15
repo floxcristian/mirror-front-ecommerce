@@ -1,11 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
-import {
-  Component,
-  HostListener,
-  Inject,
-  OnInit,
-  PLATFORM_ID,
-} from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -13,26 +6,9 @@ import { Router } from '@angular/router';
   templateUrl: './contactanos.component.html',
   styleUrls: ['./contactanos.component.scss'],
 })
-export class ContactanosComponent implements OnInit {
-  screenWidth: any;
+export class ContactanosComponent {
   terminos = false;
-  constructor(
-    private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    this.screenWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-  }
-
-  ngOnInit() {}
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.screenWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-  }
+  constructor(private router: Router) {}
 
   Contacto() {
     this.router.navigate(['/sitio/contacto']);

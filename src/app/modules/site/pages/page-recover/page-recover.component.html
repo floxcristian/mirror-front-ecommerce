@@ -4,8 +4,8 @@
       <h5 class="pb-3">Recuperar contraseña</h5>
 
       <form
-        [formGroup]="formRecoverpass"
-        (ngSubmit)="recoverPass(formRecoverpass.value)"
+        [formGroup]="formRecoverPass"
+        (ngSubmit)="recoverPass(formRecoverPass.value)"
       >
         <div class="mb-3">
           <label>Ingrese su Email</label>
@@ -21,7 +21,13 @@
         </p>
         <br />
 
-        <button name="enviar" class="btn btn-secondary btn-md">Enviar</button>
+        <button
+          name="enviar"
+          class="btn btn-secondary btn-md"
+          [disabled]="formRecoverPass.invalid"
+        >
+          Enviar
+        </button>
       </form>
     </div>
   </div>

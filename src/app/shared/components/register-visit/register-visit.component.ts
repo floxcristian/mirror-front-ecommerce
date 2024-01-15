@@ -22,7 +22,7 @@ import { IBusinessLine } from '@core/services-v2/customer-business-line/business
 // Services
 import { rutValidator } from '../../../shared/utils/utilidades';
 import { SessionStorageService } from '@core/storage/session-storage.service';
-import { AuthApiService } from '@core/services-v2/auth.service';
+import { AuthApiService } from '@core/services-v2/auth/auth.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { CartService } from '@core/services-v2/cart.service';
 import { CustomerService } from '@core/services-v2/customer.service';

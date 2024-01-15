@@ -9,43 +9,28 @@
     <!-- Imagenes -->
     <div class="product__gallery mb-0 col-12 col-lg-6 ps-lg-0">
       <div class="product-gallery" *ngIf="showGallery">
-        <div class="row justify-content-center">
+        <div class="row">
           <div
             class="col-sm-3 d-none d-lg-flex justify-content-center align-items-center"
-            style="cursor: pointer; position: relative; max-width: 100px"
           >
-            <ngu-carousel
-              #myCarousel
-              [inputs]="carouselConfig"
-              [dataSource]="images"
-              style="position: unset"
-            >
-              <div *nguCarouselDef="let item" class="item">
-                <div class="tile" (click)="setActiveImage(item.id)">
-                  <img
-                    *ngIf="!item.video"
-                    [ngClass]="{
-                      'product-gallery__carousel-item--active': item.active
-                    }"
-                    [src]="item.url"
-                    (error)="root.errorLoadImage($event)"
-                    alt=""
-                    width="100"
-                    height="100"
-                  />
-                </div>
+            <div class="w-100 h-100 p-2 relative">
+              <div
+                class="d-block vertical-owl-carousel"
+                *ngIf="images.length > 1"
+              >
+                <owl-carousel-o [options]="customThumbsOptions">
+                  <ng-container *ngFor="let slide of images">
+                    <ng-template class="w-100 h-100" carouselSlide>
+                      <img
+                        (click)="setActiveImage(slide.id)"
+                        [alt]="product.name"
+                        [src]="slide.url"
+                      />
+                    </ng-template>
+                  </ng-container>
+                </owl-carousel-o>
               </div>
-
-              <div NguCarouselPrev class="leftRs">
-                <i class="fas fa-chevron-up fa-lg" style="color: #10826c"></i>
-              </div>
-              <div NguCarouselNext class="rightRs">
-                <i
-                  class="fas fa-chevron-down fa-lg"
-                  style="color: #10826c"
-                ></i>
-              </div>
-            </ngu-carousel>
+            </div>
           </div>
           <div class="col-12 col-lg-9 ps-lg-0">
             <div
@@ -731,7 +716,7 @@
         </ng-container>
         <!-- End::texto sin stock y formulario de contacto -->
 
-        <hr class="mb-0" />
+        <!-- <hr class="mb-0" /> -->
         <div
           class="row justify-content-start px-3 my-2"
           *ngIf="dataProduct.priceInfo.scalePrice.length > 1 && !isB2B"
@@ -747,7 +732,7 @@
 
       <div class="clearfix"></div>
 
-      <h1>stock</h1>
+      <!-- <h1>stock</h1> -->
 
       <div *ngIf="stock">
         <div class="product__sidebar col-12 p-0">

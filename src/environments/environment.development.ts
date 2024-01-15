@@ -5,10 +5,8 @@ export const environment = {
   // APIs
   apiShoppingCart: 'https://dev-api.implementos.cl/api/carro/',
   apiCMS: 'https://dev-api.implementos.cl/cms/',
-  apiOms: 'https://dev-api.implementos.cl/api/oms/',
   apiCatalogo: 'https://dev-api.implementos.cl/api/catalogo/',
   apiCustomer: 'https://dev-api.implementos.cl/api/cliente/',
-  apiLogistic: 'https://dev-api.implementos.cl/api/logistica/',
   // Images Urls
   urlFotoOmnichannel:
     'http://replicacion.implementos.cl/siteomnichannel/fotos/',

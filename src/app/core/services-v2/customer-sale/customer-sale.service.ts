@@ -1,17 +1,18 @@
 // Angular
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IPreference } from '@core/models-v2/customer/customer-preference.interface';
+// Rxjs
+import { Observable } from 'rxjs';
+// Env
+import { environment } from '@env/environment';
+// Models
 import {
-  IDebtSales,
   ISalesBySbuResponse,
   ISalesMonthResponse,
-} from '@core/models-v2/customer/customer-sale.interface';
+} from '@core/services-v2/customer-sale/models/customer-sale.interface';
 import { IOrders } from '@core/models-v2/customer/orders.interface';
 import { IPaginated } from '@core/models-v2/shared/paginated.interface';
-// Environment
-import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
+import { IDebtSales } from './models/debt-sale.interface';
 
 const API_CUSTOMER_SALE = `${environment.apiEcommerce}/api/v1/customer-sale`;
 
@@ -20,7 +21,10 @@ const API_CUSTOMER_SALE = `${environment.apiEcommerce}/api/v1/customer-sale`;
 })
 export class CustomerSaleService {
   constructor(private http: HttpClient) {}
-  //*** SALES */
+  /**
+   * Obtener deudas de un cliente.
+   * @returns
+   */
   getCustomerSalesDebt(): Observable<IDebtSales> {
     return this.http.get<IDebtSales>(`${API_CUSTOMER_SALE}/debt-sales`);
   }
@@ -42,6 +46,7 @@ export class CustomerSaleService {
       { params: { year } }
     );
   }
+
   getSales(params: {
     search: string;
     page: number;

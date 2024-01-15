@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 // modules (angular)
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // modules
@@ -37,6 +37,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
     FormsModule,
     SharedModule,
     CarouselModule.forRoot(),
+    NgOptimizedImage,
   ],
   exports: [
     // blocks

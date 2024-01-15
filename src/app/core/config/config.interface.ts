@@ -3,6 +3,7 @@ export interface IConfig {
   document: IDocument;
   phoneCodes: IPhoneCodes;
   storesPage: IStoresPage;
+  salesDebtPage: ISalesDebtPage;
 }
 
 export interface IPhoneCodes {
@@ -18,6 +19,16 @@ export interface IPhoneItem {
 export interface IStoresPage {
   title: string;
   subtitle: string;
+}
+
+export interface ISalesDebtPage {
+  paymentButtons: IPaymentButton[];
+}
+
+export interface IPaymentButton {
+  id: string;
+  title: string;
+  image: string;
 }
 
 export interface IDocument {

@@ -22,6 +22,9 @@ export class RootService {
     this.setDataTableBasic();
   }
 
+  /**
+   * Obtener configuración de datatable utilizado.
+   */
   setDataTableBasic() {
     this.simpleDtOptions = {
       pagingType: 'full_numbers',

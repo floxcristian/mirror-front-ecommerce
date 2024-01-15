@@ -1,4 +1,5 @@
-<div *ngIf="innerWidth >= 1025 && slides.length > 1" class="block-slideshow">
+<!-- Start::slideshow si tiene mas de un item (lg+) -->
+<div *ngIf="slides.length > 1" class="block-slideshow d-none d-lg-block">
   <owl-carousel-o
     class="carouselMundo"
     [options]="carouselOptions"
@@ -41,7 +42,10 @@
     </ng-container>
   </owl-carousel-o>
 </div>
-<div *ngIf="innerWidth >= 1025 && slides.length == 1" class="block-slideshow">
+<!-- End::slideshow si tiene mas de un item (lg+) -->
+
+<!-- Start::slideshow si tiene un solo item (lg+) -->
+<div *ngIf="slides.length == 1" class="block-slideshow d-none d-lg-block">
   <owl-carousel-o
     class="carouselMundo"
     [options]="carouselOptions2"
@@ -84,8 +88,10 @@
     </ng-container>
   </owl-carousel-o>
 </div>
+<!-- End::slideshow si tiene un solo item (lg+) -->
 
-<div *ngIf="innerWidth < 1025" class="block-slideshow">
+<!-- Start:slideshow xs, sm y md -->
+<div class="block-slideshow d-block d-lg-none">
   <owl-carousel-o
     class="carouselMundo"
     [options]="carouselOptions2"
@@ -99,23 +105,20 @@
       >
         <div>
           <a [href]="slide.url">
-            <ng-container *ngIf="innerWidth >= 500">
-              <img
-                [src]="slide.imageMobile"
-                [alt]="slide.alt"
-                [title]="slide.alt"
-                class=".img-fluid-product lazyload"
-              />
-            </ng-container>
+            <img
+              [src]="slide.imageMobile"
+              [alt]="slide.alt"
+              [title]="slide.alt"
+              class=".img-fluid-product lazyload d-none d-sm-block"
+            />
 
-            <ng-container *ngIf="innerWidth < 500">
-              <img
-                [src]="slide.imageTablet"
-                [alt]="slide.alt"
-                [title]="slide.alt"
-                class=".img-fluid-product lazyload"
-              />
-            </ng-container>
+            <img
+              [src]="slide.imageTablet"
+              [alt]="slide.alt"
+              [title]="slide.alt"
+              class=".img-fluid-product lazyload d-block d-sm-none"
+            />
+
             <div class="overlay">
               <div class="text d-flex flex-column justify-content-center">
                 <h3 style="text-align: center" *ngIf="slide.title !== '.'">
