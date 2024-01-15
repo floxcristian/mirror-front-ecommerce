@@ -719,21 +719,22 @@ export class PageCartShippingComponent implements OnInit {
     }
 
     if (indexGroup !== -1 && indexTripDate !== -1) {
-      this.cart.updateShipping(indexGroup, indexTripDate).then(
-        (response: IShoppingCart) => {
+      this.cart.updateShipping(indexGroup, indexTripDate).subscribe({
+        next: (response: GetLogisticPromiseResponse) => {
+          const shoppingCart = response.shoppingCart;
           this.loadingResumen = false;
           if (redirect) {
             this.router.navigate(['/', 'carro-compra', 'forma-de-pago']);
           }
-          this.addShipping(response);
+          //this.addShipping(shoppingCart);
         },
-        () => {
+        error: () => {
           this.toast.error(
             'Ha ocurrido un error en servicio al actualizar el carro de compra'
           );
           this.loadingResumen = false;
-        }
-      );
+        },
+      });
       this.getDireccionName(this.shippingSelected?.tipoenvio || '');
     } else {
       this.loadingResumen = false;

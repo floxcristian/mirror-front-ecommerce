@@ -470,7 +470,7 @@ export class CartService {
     this.shoppingCartStorage.set(this.CartData);
   }
 
-  async updateShipping(indexGroup: number, indexTripDate: number) {
+  updateShipping(indexGroup: number, indexTripDate: number) {
     // Sucursal
     console.log('getSelectedStore desde updateShipping');
 
@@ -482,12 +482,15 @@ export class CartService {
       tripDate: indexTripDate,
     };
 
-    const respuesta = await lastValueFrom(
-      this.http.put<IShoppingCart>(`${API_CART}/group/trip-date`, data)
-    );
-    // this.load();
-
-    return respuesta;
+    return this.http
+      .put<GetLogisticPromiseResponse>(`${API_CART}/group/trip-date`, data)
+      .pipe(
+        map((r) => {
+          const shoppingCart = r.shoppingCart;
+          this.recalculateShoppingCart(shoppingCart);
+          return r;
+        })
+      );
   }
 
   calc(totalesFull = false): void {
