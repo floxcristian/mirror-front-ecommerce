@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { CatalogoService } from '../../services/catalogo.service';
 import { isVacio } from '../../utils/utilidades';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { SessionService } from '@core/services-v2/session/session.service';
@@ -30,7 +29,6 @@ export class AddCommentModalComponent implements OnInit {
 
   constructor(
     public ModalRef: BsModalRef,
-    private catalogoService: CatalogoService,
     private toastrService: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
@@ -44,7 +42,7 @@ export class AddCommentModalComponent implements OnInit {
       this.urlImg = this.producto.images['150'][0];
     }
 
-    this.usuario = this.sessionService.getSession(); // this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
     if (this.usuario.userRole !== 'temp') {
       this.nombre = `${(this.usuario.firstName || '').split(' ')[0]} ${
         (this.usuario.lastName || '').split(' ')[0]

@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { CatalogoService } from '../../services/catalogo.service';
 import { AddCommentModalComponent } from '../add-comment-modal/add-comment-modal.component';
 import {
   DataModal,
@@ -41,7 +40,6 @@ export class ProductRatingComponent implements OnChanges {
 
   constructor(
     private modalService: BsModalService,
-    private catalogoService: CatalogoService,
     private toastrService: ToastrService,
     public router: Router,
     // Services V2
@@ -86,7 +84,7 @@ export class ProductRatingComponent implements OnChanges {
   }
 
   escribirComentario() {
-    const usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    const usuario = this.sessionService.getSession();
 
     if (usuario.userRole !== 'temp') {
       const initialState = {
