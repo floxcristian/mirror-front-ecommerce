@@ -349,14 +349,16 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       ? InvoiceType.INVOICE
       : InvoiceType.RECEIPT;
 
-    this.formOV();
     this.cartService.load();
 
     const subscription = this.cartService.cartDataSubject$.subscribe(
       async (cartSession) => {
-        this.cartSession = cartSession;
-        await this.updateReceive();
-        this.setDireccionOrTiendaRetiro();
+        if (cartSession) {
+          this.cartSession = cartSession;
+          this.formOV();
+          await this.updateReceive();
+          this.setDireccionOrTiendaRetiro();
+        }
       }
     );
     this.subscriptions.add(subscription);
@@ -410,7 +412,6 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         },
         error: (e) => {
           console.error(e);
-          this.toastr.error('No se pudo obtener los centros de costo');
         },
       });
     }
