@@ -4,25 +4,61 @@
     appOwlPreventClick
     [ngClass]="{ item: true }"
   >
-    <ng-container *ngFor="let slide of slides; let i = index">
+    <ng-container *ngFor="let slide of slides; index as i">
       <ng-template carouselSlide [id]="slide.imageClassic">
+        @if(i === 0){
         <a [href]="slide.buttonUrl">
-          <img
-            [src]="slide.imageMobile"
-            [alt]="slide.alt"
-            class="d-block d-sm-none"
-          />
-          <img
-            [src]="slide.imageClassic"
-            [alt]="slide.alt"
-            class="d-none d-sm-block d-lg-none"
-          />
-          <img
-            [src]="slide.imageClassic"
-            [alt]="slide.alt"
-            class="d-none d-lg-block"
-          />
+          <div
+            class="slide_container"
+            style="aspect-ratio: 138/139; position: relative"
+          >
+            <img
+              [ngSrc]="slide.imageMobile"
+              [alt]="slide.alt"
+              class="d-block d-sm-none slide"
+              fill
+              priority
+            />
+          </div>
+          <div
+            class="slide_container"
+            style="aspect-ratio: 10/3; position: relative"
+          >
+            <img
+              [ngSrc]="slide.imageClassic"
+              [alt]="slide.alt"
+              class="d-none d-sm-block slide"
+              fill
+              priority
+            />
+          </div>
         </a>
+        } @else {
+        <a [href]="slide.buttonUrl">
+          <div
+            class="slide_container"
+            style="aspect-ratio: 138/139; position: relative"
+          >
+            <img
+              [ngSrc]="slide.imageMobile"
+              [alt]="slide.alt"
+              class="d-block d-sm-none slide"
+              fill
+            />
+          </div>
+          <div
+            class="slide_container"
+            style="aspect-ratio: 10/3; position: relative"
+          >
+            <img
+              [ngSrc]="slide.imageClassic"
+              [alt]="slide.alt"
+              class="d-none d-sm-block slide"
+              fill
+            />
+          </div>
+        </a>
+        }
       </ng-template>
     </ng-container>
   </owl-carousel-o>

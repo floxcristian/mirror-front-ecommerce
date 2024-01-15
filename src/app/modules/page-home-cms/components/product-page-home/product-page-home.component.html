@@ -24,7 +24,7 @@
         <div class="row" style="margin-top: 20px">
           <div class="col-sm-6 d-flex">
             <a [href]="item.url">
-              <div class="container-image" *ngIf="item.image != undefined">
+              <div class="container-image" *ngIf="item.image">
                 <div
                   class="overlay d-flex flex-column justify-content-center align-items-center"
                 >
@@ -44,7 +44,7 @@
 
                 <img
                   [src]="item.image"
-                  class="img-fluid-product lazyload"
+                  class="img-fluid-product"
                   alt="Ver más"
                 />
               </div>

@@ -7,7 +7,6 @@ import {
   OnInit,
   PLATFORM_ID,
 } from '@angular/core';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-concepto',
@@ -19,9 +18,10 @@ export class ConceptoComponent implements OnInit {
     this.caja = value;
   }
 
-  @Input() set tipo(value: any) {
-    this.tipo_caja = value;
+  @Input() set tipo(value: 'caja' | 'slide') {
+    this.boxType = value;
   }
+
   caja: any;
   style_title: any = {};
   style: any = {};
@@ -30,15 +30,12 @@ export class ConceptoComponent implements OnInit {
   style_text: any = {};
   px_y = 20;
   px_x = 144.75;
-  tipo_caja: any;
+  boxType: any;
   //capturando el tamaño de la pantalla
   screenWidth: any;
   screenHeight: any;
 
-  constructor(
-    private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
@@ -49,11 +46,17 @@ export class ConceptoComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.tipo_caja != 'slide') this.SetCalcular(this.caja.h, this.caja.w);
-    else this.SetCalcularSlide();
+    if (this.boxType != 'slide') {
+      this.SetCalcular(this.caja.h, this.caja.w);
+    } else this.SetCalcularSlide();
   }
 
-  SetCalcular(h: any, w: any) {
+  /**
+   * Corregir esto..
+   * @param h
+   * @param w
+   */
+  SetCalcular(h: number, w: number): void {
     let calculoy = 0;
     let calculox = 0;
     if (h > 15) h = h + 0.7;
@@ -63,6 +66,7 @@ export class ConceptoComponent implements OnInit {
     } else this.font = 'normal normal 900 28px/49px Avenir';
     calculoy = h * this.px_y;
     calculox = w * this.px_x;
+
     this.style['height.px'] = calculoy;
     this.style['width.px'] = calculox * 2;
     let center = (-1 * calculoy) / 2;
@@ -142,6 +146,6 @@ export class ConceptoComponent implements OnInit {
       ? window.innerHeight
       : 900;
     this.get_innerWidth();
-    if (this.tipo_caja != 'slide') this.SetCalcular(this.caja.h, this.caja.w);
+    if (this.boxType != 'slide') this.SetCalcular(this.caja.h, this.caja.w);
   }
 }
