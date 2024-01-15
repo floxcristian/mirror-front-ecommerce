@@ -11,6 +11,7 @@
         [id]="slide.image_classic"
         style="height: 300px !important"
       >
+      <h1>test</h1>
         <div>
           <a [href]="slide.url">
             <ng-container>
@@ -18,7 +19,7 @@
                 [src]="slide.imageTablet"
                 [alt]="slide.alt"
                 [title]="slide.alt"
-                class=".img-fluid-product lazyload"
+                class="img-fluid-product"
               />
             </ng-container>
             <div class="overlay">
@@ -109,14 +110,14 @@
               [src]="slide.imageMobile"
               [alt]="slide.alt"
               [title]="slide.alt"
-              class=".img-fluid-product lazyload d-none d-sm-block"
+              class="img-fluid-product d-none d-sm-block"
             />
 
             <img
               [src]="slide.imageTablet"
               [alt]="slide.alt"
               [title]="slide.alt"
-              class=".img-fluid-product lazyload d-block d-sm-none"
+              class="img-fluid-product d-block d-sm-none"
             />
 
             <div class="overlay">
