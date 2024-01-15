@@ -187,6 +187,7 @@ export class ProductSlideshowComponent
           error: (err) => {
             console.log(err);
             this.lastCustomHomepageKey = '';
+            this.cargando = false;
           },
         });
     } else {

@@ -32,18 +32,15 @@
             style="color: #0063b9 !important; font-size: 18px"
           >
             <p>
-              Estimado
-              <strong>{{
-                ' ' + usuario.firstName + ' ' + usuario.lastName
-              }}</strong
+              Estimado <strong>{{ cartData?.notification?.name }}</strong
               >, hemos recibido su compra y su pago de
               <strong> {{ ' ' + total | currencyFormat }}{{ ' ' }}</strong
               >fue procesado correctamente.
             </p>
             <p>
               En breve le enviaremos un correo a
-              <strong>{{ ' ' + usuario.email }}</strong> con la confirmación de
-              su pedido:
+              <strong>{{ ' ' + cartData?.notification?.email }}</strong> con la
+              confirmación de su pedido:
             </p>
           </div>
           <div class="col-12 mt-3">
@@ -100,18 +97,15 @@
           style="color: #0063b9; font-size: 16px"
         >
           <p>
-            Estimado
-            <strong>{{
-              ' ' + usuario.firstName + ' ' + usuario.lastName
-            }}</strong
+            Estimado <strong>{{ cartData?.notification?.name }}</strong
             >, hemos recibido su compra y su pago de
             <strong> {{ ' ' + total | currencyFormat }}{{ ' ' }}</strong
             >fue procesado correctamente.
           </p>
           <p>
             En breve le enviaremos un correo a
-            <strong>{{ ' ' + usuario.email }}</strong> con la confirmación de
-            su pedido:
+            <strong>{{ ' ' + cartData?.notification?.email }}</strong> con la
+            confirmación de su pedido:
           </p>
         </div>
         <div class="col-12 mt-3">

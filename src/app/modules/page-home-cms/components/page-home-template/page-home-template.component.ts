@@ -131,8 +131,11 @@ export class PageHomeTemplateComponent
         error: (err) => {
           console.error(err);
           this.lastLoadKey = '';
+          this.carga = false;
         },
       });
+    } else {
+      this.carga = false;
     }
   }
 
