@@ -24,7 +24,11 @@
         <div class="row" style="margin-top: 20px">
           <div class="col-sm-6 d-flex">
             <a [href]="item.url">
-              <div class="container-image" *ngIf="item.image">
+              <div
+                class="container-image"
+                *ngIf="item.image"
+                style="position: relative; width: 587px; height: 100%"
+              >
                 <div
                   class="overlay d-flex flex-column justify-content-center align-items-center"
                 >
@@ -43,9 +47,10 @@
                 </div>
 
                 <img
-                  [src]="item.image"
+                  [ngSrc]="item.image"
                   class="img-fluid-product"
                   alt="Ver más"
+                  fill
                 />
               </div>
             </a>

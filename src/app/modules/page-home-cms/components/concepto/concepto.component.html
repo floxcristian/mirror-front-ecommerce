@@ -1,11 +1,12 @@
-<!-- FIXME: -->
 <div class="row" [ngStyle]="style" (click)="send_pagina(caja.data.url)">
-  <div class="container-img" [ngStyle]="style">
+  <div class="container-img" [ngStyle]="style" style="position: relative">
     <img
-      [src]="caja.data.image"
+      [ngSrc]="caja.data.image"
       class="bg"
       [ngStyle]="style"
       [alt]="caja?.data?.title"
+      [height]="style['height.px']"
+      [width]="style['width.px']"
     />
   </div>
   <div
