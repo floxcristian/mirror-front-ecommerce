@@ -18,7 +18,7 @@ export class TemplateProductosVerticalComponent implements OnChanges {
   @Input() objeto:any
   @Input() innerWidth!: number;
   @Input() page: number = 0;
-  @Input() tipoCatalogo: any;
+  @Input() tipoCatalogo!: string;
   cambiarImg: boolean = true;
   addingToCart = false;
   ght = `height:${window.innerHeight - 60}px !important`;

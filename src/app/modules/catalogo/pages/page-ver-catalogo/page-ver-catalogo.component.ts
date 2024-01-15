@@ -21,7 +21,6 @@ export class PageVerCatalogoComponent implements OnInit {
   catalogo: IBody[] = [];
   catalogoMovil: any = [];
   skus!: Array<string>;
-  // objeto!: IBody;
   objeto!:any;
   page: number;
   longitud!: number;

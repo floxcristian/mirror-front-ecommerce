@@ -38,21 +38,6 @@
     [innerWidth]="innerWidth"
     class="col-md-10 p-0"
   ></app-template-portada>
-  <app-template-un-producto
-    *ngIf="objeto.id == 'unproducto'"
-    [objeto]="objeto"
-    [tipoCatalogo]="tipoCatalogo"
-    [innerWidth]="innerWidth"
-    class="{{ objeto.class }} p-0"
-  >
-  </app-template-un-producto>
-  <app-template-tabla-productos
-    *ngIf="objeto.id == 'tablaproductos'"
-    [objeto]="objeto"
-    [tipoCatalogo]="tipoCatalogo"
-    class="{{ objeto.class }}"
-  >
-  </app-template-tabla-productos>
   <app-template-productos-vertical
     *ngIf="objeto.id == 'productosVertical'"
     [objeto]="objeto"
@@ -63,20 +48,7 @@
     [innerWidth]="innerWidth"
   >
   </app-template-productos-vertical>
-  <app-template-productos-horizontal
-    *ngIf="objeto.id == 'productosHorizontal'"
-    [objeto]="objeto"
-    [tipoCatalogo]="tipoCatalogo"
-    class="{{ objeto.class }}"
-  ></app-template-productos-horizontal>
-  <app-template-productos-dinamico
-    *ngIf="objeto.id == 'dinamico'"
-    [objeto]="objeto"
-    [tipoCatalogo]="tipoCatalogo"
-    class="{{ objeto.class }}"
-    [class.px-0]="innerWidth < 427"
-    [innerWidth]="innerWidth"
-  ></app-template-productos-dinamico>
+
 
   <ng-container *ngIf="innerWidth > 767">
     <div class="col-md-1 text-center" style="padding-top: 20rem">

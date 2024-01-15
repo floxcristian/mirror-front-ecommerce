@@ -21,15 +21,11 @@ import { PageVerCatalogoFlipComponent } from './pages/page-ver-catalogo-flip/pag
 import { PageVerNewsletterComponent } from './pages/page-ver-newsletter/page-ver-newsletter.component';
 // Components
 import { TemplatePortadaComponent } from './components/template-portada/template-portada.component';
-import { TemplateUnProductoComponent } from './components/template-un-producto/template-un-producto.component';
-import { TemplateProductosHorizontalComponent } from './components/template-productos-horizontal/template-productos-horizontal.component';
-import { TemplateTablaProductosComponent } from './components/template-tabla-productos/template-tabla-productos.component';
 import { TemplateProductosVerticalComponent } from './components/template-productos-vertical/template-productos-vertical.component';
 import { IconSvgComponent } from './components/icon-svg/icon-svg.component';
 import { HeaderCatalogoComponent } from './components/header-catalogo/header-catalogo.component';
 import { FooterCatalogoComponent } from './components/footer-catalogo/footer-catalogo.component';
 import { ProductoVerticalComponent } from './components/producto-vertical/producto-vertical.component';
-import { TemplateProductosDinamicoComponent } from './components/template-productos-dinamico/template-productos-dinamico.component';
 import { TemplateMenuCatalogoComponent } from './components/template-menu-catalogo/template-menu-catalogo.component';
 
 @NgModule({
@@ -37,15 +33,11 @@ import { TemplateMenuCatalogoComponent } from './components/template-menu-catalo
     PageCatalogoComponent,
     PageVerCatalogoComponent,
     TemplatePortadaComponent,
-    TemplateUnProductoComponent,
-    TemplateTablaProductosComponent,
-    TemplateProductosHorizontalComponent,
     TemplateProductosVerticalComponent,
     IconSvgComponent,
     HeaderCatalogoComponent,
     FooterCatalogoComponent,
     ProductoVerticalComponent,
-    TemplateProductosDinamicoComponent,
     PagePimTemplateS,
     PagePimTemplateM,
     PagePimTemplateL,
