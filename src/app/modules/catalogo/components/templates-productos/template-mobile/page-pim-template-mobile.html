@@ -146,7 +146,7 @@
           *ngIf="precioEspecial"
           class="col-12 col-sm-12 p-0 precioNormal pb-1"
         >
-          {{ preciosLista[0].precio | currencyFormat }} c/iva
+          {{ preciosLista[0].price | currencyFormat }} c/iva
         </div>
         <div *ngIf="!precioEspecial" class="col-12 col-sm-12 p-0 unidadNormal">
           Unidad
@@ -155,19 +155,19 @@
           *ngIf="!precioEspecial"
           class="col-12 col-sm-12 p-0 precioNormal pb-1"
         >
-          {{ preciosLista[0].precio | currencyFormat }} c/iva
+          {{ preciosLista[0].price | currencyFormat }} c/iva
         </div>
         <div class="col-12 col-sm-12 p-0 unidadNormal">
-          {{ preciosLista[1].desde }} a {{ preciosLista[1].hasta }} UN
+          {{ preciosLista[1].fromQuantity }} a {{ preciosLista[1].toQuantity }} UN
         </div>
         <div class="col-12 col-sm-12 p-0 precioNormal pb-1">
-          {{ preciosLista[1].precio | currencyFormat }} c/iva
+          {{ preciosLista[1].price | currencyFormat }} c/iva
         </div>
         <div class="col-12 col-sm-12 p-0 unidadDestacado">
-          {{ preciosLista[2].desde }} {{ preciosLista[2].hasta }} UN
+          {{ preciosLista[2].fromQuantity }} {{ preciosLista[2].toQuantity }} UN
         </div>
         <div class="col-12 col-sm-12 p-0 precioDestacado">
-          {{ preciosLista[2].precio | currencyFormat }} c/iva
+          {{ preciosLista[2].price | currencyFormat }} c/iva
         </div>
       </div>
       <div
@@ -181,7 +181,7 @@
           *ngIf="precioEspecial"
           class="col-12 col-sm-12 p-0 precioNormal pb-1"
         >
-          {{ preciosLista[0].precio | currencyFormat }}
+          {{ preciosLista[0].price | currencyFormat }}
           <em>
             <span
               [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
@@ -197,7 +197,7 @@
           *ngIf="!precioEspecial"
           class="col-12 col-sm-12 p-0 precioNormal pb-1"
         >
-          {{ preciosLista[0].precio | currencyFormat }}
+          {{ preciosLista[0].price | currencyFormat }}
           <em>
             <span
               [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
@@ -207,10 +207,10 @@
           </em>
         </div>
         <div class="col-12 col-sm-12 p-0 unidadNormal">
-          {{ preciosLista[1].desde }} a {{ preciosLista[1].hasta }} UN
+          {{ preciosLista[1].fromQuantity }} a {{ preciosLista[1].toQuantity }} UN
         </div>
         <div class="col-12 col-sm-12 p-0 precioNormal pb-1">
-          {{ preciosLista[1].precio | currencyFormat }}
+          {{ preciosLista[1].price | currencyFormat }}
           <em>
             <span
               [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
@@ -220,10 +220,10 @@
           </em>
         </div>
         <div class="col-12 col-sm-12 p-0 unidadDestacado">
-          {{ preciosLista[2].desde }} {{ preciosLista[2].hasta }} UN
+          {{ preciosLista[2].fromQuantity }} {{ preciosLista[2].toQuantity }} UN
         </div>
         <div class="col-12 col-sm-12 p-0 precioDestacado">
-          {{ preciosLista[2].precio | currencyFormat }}
+          {{ preciosLista[2].price | currencyFormat }}
           <em>
             <span
               [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
@@ -245,7 +245,7 @@
           *ngIf="precioEspecial"
           class="col-12 col-sm-12 p-0 precioNormal pb-1"
         >
-          {{ preciosLista[0].precio | currencyFormat }} c/iva
+          {{ preciosLista[0].price | currencyFormat }} c/iva
         </div>
         <div *ngIf="!precioEspecial" class="col-12 col-sm-12 p-0 unidadNormal">
           Unidad
@@ -254,13 +254,13 @@
           *ngIf="!precioEspecial"
           class="col-12 col-sm-12 p-0 precioNormal pb-1"
         >
-          {{ preciosLista[0].precio | currencyFormat }} c/iva
+          {{ preciosLista[0].price | currencyFormat }} c/iva
         </div>
         <div class="col-12 col-sm-12 p-0 unidadDestacado">
-          {{ preciosLista[1].desde }} {{ preciosLista[1].hasta }} UN
+          {{ preciosLista[1].fromQuantity }} {{ preciosLista[1].toQuantity }} UN
         </div>
         <div class="col-12 col-sm-12 p-0 precioDestacado">
-          {{ preciosLista[1].precio | currencyFormat }} c/iva
+          {{ preciosLista[1].price | currencyFormat }} c/iva
         </div>
       </div>
       <div
@@ -274,7 +274,7 @@
           *ngIf="precioEspecial"
           class="col-12 col-sm-12 p-0 precioNormal pb-1"
         >
-          {{ preciosLista[0].precio | currencyFormat }}
+          {{ preciosLista[0].price | currencyFormat }}
           <em>
             <span
               [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
@@ -290,7 +290,7 @@
           *ngIf="!precioEspecial"
           class="col-12 col-sm-12 p-0 precioNormal pb-1"
         >
-          {{ preciosLista[0].precio | currencyFormat }}
+          {{ preciosLista[0].price | currencyFormat }}
           <em>
             <span
               [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
@@ -300,10 +300,10 @@
           </em>
         </div>
         <div class="col-12 col-sm-12 p-0 unidadDestacado">
-          {{ preciosLista[1].desde }} {{ preciosLista[1].hasta }} UN
+          {{ preciosLista[1].fromQuantity }} {{ preciosLista[1].toQuantity }} UN
         </div>
         <div class="col-12 col-sm-12 p-0 precioDestacado">
-          {{ preciosLista[1].precio | currencyFormat }} c/iva
+          {{ preciosLista[1].price | currencyFormat }} c/iva
         </div>
       </div>
 
@@ -319,7 +319,7 @@
             *ngIf="precioEspecial"
             class="col-12 col-sm-12 p-0 precioDestacado"
           >
-            {{ preciosLista[0].precio | currencyFormat }} c/iva
+            {{ preciosLista[0].price | currencyFormat }} c/iva
           </div>
         </div>
         <div *ngIf="tipo==='Automatico' && !folio">
@@ -345,7 +345,7 @@
             *ngIf="precioEspecial"
             class="col-12 col-sm-12 p-0 precioDestacado"
           >
-            {{ preciosLista[0].precio | currencyFormat }}
+            {{ preciosLista[0].price | currencyFormat }}
             <em>
               <span
                 [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
@@ -367,7 +367,7 @@
             *ngIf="!precioEspecial"
             class="col-12 col-sm-12 p-0 precioNormalB"
           >
-            {{ preciosLista[0].precio | currencyFormat }}
+            {{ preciosLista[0].price | currencyFormat }}
             {{plana.products.cantidad}}
             <em>
               <span
@@ -430,7 +430,7 @@
             *ngIf="!precioEspecial"
             class="col-12 col-sm-12 p-0 precioNormalB"
           >
-            {{ preciosLista[0].precio | currencyFormat }} c/iva
+            {{ preciosLista[0].price | currencyFormat }} c/iva
           </div>
         </div>
       </div>
@@ -481,7 +481,7 @@
             *ngIf="!precioEspecial"
             class="col-12 col-sm-12 p-0 precioNormalB"
           >
-            {{ preciosLista[0].precio | currencyFormat }} c/iva
+            {{ preciosLista[0].price | currencyFormat }} c/iva
           </div>
         </div>
       </div>

@@ -48,33 +48,33 @@ export class PagePimTemplateMobile implements OnInit {
     if (this.plana.products.type == 'producto' && this.precios) {
       // Precio 1
       let objPrecio = {
-        desde: '1',
-        hasta: '1',
-        precio: this.plana.products.precio,
+        fromQuantity: '1',
+        toQuantity: '1',
+        price: this.plana.products.precio,
       };
       if (
         this.plana.products.rut == '0' &&
         this.plana.products.precioEsp == 0
       ) {
-        objPrecio.precio = this.plana.products.precio;
+        objPrecio.price = this.plana.products.precio;
       }
       if (
         this.plana.products.rut != '0' &&
         this.plana.products.precio != this.plana.products.precioEsp
       ) {
-        objPrecio.precio = this.plana.products.precioEsp;
+        objPrecio.price = this.plana.products.precioEsp;
         this.precioEspecial = true;
       }
 
       if (this.plana.products.precio == this.plana.products.precioEsp) {
-        objPrecio.precio = this.plana.products.precio;
+        objPrecio.price = this.plana.products.precio;
       }
       //Precio normal con dto.
       if (
         this.plana.products.rut == '0' &&
         (this.plana.products.precio || 0) > (this.plana.products.precioEsp || 0)
       ) {
-        objPrecio.precio = this.plana.products.precioEsp;
+        objPrecio.price = this.plana.products.precioEsp;
         this.precioEspecial = true;
       }
       this.preciosLista.push(objPrecio);
@@ -84,20 +84,20 @@ export class PagePimTemplateMobile implements OnInit {
         let contador = this.preciosEscala.length;
         if (contador >= 2) {
           this.preciosLista.push(this.preciosEscala[contador - 2]);
-          if (this.preciosEscala[contador - 1].hasta === 'y mas.') {
-            this.preciosEscala[contador - 1].hasta =
-              this.preciosEscala[contador - 1].desde;
-            this.preciosEscala[contador - 1].desde = 'Desde';
+          if (this.preciosEscala[contador - 1].toQuantity === 'y mas.') {
+            this.preciosEscala[contador - 1].toQuantity =
+              this.preciosEscala[contador - 1].fromQuantity;
+            this.preciosEscala[contador - 1].fromQuantity = 'Desde';
             this.preciosLista.push(this.preciosEscala[contador - 1]);
           } else {
             this.preciosLista.push(this.preciosEscala[contador - 1]);
           }
         }
         if (contador === 1) {
-          if (this.preciosEscala[contador - 1].hasta === 'y mas.') {
-            this.preciosEscala[contador - 1].hasta =
-              this.preciosEscala[contador - 1].desde;
-            this.preciosEscala[contador - 1].desde = 'Desde';
+          if (this.preciosEscala[contador - 1].toQuantity === 'y mas.') {
+            this.preciosEscala[contador - 1].toQuantity =
+              this.preciosEscala[contador - 1].fromQuantity;
+            this.preciosEscala[contador - 1].fromQuantity = 'Desde';
             this.preciosLista.push(this.preciosEscala[contador - 1]);
           } else {
             this.preciosLista.push(this.preciosEscala[contador - 1]);

@@ -156,7 +156,7 @@
                         class="p-0 pull-right txtNormal"
                         title="Precio con descuento cliente"
                       >
-                        {{ preciosLista[0].precio | currencyFormat}} {{
+                        {{ preciosLista[0].price | currencyFormat}} {{
                         (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}
                       </td>
                     </tr>
@@ -166,27 +166,27 @@
                         class="p-0 pull-right txtNormal"
                         title="Precio normal"
                       >
-                        {{ preciosLista[0].precio | currencyFormat}} {{
+                        {{ preciosLista[0].price | currencyFormat}} {{
                         (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}
                       </td>
                     </tr>
                     <tr>
                       <td class="p-0 txtNormal">
-                        {{ preciosLista[1].desde }} a {{ preciosLista[1].hasta
+                        {{ preciosLista[1].fromQuantity }} a {{ preciosLista[1].toQuantity
                         }} UN
                       </td>
                       <td class="p-0 pull-right txtNormal">
-                        {{ preciosLista[1].precio | currencyFormat }} {{
+                        {{ preciosLista[1].price | currencyFormat }} {{
                         (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}
                       </td>
                     </tr>
                     <tr>
                       <td class="p-0 txtNormal fw-bold">
-                        {{ preciosLista[2].desde }} {{ preciosLista[2].hasta }}
+                        {{ preciosLista[2].fromQuantity }} {{ preciosLista[2].toQuantity }}
                         UN
                       </td>
                       <td class="p-0 pull-right txtDestacado">
-                        {{ preciosLista[2].precio | currencyFormat }} {{
+                        {{ preciosLista[2].price | currencyFormat }} {{
                         (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}
                       </td>
                     </tr>
@@ -205,7 +205,7 @@
                         class="p-0 pull-right txtNormal"
                         title="Precio con descuento cliente"
                       >
-                        {{ preciosLista[0].precio | currencyFormat}} {{
+                        {{ preciosLista[0].price | currencyFormat}} {{
                         (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}
                       </td>
                     </tr>
@@ -215,27 +215,27 @@
                         class="p-0 pull-right txtNormal"
                         title="Precio normal"
                       >
-                        {{ preciosLista[0].precio | currencyFormat}} {{
+                        {{ preciosLista[0].price | currencyFormat}} {{
                         (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}
                       </td>
                     </tr>
                     <tr>
                       <td class="p-0 txtNormal">
-                        {{ preciosLista[1].desde }} a {{ preciosLista[1].hasta
+                        {{ preciosLista[1].fromQuantity }} a {{ preciosLista[1].toQuantity
                         }} UN
                       </td>
                       <td class="p-0 pull-right txtNormal">
-                        {{ preciosLista[1].precio | currencyFormat }} {{
+                        {{ preciosLista[1].price | currencyFormat }} {{
                         (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}
                       </td>
                     </tr>
                     <tr>
                       <td class="p-0 txtNormal fw-bold">
-                        {{ preciosLista[2].desde }} {{ preciosLista[2].hasta }}
+                        {{ preciosLista[2].fromQuantity }} {{ preciosLista[2].toQuantity }}
                         UN
                       </td>
                       <td class="p-0 pull-right txtDestacado">
-                        {{ preciosLista[2].precio | currencyFormat }}
+                        {{ preciosLista[2].price | currencyFormat }}
                         <em>
                           <span
                             [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
@@ -262,7 +262,7 @@
                         class="p-0 pull-right txtNormal"
                         title="Precio con descuento cliente"
                       >
-                        {{ preciosLista[0].precio | currencyFormat}} {{
+                        {{ preciosLista[0].price | currencyFormat}} {{
                         (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}
                       </td>
                     </tr>
@@ -272,17 +272,17 @@
                         class="p-0 pull-right txtNormal"
                         title="Precio normal"
                       >
-                        {{ preciosLista[0].precio | currencyFormat}} {{
+                        {{ preciosLista[0].price | currencyFormat}} {{
                         (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}
                       </td>
                     </tr>
                     <tr>
                       <td class="p-0 txtNormal fw-bold text-start">
-                        {{ preciosLista[1].desde }} {{ preciosLista[1].hasta }}
+                        {{ preciosLista[1].fromQuantity }} {{ preciosLista[1].toQuantity }}
                         UN
                       </td>
                       <td class="p-0 pull-right txtDestacado">
-                        {{ preciosLista[1].precio | currencyFormat }} {{
+                        {{ preciosLista[1].price | currencyFormat }} {{
                         (!isVacio(iva) ? (iva ? 'c/iva' : 'neto') : 'c/iva') }}
                       </td>
                     </tr>
@@ -302,7 +302,7 @@
                         class="p-0 pull-right txtNormal"
                         title="Precio con descuento cliente"
                       >
-                        {{ preciosLista[0].precio | currencyFormat}}
+                        {{ preciosLista[0].price | currencyFormat}}
                         <em>
                           <span
                             [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
@@ -319,7 +319,7 @@
                         class="p-0 pull-right txtNormal"
                         title="Precio normal"
                       >
-                        {{ preciosLista[0].precio | currencyFormat}}
+                        {{ preciosLista[0].price | currencyFormat}}
                         <em>
                           <span
                             [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
@@ -332,11 +332,11 @@
                     </tr>
                     <tr>
                       <td class="p-0 txtNormal fw-bold text-start">
-                        {{ preciosLista[1].desde }} {{ preciosLista[1].hasta }}
+                        {{ preciosLista[1].fromQuantity }} {{ preciosLista[1].toQuantity }}
                         UN
                       </td>
                       <td class="p-0 pull-right txtDestacado">
-                        {{ preciosLista[1].precio | currencyFormat }}
+                        {{ preciosLista[1].price | currencyFormat }}
                         <em>
                           <span
                             [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
@@ -385,7 +385,7 @@
                         class="p-0 pull-right txtDestacado"
                         title="Precio con descuento cliente"
                       >
-                        {{ preciosLista[0].precio | currencyFormat}}
+                        {{ preciosLista[0].price | currencyFormat}}
                         <em>
                           <span
                             [ngClass]="(!isVacio(iva) ? (iva ? 'rounded-pill badge-implementos' : 'rounded-pill badge-primary-custom') : 'rounded-pill badge-implementos')"
@@ -415,7 +415,7 @@
                         title="Precio normal"
                       >
                         <span>
-                          {{ preciosLista[0].precio | currencyFormat}}
+                          {{ preciosLista[0].price | currencyFormat}}
                         </span>
                         <span
                           style="font-size: xx-large"
@@ -447,7 +447,7 @@
                         class="p-0 pull-right txtDestacado"
                         title="Precio con descuento cliente"
                       >
-                        {{ preciosLista[0].precio | currencyFormat}} c/iva
+                        {{ preciosLista[0].price | currencyFormat}} c/iva
                       </td>
                     </tr>
                     <tr *ngIf="(!precioEspecial && tipo!='Automatico')">
@@ -456,7 +456,7 @@
                         class="p-0 pull-right txtPrecioNormal"
                         title="Precio normal"
                       >
-                        {{ preciosLista[0].precio | currencyFormat}} c/iva
+                        {{ preciosLista[0].price | currencyFormat}} c/iva
                       </td>
                     </tr>
                   </tbody>
