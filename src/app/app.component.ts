@@ -8,6 +8,7 @@ import {
 import {
   AfterViewInit,
   Component,
+  ElementRef,
   Inject,
   NgZone,
   OnInit,
@@ -16,7 +17,6 @@ import {
 } from '@angular/core';
 // Libs
 import * as moment from 'moment';
-import * as $ from 'jquery';
 // Services
 import { CurrencyService } from './shared/services/currency.service';
 import { SeoService } from './shared/services/seo.service';
@@ -40,6 +40,8 @@ export class AppComponent implements AfterViewInit, OnInit {
     static: false,
   })
   alert!: AlertCartMinComponent;
+
+  @ViewChild('webchatStartButtonContainer') webchatStartButtonContainer!: ElementRef;
 
   productCard!: IShoppingCartProduct;
   s: any;
@@ -100,7 +102,7 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.add('carrito');
           this.document.body.classList.remove('categoria');
           if (isPlatformBrowser(this.platformId)) {
-            $('.webchatStartButtonContainer').hide();
+            this.webchatStartButtonContainer.nativeElement.style.display = 'none';
           }
         } else if (event.url.includes('/catalogos')) {
           this.document.body.classList.remove('home');
@@ -108,7 +110,7 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('categoria');
           if (isPlatformBrowser(this.platformId)) {
-            $('.webchatStartButtonContainer').hide();
+            this.webchatStartButtonContainer.nativeElement.style.display = 'none';
           }
         } else if (event.url.includes('/categoria')) {
           this.document.body.classList.remove('home');
@@ -116,7 +118,7 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('carrito');
           this.document.body.classList.add('categoria');
           if (isPlatformBrowser(this.platformId)) {
-            $('.webchatStartButtonContainer').hide();
+            this.webchatStartButtonContainer.nativeElement.style.display = 'none';
           }
         } else if (this.sessionService.isB2B()) {
           this.document.body.classList.remove('home');
@@ -124,7 +126,7 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('categoria');
           if (isPlatformBrowser(this.platformId)) {
-            $('.webchatStartButtonContainer').hide();
+            this.webchatStartButtonContainer.nativeElement.style.display = 'none';
           }
         } else if (event.url.includes('/ficha')) {
           this.document.body.classList.remove('home');
@@ -132,7 +134,7 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('carrito');
           this.document.body.classList.add('pdp');
           if (isPlatformBrowser(this.platformId)) {
-            $('.webchatStartButtonContainer').show();
+            this.webchatStartButtonContainer.nativeElement.style.display = 'block';
           }
         } else if (event.url.includes('/especial/')) {
           this.document.body.classList.add('home');
@@ -140,7 +142,7 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('pdp');
           if (isPlatformBrowser(this.platformId)) {
-            $('.webchatStartButtonContainer').show();
+            this.webchatStartButtonContainer.nativeElement.style.display = 'block';
           }
         } else {
           this.document.body.classList.add('home');
@@ -148,7 +150,7 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('categoria');
           if (isPlatformBrowser(this.platformId)) {
-            $('.webchatStartButtonContainer').show();
+            this.webchatStartButtonContainer.nativeElement.style.display = 'block';
           }
         }
         if (event.url.includes('/omni-forma-de-pago')) {
