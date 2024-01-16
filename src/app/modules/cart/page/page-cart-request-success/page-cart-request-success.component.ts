@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CartService } from '../../../../shared/services/cart.service';
 
 @Component({
   selector: 'app-page-cart-request-success',
@@ -9,7 +8,7 @@ import { CartService } from '../../../../shared/services/cart.service';
 })
 export class PageCartRequestSuccessComponent implements OnInit {
   count = 1;
-  constructor(private router: Router, public cart: CartService) {
+  constructor(private router: Router) {
     /*setTimeout(() => {
       this.router.navigate(['/inicio'])
     .then(() => {

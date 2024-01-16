@@ -6,7 +6,6 @@ import { takeUntil } from 'rxjs/operators';
 import { NavigationLink } from '../../../../../shared/interfaces/navigation-link';
 import { MenuCategoriasB2cService } from '../../../../../shared/services/menu-categorias-b2c.service';
 import { RootService } from '../../../../../shared/services/root.service';
-import { CartService } from '../../../../../shared/services/cart.service';
 import { DropdownDirective } from '../../../../../shared/directives/dropdown.directive';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
@@ -21,6 +20,7 @@ import {
 } from '@core/models-v2/cms/categories-response.interface';
 import { CmsService } from '@core/services-v2/cms.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
+import { CartService } from '@core/services-v2/cart.service';
 @Component({
   selector: 'app-menu-categoria-b2c-mobile',
   templateUrl: './menu-categoria-b2c-mobile.component.html',
@@ -96,11 +96,11 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
     private modalService: BsModalService,
     private router: Router,
     public localS: LocalStorageService,
-    private cartService: CartService,
     private root: RootService,
     // Services V2
     private readonly geolocationService: GeolocationServiceV2,
-    private readonly cmsService: CmsService
+    private readonly cmsService: CmsService,
+    private readonly cartService:CartService
   ) {
     this.obtieneCategorias();
   }
@@ -230,7 +230,6 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
 
   async validarCuenta() {
     this.localS.set(StorageKey.ruta, ['/', 'mi-cuenta', 'seguimiento']);
-    // // @ts-ignore
     this.router.navigate(['/mi-cuenta', 'seguimiento']);
   }
 

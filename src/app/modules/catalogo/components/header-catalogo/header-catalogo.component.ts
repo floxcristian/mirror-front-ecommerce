@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CartService } from '../../../../shared/services/cart.service';
-import { RootService } from '../../../../shared/services/root.service';
+import { CartService } from '@core/services-v2/cart.service';
 
 @Component({
   selector: 'app-header-catalogo',
@@ -8,7 +7,9 @@ import { RootService } from '../../../../shared/services/root.service';
   styleUrls: ['./header-catalogo.component.scss'],
 })
 export class HeaderCatalogoComponent implements OnInit {
-  constructor(public cart: CartService, private root: RootService) {}
+  constructor(
+    //Servicesv2
+    public cart: CartService,) {}
 
   ngOnInit() {}
 }

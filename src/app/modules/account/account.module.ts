@@ -35,7 +35,6 @@ import { PageComprasComponent } from './pages/page-compras/page-compras.componen
 import { PageTrackingOvComponent } from './pages/page-tracking-ov/page-tracking-ov.component';
 // Components
 import { LayoutComponent } from './components/layout/layout.component';
-import { DetallePedidoComponent } from './components/detalle-pedido/detalle-pedido.component';
 import { TablaUsuarioComponent } from './components/tabla-usuario/tabla-usuario.component';
 import { ModaluserComponent } from './components/modaluser/modaluser.component';
 import { FiltroCategoriasComponent } from './components/filtro-categorias/filtro-categorias.component';
@@ -86,7 +85,6 @@ import { CardDashboardNoChartComponent } from '../../shared/components/card-dash
     TablaUsuarioComponent,
     Modal_reciboComponent,
     ModaluserComponent,
-    DetallePedidoComponent,
     PageComprasComponent,
     FiltroCategoriasComponent,
   ],

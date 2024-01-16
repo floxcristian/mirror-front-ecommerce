@@ -2,7 +2,6 @@ import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { PageFlip, SizeType } from 'page-flip';
-import { CartService } from '../../../../shared/services/cart.service';
 import { RootService } from '../../../../shared/services/root.service';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { environment } from '@env/environment';
@@ -14,6 +13,7 @@ import { StorageKey } from '@core/storage/storage-keys.enum';
 import { CatalogService } from '@core/services-v2/catalog.service';
 import { IBody, ICatalog, ILeftSide, IRightSide } from '@core/models-v2/catalog/catalog-response.interface';
 import { MetaTag } from '@core/models-v2/article/article-response.interface';
+import { CartService } from '@core/services-v2/cart.service';
 
 @Component({
   selector: 'app-page-ver-catalogo-flip',
@@ -53,11 +53,11 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     private localS: LocalStorageService,
     private router: Router,
     private toast: ToastrService,
-    public cart: CartService,
     public root: RootService,
     private responsive: BreakpointObserver,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
+    public cart: CartService,
     private readonly sessionService: SessionService,
     private readonly geolocationService: GeolocationServiceV2,
     private readonly catalogService:CatalogService

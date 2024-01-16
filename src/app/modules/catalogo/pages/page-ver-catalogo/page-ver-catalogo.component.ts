@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { RootService } from '../../../../shared/services/root.service';
 import { isPlatformBrowser } from '@angular/common';
-import { CartService } from '../../../../shared/services/cart.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
@@ -11,6 +10,7 @@ import { StorageKey } from '@core/storage/storage-keys.enum';
 import { IBody, ICatalog } from '@core/models-v2/catalog/catalog-response.interface';
 import { CatalogService } from '@core/services-v2/catalog.service';
 import { MetaTag } from '@core/models-v2/article/article-response.interface';
+import { CartService } from '@core/services-v2/cart.service';
 @Component({
   selector: 'app-page-ver-catalogo',
   templateUrl: './page-ver-catalogo.component.html',
@@ -31,12 +31,11 @@ export class PageVerCatalogoComponent implements OnInit {
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,
     private localS: LocalStorageService,
-
     public root: RootService,
     private router: Router,
-    public cart: CartService,
     private toast: ToastrService,
     // Services V2
+    public cart: CartService,
     private readonly sessionService: SessionService,
     private readonly geolocationService: GeolocationServiceV2,
     private readonly catalogService:CatalogService

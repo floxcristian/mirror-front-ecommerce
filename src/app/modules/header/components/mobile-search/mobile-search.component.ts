@@ -9,10 +9,8 @@ import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { RootService } from '../../../../shared/services/root.service';
 import { ToastrService } from 'ngx-toastr';
-
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { CartService } from '../../../../shared/services/cart.service';
 import { Subject, Subscription } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
@@ -30,6 +28,7 @@ import { SessionService } from '@core/services-v2/session/session.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
+import { CartService } from '@core/services-v2/cart.service';
 
 @Component({
   selector: 'app-mobile-search',
@@ -77,16 +76,15 @@ export class MobileSearchComponent implements OnInit {
     private modalService: BsModalService,
     public root: RootService,
     private toastr: ToastrService,
-    public cart: CartService,
     public menuCategorias: MenuCategoriasB2cService,
     public localS: LocalStorageService,
-    private cartService: CartService,
     private readonly gtmService: GoogleTagManagerService,
     // Service V2
     private readonly geolocationService: GeolocationServiceV2,
     private readonly articleService: ArticleService,
     private readonly sessionService: SessionService,
-    private readonly authStateService: AuthStateServiceV2
+    private readonly authStateService: AuthStateServiceV2,
+    private readonly cartService:CartService
   ) {}
 
   ngOnInit() {
