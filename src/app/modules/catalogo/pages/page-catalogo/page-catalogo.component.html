@@ -20,25 +20,27 @@
                 <div class="col-md-8">
                   <div class="card-body py-3 ps-3">
                     <table style="font-size: 13px">
-                      <tr>
-                        <td colspan="2">
-                          <h5>{{ catalogo.name }}</h5>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="width: 110px">
-                          <small class="text-muted">FECHA VIGENCIA: </small>
-                        </td>
-                        <td>{{ catalogo.activationDate | date : "dd/MM/yyyy" }}</td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <small class="text-muted"
-                            >FECHA EXPIRACI&Oacute;N:
-                          </small>
-                        </td>
-                        <td>{{ catalogo.expirationDate | date : "dd/MM/yyyy" }}</td>
-                      </tr>
+                      <tbody>
+                        <tr>
+                          <td colspan="2">
+                            <h5>{{ catalogo.name }}</h5>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="width: 110px">
+                            <small class="text-muted">FECHA VIGENCIA: </small>
+                          </td>
+                          <td>{{ catalogo.activationDate | date : "dd/MM/yyyy" }}</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <small class="text-muted"
+                              >FECHA EXPIRACI&Oacute;N:
+                            </small>
+                          </td>
+                          <td>{{ catalogo.expirationDate | date : "dd/MM/yyyy" }}</td>
+                        </tr>
+                      </tbody>
                     </table>
                   </div>
                   <div class="card-footer py-3 ps-3">

@@ -11,7 +11,7 @@ import { ICatalog } from '@core/models-v2/catalog/catalog-response.interface';
   styleUrls: ['./page-catalogo.component.scss'],
 })
 export class PageCatalogoComponent implements OnInit {
-  lstCatalogos!: ICatalog[];
+  lstCatalogos: ICatalog[] = [];
 
   constructor(
     private localS: LocalStorageService,
@@ -41,7 +41,8 @@ export class PageCatalogoComponent implements OnInit {
     if (
       typeof catalogo !== 'undefined' &&
       catalogo.hasOwnProperty('dynamic') && catalogo.dynamic
-    ) {
+    )
+    {
       this.router.navigate(['/', 'catalogos', 'ver-catalogo-flip']);
     } else {
       this.router.navigate(['/', 'catalogos', 'ver-catalogo']);
