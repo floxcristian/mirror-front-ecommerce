@@ -27,6 +27,8 @@ import { HeaderCatalogoComponent } from './components/header-catalogo/header-cat
 import { FooterCatalogoComponent } from './components/footer-catalogo/footer-catalogo.component';
 import { ProductoVerticalComponent } from './components/producto-vertical/producto-vertical.component';
 import { TemplateMenuCatalogoComponent } from './components/template-menu-catalogo/template-menu-catalogo.component';
+//new
+import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,7 @@ import { TemplateMenuCatalogoComponent } from './components/template-menu-catalo
     SharedModule,
     HeaderModule,
     MobileModule,
+    LayoutModule
   ],
 })
 export class CatalogoModule {}

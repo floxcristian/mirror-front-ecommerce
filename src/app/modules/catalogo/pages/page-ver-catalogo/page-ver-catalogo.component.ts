@@ -43,13 +43,15 @@ export class PageVerCatalogoComponent implements OnInit {
     this.page = 0;
     this.onResize();
 
-    if (isPlatformBrowser(this.platformId)) {
-      this.isBrowser = true;
-    }
+    // if (isPlatformBrowser(this.platformId)) {
+    //   this.isBrowser = true;
+    // }
   }
 
   async ngOnInit() {
+    if (isPlatformBrowser(this.platformId))
     await this.validarParametros();
+    else console.log('not client')
   }
   async validarParametros() {
     let objeto:ICatalog | null = null;

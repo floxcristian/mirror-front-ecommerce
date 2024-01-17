@@ -24,6 +24,7 @@ export class PageVerNewsletterComponent implements OnInit {
   portada!: string;
   contraportada!: string;
   vertical!: boolean;
+  dispositivo: string = '';
 
   constructor(
     private responsive: BreakpointObserver,
@@ -36,7 +37,9 @@ export class PageVerNewsletterComponent implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id') || 1;
-    this.responsive
+    if(isPlatformBrowser(this.platformId)){
+      console.log('client')
+      this.responsive
       .observe([
         Breakpoints.TabletPortrait,
         Breakpoints.HandsetPortrait,
@@ -46,6 +49,7 @@ export class PageVerNewsletterComponent implements OnInit {
         Breakpoints.HandsetLandscape,
       ])
       .subscribe((result) => {
+        console.log('resultado break :',result)
         this.pageFlip = null;
         const breakpoints = result.breakpoints;
         if (breakpoints[Breakpoints.TabletPortrait]) {
@@ -60,7 +64,6 @@ export class PageVerNewsletterComponent implements OnInit {
           this.dispositivo = 'web';
         } else {
           if (breakpoints[Breakpoints.HandsetLandscape]) this.vertical = true;
-
           this.dispositivo = 'tablet';
         }
       });
@@ -70,11 +73,13 @@ export class PageVerNewsletterComponent implements OnInit {
     this.screenHeight = isPlatformBrowser(this.platformId)
       ? window.innerHeight
       : 900;
-    console.log(this.dispositivo);
+    console.log('tipo del dispo:',this.dispositivo);
     this.ObtenerDatos(id);
     setTimeout(() => {
       this.loadFlip();
     }, 1300);
+    }
+    else console.log('not client')
   }
 
   async ObtenerDatos(id: any) {
@@ -82,10 +87,15 @@ export class PageVerNewsletterComponent implements OnInit {
       this.catalogService.getNewsletter(id).subscribe({
         next:(res)=>{
           this.data = res.data
+          console.log('newsletter:',res)
           let page_portada:IPage = res.data.pages.shift() as IPage;
           let page_contraportada:IPage = res.data.pages.pop() as IPage;
+          // this.portada = page_portada.image;
+          // this.contraportada = page_contraportada.image;
           this.portada = page_portada.image;
           this.contraportada = page_contraportada.image;
+          console.log('portada:', this.portada)
+          console.log('portada:', this.contraportada)
         },
         error:(err)=>{
           console.log(err)
@@ -118,7 +128,7 @@ export class PageVerNewsletterComponent implements OnInit {
       : 900;
   }
 
-  dispositivo: string = '';
+  
   nextPage() {
     let por = this.pageFlip.getOrientation();
     if (this.dispositivo === 'smartphone' || por === 'portrait') {
@@ -140,6 +150,7 @@ export class PageVerNewsletterComponent implements OnInit {
   loadFlip() {
     let duracion = 1000;
     if (this.dispositivo === 'smartphone') {
+      console.log('ENTRE CELAR')
       const htmlElement = document.getElementById(
         'demoBookExample'
       ) as HTMLElement;
@@ -166,6 +177,7 @@ export class PageVerNewsletterComponent implements OnInit {
       this.pageFlip = new PageFlip(htmlElement, pageFlipSettings);
     }
     if (this.dispositivo === 'web') {
+      console.log('ENTRE WEB')
       this.ObtenerTamanoPantalla();
       let width;
       let height;
@@ -201,6 +213,7 @@ export class PageVerNewsletterComponent implements OnInit {
       this.pageFlip = new PageFlip(htmlElement, pageFlipSettings);
     }
     if (this.dispositivo === 'tablet') {
+      console.log('ENTRE TABLET')
       const htmlElement = document.getElementById(
         'demoBookExample'
       ) as HTMLElement;

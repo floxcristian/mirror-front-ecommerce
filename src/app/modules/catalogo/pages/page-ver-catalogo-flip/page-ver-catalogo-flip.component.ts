@@ -68,7 +68,9 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.responsive
+    if(isPlatformBrowser(this.platformId)){
+      console.log('client')
+      this.responsive
       .observe([
         Breakpoints.TabletPortrait,
         Breakpoints.HandsetPortrait,
@@ -77,6 +79,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         Breakpoints.Web,
       ])
       .subscribe((result) => {
+        console.log('break flip:',result)
         this.pageTotal = 0;
         this.paginas = [];
         this.paginasMobile = [];
@@ -96,6 +99,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
           this.dispositivo = 'tablet';
         }
       });
+      console.log('flip dispo:', this.dispositivo)
     this.validarParametros();
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -103,6 +107,8 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     this.screenHeight = isPlatformBrowser(this.platformId)
       ? window.innerHeight
       : 900;
+    }
+    else console.log('not client')
   }
 
   async validarParametros() {
@@ -155,7 +161,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         return;
       } else {
         if(objeto.proposalNumber != 0) this.propuesta = await this.catalogService.getProposal(objeto.proposalNumber);
-        console.log(' propuestita: ',this.propuesta)
         this.tipoCatalogo = objeto.catalogType;
         this.folio = objeto.proposalNumber;
         this.nombreCliente = objeto.name;
@@ -202,7 +207,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
 
     let params: any;
     if (this.tipoCatalogo == 'Automatico') {
-      console.log(this.rutCatalogo);
       params = {
         branchCode: tiendaSeleccionada.code,
         documentId: this.rutCatalogo,
@@ -499,6 +503,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   loadFlip() {
     console.log('dispositivo pe:',this.dispositivo)
     if (this.dispositivo === 'smartphone') {
+      console.log('ENTRE CELAR')
       let porcentaje = 1.9;
       if (this.screenWidth > 400 && this.screenWidth < 420) porcentaje = 5.4; //ok
       if (this.screenWidth < 400 && this.screenWidth > 360) porcentaje = 5.9; //ok
@@ -527,6 +532,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       );
     }
     if (this.dispositivo === 'web') {
+      console.log('ENTRE WEB')
       let numero;
       if (this.screenWidth > 1440 && this.screenWidth < 1540) {
         numero = 600;
@@ -562,6 +568,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       );
     }
     if (this.dispositivo === 'tablet') {
+      console.log('ENTRE TABLET')
       this.pageFlip = new PageFlip(
         document.getElementById('demoBookExample') as HTMLElement,
         {
