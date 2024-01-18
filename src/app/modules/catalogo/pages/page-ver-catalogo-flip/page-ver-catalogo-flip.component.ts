@@ -69,7 +69,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
 
   ngOnInit() {
     if(isPlatformBrowser(this.platformId)){
-      console.log('client')
       this.responsive
       .observe([
         Breakpoints.TabletPortrait,
@@ -79,7 +78,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         Breakpoints.Web,
       ])
       .subscribe((result) => {
-        console.log('break flip:',result)
         this.pageTotal = 0;
         this.paginas = [];
         this.paginasMobile = [];
@@ -99,7 +97,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
           this.dispositivo = 'tablet';
         }
       });
-      console.log('flip dispo:', this.dispositivo)
     this.validarParametros();
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -202,7 +199,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   }
   async establecerPrecio() {
     let user = this.sessionService.getSession();
-    console.log('getSelectedStore desde PageVerCatalogoFlipComponent');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
     let params: any;
@@ -414,7 +410,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       // OBTENGO TODOS LOS ARTICULOS
       for (let i = 0; i < this.paginasTemp.length; i++) {
         for (let x = 0; x < this.paginasTemp[i].length; x++) {
-          console.log('paginaTemp:',this.paginasTemp)
           if (this.paginasTemp[i][x].products) {
             let titulo = '';
             this.paginasTemp[i].leftTitle
@@ -501,7 +496,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   minimo:boolean = false;
   medio:boolean = false;
   loadFlip() {
-    console.log('dispositivo pe:',this.dispositivo)
     if (this.dispositivo === 'smartphone') {
       console.log('ENTRE CELAR')
       let porcentaje = 1.9;
@@ -532,7 +526,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       );
     }
     if (this.dispositivo === 'web') {
-      console.log('ENTRE WEB')
       let numero;
       if (this.screenWidth > 1440 && this.screenWidth < 1540) {
         numero = 600;
@@ -543,8 +536,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         numero = 450;
         this.minimo = true;
       }
-      console.log(numero);
-      console.log(this.medio);
 
       this.pageFlip = new PageFlip(
         document.getElementById('demoBookExample') as HTMLElement,
@@ -568,7 +559,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       );
     }
     if (this.dispositivo === 'tablet') {
-      console.log('ENTRE TABLET')
       this.pageFlip = new PageFlip(
         document.getElementById('demoBookExample') as HTMLElement,
         {
