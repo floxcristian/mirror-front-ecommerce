@@ -169,7 +169,9 @@
     <div *ngIf="!cargandoCat" class="row">
       <div class="col-12 text-center mt-2 h6">
         <span>{{ pageCurrent }}</span> de
-        <span class="page-total">{{ data.pages.length }}</span>
+        <span class="page-total">
+          {{ data.pages.length%2 === 0 ? data.pages.length + 2 : data.pages.length + 1 }}
+        </span>
       </div>
     </div>
   </div>
@@ -236,7 +238,9 @@
           "
         >
           <span>{{ pageCurrent }}</span> de
-          <span class="page-total">{{ data.pages.length }}</span>
+          <span class="page-total">
+            {{ data.pages.length%2 === 0 ? data.pages.length + 2 : data.pages.length + 1 }}
+          </span>
         </div>
         <div class="col-4 text-center">
           <button

@@ -17,7 +17,6 @@ import { CartService } from '@core/services-v2/cart.service';
   styleUrls: ['./page-ver-catalogo.component.scss'],
 })
 export class PageVerCatalogoComponent implements OnInit {
-  isBrowser = false;
   catalogo: IBody[] = [];
   catalogoMovil: any = [];
   skus!: Array<string>;
@@ -42,10 +41,6 @@ export class PageVerCatalogoComponent implements OnInit {
   ) {
     this.page = 0;
     this.onResize();
-
-    // if (isPlatformBrowser(this.platformId)) {
-    //   this.isBrowser = true;
-    // }
   }
 
   async ngOnInit() {
@@ -79,7 +74,6 @@ export class PageVerCatalogoComponent implements OnInit {
           console.log(err)
           this.toast.error('Error, el catalogo no se encuentra disponible');
           this.router.navigate(['/', 'catalogos']);
-          return;
         }
       })
     } else {
@@ -112,7 +106,6 @@ export class PageVerCatalogoComponent implements OnInit {
     let user = this.sessionService.getSession();
     let rut = user.documentId;
 
-    console.log('getSelectedStore desde PageVerCatalogoComponent');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const params: any = {
       branchCode: tiendaSeleccionada.code,
@@ -157,7 +150,6 @@ export class PageVerCatalogoComponent implements OnInit {
         console.log(err)
       }
     })
-    console.log(this.catalogo, 'catalogo');
   }
 
   generateTag(tags:MetaTag[] | undefined , code:string){

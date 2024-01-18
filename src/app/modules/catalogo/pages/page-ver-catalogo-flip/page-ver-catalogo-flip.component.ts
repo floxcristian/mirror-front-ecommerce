@@ -497,7 +497,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   medio:boolean = false;
   loadFlip() {
     if (this.dispositivo === 'smartphone') {
-      console.log('ENTRE CELAR')
       let porcentaje = 1.9;
       if (this.screenWidth > 400 && this.screenWidth < 420) porcentaje = 5.4; //ok
       if (this.screenWidth < 400 && this.screenWidth > 360) porcentaje = 5.9; //ok
@@ -635,10 +634,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     ];
     this.tags = this.tags.filter((item) => item);
     this.localS.set(StorageKey.tags, this.tags);
-  }
-
-  cambiarPaginaPreview(pag: any) {
-    this.pageFlip.turnToPage(pag);
   }
 
   buscaTagsSmartphone(objeto: any) {

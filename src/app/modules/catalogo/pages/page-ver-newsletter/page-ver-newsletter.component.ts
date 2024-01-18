@@ -38,7 +38,6 @@ export class PageVerNewsletterComponent implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id') || 1;
     if(isPlatformBrowser(this.platformId)){
-      console.log('client')
       this.responsive
       .observe([
         Breakpoints.TabletPortrait,
@@ -49,7 +48,6 @@ export class PageVerNewsletterComponent implements OnInit {
         Breakpoints.HandsetLandscape,
       ])
       .subscribe((result) => {
-        console.log('resultado break :',result)
         this.pageFlip = null;
         const breakpoints = result.breakpoints;
         if (breakpoints[Breakpoints.TabletPortrait]) {
@@ -67,56 +65,41 @@ export class PageVerNewsletterComponent implements OnInit {
           this.dispositivo = 'tablet';
         }
       });
-    this.screenWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-    this.screenHeight = isPlatformBrowser(this.platformId)
-      ? window.innerHeight
-      : 900;
-    console.log('tipo del dispo:',this.dispositivo);
-    this.ObtenerDatos(id);
-    setTimeout(() => {
-      this.loadFlip();
-    }, 1300);
+      this.screenWidth = isPlatformBrowser(this.platformId)
+        ? window.innerWidth
+        : 900;
+      this.screenHeight = isPlatformBrowser(this.platformId)
+        ? window.innerHeight
+        : 900;
+      this.ObtenerDatos(id);
+      setTimeout(() => {
+        this.loadFlip();
+      }, 1300);
     }
-    else console.log('not client')
   }
 
   async ObtenerDatos(id: any) {
-    try {
       this.catalogService.getNewsletter(id).subscribe({
         next:(res)=>{
           this.data = res.data
-          console.log('newsletter:',res)
           let page_portada:IPage = res.data.pages.shift() as IPage;
           let page_contraportada:IPage = res.data.pages.pop() as IPage;
-          // this.portada = page_portada.image;
-          // this.contraportada = page_contraportada.image;
           this.portada = page_portada.image;
           this.contraportada = page_contraportada.image;
-          console.log('portada:', this.portada)
-          console.log('portada:', this.contraportada)
         },
         error:(err)=>{
           console.log(err)
           this.router.navigate(['/not-found']);
         }
       })
-    } catch (error) {
-      console.log(error);
-    }
   }
   abrirEnlace(link: any) {
-    console.log('click');
-
     if (link) window.open(link, '_blank');
   }
   flipNext() {
     this.pageFlip.flipNext();
   }
-  flipBack() {
-    this.pageFlip.flipPrev();
-  }
+
   altoPantalla: number = 0;
   anchoPantalla: number = 0;
   ObtenerTamanoPantalla() {
@@ -127,17 +110,14 @@ export class PageVerNewsletterComponent implements OnInit {
       ? window.innerWidth
       : 900;
   }
-
-  
   nextPage() {
     let por = this.pageFlip.getOrientation();
     if (this.dispositivo === 'smartphone' || por === 'portrait') {
       if (this.pageCurrent < this.pageTotal) {
         this.pageFlip.turnToNextPage();
       }
-    } else {
+    } else
       this.pageFlip.flipNext();
-    }
   }
 
   prevPage() {
@@ -150,7 +130,6 @@ export class PageVerNewsletterComponent implements OnInit {
   loadFlip() {
     let duracion = 1000;
     if (this.dispositivo === 'smartphone') {
-      console.log('ENTRE CELAR')
       const htmlElement = document.getElementById(
         'demoBookExample'
       ) as HTMLElement;
@@ -177,7 +156,6 @@ export class PageVerNewsletterComponent implements OnInit {
       this.pageFlip = new PageFlip(htmlElement, pageFlipSettings);
     }
     if (this.dispositivo === 'web') {
-      console.log('ENTRE WEB')
       this.ObtenerTamanoPantalla();
       let width;
       let height;
@@ -185,7 +163,6 @@ export class PageVerNewsletterComponent implements OnInit {
         // Notebook
         width = this.anchoPantalla / 3;
         height = this.altoPantalla / 1.1;
-        console.log(this.anchoPantalla);
       } else {
         // Escritorio
         width = this.anchoPantalla / 3;
@@ -213,7 +190,6 @@ export class PageVerNewsletterComponent implements OnInit {
       this.pageFlip = new PageFlip(htmlElement, pageFlipSettings);
     }
     if (this.dispositivo === 'tablet') {
-      console.log('ENTRE TABLET')
       const htmlElement = document.getElementById(
         'demoBookExample'
       ) as HTMLElement;
