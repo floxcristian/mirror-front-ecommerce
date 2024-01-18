@@ -68,7 +68,8 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.responsive
+    if(isPlatformBrowser(this.platformId)){
+      this.responsive
       .observe([
         Breakpoints.TabletPortrait,
         Breakpoints.HandsetPortrait,
@@ -103,6 +104,8 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     this.screenHeight = isPlatformBrowser(this.platformId)
       ? window.innerHeight
       : 900;
+    }
+    else console.log('not client')
   }
 
   async validarParametros() {
@@ -155,7 +158,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         return;
       } else {
         if(objeto.proposalNumber != 0) this.propuesta = await this.catalogService.getProposal(objeto.proposalNumber);
-        console.log(' propuestita: ',this.propuesta)
         this.tipoCatalogo = objeto.catalogType;
         this.folio = objeto.proposalNumber;
         this.nombreCliente = objeto.name;
@@ -197,12 +199,10 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   }
   async establecerPrecio() {
     let user = this.sessionService.getSession();
-    console.log('getSelectedStore desde PageVerCatalogoFlipComponent');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
 
     let params: any;
     if (this.tipoCatalogo == 'Automatico') {
-      console.log(this.rutCatalogo);
       params = {
         branchCode: tiendaSeleccionada.code,
         documentId: this.rutCatalogo,
@@ -410,7 +410,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       // OBTENGO TODOS LOS ARTICULOS
       for (let i = 0; i < this.paginasTemp.length; i++) {
         for (let x = 0; x < this.paginasTemp[i].length; x++) {
-          console.log('paginaTemp:',this.paginasTemp)
           if (this.paginasTemp[i][x].products) {
             let titulo = '';
             this.paginasTemp[i].leftTitle
@@ -497,7 +496,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   minimo:boolean = false;
   medio:boolean = false;
   loadFlip() {
-    console.log('dispositivo pe:',this.dispositivo)
     if (this.dispositivo === 'smartphone') {
       let porcentaje = 1.9;
       if (this.screenWidth > 400 && this.screenWidth < 420) porcentaje = 5.4; //ok
@@ -537,8 +535,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         numero = 450;
         this.minimo = true;
       }
-      console.log(numero);
-      console.log(this.medio);
 
       this.pageFlip = new PageFlip(
         document.getElementById('demoBookExample') as HTMLElement,
@@ -638,10 +634,6 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     ];
     this.tags = this.tags.filter((item) => item);
     this.localS.set(StorageKey.tags, this.tags);
-  }
-
-  cambiarPaginaPreview(pag: any) {
-    this.pageFlip.turnToPage(pag);
   }
 
   buscaTagsSmartphone(objeto: any) {
