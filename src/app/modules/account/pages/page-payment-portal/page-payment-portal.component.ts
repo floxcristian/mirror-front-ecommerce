@@ -25,6 +25,7 @@ import { SessionService } from '@core/services-v2/session/session.service';
 import { ConfigService } from '@core/config/config.service';
 import { CustomerSaleService } from '@core/services-v2/customer-sale/customer-sale.service';
 import { IFormattedPaymentButton } from './models/formatted-payment-button.model';
+import { ICustomerSale, IDebtSales } from '@core/services-v2/customer-sale/models/debt-sale.interface';
 
 @Component({
   selector: 'app-page-payment-portal',
@@ -39,19 +40,20 @@ export class PagePaymentPortalComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
   user!: ISession;
-  customerDebt: any;
-  loading = true;
-  documentToPay: any[] = [];
+  customerDebt!: ICustomerSale[];
+  loading:boolean = true;
+  documentToPay: ICustomerSale[] = [];
   documentsSelected: any[] = [];
-  total = 0;
-  totalExpired = 0;
-  totalDocuments = 0;
-  totalToPay = 0;
+  total:number = 0;
+  totalExpired:number = 0;
+  totalDocuments:number = 0;
+  totalToPay:number = 0;
   paymentBtns!: IFormattedPaymentButton[];
+  debtSales!:IDebtSales
 
-  paymentSelected = '';
-  loadingPayment = false;
-  paymentMsgSuccess = false;
+  paymentSelected:string = '';
+  loadingPayment:boolean = false;
+  paymentMsgSuccess:boolean = false;
   innerWidth: any;
   config!: IConfig;
 
@@ -87,38 +89,33 @@ export class PagePaymentPortalComponent implements OnInit {
   private getSalesDebt(): void {
     this.customerSaleService.getCustomerSalesDebt().subscribe({
       next: (res) => {
-        console.log('getCustomerSalesDebt: ', res);
+        this.debtSales = res
+        const overSales:ICustomerSale[] = this.debtSales.overdueCustomerSales.map((m:ICustomerSale) => {return {...m,"status":"VENCIDA"}} )
+        const dueSales:ICustomerSale[] = this.debtSales.dueCustomerSales.map((m:ICustomerSale) => {return {...m,"status":"PENDIENTE"}} )
+        this.customerDebt = [...overSales,...dueSales]
+        this.dtTrigger.next('')
+        this.addCheckBoxs(this.customerDebt)
+        this.calcTotalSelected();
+        this.customerDebt.forEach((e:ICustomerSale) =>{
+          let date_string = e.dueDate
+          let diff = +new Date() - +new Date(date_string)
+          e.days = Math.ceil(diff/ (1000* 3600 *24))
+        })
+        this.loading = false;
       },
-    });
-
-    const data = {
-      where: {
-        rut: this.user.documentId,
-      },
-    };
-
-    this.clientsService.getCustomerDebt(data).subscribe((r: any) => {
-      this.customerDebt = r.data[0].documento_cobros;
-      this.dtTrigger.next('');
-      this.addCheckBoxs(this.customerDebt);
-      this.calcTotalSelected();
-      this.loading = false;
-
-      this.customerDebt.forEach((e: any) => {
-        var date_string = e.fechaVencimiento;
-        var diff = +new Date() - +new Date(date_string);
-        e.days = Math.ceil(diff / (1000 * 3600 * 24));
-      });
+      error: (err) =>{
+        console.log(err)
+      }
     });
   }
 
-  addCheckBoxs(docs: any) {
+  addCheckBoxs(docs: ICustomerSale[]) {
     docs.map((item: any) => {
       item.check = false;
     });
   }
 
-  addCheck(item: any) {
+  addCheck(item: ICustomerSale) {
     item.check = !item.check;
     this.calcTotalSelected();
   }
@@ -128,27 +125,22 @@ export class PagePaymentPortalComponent implements OnInit {
     this.documentToPay = [];
     this.documentsSelected = [];
     this.total = 0;
-    this.totalDocuments = 0;
+    this.totalDocuments = this.debtSales.totalDueAmount + this.debtSales.totalOverdueAmount;
     this.totalToPay = 0;
-    this.totalExpired = 0;
+    this.totalExpired = this.debtSales.totalOverdueAmount;
 
     for (const item of this.customerDebt) {
-      this.totalDocuments += item.saldo;
-      // guarda las vencidas
-      if (item.estado === 'VENCIDA') {
-        this.totalExpired += item.saldo;
-      }
       // guarda la seleccionadas
       if (item.check) {
         const obj = {
-          folio: item.folio,
-          monto: item.saldo,
+          folio: item.invoiceNumber,
+          monto: item.dueBalanceAmount,
         };
         this.documentToPay.push(item);
         this.documentsSelected.push(obj);
 
-        this.total += item.saldo;
-        this.totalToPay += item.saldo;
+        this.total += item.dueBalanceAmount;
+        this.totalToPay += item.dueBalanceAmount;
       }
     }
   }
@@ -180,13 +172,12 @@ export class PagePaymentPortalComponent implements OnInit {
     this.documentToPay = [];
 
     for (const item of this.customerDebt) {
-      if (item.estado === 'VENCIDA') {
+      if (item.status === 'VENCIDA') {
         this.documentToPay.push(item);
-        this.totalToPay += item.saldo;
-        this.totalExpired += item.saldo;
+        this.totalToPay += item.dueBalanceAmount;
+        this.totalExpired += item.dueBalanceAmount;
       }
     }
-
     this.openModal();
   }
 
@@ -197,8 +188,8 @@ export class PagePaymentPortalComponent implements OnInit {
     this.documentToPay = [];
     for (const item of this.customerDebt) {
       this.documentToPay.push(item);
-      this.totalToPay += item.saldo;
-      this.totalDocuments += item.saldo;
+      this.totalToPay += item.dueBalanceAmount;
+      this.totalDocuments += item.dueBalanceAmount;
     }
     this.openModal();
   }
@@ -242,6 +233,7 @@ export class PagePaymentPortalComponent implements OnInit {
   }
 
   resetPayment() {
+    console.log('reset check')
     this.calcTotalSelected();
     this.paymentMsgSuccess = true;
     this.modalPaymentMethodsRef.hide();
