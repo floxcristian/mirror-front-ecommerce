@@ -1,6 +1,11 @@
+// Angular
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { IConfig } from '@core/config/config.interface';
+import { ConfigService } from '@core/config/config.service';
+// Env
 import { environment } from '@env/environment';
+// Services
 
 @Component({
   selector: 'app-topbar-mobile',
@@ -9,7 +14,13 @@ import { environment } from '@env/environment';
 })
 export class TopbarMobileComponent implements OnInit {
   logoSrc = environment.logoSrc;
-  constructor(private router: Router) {}
+  config: IConfig;
+  constructor(
+    private readonly router: Router,
+    private readonly configService: ConfigService
+  ) {
+    this.config = this.configService.getConfig();
+  }
 
   ngOnInit() {
     this.Hide_menub2c();

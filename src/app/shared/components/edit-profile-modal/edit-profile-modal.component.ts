@@ -1,11 +1,6 @@
 // Angular
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 // Services
 import { SessionService } from '@core/services-v2/session/session.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
@@ -16,17 +11,20 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerService } from '@core/services-v2/customer.service';
+import { IConfig } from '@core/config/config.interface';
+import { ConfigService } from '@core/config/config.service';
 
 @Component({
   selector: 'app-edit-profile-modal',
   templateUrl: './edit-profile-modal.component.html',
   styleUrls: ['./edit-profile-modal.component.scss'],
 })
-export class EditProfileModalComponent implements OnInit {
+export class EditProfileModalComponent {
   @Input() modalEditRef!: BsModalRef;
   @Output() respuesta = new EventEmitter<any>();
-  formPerfil: FormGroup;
+  formPerfil!: FormGroup;
   user: ISession;
+  config: IConfig;
 
   constructor(
     private fb: FormBuilder,
@@ -34,39 +32,30 @@ export class EditProfileModalComponent implements OnInit {
     // Services V2
     private readonly sessionService: SessionService,
     private readonly sessionStorage: SessionStorageService,
-    private readonly customerService: CustomerService
+    private readonly customerService: CustomerService,
+    private readonly configService: ConfigService
   ) {
-    this.formPerfil = this.fb.group({
-      nombre: new FormControl(null, {
-        validators: [Validators.required],
-      }),
-      apellido: new FormControl(null, {
-        validators: [Validators.required],
-      }),
-
-      correo: new FormControl(null, {
-        validators: [Validators.required],
-      }),
-      telefono: new FormControl(null, {
-        validators: [
-          Validators.required,
-          Validators.pattern('[1-9][0-9]{0,9}'),
-        ],
-      }),
-    });
+    this.config = this.configService.getConfig();
+    this.buildForm();
     this.user = this.sessionService.getSession();
     this.cargarDatos();
   }
 
-  ngOnInit() {}
+  private buildForm(): void {
+    this.formPerfil = this.fb.group({
+      nombre: [null, [Validators.required]],
+      apellido: [null, [Validators.required]],
+      correo: [null, [Validators.required]],
+      telefono: [
+        null,
+        [Validators.required, Validators.pattern('[1-9][0-9]{0,9}')],
+      ],
+    });
+  }
 
-  cargarDatos() {
-    console.log('formPerfil');
-    console.log(this.formPerfil.value);
-    console.log('user');
-    console.log(this.user);
+  cargarDatos(): void {
     this.formPerfil.setValue({
-      nombre: !isVacio(this.user.firstName) ? this.user.firstName : '',
+      nombre: this.user.firstName || '',
       apellido: !isVacio(this.user.lastName) ? this.user.lastName : '',
       telefono: !isVacio(this.user.phone) ? this.user.phone : '',
       correo: !isVacio(this.user.email) ? this.user.email : '',

@@ -85,7 +85,8 @@
               </h2>
               <div class="col-md-12">
                 <label style="color: #0063b9; font-weight: 100"
-                  >{{ document.name }}* (ej: {{ document.sample }})</label
+                  >{{ config.document.name }}* (ej:
+                  {{ config.document.sample }})</label
                 >
                 <div class="input-group">
                   <input
@@ -93,7 +94,11 @@
                     [(ngModel)]="rut"
                     class="form-control"
                     [disabled]="isDisabledDocumentId"
-                    [placeholder]="isInvoice ? 'Rut Empresa*' : document.name"
+                    [placeholder]="
+                      isInvoice
+                        ? config.document.name + ' Empresa*'
+                        : config.document.name
+                    "
                     (focusout)="checkIfDocumentIdExists($event)"
                     [maxlength]="cantMaxRut"
                     appRutChars
@@ -123,7 +128,7 @@
                   "
                   class="text-error-form-2 float-start"
                 >
-                  El {{ document.name }} ingresado no es válido.
+                  El {{ config.document.name }} ingresado no es válido.
                 </p>
               </div>
               <div class="col-md-12 mt-3">
@@ -159,7 +164,9 @@
             </h2>
             <div class="col-md-12" *ngIf="!isInvoice">
               <label style="color: #0063b9; font-weight: 100"
-                >{{ document.name }}* (ej:{{ document.sample }})</label
+                >{{ config.document.name }}* (ej:{{
+                  config.document.sample
+                }})</label
               >
               <div class="input-group">
                 <input
@@ -168,7 +175,9 @@
                   class="form-control"
                   [disabled]="isDisabledDocumentId"
                   [placeholder]="
-                    isInvoice ? 'Rut Empresa*' : document.name + '*'
+                    isInvoice
+                      ? config.document.name + ' Empresa*'
+                      : config.document.name + '*'
                   "
                   (focusout)="checkIfDocumentIdExists($event)"
                   [maxlength]="cantMaxRut"
@@ -192,6 +201,7 @@
                   </button>
                 </span>
               </div>
+
               <p
                 *ngIf="
                   userForm.controls['documentId'].invalid &&
@@ -199,19 +209,21 @@
                 "
                 class="text-error-form-2 float-start"
               >
-                El {{ document.name }} ingresado no es válido.
+                El {{ config.document.name }} ingresado no es válido.
               </p>
             </div>
 
             <div class="col-12" *ngIf="isInvoice">
               <label style="color: #0063b9; font-weight: 100"
-                >{{ document.name }} *(ej:11111111-1)</label
+                >{{ config.document.name }} *({{
+                  config.document.sample
+                }})</label
               >
               <div class="input-group">
                 <input
                   formControlName="contactDocumentId"
                   class="form-control"
-                  [placeholder]="document.name + '*'"
+                  [placeholder]="config.document.name + '*'"
                   [maxlength]="cantMaxRut"
                   appRutChars
                 />
@@ -223,7 +235,7 @@
                 "
                 class="text-danger float-start"
               >
-                El {{ document.name }} ingresado no es válido.
+                El {{ config.document.name }} ingresado no es válido.
               </p>
             </div>
 
@@ -284,13 +296,14 @@
                     >
                       <i
                         [ngClass]="
-                          phoneCode === phoneCodes.mobile.code
+                          selectedPhoneCode ===
+                          this.config.phoneCodes.mobile.code
                             ? 'fa-solid fa-mobile-screen'
                             : 'fa-solid fa-phone'
                         "
                         style="margin-right: 1px"
                       ></i>
-                      {{ phoneCode }}
+                      {{ selectedPhoneCode }}
                     </button>
                     <div
                       id="dropdown-phone"
@@ -301,21 +314,25 @@
                     >
                       <a
                         class="dropdown-item"
-                        (click)="changePhoneCode(phoneCodes.mobile.code)"
+                        (click)="
+                          changePhoneCode(this.config.phoneCodes.mobile.code)
+                        "
                         ><i
                           class="fa-solid fa-mobile-screen"
                           style="margin-right: 1px"
                         ></i
-                        >{{ phoneCodes.mobile.code }}</a
+                        >{{ this.config.phoneCodes.mobile.code }}</a
                       >
                       <a
                         class="dropdown-item"
-                        (click)="changePhoneCode(phoneCodes.landline.code)"
+                        (click)="
+                          changePhoneCode(this.config.phoneCodes.landline.code)
+                        "
                         ><i
                           class="fa-solid fa-phone"
                           style="margin-right: 1px"
                         ></i
-                        >{{ phoneCodes.landline.code }}</a
+                        >{{ this.config.phoneCodes.landline.code }}</a
                       >
                     </div>
                   </div>
@@ -367,7 +384,7 @@
                   "
                   class="text-error-form-2"
                 >
-                  La contraseña no puede tener menos de 6 caracteres
+                  La contraseña no puede tener menos de 6 caracteres.
                 </p>
               </div>
             </div>
@@ -416,11 +433,7 @@
           </div>
           <div class="mb-3">
             <div class="row m-0">
-              <div
-                class="col-md-9 ps-0"
-                [class.ps-0]="innerWidth < 427"
-                [class.mb-3]="innerWidth < 427"
-              >
+              <div class="col-md-9 ps-0" [class.mb-3]="innerWidth < 427">
                 <input
                   formControlName="street"
                   type="text"
@@ -445,11 +458,7 @@
 
           <div class="mb-3">
             <div class="row m-0">
-              <div
-                class="col-md-6 ps-0"
-                [class.ps-0]="innerWidth < 427"
-                [class.mb-3]="innerWidth < 427"
-              >
+              <div class="col-md-6 ps-0" [class.mb-3]="innerWidth < 427">
                 <input
                   formControlName="departmentOrHouse"
                   type="text"
@@ -458,7 +467,7 @@
                 />
               </div>
 
-              <div class="col-md-6 ps-0" [class.ps-0]="innerWidth < 427">
+              <div class="col-md-6 ps-0">
                 <ng-select
                   [clearable]="false"
                   [searchable]="true"
@@ -510,7 +519,7 @@
                       class="form-check-label"
                       for="check-inscripcion"
                       style="color: #0063b9; font-weight: bold"
-                      >Quiero suscribirme a implementos.cl</label
+                      >Quiero suscribirme a {{ config.url }}</label
                     >
                   </div>
                 </div>

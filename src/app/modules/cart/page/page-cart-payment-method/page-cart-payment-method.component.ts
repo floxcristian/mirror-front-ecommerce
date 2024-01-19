@@ -50,7 +50,6 @@ import {
   calculaIcono,
   dataURLtoFile,
   isVacio,
-  rutValidator,
 } from '../../../../shared/utils/utilidades';
 
 import { AgregarCentroCostoComponent } from '../../components/agregar-centro-costo/agregar-centro-costo.component';
@@ -87,6 +86,7 @@ import { CustomerCostCenterService } from '@core/services-v2/customer-cost-cente
 import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';
 import { ConfigService } from '@core/config/config.service';
 import { IConfig } from '@core/config/config.interface';
+import { DocumentValidator } from '@core/validators/document-form.validator';
 
 declare const $: any;
 export interface Archivo {
@@ -205,7 +205,6 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       ? window.innerWidth
       : 900;
     this.formDefault();
-    // this.invitado = this.localS.get('invitado');
     this.guest = this.guestStorage.get() as IGuest;
     if (this.guest) {
       this.formVisita.setValue({
@@ -309,22 +308,9 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Verifica si el usuario es B2B.
-   * @returns
-   */
-  checkIsB2b(): boolean {
-    const user = this.sessionService.getSession();
-    return (
-      user.userRole === UserRoleType.SUPERVISOR ||
-      user.userRole === UserRoleType.BUYER
-    );
-  }
-
   async ngOnInit() {
     this.userSession = this.sessionService.getSession();
-    // this.root.getDataSesionUsuario();
-    this.isB2B = this.checkIsB2b();
+    this.isB2B = this.sessionService.isB2B();
     if (this.isB2B || this.userSession.businessLine) {
       this.documentOptions.push({ id: InvoiceType.INVOICE, name: 'FACTURA' });
     }
@@ -815,11 +801,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         this.cartSession.shipment?.deliveryMode === DeliveryModeType.DELIVERY
           ? 'DES'
           : 'RC';
-      // this.localS.remove('invitado');
       this.guestStorage.remove();
-      // this.localS.set('invitado', invitado);
       this.guestStorage.set(invitado);
-      // this.invitado = this.localS.get('invitado');
       this.guest = this.guestStorage.get() as IGuest;
       active_khipu = true;
     }
@@ -840,7 +823,14 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   formDefault() {
     this.formVisita = this.fb.group({
-      rut: [, [Validators.required, rutValidator, Validators.minLength(6)]],
+      rut: [
+        ,
+        [
+          Validators.required,
+          DocumentValidator.isValidDocumentId,
+          Validators.minLength(6),
+        ],
+      ],
       nombre: [, Validators.required],
       apellido: [, Validators.required],
       telefono: [

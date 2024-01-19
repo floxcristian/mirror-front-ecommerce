@@ -39,7 +39,9 @@
                       *ngIf="formContacto.get('asunto')?.value == 'Cotización'"
                     >
                       <div class="mb-3 col-md-6">
-                        <label for="form-name">Rut</label>
+                        <label for="form-name">{{
+                          config.document.name
+                        }}</label>
                         <input
                           formControlName="rut"
                           type="text"
@@ -60,7 +62,9 @@
 
                           <div class="input-group">
                             <div class="input-group-prepend">
-                              <span class="input-group-text">+56 9</span>
+                              <span class="input-group-text">{{
+                                config.phoneCodes.mobile.code
+                              }}</span>
                             </div>
                             <input
                               formControlName="telefono"
@@ -158,8 +162,11 @@
 
                 <div class="contact-us__address col-lg-12">
                   <p>
-                    Av. Gral Velásquez N° 10701, San Bernardo, Santiago.<br />
-                    Servicio Cliente: <a href="tel:800330088">800 330 088</a>
+                    {{ config.company.address }}.<br />
+                    Servicio Cliente:
+                    <a [href]="'tel:' + config.company.formattedPhone">{{
+                      config.company.phone
+                    }}</a>
                   </p>
 
                   <p>

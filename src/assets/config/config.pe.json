@@ -1,5 +1,6 @@
 {
   "country": "Perú",
+  "url": "www.implementos.pe",
   "document": {
     "name": "DNI",
     "sample": "11111111-1"
@@ -18,7 +19,29 @@
     "title": "29 TIENDAS A LO LARGO DE CHILE",
     "subtitle": "Desde Arica a Punta Arenas"
   },
+  "salesDebtPage": {
+    "paymentButtons": [
+      {
+        "id": "bsantander",
+        "title": "Banco Satander",
+        "image": "assets/images/bank_logos/Logotipo_del_Banco_Santander.jpg"
+      },
+      {
+        "id": "bchile",
+        "title": "Banco de Chile",
+        "image": "assets/images/bank_logos/bancochile.jpg"
+      },
+      {
+        "id": "bbci",
+        "title": "Banco BCI",
+        "image": "assets/images/bank_logos/bci.jpg"
+      }
+    ]
+  },
   "company": {
-    "phone": ""
+    "phone": "800 330 088",
+    "whatsapp": "+569 32633571",
+    "email": "contacto@implementos.pe",
+    "address": "Av. Gral. Velásquez N° 10701, San Bernardo, Santiago"
   }
 }

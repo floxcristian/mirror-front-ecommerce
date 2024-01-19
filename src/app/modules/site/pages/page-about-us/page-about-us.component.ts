@@ -1,5 +1,9 @@
+// Angular
 import { Component } from '@angular/core';
-import { DirectionService } from '../../../../shared/services/direction.service';
+// Models
+import { IConfig } from '@core/config/config.interface';
+// Services
+import { ConfigService } from '@core/config/config.service';
 
 @Component({
   selector: 'app-about-us',
@@ -7,16 +11,9 @@ import { DirectionService } from '../../../../shared/services/direction.service'
   styleUrls: ['./page-about-us.component.scss'],
 })
 export class PageAboutUsComponent {
-  carouselOptions = {
-    nav: false,
-    dots: true,
-    responsive: {
-      580: { items: 3, margin: 32 },
-      280: { items: 2, margin: 24 },
-      0: { items: 1 },
-    },
-    rtl: this.direction.isRTL(),
-  };
+  config: IConfig;
 
-  constructor(private direction: DirectionService) {}
+  constructor(private readonly configService: ConfigService) {
+    this.config = this.configService.getConfig();
+  }
 }

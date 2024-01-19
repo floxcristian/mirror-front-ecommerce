@@ -13,8 +13,8 @@
             class="alert alert-warning p-2 mb-4 text-center"
             style="font-size: 11px"
           >
-            Los datos de la cuenta deben pertenecer al nombre y Rut del
-            comprador.
+            Los datos de la cuenta deben pertenecer al nombre y
+            {{ config.document.name }} del comprador.
           </div>
           <form [formGroup]="formulario">
             <div class="row mb-3">
@@ -31,7 +31,7 @@
             </div>
             <div class="row mb-3">
               <div class="col-5">
-                Rut:
+                {{ config.document.name }}:
                 <small style="font-size: 65%">(Sin puntos y con guión)</small>
               </div>
               <div class="col-7">
@@ -86,7 +86,9 @@
               <div class="col-7">
                 <div class="input-group input-group-sm">
                   <div class="input-group-prepend">
-                    <span class="input-group-text">+569</span>
+                    <span class="input-group-text">{{
+                      config.phoneCodes.mobile.code
+                    }}</span>
                   </div>
                   <input
                     type="text"
@@ -178,8 +180,8 @@
                   class="alert alert-warning p-2 mb-4 text-center"
                   style="font-size: 11px"
                 >
-                  Los datos de la cuenta deben pertenecer al nombre y Rut del
-                  comprador.
+                  Los datos de la cuenta deben pertenecer al nombre y
+                  {{ config.document.name }} del comprador.
                 </div>
               </div>
             </div>
@@ -197,7 +199,7 @@
             </div>
             <div class="row mb-3">
               <div class="col-5">
-                Rut: <br /><small style="font-size: 65%"
+                {{ config.document.name }}: <br /><small style="font-size: 65%"
                   >(Sin puntos y con guión)</small
                 >
               </div>
@@ -253,7 +255,9 @@
               <div class="col-7">
                 <div class="input-group input-group-sm">
                   <div class="input-group-prepend">
-                    <span class="input-group-text">+569</span>
+                    <span class="input-group-text">{{
+                      config.phoneCodes.mobile.code
+                    }}</span>
                   </div>
                   <input
                     type="text"

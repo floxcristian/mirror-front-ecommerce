@@ -5,19 +5,19 @@
 <div class="row" class="bg-primary">
   <a id="informacionTienda"></a>
   <h1 class="text-center text-white py-2 mb-0" *ngIf="innerWidth > 768">
-    {{ pageConfig.title }}
+    {{ config.storesPage.title }}
   </h1>
   <h4 class="text-center text-white py-2 mb-0" *ngIf="innerWidth <= 768">
-    {{ pageConfig.title }}
+    {{ config.storesPage.title }}
   </h4>
 </div>
 
 <div class="row" class="text-white bg-dark">
   <h1 class="text-center py-2" *ngIf="innerWidth > 768">
-    {{ pageConfig.subtitle }}
+    {{ config.storesPage.subtitle }}
   </h1>
   <h5 class="text-center py-2" *ngIf="innerWidth <= 768">
-    {{ pageConfig.subtitle }}
+    {{ config.storesPage.subtitle }}
   </h5>
 </div>
 
@@ -74,7 +74,9 @@
                             'font-size': innerWidth <= 768 ? '15px' : '1em'
                           }"
                         >
-                          <a href="tel:800330088">800330088</a>
+                          <a [href]="'tel:' + config.company.formattedPhone">{{
+                            config.company.phone
+                          }}</a>
                         </span>
                       </div>
                     </div>

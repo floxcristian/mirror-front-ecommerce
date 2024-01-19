@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  country: 'cl',
+  country: 'pe',
   IVA: 0.19,
   // APIs
   apiShoppingCart: 'https://dev-api.implementos.cl/api/carro/',

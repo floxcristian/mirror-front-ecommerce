@@ -66,6 +66,8 @@ import { ProductPriceApiService } from '@core/services-v2/product-price/product-
 import { CartService } from '@core/services-v2/cart.service';
 // Modals
 import { ModalScalePriceComponent } from '../modal-scale-price/modal-scale-price.component';
+import { ConfigService } from '@core/config/config.service';
+import { IConfig } from '@core/config/config.interface';
 
 export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
 
@@ -194,6 +196,7 @@ export class ProductComponent implements OnInit, OnChanges {
 
   cyber: number = 0;
   cyberMonday: number = 0;
+  config: IConfig;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -215,8 +218,10 @@ export class ProductComponent implements OnInit, OnChanges {
     private readonly wishlistApiService: WishlistApiService,
     private readonly wishlistStorage: WishlistStorageService,
     private readonly wishlistService: WishlistService,
-    private readonly productPriceApiService: ProductPriceApiService
+    private readonly productPriceApiService: ProductPriceApiService,
+    private readonly configService: ConfigService
   ) {
+    this.config = this.configService.getConfig();
     this.carouselOptions = CarouselOptions;
     this.isB2B = this.sessionService.isB2B();
     this.session = this.sessionService.getSession();
@@ -435,7 +440,7 @@ export class ProductComponent implements OnInit, OnChanges {
    * Enviar mensaje por whatsapp solicitando producto.
    */
   sendWhatsappMessage(): void {
-    const phoneNumber = '56932633571';
+    const phoneNumber = this.config.company.formattedWhatsapp;
     const message = `Hola, necesito el siguiente producto ${
       this.product?.name
     } de SKU: ${this.product!.sku}. Para que me atienda un ejecutivo.`;

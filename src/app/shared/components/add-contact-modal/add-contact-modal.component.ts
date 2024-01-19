@@ -1,14 +1,20 @@
+// Angular
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+// Libs
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import { rutPersonaValidator, rutValidator } from '../../utils/utilidades';
+// Models
+import { IError } from '@core/models-v2/error/error.interface';
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { IContactPosition } from '@core/models-v2/customer/contact-position.interface';
+// Services
 import { getDomainsToAutocomplete } from './domains-autocomplete';
 import { CustomerContactService } from '@core/services-v2/customer-contact.service';
-import { IContactPosition } from '@core/models-v2/customer/contact-position.interface';
-import { IError } from '@core/models-v2/error/error.interface';
 import { SessionService } from '@core/services-v2/session/session.service';
-import { ISession } from '@core/models-v2/auth/session.interface';
+import { DocumentValidator } from '@core/validators/document-form.validator';
+import { IConfig } from '@core/config/config.interface';
+import { ConfigService } from '@core/config/config.service';
 
 @Component({
   selector: 'app-add-contact-modal',
@@ -22,19 +28,23 @@ export class AddContactModalComponent implements OnInit {
   formContacto!: FormGroup;
   domains: any[] = [];
   cargos: IContactPosition[] = [];
-  tipo_fono = '+569';
+  selectedPhoneCode: string;
   loadingForm = false;
   usuario!: ISession;
+  config: IConfig;
 
   constructor(
     public ModalRef: BsModalRef,
     private fb: FormBuilder,
     private toastr: ToastrService,
-    // Storage
-    private readonly sessionService: SessionService,
     // Services V2
-    private readonly customerContactService: CustomerContactService
-  ) {}
+    private readonly sessionService: SessionService,
+    private readonly customerContactService: CustomerContactService,
+    private readonly configService: ConfigService
+  ) {
+    this.config = this.configService.getConfig();
+    this.selectedPhoneCode = this.config.phoneCodes.mobile.code;
+  }
 
   ngOnInit(): void {
     this.usuario = this.sessionService.getSession();
@@ -45,13 +55,16 @@ export class AddContactModalComponent implements OnInit {
 
   formDefault() {
     this.formContacto = this.fb.group({
-      contactRut: [, [Validators.required, rutValidator, rutPersonaValidator]],
+      contactRut: [
+        ,
+        [Validators.required, DocumentValidator.isValidDocumentId],
+      ],
       nombre: [, Validators.required],
       apellido: [, Validators.required],
       telefono: [, [Validators.required]],
       cargo: [, Validators.required],
     });
-    this.Select_fono(this.tipo_fono);
+    this.Select_fono(this.selectedPhoneCode);
   }
 
   getCargos() {
@@ -71,7 +84,7 @@ export class AddContactModalComponent implements OnInit {
       name: data.nombre,
       lastName: data.apellido,
       email: emailValidado,
-      phone: this.tipo_fono + data.telefono,
+      phone: this.selectedPhoneCode + data.telefono,
       position: data.cargo,
     };
 
@@ -92,20 +105,20 @@ export class AddContactModalComponent implements OnInit {
   }
 
   Select_fono(tipo: any) {
-    this.tipo_fono = tipo;
-    if (this.tipo_fono === '+569')
+    this.selectedPhoneCode = tipo;
+    if (this.selectedPhoneCode === this.config.phoneCodes.mobile.code) {
       this.formContacto.controls['telefono'].setValidators([
         Validators.required,
         Validators.minLength(8),
         Validators.maxLength(8),
       ]);
-    else
+    } else {
       this.formContacto.controls['telefono'].setValidators([
         Validators.required,
         Validators.minLength(9),
         Validators.maxLength(9),
       ]);
-
+    }
     this.formContacto.get('telefono')?.updateValueAndValidity();
   }
 }

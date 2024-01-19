@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { IDocument, IPhoneCodes } from '@core/config/config.interface';
+import { IConfig } from '@core/config/config.interface';
 import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
 import {
   ICity,
@@ -15,7 +15,6 @@ import {
 import { IContactPosition } from '@core/services-v2/customer-contact/models/contact-positions.interface';
 // Services
 import { PasswordValidator } from '../../validations/password';
-import { rutValidator } from '../../utils/utilidades';
 import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete/angular-email-autocomplete.component';
 import { getDomainsToAutocomplete } from './domains-autocomplete';
 import { SessionStorageService } from '@core/storage/session-storage.service';
@@ -29,6 +28,7 @@ import { CustomerContactApiService } from '@core/services-v2/customer-contact/cu
 import { CustomerApiService } from '@core/services-v2/customer/customer-api.service';
 import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
 import { GuestStorageService } from '@core/storage/guest-storage.service';
+import { DocumentValidator } from '@core/validators/document-form.validator';
 
 @Component({
   selector: 'app-register',
@@ -57,13 +57,16 @@ export class RegisterComponent implements OnInit {
   selectedAddress!: { address: string; zone: string } | null;
   isDisabledDocumentId!: boolean;
   isValidDocumentId!: boolean;
-  phoneCode: string;
-  phoneCodes: IPhoneCodes;
-  document: IDocument;
+  selectedPhoneCode: string;
   isLoading!: boolean;
   businessLines!: IBusinessLine[];
   cities!: ICity[];
   contactPositions!: IContactPosition[];
+
+  /**********************************
+   * Config variables
+   ***********************************/
+  config: IConfig;
 
   constructor(
     private toastr: ToastrService,
@@ -82,10 +85,8 @@ export class RegisterComponent implements OnInit {
     private readonly sessionTokenStorage: SessionTokenStorageService,
     private readonly guestStorage: GuestStorageService
   ) {
-    const { document, phoneCodes } = this.configService.getConfig();
-    this.document = document;
-    this.phoneCodes = phoneCodes;
-    this.phoneCode = this.phoneCodes.mobile.code;
+    this.config = this.configService.getConfig();
+    this.selectedPhoneCode = this.config.phoneCodes.mobile.code;
     this.buildUserForm();
   }
 
@@ -100,8 +101,14 @@ export class RegisterComponent implements OnInit {
   private buildUserForm(): void {
     this.userForm = this.fb.group(
       {
-        documentId: [null, [Validators.required, rutValidator]],
-        contactDocumentId: [null, [Validators.required, rutValidator]],
+        documentId: [
+          null,
+          [Validators.required, DocumentValidator.isValidDocumentId],
+        ],
+        contactDocumentId: [
+          null,
+          [Validators.required, DocumentValidator.isValidDocumentId],
+        ],
         position: [null, Validators.required],
         firstName: [null, Validators.required],
         lastName: [null, Validators.required],
@@ -123,7 +130,7 @@ export class RegisterComponent implements OnInit {
         validator: PasswordValidator.validate.bind(this),
       }
     );
-    this.changePhoneCode(this.phoneCode);
+    this.changePhoneCode(this.selectedPhoneCode);
   }
 
   /**
@@ -193,7 +200,7 @@ export class RegisterComponent implements OnInit {
         isCompanyUser: this.isInvoice,
         // Contact
         position,
-        phone: `${this.phoneCode}${phone}`,
+        phone: `${this.selectedPhoneCode}${phone}`,
         contactDocumentId,
         // Adress
         city,
@@ -259,7 +266,10 @@ export class RegisterComponent implements OnInit {
       this.userForm.get('contactDocumentId')?.setValue(null);
       this.userForm
         .get('contactDocumentId')
-        ?.setValidators([Validators.required, rutValidator]);
+        ?.setValidators([
+          Validators.required,
+          DocumentValidator.isValidDocumentId,
+        ]);
       this.userForm.get('position')?.setValidators([Validators.required]);
       this.userForm.get('businessName')?.setValidators([Validators.required]);
       this.userForm.get('businessLine')?.setValidators([Validators.required]);
@@ -414,19 +424,19 @@ export class RegisterComponent implements OnInit {
    * @param phoneCode
    */
   changePhoneCode(phoneCode: string): void {
-    this.phoneCode = phoneCode;
+    this.selectedPhoneCode = phoneCode;
 
-    if (this.phoneCode === this.phoneCodes.mobile.code)
+    if (this.selectedPhoneCode === this.config.phoneCodes.mobile.code)
       this.userForm.controls['phone'].setValidators([
         Validators.required,
-        Validators.minLength(this.phoneCodes.mobile.lengthRule),
-        Validators.maxLength(this.phoneCodes.mobile.lengthRule),
+        Validators.minLength(this.config.phoneCodes.mobile.lengthRule),
+        Validators.maxLength(this.config.phoneCodes.mobile.lengthRule),
       ]);
     else
       this.userForm.controls['phone'].setValidators([
         Validators.required,
-        Validators.minLength(this.phoneCodes.landline.lengthRule),
-        Validators.maxLength(this.phoneCodes.landline.lengthRule),
+        Validators.minLength(this.config.phoneCodes.landline.lengthRule),
+        Validators.maxLength(this.config.phoneCodes.landline.lengthRule),
       ]);
     this.userForm.get('phone')?.updateValueAndValidity();
   }

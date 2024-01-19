@@ -1,14 +1,16 @@
 // Angular
 import { Inject, Injectable, Optional, PLATFORM_ID } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+// Express
+import { Request } from 'express';
+// Env
+import { environment } from '@env/environment';
 // Models
 import { IConfig } from './config.interface';
 // Rxjs
-import { Observable, tap } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { REQUEST } from '../../../express.tokens';
-import { Request } from 'express';
-import { isPlatformServer } from '@angular/common';
-import { environment } from '@env/environment';
 
 @Injectable()
 export class ConfigService {
@@ -21,19 +23,15 @@ export class ConfigService {
   ) {}
 
   loadConfig(): Observable<IConfig> {
-    const country = environment.country;
-    const file = `config.${country}.json`;
-    let filePath = `./assets/config/${file}`;
-    if (isPlatformServer(this.platformId) && this.request) {
-      filePath = this.getFullUrl() + '/assets/config/config.json';
-    }
-    console.log('configPath: ' + filePath);
-
+    const { country } = environment;
+    const filePath = this.getFilePath(country);
     return this.http.get<IConfig>(filePath).pipe(
-      tap((config) => {
-        this.config = config;
-        console.log('config: ', config);
-      })
+      map((res) => {
+        res.company.formattedWhatsapp = this.formatPhone(res.company.whatsapp);
+        res.company.formattedPhone = this.formatPhone(res.company.phone);
+        return res;
+      }),
+      tap((config) => (this.config = config))
     );
   }
 
@@ -41,9 +39,24 @@ export class ConfigService {
     return this.config;
   }
 
-  private getFullUrl() {
+  private getFullUrl(): string {
     const port = process.env['PORT'] || 4000;
-    const url = `http://localhost:${port}`;
-    return url;
+    return `http://localhost:${port}`;
+  }
+
+  private getFilePath(country: string): string {
+    const file = `config.${country}.json`;
+    return isPlatformServer(this.platformId) && this.request
+      ? `${this.getFullUrl()}/assets/config/${file}`
+      : `./assets/config/${file}`;
+  }
+
+  /**
+   * Formatea un número dejando solo números y quitando otros elementos como espacios o signos.
+   * @param phone
+   * @returns
+   */
+  private formatPhone(phone: string): string {
+    return phone.replace(/\D/g, '');
   }
 }

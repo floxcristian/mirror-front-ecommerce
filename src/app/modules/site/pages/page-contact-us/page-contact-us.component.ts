@@ -6,8 +6,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { rutValidator } from 'src/app/shared/utils/utilidades';
 import { NotificationService } from '@core/services-v2/notification.service';
+import { DocumentValidator } from '@core/validators/document-form.validator';
+import { ConfigService } from '@core/config/config.service';
+import { IConfig } from '@core/config/config.interface';
 
 @Component({
   selector: 'app-contact-us',
@@ -17,12 +19,15 @@ import { NotificationService } from '@core/services-v2/notification.service';
 export class PageContactUsComponent {
   formContacto: FormGroup;
   asuntos = ['Cotización', 'Información'];
+  config: IConfig;
   constructor(
     private formGroup: FormBuilder,
     private toastr: ToastrService,
     //ServicesV2
-    private readonly notificationService:NotificationService
+    private readonly notificationService: NotificationService,
+    private readonly configService: ConfigService
   ) {
+    this.config = this.configService.getConfig();
     this.formContacto = this.formGroup.group({
       nombre: new FormControl(null, Validators.required),
       para: new FormControl(null, [
@@ -31,7 +36,7 @@ export class PageContactUsComponent {
         Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$'),
       ]),
       asunto: new FormControl(null, Validators.required),
-      rut: [, rutValidator],
+      rut: [null, DocumentValidator.isValidDocumentId],
       telefono: new FormControl(null),
       html: new FormControl(null, Validators.required),
     });
@@ -50,25 +55,25 @@ export class PageContactUsComponent {
     }
 
     let params = {
-      documentId:rut,
-      phone:telefono,
-      name:nombre,
-      email:para,
-      subject:asunto,
-      text:html
-    }
+      documentId: rut,
+      phone: telefono,
+      name: nombre,
+      email: para,
+      subject: asunto,
+      text: html,
+    };
 
     this.notificationService.sendContactFormEmail(params).subscribe({
-      next:(res)=>{
-        console.log('res envio correo',res)
+      next: (res) => {
+        console.log('res envio correo', res);
         this.toastr.success(`Correo Enviado correctamente`);
         this.formContacto.reset();
       },
-      error:(err)=>{
-        console.log(err)
+      error: (err) => {
+        console.log(err);
         this.toastr.error(`No se logro enviar el correo`);
-      }
-    })
+      },
+    });
   }
 
   tipoAsunto(event: any) {

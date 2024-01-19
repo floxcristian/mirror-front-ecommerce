@@ -1,14 +1,13 @@
 // Angular
-import { Component, Input, TemplateRef, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 // Libs
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 // Models
 import { ISlider } from '@core/models-v2/cms/slider-reponse.interface';
 // Services
 import { DirectionService } from '../../../shared/services/direction.service';
 import { CmsService } from '@core/services-v2/cms.service';
-import { OwlOptions } from 'ngx-owl-carousel-o';
 
 @Component({
   selector: 'app-block-slideshow',
@@ -16,9 +15,6 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
   styleUrls: ['./block-slideshow.component.scss'],
 })
 export class BlockSlideshowComponent implements OnInit {
-  @Input() withDepartments = false;
-  modalRef!: BsModalRef;
-
   options: OwlOptions = {
     // lazyLoad: false,
     dots: true,
@@ -39,12 +35,14 @@ export class BlockSlideshowComponent implements OnInit {
   constructor(
     public sanitizer: DomSanitizer,
     private direction: DirectionService,
-    private modalService: BsModalService,
-    // Servicios V2
     private readonly cmsService: CmsService
   ) {}
 
-  cargarGaleria() {
+  ngOnInit(): void {
+    this.cargarGaleria();
+  }
+
+  private cargarGaleria(): void {
     this.cmsService.getSliders().subscribe({
       next: (res) => {
         this.slides = res.data;
@@ -53,20 +51,5 @@ export class BlockSlideshowComponent implements OnInit {
         console.error(err);
       },
     });
-  }
-
-  openForm(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template, {
-      backdrop: 'static',
-      keyboard: false,
-    });
-  }
-
-  ngOnInit() {
-    this.cargarGaleria();
-  }
-
-  delay(ms: any) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

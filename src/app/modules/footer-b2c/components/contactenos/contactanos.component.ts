@@ -1,5 +1,10 @@
+// Angular
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+// Models
+import { IConfig } from '@core/config/config.interface';
+// Services
+import { ConfigService } from '@core/config/config.service';
 
 @Component({
   selector: 'app-contactanos',
@@ -8,9 +13,15 @@ import { Router } from '@angular/router';
 })
 export class ContactanosComponent {
   terminos = false;
-  constructor(private router: Router) {}
+  config: IConfig;
+  constructor(
+    private readonly router: Router,
+    private readonly configService: ConfigService
+  ) {
+    this.config = this.configService.getConfig();
+  }
 
-  Contacto() {
+  Contacto(): void {
     this.router.navigate(['/sitio/contacto']);
   }
 }

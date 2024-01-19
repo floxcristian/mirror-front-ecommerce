@@ -15,18 +15,18 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ICustomerContact } from '@core/models-v2/customer/customer.interface';
 import { IContactPosition } from '@core/models-v2/customer/contact-position.interface';
 import { IError } from '@core/models-v2/error/error.interface';
+import { IConfig } from '@core/config/config.interface';
 // Services
-import { getDomainsToAutocomplete } from './domains-autocomplete';
 import {
-  isVacio,
-  rutPersonaValidator,
-  rutValidator,
-} from '../../utils/utilidades';
+  IDomainAutocomplete,
+  getDomainsToAutocomplete,
+} from './domains-autocomplete';
+import { isVacio } from '../../utils/utilidades';
 import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete/angular-email-autocomplete.component';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { CustomerContactService } from '@core/services-v2/customer-contact.service';
-import { IConfig } from '@core/config/config.interface';
 import { ConfigService } from '@core/config/config.service';
+import { DocumentValidator } from '@core/validators/document-form.validator';
 
 @Component({
   selector: 'app-update-contact-modal',
@@ -41,9 +41,9 @@ export class UpdateContactModalComponent implements OnInit {
   email!: AngularEmailAutocompleteComponent;
 
   formContacto!: FormGroup;
-  domains: any[] = [];
+  domains: IDomainAutocomplete[] = [];
   cargos: IContactPosition[] = [];
-  tipo_fono = '+569';
+  selectedPhoneCode: string;
   loadingForm = false;
   config!: IConfig;
 
@@ -56,6 +56,7 @@ export class UpdateContactModalComponent implements OnInit {
     private readonly configService: ConfigService
   ) {
     this.config = this.configService.getConfig();
+    this.selectedPhoneCode = this.config.phoneCodes.mobile.code;
   }
 
   ngOnInit(): void {
@@ -64,25 +65,27 @@ export class UpdateContactModalComponent implements OnInit {
     this.formDefault();
   }
 
-  formDefault() {
+  formDefault(): void {
     let largo = 8;
     if (!this.contacto.phone) {
       this.contacto.phone = '';
-      this.tipo_fono = '+569';
+      this.selectedPhoneCode = this.config.phoneCodes.mobile.code;
     } else {
-      if (this.contacto.phone.slice(0, 4) === '+569') {
+      if (
+        this.contacto.phone.slice(0, 4) === this.config.phoneCodes.mobile.code
+      ) {
         largo = 8;
-        this.tipo_fono = '+569';
+        this.selectedPhoneCode = this.config.phoneCodes.mobile.code;
       } else {
         largo = 9;
-        this.tipo_fono = '+56';
+        this.selectedPhoneCode = this.config.phoneCodes.landline.code;
       }
     }
 
     this.formContacto = this.fb.group({
       contactRut: [
         this.contacto.documentId,
-        [Validators.required, rutValidator, rutPersonaValidator],
+        [Validators.required, DocumentValidator.isValidDocumentId],
       ],
       nombre: [this.contacto.name, Validators.required],
       apellido: [this.contacto.lastName, Validators.required],
@@ -97,7 +100,7 @@ export class UpdateContactModalComponent implements OnInit {
     if (this.contacto.documentId && this.contacto.documentId !== '') {
       this.formContacto.get('contactRut')?.disable();
     }
-    this.Select_fono(this.tipo_fono);
+    this.Select_fono(this.selectedPhoneCode);
   }
 
   getCargos() {
@@ -122,7 +125,7 @@ export class UpdateContactModalComponent implements OnInit {
           name: data.nombre,
           lastName: data.apellido,
           email: emailValidado,
-          phone: this.tipo_fono + data.telefono,
+          phone: this.selectedPhoneCode + data.telefono,
           position: data.cargo,
         };
 
@@ -159,9 +162,9 @@ export class UpdateContactModalComponent implements OnInit {
   }
 
   Select_fono(tipo: any) {
-    this.tipo_fono = tipo;
+    this.selectedPhoneCode = tipo;
 
-    if (this.tipo_fono === '+569')
+    if (this.selectedPhoneCode === this.config.phoneCodes.mobile.code)
       this.formContacto.controls['telefono'].setValidators([
         Validators.required,
         Validators.minLength(8),

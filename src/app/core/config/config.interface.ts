@@ -1,9 +1,20 @@
 export interface IConfig {
   country: string;
+  url: string;
   document: IDocument;
   phoneCodes: IPhoneCodes;
   storesPage: IStoresPage;
   salesDebtPage: ISalesDebtPage;
+  company: ICompany;
+}
+
+export interface ICompany {
+  phone: string;
+  formattedPhone: string;
+  whatsapp: string;
+  formattedWhatsapp: string;
+  address: string;
+  email: string;
 }
 
 export interface IPhoneCodes {

@@ -9,19 +9,22 @@
         Llámanos a la línea de atención al cliente<br />
         <div class="row">
           <div class="col-5 d-flex align-items-center">
-            <a href="tel:800330088">
+            <a [href]="'tel:' + config.company.formattedPhone">
               <img
                 class="me-2"
                 src="../../../../../assets/svg/14.svg"
                 style="width: 20px; height: 20px"
                 alt="fono"
               />
-              800 330 088
+              {{ config.company.phone }}
             </a>
           </div>
           <div class="col-6 text-start">
             <a
-              href="https://api.whatsapp.com/send?phone=56932633571"
+              [href]="
+                'https://api.whatsapp.com/send?phone=' +
+                config.company.formattedWhatsapp
+              "
               target="_blank"
             >
               <!-- <img class="me-1" src="../../../../../assets/images/boton_wsp_02.png" style="width: 140px" /> -->
@@ -55,7 +58,7 @@
               alt="horario"
             />
             Horario: Lu a Vi 9:00 a 18:30 hrs.<br />
-            <span style="margin-left: 95px">Sab 9:00 a 13:00 hrs.</span>
+            <span style="margin-left: 95px">Sáb 9:00 a 13:00 hrs.</span>
           </div>
         </div>
       </li>
@@ -68,7 +71,7 @@
               style="width: 23px; height: 30px"
               alt="direccion"
             />
-            Av. Gral. Velásquez N° 10701, San Bernardo, Santiago.
+            {{ config.company.address }}.
           </div>
         </div>
       </li>
@@ -128,19 +131,22 @@
         Llámanos a la línea de atención al cliente<br />
         <div class="row">
           <div class="col-5 d-flex align-items-center">
-            <a href="tel:800330088">
+            <a [href]="'tel:' + config.company.formattedPhone">
               <img
                 class="me-2"
                 src="../../../../../assets/svg/14.svg"
                 style="width: 20px; height: 20px"
                 alt="fono"
               />
-              800 330 088
+              {{ config.company.phone }}
             </a>
           </div>
           <div class="col-6 text-start">
             <a
-              href="https://api.whatsapp.com/send?phone=56932633571"
+              [href]="
+                'https://api.whatsapp.com/send?phone=' +
+                config.company.formattedWhatsapp
+              "
               target="_blank"
             >
               <!-- <img class="me-1" src="../../../../../assets/images/boton_wsp_02.png" style="width: 140px" /> -->
@@ -187,7 +193,7 @@
               style="width: 23px; height: 30px"
               alt="direccion"
             />
-            Av. Gral. Velásquez N° 10701, San Bernardo, Santiago.
+            {{ config.company.address }}.
           </div>
         </div>
       </li>

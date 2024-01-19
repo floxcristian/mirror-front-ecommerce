@@ -1,7 +1,12 @@
+// Angular
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { rutValidator } from '../../utils/utilidades';
+// Models
 import { IReceive } from '@core/models-v2/storage/receive.interface';
+import { IConfig } from '@core/config/config.interface';
+// Services
+import { DocumentValidator } from '@core/validators/document-form.validator';
+import { ConfigService } from '@core/config/config.service';
 
 @Component({
   selector: 'app-register-reception',
@@ -13,36 +18,46 @@ export class RegisterReceptionComponent {
   @Input() entrega!: string;
 
   public formRecibe!: FormGroup;
-  tipo_fono = '+569';
+  selectedPhoneCode: string;
   slices = 8;
-  constructor(private fb: FormBuilder) {
-    this.formDefault();
+  config: IConfig;
+
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly configService: ConfigService
+  ) {
+    this.config = this.configService.getConfig();
+    this.selectedPhoneCode = this.config.phoneCodes.mobile.code;
+    this.buildForm();
   }
 
-  formDefault() {
+  private buildForm(): void {
     this.formRecibe = this.fb.group({
       firstName: [, Validators.required],
       lastName: [, Validators.required],
       phone: [, [Validators.required]],
-      documentId: [, [Validators.required, rutValidator]],
+      documentId: [
+        null,
+        [Validators.required, DocumentValidator.isValidDocumentId],
+      ],
     });
 
-    this.Select_fono(this.tipo_fono);
+    this.Select_fono(this.selectedPhoneCode);
   }
 
   async enviarReceptor() {
     const dataSave = { ...this.formRecibe.value };
     let usuarioVisita: IReceive;
-    dataSave.telefono = this.tipo_fono + dataSave.phone;
+    dataSave.telefono = this.selectedPhoneCode + dataSave.phone;
     usuarioVisita = await this.setUsuario(dataSave);
 
     this.returnReceptionEvent.emit(usuarioVisita);
   }
 
   async setUsuario(formulario: IReceive) {
-    if (formulario.phone.slice(0, 4) !== '+569') {
+    if (formulario.phone.slice(0, 4) !== this.config.phoneCodes.mobile.code) {
       this.slices = 9;
-      this.tipo_fono = '+56';
+      this.selectedPhoneCode = this.config.phoneCodes.landline.code;
     }
 
     let usuario: IReceive = {
@@ -55,10 +70,10 @@ export class RegisterReceptionComponent {
     return await usuario;
   }
 
-  Select_fono(tipo: any) {
-    this.tipo_fono = tipo;
+  Select_fono(phoneCode: string): void {
+    this.selectedPhoneCode = phoneCode;
 
-    if (this.tipo_fono === '+569')
+    if (this.selectedPhoneCode === this.config.phoneCodes.mobile.code)
       this.formRecibe.controls['phone'].setValidators([
         Validators.required,
         Validators.minLength(8),

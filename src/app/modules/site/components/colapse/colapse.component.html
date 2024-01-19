@@ -21,7 +21,9 @@
           class="ps-1"
           [ngStyle]="{ 'font-size': innerWidth <= 768 ? '15px' : '1em' }"
         >
-          <a href="tel:800330088">800330088</a>
+          <a [href]="'tel:' + config.company.formattedPhone">{{
+            config.company.phone
+          }}</a>
         </span>
       </div>
     </div>

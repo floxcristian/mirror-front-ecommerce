@@ -25,7 +25,9 @@
           <div class="row">
             <div class="col-md-12">
               <div class="mb-3">
-                <label style="color: #0063b9; font-weight: bold">Rut*</label>
+                <label style="color: #0063b9; font-weight: bold"
+                  >{{ config.document.name }}*</label
+                >
                 <input
                   formControlName="rut"
                   type="text"
@@ -42,8 +44,10 @@
                   class="text-error-form-2"
                 >
                   {{ config.document.name }} no válido, estimado usuario su
-                  {{ config.document }} debe ingresarse sin '.', Ejemplo rut
-                  válido (17007900-0)
+                  {{ config.document }} debe ingresarse sin '.', Ejemplo de
+                  {{ config.document.name }} válido ({{
+                    config.document.sample
+                  }})
                 </p>
               </div>
             </div>
@@ -73,7 +77,7 @@
             <div class="col-md-12">
               <div class="mb-3" style="color: #0063b9">
                 <label style="color: #0063b9; font-weight: bold"
-                  ><font style="margin-right: 10px">Codigo*</font> Teléfono
+                  ><font style="margin-right: 10px">Código*</font> Teléfono
                   Fijo/Celular</label
                 >
                 <div class="input-group">
@@ -87,28 +91,32 @@
                     >
                       <i
                         [ngClass]="
-                          tipo_fono == '+569'
+                          selectedPhoneCode == config.phoneCodes.mobile.code
                             ? 'fa-solid fa-mobile-screen'
                             : 'fa-solid fa-phone'
                         "
                         style="margin-right: 1px"
                       ></i>
-                      {{ tipo_fono }}
+                      {{ selectedPhoneCode }}
                     </button>
                     <div class="dropdown-menu">
-                      <a class="dropdown-item" (click)="Select_fono('+569')"
+                      <a
+                        class="dropdown-item"
+                        (click)="Select_fono(config.phoneCodes.mobile.code)"
                         ><i
                           class="fa-solid fa-mobile-screen"
                           style="margin-right: 1px"
                         ></i
-                        >+569</a
+                        >{{ config.phoneCodes.mobile.code }}</a
                       >
-                      <a class="dropdown-item" (click)="Select_fono('+56')"
+                      <a
+                        class="dropdown-item"
+                        (click)="Select_fono(config.phoneCodes.landline.code)"
                         ><i
                           class="fa-solid fa-phone"
                           style="margin-right: 1px"
                         ></i
-                        >+56</a
+                        >{{ config.phoneCodes.landline.code }}</a
                       >
                     </div>
                   </div>

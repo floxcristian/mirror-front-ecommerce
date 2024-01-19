@@ -539,7 +539,7 @@
                               type="text"
                               formControlName="rut"
                               class="form-control"
-                              placeholder="RUT*"
+                              [placeholder]="config.document.name + '*'"
                               formatRut
                               (blur)="onBlur()"
                             />
@@ -551,13 +551,15 @@
                               "
                               class="text-error-form-2 pull-right"
                             >
-                              El RUT ingresado no es válido
+                              El {{ config.document.name }} ingresado no es
+                              válido.
                             </p>
                             <p
                               *ngIf="isInvoice"
                               class="text-error-form-2 pull-right"
                             >
-                              Debes ingresar el rut de empresa.
+                              Debes ingresar el {{ config.document.name }} de
+                              empresa.
                             </p>
                           </div>
                         </div>
@@ -587,7 +589,9 @@
                           <div class="mb-3">
                             <div class="input-group">
                               <div class="input-group-prepend">
-                                <span class="input-group-text">+56 9</span>
+                                <span class="input-group-text">{{
+                                  config.phoneCodes.mobile.code
+                                }}</span>
                               </div>
                               <input
                                 formControlName="telefono"
@@ -1075,7 +1079,9 @@
                   "
                 >
                   <div class="card-body m-0">
-                    <h4 class="card-title">Ingrese su RUT</h4>
+                    <h4 class="card-title">
+                      Ingrese su {{ config.document.name }}
+                    </h4>
                     <form [formGroup]="formVisita">
                       <div class="row">
                         <div class="col-sm-12">
@@ -1084,7 +1090,7 @@
                               type="text"
                               formControlName="rut"
                               class="form-control"
-                              placeholder="RUT*"
+                              [placeholder]="config.document.name + '*'"
                               formatRut
                             />
 
@@ -1102,7 +1108,8 @@
                               *ngIf="isInvoice"
                               class="text-error-form-2 pull-right"
                             >
-                              Debes ingresar el rut de empresa.
+                              Debes ingresar el {{ config.document.name }} de
+                              empresa.
                             </p>
                           </div>
                         </div>
@@ -1132,7 +1139,9 @@
                           <div class="mb-3">
                             <div class="input-group">
                               <div class="input-group-prepend">
-                                <span class="input-group-text">+56 9</span>
+                                <span class="input-group-text">{{
+                                  config.phoneCodes.mobile.code
+                                }}</span>
                               </div>
                               <input
                                 formControlName="telefono"

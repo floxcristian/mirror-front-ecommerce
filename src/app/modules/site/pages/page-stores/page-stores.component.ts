@@ -18,7 +18,8 @@ export class PageStoresComponent {
   selectedStore!: ICollapsableStore;
   isCollapsed!: boolean;
   innerWidth: number;
-  pageConfig!: IStoresPage;
+  //pageConfig!: IStoresPage;
+  config: IConfig;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -29,7 +30,7 @@ export class PageStoresComponent {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
-    this.pageConfig = this.configService.getConfig().storesPage;
+    this.config = this.configService.getConfig();
   }
 
   ngOnInit(): void {

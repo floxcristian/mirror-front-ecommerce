@@ -1,7 +1,9 @@
 // Angular
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+// Models
 import { IConfig } from '@core/config/config.interface';
+// Services
 import { ConfigService } from '@core/config/config.service';
 
 @Component({

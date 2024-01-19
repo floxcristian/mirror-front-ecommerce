@@ -20,7 +20,6 @@ import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
 import { IGuest } from '@core/models-v2/storage/guest.interface';
 import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
 // Services
-import { rutValidator } from '../../../shared/utils/utilidades';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthApiService } from '@core/services-v2/auth/auth.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
@@ -29,6 +28,7 @@ import { CustomerService } from '@core/services-v2/customer.service';
 import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';
 import { IConfig } from '@core/config/config.interface';
 import { ConfigService } from '@core/config/config.service';
+import { DocumentValidator } from '@core/validators/document-form.validator';
 
 @Component({
   selector: 'app-register-visit',
@@ -46,7 +46,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
   formVisita!: FormGroup;
   passwordFormGroup!: FormGroup;
   isInvoice = false;
-  tipo_fono = '+569';
+  selectedPhoneCode: string;
   loadingForm = false;
   blockedForm = true;
   isValidRut = false;
@@ -66,14 +66,17 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     private readonly configService: ConfigService
   ) {
     this.config = this.configService.getConfig();
-    this.formDefault();
+    this.selectedPhoneCode = this.config.phoneCodes.mobile.code;
+    this.buildForm();
   }
 
   ngOnChanges() {
     if (this.invitado) {
-      if (this.invitado.phone?.slice(0, 4) !== '+569') {
+      if (
+        this.invitado.phone?.slice(0, 4) !== this.config.phoneCodes.mobile.code
+      ) {
         this.slices = 9;
-        this.tipo_fono = '+56';
+        this.selectedPhoneCode = this.config.phoneCodes.landline.code;
       }
       this.formVisita.setValue({
         rut: this.invitado.documentId || '',
@@ -89,9 +92,16 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     this.formBlock(true);
   }
 
-  formDefault() {
+  private buildForm(): void {
     this.formVisita = this.fb.group({
-      rut: ['', [Validators.required, Validators.maxLength(10), rutValidator]],
+      rut: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(10),
+          DocumentValidator.isValidDocumentId,
+        ],
+      ],
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
       telefono: ['', [Validators.required]],
@@ -101,9 +111,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
 
   loadGiro() {
     this.customerBusinessLineService.getBusinessLines().subscribe({
-      next: (r) => {
-        this.giros = r;
-      },
+      next: (businessLines) => (this.giros = businessLines),
       error: (e) => {
         console.error(e);
         this.toastr.error('No se pudieron traer los giros comerciales');
@@ -123,7 +131,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
         this.loadingForm = true;
 
         dataSave.tipoCliente = 1;
-        dataSave.telefono = this.tipo_fono + dataSave.telefono;
+        dataSave.telefono = this.selectedPhoneCode + dataSave.telefono;
         const user = this.sessionStorage.get();
 
         let usuarioVisita: IEcommerceUser;
@@ -150,7 +158,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
         this.returnLoginEvent.emit(usuarioVisita);
       } else {
         this.toastr.warning(
-          'Hemos detectado que el email ingresado esta registrado, por favor inicie sesión para continuar'
+          'Hemos detectado que el email ingresado esta registrado, por favor inicie sesión para continuar.'
         );
       }
     } catch (e) {
@@ -204,7 +212,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
               origin: userIdOld,
               destination: data.email,
             })
-            .subscribe((res: IShoppingCart) => {
+            .subscribe(() => {
               this.cartService.load();
             });
         } else {
@@ -261,10 +269,10 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     }
   }
 
-  Select_fono(tipo: any) {
-    this.tipo_fono = tipo;
+  Select_fono(phoneCode: string): void {
+    this.selectedPhoneCode = phoneCode;
 
-    if (this.tipo_fono === '+569')
+    if (this.selectedPhoneCode === this.config.phoneCodes.mobile.code)
       this.formVisita.controls['telefono'].setValidators([
         Validators.required,
         Validators.minLength(8),

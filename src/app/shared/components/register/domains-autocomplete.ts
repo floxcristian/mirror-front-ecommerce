@@ -5,6 +5,6 @@ export const DOMAIN_AUTOCOMPLETE = [
   'outlook.com',
 ];
 
-export const getDomainsToAutocomplete = () => {
+export const getDomainsToAutocomplete = (): any[] => {
   return DOMAIN_AUTOCOMPLETE.map((item) => ({ value: item }));
 };

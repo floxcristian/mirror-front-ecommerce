@@ -8,11 +8,11 @@ import { ICity } from '@core/services-v2/geolocation/models/city.interface';
 import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
 import { IPhoneCodes } from '@core/config/config.interface';
 // Services
-import { rutValidator } from '../../utils/utilidades';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';
 import { ConfigService } from '@core/config/config.service';
 import { CustomerApiService } from '@core/services-v2/customer/customer-api.service';
+import { DocumentValidator } from '@core/validators/document-form.validator';
 
 @Component({
   selector: 'app-register-b2b',
@@ -58,7 +58,10 @@ export class Registerb2bComponent implements OnInit {
    */
   private buildUserForm(): void {
     this.userForm = this.fb.group({
-      documentId: ['', [Validators.required, rutValidator]],
+      documentId: [
+        '',
+        [Validators.required, DocumentValidator.isValidDocumentId],
+      ],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       phone: ['', [Validators.required]],

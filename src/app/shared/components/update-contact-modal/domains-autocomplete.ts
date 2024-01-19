@@ -5,6 +5,10 @@ export const DOMAIN_AUTOCOMPLETE = [
   'outlook.com',
 ];
 
-export const getDomainsToAutocomplete = () => {
+export interface IDomainAutocomplete {
+  value: string;
+}
+
+export const getDomainsToAutocomplete = (): IDomainAutocomplete[] => {
   return DOMAIN_AUTOCOMPLETE.map((item) => ({ value: item }));
 };

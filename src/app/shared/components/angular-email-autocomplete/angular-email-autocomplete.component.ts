@@ -1,5 +1,4 @@
-import { Component, Input, Output } from '@angular/core';
-import { EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 @Component({
   selector: 'autocomplete',
   templateUrl: './angular-email-autocomplete.component.html',
@@ -16,7 +15,6 @@ export class AngularEmailAutocompleteComponent {
   correoValido: boolean = false;
   regularExpression =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  // @Output() selectedValue: EventEmitter<string> = new EventEmitter<string>();
   @Input() givenPlaceHolder: string;
   @Input() domainNames: Array<{
     imgUrl?: undefined | string;
@@ -34,7 +32,7 @@ export class AngularEmailAutocompleteComponent {
 
   ValidaCorreo = () => {
     // validation email
-    if (this.inputValue && this.inputValue.length) {
+    if (this.inputValue?.length) {
       this.correoValido = this.regularExpression.test(
         String(this.inputValue).toLowerCase()
       );
@@ -45,8 +43,6 @@ export class AngularEmailAutocompleteComponent {
     this.inputValue = value;
     this.ValidaCorreo();
   };
-
-  ocultaMenuDropdown = (event: any) => {};
 
   activaFiltro = (event: any) => {
     this.toggleDropDown = true;

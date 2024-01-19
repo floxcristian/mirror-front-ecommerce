@@ -30,7 +30,9 @@
           <label>Telefono (*)</label>
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text">+569</span>
+              <span class="input-group-text">{{
+                config.phoneCodes.mobile.code
+              }}</span>
             </div>
             <input
               formControlName="telefono"
@@ -51,7 +53,7 @@
             "
             class="text-error-form-2"
           >
-            El Teléfono ingresado no es válido
+            El Teléfono ingresado no es válido.
           </p>
         </div>
       </div>
