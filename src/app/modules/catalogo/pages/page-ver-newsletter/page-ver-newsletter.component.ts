@@ -24,6 +24,7 @@ export class PageVerNewsletterComponent implements OnInit {
   portada!: string;
   contraportada!: string;
   vertical!: boolean;
+  dispositivo: string = '';
 
   constructor(
     private responsive: BreakpointObserver,
@@ -36,7 +37,8 @@ export class PageVerNewsletterComponent implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id') || 1;
-    this.responsive
+    if(isPlatformBrowser(this.platformId)){
+      this.responsive
       .observe([
         Breakpoints.TabletPortrait,
         Breakpoints.HandsetPortrait,
@@ -60,25 +62,23 @@ export class PageVerNewsletterComponent implements OnInit {
           this.dispositivo = 'web';
         } else {
           if (breakpoints[Breakpoints.HandsetLandscape]) this.vertical = true;
-
           this.dispositivo = 'tablet';
         }
       });
-    this.screenWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-    this.screenHeight = isPlatformBrowser(this.platformId)
-      ? window.innerHeight
-      : 900;
-    console.log(this.dispositivo);
-    this.ObtenerDatos(id);
-    setTimeout(() => {
-      this.loadFlip();
-    }, 1300);
+      this.screenWidth = isPlatformBrowser(this.platformId)
+        ? window.innerWidth
+        : 900;
+      this.screenHeight = isPlatformBrowser(this.platformId)
+        ? window.innerHeight
+        : 900;
+      this.ObtenerDatos(id);
+      setTimeout(() => {
+        this.loadFlip();
+      }, 1300);
+    }
   }
 
   async ObtenerDatos(id: any) {
-    try {
       this.catalogService.getNewsletter(id).subscribe({
         next:(res)=>{
           this.data = res.data
@@ -92,21 +92,14 @@ export class PageVerNewsletterComponent implements OnInit {
           this.router.navigate(['/not-found']);
         }
       })
-    } catch (error) {
-      console.log(error);
-    }
   }
   abrirEnlace(link: any) {
-    console.log('click');
-
     if (link) window.open(link, '_blank');
   }
   flipNext() {
     this.pageFlip.flipNext();
   }
-  flipBack() {
-    this.pageFlip.flipPrev();
-  }
+
   altoPantalla: number = 0;
   anchoPantalla: number = 0;
   ObtenerTamanoPantalla() {
@@ -117,17 +110,14 @@ export class PageVerNewsletterComponent implements OnInit {
       ? window.innerWidth
       : 900;
   }
-
-  dispositivo: string = '';
   nextPage() {
     let por = this.pageFlip.getOrientation();
     if (this.dispositivo === 'smartphone' || por === 'portrait') {
       if (this.pageCurrent < this.pageTotal) {
         this.pageFlip.turnToNextPage();
       }
-    } else {
+    } else
       this.pageFlip.flipNext();
-    }
   }
 
   prevPage() {
@@ -173,7 +163,6 @@ export class PageVerNewsletterComponent implements OnInit {
         // Notebook
         width = this.anchoPantalla / 3;
         height = this.altoPantalla / 1.1;
-        console.log(this.anchoPantalla);
       } else {
         // Escritorio
         width = this.anchoPantalla / 3;
