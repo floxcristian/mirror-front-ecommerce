@@ -26,7 +26,7 @@ import { ProductComponent } from '../../shared/components/product/product.compon
 import { ModalDeliveryComponent } from './components/despacho/components/modal-delivery/modal-delivery.component';
 import { ModalPickupComponent } from './components/despacho/components/modal-pickup/modal-pickup.component';
 import { ModalPickupTodayComponent } from './components/despacho/components/modal-pickup-today/modal-pickup-today.component';
-
+import { GoogleMapsModule } from '@angular/google-maps';
 @NgModule({
   declarations: [
     PageCategoryComponent,
@@ -51,6 +51,7 @@ import { ModalPickupTodayComponent } from './components/despacho/components/moda
     WidgetsModule,
     NgSelectModule,
     HeaderModule,
+     GoogleMapsModule
   ],
 })
 export class ShopModule {}

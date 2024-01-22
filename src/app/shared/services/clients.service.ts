@@ -10,10 +10,6 @@ import { environment } from '@env/environment';
 export class ClientsService {
   constructor(private http: HttpClient) {}
 
-  getCustomerDebt(data: any) {
-    return this.http.post(environment.apiCustomer + `deuda/listado`, data);
-  }
-
   generatePayment(data: any) {
     return this.http.post(environment.apiCustomer + `deuda/generaPago`, data);
   }

@@ -95,38 +95,38 @@
             <table>
               <tr>
                 <th class="fw-bold titilo-w">Nota venta</th>
-                <td class="text-start">{{ item.nota_venta }}</td>
+                <td class="text-start">{{ item.salesId }}</td>
               </tr>
               <tr>
                 <th class="fw-bold titilo-w">Factura</th>
-                <td class="text-start">{{ item.folio }}</td>
+                <td class="text-start">{{ item.invoiceNumber }}</td>
               </tr>
               <tr>
                 <th class="fw-bold titilo-w">Fecha</th>
                 <td class="text-start">
-                  {{ item.fechaCreacion | date : 'dd-MM-yyyy' }}
+                  {{ item.createdAt | date : 'dd-MM-yyyy' }}
                 </td>
               </tr>
               <tr>
                 <th class="fw-bold titilo-w">Vencimiento</th>
                 <td class="text-start">
-                  {{ item.fechaVencimiento | date : 'dd-MM-yyyy' }}
+                  {{ item.dueDate | date : 'dd-MM-yyyy' }}
                 </td>
               </tr>
               <tr>
                 <th class="fw-bold titilo-w">Adeudado</th>
-                <td class="text-start">{{ item.saldo | currencyFormat }}</td>
+                <td class="text-start">{{ item.dueBalanceAmount | currencyFormat }}</td>
               </tr>
               <tr>
                 <th class="fw-bold titilo-w">Estado</th>
                 <td
                   class="text-start badge"
                   [ngClass]="{
-                    'bg-danger': item.estado == 'VENCIDA',
-                    'bg-warning': item.estado == 'PENDIENTE'
+                    'bg-danger': item.status == 'VENCIDA',
+                    'bg-warning': item.status == 'PENDIENTE'
                   }"
                 >
-                  {{ item.estado }}
+                  {{ item.status }}
                 </td>
               </tr>
               <tr>
@@ -180,27 +180,27 @@
               <tr
                 *ngFor="let item of customerDebt"
                 [ngClass]="{
-                  'row-red': item.estado == 'VENCIDA',
-                  'row-green': item.estado == 'PENDIENTE'
+                  'row-red': item.status == 'VENCIDA',
+                  'row-green': item.status == 'PENDIENTE'
                 }"
               >
-                <td>{{ item.nota_venta }}</td>
-                <td>{{ item.ordencompra }}</td>
-                <td>{{ item.folio }}</td>
-                <td>{{ item.fechaCreacion | date : 'dd-MM-yyyy' }}</td>
-                <td>{{ item.fechaVencimiento | date : 'dd-MM-yyyy' }}</td>
-                <td class="text-end">{{ item.saldo | currencyFormat }}</td>
+                <td>{{ item.salesId }}</td>
+                <td>{{ item.purchaseOrder }}</td>
+                <td>{{ item.invoiceNumber }}</td>
+                <td>{{ item.createdAt | date : 'dd-MM-yyyy' }}</td>
+                <td>{{ item.dueDate | date : 'dd-MM-yyyy' }}</td>
+                <td class="text-end">{{ item.dueBalanceAmount | currencyFormat }}</td>
                 <td>
                   <span
                     class="badge"
                     [ngClass]="{
-                      'bg-danger': item.estado == 'VENCIDA',
-                      'bg-warning': item.estado == 'PENDIENTE'
+                      'bg-danger': item.status == 'VENCIDA',
+                      'bg-warning': item.status == 'PENDIENTE'
                     }"
                   >
-                    {{ item.estado }}
+                    {{ item.status }}
                   </span>
-                  <span *ngIf="item.days > 0"> {{ item.days }} días</span>
+                  <span *ngIf="item.days ? item.days : 0 > 0"> {{ item.days }} días</span>
                 </td>
                 <td class="td-checkbox">
                   <div class="form-check form-check-lg">
@@ -269,7 +269,7 @@
     </div>
   </div>
 </div>
-
+<!-- Modal Payment Methods -->
 <ng-template #modalPaymentMethods>
   <div class="modal-header">
     <h4 class="modal-title pull-left">Métodos de pagos</h4>

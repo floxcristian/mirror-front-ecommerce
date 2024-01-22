@@ -4,21 +4,24 @@
       <div class="list-group" style="cursor: pointer; color: #0063b9">
         <a class="list-group-item list-group-item-action">
           <div class="col-sm-12" style="padding: 0px">
-            <i
-              class="fas fa-store"
-              style="margin-right: 10px; color: #0063b9"
-            ></i>
+            <i class="fas fa-store" style="margin-right: 10px; color: #0063b9"></i>
             {{ selectedStore.address }}
           </div>
           <hr />
-          <div class="col-sm-12" style="padding: 0px">
-            <font color="red"> {{ stock }} UNIDADES Disponibles</font>
+          <div class="col-sm-12 text-danger" >
+            {{ stock }} UNIDADES Disponibles
           </div>
         </a>
       </div>
     </div>
   </div>
   <div class="col-sm-8 ps-0 ps-0 ps-sm-2">
-    <div id="map" style="border: 1px solid #00549d"></div>
+    <div style="border: 1px solid #00549d">
+      <google-map height="350px" width="100%" [options]="options" [center]="center" [zoom]="zoom">
+        @for (position of markerPositions; track position) {
+        <map-marker [position]="position" [options]="markerOptions" />
+        }
+      </google-map>
+    </div>
   </div>
-</div>
+  </div>

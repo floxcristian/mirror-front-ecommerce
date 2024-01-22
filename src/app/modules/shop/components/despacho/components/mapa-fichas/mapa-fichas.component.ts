@@ -1,14 +1,7 @@
 // Angular
 import { Component, Input, OnInit } from '@angular/core';
-// Rxjs
-import { fromEvent } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
-// Env
-import { environment } from '@env/environment';
 // Models
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
-declare const L: any;
-
 @Component({
   selector: 'app-mapa-fichas',
   templateUrl: './mapa-fichas.component.html',
@@ -18,55 +11,50 @@ export class MapaFichasComponent implements OnInit {
   @Input() selectedStore!: IStore;
   @Input() stock!: number;
 
-  accessToken = environment.tokenMapbox;
-  map: any;
-  Layer: any;
+  markerPositions: google.maps.LatLngLiteral[] = [];
+  options: google.maps.MapOptions = {
+    disableDefaultUI: false,
+    // tipos de mapas: roadmap, satellite, hybrid, terrain
+    mapTypeId: 'roadmap',
+    mapTypeControl: false,
+    streetViewControl: false,
+    rotateControl: false,
+    fullscreenControl: false,
+    zoomControl: true,
+    //draggable: false,
+    //disableDoubleClickZoom: true,
+    //scrollwheel: false,
+  };
+  markerOptions: google.maps.MarkerOptions = { draggable: false };
+  center: google.maps.LatLngLiteral = {
+    lat: -33.54864395765844,
+    lng: -70.70984971059704,
+  };
+  zoom = 16;
 
   ngOnInit(): void {
-    fromEvent(window, 'resize')
-      .pipe(debounceTime(200))
-      .subscribe((event) => {});
-    this.initMap();
+    if (this.selectedStore) {
+      this.updatePosition(this.selectedStore);
+    }
   }
 
-  ngOnChange(): void {
-    window.dispatchEvent(new Event('resize'));
+  updatePosition(event: any) {
+    const { lat, lng } = this.formatCoordinates(event.lat, event.lng)
+    this.center = { lat, lng };
+    this.markerPositions = [];
+    this.markerPositions.push(this.center);
   }
 
-  private initMap(): void {
-    window.dispatchEvent(new Event('resize'));
-    const map = L.map('map').setView([51.505, -0.09], 13);
-
-    L.tileLayer(
-      'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' +
-        this.accessToken,
-      {
-        maxZoom: 18,
-        id: 'mapbox/streets-v12',
-        tileSize: 512,
-        zoomOffset: -1,
-        accessToken: this.accessToken,
-      }
-    ).addTo(map);
-    this.map = map;
-    this.getpointer();
-  }
-
-  /**
-   * Setear marcador de la tienda en el mapa.
-   */
-  private getpointer(): void {
-    const feature = {
-      type: 'Feature',
-      properties: this.selectedStore,
-      geometry: {
-        type: 'Point',
-        coordinates: [this.selectedStore.lng, this.selectedStore.lat],
-      },
+  formatCoordinates(lat: number, lng: number) {
+    const getDivisor = (num: number) => {
+      const digits = Math.abs(num).toString().length;
+      return Math.pow(10, digits - 2);
     };
-
-    this.Layer = L.geoJson({ type: 'FeatureCollection', features: [feature] });
-    this.map.addLayer(this.Layer);
-    this.map.fitBounds(this.Layer.getBounds());
+    const latDivisor = getDivisor(lat);
+    const lngDivisor = getDivisor(lng);
+    return {
+      lat: lat / latDivisor,
+      lng: lng / lngDivisor,
+    };
   }
 }
