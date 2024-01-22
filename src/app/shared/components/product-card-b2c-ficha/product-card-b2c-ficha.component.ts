@@ -110,9 +110,9 @@ export class ProductCardB2cFichaComponent implements OnInit {
   generateTags(tags: MetaTag[] | undefined) {
     if (tags) {
       tags.forEach((tag: MetaTag) => {
-        if (tag.code === 'cyber') this.cyber = tag.value;
+        if (tag.code === 'cyber') this.cyber = typeof tag.value === 'number' ? tag.value : 0;
         else this.cyber = 0;
-        if (tag.code === 'cyberMonday') this.cyberMonday = tag.value;
+        if (tag.code === 'cyberMonday') this.cyberMonday = typeof tag.value === 'number' ? tag.value : 0;
         else this.cyberMonday = 0;
       });
     }

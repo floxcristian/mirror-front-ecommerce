@@ -191,11 +191,16 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       if(index === -1){
         return 0
       }else{
-        return tags[index].value
+        return this.isNumber(tags[index].value)
       }
     }else{
       return 0
     }
+  }
+
+  isNumber(value:number | string){
+    if(typeof value === 'number') return value
+    else return 0
   }
   async establecerPrecio() {
     let user = this.sessionService.getSession();

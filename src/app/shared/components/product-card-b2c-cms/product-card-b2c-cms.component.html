@@ -126,7 +126,7 @@
   <div class="product-card__info position-relative">
     <div
       class="product-card__badges-list-right"
-      *ngIf="( cyberMonday || 0) > 0"
+      *ngIf="cyberMonday > 0"
     >
       <div
         class="badge_cyber float-end"
@@ -143,9 +143,22 @@
       </div>
     </div>
 
+    <div class="product-card__badges-list-right" *ngIf="isOfficial">
+      <div class="badge_cyber float-end" style="position: absolute; top: -32px; right: 1px">
+        <picture>
+          <img
+            [src]="imageOEM | replace : 'png' : 'svg'"
+            class="mr-1 mt-sm-1"
+            style="width: 50px !important; height: 50px"
+            alt="logo oferta"
+          />
+        </picture>
+      </div>
+    </div>
+
     <div
       class="product-card__badges-list-right"
-      *ngIf="(cyber || 0) > 0 && cyberMonday === 0"
+      *ngIf="cyber > 0 && cyberMonday === 0"
     >
       <div
         class="badge_cyber float-end"
