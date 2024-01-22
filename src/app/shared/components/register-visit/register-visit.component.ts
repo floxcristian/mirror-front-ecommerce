@@ -15,10 +15,10 @@ import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom } from 'rxjs';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
 import { IGuest } from '@core/models-v2/storage/guest.interface';
 import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
+import { IConfig } from '@core/config/config.interface';
 // Services
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthApiService } from '@core/services-v2/auth/auth.service';
@@ -26,7 +26,6 @@ import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service
 import { CartService } from '@core/services-v2/cart.service';
 import { CustomerService } from '@core/services-v2/customer.service';
 import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';
-import { IConfig } from '@core/config/config.interface';
 import { ConfigService } from '@core/config/config.service';
 import { DocumentValidator } from '@core/validators/document-form.validator';
 
@@ -70,7 +69,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     this.buildForm();
   }
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     if (this.invitado) {
       if (
         this.invitado.phone?.slice(0, 4) !== this.config.phoneCodes.mobile.code
@@ -88,7 +87,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.formBlock(true);
   }
 
@@ -109,7 +108,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     });
   }
 
-  loadGiro() {
+  loadGiro(): void {
     this.customerBusinessLineService.getBusinessLines().subscribe({
       next: (businessLines) => (this.giros = businessLines),
       error: (e) => {

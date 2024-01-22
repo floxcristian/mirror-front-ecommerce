@@ -379,7 +379,6 @@ export class CartService {
     products: IShoppingCartProduct[] | IProduct[]
   ): Observable<IShoppingCart> {
     // Sucursal
-    console.log('getSelectedStore desde addLista');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada.code;
 
@@ -637,6 +636,12 @@ export class CartService {
     return this.http.put(`${API_CART}/notification-contact/${id}`, data);
   }
 
+  /**
+   * Setear usuario invitado a un carro de compras.
+   * @param user
+   * @param data
+   * @returns
+   */
   setGuestUser(user: string, data: IShoppingCartGuest) {
     return this.http.put(`${API_CART}/guest/${user}`, data);
   }
