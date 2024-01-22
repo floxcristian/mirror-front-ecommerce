@@ -1,11 +1,22 @@
-.cargandoCent {
+.loading-center {
   font-size: 3rem;
   color: #0063b9;
   height: 800px;
   padding-top: 25%;
 }
 
-.space {
-  margin-top: 10px;
-  margin-bottom: 10px;
+.center-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.text-loading {
+  color: var(--primary-color);
+  --fa-beat-fade-opacity: 0.67;
+  --fa-beat-fade-scale: 1.075;
+}
+.icon-loading {
+  font-size: 64px;
+  color: var(--primary-color);
 }
