@@ -26,6 +26,7 @@ export class ModalPickupComponent implements OnInit {
   currentSelectedStore!: IStore;
   availabilities: ITripDate[] = [];
   maxStock!: number;
+  productDropshipment!:number
 
   constructor(
     public readonly modalRef: BsModalRef,

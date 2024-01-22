@@ -104,6 +104,7 @@ export class ProductsViewComponent {
     }
   }
   ngOnChanges() {
+    this.url = window.location.href;
     if (this.textToSearch.includes('SKU:'))
       this.textToSearch = this.textToSearch.substring(
         4,

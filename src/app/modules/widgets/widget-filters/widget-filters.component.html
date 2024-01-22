@@ -18,22 +18,29 @@
         <div class="filter__body m-0">
           <div class="filter__container pt-2">
             <h1
-              *ngFor="let item of this.removableCategory"
+              *ngFor="let item of removableCategory"
               (click)="removeCategory(item)"
               class="filter-selected"
             >
               {{ item.text }}
               <i class="fas fa-times"></i>
             </h1>
-
-            <h1
-              *ngFor="let item of this.removableFiltersArray"
-              (click)="removeFilter(item)"
-              class="filter-selected"
-            >
-              {{ item.value }}
-              <i class="fas fa-times"></i>
-            </h1>
+            <ng-container *ngFor="let item of removableFiltersArray">
+              <ng-container *ngIf="marca_tienda === ''">
+                <h1 (click)="removeFilter(item)" class="filter-selected">
+                  {{ item.value }}
+                  <i class="fas fa-times"></i>
+                </h1>
+              </ng-container>
+              <ng-container *ngIf="marca_tienda !== ''">
+                <ng-container *ngIf="item.field !== 'filter_MARCA'">
+                  <h1 (click)="removeFilter(item)" class="filter-selected">
+                    {{ item.value }}
+                    <i class="fas fa-times"></i>
+                  </h1>
+                </ng-container>
+              </ng-container>
+            </ng-container>
           </div>
         </div>
       </div>

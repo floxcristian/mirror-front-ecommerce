@@ -26,6 +26,7 @@ export class WidgetFiltersComponent {
   @Input() filters: ProductFilter[] = [];
   @Input() filtrosOculto!: boolean;
   @Input() mensaje!: string;
+  @Input() marca_tienda!: string;
   @Input() set removableFilters(arr: any) {
     this.removableFiltersArray = [];
     console.log('arr filters', arr);

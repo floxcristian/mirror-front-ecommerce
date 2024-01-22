@@ -123,8 +123,8 @@ export class RegisterComponent implements OnInit {
         longitude: [null],
         reference: [''],
         departmentOrHouse: [''],
-        password: [, [Validators.required, Validators.minLength(6)]],
-        confirmPassword: [, [Validators.required, Validators.minLength(6)]],
+        password: [, [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
+        confirmPassword: [, [Validators.required, Validators.minLength(6),Validators.maxLength(30)]],
       },
       {
         validator: PasswordValidator.validate.bind(this),
