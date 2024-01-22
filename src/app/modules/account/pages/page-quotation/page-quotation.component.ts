@@ -1,3 +1,4 @@
+// Angular
 import {
   Component,
   Inject,
@@ -5,26 +6,28 @@ import {
   PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '@env/environment';
-import { RootService } from '../../../../shared/services/root.service';
-import { ToastrService } from 'ngx-toastr';
-import { DataTablesResponse } from '../../../../shared/interfaces/data-table';
-import { ClientsService } from '../../../../shared/services/clients.service';
-import { DataTableDirective } from 'angular-datatables';
-import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
-import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { isPlatformBrowser } from '@angular/common';
-import { SessionService } from '@core/services-v2/session/session.service';
+// Env
+import { environment } from '@env/environment';
+// Rxjs
+import { Subject } from 'rxjs';
+// Libs
+import { ToastrService } from 'ngx-toastr';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { DataTableDirective } from 'angular-datatables';
+// Components
+import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
+// Models
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { CartService } from '@core/services-v2/cart.service';
 import {
   IOrderDetail,
   IOrderDetailResponse,
 } from '@core/models-v2/cart/order-details.interface';
 import { SHOPPING_CART_STATUS_TYPE } from '@core/enums/shopping-cart-status.enum';
+// Services
+import { SessionService } from '@core/services-v2/session/session.service';
+import { CartService } from '@core/services-v2/cart.service';
 
 @Component({
   selector: 'app-page-quotation',
@@ -46,16 +49,12 @@ export class PageQuotationComponent implements OnInit {
   columns = ['createdAt', 'salesId', 'total', 'deliveryMode', 'vendedor'];
 
   constructor(
-    private http: HttpClient,
-    private root: RootService,
     private toast: ToastrService,
-    private clientsService: ClientsService,
     private modalService: BsModalService,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object,
-    // Services V2
     private cartService: CartService,
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -64,25 +63,15 @@ export class PageQuotationComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
     if (!this.usuario.hasOwnProperty('username'))
       this.usuario.username = this.usuario.email;
   }
 
-  loadData() {
+  loadData(): void {
     const that = this;
-    let username: String = 'services';
-    let password: String = '0.=j3D2ss1.w29-';
-    let authdata = window.btoa(username + ':' + password);
-    let head = {
-      Authorization: `Basic ${authdata}`,
-      'Access-Control-Allow-Headers':
-        'Authorization, Access-Control-Allow-Headers',
-    };
-    let headers = new HttpHeaders(head);
     this.dtOptions = {
       language: {
-        // url: 'assets/js/datatable/Spanish.json'
         url: '//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json',
       },
       pagingType: 'full_numbers',

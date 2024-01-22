@@ -4,7 +4,7 @@ import { Injectable, inject } from '@angular/core';
 // Env
 import { environment } from '@env/environment';
 // Rxjs
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import {
   BehaviorSubject,
   Observable,
@@ -29,7 +29,6 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { DatePipe } from '@angular/common';
 import { ShoppingCartStorageService } from '@core/storage/shopping-cart-storage.service';
 import { SessionService } from '@core/services-v2/session/session.service';
-import { IError } from '@core/models-v2/error/error.interface';
 import { ToastrService } from 'ngx-toastr';
 
 import { GuestStorageService } from '@core/storage/guest-storage.service';

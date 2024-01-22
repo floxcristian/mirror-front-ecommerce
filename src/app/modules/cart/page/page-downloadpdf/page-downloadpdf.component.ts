@@ -1,9 +1,13 @@
+// Angular
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+// Services
 import { DocumentDownloadService } from '@core/services-v2/document-download.service';
+// Env
 import { environment } from '@env/environment';
+// Libs
 import { Buffer } from 'buffer';
 
 @Component({
