@@ -39,10 +39,10 @@
             >
               <div
                 class="col float-end"
-                *ngIf="cyber || cyberMonday"
+                *ngIf="cyber || cyberMonday || isOfficial"
                 style="position: absolute; top: 2px; right: 2px; z-index: 2"
               >
-                <picture *ngIf="(cyberMonday || 0) > 0">
+                <picture *ngIf="cyberMonday > 0">
                   <img
                     src="https://images.implementos.cl/uploads/cyber/cyberMonday.webp"
                     height="100px"
@@ -50,8 +50,11 @@
                     class="float-end"
                   />
                 </picture>
+                <picture *ngIf="isOfficial">
+                  <img [src]="imageOEM | replace : 'png' : 'svg'" height="100px" width="100px" class="float-end" />
+                </picture>
 
-                <picture *ngIf="(cyber || 0) > 0 && cyberMonday === 0">
+                <picture *ngIf="cyber > 0 && cyberMonday === 0">
                   <img
                     src="https://images.implementos.cl/uploads/cyber/cyber.webp"
                     alt=""
@@ -76,7 +79,8 @@
                     product.brand == 'BLACKSMITH' ||
                     product.brand == 'SUNTECH' ||
                     product.brand == 'INDIANA' ||
-                    product.brand == 'RANDON'
+                    product.brand == 'RANDON' ||
+                    product.brand == 'SCANIA'
                   "
                 >
                   <img

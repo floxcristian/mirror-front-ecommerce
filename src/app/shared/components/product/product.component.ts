@@ -197,6 +197,8 @@ export class ProductComponent implements OnInit, OnChanges {
   cyber: number = 0;
   cyberMonday: number = 0;
   config: IConfig;
+  isOfficial: number = 0
+  imageOEM:string = ''
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -277,10 +279,15 @@ export class ProductComponent implements OnInit, OnChanges {
   generateTags(tags: MetaTag[] | undefined) {
     if (tags) {
       tags.forEach((tag: MetaTag) => {
-        if (tag.code === 'cyber') this.cyber = tag.value;
+        if (tag.code === 'cyber') this.cyber = typeof tag.value === 'number' ? tag.value : 0;
         else this.cyber = 0;
-        if (tag.code === 'cyberMonday') this.cyberMonday = tag.value;
+        if (tag.code === 'cyberMonday') this.cyberMonday = typeof tag.value === 'number' ? tag.value : 0;
         else this.cyberMonday = 0;
+        if(tag.code === 'official_store'){
+          this.isOfficial = 1
+          this.imageOEM = typeof tag.value === 'string' ? tag.value : '';
+        }
+        else this.isOfficial = 0
       });
     }
   }

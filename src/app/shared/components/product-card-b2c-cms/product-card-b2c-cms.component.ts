@@ -76,6 +76,8 @@ export class ProductCardB2cCmsComponent implements OnInit {
 
   cyber: number = 0;
   cyberMonday: number = 0;
+  isOfficial:number = 0
+  imageOEM : string = ''
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -110,10 +112,15 @@ export class ProductCardB2cCmsComponent implements OnInit {
   generateTags(tags: MetaTag[] | undefined) {
     if (tags) {
       tags.forEach((tag: MetaTag) => {
-        if (tag.code === 'cyber') this.cyber = tag.value;
+        if (tag.code === 'cyber') this.cyber = typeof tag.value === 'number' ? tag.value : 0;
         else this.cyber = 0;
-        if (tag.code === 'cyberMonday') this.cyberMonday = tag.value;
+        if (tag.code === 'cyberMonday') this.cyberMonday = typeof tag.value === 'number' ? tag.value : 0;
         else this.cyberMonday = 0;
+        if(tag.code === 'official_store'){
+          this.isOfficial = 1
+          this.imageOEM = typeof tag.value === 'string' ? tag.value : '';
+        }
+        else this.isOfficial = 0
       });
     }
   }
