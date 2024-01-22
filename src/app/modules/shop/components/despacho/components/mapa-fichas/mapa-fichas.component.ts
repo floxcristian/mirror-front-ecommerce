@@ -10,6 +10,7 @@ import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 export class MapaFichasComponent implements OnInit {
   @Input() selectedStore!: IStore;
   @Input() stock!: number;
+  @Input() productDropshipment:number = 0
 
   markerPositions: google.maps.LatLngLiteral[] = [];
   options: google.maps.MapOptions = {

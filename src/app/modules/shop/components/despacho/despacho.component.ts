@@ -9,6 +9,7 @@ import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation
 import { ModalDeliveryComponent } from './components/modal-delivery/modal-delivery.component';
 import { ModalPickupComponent } from './components/modal-pickup/modal-pickup.component';
 import { ModalPickupTodayComponent } from './components/modal-pickup-today/modal-pickup-today.component';
+import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 
 @Component({
   selector: 'app-despacho',
@@ -16,7 +17,8 @@ import { ModalPickupTodayComponent } from './components/modal-pickup-today/modal
   styleUrls: ['./despacho.component.scss'],
 })
 export class DespachoComponent implements OnInit {
-  @Input() product!: IArticle;
+  // @Input() product!: IArticle;
+  @Input() product!:IArticleResponse;
   @Input() selectedStore!: ISelectedStore;
   @Input() cantidad: number = 0;
 
@@ -51,6 +53,7 @@ export class DespachoComponent implements OnInit {
         selectedStore: this.selectedStore,
         productSku: this.product.sku,
         productQuantity: this.cantidad,
+        productDropshipment: this.product.dropshipment
       },
     });
   }
@@ -66,7 +69,7 @@ export class DespachoComponent implements OnInit {
       initialState: {
         selectedStore: this.selectedStore,
         productSku: this.product.sku,
-        productQuantity: this.cantidad,
+        productQuantity: this.cantidad
       },
     });
   }
