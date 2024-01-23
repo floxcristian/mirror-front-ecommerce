@@ -8,9 +8,10 @@ import {
   EventEmitter,
   PLATFORM_ID,
   Inject,
+  Renderer2,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   FormGroup,
   FormBuilder,
@@ -88,7 +89,7 @@ import { ConfigService } from '@core/config/config.service';
 import { IConfig } from '@core/config/config.interface';
 import { DocumentValidator } from '@core/validators/document-form.validator';
 
-declare const $: any;
+// declare const $: any;
 export interface Archivo {
   archivo: File;
   nombre: string;
@@ -185,6 +186,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private readonly gtmService: GoogleTagManagerService,
     @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(DOCUMENT) private document:Document,
+    private renderer:Renderer2,
     // Services V2
     private readonly sessionStorage: SessionStorageService,
     private readonly guestStorage: GuestStorageService,
@@ -630,8 +633,12 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       this.archivo = this.cargaArchivo(files[0]);
 
       if (isPlatformBrowser(this.platformId)) {
-        $('#' + this.idArchivo).val(null);
-        $('#' + this.idArchivoMobile).val(null);
+        // $('#' + this.idArchivo).val(null);
+        // $('#' + this.idArchivoMobile).val(null);
+        const inputElement = this.document.getElementById(this.idArchivo) as HTMLInputElement
+        const inputElementMobile = this.document.getElementById(this.idArchivoMobile ? this.idArchivoMobile : '') as HTMLInputElement
+        this.renderer.setProperty(inputElement,'value',null)
+        this.renderer.setProperty(inputElementMobile,'value',null)
       }
     }
   }
