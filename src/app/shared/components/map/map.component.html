@@ -23,6 +23,7 @@
 </div>
 <div class="me-1 ms-1">
   <google-map
+    *ngIf="isMapLoaded"
     [center]="center"
     [zoom]="zoom"
     [mapTypeId]="autocompletado === true ? var_hybrid : var_roadmap"

@@ -1,7 +1,10 @@
 // Angular
 import { Component, Input, OnInit } from '@angular/core';
+// Env
+import { environment } from '@env/environment';
 // Models
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
+import { ScriptService } from '@core/utils-v2/script/script.service';
 @Component({
   selector: 'app-mapa-fichas',
   templateUrl: './mapa-fichas.component.html',
@@ -10,7 +13,7 @@ import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 export class MapaFichasComponent implements OnInit {
   @Input() selectedStore!: IStore;
   @Input() stock!: number;
-  @Input() productDropshipment:number = 0
+  @Input() productDropshipment: number = 0;
 
   markerPositions: google.maps.LatLngLiteral[] = [];
   options: google.maps.MapOptions = {
@@ -32,15 +35,21 @@ export class MapaFichasComponent implements OnInit {
     lng: -70.70984971059704,
   };
   zoom = 16;
+  isMapLoaded!: boolean;
+
+  constructor(private readonly scriptService: ScriptService) {}
 
   ngOnInit(): void {
+    this.scriptService.loadScript(environment.gmapScript).then(() => {
+      this.isMapLoaded = true;
+    });
     if (this.selectedStore) {
       this.updatePosition(this.selectedStore);
     }
   }
 
   updatePosition(event: any) {
-    const { lat, lng } = this.formatCoordinates(event.lat, event.lng)
+    const { lat, lng } = this.formatCoordinates(event.lat, event.lng);
     this.center = { lat, lng };
     this.markerPositions = [];
     this.markerPositions.push(this.center);

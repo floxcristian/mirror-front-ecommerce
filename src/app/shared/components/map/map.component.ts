@@ -15,6 +15,7 @@ import { GoogleMap, MapGeocoder } from '@angular/google-maps';
 // Env
 import { environment } from '@env/environment';
 import { IMapStore } from './map-store.interface';
+import { ScriptService } from '@core/utils-v2/script/script.service';
 
 export interface DireccionMap {
   direccion: string;
@@ -53,14 +54,22 @@ export class MapComponent implements OnInit, OnChanges {
   @ViewChild(GoogleMap, { static: false }) map!: GoogleMap;
 
   autocomplete!: google.maps.places.Autocomplete;
+  isMapLoaded!: boolean;
 
   constructor(
-    private ref: ChangeDetectorRef,
     private ngZone: NgZone,
-    private geocoder: MapGeocoder
+    private geocoder: MapGeocoder,
+    private readonly scriptService: ScriptService
   ) {}
 
   ngOnInit() {
+    this.scriptService.loadScript(environment.gmapScript).then(() => {
+      this.buildMap();
+      this.isMapLoaded = true;
+    });
+  }
+
+  private buildMap(): void {
     if (this.autocompletado === true) {
       this.options.disableDefaultUI = true;
       this.markerOptions.draggable = true;
@@ -107,7 +116,7 @@ export class MapComponent implements OnInit, OnChanges {
     }
   }
 
-  async ngOnChanges() {
+  ngOnChanges(): void {
     if (this.storeAddress) {
       this.geocoder
         .geocode({
@@ -136,7 +145,7 @@ export class MapComponent implements OnInit, OnChanges {
     }
   }
 
-  markerDragEnd($event: google.maps.MapMouseEvent) {
+  markerDragEnd($event: google.maps.MapMouseEvent): void {
     if (this.autocompletado === true) {
       this.zoom = 17;
       let center: google.maps.LatLngLiteral = {
@@ -149,7 +158,7 @@ export class MapComponent implements OnInit, OnChanges {
     }
   }
 
-  getAddress() {
+  getAddress(): void {
     this.geocoder.geocode({ location: this.center }).subscribe((location) => {
       if (location.status === 'OK') {
         if (location.results[0]) {
