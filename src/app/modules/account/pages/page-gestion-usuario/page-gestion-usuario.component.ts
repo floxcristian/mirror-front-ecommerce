@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, PLATFORM_ID, Renderer2 } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, Renderer2, ElementRef, ViewChild } from '@angular/core';
 import { calculaIcono } from '../../../../shared/utils/utilidades';
 
 import { UsersService } from '../../service/users.service';
@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SubAccountService } from '@core/services-v2/sub-account.service';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 export interface Archivo {
   archivo: File;
   nombre: string;
@@ -19,6 +19,7 @@ export interface Archivo {
   styleUrls: ['./page-gestion-usuario.component.scss'],
 })
 export class PageGestionUsuarioComponent implements OnInit {
+  @ViewChild('idArchivoInput') idArchivoInput!: ElementRef<HTMLInputElement>;
   userSession!: ISession;
   nuevo: any = [];
   existe: any = [];
@@ -27,7 +28,6 @@ export class PageGestionUsuarioComponent implements OnInit {
     private userService: UsersService,
     private toast: ToastrService,
     private renderer:Renderer2,
-    @Inject(DOCUMENT) private document:Document,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly subAccountService: SubAccountService
@@ -54,9 +54,7 @@ export class PageGestionUsuarioComponent implements OnInit {
 
       this.archivo = aux;
       if (isPlatformBrowser(this.platformId)) {
-        // $('#' + this.idArchivo).val('');
-        const inputElement = this.document.getElementById(this.idArchivo) as HTMLInputElement
-        this.renderer.setProperty(inputElement,'value','')
+        this.renderer.setProperty(this.idArchivoInput,'value','')
       }
     }
   }
