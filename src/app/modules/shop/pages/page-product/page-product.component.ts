@@ -7,8 +7,10 @@ import {
   HostListener,
   DestroyRef,
   inject,
+  Renderer2,
+  ElementRef,
 } from '@angular/core';
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 // Libs
@@ -56,7 +58,6 @@ import { CartV2Service } from '@core/services-v2/cart/cart.service';
 import { CartService } from '@core/services-v2/cart.service';
 import { IShoppingCartProductOrigin } from '@core/models-v2/cart/shopping-cart.interface';
 
-declare const $: any;
 declare let fbq: any;
 
 @Component({
@@ -120,6 +121,9 @@ export class PageProductComponent implements OnInit {
     private capitalize: CapitalizeFirstPipe,
     private seoService: SeoService,
     private canonicalService: CanonicalService,
+    private renderer:Renderer2,
+    @Inject(DOCUMENT) private document:Document,
+    private el: ElementRef,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
@@ -359,17 +363,35 @@ export class PageProductComponent implements OnInit {
 
   abrirTabEvaluacion(): void {
     if (isPlatformBrowser(this.platformId)) {
-      $('#descripcion-tab').removeClass('active');
-      $('#detallesTecnicos-tab').removeClass('active');
-      $('#evaluacion-tab').addClass('active');
+      // $('#descripcion-tab').removeClass('active');
+      // $('#detallesTecnicos-tab').removeClass('active');
+      // $('#evaluacion-tab').addClass('active');
 
-      $('#descripcion').removeClass('active show');
-      $('#detallesTecnicos').removeClass('active show');
-      $('#evaluacion').addClass('active show');
+      // $('#descripcion').removeClass('active show');
+      // $('#detallesTecnicos').removeClass('active show');
+      // $('#evaluacion').addClass('active show');
 
-      $('#evaluacion').tab('show');
+      // $('#evaluacion').tab('show'); // este falta ver bien
+      this.removeClass('descripcion-tab','active')
+      this.removeClass('detallesTecnicos-tab','active')
+      this.addClass('evaluacion-tab','active')
+
+      this.removeClass('descripcion','active show')
+      this.removeClass('detallesTecnicos','active show')
+      this.addClass('evaluacion','active show')
+
     }
     document.querySelector('#ancla')?.scrollIntoView();
+  }
+
+  private removeClass(elementId: string, className: string) {
+    const element = this.el.nativeElement.querySelector(`#${elementId}`);
+    this.renderer.removeClass(element, className);
+  }
+
+  private addClass(elementId: string, className: string) {
+    const element = this.el.nativeElement.querySelector(`#${elementId}`);
+    this.renderer.addClass(element, className);
   }
 
   /**
