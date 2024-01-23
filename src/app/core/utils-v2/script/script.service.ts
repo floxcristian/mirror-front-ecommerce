@@ -25,12 +25,12 @@ export class ScriptService {
 
   loadScript(src: string): Promise<ILoadScriptResponse> {
     return new Promise((resolve, reject) => {
-      if (this.scripts[src] && !this.scripts[src].loaded) {
-        this.removeScript(src);
+      if (this.scripts[src]?.loaded) {
+        return resolve({ loaded: true, status: 'Already Loaded.' });
       }
 
-      if (this.scripts[src]) {
-        return resolve({ loaded: true, status: 'Already Loaded.' });
+      if (this.scripts[src] && !this.scripts[src].loaded) {
+        this.removeScript(src);
       }
 
       const script = this.renderer.createElement('script');
@@ -41,6 +41,7 @@ export class ScriptService {
       script.async = true;
       script.defer = true;
 
+      console.log('script: ', script);
       script.onload = () => {
         this.scripts[src] = { src, loaded: true };
         return resolve({ loaded: true, status: 'Loaded.' });
