@@ -25,6 +25,5 @@ export const environment = {
     'https://dev.implementos.cl/carro-compra/omni-gracias-por-tu-compra/',
   // Nuevo Ecommerce
   apiEcommerce: 'https://dev-api.implementos.cl/ecommerce',
-  tokenMapbox:
-    'pk.eyJ1Ijoic3VwZXJzYngwMCIsImEiOiJjaWpsZ3FsN3QwMDIydGhtNTh4aGhubG5xIn0.i2J0k0mBZhIi7W-bsPTJiQ',
+  gmapsApiKey: '',
 };
