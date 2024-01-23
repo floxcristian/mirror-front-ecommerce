@@ -11,7 +11,7 @@ import {
   Renderer2,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {
   FormGroup,
   FormBuilder,
@@ -103,6 +103,9 @@ export interface Archivo {
   styleUrls: ['./page-cart-payment-method.component.scss'],
 })
 export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
+
+  @ViewChild('idArchivoInput') idArchivoInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('idArchivoInputMobile') idArchivoInputMobile!: ElementRef<HTMLInputElement>;
   private destroy$: Subject<void> = new Subject();
   isInvoice!: boolean;
   items: any[] = [];
@@ -186,7 +189,6 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private readonly gtmService: GoogleTagManagerService,
     @Inject(PLATFORM_ID) private platformId: Object,
-    @Inject(DOCUMENT) private document:Document,
     private renderer:Renderer2,
     // Services V2
     private readonly sessionStorage: SessionStorageService,
@@ -224,7 +226,6 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   ngDoCheck() {
     this.userSession = this.sessionService.getSession();
-    //this.userSession = this.root.getDataSesionUsuario();
     // this.userSession['requiereValidacion'] = true;
     this.cartSession = this.localS.get(StorageKey.carroCompraB2B);
     this.fechas_entregas = this.localS.get(StorageKey.fechas);
@@ -631,14 +632,9 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     let files = event.target.files;
     if (files.length) {
       this.archivo = this.cargaArchivo(files[0]);
-
       if (isPlatformBrowser(this.platformId)) {
-        // $('#' + this.idArchivo).val(null);
-        // $('#' + this.idArchivoMobile).val(null);
-        const inputElement = this.document.getElementById(this.idArchivo) as HTMLInputElement
-        const inputElementMobile = this.document.getElementById(this.idArchivoMobile ? this.idArchivoMobile : '') as HTMLInputElement
-        this.renderer.setProperty(inputElement,'value',null)
-        this.renderer.setProperty(inputElementMobile,'value',null)
+        this.renderer.setProperty(this.idArchivoInput,'value',null)
+        this.renderer.setProperty(this.idArchivoInputMobile,'value',null)
       }
     }
   }
@@ -658,7 +654,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   eliminaArchivo() {
     this.archivo = null;
-    this.idArchivoMobile = null;
+    // this.idArchivoMobile = null;
   }
 
   extensionValida(extension: string) {

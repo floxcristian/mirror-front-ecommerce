@@ -10,7 +10,7 @@ import {
   Renderer2,
   ElementRef,
 } from '@angular/core';
-import { DOCUMENT, isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 // Libs
@@ -122,7 +122,6 @@ export class PageProductComponent implements OnInit {
     private seoService: SeoService,
     private canonicalService: CanonicalService,
     private renderer:Renderer2,
-    @Inject(DOCUMENT) private document:Document,
     private el: ElementRef,
     // Services V2
     private readonly sessionService: SessionService,

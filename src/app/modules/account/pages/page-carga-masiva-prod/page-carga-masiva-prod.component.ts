@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, PLATFORM_ID, Renderer2 } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, PLATFORM_ID, Renderer2, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { calculaIcono, isVacio } from '../../../../shared/utils/utilidades';
 import { CartData } from '../../../../shared/interfaces/cart-item';
@@ -13,7 +13,7 @@ import {
   ISavedCart,
   IUploadResponse,
 } from '@core/models-v2/responses/file-upload.response';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 
 // declare var $: any;
 
@@ -30,6 +30,8 @@ export interface Archivo {
   styleUrls: ['./page-carga-masiva-prod.component.scss'],
 })
 export class PageCargaMasivaProdComponent implements OnInit {
+
+  @ViewChild('idArchivoInput') idArchivoInput!: ElementRef<HTMLInputElement>;
   archivo!: Archivo | undefined;
 
   userSession!: ISession;
@@ -55,7 +57,6 @@ export class PageCargaMasivaProdComponent implements OnInit {
     private localS: LocalStorageService,
     private toast: ToastrService,
     private renderer:Renderer2,
-    @Inject(DOCUMENT) private document:Document,
     // ServicesV2
     private readonly sessionService: SessionService,
     private readonly cartService: CartService,
@@ -80,9 +81,7 @@ export class PageCargaMasivaProdComponent implements OnInit {
 
       this.archivo = aux;
       if (isPlatformBrowser(this.platformId)) {
-        // $('#' + this.idArchivo).val(null);
-        const inputElement = this.document.getElementById(this.idArchivo) as HTMLInputElement;
-        this.renderer.setProperty(inputElement, 'value', null);
+        this.renderer.setProperty(this.idArchivoInput.nativeElement, 'value', null);
       }
     }
   }
