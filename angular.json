@@ -21,7 +21,10 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/browser",
-            "index": "src/index.html",
+            "index": {
+              "input": "src/assets/config/index/index.cl.dev.html",
+              "output": "index.html"
+            },
             "main": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
@@ -42,6 +45,10 @@
           },
           "configurations": {
             "production": {
+              "index": {
+                "input": "src/assets/config/index/index.cl.prod.html",
+                "output": "index.html"
+              },
               "budgets": [
                 {
                   "type": "initial",
@@ -57,6 +64,47 @@
               "outputHashing": "all"
             },
             "development": {
+              "index": {
+                "input": "src/assets/config/index/index.cl.dev.html",
+                "output": "index.html"
+              },
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ]
+            },
+            "production-pe": {
+              "index": {
+                "input": "src/assets/config/index/index.pe.prod.html",
+                "output": "index.html"
+              },
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "3mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development-pe": {
+              "index": {
+                "input": "src/assets/config/index/index.pe.dev.html",
+                "output": "index.html"
+              },
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
