@@ -58,8 +58,8 @@ export class GrupoDetalleProductosComponent implements OnInit {
 
   suma_cantidad() {
     this.suma = 0;
-    this.grupo_producto.forEach((item: any) => {
-      this.suma = this.suma + item.precio * item.cantidad;
+    this.grupo_producto.forEach((item: IShoppingCartProduct) => {
+      this.suma = this.suma + item.price * item.quantity;
     });
   }
 
