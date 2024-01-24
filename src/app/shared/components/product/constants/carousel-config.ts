@@ -7,5 +7,4 @@ export const CarouselOptions: Partial<OwlCarouselOConfig> = {
   responsive: {
     0: { items: 1 },
   },
-  rtl: false,
 };

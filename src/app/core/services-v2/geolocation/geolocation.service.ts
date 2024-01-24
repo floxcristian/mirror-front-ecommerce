@@ -58,7 +58,6 @@ export class GeolocationServiceV2 {
    * @returns
    */
   getSelectedStore(): ISelectedStore {
-    //console.log('[getSelectedStore]');
     let geolocation = this.geolocationStorage.get();
     if (geolocation) {
       this.geolocation = geolocation;

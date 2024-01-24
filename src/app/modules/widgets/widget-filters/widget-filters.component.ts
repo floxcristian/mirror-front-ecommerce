@@ -14,8 +14,6 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { v4 as uuidv4 } from 'uuid';
 // Interfaces
 import { ProductFilter } from '../../../shared/interfaces/product-filter';
-// Services
-import { DirectionService } from '../../../shared/services/direction.service';
 
 @Component({
   selector: 'app-widget-filters',
@@ -27,12 +25,13 @@ export class WidgetFiltersComponent {
   @Input() filtrosOculto!: boolean;
   @Input() mensaje!: string;
   @Input() marca_tienda!: string;
+  @Input() removableCategory: any = [];
   @Input() set removableFilters(arr: any) {
     this.removableFiltersArray = [];
     console.log('arr filters', arr);
     if (arr) {
       console.log('arr filters', arr);
-      Object.keys(arr).map((field, index) => {
+      Object.keys(arr).map((field) => {
         const obj = {
           field,
           value: arr[field],
@@ -42,16 +41,13 @@ export class WidgetFiltersComponent {
     }
   }
 
-  @Input() removableCategory: any = [];
-
   @Output() filtersSelected: EventEmitter<any> = new EventEmitter();
-  @Output() clearCategory: EventEmitter<any> = new EventEmitter();
-  @Output() clearAll: EventEmitter<any> = new EventEmitter();
+  @Output() clearCategory: EventEmitter<boolean> = new EventEmitter();
+  @Output() clearAll: EventEmitter<boolean> = new EventEmitter();
 
   removableFiltersArray: any = [];
 
   isPlatformBrowser = isPlatformBrowser(this.platformId);
-  rightToLeft = false;
   isCollapsed = false;
   id: string;
 
@@ -59,21 +55,20 @@ export class WidgetFiltersComponent {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,
-    private direction: DirectionService,
     private modalService: BsModalService
   ) {
-    this.rightToLeft = this.direction.isRTL();
     this.id = uuidv4();
+    console.log('WidgetFiltersComponent constructor');
   }
 
-  openUserForm(template: TemplateRef<any>) {
+  openUserForm(template: TemplateRef<any>): void {
     this.modalRef = this.modalService.show(template, {
       backdrop: 'static',
       keyboard: false,
     });
   }
 
-  marcaCheckBox() {
+  marcaCheckBox(): void {
     const prefix = 'filter_';
     const filters: any = {};
 
@@ -94,7 +89,7 @@ export class WidgetFiltersComponent {
             values.push(v.chassis);
           }
         });
-        if (values.length > 0) {
+        if (values.length) {
           filters['chassis'] = values;
         }
       }
@@ -106,15 +101,11 @@ export class WidgetFiltersComponent {
     this.filtersSelected.emit(obj);
   }
 
-  marcarCategorias(item: any) {
+  marcarCategorias(item: any): void {
     item.checked = true;
   }
 
-  removeCategory(category: any) {
-    this.clearCategory.emit(true);
-  }
-
-  removeFilter(filter: any) {
+  removeFilter(filter: any): void {
     this.filters.map((item) => {
       if (item.type === 'checkbox') {
         if (filter.field === 'filter_' + item.name) {
@@ -135,7 +126,12 @@ export class WidgetFiltersComponent {
     });
     this.marcaCheckBox();
   }
-  removeAllFilter() {
+
+  removeCategory(): void {
+    this.clearCategory.emit(true);
+  }
+
+  removeAllFilters(): void {
     this.clearAll.emit(true);
   }
 }

@@ -133,18 +133,16 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
         dataSave.telefono = this.selectedPhoneCode + dataSave.telefono;
         const user = this.sessionStorage.get();
 
-        let usuarioVisita: IEcommerceUser;
-        usuarioVisita = this.setUsuario(dataSave);
-
+        const guestUser = this.setUsuario(dataSave);
         // FIXME: antes se usaba, y ahora??
         // usuarioVisita._id = user._id;
         if (user) {
           const guest: IGuest = {
-            documentId: usuarioVisita.documentId,
-            firstName: usuarioVisita.firstName,
-            lastName: usuarioVisita.lastName,
-            phone: usuarioVisita.phone,
-            email: usuarioVisita.email,
+            documentId: guestUser.documentId,
+            firstName: guestUser.firstName,
+            lastName: guestUser.lastName,
+            phone: guestUser.phone,
+            email: guestUser.email,
             street: '',
             number: '',
             commune: '',
@@ -154,7 +152,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
           );
         }
 
-        this.returnLoginEvent.emit(usuarioVisita);
+        this.returnLoginEvent.emit(guestUser);
       } else {
         this.toastr.warning(
           'Hemos detectado que el email ingresado esta registrado, por favor inicie sesión para continuar.'

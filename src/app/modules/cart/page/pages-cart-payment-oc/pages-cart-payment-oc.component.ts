@@ -14,7 +14,6 @@ import { RootService } from '../../../../shared/services/root.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Banner } from '../../../../shared/interfaces/banner';
 import { HostListener } from '@angular/core';
-import { DirectionService } from '../../../../shared/services/direction.service';
 import { environment } from '@env/environment';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { ToastrService } from 'ngx-toastr';
@@ -105,7 +104,6 @@ export class PagesCartPaymentOcComponent implements OnInit {
       500: { items: 2 },
       0: { items: 2 },
     },
-    rtl: this.direction.isRTL(),
   };
   usuarioTemp!: boolean;
   obsRefuse = '';
@@ -126,7 +124,6 @@ export class PagesCartPaymentOcComponent implements OnInit {
     private modalService: BsModalService,
     private route: ActivatedRoute,
     private router: Router,
-    private direction: DirectionService, // @Inject(WINDOW) private window: Window
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionStorage: SessionStorageService,

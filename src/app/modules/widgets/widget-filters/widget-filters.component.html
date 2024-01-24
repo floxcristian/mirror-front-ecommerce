@@ -1,9 +1,6 @@
 <div class="widget-filters widget" appCollapse>
   <ng-container
-    *ngIf="
-      removableFiltersArray.length > 0 ||
-      removableCategory.length > 0
-    "
+    *ngIf="removableFiltersArray.length > 0 || removableCategory.length > 0"
   >
     <div class="widget-filters__list">
       <div class="widget-filters__item filter--opened">
@@ -11,7 +8,7 @@
           Filtros seleccionados
           <i
             title="Quitar todos los filtros"
-            (click)="removeAllFilter()"
+            (click)="removeAllFilters()"
             class="fas fa-times"
           ></i>
         </div>
@@ -19,7 +16,7 @@
           <div class="filter__container pt-2">
             <h1
               *ngFor="let item of removableCategory"
-              (click)="removeCategory(item)"
+              (click)="removeCategory()"
               class="filter-selected"
             >
               {{ item.text }}
@@ -47,8 +44,6 @@
     </div>
     <div class="div-separated"></div>
   </ng-container>
-
-  <!-- FIXME: START -->
 
   <div class="widget-filters__list widget-filters__list-body">
     <div

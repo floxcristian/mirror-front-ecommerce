@@ -6,7 +6,6 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
 // Models
 import { ISlider } from '@core/models-v2/cms/slider-reponse.interface';
 // Services
-import { DirectionService } from '../../../shared/services/direction.service';
 import { CmsService } from '@core/services-v2/cms.service';
 
 @Component({
@@ -27,14 +26,12 @@ export class BlockSlideshowComponent implements OnInit {
     responsive: {
       0: { items: 1 },
     },
-    rtl: this.direction.isRTL(),
     autoplaySpeed: 1000,
   };
   slides: ISlider[] = [];
 
   constructor(
     public sanitizer: DomSanitizer,
-    private direction: DirectionService,
     private readonly cmsService: CmsService
   ) {}
 

@@ -14,7 +14,6 @@ import { ToastrService } from 'ngx-toastr';
 // Rxjs
 import { Subscription } from 'rxjs';
 // Services
-import { DirectionService } from '../../services/direction.service';
 import { isVacio } from '../../utils/utilidades';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { CmsService } from '@core/services-v2/cms.service';
@@ -66,15 +65,12 @@ export class ProductSlideshowComponent
       500: { items: 2 },
       0: { items: 2 },
     },
-    rtl: this.direction.isRTL(),
   };
 
   lastCustomHomepageKey = '';
 
   constructor(
-    // @Inject(WINDOW) private window: Window,
     public toast: ToastrService,
-    private direction: DirectionService,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2

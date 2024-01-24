@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 // Models
 import { IValueBox } from '@core/models-v2/cms/valueBox-response.interface';
 // Services
-import { DirectionService } from '../../services/direction.service';
 import { CmsService } from '@core/services-v2/cms.service';
 
 @Component({
@@ -27,15 +26,10 @@ export class ButtonsSlideshowComponent implements OnInit {
       0: { items: 1.5 },
       700: { items: 2.5 },
     },
-    rtl: this.direction.isRTL(),
     autoplaySpeed: 3000,
   };
 
-  constructor(
-    private direction: DirectionService,
-    // Services V2
-    private readonly cmsService: CmsService
-  ) {}
+  constructor(private readonly cmsService: CmsService) {}
 
   ngOnInit(): void {
     this.getValueBoxes();

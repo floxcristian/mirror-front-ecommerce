@@ -4,17 +4,17 @@ import {
   OnInit,
   Input,
   OnChanges,
-  ChangeDetectorRef,
   Output,
   EventEmitter,
   ViewChild,
   ElementRef,
   NgZone,
+  SimpleChanges,
 } from '@angular/core';
 import { GoogleMap, MapGeocoder } from '@angular/google-maps';
 // Env
 import { environment } from '@env/environment';
-import { IMapStore } from './map-store.interface';
+// Services
 import { ScriptService } from '@core/utils-v2/script/script.service';
 
 export interface DireccionMap {
@@ -39,15 +39,11 @@ export class MapComponent implements OnInit, OnChanges {
 
   showSearchBar: boolean = true;
   markerPositions: google.maps.LatLngLiteral[] = [];
-  options: google.maps.MapOptions = {
-    disableDefaultUI: false,
-  };
+  options!: google.maps.MapOptions;
   markerOptions: google.maps.MarkerOptions = { draggable: false };
   center: google.maps.LatLngLiteral = { lat: 0, lng: 0 };
   zoom = 15;
 
-  var_hybrid = google.maps.MapTypeId.HYBRID;
-  var_roadmap = google.maps.MapTypeId.ROADMAP;
   @Output() public geolocalizacion = new EventEmitter<any>();
   @Output() public clearAdress = new EventEmitter<any>();
   @Output() public setDireccion = new EventEmitter<any>();
@@ -58,20 +54,24 @@ export class MapComponent implements OnInit, OnChanges {
 
   constructor(
     private ngZone: NgZone,
-    private geocoder: MapGeocoder,
+    private readonly geocoder: MapGeocoder,
     private readonly scriptService: ScriptService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.scriptService.loadScript(environment.gmapScript).then(() => {
       this.buildMap();
+      this.geocodePosition();
       this.isMapLoaded = true;
     });
   }
 
   private buildMap(): void {
-    if (this.autocompletado === true) {
-      this.options.disableDefaultUI = true;
+    if (this.autocompletado) {
+      this.options = {
+        disableDefaultUI: true,
+        mapTypeId: google.maps.MapTypeId.HYBRID,
+      };
       this.markerOptions.draggable = true;
       this.showSearchBar = false;
       this.zoom = 3;
@@ -113,44 +113,54 @@ export class MapComponent implements OnInit, OnChanges {
           this.markerPositions.push(center);
         });
       });
+    } else {
+      this.options = {
+        disableDefaultUI: false,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+      };
     }
   }
 
-  ngOnChanges(): void {
-    if (this.storeAddress) {
-      this.geocoder
-        .geocode({
-          address: `${this.storeAddress} ${this.storeZone}`,
-        })
-        .subscribe((location) => {
-          this.searchElementRef.nativeElement.value = this.storeAddress;
-          if (location.status === 'OK') {
-            this.markerPositions = [];
-            let center: google.maps.LatLngLiteral = {
-              lat: location.results[0].geometry.location.lat(),
-              lng: location.results[0].geometry.location.lng(),
-            };
-            this.center = center;
-            this.map.panTo(center);
-            this.markerPositions.push(center);
-            this.geolocalizacion.emit({
-              lat: location.results[0].geometry.location.lat(),
-              lng: location.results[0].geometry.location.lng(),
-            });
-          } else {
-            this.markerPositions = [];
-            this.geolocalizacion.emit({ lat: 0, lng: 0 });
-          }
-        });
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.storeAddress && this.isMapLoaded) {
+      this.geocodePosition();
     }
   }
 
-  markerDragEnd($event: google.maps.MapMouseEvent): void {
-    if (this.autocompletado === true) {
+  private geocodePosition(): void {
+    this.geocoder
+      .geocode({
+        address: `${this.storeAddress} ${this.storeZone}`,
+      })
+      .subscribe(({ status, results }) => {
+        this.searchElementRef.nativeElement.value = this.storeAddress;
+        const { location } = results[0].geometry;
+
+        if (status === google.maps.GeocoderStatus.OK) {
+          const center: google.maps.LatLngLiteral = {
+            lat: location.lat(),
+            lng: location.lng(),
+          };
+          this.center = center;
+          this.map.panTo(center);
+          this.markerPositions = [center];
+          this.geolocalizacion.emit({
+            lat: location.lat(),
+            lng: location.lng(),
+          });
+        } else {
+          this.markerPositions = [];
+          this.geolocalizacion.emit({ lat: 0, lng: 0 });
+        }
+      });
+  }
+
+  markerDragEnd({ latLng }: google.maps.MapMouseEvent): void {
+    if (this.autocompletado) {
       this.zoom = 17;
       let center: google.maps.LatLngLiteral = {
-        lat: $event.latLng?.lat() || 0,
-        lng: $event.latLng?.lng() || 0,
+        lat: latLng?.lat() || 0,
+        lng: latLng?.lng() || 0,
       };
       this.center = center;
       this.map.panTo(center);

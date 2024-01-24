@@ -13,7 +13,6 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { Banner } from '../../../../shared/interfaces/banner';
 import { HostListener } from '@angular/core';
-import { DirectionService } from '../../../../shared/services/direction.service';
 import { environment } from '@env/environment';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { isPlatformBrowser } from '@angular/common';
@@ -50,7 +49,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
 
   removedItems: IShoppingCart[] = [];
   items: Item[] = [];
-  updating:boolean = false;
+  updating: boolean = false;
   saveTimer: any;
   innerWidth: number;
   banners: Banner[] = [];
@@ -77,7 +76,6 @@ export class PageCartComponent implements OnInit, OnDestroy {
       500: { items: 3 },
       0: { items: 2 },
     },
-    rtl: this.direction.isRTL(),
   };
   carrouselOptionsMobile = {
     items: 6,
@@ -100,8 +98,6 @@ export class PageCartComponent implements OnInit, OnDestroy {
     private router: Router,
     public root: RootService,
     private toast: ToastrService,
-
-    private direction: DirectionService,
     private readonly gtmService: GoogleTagManagerService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
@@ -263,7 +259,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
           documentId: rut,
           branchCode: tiendaSeleccionada.code,
           quantityToSuggest: 6,
-          location:localidad
+          location: localidad,
         })
         .subscribe(
           (r: IArticleResponse[]) => {

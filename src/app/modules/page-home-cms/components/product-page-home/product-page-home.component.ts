@@ -11,7 +11,6 @@ import {
 import { Subscription } from 'rxjs';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { Router } from '@angular/router';
-import { DirectionService } from '../../../../shared/services/direction.service';
 import { VerMasProductoComponent } from '../ver-mas-producto/ver-mas-producto.component';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -56,7 +55,6 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private modalService: BsModalService,
-    private direction: DirectionService,
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService
@@ -85,7 +83,6 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
       500: { items: 3 },
       0: { items: 2 },
     },
-    rtl: this.direction.isRTL(),
   };
   carouselOptions3 = {
     nav: false,
@@ -200,7 +197,7 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
     });
     this.refresh = false;
     this.producto_selecionado = this.tipo_producto[index];
-    console.log('proget',this.producto_selecionado)
+    console.log('proget', this.producto_selecionado);
     this.index_seleccionado = index;
   }
 
@@ -216,7 +213,7 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
     });
     this.refresh2 = false;
     this.producto_selecionado = this.tipo_producto[index];
-    console.log('proget2',this.producto_selecionado)
+    console.log('proget2', this.producto_selecionado);
     this.index_seleccionado = index;
   }
 }

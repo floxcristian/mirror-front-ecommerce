@@ -2,7 +2,6 @@
 import { Component, OnInit } from '@angular/core';
 // Services
 import { isVacio } from '../../../../shared/utils/utilidades';
-import { DirectionService } from '../../../../shared/services/direction.service';
 import { CmsService } from '@core/services-v2/cms.service';
 
 @Component({
@@ -23,7 +22,6 @@ export class SlideMundoComponent implements OnInit {
       1024: { items: 3 },
       0: { items: 1 },
     },
-    rtl: this.direction.isRTL(),
   };
 
   carouselOptions2 = {
@@ -35,14 +33,9 @@ export class SlideMundoComponent implements OnInit {
     responsive: {
       0: { items: 1 },
     },
-    rtl: this.direction.isRTL(),
   };
   slides: any[] = [];
-  constructor(
-    private direction: DirectionService,
-    //Services V2
-    private readonly cmsService: CmsService
-  ) {}
+  constructor(private readonly cmsService: CmsService) {}
 
   ngOnInit() {
     this.Carga_mundo();

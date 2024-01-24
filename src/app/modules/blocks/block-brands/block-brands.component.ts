@@ -1,5 +1,5 @@
 import { Component, Input, Inject, PLATFORM_ID } from '@angular/core';
-import { DirectionService } from '../../../shared/services/direction.service';
+
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
@@ -26,14 +26,10 @@ export class BlockBrandsComponent {
       500: { items: 2 },
       0: { items: 2 },
     },
-    rtl: this.direction.isRTL(),
     autoplaySpeed: 5000,
   };
 
-  constructor(
-    private direction: DirectionService,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;

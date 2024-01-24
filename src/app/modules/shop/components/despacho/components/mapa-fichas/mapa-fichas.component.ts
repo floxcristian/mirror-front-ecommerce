@@ -4,6 +4,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { environment } from '@env/environment';
 // Models
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
+// Services
 import { ScriptService } from '@core/utils-v2/script/script.service';
 @Component({
   selector: 'app-mapa-fichas',
@@ -16,19 +17,7 @@ export class MapaFichasComponent implements OnInit {
   @Input() productDropshipment: number = 0;
 
   markerPositions: google.maps.LatLngLiteral[] = [];
-  options: google.maps.MapOptions = {
-    disableDefaultUI: false,
-    // tipos de mapas: roadmap, satellite, hybrid, terrain
-    mapTypeId: 'roadmap',
-    mapTypeControl: false,
-    streetViewControl: false,
-    rotateControl: false,
-    fullscreenControl: false,
-    zoomControl: true,
-    //draggable: false,
-    //disableDoubleClickZoom: true,
-    //scrollwheel: false,
-  };
+  options!: google.maps.MapOptions;
   markerOptions: google.maps.MarkerOptions = { draggable: false };
   center: google.maps.LatLngLiteral = {
     lat: -33.54864395765844,
@@ -41,6 +30,18 @@ export class MapaFichasComponent implements OnInit {
 
   ngOnInit(): void {
     this.scriptService.loadScript(environment.gmapScript).then(() => {
+      this.options = {
+        disableDefaultUI: false,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControl: false,
+        streetViewControl: false,
+        rotateControl: false,
+        fullscreenControl: false,
+        zoomControl: true,
+        //draggable: false,
+        //disableDoubleClickZoom: true,
+        //scrollwheel: false,
+      };
       this.isMapLoaded = true;
     });
     if (this.selectedStore) {
@@ -48,14 +49,13 @@ export class MapaFichasComponent implements OnInit {
     }
   }
 
-  updatePosition(event: any) {
-    const { lat, lng } = this.formatCoordinates(event.lat, event.lng);
-    this.center = { lat, lng };
+  updatePosition({ lat, lng }: IStore): void {
+    this.center = this.formatCoordinates(lat, lng);
     this.markerPositions = [];
     this.markerPositions.push(this.center);
   }
 
-  formatCoordinates(lat: number, lng: number) {
+  private formatCoordinates(lat: number, lng: number) {
     const getDivisor = (num: number) => {
       const digits = Math.abs(num).toString().length;
       return Math.pow(10, digits - 2);

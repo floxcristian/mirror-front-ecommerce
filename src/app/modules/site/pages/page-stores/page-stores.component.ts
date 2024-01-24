@@ -3,10 +3,10 @@ import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 // Models
 import { ICollapsableStore } from './collapsable-store.interface';
+import { IConfig } from '@core/config/config.interface';
 // Services
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { ConfigService } from '@core/config/config.service';
-import { IConfig, IStoresPage } from '@core/config/config.interface';
 
 @Component({
   selector: 'app-stores',
@@ -18,7 +18,6 @@ export class PageStoresComponent {
   selectedStore!: ICollapsableStore;
   isCollapsed!: boolean;
   innerWidth: number;
-  //pageConfig!: IStoresPage;
   config: IConfig;
 
   constructor(

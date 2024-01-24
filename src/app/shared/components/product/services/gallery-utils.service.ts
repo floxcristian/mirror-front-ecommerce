@@ -8,8 +8,7 @@ import { IProductImage } from '../models/image.interface';
 import { ImageUtils } from '@core/utils-v2/image-utils.service';
 
 export class GalleryUtils {
-  // FIXME: esto debe ser privado.
-  static formatThumbVideo(attribute: IAttribute): string {
+  private static formatThumbVideo(attribute: IAttribute): string {
     const thumbImage = attribute.value.split('/embed')[1];
     return `https://i.ytimg.com/vi${thumbImage}/1.jpg`;
   }
