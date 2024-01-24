@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 // Libs
 import { ToastrModule } from 'ngx-toastr';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -22,16 +23,13 @@ import { WidgetsModule } from '../modules/widgets/widgets.module';
 import { PageHomeOneComponent } from '../pages/page-home-one/page-home-one.component';
 import { PageNotFoundComponent } from '../pages/page-not-found/page-not-found.component';
 import { PageSpecialsComponent } from '../pages/page-specials/page-specials.component';
-
 import { LayoutComponent } from '../layout/layout.component';
 import { B2cComponent } from '../layout/b2c/b2c.component';
-
-import { RouterModule } from '@angular/router';
-import { FooterB2cModule } from '../modules/footer-b2c/footer-b2c.module';
-import { PageHomeCmsModule } from '../modules/page-home-cms/page-home-cms.module';
-
 import { PageDevolucionesComponent } from '../pages/page-devoluciones/page-devoluciones.component';
 import { DevolucionOkModalComponent } from '../pages/components/devolucion-ok-modal/devolucion-ok-modal.component';
+// Modules
+import { FooterB2cModule } from '../modules/footer-b2c/footer-b2c.module';
+import { PageHomeCmsModule } from '../modules/page-home-cms/page-home-cms.module';
 
 @NgModule({
   declarations: [

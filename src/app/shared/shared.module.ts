@@ -15,7 +15,7 @@ import { NgbNavModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { NgChartsModule, ThemeService } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts';
 import { GoogleMapsModule } from '@angular/google-maps';
 // Directives
 import { ClickDirective } from './directives/click.directive';
@@ -41,25 +41,16 @@ import { IconComponent } from './components/icon/icon.component';
 import { InputNumberComponent } from './components/input-number/input-number.component';
 import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
-//import { PaginationComponent } from './components/pagination/pagination.component';
-//import { ProductFeatureSpecialComponent } from './components/product-feature-special/product-feature-special.component';
 import { ProductsViewComponent } from '../modules/shop/components/products-view/products-view.component';
-//import { ProductSliderComponent } from './components/product-slider/product-slider.component';
-//import { FiltersProductsComponent } from './components/filters-products/filters-products.component';
 import { AlertCartMinComponent } from './components/alert-cart-min/alert-cart-min.component';
-//import { ViewPdfComponent } from './components/view-pdf/view-pdf.component';
 import { ProductSlideshowComponent } from './components/product-slideshow/product-slideshow.component';
 import { MapComponent } from './components/map/map.component';
 import { UpdateAddressModalComponent } from './components/update-address-modal/update-address-modal.component';
 import { LoginComponent } from '../modules/header/components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-//import { WidgetProductsComponent } from '../modules/widgets/widget-products/widget-products.component';
-//import { LoadingComponent } from './components/loading/loading.component';
 import { AddcartButtonComponent } from './components/addcart-button/addcart-button.component';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
-
 import { ScrollTopComponent } from './components/scroll-top/scroll-top.component';
-//import { VideoComponent } from './components/video/video.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { AddFlotaModalComponent } from './components/add-flota-modal/add-flota-modal.component';
 import { UpdateFlotaModalComponent } from './components/update-flota-modal/update-flota-modal.component';
@@ -113,28 +104,19 @@ const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
     InputNumberComponent,
     LoadingBarComponent,
     PageHeaderComponent,
-    // PaginationComponent,
-    // ProductFeatureSpecialComponent,
     LoadingElementComponent,
-    // ProductSliderComponent,
-    // FiltersProductsComponent,
     AlertCartMinComponent,
-    // ViewPdfComponent,
     MapComponent,
     LoginComponent,
     RegisterComponent,
-    // WidgetProductsComponent,
     ProductSlideshowComponent,
     ProductSlideshowSpecialsComponent,
     ProductsViewComponent,
-    // LoadingComponent,
     AddcartButtonComponent,
     ConfirmModalComponent,
     ScrollTopComponent,
-    // VideoComponent,
     ModalComponent,
     AddFlotaModalComponent,
-
     UpdateFlotaModalComponent,
     InputNumberProductComponent,
     WishListModalComponent,
@@ -202,24 +184,16 @@ const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
     InputNumberComponent,
     LoadingBarComponent,
     PageHeaderComponent,
-    // PaginationComponent,
     LoadingElementComponent,
-    // ProductSliderComponent,
-    // FiltersProductsComponent,
     AlertCartMinComponent,
-    // ProductFeatureSpecialComponent,
     MapComponent,
     LoginComponent,
     RegisterComponent,
-    // WidgetProductsComponent,
     ProductSlideshowComponent,
     ProductSlideshowSpecialsComponent,
     ProductsViewComponent,
-    // LoadingComponent,
     AddcartButtonComponent,
     ConfirmModalComponent,
-    // VideoComponent,
-    // ViewPdfComponent,
     AngularEmailAutocompleteComponent,
     ProductoSelectBusquedaComponent,
     ProductCardB2cCmsComponent,

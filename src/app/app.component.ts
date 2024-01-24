@@ -31,8 +31,8 @@ import { AlertCartMinComponent } from './shared/components/alert-cart-min/alert-
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  template: ` <router-outlet />
+    <app-alert-cart-min [product]="productCard" />`,
 })
 export class AppComponent implements AfterViewInit, OnInit {
   @ViewChild(AlertCartMinComponent, {
@@ -41,7 +41,8 @@ export class AppComponent implements AfterViewInit, OnInit {
   })
   alert!: AlertCartMinComponent;
 
-  @ViewChild('webchatStartButtonContainer') webchatStartButtonContainer!: ElementRef;
+  @ViewChild('webchatStartButtonContainer')
+  webchatStartButtonContainer!: ElementRef;
 
   productCard!: IShoppingCartProduct;
   s: any;
@@ -102,7 +103,8 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.add('carrito');
           this.document.body.classList.remove('categoria');
           if (isPlatformBrowser(this.platformId)) {
-            this.webchatStartButtonContainer.nativeElement.style.display = 'none';
+            this.webchatStartButtonContainer.nativeElement.style.display =
+              'none';
           }
         } else if (event.url.includes('/catalogos')) {
           this.document.body.classList.remove('home');
@@ -110,7 +112,8 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('categoria');
           if (isPlatformBrowser(this.platformId)) {
-            this.webchatStartButtonContainer.nativeElement.style.display = 'none';
+            this.webchatStartButtonContainer.nativeElement.style.display =
+              'none';
           }
         } else if (event.url.includes('/categoria')) {
           this.document.body.classList.remove('home');
@@ -118,7 +121,8 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('carrito');
           this.document.body.classList.add('categoria');
           if (isPlatformBrowser(this.platformId)) {
-            this.webchatStartButtonContainer.nativeElement.style.display = 'none';
+            this.webchatStartButtonContainer.nativeElement.style.display =
+              'none';
           }
         } else if (this.sessionService.isB2B()) {
           this.document.body.classList.remove('home');
@@ -126,7 +130,8 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('categoria');
           if (isPlatformBrowser(this.platformId)) {
-            this.webchatStartButtonContainer.nativeElement.style.display = 'none';
+            this.webchatStartButtonContainer.nativeElement.style.display =
+              'none';
           }
         } else if (event.url.includes('/ficha')) {
           this.document.body.classList.remove('home');
@@ -134,7 +139,8 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('carrito');
           this.document.body.classList.add('pdp');
           if (isPlatformBrowser(this.platformId)) {
-            this.webchatStartButtonContainer.nativeElement.style.display = 'block';
+            this.webchatStartButtonContainer.nativeElement.style.display =
+              'block';
           }
         } else if (event.url.includes('/especial/')) {
           this.document.body.classList.add('home');
@@ -142,7 +148,8 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('pdp');
           if (isPlatformBrowser(this.platformId)) {
-            this.webchatStartButtonContainer.nativeElement.style.display = 'block';
+            this.webchatStartButtonContainer.nativeElement.style.display =
+              'block';
           }
         } else {
           this.document.body.classList.add('home');
@@ -150,7 +157,8 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('categoria');
           if (isPlatformBrowser(this.platformId)) {
-            this.webchatStartButtonContainer.nativeElement.style.display = 'block';
+            this.webchatStartButtonContainer.nativeElement.style.display =
+              'block';
           }
         }
         if (event.url.includes('/omni-forma-de-pago')) {

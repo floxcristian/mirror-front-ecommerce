@@ -1,36 +1,25 @@
+// Angular
 import { NgModule } from '@angular/core';
-// modules (angular)
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
-// modules
+import { FormsModule } from '@angular/forms';
+// Libs
+import { NgSelectModule } from '@ng-select/ng-select';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
+// Modules
 import { SharedModule } from '../../shared/shared.module';
-
-// blocks
+// Components
 import { BlockBrandsB2cComponent } from './block-brands-b2c/block-brands-b2c.component';
 import { BlockSlideshowComponent } from './block-slideshow/block-slideshow.component';
-
-//B2B
 import { BlockBrandsComponent } from './block-brands/block-brands.component';
-
-// components
-import { BlockHeaderComponent } from './components/block-header/block-header.component';
-
-import { NgSelectModule } from '@ng-select/ng-select';
-import { FormsModule } from '@angular/forms';
-import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @NgModule({
   declarations: [
-    // blocks
     BlockBrandsComponent,
     BlockSlideshowComponent,
-    // components
-    // BlockHeaderComponent,
     BlockBrandsB2cComponent,
   ],
   imports: [
-    // modules (angular)
     CommonModule,
     RouterModule,
     NgSelectModule,
@@ -40,10 +29,8 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
     NgOptimizedImage,
   ],
   exports: [
-    // blocks
     BlockBrandsComponent,
     BlockSlideshowComponent,
-    // BlockHeaderComponent,
     BlockBrandsB2cComponent,
   ],
 })

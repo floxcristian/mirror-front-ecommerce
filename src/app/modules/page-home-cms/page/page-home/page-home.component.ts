@@ -7,8 +7,8 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./page-home.component.scss'],
 })
 export class PageHomeComponent implements OnInit {
-  constructor(private titleService: Title) {
-    titleService.setTitle(
+  constructor(private readonly titleService: Title) {
+    this.titleService.setTitle(
       'Implementos - Respuestos para Camiones, Buses y Remolque'
     );
   }

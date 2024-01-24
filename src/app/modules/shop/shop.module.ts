@@ -20,7 +20,6 @@ import { MapaFichasComponent } from './components/despacho/components/mapa-ficha
 import { DespachoComponent } from './components/despacho/despacho.component';
 import { DetalleTecnicosComponent } from './components/detalle-tecnicos/detalle-tecnicos.component';
 import { FechasPromesasComponent } from './components/fechas-promesas/fechas-promesas.component';
-
 //shared
 import { ProductComponent } from '../../shared/components/product/product.component';
 import { ModalDeliveryComponent } from './components/despacho/components/modal-delivery/modal-delivery.component';
@@ -51,7 +50,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
     WidgetsModule,
     NgSelectModule,
     HeaderModule,
-     GoogleMapsModule
+    GoogleMapsModule,
   ],
 })
 export class ShopModule {}
