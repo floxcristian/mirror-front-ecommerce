@@ -18,6 +18,8 @@ export interface IStore {
   mapUrl: string;
   schedule: string;
   order: number;
+  zoneGroup: string;
+  phone2: string;
   regionCode: string;
   createdAt: Date;
   updatedAt: Date;

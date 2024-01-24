@@ -29,7 +29,7 @@ import { PageInicioSesionComponent } from './pages/page-inicio-sesion/page-inici
 import { DetailNewsComponent } from './components/detail-news/detail-news.component';
 import { HeaderBlogComponent } from './components/header-blog/header-blog.component';
 import { Registerb2bComponent } from '../../shared/components/register-b2b/register-b2b.component';
-
+import { GoogleMapsModule } from '@angular/google-maps';
 @NgModule({
   declarations: [
     PageAboutUsComponent,
@@ -59,6 +59,7 @@ import { Registerb2bComponent } from '../../shared/components/register-b2b/regis
     ReactiveFormsModule,
     FormsModule,
     BsDropdownModule,
+    GoogleMapsModule,
   ],
 })
 export class SiteModule {}

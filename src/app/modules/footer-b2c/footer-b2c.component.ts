@@ -32,15 +32,4 @@ export class FooterB2cComponent implements OnInit {
       return true;
     }
   }
-
-  HideFooter2() {
-    if (
-      this.router.url.includes('/carro-compra') ||
-      this.router.url.includes('/sitio')
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  }
 }

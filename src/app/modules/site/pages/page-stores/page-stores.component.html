@@ -1,37 +1,50 @@
 <div class="row">
   <img class="img-fluid" src="/assets/images/stores/banner2.JPG" />
 </div>
-
-<div class="row" class="bg-primary">
+<div class="row bg-primary">
   <a id="informacionTienda"></a>
-  <h1 class="text-center text-white py-2 mb-0" *ngIf="innerWidth > 768">
+  <h1 class="text-center text-white py-2 mb-0 d-none d-md-block">
     {{ config.storesPage.title }}
   </h1>
-  <h4 class="text-center text-white py-2 mb-0" *ngIf="innerWidth <= 768">
+  <h4 class="text-center text-white py-2 mb-0 d-block d-md-none">
     {{ config.storesPage.title }}
   </h4>
 </div>
 
-<div class="row" class="text-white bg-dark">
-  <h1 class="text-center py-2" *ngIf="innerWidth > 768">
+<div class="row text-white bg-dark">
+  <h1 class="text-center py-2 d-none d-md-block">
     {{ config.storesPage.subtitle }}
   </h1>
-  <h5 class="text-center py-2" *ngIf="innerWidth <= 768">
+  <h5 class="text-center py-2 d-block d-md-none">
     {{ config.storesPage.subtitle }}
   </h5>
 </div>
-
-<div class="container" (window:resize)="onResize($event)">
-  <div class="row justify-content-center mb-5" *ngIf="innerWidth > 426">
+<div class="container">
+  <div class="row justify-content-center mb-5">
     <div class="col-md-12 card-group">
-      <div class="card" *ngIf="selectedStore">
+      @if (selectedStore) {
+      <div class="card">
         <div class="card-body">
           <div class="row">
-            <div class="col-sm-12 col-md-6 col-lg-6">
-              <app-map
-                [storeAddress]="selectedStore.address"
-                [storeZone]="selectedStore.zone"
-              ></app-map>
+            <div class="col-sm-12 col-md-6 col-lg-6 pb-2 pb-md-0">
+              <div style="border: 1px solid #00549d">
+                @if (isMapLoaded) {
+                <google-map
+                  height="420px"
+                  width="100%"
+                  [options]="options"
+                  [center]="center"
+                  [zoom]="zoom"
+                >
+                  @for (position of markerPositions; track position) {
+                  <map-marker
+                    [position]="position"
+                    [options]="markerOptions"
+                  />
+                  }
+                </google-map>
+                }
+              </div>
             </div>
             <div
               class="col-sm-12 col-md-6 col-lg-6 px-0"
@@ -42,78 +55,40 @@
               >
                 <h4>Tienda {{ selectedStore.zone }}</h4>
               </div>
-              <div class="card-body p-5" *ngIf="selectedStore">
-                <div class="row" style="font-size: large">
-                  <div class="col-md-12 mt-3">
-                    <div class="row ps-4">
-                      <div class="col-md-4 ps-0">
-                        <i class="fas fa-home"></i> Dirección :
-                      </div>
-                      <div class="col-6 col-sm-8 ps-2">
-                        <span
-                          class="ps-1"
-                          [ngStyle]="{
-                            'font-size': innerWidth <= 768 ? '15px' : '1em'
-                          }"
-                        >
-                          {{ selectedStore.address }}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-md-12">
-                    <div class="row ps-4">
-                      <div class="col-md-4 ps-0">
-                        <i class="fas fa-phone-alt"></i> Fono :
-                      </div>
-                      <div class="col-6 col-sm-8 ps-2">
-                        <span
-                          class="ps-1"
-                          [ngStyle]="{
-                            'font-size': innerWidth <= 768 ? '15px' : '1em'
-                          }"
-                        >
-                          <a [href]="'tel:' + config.company.formattedPhone">{{
-                            config.company.phone
-                          }}</a>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="row ps-4">
-                      <div class="col-md-4 ps-0">
-                        <i class="fas fa-map-marker-alt"></i> Maps :
-                      </div>
-                      <div class="col-6 col-sm-8 ps-2">
-                        <a
-                          class="ps-1"
-                          [href]="selectedStore.mapUrl"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Ver mapa
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-md-12 mb-3">
-                    <div class="row ps-4">
-                      <div class="col-md-4 ps-0">
-                        <i class="far fa-clock"></i> Horarios :
-                      </div>
-                      <div class="col-6 col-sm-8 ps-2">
-                        <span
-                          class="ps-1"
-                          [ngStyle]="{
-                            'font-size': innerWidth <= 768 ? '12px' : '1em'
-                          }"
-                        >
-                          {{ selectedStore.schedule }}
-                        </span>
-                      </div>
+              <div class="card-body p-4">
+                <div class="row">
+                  <div class="contact__content">
+                    <div class="contact__address">
+                      <ul>
+                        <li>
+                          <h6>
+                            <i class="fa fa-map-marker"></i>&nbsp;Direccion
+                          </h6>
+                          <p>{{ selectedStore.address }}</p>
+                        </li>
+                        <li>
+                          <h6><i class="fa fa-phone"></i>&nbsp;Fono</h6>
+                          <p>
+                            <span>
+                              <a [href]="'tel:' + selectedStore.phone2">{{
+                                selectedStore.phone2
+                              }}</a>
+                            </span>
+                          </p>
+                        </li>
+                        <li>
+                          <h6><i class="fa fa-clock"></i>&nbsp;Horarios</h6>
+                          <p>{{ selectedStore.schedule }}</p>
+                        </li>
+                        <li>
+                          <h6><i class="fa fa-map"></i>&nbsp;Mapa</h6>
+                          <p>
+                            <a [href]="selectedStore.mapUrl"
+                              >Ver en Google Maps</a
+                            >
+                          </p>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>
@@ -122,105 +97,32 @@
           </div>
         </div>
       </div>
+      }
     </div>
   </div>
 
-  <div class="row justify-content-center my-5" *ngIf="stores.length">
+  <div class="row justify-content-center my-5">
+    @for (stores of orderedStores; track $index) {
     <div class="col-md-4 card-group">
       <div class="card p-0">
         <div class="card-header bg-primary text-white text-center py-2 px-1">
-          <h6>ZONA NORTE</h6>
+          <h6>{{ stores.title }}</h6>
         </div>
-        <div class="card-body px-1">
-          <div *ngFor="let store of stores | slice : 0 : 6">
-            <div
-              (click)="showStoreDetail(store)"
-              aria-expanded="false "
-              aria-controls="collapseExample "
-              class="pointer box text-start"
-            >
-              <h4 class="tienda">
-                <img
-                  class="inline-icon lazyload"
-                  src="./assets/images/next.png "
-                  alt="Icono "
-                />{{ store.zone }}
-              </h4>
-            </div>
-
-            <div [collapse]="store.isCollapsed" class="caja-detalle">
-              <app-colapse
-                [store]="store"
-                [innerWidth]="innerWidth"
-              ></app-colapse>
-            </div>
+        <div class="card-body pt-1">
+          @for (store of stores.stores; track $index) {
+          <div
+            (click)="showStoreDetail(store, true)"
+            class="pointer box text-start"
+          >
+            <h4 class="fw-bolder fs-5">
+              <i class="fas fa-chevron-right" style="margin-right: 10px"></i>
+              {{ store.zone }}
+            </h4>
           </div>
+          }
         </div>
       </div>
     </div>
-    <div class="col-md-4 card-group">
-      <div class="card p-0">
-        <div class="card-header bg-primary text-white text-center py-2 px-1">
-          <h6>ZONA CENTRO</h6>
-        </div>
-        <div class="card-body px-1">
-          <div *ngFor="let store of stores | slice : 6 : 16">
-            <div
-              (click)="showStoreDetail(store)"
-              aria-expanded="false "
-              aria-controls="collapseExample "
-              class="pointer box text-start"
-            >
-              <h4 class="tienda">
-                <img
-                  class="inline-icon lazyload"
-                  src="./assets/images/next.png "
-                  alt="Icono "
-                />{{ store.zone }}
-              </h4>
-            </div>
-
-            <div [collapse]="store.isCollapsed" class="caja-detalle">
-              <app-colapse
-                [store]="store"
-                [innerWidth]="innerWidth"
-              ></app-colapse>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4 card-group">
-      <div class="card p-0">
-        <div class="card-header bg-primary text-white text-center py-2 px-1">
-          <h6>ZONA SUR</h6>
-        </div>
-        <div class="card-body">
-          <div *ngFor="let store of stores | slice : 16">
-            <div
-              (click)="showStoreDetail(store)"
-              aria-expanded="false "
-              aria-controls="collapseExample "
-              class="pointer box text-start"
-            >
-              <h4 class="tienda">
-                <img
-                  class="inline-icon lazyload"
-                  src="./assets/images/next.png "
-                  alt="Icono "
-                />{{ store.zone }}
-              </h4>
-            </div>
-
-            <div [collapse]="store.isCollapsed" class="caja-detalle">
-              <app-colapse
-                [store]="store"
-                [innerWidth]="innerWidth"
-              ></app-colapse>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    }
   </div>
 </div>
