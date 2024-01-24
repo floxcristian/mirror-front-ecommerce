@@ -462,7 +462,7 @@ export class PageCartShippingComponent implements OnInit {
 
     this.fechas = [];
 
-    this.selectedShippingId = this.selectedShippingIdStore;
+    // this.selectedShippingId = this.selectedShippingIdStore;
     const usuario = this.sessionService.getSession();
 
     if (!usuario.hasOwnProperty('username')) usuario.username = usuario.email;
@@ -1260,17 +1260,17 @@ export class PageCartShippingComponent implements OnInit {
   async eliminarGrupo(index: any) {
     this.loadingShipping = true;
     this.loadingResumen = true;
+    console.log('inicio shipping',this.selectedShippingId)
     const resultado: any = this.addresses.find(
       (address) => address.id == this.selectedShippingId
     );
-
     const usuario: ISession = this.sessionService.getSession();
     let request: IRemoveGroupRequest = {};
     if (this.shippingType === ShippingType.DESPACHO) {
       request = {
         user: usuario.username,
         id: index,
-        branch: resultado.comuna,
+        branch: resultado.city,
       };
     } else {
       let disponible = this.stores.find(
@@ -1291,6 +1291,8 @@ export class PageCartShippingComponent implements OnInit {
 
       this.obtieneDespachos();
       this.obtieneTiendas();
+      console.log('shipping',this.selectedShippingId)
+      console.log('addresses:', this.addresses)
     });
   }
 
