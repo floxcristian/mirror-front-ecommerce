@@ -1,5 +1,5 @@
 // Angular
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 // Environment
 import { environment } from '@env/environment';
@@ -19,14 +19,14 @@ import { StorageKey } from '@core/storage/storage-keys.enum';
   templateUrl: './topbar.component.html',
   styleUrls: ['./topbar.component.scss'],
 })
-export class TopbarComponent {
+export class TopbarComponent implements OnInit {
   @Input() tipo: any = 'b2c'; // 'b2b' | 'b2c'
   @Input() desde: string = '';
   @Input() logo: any;
   usuario: ISession | null;
   logoSrc = environment.logoSrc;
   config!: IConfig;
-
+  menub2c!: boolean;
   constructor(
     public currencyService: CurrencyService,
     private router: Router,
@@ -50,6 +50,9 @@ export class TopbarComponent {
       display: currency.symbol,
     };
   }
+  ngOnInit(): void {
+    this.hideMenub2c();
+  }
 
   async validarCuenta() {
     this.localS.set(StorageKey.ruta, ['/', 'mi-cuenta', 'seguimiento']);
@@ -70,11 +73,15 @@ export class TopbarComponent {
     this.router.navigate(['/mi-cuenta', 'seguimiento']);
   }
 
-  Hide_menub2c() {
-    if (this.router.url.includes('/carro-compra/')) {
-      return false;
+  hideMenub2c() {
+    const exclusionPath = '/carro-compra/comprobante-de-solicitud';
+    if (
+      this.router.url.includes('/carro-compra/') &&
+      this.router.url !== exclusionPath
+    ) {
+      this.menub2c = true;
     } else {
-      return true;
+      this.menub2c = false;
     }
   }
 }

@@ -43,11 +43,6 @@ import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
 import { ITotals } from '@core/models-v2/cart/totals.interface';
 import { ShippingService } from '@shared/interfaces/address';
 
-interface Item {
-  ProductCart: ProductCart;
-  quantity: number;
-  quantityControl: FormControl;
-}
 @Component({
   selector: 'app-pages-cart-payment-oc',
   templateUrl: './pages-cart-payment-oc.component.html',
@@ -73,7 +68,6 @@ export class PagesCartPaymentOcComponent implements OnInit {
   banners: Banner[] = [];
   verificar_oc = false;
   loadingText = '';
-  showresumen = false;
   IVA = environment.IVA || 0.19;
   isVacio = isVacio;
   @Input() id: any;
@@ -109,6 +103,8 @@ export class PagesCartPaymentOcComponent implements OnInit {
   obsRefuse = '';
 
   purchaseOrderId!: string;
+  showresumen = true;
+  firstCharge:number = 0
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -339,7 +335,8 @@ export class PagesCartPaymentOcComponent implements OnInit {
 
   Ver_fecha(event: any) {
     this.fechas = event;
-    console.log(this.fechas);
+    if(this.firstCharge === 0) this.showresumen = !this.showresumen
+    this.firstCharge++
   }
   setSeleccionarEnvio(event: any, i: any) {
     if (this.cartSession && this.cartSession.groups) {
