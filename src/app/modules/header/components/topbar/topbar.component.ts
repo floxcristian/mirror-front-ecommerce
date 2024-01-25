@@ -51,7 +51,7 @@ export class TopbarComponent implements OnInit {
     };
   }
   ngOnInit(): void {
-    this.hide_menub2c();
+    this.hideMenub2c();
   }
 
   async validarCuenta() {
