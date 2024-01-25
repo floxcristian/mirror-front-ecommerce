@@ -1,4 +1,5 @@
-<div class="menu_b2c" [hidden]="Hide_menub2c() ? true : false">
+@if(menub2c){
+<div class="menu_b2c">
   <div class="row">
     <div class="col-sm-3" style="margin-top: 10px">
       <div class="site-header__logo">
@@ -41,10 +42,9 @@
     </div>
   </div>
 </div>
-
+} @if(desde !== 'omni'){
 <div
-  class="site-header__topbar topbar"
-  *ngIf="desde !== 'omni'"
+  class="site-header__topbar topbar custom-topbar"
   style="background-color: #009579; height: 38px"
 >
   <div
@@ -63,3 +63,4 @@
     }
   </div>
 </div>
+}
