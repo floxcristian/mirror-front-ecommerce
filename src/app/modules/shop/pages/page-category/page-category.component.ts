@@ -1,6 +1,6 @@
 // Angular
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PLATFORM_ID, Inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
@@ -38,6 +38,7 @@ import { CustomerPreferencesStorageService } from '@core/storage/customer-prefer
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
 import { CATEGORIES_METADATA } from './categories-metadata';
+import { ICategory } from './category.interface';
 
 @Component({
   selector: 'app-grid',
@@ -48,11 +49,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   products: IArticleResponse[] = [];
   filters: IProductFilter[] = [];
   filterQuery: any;
-  removableFilters: any = [];
-  removableCategory: any = [];
-  columns: 3 | 4 | 5 = 3;
-  viewMode: 'grid' | 'grid-with-features' | 'list' = 'grid';
-  sidebarPosition: 'start' | 'end' = 'start'; // For LTR scripts "start" is "left" and "end" is "right"
+  removableFilters: Params = [];
+  removableCategory: ICategory[] = [];
   breadcrumbs: any[] = [];
   productosTemp = [];
   // Paginacion
@@ -133,19 +131,10 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.despachoCliente.unsubscribe();
   }
 
-  async ngOnInit() {
-    this.usuario = this.sessionService.getSession();
-    this.route.data.subscribe((data) => {
-      this.columns = 'columns' in data ? data['columns'] : this.columns;
-      this.viewMode = 'viewMode' in data ? data['viewMode'] : this.viewMode;
-      this.sidebarPosition =
-        'sidebarPosition' in data
-          ? data['sidebarPosition']
-          : this.sidebarPosition;
-    });
-
+  ngOnInit(): void {
     let metadataCount = 0;
     this.route.queryParams.subscribe((query) => {
+      console.log('query original: ', query);
       // Seteamos el origen del buscador
       this.setOrigenes();
       if (query['tiendaOficial']) {
@@ -164,7 +153,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         this.marca_tienda = '';
       }
 
-      //this.route.queryParams.subscribe();
       // Verificamos si viene la pagina en un queryparams. sino la reseteamos a la pagina 1.
       if (query['_value']?.hasOwnProperty('page')) {
         this.currentPage = query['_value']['page'];
@@ -700,22 +688,16 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     return atributos2;
   }
 
-  getFiltersQuery(query: any) {
-    let resp = {};
-
-    if (isVacio(query)) {
-      return;
+  /**
+   * Obtener query params que solo correspondan a los filtros y no a tienda oficial.
+   */
+  private getFiltersQuery(params: Params): Params {
+    if (!params) return {};
+    let clonedParams = { ...params };
+    if ('tiendaOficial' in clonedParams) {
+      delete clonedParams['tiendaOficial'];
     }
-
-    for (const key in query) {
-      if (Object.prototype.hasOwnProperty.call(query, key)) {
-        const element = query[key];
-        if (key !== 'tiendaOficial') {
-          resp = { ...resp, ...{ [key]: element } };
-        }
-      }
-    }
-    return resp;
+    return clonedParams;
   }
 
   paginacionProductos({ page, scroll }: any): void {
@@ -837,7 +819,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     }
   }
 
-  setFilteState(state: any) {
+  setFilteState(state: any): void {
     this.visibleFilter = state;
   }
 
@@ -878,7 +860,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       this.origen = ['buscador', '', 'sinCategoria', ''];
     }
   }
-    //Definicion de meta Información para optimización del SEO
+  //Definicion de meta Información para optimización del SEO
   getDetalleSeoCategoria(category: string) {
     let meta = CATEGORIES_METADATA[category] || {
       title: 'Productos en Categoría ' + category,
@@ -891,9 +873,10 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       this.canonicalService.setCanonicalURL(location.href);
     }
     if (isPlatformServer(this.platformId)) {
-      this.canonicalService.setCanonicalURL(environment.canonical + this.router.url);
+      this.canonicalService.setCanonicalURL(
+        environment.canonical + this.router.url
+      );
     }
-
   }
 
   decodedUrl(cadena: string) {

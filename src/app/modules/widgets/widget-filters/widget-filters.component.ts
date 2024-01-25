@@ -14,6 +14,9 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { v4 as uuidv4 } from 'uuid';
 // Interfaces
 import { ProductFilter } from '../../../shared/interfaces/product-filter';
+import { ICategory } from '../../shop/pages/page-category/category.interface';
+import { Params } from '@angular/router';
+import { IWidgetFilter } from './widget-filter.interface';
 
 @Component({
   selector: 'app-widget-filters',
@@ -25,27 +28,19 @@ export class WidgetFiltersComponent {
   @Input() filtrosOculto!: boolean;
   @Input() mensaje!: string;
   @Input() marca_tienda!: string;
-  @Input() removableCategory: any = [];
-  @Input() set removableFilters(arr: any) {
-    this.removableFiltersArray = [];
-    console.log('arr filters', arr);
-    if (arr) {
-      console.log('arr filters', arr);
-      Object.keys(arr).map((field) => {
-        const obj = {
-          field,
-          value: arr[field],
-        };
-        this.removableFiltersArray.push(obj);
-      });
-    }
+  @Input() removableCategory: ICategory[] = [];
+  @Input() set removableFilters(filters: Params) {
+    this.removableFiltersArray = Object.keys(filters).map((field) => ({
+      field,
+      value: filters[field],
+    }));
   }
 
   @Output() filtersSelected: EventEmitter<any> = new EventEmitter();
   @Output() clearCategory: EventEmitter<boolean> = new EventEmitter();
   @Output() clearAll: EventEmitter<boolean> = new EventEmitter();
 
-  removableFiltersArray: any = [];
+  removableFiltersArray: IWidgetFilter[] = [];
 
   isPlatformBrowser = isPlatformBrowser(this.platformId);
   isCollapsed = false;

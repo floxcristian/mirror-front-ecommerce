@@ -9,11 +9,6 @@ const routes: Routes = [
   {
     path: '',
     component: PageCategoryComponent,
-    data: {
-      columns: 3,
-      viewMode: 'grid',
-      sidebarPosition: 'start',
-    },
   },
   {
     path: 'ficha/:id',
@@ -47,30 +42,18 @@ const routes: Routes = [
   {
     path: ':busqueda/:metodo/:nombre',
     component: PageCategoryComponent,
-    data: {
-      layout: 'standard',
-    },
   },
   {
     path: ':busqueda/:metodo/:nombre/:secondCategory',
     component: PageCategoryComponent,
-    data: {
-      layout: 'standard',
-    },
   },
   {
     path: ':busqueda/:metodo/:nombre/:secondCategory/:thirdCategory',
     component: PageCategoryComponent,
-    data: {
-      layout: 'standard',
-    },
   },
   {
     path: ':busqueda',
     component: PageCategoryComponent,
-    data: {
-      layout: 'standard',
-    },
   },
 ];
 

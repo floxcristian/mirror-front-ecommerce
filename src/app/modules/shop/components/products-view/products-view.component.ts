@@ -13,7 +13,6 @@ import { RootService } from '../../../../shared/services/root.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
-export type Layout = 'grid' | 'grid-with-features' | 'list';
 
 @Component({
   selector: 'app-products-view',
@@ -22,7 +21,6 @@ export type Layout = 'grid' | 'grid-with-features' | 'list';
 })
 export class ProductsViewComponent {
   @Input() products!: any[];
-  @Input() layout: Layout = 'grid';
   @Input() grid: 'grid-3-sidebar' | 'grid-4-full' | 'grid-5-full' =
     'grid-3-sidebar';
   @Input() limit = 12;

@@ -92,10 +92,8 @@
 
     <div
       class="products-view__list products-list m-0"
-      [attr.data-layout]="layout != 'list' ? grid : layout"
-      [attr.data-with-features]="
-        layout == 'grid-with-features' ? 'true' : 'false'
-      "
+      [attr.data-layout]="grid"
+      [attr.data-with-features]="'false'"
     >
       <div class="products-list__body w-100">
         <app-loading-element

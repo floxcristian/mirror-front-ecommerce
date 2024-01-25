@@ -99,15 +99,8 @@
   </div>
 </ng-template>
 
-<div
-  class="shop-layout container shop-layout--sidebar--{{
-    sidebarPosition
-  }} mt-3 site_b2c"
->
-  <ng-container
-    *ngIf="sidebarPosition === 'start'"
-    [ngTemplateOutlet]="sidebar"
-  ></ng-container>
+<div class="shop-layout container shop-layout--sidebar--start mt-3 site_b2c">
+  <ng-container [ngTemplateOutlet]="sidebar"></ng-container>
 
   <div class="shop-layout__content container">
     <div class="block">
@@ -122,7 +115,6 @@
         [cargandoCatalogo]="cargandoCatalogo"
         [cargandoProductos]="cargandoProductos"
         [products]="products"
-        [layout]="viewMode"
         [grid]="'grid-4-full'"
         [limit]="productosPorPagina"
         [totalPaginas]="totalPaginas"
@@ -137,8 +129,4 @@
       </app-products-view>
     </div>
   </div>
-  <ng-container
-    *ngIf="sidebarPosition === 'end'"
-    [ngTemplateOutlet]="sidebar"
-  ></ng-container>
 </div>
