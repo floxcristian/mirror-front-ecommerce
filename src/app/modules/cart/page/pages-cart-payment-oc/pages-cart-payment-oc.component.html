@@ -161,14 +161,11 @@
                       [fletes]="fechas[i]"
                     >
                     </app-grupo-detalle-fechas>
-                    <!-- FIXME: no existe función setSeleccionarEnvioMobile() -->
-                    <!-- <app-grupo-detalle-fechas-mobile *ngIf="innerWidth <= 450 && fechas.length > 0"
-                                            (itemSeleccionado)="setSeleccionarEnvioMobile($event, i)" [index]="i"
-                                            [fletes]="fechas[i]"></app-grupo-detalle-fechas-mobile> -->
                     <app-grupo-detalle-fechas-mobile
                       *ngIf="innerWidth <= 450 && fechas.length > 0"
                       [index]="i"
                       [fletes]="fechas[i]"
+                      (itemSeleccionado)="setSeleccionarEnvio($event, i)"
                     ></app-grupo-detalle-fechas-mobile>
                   </div>
                 </div>
@@ -270,6 +267,7 @@
                   [productCart]="productCart"
                   [cart]="cartSession"
                   (sinStock)="verificarOc($event)"
+                  (fechas)="Ver_fecha($event)"
                   (productosDisponible)="agregar_lista($event)"
                 >
                 </app-detalle-carro-productos-oc>
@@ -366,6 +364,7 @@
                     [productCart]="productCart"
                     [cart]="cartSession"
                     (sinStock)="verificarOc($event)"
+                    (fechas)="Ver_fecha($event)"
                     (productosDisponible)="agregar_lista($event)"
                   >
                   </app-detalle-carro-productos-oc>
