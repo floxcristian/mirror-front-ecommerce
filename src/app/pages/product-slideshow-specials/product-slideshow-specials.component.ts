@@ -30,7 +30,7 @@ import { CustomerAddressService } from '@core/services-v2/customer-address/custo
 export type Layout = 'grid' | 'grid-with-features' | 'list';
 export interface ISection {
   nombre: string;
-  productos: IArticle[];
+  id:string
   p: number;
 }
 
@@ -43,7 +43,7 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
   @Input() layout: Layout = 'grid';
   @Input() grid: 'grid-3-sidebar' | 'grid-4-full' | 'grid-4-full' =
     'grid-3-sidebar';
-  lstProductos!: ISection[];
+  secciones: ISection[] = [];
   especial!: ISpecial[];
   banners!: IBanner;
   producto_espacial: IArticle[] = [];
@@ -53,10 +53,14 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
   cantItem: number = 4;
   innerWidth: number;
   ruta!: any[];
-  config: any;
   p: number = 1;
   preferenciaCliente!: ICustomerPreference;
   despachoCliente!: Subscription;
+  currentPage = 1;
+  totalPages!: number;
+  currentIdSeccion!: string;
+  cargandoProductos:boolean = false;
+  cargandoProductos2:boolean = false;
 
   constructor(
     public toast: ToastrService,
@@ -133,32 +137,21 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
   }
 
   getUrl(id: any) {
-    this.producto_espacial = this.lstProductos[id].productos;
-    this.nombre = this.lstProductos[id].nombre;
+    this.nombre = this.secciones.find(x => x.id == id)?.nombre;
+    this.currentIdSeccion = id;
+    this.cargaEspecialesArticulos(id);
   }
 
   async cargaEspeciales() {
-    let documentId = this.user.documentId;
-    console.log('getSelectedStore desde ProductSlideshowSpecialsComponent');
-    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.code;
+    this.secciones = []
     var especials = this.router.url.split('/').pop() || '';
-    let location = '';
 
     //clean tracking vars
     var look = especials?.indexOf('?');
     if ((look || 0) > -1) especials = especials?.substr(0, look);
 
-    if (this.preferenciaCliente && this.preferenciaCliente.deliveryAddress)
-      location = this.preferenciaCliente.deliveryAddress.city
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
-
-    this.cmsService
-      .getSpecial(especials, documentId, sucursal, location)
-      .subscribe({
+    this.cmsService.getSpecial(especials).subscribe({
         next: (res) => {
-          console.log('especial: ', res);
           this.especial = res.specials;
           this.banners = res.banners[0];
           let data: ISpecialData[] = res.data;
@@ -167,30 +160,15 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
           data.forEach((x: ISpecialData) => {
             let seccion: ISection = {
               nombre: x.title,
-              productos: x.articles,
+              id: x.id,
               p: i,
             };
             out.push(seccion);
             i++;
           });
-          this.lstProductos = out;
+          this.secciones = out;
 
-          if (!this.nombre) {
-            this.producto_espacial = this.lstProductos[0].productos;
-            this.nombre = this.lstProductos[0].nombre;
-          } else {
-            let index = this.lstProductos.findIndex((item: any) =>
-              item.nombre.toUpperCase().match(this.nombre || ''.toUpperCase())
-            );
-            if (index != -1) {
-              this.producto_espacial = this.lstProductos[index].productos;
-              this.nombre = this.lstProductos[index].nombre;
-              let division = Math.trunc(index / 3);
-              if (division >= this.p) {
-                this.p = division + 1;
-              }
-            }
-          }
+          this.getUrl(this.secciones[0].id)
         },
         error: (err) => {
           console.log(err);
@@ -198,11 +176,60 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
       });
   }
 
+  onPageChange() {
+    const page = this.currentPage + 1;
+
+    if (page <= this.totalPages) {
+      this.currentPage = page;
+      this.cargaEspecialesArticulos(this.currentIdSeccion, true);
+    }
+  }
+
+  async cargaEspecialesArticulos(idSeccion:string, scroll = false) {
+    let documentId = this.user.documentId;
+    const tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    const sucursal = tiendaSeleccionada.code;
+    var especials = this.router.url.split('/').pop() || '';
+    let location = '';
+
+    //clean tracking vars
+    var look = especials.indexOf('?');
+    if (look  > -1) especials = especials?.substr(0, look);
+
+    if (this.preferenciaCliente && this.preferenciaCliente.deliveryAddress)
+        location = this.preferenciaCliente.deliveryAddress.city.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    if (!scroll) {
+      this.producto_espacial = [];
+      this.currentPage = 1;
+      this.cargandoProductos = true;
+    } else {
+      this.cargandoProductos2 = true;
+    }
+
+    this.cmsService.getSpecialArticles(idSeccion,especials,documentId,sucursal,location,this.currentPage).subscribe({
+      next:(res)=>{
+        if (scroll) {
+          for (const item of res.data) {
+            this.producto_espacial.push(item);
+          }
+        } else {
+          this.totalPages = res.lastPage;
+          this.producto_espacial = res.data;
+        }
+        this.cargandoProductos = false;
+        this.cargandoProductos2 = false;
+      },
+      error:(err)=>{
+        console.log(err)
+      }
+    })
+
+  }
+
   pageChanged(event: any) {
     this.p = event;
     let index = (this.p - 1) * 3;
-
-    this.producto_espacial = this.lstProductos[index].productos;
-    this.nombre = this.lstProductos[index].nombre;
+    this.getUrl(this.secciones[index].id);
   }
 }

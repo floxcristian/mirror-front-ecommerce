@@ -12,6 +12,7 @@ export class BlockHeaderComponent {
   @Input() colorText!: string;
   @Input() arrows = false;
   @Input() groups: BlockHeaderGroup[] = [];
+  @Input() m_0 = false;
 
   @Output() next: EventEmitter<any> = new EventEmitter();
   @Output() prev: EventEmitter<any> = new EventEmitter();

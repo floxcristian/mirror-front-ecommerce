@@ -1,5 +1,6 @@
-<ng-container *ngIf="innerWidth > 426">
-  <app-scroll-top> </app-scroll-top>
+<div infiniteScroll [infiniteScrollDistance]="2" (scrolled)="onPageChange()">
+  <ng-container *ngIf="innerWidth > 426">
+  <app-scroll-top [fast]="true"> </app-scroll-top>
   <ng-container *ngIf="banners">
     <a [href]="banners.url" [target]="banners.target">
       <img [src]="banners.imageFull" width="100%" [alt]="banners.alt" />
@@ -10,13 +11,18 @@
       <div
         class="card_especiales text-center col-sm-3 m-1 p-0 mb-3"
         *ngFor="
-          let objB of lstProductos
+          let objB of secciones
             | paginate : { itemsPerPage: 3, currentPage: p }
         "
+        (click)="getUrl(objB.id)"
       >
         <div
-          (click)="getUrl(objB.p)"
-          style="text-transform: uppercase; font-size: 1.2rem"
+          style="text-transform: uppercase;
+          font-size: 1.2rem;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;"
         >
           {{ objB.nombre }}
         </div>
@@ -30,8 +36,8 @@
       ></pagination-controls>
     </div>
   </div>
-</ng-container>
-<ng-container *ngIf="innerWidth < 427">
+  </ng-container>
+  <ng-container *ngIf="innerWidth < 427">
   <ng-container *ngIf="banners">
     <a [href]="banners.url" [target]="banners.target">
       <img
@@ -47,14 +53,19 @@
       <div
         class="card_especiales text-center col-sm-3 m-1 p-0 mb-3"
         *ngFor="
-          let objB of lstProductos
+          let objB of secciones
             | paginate : { itemsPerPage: 3, currentPage: p };
           let y = index
         "
+        (click)="getUrl(objB.id)"
       >
         <div
-          (click)="getUrl(objB.p)"
-          style="text-transform: uppercase; font-size: 1.2rem"
+          style="text-transform: uppercase;
+          font-size: 1.2rem;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;"
         >
           {{ objB.nombre }}
         </div>
@@ -68,14 +79,14 @@
       ></pagination-controls>
     </div>
   </div>
-</ng-container>
+  </ng-container>
 
-<app-loading-element
+  <app-loading-element
   [text]="'Cargando...'"
-  *ngIf="!lstProductos"
-></app-loading-element>
+  *ngIf="secciones.length === 0"
+  ></app-loading-element>
 
-<div class="products-view container mb-5" (window:resize)="onResize($event)">
+  <div *ngIf="secciones.length > 0" class="products-view container mb-5" (window:resize)="onResize($event)">
   <div class="clearfix"></div>
   <div
     class="products-view__list products-list"
@@ -94,6 +105,10 @@
           [header]="nombre"
           colorText="text-primary"
         ></app-block-header>
+        <div *ngIf="cargandoProductos" class="row flex-column justify-content-center align-content-center mt-5">
+          <div class="text-center"><i class="fas fa-spinner fa-2x fa-spin fa-fw"></i></div>
+          <div class="mt-1">Cargando Artículos</div>
+        </div>
       </div>
 
       <div
@@ -108,5 +123,10 @@
         </app-product-card-b2c-cms>
       </div>
     </div>
+    <div *ngIf="cargandoProductos2" class="row flex-column justify-content-center align-content-center mt-5">
+      <div class="text-center"><i class="fas fa-spinner fa-2x fa-spin fa-fw"></i></div>
+      <div class="mt-1">Cargando Artículos</div>
+    </div>
+  </div>
   </div>
 </div>
