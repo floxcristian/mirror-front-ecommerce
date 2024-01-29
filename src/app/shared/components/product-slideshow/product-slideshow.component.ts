@@ -26,6 +26,7 @@ import { IData } from '@core/models-v2/cms/customHomePage-response.interface';
 import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 
 @Component({
   selector: 'app-product-slideshow',
@@ -46,7 +47,8 @@ export class ProductSlideshowComponent
   layout = 'grid-lg';
   window = window;
   innerWidth: number;
-  carouselOptions = {
+  carouselOptions: OwlOptions = {
+    lazyLoad: true,
     items: 5,
     nav: true,
     navText: [

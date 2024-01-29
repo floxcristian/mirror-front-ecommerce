@@ -15,7 +15,7 @@ import { CmsService } from '@core/services-v2/cms.service';
 })
 export class BlockSlideshowComponent implements OnInit {
   options: OwlOptions = {
-    // lazyLoad: false,
+    lazyLoad: true,
     dots: true,
     //dragging: false,
     loop: true,

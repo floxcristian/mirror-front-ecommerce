@@ -13,7 +13,9 @@ import {
   NgZone,
   OnInit,
   PLATFORM_ID,
+  Renderer2,
   ViewChild,
+  afterNextRender,
 } from '@angular/core';
 // Libs
 import * as moment from 'moment';
@@ -28,11 +30,15 @@ import { CartService } from '@core/services-v2/cart.service';
 import { IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
 // Components
 import { AlertCartMinComponent } from './shared/components/alert-cart-min/alert-cart-min.component';
-
+import { ScriptService } from '@core/utils-v2/script/script.service';
+// ENV
+import { environment } from '@env/environment';
 @Component({
   selector: 'app-root',
-  template: ` <router-outlet />
-    <app-alert-cart-min [product]="productCard" />`,
+  template: `
+    <router-outlet />
+    <app-alert-cart-min [product]="productCard" />
+  `,
 })
 export class AppComponent implements AfterViewInit, OnInit {
   @ViewChild(AlertCartMinComponent, {
@@ -40,15 +46,11 @@ export class AppComponent implements AfterViewInit, OnInit {
     static: false,
   })
   alert!: AlertCartMinComponent;
-
-  @ViewChild('webchatStartButtonContainer')
-  webchatStartButtonContainer!: ElementRef;
-
   productCard!: IShoppingCartProduct;
   s: any;
   node: any;
   isOmni!: boolean;
-
+  private readonly webChatScript = environment.webChatScript;
   constructor(
     @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -61,8 +63,15 @@ export class AppComponent implements AfterViewInit, OnInit {
     private readonly sessionStorage: SessionStorageService,
     private readonly sessionService: SessionService,
     private readonly shoppingCartService: CartService,
-    private readonly geolocationService: GeolocationServiceV2
-  ) {}
+    private readonly geolocationService: GeolocationServiceV2,
+    private readonly scriptService: ScriptService,
+    private renderer: Renderer2
+  ) {
+    afterNextRender(() => {
+      this.loadWebChat();
+      this.handleChatButtonVisibility();
+    });
+  }
 
   private setLastSession(): void {
     if (!this.sessionService.isB2B()) return;
@@ -102,64 +111,36 @@ export class AppComponent implements AfterViewInit, OnInit {
           this.document.body.classList.remove('pdp');
           this.document.body.classList.add('carrito');
           this.document.body.classList.remove('categoria');
-          if (isPlatformBrowser(this.platformId)) {
-            this.webchatStartButtonContainer.nativeElement.style.display =
-              'none';
-          }
         } else if (event.url.includes('/catalogos')) {
           this.document.body.classList.remove('home');
           this.document.body.classList.remove('pdp');
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('categoria');
-          if (isPlatformBrowser(this.platformId)) {
-            this.webchatStartButtonContainer.nativeElement.style.display =
-              'none';
-          }
         } else if (event.url.includes('/categoria')) {
           this.document.body.classList.remove('home');
           this.document.body.classList.remove('pdp');
           this.document.body.classList.remove('carrito');
           this.document.body.classList.add('categoria');
-          if (isPlatformBrowser(this.platformId)) {
-            this.webchatStartButtonContainer.nativeElement.style.display =
-              'none';
-          }
         } else if (this.sessionService.isB2B()) {
           this.document.body.classList.remove('home');
           this.document.body.classList.remove('pdp');
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('categoria');
-          if (isPlatformBrowser(this.platformId)) {
-            this.webchatStartButtonContainer.nativeElement.style.display =
-              'none';
-          }
         } else if (event.url.includes('/ficha')) {
           this.document.body.classList.remove('home');
           this.document.body.classList.remove('categoria');
           this.document.body.classList.remove('carrito');
           this.document.body.classList.add('pdp');
-          if (isPlatformBrowser(this.platformId)) {
-            this.webchatStartButtonContainer.nativeElement.style.display =
-              'block';
-          }
         } else if (event.url.includes('/especial/')) {
           this.document.body.classList.add('home');
           this.document.body.classList.remove('categoria');
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('pdp');
-          if (isPlatformBrowser(this.platformId)) {
-            this.webchatStartButtonContainer.nativeElement.style.display =
-              'block';
-          }
         } else {
           this.document.body.classList.add('home');
           this.document.body.classList.remove('pdp');
           this.document.body.classList.remove('carrito');
           this.document.body.classList.remove('categoria');
-          if (isPlatformBrowser(this.platformId)) {
-            this.webchatStartButtonContainer.nativeElement.style.display =
-              'block';
-          }
         }
         if (event.url.includes('/omni-forma-de-pago')) {
           this.isOmni = true;
@@ -213,6 +194,11 @@ export class AppComponent implements AfterViewInit, OnInit {
       console.log('setDefaultLocation desde app.component.ts');
       this.geolocationService.setDefaultLocation();
     }
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.handleChatButtonVisibility();
+      }
+    });
   }
 
   /**
@@ -221,5 +207,52 @@ export class AppComponent implements AfterViewInit, OnInit {
   private showAlertCart(): void {
     this.alert.hide();
     this.alert.show();
+  }
+
+  loadWebChat() {
+    this.scriptService
+      .loadScript(this.webChatScript)
+      .then((res) => {
+        console.log('cargar el script de chat exitosa');
+      })
+      .catch((error) => {
+        console.warn('Error al cargar el script de chat');
+      });
+  }
+  showChatButton() {
+    const token = this.getChatToken(this.webChatScript);
+    const tokenWithSuffix = token + '_startButtonContainer';
+    const element = document.getElementById(tokenWithSuffix);
+    if (element) {
+      this.renderer.setStyle(element, 'display', 'block');
+    } else {
+      console.error('Elemento no encontrado:', tokenWithSuffix);
+    }
+  }
+
+  hideChatButton() {
+    const token = this.getChatToken(this.webChatScript);
+    const tokenWithSuffix = token + '_startButtonContainer';
+    const element = document.getElementById(tokenWithSuffix);
+    if (element) {
+      this.renderer.setStyle(element, 'display', 'none');
+    }
+  }
+
+  handleChatButtonVisibility() {
+    const showChatRoutes = ['/ficha', '/especial/', '/home'];
+    const hideChatRoutes = ['/carro-compra', '/catalogos', '/categoria'];
+    const currentUrl = this.router.url;
+    if (showChatRoutes.some((route) => currentUrl.includes(route))) {
+      this.showChatButton();
+    } else if (hideChatRoutes.some((route) => currentUrl.includes(route))) {
+      this.hideChatButton();
+    }
+  }
+
+  private getChatToken(url: string): string | null {
+    const regex = /token=([^&]+)/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
   }
 }
