@@ -11,16 +11,15 @@
 </div>
 <!-- End::header -->
 
-<ng-container *ngIf="layout !== 'sidebar'">
-  <div>
-    <div class="container">
-      <div class="card pt-2">
-        <div class="col-12 col-lg-12 mt-3" *ngIf="product?.visible === 0">
-          <div class="alert alert-info text-center">
-            No se encontro el producto.
-          </div>
+<div>
+  <div class="container">
+    <div class="card pt-2">
+      <div class="col-12 col-lg-12 mt-3" *ngIf="product?.visible === 0">
+        <div class="alert alert-info text-center">
+          No se encontro el producto.
         </div>
-        <!-- <app-product
+      </div>
+      <!-- <app-product
           [product]="product"
           [origen]="origen"
           [layout]="layout"
@@ -31,458 +30,26 @@
           "
           (leerComentarios)="abrirTabEvaluacion()"
         ></app-product> -->
-        <app-product
-          *ngIf="product"
-          [product]="product"
-          [origen]="origen"
-          [layout]="layout"
-          [stock]="stock"
-          [recommendedProducts]="recommendedProducts"
-          (leerComentarios)="abrirTabEvaluacion()"
-        ></app-product>
+      <app-product
+        *ngIf="product"
+        [product]="product"
+        [origen]="origen"
+        layout="standard"
+        [stock]="stock"
+        [recommendedProducts]="recommendedProducts"
+        (leerComentarios)="abrirTabEvaluacion()"
+      ></app-product>
 
-        <div id="ancla"></div>
+      <div id="ancla"></div>
 
-        <div
-          *ngIf="!showMobile && product?.visible === 1"
-          class="d-none d-sm-block"
-        >
-          <!-- Matriz Comparativa (Articulos similares) -->
-          <ng-container *ngIf="matriz.length > 1">
-            <hr />
-            <div class="mt-3">
-              <div class="d-flex flex-column align-items-center mb-3">
-                <div
-                  class="text-center"
-                  style="
-                    text-align: center;
-                    font-size: 39px;
-                    font-weight: 900;
-                    line-height: 53px;
-                    font-style: normal;
-                    border-radius: 0px;
-                    letter-spacing: 0px;
-                    color: #0d61bb;
-                    margin-bottom: 0px;
-                  "
-                >
-                  Artículos similares
-                </div>
-              </div>
-
-              <div
-                class="products-view px-sm-3 mx-sm-3 mx-xl-5"
-                style="margin-top: 15px"
-              >
-                <div class="table-responsive-lg" *ngIf="matriz.length > 1">
-                  <table
-                    style="margin: auto; background-color: #fff"
-                    class="mb-3"
-                  >
-                    <tr style="background-color: #fff; border-top: 0px">
-                      <td class="border-top-0"></td>
-                      <td
-                        *ngFor="let item of matriz"
-                        class="text-center border-top-0"
-                        style="vertical-align: middle"
-                      >
-                        <img
-                          class="img-fluid"
-                          [routerLink]="root.product(item.sku, item.name)"
-                          [src]="root.getUrlImagenMiniatura(item)"
-                          alt="{{ item.name }}"
-                          style="width: 40%; cursor: pointer"
-                        />
-                        <div class="col-12 skuP">
-                          {{ item.sku }}
-                        </div>
-
-                        <div
-                          *ngIf="
-                            item.stockSummary.branchStock > 0 ||
-                            item.stockSummary.companyStock > 0
-                          "
-                          class="d-flex flex-column justify-content-center align-items-center"
-                        >
-                          <div
-                            *ngIf="
-                              item.priceInfo.commonPrice ===
-                              item.priceInfo.price
-                            "
-                            class="product-card__new-price font-weight-bold"
-                            style="color: #000"
-                          >
-                            <span *ngIf="!showNetPrice"
-                              >{{ item.priceInfo.price | currencyFormat }}
-                              <em
-                                ><span class="rounded-pill badge-implementos">
-                                  c/iva</span
-                                ></em
-                              ></span
-                            >
-                            <span *ngIf="showNetPrice"
-                              >{{ item.priceInfo.netPrice | currencyFormat }}
-                              <em
-                                ><span
-                                  class="rounded-pill badge-primary-custom"
-                                >
-                                  neto</span
-                                ></em
-                              ></span
-                            >
-                          </div>
-                          <!-- Start::precio oferta en rojo en producto de matriz -->
-                          <div
-                            *ngIf="
-                              item.priceInfo.commonPrice !==
-                              item.priceInfo.price
-                            "
-                            class="product-card__new-price text-danger font-weight-bold"
-                          >
-                            <span *ngIf="!showNetPrice"
-                              >{{ item.priceInfo.price | currencyFormat }}
-                              <em
-                                ><span class="rounded-pill badge-implementos">
-                                  c/iva</span
-                                ></em
-                              ></span
-                            >
-                            <span *ngIf="showNetPrice"
-                              >{{ item.priceInfo.netPrice | currencyFormat }}
-                              <em
-                                ><span
-                                  class="rounded-pill badge-primary-custom"
-                                >
-                                  neto</span
-                                ></em
-                              ></span
-                            >
-                          </div>
-                          <!-- End::precio oferta en rojo en producto de matriz -->
-
-                          <!-- Start::precio normal -->
-                          <div
-                            *ngIf="
-                              item.priceInfo.commonPrice !==
-                              item.priceInfo.price
-                            "
-                            tooltip="Precio normal"
-                            class="product-card__old-price text-end"
-                          >
-                            <span *ngIf="!showNetPrice"
-                              >{{
-                                item.priceInfo.commonPrice | currencyFormat
-                              }}
-                              <em> c/iva </em></span
-                            >
-                            <span *ngIf="showNetPrice"
-                              >{{
-                                item.priceInfo.commonNetPrice | currencyFormat
-                              }}
-                              <em> neto </em></span
-                            >
-                          </div>
-                          <!-- End::precio normal -->
-                        </div>
-                        <div class="col-12 marcaP text-center">
-                          {{ item.brand }}
-                        </div>
-                        <div
-                          *ngIf="
-                            item.stockSummary.branchStock > 0 ||
-                            item.stockSummary.companyStock > 0
-                          "
-                          class="mb-2 d-flex flex-column justify-content-center align-items-center"
-                        >
-                          <div class="row">
-                            <div
-                              class="col-12 d-flex justify-content-center align-items-center"
-                            >
-                              <i
-                                class="fal fa-minus-circle fa-xl me-3"
-                                style="cursor: pointer; color: #005cb9"
-                                role="button"
-                                (click)="
-                                  refreshComparedProductPrice(item, '-')
-                                "
-                              ></i>
-                              <input
-                                type="number"
-                                size="4"
-                                style="width: 50px"
-                                class="text-center"
-                                [(ngModel)]="item.quantity"
-                                (change)="refreshComparedProductPrice(item)"
-                              />
-                              <i
-                                class="fal fa-plus-circle fa-xl ms-3"
-                                style="cursor: pointer; color: #005cb9"
-                                (click)="
-                                  refreshComparedProductPrice(item, '+')
-                                "
-                                role="button"
-                              ></i>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="col-12 marcaP text-center"
-                          *ngIf="
-                            item.stockSummary.branchStock === 0 &&
-                            item.stockSummary.companyStock === 0
-                          "
-                        >
-                          <div class="no_stock">
-                            <div
-                              class="text-center"
-                              style="margin: 0px; padding: 0"
-                            >
-                              <span>Sujeto a disponibilidad </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="mb-2 d-flex flex-column justify-content-center align-items-center"
-                        >
-                          <button
-                            *ngIf="
-                              item.stockSummary.branchStock ||
-                              item.stockSummary.companyStock
-                            "
-                            class="btn btn-sm btn-secondary"
-                            (click)="addComparedProductToCart(item)"
-                          >
-                            AGREGAR
-                          </button>
-                          <button
-                            *ngIf="
-                              !item.stockSummary.branchStock &&
-                              !item.stockSummary.companyStock
-                            "
-                            class="btn btn-sm btn-secondary"
-                            [routerLink]="root.product(item.sku, item.name)"
-                          >
-                            SOLICITAR
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="color-gris" *ngFor="let item of comparacion">
-                      <td>
-                        <b>{{ item.name | capitalizeFirst }}</b>
-                      </td>
-                      <td
-                        *ngFor="let dato of item.values"
-                        class="text-center"
-                        [class.text-muted]="dato === 'N/A'"
-                      >
-                        {{ dato }}
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-              <hr />
-            </div>
-          </ng-container>
-          <!-- Relacionados de productos -->
-          <div class="mt-4 mb-3" *ngIf="relatedProducts.length > 0">
-            <div class="d-flex flex-column align-items-center mb-3">
-              <div
-                class="text-center"
-                style="
-                  text-align: center;
-                  font-size: 39px;
-                  font-weight: 900;
-                  line-height: 53px;
-                  font-style: normal;
-                  border-radius: 0px;
-                  letter-spacing: 0px;
-                  color: #0d61bb;
-                  margin-bottom: 0px;
-                "
-              >
-                <!-- Artículos equivalentes -->
-                Otras personas han comprado esto
-              </div>
-            </div>
-
-            <div
-              class="products-view px-sm-3 mx-sm-3 mx-xl-5"
-              style="margin-top: 15px"
-            >
-              <div
-                class="products-view__list products-list"
-                [class.mx-0]="!isB2B"
-                data-layout="grid-5-full"
-                data-with-features="false"
-              >
-                <owl-carousel-o
-                  class="carouselFicha"
-                  [options]="carouselOptions"
-                  appOwlPreventClick
-                >
-                  <ng-container
-                    *ngFor="let item of relatedProducts"
-                    class="products-list__item"
-                  >
-                    <ng-template carouselSlide>
-                      <app-product-card-b2c-ficha
-                        [product]="item"
-                        [origen]="[origen[0], origen[1], origen[2], 'matriz']"
-                        [isOnProductPage]="true"
-                      >
-                      </app-product-card-b2c-ficha>
-                    </ng-template>
-                  </ng-container>
-                  <ng-container *ngIf="relatedProducts.length < 6">
-                    <ng-template
-                      carouselSlide
-                      *ngFor="
-                        let item of relleno
-                          | slice : 0 : 6 - relatedProducts.length
-                      "
-                    >
-                      <div class="d-flex w-100"></div>
-                    </ng-template>
-                  </ng-container>
-                </owl-carousel-o>
-              </div>
-            </div>
-          </div>
-          <!-- Fin Relacionados de productos -->
-          <!-- Recomendados de productos -->
-          <div class="mt-4" *ngIf="recommendedProducts.length > 0">
-            <div class="d-flex flex-column align-items-center mb-3">
-              <div
-                class="text-center"
-                style="
-                  text-align: center;
-                  font-size: 39px;
-                  font-weight: 900;
-                  line-height: 53px;
-                  font-style: normal;
-                  border-radius: 0px;
-                  letter-spacing: 0px;
-                  color: #0d61bb;
-                  margin-bottom: 0px;
-                "
-              >
-                También podría interesarte
-              </div>
-            </div>
-
-            <div
-              class="products-view px-sm-3 mx-sm-3 mx-xl-5"
-              style="margin-top: 15px"
-            >
-              <div
-                class="products-view__list products-list"
-                [class.mx-0]="isB2B"
-                data-layout="grid-5-full"
-                data-with-features="false"
-              >
-                <owl-carousel-o
-                  class="carouselFicha"
-                  [options]="carouselOptions"
-                  appOwlPreventClick
-                >
-                  <ng-container
-                    *ngFor="let item of recommendedProducts"
-                    class="products-list__item"
-                  >
-                    <ng-template carouselSlide>
-                      <app-product-card-b2c-ficha
-                        [product]="item"
-                        [origen]="[origen[0], origen[1], origen[2], 'matriz']"
-                        [isOnProductPage]="true"
-                      >
-                      </app-product-card-b2c-ficha>
-                    </ng-template>
-                  </ng-container>
-                  <ng-container *ngIf="recommendedProducts.length < 6">
-                    <ng-template
-                      carouselSlide
-                      *ngFor="
-                        let item of relleno
-                          | slice : 0 : 6 - recommendedProducts.length
-                      "
-                    >
-                      <div class="d-flex w-100"></div>
-                    </ng-template>
-                  </ng-container>
-                </owl-carousel-o>
-              </div>
-            </div>
-          </div>
-          <!-- Fin Recomendados de productos -->
+      <div
+        *ngIf="!showMobile && product?.visible === 1"
+        class="d-none d-sm-block"
+      >
+        <!-- Matriz Comparativa (Articulos similares) -->
+        <ng-container *ngIf="matriz.length > 1">
           <hr />
-
-          <ul
-            class="nav mb-3 mt-5 justify-content-center justify-content-lg-start"
-            id="myTab"
-          >
-            <li class="nav-item me-5">
-              <a
-                class="nav-link active"
-                id="detallesTecnicos-tab"
-                data-bs-toggle="tab"
-                href="#detallesTecnicos"
-                role="tab"
-                aria-controls="detallesTecnicos"
-                aria-selected="false"
-              >
-                Detalles Técnicos
-              </a>
-              <div class="w-100"></div>
-            </li>
-            <li class="nav-item me-5">
-              <a
-                class="nav-link"
-                id="evaluacion-tab"
-                data-bs-toggle="tab"
-                href="#evaluacion"
-                role="tab"
-                aria-controls="evaluacion"
-                aria-selected="false"
-              >
-                Evaluación
-              </a>
-              <div class="w-100"></div>
-            </li>
-          </ul>
-
-          <div class="tab-content border-0" id="myTabContent">
-            <div
-              class="tab-pane fade active show"
-              id="detallesTecnicos"
-              role="tabpanel"
-              aria-labelledby="detallesTecnicos-tab"
-            >
-              <app-detalle-tecnicos
-                [producto]="product"
-              ></app-detalle-tecnicos>
-            </div>
-            <div
-              class="tab-pane fade"
-              id="evaluacion"
-              role="tabpanel"
-              aria-labelledby="evaluacion-tab"
-            >
-              <app-comentarios
-                #comentarios
-                [producto]="product"
-              ></app-comentarios>
-            </div>
-          </div>
-        </div>
-        <!-- MOBILE -->
-        <div
-          *ngIf="showMobile && product?.visible === 1"
-          class="d-block d-sm-none mt-4"
-        >
-          <!-- Start::matriz comparativa (articulos similares) (mobile) -->
-          <div *ngIf="matriz.length > 1" class="mt-3">
+          <div class="mt-3">
             <div class="d-flex flex-column align-items-center mb-3">
               <div
                 class="text-center"
@@ -506,17 +73,13 @@
               class="products-view px-sm-3 mx-sm-3 mx-xl-5"
               style="margin-top: 15px"
             >
-              <div
-                class="table"
-                *ngIf="matriz.length > 1"
-                style="overflow-x: scroll; border-radius: 0px; border: none"
-              >
+              <div class="table-responsive-lg" *ngIf="matriz.length > 1">
                 <table
                   style="margin: auto; background-color: #fff"
                   class="mb-3"
                 >
                   <tr style="background-color: #fff; border-top: 0px">
-                    <td class="border-top-0 sticky"></td>
+                    <td class="border-top-0"></td>
                     <td
                       *ngFor="let item of matriz"
                       class="text-center border-top-0"
@@ -532,10 +95,11 @@
                       <div class="col-12 skuP">
                         {{ item.sku }}
                       </div>
+
                       <div
                         *ngIf="
-                          item.stockSummary.branchStock ||
-                          item.stockSummary.companyStock
+                          item.stockSummary.branchStock > 0 ||
+                          item.stockSummary.companyStock > 0
                         "
                         class="d-flex flex-column justify-content-center align-items-center"
                       >
@@ -563,7 +127,7 @@
                             ></span
                           >
                         </div>
-                        <!-- Start::precio oferta en rojo -->
+                        <!-- Start::precio oferta en rojo en producto de matriz -->
                         <div
                           *ngIf="
                             item.priceInfo.commonPrice !== item.priceInfo.price
@@ -587,8 +151,9 @@
                             ></span
                           >
                         </div>
-                        <!-- End::precio oferta en rojo -->
+                        <!-- End::precio oferta en rojo en producto de matriz -->
 
+                        <!-- Start::precio normal -->
                         <div
                           *ngIf="
                             item.priceInfo.commonPrice !== item.priceInfo.price
@@ -607,6 +172,7 @@
                             <em> neto </em></span
                           >
                         </div>
+                        <!-- End::precio normal -->
                       </div>
                       <div class="col-12 marcaP text-center">
                         {{ item.brand }}
@@ -666,8 +232,8 @@
                       >
                         <button
                           *ngIf="
-                            item.stockSummary.branchStock > 0 ||
-                            item.stockSummary.companyStock > 0
+                            item.stockSummary.branchStock ||
+                            item.stockSummary.companyStock
                           "
                           class="btn btn-sm btn-secondary"
                           (click)="addComparedProductToCart(item)"
@@ -676,8 +242,8 @@
                         </button>
                         <button
                           *ngIf="
-                            item.stockSummary.branchStock === 0 &&
-                            item.stockSummary.companyStock === 0
+                            !item.stockSummary.branchStock &&
+                            !item.stockSummary.companyStock
                           "
                           class="btn btn-sm btn-secondary"
                           [routerLink]="root.product(item.sku, item.name)"
@@ -687,8 +253,8 @@
                       </div>
                     </td>
                   </tr>
-                  <tr class="mobile" *ngFor="let item of comparacion">
-                    <td class="sticky">
+                  <tr class="color-gris" *ngFor="let item of comparacion">
+                    <td>
                       <b>{{ item.name | capitalizeFirst }}</b>
                     </td>
                     <td
@@ -704,203 +270,617 @@
             </div>
             <hr />
           </div>
-          <!-- End::matriz comparativa (articulos similares) (mobile) -->
-
-          <!-- Relacionados de productos -->
-          <div class="mt-3" *ngIf="relatedProducts.length > 0">
-            <div class="d-flex flex-column align-items-center mb-3">
-              <div
-                class="text-center"
-                style="
-                  text-align: center;
-                  font-size: 39px;
-                  font-weight: 900;
-                  line-height: 53px;
-                  font-style: normal;
-                  border-radius: 0px;
-                  letter-spacing: 0px;
-                  color: #0d61bb;
-                  margin-bottom: 0px;
-                "
-              >
-                <!-- Artículos equivalentes -->
-                Otras personas han comprado esto
-              </div>
-            </div>
-
+        </ng-container>
+        <!-- Relacionados de productos -->
+        <div class="mt-4 mb-3" *ngIf="relatedProducts.length > 0">
+          <div class="d-flex flex-column align-items-center mb-3">
             <div
-              class="products-view px-sm-3 mx-sm-3 mx-xl-5"
-              style="margin-top: 15px"
+              class="text-center"
+              style="
+                text-align: center;
+                font-size: 39px;
+                font-weight: 900;
+                line-height: 53px;
+                font-style: normal;
+                border-radius: 0px;
+                letter-spacing: 0px;
+                color: #0d61bb;
+                margin-bottom: 0px;
+              "
             >
-              <div
-                class="products-view__list products-list"
-                [class.mx-0]="isB2B"
-                data-layout="grid-5-full"
-                data-with-features="false"
+              <!-- Artículos equivalentes -->
+              Otras personas han comprado esto
+            </div>
+          </div>
+
+          <div
+            class="products-view px-sm-3 mx-sm-3 mx-xl-5"
+            style="margin-top: 15px"
+          >
+            <div
+              class="products-view__list products-list"
+              [class.mx-0]="!isB2B"
+              data-layout="grid-5-full"
+              data-with-features="false"
+            >
+              <owl-carousel-o
+                class="carouselFicha"
+                [options]="carouselOptions"
+                appOwlPreventClick
               >
-                <owl-carousel-o
-                  class="carouselFicha"
-                  [options]="carrouselOptionsMobile"
-                  appOwlPreventClick
+                <ng-container
+                  *ngFor="let item of relatedProducts"
+                  class="products-list__item"
                 >
-                  <ng-container
-                    *ngFor="let item of relatedProducts"
-                    class="products-list__item"
+                  <ng-template carouselSlide>
+                    <app-product-card-b2c-ficha
+                      [product]="item"
+                      [origen]="[origen[0], origen[1], origen[2], 'matriz']"
+                      [isOnProductPage]="true"
+                    >
+                    </app-product-card-b2c-ficha>
+                  </ng-template>
+                </ng-container>
+                <ng-container *ngIf="relatedProducts.length < 6">
+                  <ng-template
+                    carouselSlide
+                    *ngFor="
+                      let item of relleno
+                        | slice : 0 : 6 - relatedProducts.length
+                    "
                   >
-                    <ng-template carouselSlide [dataMerge]="2">
-                      <app-product-card-b2c-ficha
-                        [product]="item"
-                        [origen]="[origen[0], origen[1], origen[2], 'matriz']"
-                        [isOnProductPage]="true"
+                    <div class="d-flex w-100"></div>
+                  </ng-template>
+                </ng-container>
+              </owl-carousel-o>
+            </div>
+          </div>
+        </div>
+        <!-- Fin Relacionados de productos -->
+        <!-- Recomendados de productos -->
+        <div class="mt-4" *ngIf="recommendedProducts.length > 0">
+          <div class="d-flex flex-column align-items-center mb-3">
+            <div
+              class="text-center"
+              style="
+                text-align: center;
+                font-size: 39px;
+                font-weight: 900;
+                line-height: 53px;
+                font-style: normal;
+                border-radius: 0px;
+                letter-spacing: 0px;
+                color: #0d61bb;
+                margin-bottom: 0px;
+              "
+            >
+              También podría interesarte
+            </div>
+          </div>
+
+          <div
+            class="products-view px-sm-3 mx-sm-3 mx-xl-5"
+            style="margin-top: 15px"
+          >
+            <div
+              class="products-view__list products-list"
+              [class.mx-0]="isB2B"
+              data-layout="grid-5-full"
+              data-with-features="false"
+            >
+              <owl-carousel-o
+                class="carouselFicha"
+                [options]="carouselOptions"
+                appOwlPreventClick
+              >
+                <ng-container
+                  *ngFor="let item of recommendedProducts"
+                  class="products-list__item"
+                >
+                  <ng-template carouselSlide>
+                    <app-product-card-b2c-ficha
+                      [product]="item"
+                      [origen]="[origen[0], origen[1], origen[2], 'matriz']"
+                      [isOnProductPage]="true"
+                    >
+                    </app-product-card-b2c-ficha>
+                  </ng-template>
+                </ng-container>
+                <ng-container *ngIf="recommendedProducts.length < 6">
+                  <ng-template
+                    carouselSlide
+                    *ngFor="
+                      let item of relleno
+                        | slice : 0 : 6 - recommendedProducts.length
+                    "
+                  >
+                    <div class="d-flex w-100"></div>
+                  </ng-template>
+                </ng-container>
+              </owl-carousel-o>
+            </div>
+          </div>
+        </div>
+        <!-- Fin Recomendados de productos -->
+        <hr />
+
+        <ul
+          class="nav mb-3 mt-5 justify-content-center justify-content-lg-start"
+          id="myTab"
+        >
+          <li class="nav-item me-5">
+            <a
+              class="nav-link active"
+              id="detallesTecnicos-tab"
+              data-bs-toggle="tab"
+              href="#detallesTecnicos"
+              role="tab"
+              aria-controls="detallesTecnicos"
+              aria-selected="false"
+            >
+              Detalles Técnicos
+            </a>
+            <div class="w-100"></div>
+          </li>
+          <li class="nav-item me-5">
+            <a
+              class="nav-link"
+              id="evaluacion-tab"
+              data-bs-toggle="tab"
+              href="#evaluacion"
+              role="tab"
+              aria-controls="evaluacion"
+              aria-selected="false"
+            >
+              Evaluación
+            </a>
+            <div class="w-100"></div>
+          </li>
+        </ul>
+
+        <div class="tab-content border-0" id="myTabContent">
+          <div
+            class="tab-pane fade active show"
+            id="detallesTecnicos"
+            role="tabpanel"
+            aria-labelledby="detallesTecnicos-tab"
+          >
+            <app-detalle-tecnicos [producto]="product"></app-detalle-tecnicos>
+          </div>
+          <div
+            class="tab-pane fade"
+            id="evaluacion"
+            role="tabpanel"
+            aria-labelledby="evaluacion-tab"
+          >
+            <app-comentarios
+              #comentarios
+              [producto]="product"
+            ></app-comentarios>
+          </div>
+        </div>
+      </div>
+      <!-- MOBILE -->
+      <div
+        *ngIf="showMobile && product?.visible === 1"
+        class="d-block d-sm-none mt-4"
+      >
+        <!-- Start::matriz comparativa (articulos similares) (mobile) -->
+        <div *ngIf="matriz.length > 1" class="mt-3">
+          <div class="d-flex flex-column align-items-center mb-3">
+            <div
+              class="text-center"
+              style="
+                text-align: center;
+                font-size: 39px;
+                font-weight: 900;
+                line-height: 53px;
+                font-style: normal;
+                border-radius: 0px;
+                letter-spacing: 0px;
+                color: #0d61bb;
+                margin-bottom: 0px;
+              "
+            >
+              Artículos similares
+            </div>
+          </div>
+
+          <div
+            class="products-view px-sm-3 mx-sm-3 mx-xl-5"
+            style="margin-top: 15px"
+          >
+            <div
+              class="table"
+              *ngIf="matriz.length > 1"
+              style="overflow-x: scroll; border-radius: 0px; border: none"
+            >
+              <table style="margin: auto; background-color: #fff" class="mb-3">
+                <tr style="background-color: #fff; border-top: 0px">
+                  <td class="border-top-0 sticky"></td>
+                  <td
+                    *ngFor="let item of matriz"
+                    class="text-center border-top-0"
+                    style="vertical-align: middle"
+                  >
+                    <img
+                      class="img-fluid"
+                      [routerLink]="root.product(item.sku, item.name)"
+                      [src]="root.getUrlImagenMiniatura(item)"
+                      alt="{{ item.name }}"
+                      style="width: 40%; cursor: pointer"
+                    />
+                    <div class="col-12 skuP">
+                      {{ item.sku }}
+                    </div>
+                    <div
+                      *ngIf="
+                        item.stockSummary.branchStock ||
+                        item.stockSummary.companyStock
+                      "
+                      class="d-flex flex-column justify-content-center align-items-center"
+                    >
+                      <div
+                        *ngIf="
+                          item.priceInfo.commonPrice === item.priceInfo.price
+                        "
+                        class="product-card__new-price font-weight-bold"
+                        style="color: #000"
                       >
-                      </app-product-card-b2c-ficha>
-                    </ng-template>
-                  </ng-container>
-                  <ng-container *ngIf="relatedProducts.length < 6">
-                    <ng-template
-                      carouselSlide
-                      *ngFor="
-                        let item of relleno
-                          | slice : 0 : 6 - relatedProducts.length
+                        <span *ngIf="!showNetPrice"
+                          >{{ item.priceInfo.price | currencyFormat }}
+                          <em
+                            ><span class="rounded-pill badge-implementos">
+                              c/iva</span
+                            ></em
+                          ></span
+                        >
+                        <span *ngIf="showNetPrice"
+                          >{{ item.priceInfo.netPrice | currencyFormat }}
+                          <em
+                            ><span class="rounded-pill badge-primary-custom">
+                              neto</span
+                            ></em
+                          ></span
+                        >
+                      </div>
+                      <!-- Start::precio oferta en rojo -->
+                      <div
+                        *ngIf="
+                          item.priceInfo.commonPrice !== item.priceInfo.price
+                        "
+                        class="product-card__new-price text-danger font-weight-bold"
+                      >
+                        <span *ngIf="!showNetPrice"
+                          >{{ item.priceInfo.price | currencyFormat }}
+                          <em
+                            ><span class="rounded-pill badge-implementos">
+                              c/iva</span
+                            ></em
+                          ></span
+                        >
+                        <span *ngIf="showNetPrice"
+                          >{{ item.priceInfo.netPrice | currencyFormat }}
+                          <em
+                            ><span class="rounded-pill badge-primary-custom">
+                              neto</span
+                            ></em
+                          ></span
+                        >
+                      </div>
+                      <!-- End::precio oferta en rojo -->
+
+                      <div
+                        *ngIf="
+                          item.priceInfo.commonPrice !== item.priceInfo.price
+                        "
+                        tooltip="Precio normal"
+                        class="product-card__old-price text-end"
+                      >
+                        <span *ngIf="!showNetPrice"
+                          >{{ item.priceInfo.commonPrice | currencyFormat }}
+                          <em> c/iva </em></span
+                        >
+                        <span *ngIf="showNetPrice"
+                          >{{
+                            item.priceInfo.commonNetPrice | currencyFormat
+                          }}
+                          <em> neto </em></span
+                        >
+                      </div>
+                    </div>
+                    <div class="col-12 marcaP text-center">
+                      {{ item.brand }}
+                    </div>
+                    <div
+                      *ngIf="
+                        item.stockSummary.branchStock > 0 ||
+                        item.stockSummary.companyStock > 0
+                      "
+                      class="mb-2 d-flex flex-column justify-content-center align-items-center"
+                    >
+                      <div class="row">
+                        <div
+                          class="col-12 d-flex justify-content-center align-items-center"
+                        >
+                          <i
+                            class="fal fa-minus-circle fa-xl me-3"
+                            style="cursor: pointer; color: #005cb9"
+                            role="button"
+                            (click)="refreshComparedProductPrice(item, '-')"
+                          ></i>
+                          <input
+                            type="number"
+                            size="4"
+                            style="width: 50px"
+                            class="text-center"
+                            [(ngModel)]="item.quantity"
+                            (change)="refreshComparedProductPrice(item)"
+                          />
+                          <i
+                            class="fal fa-plus-circle fa-xl ms-3"
+                            style="cursor: pointer; color: #005cb9"
+                            (click)="refreshComparedProductPrice(item, '+')"
+                            role="button"
+                          ></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="col-12 marcaP text-center"
+                      *ngIf="
+                        item.stockSummary.branchStock === 0 &&
+                        item.stockSummary.companyStock === 0
                       "
                     >
-                      <div class="d-flex w-100"></div>
-                    </ng-template>
-                  </ng-container>
-                </owl-carousel-o>
+                      <div class="no_stock">
+                        <div
+                          class="text-center"
+                          style="margin: 0px; padding: 0"
+                        >
+                          <span>Sujeto a disponibilidad </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="mb-2 d-flex flex-column justify-content-center align-items-center"
+                    >
+                      <button
+                        *ngIf="
+                          item.stockSummary.branchStock > 0 ||
+                          item.stockSummary.companyStock > 0
+                        "
+                        class="btn btn-sm btn-secondary"
+                        (click)="addComparedProductToCart(item)"
+                      >
+                        AGREGAR
+                      </button>
+                      <button
+                        *ngIf="
+                          item.stockSummary.branchStock === 0 &&
+                          item.stockSummary.companyStock === 0
+                        "
+                        class="btn btn-sm btn-secondary"
+                        [routerLink]="root.product(item.sku, item.name)"
+                      >
+                        SOLICITAR
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="mobile" *ngFor="let item of comparacion">
+                  <td class="sticky">
+                    <b>{{ item.name | capitalizeFirst }}</b>
+                  </td>
+                  <td
+                    *ngFor="let dato of item.values"
+                    class="text-center"
+                    [class.text-muted]="dato === 'N/A'"
+                  >
+                    {{ dato }}
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <hr />
+        </div>
+        <!-- End::matriz comparativa (articulos similares) (mobile) -->
+
+        <!-- Relacionados de productos -->
+        <div class="mt-3" *ngIf="relatedProducts.length > 0">
+          <div class="d-flex flex-column align-items-center mb-3">
+            <div
+              class="text-center"
+              style="
+                text-align: center;
+                font-size: 39px;
+                font-weight: 900;
+                line-height: 53px;
+                font-style: normal;
+                border-radius: 0px;
+                letter-spacing: 0px;
+                color: #0d61bb;
+                margin-bottom: 0px;
+              "
+            >
+              <!-- Artículos equivalentes -->
+              Otras personas han comprado esto
+            </div>
+          </div>
+
+          <div
+            class="products-view px-sm-3 mx-sm-3 mx-xl-5"
+            style="margin-top: 15px"
+          >
+            <div
+              class="products-view__list products-list"
+              [class.mx-0]="isB2B"
+              data-layout="grid-5-full"
+              data-with-features="false"
+            >
+              <owl-carousel-o
+                class="carouselFicha"
+                [options]="carrouselOptionsMobile"
+                appOwlPreventClick
+              >
+                <ng-container
+                  *ngFor="let item of relatedProducts"
+                  class="products-list__item"
+                >
+                  <ng-template carouselSlide [dataMerge]="2">
+                    <app-product-card-b2c-ficha
+                      [product]="item"
+                      [origen]="[origen[0], origen[1], origen[2], 'matriz']"
+                      [isOnProductPage]="true"
+                    >
+                    </app-product-card-b2c-ficha>
+                  </ng-template>
+                </ng-container>
+                <ng-container *ngIf="relatedProducts.length < 6">
+                  <ng-template
+                    carouselSlide
+                    *ngFor="
+                      let item of relleno
+                        | slice : 0 : 6 - relatedProducts.length
+                    "
+                  >
+                    <div class="d-flex w-100"></div>
+                  </ng-template>
+                </ng-container>
+              </owl-carousel-o>
+            </div>
+          </div>
+        </div>
+        <!-- Fin Relacionados de productos -->
+        <!-- Recomendados de productos -->
+        <div class="mt-3" *ngIf="recommendedProducts.length > 0">
+          <div class="d-flex flex-column align-items-center mb-3">
+            <div
+              class="text-center"
+              style="
+                text-align: center;
+                font-size: 39px;
+                font-weight: 900;
+                line-height: 53px;
+                font-style: normal;
+                border-radius: 0px;
+                letter-spacing: 0px;
+                color: #0d61bb;
+                margin-bottom: 0px;
+              "
+            >
+              También podría interesarte
+            </div>
+          </div>
+
+          <div
+            class="products-view px-sm-3 mx-sm-3 mx-xl-5"
+            style="margin-top: 15px"
+          >
+            <div
+              class="products-view__list products-list"
+              [class.mx-0]="isB2B"
+              data-layout="grid-5-full"
+              data-with-features="false"
+            >
+              <owl-carousel-o
+                class="carouselFicha"
+                [options]="carrouselOptionsMobile"
+                appOwlPreventClick
+              >
+                <ng-container
+                  *ngFor="let item of recommendedProducts"
+                  class="products-list__item"
+                >
+                  <ng-template carouselSlide [dataMerge]="2">
+                    <app-product-card-b2c-ficha
+                      [product]="item"
+                      [origen]="[origen[0], origen[1], origen[2], 'matriz']"
+                      [isOnProductPage]="true"
+                    >
+                    </app-product-card-b2c-ficha>
+                  </ng-template>
+                </ng-container>
+                <ng-container *ngIf="recommendedProducts.length < 6">
+                  <ng-template
+                    carouselSlide
+                    *ngFor="
+                      let item of relleno
+                        | slice : 0 : 6 - recommendedProducts.length
+                    "
+                  >
+                    <div class="d-flex w-100"></div>
+                  </ng-template>
+                </ng-container>
+              </owl-carousel-o>
+            </div>
+          </div>
+        </div>
+        <!-- Fin Recomendados de productos -->
+
+        <div class="accordion" id="accordionExample">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button
+                class="accordion-button"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo"
+                aria-expanded="true"
+                aria-controls="collapseTwo"
+              >
+                Detalles Técnicos
+              </button>
+            </h2>
+            <div
+              id="collapseTwo"
+              class="accordion-collapse collapse show"
+              aria-labelledby="headingTwo"
+              data-bs-parent="#accordionExample"
+            >
+              <div class="accordion-body">
+                <app-detalle-tecnicos
+                  [producto]="product"
+                ></app-detalle-tecnicos>
               </div>
             </div>
           </div>
-          <!-- Fin Relacionados de productos -->
-          <!-- Recomendados de productos -->
-          <div class="mt-3" *ngIf="recommendedProducts.length > 0">
-            <div class="d-flex flex-column align-items-center mb-3">
-              <div
-                class="text-center"
-                style="
-                  text-align: center;
-                  font-size: 39px;
-                  font-weight: 900;
-                  line-height: 53px;
-                  font-style: normal;
-                  border-radius: 0px;
-                  letter-spacing: 0px;
-                  color: #0d61bb;
-                  margin-bottom: 0px;
-                "
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseThree"
+                aria-expanded="false"
+                aria-controls="collapseThree"
               >
-                También podría interesarte
-              </div>
-            </div>
-
+                Evaluación
+              </button>
+            </h2>
             <div
-              class="products-view px-sm-3 mx-sm-3 mx-xl-5"
-              style="margin-top: 15px"
+              id="collapseThree"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingThree"
+              data-bs-parent="#accordionExample"
             >
-              <div
-                class="products-view__list products-list"
-                [class.mx-0]="isB2B"
-                data-layout="grid-5-full"
-                data-with-features="false"
-              >
-                <owl-carousel-o
-                  class="carouselFicha"
-                  [options]="carrouselOptionsMobile"
-                  appOwlPreventClick
-                >
-                  <ng-container
-                    *ngFor="let item of recommendedProducts"
-                    class="products-list__item"
-                  >
-                    <ng-template carouselSlide [dataMerge]="2">
-                      <app-product-card-b2c-ficha
-                        [product]="item"
-                        [origen]="[origen[0], origen[1], origen[2], 'matriz']"
-                        [isOnProductPage]="true"
-                      >
-                      </app-product-card-b2c-ficha>
-                    </ng-template>
-                  </ng-container>
-                  <ng-container *ngIf="recommendedProducts.length < 6">
-                    <ng-template
-                      carouselSlide
-                      *ngFor="
-                        let item of relleno
-                          | slice : 0 : 6 - recommendedProducts.length
-                      "
-                    >
-                      <div class="d-flex w-100"></div>
-                    </ng-template>
-                  </ng-container>
-                </owl-carousel-o>
-              </div>
-            </div>
-          </div>
-          <!-- Fin Recomendados de productos -->
-
-          <div class="accordion" id="accordionExample">
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="headingTwo">
-                <button
-                  class="accordion-button"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#collapseTwo"
-                  aria-expanded="true"
-                  aria-controls="collapseTwo"
-                >
-                  Detalles Técnicos
-                </button>
-              </h2>
-              <div
-                id="collapseTwo"
-                class="accordion-collapse collapse show"
-                aria-labelledby="headingTwo"
-                data-bs-parent="#accordionExample"
-              >
-                <div class="accordion-body">
-                  <app-detalle-tecnicos
-                    [producto]="product"
-                  ></app-detalle-tecnicos>
-                </div>
-              </div>
-            </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="headingThree">
-                <button
-                  class="accordion-button collapsed"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#collapseThree"
-                  aria-expanded="false"
-                  aria-controls="collapseThree"
-                >
-                  Evaluación
-                </button>
-              </h2>
-              <div
-                id="collapseThree"
-                class="accordion-collapse collapse"
-                aria-labelledby="headingThree"
-                data-bs-parent="#accordionExample"
-              >
-                <div class="accordion-body">
-                  <app-comentarios
-                    #comentariosMobile
-                    [producto]="product"
-                  ></app-comentarios>
-                </div>
+              <div class="accordion-body">
+                <app-comentarios
+                  #comentariosMobile
+                  [producto]="product"
+                ></app-comentarios>
               </div>
             </div>
           </div>
         </div>
-
-        <hr />
       </div>
+
+      <hr />
     </div>
   </div>
-  <div style="margin-bottom: 170px !important"></div>
-</ng-container>
+</div>
+<div style="margin-bottom: 170px !important"></div>
 
 <ng-container *ngIf="product">
   <div itemscope itemtype="http://schema.org/Product">

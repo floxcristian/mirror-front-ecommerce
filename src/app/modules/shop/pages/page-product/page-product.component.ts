@@ -55,7 +55,6 @@ import { INumberInputAction } from './models/number-input-action.interface';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 import { ProductPriceApiService } from '@core/services-v2/product-price/product-price.service';
 import { CartV2Service } from '@core/services-v2/cart/cart.service';
-import { CartService } from '@core/services-v2/cart.service';
 import { IShoppingCartProductOrigin } from '@core/models-v2/cart/shopping-cart.interface';
 
 declare let fbq: any;
@@ -76,8 +75,6 @@ export class PageProductComponent implements OnInit {
 
   minItems = 5;
   stock: boolean = true;
-  layout: 'standard' | 'columnar' | 'sidebar' = 'standard';
-  sidebarPosition: 'start' | 'end' = 'start'; // For LTR scripts "start" is "left" and "end" is "right"
   user: ISession;
   isB2B: boolean;
   origen: string[] = [];
@@ -156,14 +153,6 @@ export class PageProductComponent implements OnInit {
     this.onSelectedStoreChange();
     this.onCustomerAddressChange();
     this.onSessionChange();
-
-    this.route.data.subscribe((data: any) => {
-      this.layout = 'layout' in data ? data.layout : this.layout;
-      this.sidebarPosition =
-        'sidebarPosition' in data
-          ? data.sidebarPosition
-          : this.sidebarPosition;
-    });
   }
 
   private onSelectedStoreChange(): void {

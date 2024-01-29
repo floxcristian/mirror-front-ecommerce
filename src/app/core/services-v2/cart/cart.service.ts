@@ -8,11 +8,10 @@ export class CartV2Service {
   private productOrigin: string[] = [];
 
   /**
-   * Guardar origen previo al ingreso de una ficha de producto.
+   * Guardar origen previo al ingreso de una ficha de producto.?
    * @param origin
    */
   setProductOrigin(origin: string[]): void {
-    console.log('setProductOrigin: ', origin);
     this.productOrigin = this.productOrigin ? origin : [];
   }
 

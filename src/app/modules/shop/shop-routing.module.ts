@@ -13,31 +13,19 @@ const routes: Routes = [
   {
     path: 'ficha/:id',
     component: PageProductComponent,
-    data: {
-      layout: 'standard',
-    },
   },
   {
     path: 'ficha/:id/:firstCategory',
     component: PageProductComponent,
-    data: {
-      layout: 'standard',
-    },
   },
 
   {
     path: 'ficha/:id/:firstCategory/:secondCategory',
     component: PageProductComponent,
-    data: {
-      layout: 'standard',
-    },
   },
   {
     path: 'ficha/:id/:firstCategory/:secondCategory/:thirdCategory',
     component: PageProductComponent,
-    data: {
-      layout: 'standard',
-    },
   },
   {
     path: ':busqueda/:metodo/:nombre',

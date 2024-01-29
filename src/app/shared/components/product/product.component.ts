@@ -51,6 +51,7 @@ import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation
 import { IDeliverySupply } from '@core/models-v2/cms/special-reponse.interface';
 import { IWishlist } from '@core/services-v2/wishlist/models/wishlist-response.interface';
 import { IShoppingCartProductOrigin } from '@core/models-v2/cart/shopping-cart.interface';
+import { IConfig } from '@core/config/config.interface';
 // Services
 import { PhotoSwipeService } from '../../services/photo-swipe.service';
 import { RootService } from '../../services/root.service';
@@ -67,9 +68,6 @@ import { CartService } from '@core/services-v2/cart.service';
 // Modals
 import { ModalScalePriceComponent } from '../modal-scale-price/modal-scale-price.component';
 import { ConfigService } from '@core/config/config.service';
-import { IConfig } from '@core/config/config.interface';
-
-export type Layout = 'standard' | 'sidebar' | 'columnar' | 'quickview';
 
 @Component({
   selector: 'app-product',
@@ -149,7 +147,6 @@ export class ProductComponent implements OnInit, OnChanges {
   quantityToScalePrice!: number;
 
   dataProduct!: IArticleResponse;
-  private dataLayout: Layout = 'standard';
 
   showGallery = true;
   showGalleryTimeout!: number;
@@ -164,22 +161,6 @@ export class ProductComponent implements OnInit, OnChanges {
   isProductOnList!: boolean;
   productWishlistsIds: string[] = [];
   defaultWishlist!: IWishlist | null;
-
-  @Input() set layout(value: Layout) {
-    this.dataLayout = value;
-    if (isPlatformBrowser(this.platformId)) {
-      // this dirty hack is needed to re-initialize the gallery after changing the layout
-      clearTimeout(this.showGalleryTimeout);
-      this.showGallery = false;
-      this.showGalleryTimeout = window.setTimeout(() => {
-        this.showGallery = true;
-      }, 0);
-    }
-  }
-
-  get layout(): Layout {
-    return this.dataLayout;
-  }
 
   get product() {
     return this.dataProduct;
@@ -197,8 +178,8 @@ export class ProductComponent implements OnInit, OnChanges {
   cyber: number = 0;
   cyberMonday: number = 0;
   config: IConfig;
-  isOfficial: number = 0
-  imageOEM:string = ''
+  isOfficial: number = 0;
+  imageOEM: string = '';
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -252,7 +233,7 @@ export class ProductComponent implements OnInit, OnChanges {
     this.onChangeStore();
     this.setIsMobile();
     window.onresize = () => this.setIsMobile();
-    if (this.layout !== 'quickview' && isPlatformBrowser(this.platformId)) {
+    if (isPlatformBrowser(this.platformId)) {
       this.photoSwipe
         .load()
         .pipe(takeUntilDestroyed(this.destroyRef))
@@ -274,20 +255,22 @@ export class ProductComponent implements OnInit, OnChanges {
         },
       });
     this.buildProductRequestForm();
+    this.showGallery = true;
   }
 
   generateTags(tags: MetaTag[] | undefined) {
     if (tags) {
       tags.forEach((tag: MetaTag) => {
-        if (tag.code === 'cyber') this.cyber = typeof tag.value === 'number' ? tag.value : 0;
+        if (tag.code === 'cyber')
+          this.cyber = typeof tag.value === 'number' ? tag.value : 0;
         else this.cyber = 0;
-        if (tag.code === 'cyberMonday') this.cyberMonday = typeof tag.value === 'number' ? tag.value : 0;
+        if (tag.code === 'cyberMonday')
+          this.cyberMonday = typeof tag.value === 'number' ? tag.value : 0;
         else this.cyberMonday = 0;
-        if(tag.code === 'official_store'){
-          this.isOfficial = 1
+        if (tag.code === 'official_store') {
+          this.isOfficial = 1;
           this.imageOEM = typeof tag.value === 'string' ? tag.value : '';
-        }
-        else this.isOfficial = 0
+        } else this.isOfficial = 0;
       });
     }
   }
@@ -481,7 +464,6 @@ export class ProductComponent implements OnInit, OnChanges {
    * @returns
    */
   openPhotoSwipe(event: MouseEvent, image: IProductImage): void {
-    if (this.layout === 'quickview') return;
     event.preventDefault();
 
     const options = {

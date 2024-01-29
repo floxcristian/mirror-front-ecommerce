@@ -13,6 +13,10 @@ import { isPlatformBrowser } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 // Rxjs
 import { Subscription } from 'rxjs';
+// Models
+import { ISession } from '@core/models-v2/auth/session.interface';
+import { IData } from '@core/models-v2/cms/customHomePage-response.interface';
+import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 // Services
 import { isVacio } from '../../utils/utilidades';
 import { SessionService } from '@core/services-v2/session/session.service';
@@ -20,10 +24,6 @@ import { CmsService } from '@core/services-v2/cms.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
-// Models
-import { ISession } from '@core/models-v2/auth/session.interface';
-import { IData } from '@core/models-v2/cms/customHomePage-response.interface';
-import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 
@@ -86,8 +86,6 @@ export class ProductSlideshowComponent
       ? window.innerWidth
       : 900;
   }
-
-  sidebarPosition: 'start' | 'end' = 'start';
 
   ngOnInit() {
     this.ruta = this.router.url === '/inicio' ? 'home' : this.router.url;

@@ -1,4 +1,4 @@
-<div class="product product--layout--{{ layout }}" *ngIf="product">
+<div class="product product--layout--standard" *ngIf="product">
   <div class="product__content_232 d-flex row px-sm-4">
     <!--  NOMBRE VERSION MOVIL -->
     <div class="col-12 d-block d-sm-none">
@@ -51,7 +51,12 @@
                   />
                 </picture>
                 <picture *ngIf="isOfficial">
-                  <img [src]="imageOEM | replace : 'png' : 'svg'" height="100px" width="100px" class="float-end" />
+                  <img
+                    [src]="imageOEM | replace : 'png' : 'svg'"
+                    height="100px"
+                    width="100px"
+                    class="float-end"
+                  />
                 </picture>
 
                 <picture *ngIf="cyber > 0 && cyberMonday === 0">

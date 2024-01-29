@@ -10,7 +10,6 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { Params } from '@angular/router';
 // Libs
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import { v4 as uuidv4 } from 'uuid';
 // Models
 import { ProductFilter } from '../../../shared/interfaces/product-filter';
@@ -23,13 +22,15 @@ import { IWidgetFilter } from './models/widget-filter.interface';
   styleUrls: ['./widget-filters.component.scss'],
 })
 export class WidgetFiltersComponent {
+  /**
+   * Filtros de producto.
+   */
   @Input() filters: ProductFilter[] = [];
   @Input() filtrosOculto!: boolean;
-  @Input() mensaje!: string;
   @Input() marca_tienda!: string;
   @Input() removableCategory: ICategory[] = [];
   @Input() set removableFilters(filters: Params) {
-    this.removableFiltersArray = Object.keys(filters).map((field) => ({
+    this.formattedRemovableFilters = Object.keys(filters).map((field) => ({
       field,
       value: filters[field],
     }));
@@ -39,17 +40,14 @@ export class WidgetFiltersComponent {
   @Output() clearCategory: EventEmitter<void> = new EventEmitter();
   @Output() clearAll: EventEmitter<void> = new EventEmitter();
 
-  removableFiltersArray: IWidgetFilter[] = [];
+  formattedRemovableFilters: IWidgetFilter[] = [];
 
   isPlatformBrowser = isPlatformBrowser(this.platformId);
   isCollapsed = false;
   id: string;
 
-  modalRef!: BsModalRef;
-
   constructor(@Inject(PLATFORM_ID) private platformId: any) {
     this.id = uuidv4();
-    console.log('WidgetFiltersComponent constructor');
   }
 
   marcaCheckBox(): void {

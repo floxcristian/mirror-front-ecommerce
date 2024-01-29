@@ -1,6 +1,7 @@
+<h1>FILTERS</h1>
 <div class="widget-filters widget" appCollapse>
   <ng-container
-    *ngIf="removableFiltersArray.length || removableCategory.length"
+    *ngIf="formattedRemovableFilters.length || removableCategory.length"
   >
     <div class="widget-filters__list">
       <div class="widget-filters__item filter--opened">
@@ -22,7 +23,7 @@
               {{ item.text }}
               <i class="fas fa-times"></i>
             </h1>
-            <ng-container *ngFor="let item of removableFiltersArray">
+            <ng-container *ngFor="let item of formattedRemovableFilters">
               <ng-container *ngIf="marca_tienda === ''">
                 <h1 (click)="removeFilter(item)" class="filter-selected">
                   {{ item.value }}
@@ -299,88 +300,3 @@
     </div>
   </div>
 </div>
-
-<!-- ver todos los resultados (categorias) -->
-<ng-template #template_buscador>
-  <div class="modal-header" style="background-color: #baddfc">
-    <h3 class="modal-title pull-left" style="font-size: 16px; color: #0060b4">
-      Todas las categorías
-    </h3>
-    <button
-      name="modalRef"
-      type="button"
-      class="close pull-right"
-      aria-label="Close"
-      (click)="modalRef.hide()"
-    >
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div class=".container-fluid">
-      <div class="row">
-        <div class="col">
-          <div *ngFor="let filter of filters">
-            <div
-              *ngIf="filter.type === 'categories'"
-              class="filter-categories"
-            >
-              <ul class="filter-categories__list">
-                <li
-                  *ngFor="
-                    let item of filter.options.items | slice : 0 : 5;
-                    let i = index
-                  "
-                  class="filter-categories__item filter-categories__item--{{
-                    item.type
-                  }}"
-                >
-                  <a
-                    routerLinkActive="active"
-                    [routerLink]="item.url"
-                    [queryParams]="item.queryParams"
-                    (click)="marcarCategorias(item)"
-                    style="font-size: 14px; line-height: 1.6"
-                  >
-                    {{ item.name | capitalizeFirst }} ({{ item.count }})
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div *ngFor="let filter of filters | slice : 0 : 5">
-            <div
-              *ngIf="filter.type === 'categories'"
-              class="filter-categories"
-            >
-              <ul class="filter-categories__list">
-                <li
-                  *ngFor="
-                    let item of filter.options.items | slice : 5;
-                    let i = index
-                  "
-                  class="filter-categories__item filter-categories__item--{{
-                    item.type
-                  }}"
-                >
-                  <a
-                    routerLinkActive="active"
-                    [routerLink]="item.url"
-                    [queryParams]="item.queryParams"
-                    (click)="marcarCategorias(item)"
-                    [ngClass]="{ active: item.checked }"
-                    style="font-size: 14px; line-height: 1.6"
-                  >
-                    {{ item.name | capitalizeFirst }} ({{ item.count }})
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-template>

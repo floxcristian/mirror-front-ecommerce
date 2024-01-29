@@ -4,6 +4,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PLATFORM_ID, Inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 // Environment
 import { environment } from '@env/environment';
 // Models
@@ -41,7 +42,7 @@ import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { getOriginUrl } from './utils/util.service';
 
 @Component({
   selector: 'app-grid',
@@ -863,11 +864,7 @@ export class PageCategoryComponent implements OnInit {
    */
   private setOrigenes(): void {
     let categoria = '';
-    const paramMap = this.route.snapshot.paramMap;
-    console.log('paramMap: ', paramMap);
-
-    console.log('snapshot: ', this.route.snapshot.params);
-    const { nombre, busqueda } = this.route.snapshot.params;
+    // getOriginUrl(this.route.snapshot.url[0], this.route.snapshot.params);
     // Si el Url tiene seteada la categoria, pero su busqueda no es 'todos' (no es Banner)
     if (
       this.route.snapshot.paramMap.get('nombre') &&
@@ -890,6 +887,9 @@ export class PageCategoryComponent implements OnInit {
         this.origen = ['buscador', '', 'sinCategoria', ''];
       }
     }
+    console.log('origen: ', this.origen);
+    const origin2 = getOriginUrl(this.route.snapshot);
+    console.log('origen2: ', origin2);
   }
 
   //Definicion de meta Información para optimización del SEO

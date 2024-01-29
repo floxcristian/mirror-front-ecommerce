@@ -8,12 +8,12 @@ import {
   EventEmitter,
   TemplateRef,
   Output,
+  inject,
+  DestroyRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-// Rxjs
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 // Libs
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
@@ -38,7 +38,7 @@ import { MetaTag } from '@core/models-v2/article/article-response.interface';
   styleUrls: ['./product-card-b2c-cms.component.scss'],
 })
 export class ProductCardB2cCmsComponent implements OnInit {
-  private destroy$: Subject<void> = new Subject();
+  private readonly destroyRef: DestroyRef = inject(DestroyRef);
   @Input() home: boolean = false;
   @Input() cartClass!: boolean;
   @Input() cartpopver: boolean = false;
@@ -76,8 +76,8 @@ export class ProductCardB2cCmsComponent implements OnInit {
 
   cyber: number = 0;
   cyberMonday: number = 0;
-  isOfficial:number = 0
-  imageOEM : string = ''
+  isOfficial: number = 0;
+  imageOEM: string = '';
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -95,32 +95,30 @@ export class ProductCardB2cCmsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.currency.changes$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.cd.markForCheck();
-    });
+    this.currency.changes$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.cd.markForCheck();
+      });
     this.usuario = this.sessionService.getSession();
     this.cargaPrecio();
     if (this.productData.priceInfo.hasScalePrice)
       this.preciosEscalas = this.productData.priceInfo.scalePrice;
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   generateTags(tags: MetaTag[] | undefined) {
     if (tags) {
       tags.forEach((tag: MetaTag) => {
-        if (tag.code === 'cyber') this.cyber = typeof tag.value === 'number' ? tag.value : 0;
+        if (tag.code === 'cyber')
+          this.cyber = typeof tag.value === 'number' ? tag.value : 0;
         else this.cyber = 0;
-        if (tag.code === 'cyberMonday') this.cyberMonday = typeof tag.value === 'number' ? tag.value : 0;
+        if (tag.code === 'cyberMonday')
+          this.cyberMonday = typeof tag.value === 'number' ? tag.value : 0;
         else this.cyberMonday = 0;
-        if(tag.code === 'official_store'){
-          this.isOfficial = 1
+        if (tag.code === 'official_store') {
+          this.isOfficial = 1;
           this.imageOEM = typeof tag.value === 'string' ? tag.value : '';
-        }
-        else this.isOfficial = 0
+        } else this.isOfficial = 0;
       });
     }
   }
@@ -191,7 +189,7 @@ export class ProductCardB2cCmsComponent implements OnInit {
     );
   }
 
-  verPreciosEscala(popover: NgbPopover) {
+  verPreciosEscala(popover: NgbPopover): void {
     popover.open();
   }
 
