@@ -229,7 +229,10 @@
                   <span class="filter-list__title">{{
                     item.label | capitalizeFirst
                   }}</span>
-                  <!-- <span *ngIf="item.count" class="filter-list__counter">{{ item.count }}</span> -->
+                  <!-- FIXME: indica la cantidad de resultados que deberían aparecer al presionar el filtro. Pero el número no corresponde y se debe solucionar desde el endpoint -->
+                  <!--<span *ngIf="item.count" class="filter-list__counter">{{
+                    item.count
+                  }}</span> -->
                 </label>
               </div>
               <hr />

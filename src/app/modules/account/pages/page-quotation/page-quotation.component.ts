@@ -44,7 +44,6 @@ export class PageQuotationComponent implements OnInit {
 
   usuario!: ISession;
   orders!: IOrderDetail[];
-  urlDonwloadOC = environment.apiShoppingCart + 'getoc?id=';
   innerWidth: any;
   columns = ['createdAt', 'salesId', 'total', 'deliveryMode', 'vendedor'];
 

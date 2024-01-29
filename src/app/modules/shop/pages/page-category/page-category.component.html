@@ -1,3 +1,4 @@
+<h1>page category</h1>
 <ng-container *ngIf="innerWidth > 426">
   <ng-container *ngIf="banners">
     <div class="container" style="text-align: center">
@@ -57,8 +58,8 @@
           [removableFilters]="removableFilters"
           [removableCategory]="removableCategory"
           (filtersSelected)="updateFilters($event)"
-          (clearCategory)="clearCategory($event)"
-          (clearAll)="clearAll($event)"
+          (clearCategory)="clearCategory()"
+          (clearAll)="clearAll()"
           [marca_tienda]="marca_tienda"
         >
         </app-widget-filters>
@@ -78,8 +79,8 @@
           [removableFilters]="removableFilters"
           [removableCategory]="removableCategory"
           (filtersSelected)="updateFilters($event)"
-          (clearCategory)="clearCategory($event)"
-          (clearAll)="clearAll($event)"
+          (clearCategory)="clearCategory()"
+          (clearAll)="clearAll()"
         >
         </app-widget-filters>
       </div>
@@ -105,7 +106,7 @@
   <div class="shop-layout__content container">
     <div class="block">
       <app-products-view
-        *ngIf="origen !== undefined"
+        *ngIf="origen"
         [paramsCategory]="paramsCategory"
         [origen]="origen"
         [breadcrumbs]="breadcrumbs"
@@ -115,14 +116,12 @@
         [cargandoCatalogo]="cargandoCatalogo"
         [cargandoProductos]="cargandoProductos"
         [products]="products"
-        [grid]="'grid-4-full'"
-        [limit]="productosPorPagina"
+        [limit]="pageSize"
         [totalPaginas]="totalPaginas"
         [desde]="PagDesde"
         [hasta]="PagHasta"
         [totalRegistros]="PagTotalRegistros"
         (cambiaPagina)="paginacionProductos($event)"
-        (itemPorPagina)="cambiaItemPorPagina($event)"
         (filterState)="setFilteState($event)"
         (sort)="setSort($event)"
       >

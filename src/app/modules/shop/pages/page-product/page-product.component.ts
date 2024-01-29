@@ -40,7 +40,7 @@ import {
 } from '@core/services-v2/product/models/formatted-product-compare-response.interface';
 // Services
 import { RootService } from '../../../../shared/services/root.service';
-import { SeoService } from '../../../../shared/services/seo.service';
+import { SeoService } from '../../../../shared/services/seo/seo.service';
 import { CanonicalService } from '../../../../shared/services/canonical.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
@@ -121,7 +121,7 @@ export class PageProductComponent implements OnInit {
     private capitalize: CapitalizeFirstPipe,
     private seoService: SeoService,
     private canonicalService: CanonicalService,
-    private renderer:Renderer2,
+    private renderer: Renderer2,
     private el: ElementRef,
     // Services V2
     private readonly sessionService: SessionService,
@@ -132,8 +132,7 @@ export class PageProductComponent implements OnInit {
     private readonly customerPreferenceService: CustomerPreferenceService,
     private readonly customerAddressService: CustomerAddressService,
     private readonly productPriceApiService: ProductPriceApiService,
-    private readonly cartService: CartV2Service,
-    private readonly cartApiService: CartService
+    private readonly cartService: CartV2Service
   ) {
     this.carouselOptions = CarouselDesktopOptions;
     this.carrouselOptionsMobile = CarouselMobileOptions;
@@ -371,14 +370,13 @@ export class PageProductComponent implements OnInit {
       // $('#evaluacion').addClass('active show');
 
       // $('#evaluacion').tab('show'); // este falta ver bien
-      this.removeClass('descripcion-tab','active')
-      this.removeClass('detallesTecnicos-tab','active')
-      this.addClass('evaluacion-tab','active')
+      this.removeClass('descripcion-tab', 'active');
+      this.removeClass('detallesTecnicos-tab', 'active');
+      this.addClass('evaluacion-tab', 'active');
 
-      this.removeClass('descripcion','active show')
-      this.removeClass('detallesTecnicos','active show')
-      this.addClass('evaluacion','active show')
-
+      this.removeClass('descripcion', 'active show');
+      this.removeClass('detallesTecnicos', 'active show');
+      this.addClass('evaluacion', 'active show');
     }
     document.querySelector('#ancla')?.scrollIntoView();
   }

@@ -1,69 +1,53 @@
 <div class="col-sm-12 p-0" style="margin-top: 60px">
   @if (carga) {
-      <div class="loading-center text-center">
-        <i class="fak fa-implementos fa-bounce icon-loading"></i>
-        <div class="text-loading">Iniciando ...</div>
-      </div>
-  }
-  @else {
-    @for (item of pageHome; track $index) {
-      @if (item.type === 'banner') {
-          <app-banner [banner]="item.data"/>
-          <br />
-      }
-      @if (item.type === 'product-box') {
-        @defer (on viewport) {
-          <app-product-page-home  [producto]="item.data" />
-          <br />
-          <br />
-        }@placeholder {
-          <div class="center-spinner">
-            <div class="spinner-border text-primary" role="status">
-              <span class="sr-only">Cargando ...</span>
-            </div>
-          </div>
-        }
-      }
-      @if (item.type === 'concept-box') {
-        @defer (on viewport) {
-          <app-caja-concepto [caja_concepto]="item.data" />
-          <br />
-          <br />
+  <div class="loading-center text-center">
+    <i class="fak fa-implementos fa-bounce icon-loading"></i>
+    <div class="text-loading">Iniciando ...</div>
+  </div>
+  } @else { @for (item of pageHome; track $index) { @if (item.type ===
+  'banner') {
+  <app-banner [banner]="item.data" />
+  <br />
+  } @if (item.type === 'product-box') { @defer (on viewport) {
+  <app-product-page-home [blockElements]="item.data.element" />
+  <br />
+  <br />
+  }@placeholder {
+  <div class="center-spinner">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Cargando ...</span>
+    </div>
+  </div>
+  } } @if (item.type === 'concept-box') { @defer (on viewport) {
+  <app-caja-concepto [caja_concepto]="item.data" />
+  <br />
+  <br />
 
-        }@placeholder {
-          <div class="center-spinner">
-            <div class="spinner-border text-primary" role="status">
-              <span class="sr-only">Cargando ...</span>
-            </div>
-          </div>
-        }
-      }
-      @if (item.type === 'blog') {
-        @defer (on viewport) {
-          <app-blog-home [config]="item.data" />
-          <br />
-          <br />
-        }@placeholder {
-          <div class="center-spinner">
-            <div class="spinner-border text-primary" role="status">
-              <span class="sr-only">Cargando ...</span>
-            </div>
-          </div>
-        }
-      }
-      @if (item.type === 'product-list') {
-        @defer (on viewport) {
-          <app-lista_producto [elemento]="item.data" />
-          <br />
-          <br />
-        }@placeholder {
-          <div class="center-spinner">
-            <div class="spinner-border text-primary" role="status">
-              <span class="sr-only">Cargando ...</span>
-            </div>
-          </div>
-        }
-      }
-    }
-  }
+  }@placeholder {
+  <div class="center-spinner">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Cargando ...</span>
+    </div>
+  </div>
+  } } @if (item.type === 'blog') { @defer (on viewport) {
+  <app-blog-home [config]="item.data" />
+  <br />
+  <br />
+  }@placeholder {
+  <div class="center-spinner">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Cargando ...</span>
+    </div>
+  </div>
+  } } @if (item.type === 'product-list') { @defer (on viewport) {
+  <app-lista_producto [elemento]="item.data" />
+  <br />
+  <br />
+  }@placeholder {
+  <div class="center-spinner">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Cargando ...</span>
+    </div>
+  </div>
+  } } } }
 </div>

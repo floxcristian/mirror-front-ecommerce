@@ -19,7 +19,7 @@ import {
 import * as moment from 'moment';
 // Services
 import { CurrencyService } from './shared/services/currency.service';
-import { SeoService } from './shared/services/seo.service';
+import { SeoService } from './shared/services/seo/seo.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';

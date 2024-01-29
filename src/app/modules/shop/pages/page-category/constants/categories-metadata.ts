@@ -1,4 +1,6 @@
-export const CATEGORIES_METADATA : any = {
+import { ICategoryMetadata } from '../models/category-metadata.interface';
+
+export const CATEGORIES_METADATA: Record<string, ICategoryMetadata> = {
   'accesorios-y-limpieza-automotriz': {
     title: 'Cuidados para tu vehículo Accesorios y limpieza automotriz',
     description:
@@ -7,7 +9,6 @@ export const CATEGORIES_METADATA : any = {
       ' Productos de limpieza, accesorios de limpieza, Shampoo para autos, ceras, cera, silicona, renovador de neumáticos, pulidor de autos, aspiradora portátil, esponja de limpieza, cubre asientos, fundas de asientos, cepillo, limpiavidrios, limpiaparabrisas, desengrasante, Paño, jabones, renovador de neumáticos, jabon para manos, gel para manos, M2, Loctite, Blacksmith, wd-40, Indiana, R-66, ',
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/accesorios-y-limpieza-automotriz',
   },
-
   'quimicos-de-aseo': {
     title: 'Químicos de aseo Accesorios y limpieza automotriz ',
     description:
@@ -61,7 +62,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/accesorios-y-limpieza-automotriz/accesorios-de-exterior',
   },
 
-  'aditivos': {
+  aditivos: {
     title: 'Aditivos y limpiadores | Cuidado y mantención del vehículo',
     description:
       'Encuentra los aditivos de: Combustible, limpieza, liquido de frenos, anticorrosivos, limpia inyectores, limpia correas.  Mannol, Senfineco, HS, Loctite.',
@@ -70,7 +71,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/accesorios-y-limpieza-automotriz/aditivos',
   },
 
-  'quimicos': {
+  quimicos: {
     title: 'Químicos para mantención de tu vehículo | Despachos a todo chile',
     description:
       'Químicos para mejorar la mantención de tu vehículo, encuentra todo lo que necesites y te lo llevamos a la puerta de tu casa. ',
@@ -114,7 +115,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/amarre-de-carga/fijacion-de-carga-interior',
   },
 
-  'baterias': {
+  baterias: {
     title: 'Baterías para Camiones, Buses, Camionetas, Tractores y Autos.',
     description:
       'Encuentra gran variedad de baterías desde 55 a 220 amperes, Borne estándar, esparrago, negativo, PowerTruck, Bosch, Hankook, Delkor, AC Delco.',
@@ -158,7 +159,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/cromados-y-cabina-de-camion',
   },
 
-  'cromados': {
+  cromados: {
     title: 'Cromados para tu camión',
     description:
       'Encuentra accesorios cromados: parachoques, tapas de ruedas, tuercas, puntas y tubos de escape, molduras cromadas, máscaras, biseles de foco, ópticos.',
@@ -167,7 +168,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/cromados-y-cabina-de-camion/cromados',
   },
 
-  'espejos': {
+  espejos: {
     title: 'Espejos | Cromados y Cabina de Camión',
     description:
       'Variedad de espejos para tu camión: espejo americano, europeo, universales, cuadrado, esférico, de cabina, vidrio espejo, soporte de espejo.',
@@ -185,7 +186,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/cromados-y-cabina-de-camion/accesorios-de-camiones',
   },
 
-  'parabrisas': {
+  parabrisas: {
     title: 'Parabrisas para tu camión | Cromados y Cabina de Camión',
     description:
       'Parabrisas y accesorios:  parabrisas para camiones americanos y europeos, accesorios parabrisas.',
@@ -203,7 +204,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/cromados-y-cabina-de-camion/climatizadores-de-camion',
   },
 
-  'bocinas': {
+  bocinas: {
     title: 'Bocinas para tu vehículo | Cabina de Camión',
     description:
       'Variedades de Bocinas de aire y eléctricas para tu camión: bocinas de camión, eléctricas, de aire, doble, caracol, corneta.',
@@ -281,7 +282,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/higiene-y-proteccion-personal/proteccion-auditiva',
   },
 
-  'prevencion': {
+  prevencion: {
     title: 'Prevención respiratoria | Protección Personal',
     description:
       'Encuentra Mascarillas: mascarilla desechable, KN95, N95, respirador, filtro para gases orgánicos, para vapores orgánicos, particular air.',
@@ -299,7 +300,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/higiene-y-proteccion-personal/proteccion-visual',
   },
 
-  'iluminacion': {
+  iluminacion: {
     title:
       'Iluminación para tu vehículo | Camión, Bus, Remolque, Auto, Tractor',
     description:
@@ -309,7 +310,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/iluminacion',
   },
 
-  'focos': {
+  focos: {
     title: 'Focos para tu vehículo | Iluminación para Camión, Bus, Remolque',
     description:
       'Encuentra equipos de iluminación para tu vehículo, luces, focos neblineros, ópticos, trocha, periféricos, señaleras, ampolletas, AZ10, Braslux, Suntech. ',
@@ -318,7 +319,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/iluminacion/focos',
   },
 
-  'senaleras': {
+  senaleras: {
     title: 'Señaleras para tu vehículo | Camión, Bus, Remolque, Auto, Tractor',
     description:
       'Contamos con señaleras para tu vehículo led, halógenas, incandescentes,  rectangulares,  triangular, retroreflector, caja porta focos, mica farol, regleta. ',
@@ -336,7 +337,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/iluminacion/accesorios-de-iluminacion',
   },
 
-  'ampolletas': {
+  ampolletas: {
     title:
       'Ampolletas para tu vehículo | Camión, Bus, Remolque, Auto, Tractor',
     description:
@@ -374,7 +375,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/llantas-y-neumaticos/accesorios-de-neumaticos',
   },
 
-  'neumaticos': {
+  neumaticos: {
     title:
       'Neumáticos para tu vehículo | Camión, Bus, Remolque, Auto, Tractor',
     description:
@@ -445,7 +446,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/lubricantes-filtros-y-aditivos/lubricantes-hidraulicos',
   },
 
-  'aguas': {
+  aguas: {
     title: 'Aguas para tu vehículo | Lubricantes y Filtros',
     description:
       '¿Necesitas Aguas para tu vehículo? Elige la que necesitas: aguas verdes, desmineralizada.',
@@ -471,7 +472,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/lubricantes-filtros-y-aditivos/refrigerantes-anticongelantes',
   },
 
-  'urea': {
+  urea: {
     title: 'Urea para tu Motor | Lubricantes y Filtros',
     description:
       'Reduce tus emisiones de óxidos causados por los escapes de tu motor diésel.                              .',
@@ -516,7 +517,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/motor-y-transmision/block-de-motor',
   },
 
-  'diferencial': {
+  diferencial: {
     title: 'Diferencial de Motor | Motor y Transmisión',
     description:
       'Diferencial de motor: diferencial de transmisión, kit de reparación, de diferencial, tuercas, golillas, pernos, horquillas, satélites, planetarios.',
@@ -533,7 +534,7 @@ export const CATEGORIES_METADATA : any = {
       'Sistema de refrigeracion, refrigeracio de motor, Radiadores, Mangueras, poleas, Bombas de Agua, Correas de refrigeracion, Empaquetaduras de enfriador, Enfriador de aceite, sensores de refrigeracion, termostatos, tensores, viscosos, aspas de refrigeracion, aspas, vasos expansores, Horton, Urba, Gates, Fabbof, Suntech, Borg Warner, Pai, Automann, Goodyear, Paccar, Cummins, Ford, Max gear, Meritor. ',
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/motor-y-transmision/sistema-de-refrigeracion',
   },
-  'embragues': {
+  embragues: {
     title: 'Embragues para tu camión | Motor y Transmisión',
     description:
       'Embragues para camión americano y europeo, embrague simple, hidráulico, rodamiento de embrague, Kit camión, disco y prensa camión brasilero.',
@@ -605,7 +606,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/motor-y-transmision/alternadores-y-componentes',
   },
 
-  'motor': {
+  motor: {
     title: 'Motores para tu Vehículo | Motor y Transmisión',
     description:
       'Motor y transmisión para tu vehículo: motor, motor completo, motor de camión y más. ',
@@ -622,7 +623,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/repuestos-para-equipos-de-carga/repuestos-para-equipos-de-carga',
   },
 
-  'autoencarpes': {
+  autoencarpes: {
     title: 'Autoencarpe | Repuestos para Equipos de Carga',
     description:
       'Autoencarpe: repuestos, carpas, ejes, poleas de autoencarpe, motor, manivelas, resortes de equipos de carga, rolete fijación, autoencarpe manual, eléctrico y más. ',
@@ -631,7 +632,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/repuestos-para-equipos-de-carga/autoencarpes',
   },
 
-  'enganches': {
+  enganches: {
     title:
       'Enganches para equipos de Carga  | Repuestos para Equipos de Carga',
     description:
@@ -755,7 +756,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/seguridad-herramientas-y-tiempo-libre',
   },
 
-  'accesorios': {
+  accesorios: {
     title: 'Accesorios | Seguridad, Herramientas y Tiempo Libre',
     description:
       'Accesorios: pulverizador, neveras, botiquines,  extintores, cintas de prevención, calibrador presión neumáticos, mesas, sillas, parrillas, parlantes y más.',
@@ -818,7 +819,7 @@ export const CATEGORIES_METADATA : any = {
       'racks, recipientes, bidones, embudos, estanques de agua, bandeja para aceite, esante plastico, bomba de trasvasije, bomba barril manual,   contenedor, Goodcar, King Tony, JRP, Suntech, tactix, lubritek, MotorLife, ',
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/seguridad-herramientas-y-tiempo-libre/racks-y-recipientes',
   },
-  'seguridad': {
+  seguridad: {
     title: 'Implementos de Seguridad | Seguridad, Herramientas y Tiempo Libre',
     description:
       'Implementos de seguridad: seguridad, trabavolante, trabarueda, candados, cadenas, corta corriente y más.',
@@ -898,7 +899,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/suspension-y-frenos/componentes-suspensiones-neumaticas',
   },
 
-  'ejes': {
+  ejes: {
     title: 'Ejes | Suspensión y Freno',
     description:
       'Ejes de suspensión y frenos: ejes, ejes disco americano, ejes disco europeo, ejes americanos, ejes europeos, vigas, ejes artilleros, ejes especiales y más.',
@@ -960,7 +961,7 @@ export const CATEGORIES_METADATA : any = {
     url: 'https://www.implementos.cl/inicio/productos/todos/categoria/suspension-y-frenos/pulmones-de-levante',
   },
 
-  'amortiguadores': {
+  amortiguadores: {
     title: 'Amortiguadores | Suspensión y Freno',
     description:
       'Amortiguadores: amortiguadores de suspensión, de cabina, de camión, de vehículos, amortiguador de neumáticos. Randon, Suspensys, Watson & Chalin, Cofap.',

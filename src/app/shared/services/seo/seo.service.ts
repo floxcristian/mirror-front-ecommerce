@@ -8,7 +8,7 @@ import { Meta, Title } from '@angular/platform-browser';
 export class SeoService {
   constructor(private meta: Meta, private title: Title) {}
 
-  generarMetaTag(config: any) {
+  generarMetaTag(config: any): void {
     // tslint:disable-next-line: max-line-length
     const desc =
       'Baterías, Lubricantes, Amarre de carga, Iluminación, todo para mantener, reparar y equipar. 32 puntos de venta en todo Chile.';

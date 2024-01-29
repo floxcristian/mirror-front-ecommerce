@@ -1,0 +1,6 @@
+export const IGNORED_FILTERS = [
+  'CERTIFICADO PDF',
+  'JEFE DE LINEA',
+  'TIPO PRECIO',
+  'TIPO ESTADO',
+];

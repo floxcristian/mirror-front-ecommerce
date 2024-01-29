@@ -6,17 +6,16 @@ import {
   PLATFORM_ID,
   Output,
   EventEmitter,
-  TemplateRef,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-// Libs
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { v4 as uuidv4 } from 'uuid';
-// Interfaces
-import { ProductFilter } from '../../../shared/interfaces/product-filter';
-import { ICategory } from '../../shop/pages/page-category/category.interface';
 import { Params } from '@angular/router';
-import { IWidgetFilter } from './widget-filter.interface';
+// Libs
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { v4 as uuidv4 } from 'uuid';
+// Models
+import { ProductFilter } from '../../../shared/interfaces/product-filter';
+import { ICategory } from '../../shop/pages/page-category/models/category.interface';
+import { IWidgetFilter } from './models/widget-filter.interface';
 
 @Component({
   selector: 'app-widget-filters',
@@ -37,8 +36,8 @@ export class WidgetFiltersComponent {
   }
 
   @Output() filtersSelected: EventEmitter<any> = new EventEmitter();
-  @Output() clearCategory: EventEmitter<boolean> = new EventEmitter();
-  @Output() clearAll: EventEmitter<boolean> = new EventEmitter();
+  @Output() clearCategory: EventEmitter<void> = new EventEmitter();
+  @Output() clearAll: EventEmitter<void> = new EventEmitter();
 
   removableFiltersArray: IWidgetFilter[] = [];
 
@@ -48,19 +47,9 @@ export class WidgetFiltersComponent {
 
   modalRef!: BsModalRef;
 
-  constructor(
-    @Inject(PLATFORM_ID) private platformId: any,
-    private modalService: BsModalService
-  ) {
+  constructor(@Inject(PLATFORM_ID) private platformId: any) {
     this.id = uuidv4();
     console.log('WidgetFiltersComponent constructor');
-  }
-
-  openUserForm(template: TemplateRef<any>): void {
-    this.modalRef = this.modalService.show(template, {
-      backdrop: 'static',
-      keyboard: false,
-    });
   }
 
   marcaCheckBox(): void {
@@ -123,10 +112,10 @@ export class WidgetFiltersComponent {
   }
 
   removeCategory(): void {
-    this.clearCategory.emit(true);
+    this.clearCategory.emit();
   }
 
   removeAllFilters(): void {
-    this.clearAll.emit(true);
+    this.clearAll.emit();
   }
 }

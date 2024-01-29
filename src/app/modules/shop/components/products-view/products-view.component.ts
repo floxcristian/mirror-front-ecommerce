@@ -1,3 +1,4 @@
+// Angular
 import {
   Component,
   Input,
@@ -8,11 +9,11 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+// Models
 import { Link } from '../../../../shared/interfaces/link';
-import { RootService } from '../../../../shared/services/root.service';
+// Services
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { SessionService } from '@core/services-v2/session/session.service';
-import { ISession } from '@core/models-v2/auth/session.interface';
 
 @Component({
   selector: 'app-products-view',
@@ -20,9 +21,9 @@ import { ISession } from '@core/models-v2/auth/session.interface';
   styleUrls: ['./products-view.component.scss'],
 })
 export class ProductsViewComponent {
+  isB2B: boolean;
+  // Analizando
   @Input() products!: any[];
-  @Input() grid: 'grid-3-sidebar' | 'grid-4-full' | 'grid-5-full' =
-    'grid-3-sidebar';
   @Input() limit = 12;
   @Input() cargandoCatalogo = true;
   @Input() cargandoProductos = false;
@@ -36,11 +37,8 @@ export class ProductsViewComponent {
   @Input() hasta = 0;
   @Input() currentPage: number = 1;
   @Input() totalRegistros = 0;
-  @Output() cambiaPagina: EventEmitter<any> = new EventEmitter();
-  @Output() itemPorPagina: EventEmitter<number> = new EventEmitter();
-  @Output() filterState: EventEmitter<number> = new EventEmitter();
-  usuario!: ISession;
-  isB2B: boolean;
+  @Output() cambiaPagina: EventEmitter<number> = new EventEmitter();
+  @Output() filterState: EventEmitter<boolean> = new EventEmitter();
   tipo_orden = null;
   @Output() sort: EventEmitter<any> = new EventEmitter();
   @Input() paramsCategory!: any;
@@ -53,7 +51,6 @@ export class ProductsViewComponent {
 
   constructor(
     @Inject(DOCUMENT) document: any,
-    private root: RootService,
     @Inject(PLATFORM_ID) private platformId: Object,
     private readonly gtmService: GoogleTagManagerService,
     // Services V2
@@ -84,24 +81,19 @@ export class ProductsViewComponent {
         { id: 120, value: 120 },
       ];
     }
-
-    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
-    this.isB2B =
-      this.usuario.userRole === 'supervisor' ||
-      this.usuario.userRole === 'comprador';
+    this.isB2B = this.sessionService.isB2B();
   }
-  ngOnInit() {
-    if (
-      this.usuario.userRole !== 'supervisor' &&
-      this.usuario.userRole !== 'comprador'
-    ) {
+
+  ngOnInit(): void {
+    if (!this.isB2B) {
       this.gtmService.pushTag({
         event: 'categorie_view',
         pagePath: this.url,
       });
     }
   }
-  ngOnChanges() {
+
+  ngOnChanges(): void {
     this.url = window.location.href;
     if (this.textToSearch.includes('SKU:'))
       this.textToSearch = this.textToSearch.substring(
@@ -115,20 +107,14 @@ export class ProductsViewComponent {
   onPageChange(pageNumber: number): void {
     const page = pageNumber + 1;
     if (page <= this.totalPaginas) {
-      this.cambiaPagina.emit({
-        page,
-        scroll: true,
-      });
+      this.cambiaPagina.emit(page);
     }
   }
 
-  obtieneItemPorPagina() {
-    this.itemPorPagina.emit(this.selectedItem);
+  setVisibleFilter(): void {
+    this.filterState.emit(true);
   }
 
-  setVisibleFilter(state: any) {
-    this.filterState.emit(state);
-  }
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.innerWidth = event.target.innerWidth;

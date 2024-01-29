@@ -16,9 +16,9 @@
 </div>
 
 <!-- Start::navbar slideshow (lg+) -->
-<div *ngIf="!cargando && tipo_producto" class="d-none d-lg-block">
+<div *ngIf="!cargando && _blockElements" class="d-none d-lg-block">
   <ul ngbNav #nav="ngbNav" class="nav-tabs">
-    <li ngbNavItem *ngFor="let item of tipo_producto; let i = index">
+    <li ngbNavItem *ngFor="let item of _blockElements; let i = index">
       <button style="font-size: 30px" ngbNavLink>{{ item.title }}</button>
       <ng-template ngbNavContent>
         <div class="row" style="margin-top: 20px">
@@ -54,7 +54,7 @@
                 />
               </div>
             </a>
-            <div class="container-image" *ngIf="item.image === undefined">
+            <div class="container-image" *ngIf="!item.image">
               <div
                 class="overlay d-flex justify-content-center align-items-center"
               >
@@ -107,7 +107,7 @@
 <!-- End::navbar slideshow (lg+) -->
 
 <!-- Start::navbar slideshow (xs, sm y md) -->
-<div *ngIf="tipo_producto" class="d-block d-lg-none">
+<div *ngIf="_blockElements" class="d-block d-lg-none">
   <div *ngIf="refresh" class="w-100" style="min-height: 50px"></div>
   <div
     *ngIf="!refresh"
@@ -122,7 +122,7 @@
       (translated)="getData2($event)"
     >
       <ng-container
-        *ngFor="let item of tipo_producto; let i = index"
+        *ngFor="let item of _blockElements; let i = index"
         class="products-list__item"
       >
         <ng-template carouselSlide [id]="item.title">
@@ -141,7 +141,7 @@
 <!-- End::navbar slideshow (xs, sm y md) -->
 
 <!-- Start::imagen portada slideshow (xs, sm y md) -->
-<div *ngIf="tipo_producto" class="d-block d-lg-none">
+<div *ngIf="_blockElements" class="d-block d-lg-none">
   <div
     *ngIf="refresh2"
     class="w-100"
@@ -170,12 +170,12 @@
       (translated)="getData($event)"
     >
       <ng-container
-        *ngFor="let item of tipo_producto; let i = index"
+        *ngFor="let item of _blockElements; let i = index"
         class="products-list__item"
       >
         <ng-template carouselSlide [id]="item.title">
           <img
-            [src]="tipo_producto[i].image"
+            [src]="_blockElements[i].image"
             class="img-fluid-product-mobile"
             alt="imagen"
           />

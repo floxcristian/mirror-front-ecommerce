@@ -1,23 +1,16 @@
 // Angular
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PLATFORM_ID, Inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-// Rxjs
-import { Subscription } from 'rxjs';
 // Environment
 import { environment } from '@env/environment';
+// Models
 import { ProductFilterCategory } from '../../../../shared/interfaces/product-filter';
-import { RootService } from '../../../../shared/services/root.service';
-import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
-import { SeoService } from '../../../../shared/services/seo.service';
-import { CanonicalService } from '../../../../shared/services/canonical.service';
-import { isVacio } from '../../../../shared/utils/utilidades';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { SessionService } from '@core/services-v2/session/session.service';
-import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
+import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
+import { ICategory } from './models/category.interface';
 import {
   IArticleResponse,
   IBanner,
@@ -26,26 +19,41 @@ import {
   IFilters,
   ISearchResponse,
 } from '@core/models-v2/article/article-response.interface';
-import { ArticleService } from '@core/services-v2/article.service';
 import {
   IProductFilter,
   IProductFilterCheckbox,
 } from '@core/models-v2/article/product-filter.interface';
+import { StorageKey } from '@core/storage/storage-keys.enum';
+// Constants
+import { CATEGORIES_METADATA } from './constants/categories-metadata';
+import { IGNORED_FILTERS } from './constants/ignored-filters';
+// Pipes
+import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
+// Services
+import { RootService } from '../../../../shared/services/root.service';
+import { SeoService } from '../../../../shared/services/seo/seo.service';
+import { CanonicalService } from '../../../../shared/services/canonical.service';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { SessionService } from '@core/services-v2/session/session.service';
+import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
+import { ArticleService } from '@core/services-v2/article.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
-import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
-import { StorageKey } from '@core/storage/storage-keys.enum';
-import { CATEGORIES_METADATA } from './categories-metadata';
-import { ICategory } from './category.interface';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-grid',
   templateUrl: './page-category.component.html',
   styleUrls: ['./page-category.component.scss'],
 })
-export class PageCategoryComponent implements OnInit, OnDestroy {
+export class PageCategoryComponent implements OnInit {
+  private readonly destroyRef: DestroyRef = inject(DestroyRef);
+  session: ISession;
+  preferences!: ICustomerPreference;
+
+  // Examinando params...
   products: IArticleResponse[] = [];
   filters: IProductFilter[] = [];
   filterQuery: any;
@@ -58,7 +66,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   PagDesde: number = 0;
   PagHasta: number = 0;
   PagTotalRegistros: number = 0;
-  productosPorPagina: number = 12;
+  pageSize: number = 12;
   cargandoCatalogo: boolean = true;
   cargandoProductos: boolean = false;
   currentPage: number = 1;
@@ -69,30 +77,19 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
   levelCategories: ICategoriesTree[] = [];
   level: number = 0;
   marca_tienda: string = '';
-
-  despachoCliente!: Subscription;
-
   paramsCategory = {
     firstCategory: '',
     secondCategory: '',
     thirdCategory: '',
   };
 
-  filtersIgnored = [
-    'CERTIFICADO PDF',
-    'JEFE DE LINEA',
-    'TIPO PRECIO',
-    'TIPO ESTADO',
-  ];
+  filtersIgnored = IGNORED_FILTERS;
 
-  visibleFilter: boolean = false;
+  visibleFilter!: boolean;
   filtrosOculto: boolean = true;
   scrollPosition!: number;
   innerWidth: number;
-
-  origen!: any[];
-  usuario: ISession;
-  preferenciaCliente!: ICustomerPreference;
+  origen: string[] = [];
   banners!: IBanner | null;
 
   constructor(
@@ -114,31 +111,77 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     private readonly customerPreferenceService: CustomerPreferenceService,
     private readonly customerAddressService: CustomerAddressService
   ) {
+    this.session = this.sessionService.getSession();
+    this.preferences = this.customerPreferenceStorage.get();
+    /**
+     * TODO: eliminar lo de abajo en algun momento.
+     */
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
     if (this.innerWidth < 1025) {
-      this.productosPorPagina = 12;
+      this.pageSize = 12;
     } else {
-      this.productosPorPagina = 25;
+      this.pageSize = 25;
     }
-
-    this.usuario = this.sessionService.getSession();
-    this.preferenciaCliente = this.customerPreferenceStorage.get();
   }
 
-  ngOnDestroy(): void {
-    this.despachoCliente.unsubscribe();
+  /**
+   * Cuando un usuario inicia o cierra sesión.
+   */
+  private onSessionChange(): void {
+    this.authStateService.session$.subscribe((session) => {
+      console.log('[-] onSessionChange: ', session);
+      this.filters = [];
+      this.session = session;
+      this.parametrosBusqueda.documentId = session.documentId;
+      this.customerPreferenceService.getCustomerPreferences().subscribe({
+        next: (preferences) => {
+          this.preferences = preferences;
+          this.cargarCatalogoProductos(this.parametrosBusqueda, '');
+        },
+      });
+    });
   }
+
+  /**
+   * Cuando el usuario cambia su dirección de despacho.
+   */
+  private onCustomerAddressChange(): void {
+    this.customerAddressService.customerAddress$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((customerAddress) => {
+        console.log('[-] onCustomerAddressChange');
+        this.filters = [];
+        this.parametrosBusqueda.location = customerAddress?.city || '';
+        this.preferences.deliveryAddress = customerAddress || null;
+        this.cargarCatalogoProductos(this.parametrosBusqueda, '');
+      });
+  }
+
+  /**
+   * Cuando cambia la tienda seleccionada.
+   */
+  private onSelectedStoreChange(): void {
+    this.geolocationService.selectedStore$.subscribe(({ code }) => {
+      console.log('[-] onSelectedStoreChange');
+      this.filters = [];
+      this.parametrosBusqueda.branchCode = code || '';
+      this.cargarCatalogoProductos(this.parametrosBusqueda, '');
+    });
+  }
+
+  private onRouterParamsChange(): void {}
 
   ngOnInit(): void {
     let metadataCount = 0;
     this.route.queryParams.subscribe((query) => {
-      console.log('query original: ', query);
+      console.log('on queryParamsChange: ', query);
+      this.filters = [];
       // Seteamos el origen del buscador
       this.setOrigenes();
       if (query['tiendaOficial']) {
-        this.marca_tienda = query['filter_MARCA'] ? query['filter_MARCA'] : '';
+        this.marca_tienda = query['filter_MARCA'] || '';
         if (this.marca_tienda) {
           let banner_local: any = this.localS.get('bannersMarca');
           if (
@@ -172,7 +215,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         metadataCount++;
       }
 
-      this.reinicaFiltros();
       this.filterQuery = this.getFiltersQuery(query);
 
       if (
@@ -197,14 +239,14 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     });
 
     this.route.params.subscribe((params) => {
-      this.reinicaFiltros();
+      this.filters = [];
+      console.log('on routerParamsChange: ', params);
       if (
         params['busqueda'] &&
         params['metodo'] &&
         params['metodo'] === 'categoria'
       ) {
         // 02. Categoria
-
         this.textToSearch =
           params['busqueda'] === 'todos' ? '' : params['busqueda'];
 
@@ -224,27 +266,27 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         console.log('getSelectedStore desde PageCategoryComponent 1');
         const tiendaSeleccionada = this.geolocationService.getSelectedStore();
         const sucursal = tiendaSeleccionada.code;
-        if (this.usuario?.documentId === '0') {
+        if (this.session.documentId === '0') {
           parametros = {
             category: category,
             word: this.textToSearch,
             branchCode: sucursal,
-            pageSize: this.productosPorPagina,
-            documentId: this.usuario.documentId,
+            pageSize: this.pageSize,
+            documentId: this.session.documentId,
             showPrice: 1,
           };
         } else {
           parametros = {
             category: category,
             word: this.textToSearch,
-            location: this.preferenciaCliente.deliveryAddress?.city
-              ? this.preferenciaCliente.deliveryAddress?.city
+            location: this.preferences.deliveryAddress?.city
+              ? this.preferences.deliveryAddress?.city
                   .normalize('NFD')
                   .replace(/[\u0300-\u036f]/g, '')
               : '',
             branchCode: sucursal,
-            pageSize: this.productosPorPagina,
-            documentId: this.usuario?.documentId,
+            pageSize: this.pageSize,
+            documentId: this.session.documentId,
             showPrice: 1,
           };
         }
@@ -263,7 +305,6 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
         );
 
         // SEO
-
         this.getDetalleSeoCategoria(category);
       } else {
         // 03. Búsqueda
@@ -275,27 +316,27 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           console.log('getSelectedStore desde PageCategoryComponent 2');
           const tiendaSeleccionada =
             this.geolocationService.getSelectedStore();
-          if (this.usuario?.documentId === '0') {
+          if (this.session.documentId === '0') {
             parametros = {
               category: '',
               word: this.textToSearch,
               branchCode: tiendaSeleccionada.code,
-              pageSize: this.productosPorPagina,
-              documentId: this.usuario.documentId,
+              pageSize: this.pageSize,
+              documentId: this.session.documentId,
               showPrice: 1,
             };
           } else {
             parametros = {
               category: '',
               word: this.textToSearch,
-              location: this.preferenciaCliente.deliveryAddress?.city
-                ? this.preferenciaCliente.deliveryAddress?.city
+              location: this.preferences.deliveryAddress?.city
+                ? this.preferences.deliveryAddress?.city
                     .normalize('NFD')
                     .replace(/[\u0300-\u036f]/g, '')
                 : '',
-              pageSize: this.productosPorPagina,
+              pageSize: this.pageSize,
               branchCode: tiendaSeleccionada?.code,
-              documentId: this.usuario?.documentId,
+              documentId: this.session.documentId,
               showPrice: 1,
             };
           }
@@ -312,14 +353,14 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           );
 
           // SEO
-          if (metadataCount === 0) {
+          if (!metadataCount) {
             if (this.textToSearch.trim() !== '') {
               this.titleService.setTitle(
-                'Resultados Búsqueda de ' + this.textToSearch
+                `Resultados Búsqueda de ${this.textToSearch}`
               );
             } else {
               this.titleService.setTitle(
-                'Resultados de Búsqueda - implementos.cl'
+                `Resultados de Búsqueda - implementos.cl`
               );
             }
             if (isPlatformBrowser(this.platformId)) {
@@ -347,38 +388,9 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
       }
     });
 
-    // cuando se inicia sesion
-    this.authStateService.session$.subscribe((user) => {
-      this.reinicaFiltros();
-      this.parametrosBusqueda.documentId = user.documentId || '0';
-      this.customerPreferenceService.getCustomerPreferences().subscribe({
-        next: (preferences) => {
-          this.preferenciaCliente = preferences;
-          this.cargarCatalogoProductos(this.parametrosBusqueda, '');
-        },
-      });
-    });
-
-    // cuando cambiamos sucursal
-    this.geolocationService.selectedStore$.subscribe((r) => {
-      this.reinicaFiltros();
-      this.parametrosBusqueda.branchCode = r.code || '';
-      this.cargarCatalogoProductos(this.parametrosBusqueda, '');
-    });
-
-    this.despachoCliente =
-      this.customerAddressService.customerAddress$.subscribe(
-        (customerAddress) => {
-          this.parametrosBusqueda.location = customerAddress?.city || '';
-          this.preferenciaCliente.deliveryAddress = customerAddress;
-          this.reinicaFiltros();
-          this.cargarCatalogoProductos(this.parametrosBusqueda, '');
-        }
-      );
-  }
-
-  private reinicaFiltros() {
-    this.filters = [];
+    this.onSessionChange();
+    this.onSelectedStoreChange();
+    this.onCustomerAddressChange();
   }
 
   private cleanFilterSearchParams(params: any) {
@@ -403,7 +415,11 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     return filtered;
   }
 
-  cargarCatalogoProductos(parametros: any, texto: any, scroll = false) {
+  private cargarCatalogoProductos(
+    parametros: any,
+    texto: any,
+    scroll = false
+  ): void {
     this.parametrosBusqueda = parametros;
     this.removableCategory = [];
     this.filtrosOculto = true;
@@ -426,13 +442,14 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     }
 
     // verificamos si esta la session iniciada
+    // FIXME: es necesario de nuevo?
     const user = this.sessionService.getSession();
     if (user) {
       this.parametrosBusqueda.documentId = user.documentId;
-      if (this.preferenciaCliente && this.preferenciaCliente.deliveryAddress) {
-        this.parametrosBusqueda.location = this.preferenciaCliente
-          .deliveryAddress.city
-          ? this.preferenciaCliente.deliveryAddress.city
+      if (this.preferences && this.preferences.deliveryAddress) {
+        this.parametrosBusqueda.location = this.preferences.deliveryAddress
+          .city
+          ? this.preferences.deliveryAddress.city
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
           : '';
@@ -449,6 +466,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
 
     this.articleService.search(parametros).subscribe({
       next: (res) => {
+        console.log('articleService.search: ', parametros);
         this.SetProductos(res, texto, scroll);
       },
       error: (err) => {
@@ -457,7 +475,11 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     });
   }
 
-  SetProductos(r: ISearchResponse, texto: string, scroll = false): void {
+  private SetProductos(
+    r: ISearchResponse,
+    texto: string,
+    scroll = false
+  ): void {
     this.cargandoCatalogo = false;
     this.cargandoProductos = false;
 
@@ -505,8 +527,8 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           documentId: user.documentId,
           branchCode: codigo,
           location:
-            this.preferenciaCliente.deliveryAddress != null
-              ? this.preferenciaCliente.deliveryAddress.city
+            this.preferences.deliveryAddress != null
+              ? this.preferences.deliveryAddress.city
                   .normalize('NFD')
                   .replace(/[\u0300-\u036f]/g, '')
               : '',
@@ -538,10 +560,15 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.PagTotalRegistros = r.totalResult;
   }
 
+  /**
+   * Añade un filtro de categoría a la lista.
+   * @param categorias
+   * @param levelFilter
+   */
   private formatCategories(
     categorias: ICategoriesTree[],
     levelFilter: number
-  ) {
+  ): void {
     const productoBuscado =
       this.parametrosBusqueda.word === ''
         ? 'todos'
@@ -576,7 +603,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
           'categoria',
           lvl1.slug,
         ],
-        open: levelFilter == 1 || levelFilter == 2 || levelFilter == 3,
+        open: [1, 2, 3].includes(levelFilter),
         children: lvl1.children?.map((lvl2) => {
           return {
             type: 'parent',
@@ -617,7 +644,11 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.filters.push(filtros);
   }
 
-  private formatFilters(atr: IFilters[]) {
+  /**
+   * Añade un filtro de producto a la lista.
+   * @param atr
+   */
+  private formatFilters(atr: IFilters[]): void {
     const atributos = this.cleanFilters(atr);
 
     atributos?.map((r) => {
@@ -665,8 +696,12 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     });
   }
 
-  // limpia los atributos que no son mostrables
-  cleanFilters(atributos: IFilters[]) {
+  /**
+   * Quita los atributos no mostrables.
+   * @param atributos
+   * @returns
+   */
+  private cleanFilters(atributos: IFilters[]) {
     const atributos2: any[] = [];
     if (typeof atributos === 'undefined') {
       return;
@@ -700,29 +735,22 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     return clonedParams;
   }
 
-  paginacionProductos({ page, scroll }: any): void {
-    this.reinicaFiltros();
+  paginacionProductos(page: number): void {
+    this.filters = [];
     this.parametrosBusqueda.page = page;
     this.currentPage = page;
-    this.cargarCatalogoProductos(this.parametrosBusqueda, '', scroll);
+    this.cargarCatalogoProductos(this.parametrosBusqueda, '', true);
   }
 
-  cambiaItemPorPagina(items: any) {
-    this.reinicaFiltros();
-    this.parametrosBusqueda.pageSize = items;
-    this.cargarCatalogoProductos(this.parametrosBusqueda, '');
-  }
-
-  updateFilters(filtersObj: any) {
+  updateFilters(filtersObj: any): void {
     let filters = filtersObj.selected;
-
     const url = this.router.url.split('?')[0];
 
     filters = this.armaQueryParams(filters);
     this.router.navigate([url], { queryParams: filters });
   }
 
-  clearCategory(e: any) {
+  clearCategory(): void {
     let queryParams = {};
     queryParams = this.armaQueryParams(queryParams);
 
@@ -736,7 +764,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     }
   }
 
-  clearAll(e: any) {
+  clearAll(): void {
     let queryParams = {};
     queryParams = this.armaQueryParams(queryParams);
 
@@ -750,7 +778,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     }
   }
 
-  armaQueryParams(queryParams: any) {
+  private armaQueryParams(queryParams: any) {
     if (this.marca_tienda !== '')
       queryParams = {
         ...queryParams,
@@ -759,7 +787,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     return queryParams;
   }
 
-  setBreadcrumbs() {
+  private setBreadcrumbs(): void {
     this.breadcrumbs = [];
     if (this.paramsCategory.firstCategory !== '') {
       const cat = this.root.replaceAll(
@@ -823,46 +851,50 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     this.visibleFilter = state;
   }
 
-  positionScroll(event: any) {
+  positionScroll(event: any): void {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
     this.scrollPosition = event.srcElement.children[0].scrollTop;
   }
 
-  setOrigenes() {
-    try {
-      let categoria = '';
-      // Si el Url tiene seteada la categoria , pero su busqueda no     es 'todos' ( no es Banner )
-      if (
-        this.route.snapshot.paramMap.get('nombre') &&
-        this.route.snapshot.paramMap.get('busqueda') !== 'todos'
-      ) {
+  /**
+   * Setea origen.
+   */
+  private setOrigenes(): void {
+    let categoria = '';
+    const paramMap = this.route.snapshot.paramMap;
+    console.log('paramMap: ', paramMap);
+
+    console.log('snapshot: ', this.route.snapshot.params);
+    const { nombre, busqueda } = this.route.snapshot.params;
+    // Si el Url tiene seteada la categoria, pero su busqueda no es 'todos' (no es Banner)
+    if (
+      this.route.snapshot.paramMap.get('nombre') &&
+      this.route.snapshot.paramMap.get('busqueda') !== 'todos'
+    ) {
+      categoria = this.route.snapshot.paramMap.get('nombre') as string;
+      this.origen = ['buscador', '', categoria, ''];
+    } else {
+      const urlParams = this.route.snapshot.url[0].path.split('-');
+      //Si no existe categoria en la url y se accede desde el 'Ver más'
+      if (urlParams[0] == 'HOME') {
+        urlParams.splice(0, 1);
+        this.origen = ['home', 'ver-mas', urlParams.join(' '), ''];
+        //Si viene desde Banner
+      } else if (urlParams[0] == 'todos') {
+        urlParams.splice(0, 1);
         categoria = this.route.snapshot.paramMap.get('nombre') || '';
-        this.origen = ['buscador', '', categoria, ''];
+        this.origen = ['home', 'banner', categoria, ''];
       } else {
-        const urlParams = this.route.snapshot.url[0].path.split('-');
-        //Si no existe categoria en la url y se accede desde el 'Ver más'
-        if (urlParams[0] == 'HOME') {
-          urlParams.splice(0, 1);
-          this.origen = ['home', 'ver-mas', urlParams.join(' '), ''];
-          //Si viene desde Banner
-        } else if (urlParams[0] == 'todos') {
-          urlParams.splice(0, 1);
-          categoria = this.route.snapshot.paramMap.get('nombre') || '';
-          this.origen = ['home', 'banner', categoria, ''];
-        } else {
-          this.origen = ['buscador', '', 'sinCategoria', ''];
-        }
+        this.origen = ['buscador', '', 'sinCategoria', ''];
       }
-    } catch (e) {
-      console.warn('Error a setear el origen!', e);
-      this.origen = ['buscador', '', 'sinCategoria', ''];
     }
   }
+
   //Definicion de meta Información para optimización del SEO
-  getDetalleSeoCategoria(category: string) {
-    let meta = CATEGORIES_METADATA[category] || {
+  private getDetalleSeoCategoria(category: string): void {
+    const meta = CATEGORIES_METADATA[category] || {
       title: 'Productos en Categoría ' + category,
       description: 'Productos en Categoría ' + category,
       keywords: category.replace(/(\b(\w{1,3})\b(\s|$))/g, ''),
@@ -879,11 +911,7 @@ export class PageCategoryComponent implements OnInit, OnDestroy {
     }
   }
 
-  decodedUrl(cadena: string) {
-    return decodeURIComponent(cadena);
-  }
-
-  setSort(event: any) {
+  setSort(event: any): void {
     this.parametrosBusqueda.order = event;
     let parametros: any = this.parametrosBusqueda;
     this.cargarCatalogoProductos(parametros, this.textToSearch, false);

@@ -1,45 +1,40 @@
+// Angular
 import {
   Component,
   HostListener,
   Inject,
   Input,
-  OnDestroy,
   OnInit,
   PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { isVacio } from '../../../../shared/utils/utilidades';
 import { Router } from '@angular/router';
-import { VerMasProductoComponent } from '../ver-mas-producto/ver-mas-producto.component';
+import { isPlatformBrowser } from '@angular/common';
+// Libs
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { isPlatformBrowser } from '@angular/common';
-import { SessionService } from '@core/services-v2/session/session.service';
-import { ISession } from '@core/models-v2/auth/session.interface';
+// Models
 import {
   IElement1,
-  IPageData,
+  IElement2,
 } from '@core/models-v2/cms/homePage-response.interface';
+// Components
+import { VerMasProductoComponent } from '../ver-mas-producto/ver-mas-producto.component';
 
 @Component({
   selector: 'app-product-page-home',
   templateUrl: './product-page-home.component.html',
   styleUrls: ['./product-page-home.component.scss'],
 })
-export class ProductPageHomeComponent implements OnInit, OnDestroy {
-  @Input() set producto(value: IPageData) {
-    this.id = value.id;
-    this.tipo_producto = value.element as IElement1[];
-  }
-
+export class ProductPageHomeComponent implements OnInit {
   @ViewChild('popoverContent', { static: false }) myPopover!: NgbPopover;
 
-  tipo_producto!: IElement1[];
-  user!: ISession;
-  id!: string;
+  @Input() set blockElements(value: IElement1[] | IElement2) {
+    this._blockElements = value as IElement1[];
+    console.log('_blockElements: ', this._blockElements);
+  }
+  _blockElements: IElement1[] = [];
   layout = 'grid-lg';
-  despachoCliente!: Subscription;
 
   ruta: string = '';
   refresh = false;
@@ -55,9 +50,7 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private modalService: BsModalService,
-    @Inject(PLATFORM_ID) private platformId: Object,
-    // Services V2
-    private readonly sessionService: SessionService
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -107,26 +100,22 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.index_seleccionado = this.sPosition;
     this.ruta = this.router.url === '/inicio' ? 'home' : this.router.url;
-    this.user = this.sessionService.getSession();
     this.cargarHome();
-  }
-
-  ngOnDestroy(): void {
-    if (!isVacio(this.despachoCliente)) {
-      this.despachoCliente.unsubscribe();
-    }
   }
 
   //cargahome
   async cargarHome() {
     this.cargando = true;
-    this.producto_selecionado = this.tipo_producto[0];
+    this.producto_selecionado = this._blockElements[0];
     this.index_seleccionado = 0;
     this.cargando = false;
   }
 
+  /**
+   * TODO: quitar en algun momento esto.
+   */
   @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
+  onResize() {
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
@@ -136,7 +125,10 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
     this.tamanho_layout();
   }
 
-  tamanho_layout() {
+  /**
+   * TODO: quitar en algun momento esto.
+   */
+  tamanho_layout(): void {
     if (this.screenWidth <= 768) {
       this.layout = 'grid-sm';
     } else this.layout = 'grid-lg';
@@ -167,12 +159,6 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
     event.popover.open();
   }
 
-  /*
-  seleccionar(index: any) {
-    this.producto_selecionado = this.tipo_producto[index];
-    this.index_seleccionado = index;
-  }*/
-
   openModal(item: any) {
     this.bsModalRef = this.modalService.show(VerMasProductoComponent, {
       backdrop: 'static',
@@ -186,7 +172,7 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
 
   async getData(event: any) {
     let index = event.startPosition;
-    if (index >= this.tipo_producto.length) index = 0;
+    if (index >= this._blockElements.length) index = 0;
     this.refresh = true;
 
     this.carouselOptions2 = { ...this.carouselOptions2, startPosition: index };
@@ -196,14 +182,14 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
       }, 10);
     });
     this.refresh = false;
-    this.producto_selecionado = this.tipo_producto[index];
+    this.producto_selecionado = this._blockElements[index];
     console.log('proget', this.producto_selecionado);
     this.index_seleccionado = index;
   }
 
-  async getData2(event: any) {
+  async getData2(event: any): Promise<void> {
     let index = event.startPosition;
-    if (index >= this.tipo_producto.length) index = 0;
+    if (index >= this._blockElements.length) index = 0;
     this.refresh2 = true;
     this.carouselOptions3 = { ...this.carouselOptions3, startPosition: index };
     await new Promise((resolve) => {
@@ -212,8 +198,7 @@ export class ProductPageHomeComponent implements OnInit, OnDestroy {
       }, 10);
     });
     this.refresh2 = false;
-    this.producto_selecionado = this.tipo_producto[index];
-    console.log('proget2', this.producto_selecionado);
+    this.producto_selecionado = this._blockElements[index];
     this.index_seleccionado = index;
   }
 }
