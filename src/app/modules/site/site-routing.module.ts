@@ -7,7 +7,6 @@ import { PageContactUsComponent } from './pages/page-contact-us/page-contact-us.
 import { PageTermsComponent } from './pages/page-terms/page-terms.component';
 import { PagePolicyComponent } from './pages/page-policy/page-policy.component';
 import { PageStoresComponent } from './pages/page-stores/page-stores.component';
-import { PageSelectCatalogComponent } from './pages/page-select-catalog/page-select-catalog.component';
 import { PageRecoveringComponent } from './pages/page-recover/page-recover.component';
 import { PageRecoveringChangeComponent } from './pages/page-recover-change/page-recover-change.component';
 import { PageBlogComponent } from './pages/page-blog/page-blog.component';
@@ -48,10 +47,6 @@ const routes: Routes = [
   {
     path: 'tiendas',
     component: PageStoresComponent,
-  },
-  {
-    path: 'catalogos-zonas',
-    component: PageSelectCatalogComponent,
   },
   {
     path: 'recover',

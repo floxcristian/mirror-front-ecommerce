@@ -3,7 +3,8 @@ import { IAttribute } from '@core/models-v2/catalog/catalog-response.interface';
 import { IScalePrice } from '@core/models-v2/cms/special-reponse.interface';
 
 interface IProductTemp {
-  preciosScal: IScalePrice[]
+  // preciosScal: IScalePrice[]
+  preciosScal: any[]
   precioEscala: boolean;
   precio: number;
   sku: string;
