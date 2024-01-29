@@ -18,8 +18,6 @@ import {
   IElement1,
   IElement2,
 } from '@core/models-v2/cms/homePage-response.interface';
-// Components
-import { VerMasProductoComponent } from '../ver-mas-producto/ver-mas-producto.component';
 
 @Component({
   selector: 'app-product-page-home',
@@ -157,17 +155,6 @@ export class ProductPageHomeComponent implements OnInit {
 
   get_precioEscala(event: any) {
     event.popover.open();
-  }
-
-  openModal(item: any) {
-    this.bsModalRef = this.modalService.show(VerMasProductoComponent, {
-      backdrop: 'static',
-      keyboard: false,
-      initialState: {
-        data: item,
-      },
-    });
-    this.bsModalRef.content.closeBtnName = 'Close';
   }
 
   async getData(event: any) {

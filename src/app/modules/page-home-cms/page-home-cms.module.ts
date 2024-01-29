@@ -18,7 +18,6 @@ import { BannerComponent } from './components/banner/banner.component';
 import { BlogComponent } from './components/blog/blog.component';
 import { Lista_productoComponent } from './components/lista_producto/lista_producto.component';
 import { SlideMundoComponent } from './components/slide-mundo/slide-mundo.component';
-import { VerMasProductoComponent } from './components/ver-mas-producto/ver-mas-producto.component';
 import { ConceptoMobileComponent } from './components/concepto/mobile/concepto-mobile/concepto-mobile.component';
 
 @NgModule({
@@ -40,7 +39,6 @@ import { ConceptoMobileComponent } from './components/concepto/mobile/concepto-m
     ConceptoComponent,
     BlogComponent,
     Lista_productoComponent,
-    VerMasProductoComponent,
     BannerComponent,
   ],
   exports: [
