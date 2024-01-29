@@ -37,15 +37,25 @@ export interface IBanner {
 }
 
 export interface ISpecialData {
-  title: string;
-  order: number;
-  total: number;
-  articles: IArticle[];
+  id: string
+  title: string
+  order: number
+}
+
+export interface IPaginated {
+  total: number
+  found: number
+  limit: number
+  page: number
+  firstPage: number
+  lastPage: number
+  data: IArticle[]
 }
 
 export interface IArticle {
   sku: string; // +
   name: string; // +
+  description: string; // +
   brand: string; // +
   minimumPrice: number; // +
   images: IImage; // +
@@ -54,7 +64,6 @@ export interface IArticle {
   stockSummary: IStockSummary; // +
   origin: IShoppingCartProductOrigin; // + /// ESTO LO AGREGARON A MANO?
   cyber: number; // +
-  description: string; // +
   metaTags?: MetaTag[];
 }
 
@@ -69,18 +78,21 @@ export interface IImage {
 
 export interface IPriceInfo {
   sku: string; //
-  minimumPrice: number; //
-  sellerMinimumPrice: number; //
-  hasScalePrice: boolean; //
-  scalePrice: IScalePrice[]; //
-  discount: number;
-  comments: string[];
-  documentId: string;
   price: number;
   netPrice: number;
-  customerPrice: number;
+  minimumPrice: number; //
+  sellerMinimumPrice: number; //
+  sellerMinimumNetPrice: number; //
+  hasScalePrice: boolean; //
+  scalePrice: IScalePrice[]; //
   commonPrice: number;
   commonNetPrice: number;
+  discount: number;
+  netDiscount: number;
+  comments: string[];
+  documentId: string;
+  customerPrice: number;
+  customerNetPrice: number
 }
 
 export interface IScalePrice {

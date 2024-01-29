@@ -9,7 +9,7 @@ import { ICategorieResponse } from '@core/models-v2/cms/categories-response.inte
 import { ICustomHomePage } from '@core/models-v2/cms/customHomePage-response.interface';
 import { IHomePageResponse } from '@core/models-v2/cms/homePage-response.interface';
 import { ISliderResponse } from '@core/models-v2/cms/slider-reponse.interface';
-import { ISpecialResponse } from '@core/models-v2/cms/special-reponse.interface';
+import { IPaginated, ISpecialResponse } from '@core/models-v2/cms/special-reponse.interface';
 import {
   IValueBox,
   IValueBoxResponse,
@@ -70,12 +70,23 @@ export class CmsService {
 
   getSpecial(
     special: string,
-    documentId: string,
-    branchCode: string,
-    location: string
   ): Observable<ISpecialResponse> {
     return this.http.get<ISpecialResponse>(`${API_CMS}/special`, {
-      params: { special, documentId, branchCode, location },
+      params: { special},
+    });
+  }
+
+  getSpecialArticles(
+    id:string,
+    special: string,
+    documentId: string,
+    branchCode: string,
+    location: string,
+    page:number = 1,
+    limit:number = 30
+  ): Observable<IPaginated> {
+    return this.http.get<IPaginated>(`${API_CMS}/special/${id}`, {
+      params: { special, documentId, branchCode, location , page ,limit},
     });
   }
 

@@ -2,7 +2,7 @@
   class="block-header"
   [ngStyle]="{ 'margin-top': header === 'Nuestras Marcas' ? '-90px' : '0px' }"
 >
-  <h3 *ngIf="header" class="block-header__title text-h3">
+  <h3 *ngIf="header" class="block-header__title text-h3" [class.m-0]="m_0" [class.mb-4]="m_0">
     {{ header }}
   </h3>
 

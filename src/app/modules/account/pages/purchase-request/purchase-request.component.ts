@@ -24,12 +24,12 @@ export class PurchaseRequestComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   usuario!: ISession;
   orders!: IOrderDetail[];
-  title = '';
+  title:string = '';
   viewActive = 'list';
   orderId: string = '';
   order!: IOrderDetail;
-  loadingPage = false;
-  obsRefuse = '';
+  loadingPage:boolean = false;
+  obsRefuse:string = '';
 
   constructor(
     private router: Router,
@@ -119,15 +119,6 @@ export class PurchaseRequestComponent implements OnInit {
   }
 
   confirmApproveOrder() {
-    const data: any = {
-      id: this.order?.id,
-      usuario: this.order?.user,
-      tipo: 2,
-      formaPago: 'OC',
-      web: 1,
-      proveedorPago: 'Orden de compra',
-    };
-
     this.loadingPage = true;
     this.modalApproveRef.hide();
     let params = {
@@ -169,6 +160,7 @@ export class PurchaseRequestComponent implements OnInit {
           this.loadingPage = false;
           this.toast.success('Solitud rechazada correctamente');
           this.modalRefuseRef.hide();
+          this.obsRefuse = ''
           this.loadData();
         },
         error: (err) => {
