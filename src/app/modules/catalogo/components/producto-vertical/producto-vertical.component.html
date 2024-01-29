@@ -18,13 +18,6 @@
   </div>
   <div class="div_img_cyber" *ngIf="producto.cyber == 0">
     <picture>
-      <!-- <source srcset="assets/images/cyberCircle.webp" type="image/webp" />
-      <source srcset="assets/images/cyberCircle.png" type="image/png" />
-      <img
-        src="assets/images/cyberCircle.png"
-        class="img_escala"
-        loading="lazy"
-      /> -->
       <img
         src="https://images.implementos.cl/uploads/cyber/cyber.webp"
         class="img_escala"
@@ -163,16 +156,12 @@
           "
         >
           <td class="unitScal">
-            <em class="emScal"
-              >{{ scala.fromQuantity }} - {{ scala.toQuantity }}</em
-            >
-            <!-- FIXME:Arreglar dependiendo la respuesta ... (en espera..) -->
-            <!-- <em class="emScal" *ngIf="scala.toQuantity !== 'y mas.'"
+            <em class="emScal" *ngIf="scala.toQuantity !== 'y mas.'"
               >{{ scala.fromQuantity }} - {{ scala.toQuantity }}</em
             >
             <em class="emScal" *ngIf="scala.toQuantity === 'y mas.'"
               >DESDE {{ scala.fromQuantity }}</em
-            > -->
+            >
           </td>
           <td class="product-card__new-price-scala">
             {{ scala.price | currencyFormat }} <em> c/iva </em>
