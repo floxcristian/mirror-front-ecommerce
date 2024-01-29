@@ -47,75 +47,7 @@
       crossorigin="anonymous"
     ></script>
   </head>
-  <style>
-    @keyframes site-preloader-animation {
-      from {
-        transform: rotateZ(0deg);
-      }
-
-      to {
-        transform: rotateZ(360deg);
-      }
-    }
-
-    body {
-      overflow: hidden !important;
-      overflow-y: scroll !important;
-      height: 100% !important;
-    }
-
-    .site-preloader {
-      position: fixed;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #fff;
-      z-index: 99999;
-      opacity: 1;
-    }
-
-    .site-preloader::before {
-      box-sizing: border-box;
-      content: '';
-      display: block;
-      position: absolute;
-      left: calc(50% - 50px);
-      top: calc(50% - 50px);
-      width: 100px;
-      height: 100px;
-      border-radius: 50px;
-      border: 3px solid rgba(0, 0, 0, 0.2);
-      border-top-color: rgba(0, 93, 185, 0.9);
-      animation-name: site-preloader-animation;
-      animation-duration: 0.5s;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-    }
-
-    .site-preloader__fade {
-      transition: opacity 0.3s;
-      opacity: 0;
-    }
-  </style>
-  <div class="site-preloader"></div>
   <body class="blue" id="body">
     <app-root></app-root>
   </body>
-  <script type="text/javascript">
-    (function () {
-      var proto = 'https:';
-      var node = document.createElement('script');
-      node.type = 'text/javascript';
-      node.async = true;
-      node.src =
-        proto +
-        '//webchat-cls3-cl.i6.inconcertcc.com/v3/click_to_chat?token=6436ADDF32C3F2240B1FC31C54D6AB3B';
-      var s = document.getElementsByTagName('script')[0];
-
-      if (window.location.href.indexOf('inicio') > -1) {
-        s.parentNode.insertBefore(node, s);
-      }
-    })();
-  </script>
 </html>

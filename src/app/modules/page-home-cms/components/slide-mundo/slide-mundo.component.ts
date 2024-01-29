@@ -13,9 +13,10 @@ export class SlideMundoComponent implements OnInit {
   style: any = [];
   isVacio = isVacio;
   carouselOptions = {
+    lazyLoad: true,
     nav: false,
     dots: true,
-    loop: false,
+    loop: true,
     autoplay: false,
     responsiveClass: true,
     responsive: {
@@ -25,6 +26,7 @@ export class SlideMundoComponent implements OnInit {
   };
 
   carouselOptions2 = {
+    lazyLoad: true,
     nav: false,
     dots: true,
     loop: true,
