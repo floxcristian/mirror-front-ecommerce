@@ -40,7 +40,6 @@ export class StoreUtilService {
    */
   static getOrderedStoresByZone(stores: IStore[]): IZoneGroup[] {
     const groupedStores = StoreUtilService.groupStoresByZone(stores);
-    console.log('[-] groupedStores: ', groupedStores);
     return ZONE_ORDER.filter((zone) =>
       StoreUtilService.formatZoneKey(zone)
     ).map((zone) => ({
@@ -55,7 +54,7 @@ export class StoreUtilService {
    * @param lng
    * @returns
    */
-  static formatCoordinates(
+  /*static formatCoordinates(
     lat: number,
     lng: number
   ): { lat: number; lng: number } {
@@ -69,5 +68,5 @@ export class StoreUtilService {
       lat: lat / latDivisor,
       lng: lng / lngDivisor,
     };
-  }
+  }*/
 }

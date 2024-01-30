@@ -54,8 +54,9 @@ export class PageStoresComponent {
       .then(() => (this.isMapLoaded = true));
     this.geolocationService.stores$.subscribe({
       next: (stores) => {
+        if (!stores.length) return;
         this.storesByZone = StoreUtilService.getOrderedStoresByZone(stores);
-        if (this.storesByZone?.[0].stores.length) {
+        if (this.storesByZone?.[0]?.stores?.length) {
           this.showStoreDetail(this.storesByZone[0].stores[0]);
         }
       },
