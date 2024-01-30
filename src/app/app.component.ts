@@ -2,13 +2,11 @@
 import { NavigationEnd, Router } from '@angular/router';
 import {
   isPlatformBrowser,
-  ViewportScroller,
-  DOCUMENT,
+  ViewportScroller
 } from '@angular/common';
 import {
   AfterViewInit,
   Component,
-  ElementRef,
   Inject,
   NgZone,
   OnInit,
@@ -52,7 +50,6 @@ export class AppComponent implements AfterViewInit, OnInit {
   isOmni!: boolean;
   private readonly webChatScript = environment.webChatScript;
   constructor(
-    @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: Object,
     public router: Router,
     private zone: NgZone,
@@ -107,40 +104,19 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         if (event.url.includes('/carro-compra')) {
-          this.document.body.classList.remove('home');
-          this.document.body.classList.remove('pdp');
-          this.document.body.classList.add('carrito');
-          this.document.body.classList.remove('categoria');
+          this.updateClasses('carrito')
         } else if (event.url.includes('/catalogos')) {
-          this.document.body.classList.remove('home');
-          this.document.body.classList.remove('pdp');
-          this.document.body.classList.remove('carrito');
-          this.document.body.classList.remove('categoria');
+          this.updateClasses()
         } else if (event.url.includes('/categoria')) {
-          this.document.body.classList.remove('home');
-          this.document.body.classList.remove('pdp');
-          this.document.body.classList.remove('carrito');
-          this.document.body.classList.add('categoria');
+          this.updateClasses('categoria')
         } else if (this.sessionService.isB2B()) {
-          this.document.body.classList.remove('home');
-          this.document.body.classList.remove('pdp');
-          this.document.body.classList.remove('carrito');
-          this.document.body.classList.remove('categoria');
+          this.updateClasses()
         } else if (event.url.includes('/ficha')) {
-          this.document.body.classList.remove('home');
-          this.document.body.classList.remove('categoria');
-          this.document.body.classList.remove('carrito');
-          this.document.body.classList.add('pdp');
+          this.updateClasses('pdp')
         } else if (event.url.includes('/especial/')) {
-          this.document.body.classList.add('home');
-          this.document.body.classList.remove('categoria');
-          this.document.body.classList.remove('carrito');
-          this.document.body.classList.remove('pdp');
+          this.updateClasses('home')
         } else {
-          this.document.body.classList.add('home');
-          this.document.body.classList.remove('pdp');
-          this.document.body.classList.remove('carrito');
-          this.document.body.classList.remove('categoria');
+          this.updateClasses('home')
         }
         if (event.url.includes('/omni-forma-de-pago')) {
           this.isOmni = true;
@@ -169,24 +145,20 @@ export class AppComponent implements AfterViewInit, OnInit {
     });
   }
 
+  private updateClasses(nameClass?:string){
+    let arr = ['home','categoria','carrito','pdp']
+    const body = this.renderer.selectRootElement('body',true);
+    //quitar clases
+    arr.forEach((x:string)=>{
+      this.renderer.removeClass(body,x)
+    })
+    //agregar clase
+    if(nameClass) this.renderer.addClass(body,nameClass)
+  }
+
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.geolocationService.initGeolocation();
-
-      this.zone.runOutsideAngular(() => {
-        setTimeout(() => {
-          const preloader = document.querySelector('.site-preloader');
-          if (preloader) {
-            preloader.addEventListener('transitionend', (event: any) => {
-              if (event.propertyName === 'opacity') {
-                preloader.remove();
-              }
-            });
-            preloader.classList.add('site-preloader__fade');
-          }
-        }, 300);
-      });
-
       this.onChangeStore();
     } else {
       // Esto se carga en el movil.
@@ -222,7 +194,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   showChatButton() {
     const token = this.getChatToken(this.webChatScript);
     const tokenWithSuffix = token + '_startButtonContainer';
-    const element = document.getElementById(tokenWithSuffix);
+    const element = this.renderer.selectRootElement(tokenWithSuffix,true)
     if (element) {
       this.renderer.setStyle(element, 'display', 'block');
     } else {
@@ -233,7 +205,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   hideChatButton() {
     const token = this.getChatToken(this.webChatScript);
     const tokenWithSuffix = token + '_startButtonContainer';
-    const element = document.getElementById(tokenWithSuffix);
+    const element = this.renderer.selectRootElement(tokenWithSuffix,true)
     if (element) {
       this.renderer.setStyle(element, 'display', 'none');
     }
