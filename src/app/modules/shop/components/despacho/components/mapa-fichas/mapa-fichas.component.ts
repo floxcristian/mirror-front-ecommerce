@@ -50,21 +50,8 @@ export class MapaFichasComponent implements OnInit {
   }
 
   updatePosition({ lat, lng }: IStore): void {
-    this.center = this.formatCoordinates(lat, lng);
+    this.center = { lat, lng };
     this.markerPositions = [];
     this.markerPositions.push(this.center);
-  }
-
-  private formatCoordinates(lat: number, lng: number) {
-    const getDivisor = (num: number) => {
-      const digits = Math.abs(num).toString().length;
-      return Math.pow(10, digits - 2);
-    };
-    const latDivisor = getDivisor(lat);
-    const lngDivisor = getDivisor(lng);
-    return {
-      lat: lat / latDivisor,
-      lng: lng / lngDivisor,
-    };
   }
 }

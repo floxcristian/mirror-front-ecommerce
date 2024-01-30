@@ -28,5 +28,5 @@ export const environment = {
   gmapScript:
     'https://maps.googleapis.com/maps/api/js?key=AIzaSyD_HuwF5F8X8fOSR_1Ai_hFT115caUq4vI&libraries=places&callback=Function.prototype',
   webChatScript:
-    'https://webchat-cls3-cl.i6.inconcertcc.com/v3/click_to_chat?token=khosaijocsooaschisaocih',
+    'https://webchat-cls3-cl.i6.inconcertcc.com/v3/click_to_chat?token=6436ADDF32C3F2240B1FC31C54D6AB3B',
 };
