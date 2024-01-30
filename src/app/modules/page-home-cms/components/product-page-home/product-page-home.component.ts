@@ -64,7 +64,7 @@ export class ProductPageHomeComponent implements OnInit {
     dots: true,
     loop: true,
     autoplay: false,
-
+    lazyLoad: true,
     responsiveClass: true,
     autoplayTimeout: 4000,
     responsive: {
@@ -76,6 +76,7 @@ export class ProductPageHomeComponent implements OnInit {
     },
   };
   carouselOptions3 = {
+    lazyLoad: true,
     nav: false,
     autowidth: true,
     responsiveClass: true,
@@ -86,6 +87,7 @@ export class ProductPageHomeComponent implements OnInit {
   };
 
   carouselOptions2 = {
+    lazyLoad: true,
     nav: false,
     autowidth: true,
     responsiveClass: true,

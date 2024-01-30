@@ -38,6 +38,7 @@ export class Lista_productoComponent implements OnInit {
     }
   }
   carouselOptions = {
+    lazyLoad: true,
     items: 5,
     nav: true,
     navText: [
