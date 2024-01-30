@@ -34,7 +34,6 @@
                   width="100%"
                   [options]="options"
                   [center]="center"
-                  [zoom]="zoom"
                 >
                   @for (position of markerPositions; track position) {
                   <map-marker
@@ -102,14 +101,14 @@
   </div>
 
   <div class="row justify-content-center my-5">
-    @for (stores of orderedStores; track $index) {
+    @for (zone of storesByZone; track $index) {
     <div class="col-md-4 card-group">
       <div class="card p-0">
         <div class="card-header bg-primary text-white text-center py-2 px-1">
-          <h6>{{ stores.title }}</h6>
+          <h6>{{ zone.title }}</h6>
         </div>
         <div class="card-body pt-1">
-          @for (store of stores.stores; track $index) {
+          @for (store of zone.stores; track $index) {
           <div
             (click)="showStoreDetail(store, true)"
             class="pointer box text-start"

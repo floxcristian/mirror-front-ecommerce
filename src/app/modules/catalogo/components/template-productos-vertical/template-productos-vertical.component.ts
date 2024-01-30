@@ -8,14 +8,13 @@ import {
 } from '@angular/core';
 import { CartService } from '@core/services-v2/cart.service';
 
-
 @Component({
   selector: 'app-template-productos-vertical',
   templateUrl: './template-productos-vertical.component.html',
   styleUrls: ['./template-productos-vertical.component.scss'],
 })
 export class TemplateProductosVerticalComponent implements OnChanges {
-  @Input() objeto:any
+  @Input() objeto: any;
   @Input() innerWidth!: number;
   @Input() page: number = 0;
   @Input() tipoCatalogo!: string;
@@ -26,8 +25,8 @@ export class TemplateProductosVerticalComponent implements OnChanges {
   constructor(
     private cd: ChangeDetectorRef,
     //ServicesV2
-    private readonly cartService:CartService
-    ) {}
+    private readonly cartService: CartService
+  ) {}
 
   ngOnInit(): void {
     console.log('tipoCatalogo', this.tipoCatalogo);
@@ -38,18 +37,21 @@ export class TemplateProductosVerticalComponent implements OnChanges {
     this.cambiarImg = resto == 0 ? false : true;
   }
 
-  async addToCart(producto: any) {
+  async addToCart(producto: any): Promise<void> {
     producto.images = {
       '150': [`https://images.implementos.cl/img/250/${producto.sku}-1.jpg`],
     };
     if (this.addingToCart) {
       return;
     }
-    producto = await this.cartService.setProducOrigin_cartDinamyc(producto,'vertical')
+    producto = await this.cartService.setProducOrigin_cartDinamyc(
+      producto,
+      'vertical'
+    );
     this.addingToCart = true;
-    this.cartService.add(producto,1).finally(() =>{
+    this.cartService.add(producto, 1).finally(() => {
       this.addingToCart = false;
       this.cd.markForCheck();
-    })
+    });
   }
 }

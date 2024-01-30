@@ -25,6 +25,8 @@ import {
   CarouselDesktopOptions,
   CarouselMobileOptions,
 } from './constants/carousel-config';
+// Pipes
+import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
@@ -38,6 +40,8 @@ import {
   IComparedAttribute,
   IComparedProduct,
 } from '@core/services-v2/product/models/formatted-product-compare-response.interface';
+import { IShoppingCartProductOrigin } from '@core/models-v2/cart/shopping-cart.interface';
+import { INumberInputAction } from './models/number-input-action.interface';
 // Services
 import { RootService } from '../../../../shared/services/root.service';
 import { SeoService } from '../../../../shared/services/seo/seo.service';
@@ -49,13 +53,9 @@ import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 import { BreadcrumbUtils } from './services/breadcrumb-utils.service';
-// Pipes
-import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
-import { INumberInputAction } from './models/number-input-action.interface';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
-import { ProductPriceApiService } from '@core/services-v2/product-price/product-price.service';
 import { CartV2Service } from '@core/services-v2/cart/cart.service';
-import { IShoppingCartProductOrigin } from '@core/models-v2/cart/shopping-cart.interface';
+import { ProductPriceApiService } from '@core/services-v2/product-price/product-price.service';
 
 declare let fbq: any;
 

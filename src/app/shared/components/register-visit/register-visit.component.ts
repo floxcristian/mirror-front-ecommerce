@@ -180,7 +180,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     };
   }
 
-  login() {
+  login(): void {
     const user = this.sessionStorage.get();
 
     let userIdOld: any = null;

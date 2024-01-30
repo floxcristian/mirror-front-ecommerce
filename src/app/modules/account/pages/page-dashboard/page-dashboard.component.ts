@@ -1,17 +1,21 @@
+// Angular
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
-import { Data } from '../../../../shared/components/card-dashboard-no-chart/card-dashboard-no-chart.component';
-import { ChartConfiguration, ChartOptions } from 'chart.js';
-import { Context } from 'chartjs-plugin-datalabels';
-import { isVacio } from '../../../../shared/utils/utilidades';
 import { isPlatformBrowser } from '@angular/common';
-import { SessionService } from '@core/services-v2/session/session.service';
+// Libs
+import { ToastrService } from 'ngx-toastr';
+import { Context } from 'chartjs-plugin-datalabels';
+import { ChartConfiguration, ChartOptions } from 'chart.js';
+// Models
 import { ISession } from '@core/models-v2/auth/session.interface';
-import { CustomerSaleService } from '@core/services-v2/customer-sale/customer-sale.service';
 import {
   ISalesBySbu,
   ISalesMonth,
 } from '@core/services-v2/customer-sale/models/customer-sale.interface';
+import { Data } from '../../../../shared/components/card-dashboard-no-chart/card-dashboard-no-chart.component';
+// Services
+import { isVacio } from '../../../../shared/utils/utilidades';
+import { SessionService } from '@core/services-v2/session/session.service';
+import { CustomerSaleService } from '@core/services-v2/customer-sale/customer-sale.service';
 import { CustomerService } from '@core/services-v2/customer.service';
 
 @Component({
@@ -22,7 +26,7 @@ import { CustomerService } from '@core/services-v2/customer.service';
 export class PageDashboardComponent {
   // graficos
   chartHistorySale: any;
-  usuario: ISession;
+  session: ISession;
 
   ventaMes: any;
   detalleVenta: any;
@@ -56,14 +60,12 @@ export class PageDashboardComponent {
       ? window.innerWidth
       : 900;
 
-    this.usuario = this.sessionService.getSession();
-    if (['supervisor', 'comprador'].includes(this.usuario.userRole))
-      this.isB2B = true;
+    this.session = this.sessionService.getSession();
+    this.isB2B = this.sessionService.isB2B();
     this.loadChart();
   }
 
   loadChart() {
-    const rut = this.usuario.documentId;
     this.customerSaleService.getLastwoYearsSalesByMonth(this.anio).subscribe({
       next: (res) => {
         const data: ISalesMonth[] = res.data;
@@ -116,7 +118,7 @@ export class PageDashboardComponent {
           this.barEstado = this.ESTADO.ERROR;
         },
       });
-    this.customerService.getCustomerCredit(rut).subscribe({
+    this.customerService.getCustomerCredit(this.session.documentId).subscribe({
       next: (res) => {
         const utilizado = res.used;
         const asignado = res.assigned;

@@ -1,7 +1,7 @@
 // Angular
 import { Component, Input } from '@angular/core';
 //Models
-import { ICollapsableStore } from '../../pages/page-stores/collapsable-store.interface';
+import { ICollapsableStore } from '../../pages/page-stores/models/collapsable-store.interface';
 import { ConfigService } from '@core/config/config.service';
 import { IConfig } from '@core/config/config.interface';
 

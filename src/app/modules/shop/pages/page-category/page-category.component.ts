@@ -61,7 +61,7 @@ export class PageCategoryComponent implements OnInit {
   removableFilters: Params = [];
   removableCategory: ICategory[] = [];
   breadcrumbs: any[] = [];
-  productosTemp = [];
+  productosTemp: string[] = [];
   // Paginacion
   totalPaginas: number = 0;
   PagDesde: number = 0;
@@ -418,7 +418,7 @@ export class PageCategoryComponent implements OnInit {
 
   private cargarCatalogoProductos(
     parametros: any,
-    texto: any,
+    texto: string,
     scroll = false
   ): void {
     this.parametrosBusqueda = parametros;
@@ -442,19 +442,13 @@ export class PageCategoryComponent implements OnInit {
       this.filtrosOculto = false;
     }
 
-    // verificamos si esta la session iniciada
-    // FIXME: es necesario de nuevo?
-    const user = this.sessionService.getSession();
-    if (user) {
-      this.parametrosBusqueda.documentId = user.documentId;
-      if (this.preferences && this.preferences.deliveryAddress) {
-        this.parametrosBusqueda.location = this.preferences.deliveryAddress
-          .city
-          ? this.preferences.deliveryAddress.city
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-          : '';
-      }
+    this.parametrosBusqueda.documentId = this.session.documentId;
+    if (this.preferences && this.preferences.deliveryAddress) {
+      this.parametrosBusqueda.location = this.preferences.deliveryAddress.city
+        ? this.preferences.deliveryAddress.city
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+        : '';
     }
 
     if (!scroll) {
@@ -468,7 +462,7 @@ export class PageCategoryComponent implements OnInit {
     this.articleService.search(parametros).subscribe({
       next: (res) => {
         console.log('articleService.search: ', parametros);
-        this.SetProductos(res, texto, scroll);
+        this.SetProductos(res, scroll);
       },
       error: (err) => {
         console.log(err);
@@ -476,11 +470,7 @@ export class PageCategoryComponent implements OnInit {
     });
   }
 
-  private SetProductos(
-    r: ISearchResponse,
-    texto: string,
-    scroll = false
-  ): void {
+  private SetProductos(r: ISearchResponse, scroll = false): void {
     this.cargandoCatalogo = false;
     this.cargandoProductos = false;
 
@@ -504,7 +494,7 @@ export class PageCategoryComponent implements OnInit {
       if (this.products.length == 0) this.products = r.articles;
     }
     if (this.products.length == 0) this.breadcrumbs = [];
-    this.formatoPaginacion(r, texto);
+    this.formatoPaginacion(r);
     this.filters = [];
     this.formatCategories(r.categoriesTree, r.levelFilter);
     this.formatFilters(r.filters);
@@ -548,7 +538,7 @@ export class PageCategoryComponent implements OnInit {
     }
   }
 
-  private formatoPaginacion(r: ISearchResponse, texto: any) {
+  private formatoPaginacion(r: ISearchResponse): void {
     const pagina = r.page;
     this.PagDesde = pagina === 1 ? 1 : (pagina - 1) * r.pageSize + 1;
     this.PagHasta = pagina * r.pageSize;

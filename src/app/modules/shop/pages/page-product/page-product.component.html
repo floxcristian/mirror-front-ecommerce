@@ -212,8 +212,8 @@
                       <div
                         class="col-12 marcaP text-center"
                         *ngIf="
-                          item.stockSummary.branchStock === 0 &&
-                          item.stockSummary.companyStock === 0
+                          !item.stockSummary.branchStock &&
+                          !item.stockSummary.companyStock
                         "
                       >
                         <div class="no_stock">
