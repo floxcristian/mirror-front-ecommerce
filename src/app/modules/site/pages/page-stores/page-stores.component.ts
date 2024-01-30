@@ -54,7 +54,6 @@ export class PageStoresComponent {
       .then(() => (this.isMapLoaded = true));
     this.geolocationService.stores$.subscribe({
       next: (stores) => {
-        console.log('stores: ', stores);
         this.storesByZone = StoreUtilService.getOrderedStoresByZone(stores);
         if (this.storesByZone?.[0].stores.length) {
           this.showStoreDetail(this.storesByZone[0].stores[0]);
@@ -83,12 +82,8 @@ export class PageStoresComponent {
    * Centrar mapa y actualizar marcador.
    * @param store
    */
-  private updatePosition(store: IStore): void {
-    const coordinates = StoreUtilService.formatCoordinates(
-      store.lat,
-      store.lng
-    );
-    this.center = coordinates;
-    this.markerPositions = [coordinates];
+  private updatePosition({ lat, lng }: IStore): void {
+    this.center = { lat, lng };
+    this.markerPositions = [{ lat, lng }];
   }
 }
