@@ -460,21 +460,10 @@
                 </div>
 
                 <div class="row">
-                  <div
-                    class="col-sm-12"
-                    style="
-                      padding-left: 32px;
-                      padding-right: 32px;
-                      margin-top: 10px;
-                    "
-                  >
-                    <!-- FIXME: comentado temporalmente para compilar
-                    <app-map
-                      *ngIf="tienda && showMap"
-                      [infoWindowContent]="tienda.address"
-                      [tienda]="tienda"
-                    >
-                    </app-map> -->
+                  <div class="col-sm-12" style="padding: 0 32px; margin-top: 10px;">
+                    @if(tienda && showMap){
+                      <app-map [autocompletado]="false" [coordinates]="{ lat:tienda.lat, lng: tienda.lng} "/>
+                    }
                   </div>
                 </div>
                 <br />

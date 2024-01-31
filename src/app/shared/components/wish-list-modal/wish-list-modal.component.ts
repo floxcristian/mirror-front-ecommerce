@@ -1,5 +1,5 @@
 // Angular
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Renderer2 } from '@angular/core';
 // Libs
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
@@ -32,6 +32,7 @@ export class WishListModalComponent implements OnInit {
   constructor(
     public ModalRef: BsModalRef,
     private toast: ToastrService,
+    private renderer:Renderer2,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly wishlistStorage: WishlistStorageService,
@@ -67,14 +68,14 @@ export class WishListModalComponent implements OnInit {
   }
 
   ingresaNombre(): void {
-    document.querySelector('.validacion')?.classList.remove('d-block');
-    document.querySelector('.validacion')?.classList.add('d-none');
+      this.renderer.removeClass(this.renderer.selectRootElement('.validacion',true),'d-block')
+      this.renderer.addClass(this.renderer.selectRootElement('.validacion',true),'d-none')
   }
 
   createWishlist(): void {
     if (!this.nombre.length) {
-      document.querySelector('.validacion')?.classList.remove('d-none');
-      document.querySelector('.validacion')?.classList.add('d-block');
+      this.renderer.removeClass(this.renderer.selectRootElement('.validacion',true),'d-none')
+      this.renderer.addClass(this.renderer.selectRootElement('.validacion',true),'d-block')
       return;
     }
     this.wishlistApiService
@@ -101,7 +102,8 @@ export class WishListModalComponent implements OnInit {
 
   // agrega o elimina SKU de una lista
   async selectWishlist(wishlist: IWishlist) {
-    const objHTML: any = document.getElementById(`ID-${wishlist.id}`);
+    let id = `ID-${wishlist.id}`
+    const objHTML: any = this.renderer.selectRootElement(`#${id}`,true);
 
     if (objHTML.checked) {
       this.wishlistApiService
