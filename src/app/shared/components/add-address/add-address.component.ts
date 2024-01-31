@@ -22,9 +22,9 @@ import { AddressType } from '@core/enums/address-type.enum';
   styleUrls: ['./add-address.component.scss'],
 })
 export class AddAddressComponent implements OnInit {
-  @Output() public respuesta = new EventEmitter<any>();
-  @Output() public respuestaInvitado = new EventEmitter<any>();
-  @Input() public invitado: boolean = false;
+  @Output() respuesta = new EventEmitter<any>();
+  @Output() respuestaInvitado = new EventEmitter<any>();
+  @Input() invitado: boolean = false;
 
   cities!: ICity[];
   localidades!: any[];

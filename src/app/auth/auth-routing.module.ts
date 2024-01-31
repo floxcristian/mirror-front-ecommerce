@@ -27,18 +27,12 @@ const routes: Routes = [
   {
     path: 'carro-compra',
     component: LayoutComponent,
-    data: {
-      headerLayout: 'classic',
-    },
     loadChildren: () =>
       import('../modules/cart/page-cart.module').then((m) => m.ShopModule),
   },
   {
     path: 'inicio',
     component: LayoutComponent,
-    data: {
-      headerLayout: 'classic',
-    },
     children: [
       {
         path: '',
@@ -58,9 +52,6 @@ const routes: Routes = [
   {
     path: 'especial',
     component: LayoutComponent,
-    data: {
-      headerLayout: 'classic',
-    },
     children: [
       {
         path: '**',
@@ -71,9 +62,6 @@ const routes: Routes = [
   {
     path: 'mi-cuenta',
     component: LayoutComponent,
-    data: {
-      headerLayout: 'classic',
-    },
     children: [
       {
         path: '',
@@ -88,9 +76,6 @@ const routes: Routes = [
   {
     path: 'sitio',
     component: LayoutComponent,
-    data: {
-      headerLayout: 'classic',
-    },
     children: [
       {
         path: '',
@@ -111,9 +96,6 @@ const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    data: {
-      headerLayout: 'classic',
-    },
     children: [
       {
         path: 'not-found',

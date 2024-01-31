@@ -5,7 +5,6 @@ import {
   Inject,
   AfterViewInit,
   HostListener,
-  Input,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
@@ -20,9 +19,7 @@ import { CanonicalService } from '../../shared/services/canonical.service';
   templateUrl: './b2c.component.html',
 })
 export class B2cComponent implements AfterViewInit {
-  headerLayout!: 'classic' | 'compact';
   loadingPage = true;
-  @Input() tipo!: string;
 
   innerWidth: number;
   constructor(
@@ -37,9 +34,6 @@ export class B2cComponent implements AfterViewInit {
       ? window.innerWidth
       : 900;
 
-    this.route.data.subscribe(
-      (data) => (this.headerLayout = data['headerLayout'])
-    );
     this.root.path = this.router
       .createUrlTree(['./'], { relativeTo: route })
       .toString();
@@ -73,7 +67,7 @@ export class B2cComponent implements AfterViewInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
+  onResize() {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;

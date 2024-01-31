@@ -24,12 +24,10 @@ import { StorageKey } from '@core/storage/storage-keys.enum';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements AfterViewInit {
-  @Input() layout: 'classic' | 'compact' | any = 'classic';
-  @Input() tipo: 'b2b' | 'b2c' | any = 'b2c';
   logoSrc = environment.logoSrc;
   innerWidth: any;
   @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
+  onResize() {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;

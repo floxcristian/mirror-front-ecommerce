@@ -13,6 +13,7 @@ import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service
 import { ConfigService } from '@core/config/config.service';
 import { IConfig } from '@core/config/config.interface';
 import { StorageKey } from '@core/storage/storage-keys.enum';
+import { SessionService } from '@core/services-v2/session/session.service';
 
 @Component({
   selector: 'app-header-topbar',
@@ -20,13 +21,13 @@ import { StorageKey } from '@core/storage/storage-keys.enum';
   styleUrls: ['./topbar.component.scss'],
 })
 export class TopbarComponent implements OnInit {
-  @Input() tipo: any = 'b2c'; // 'b2b' | 'b2c'
   @Input() desde: string = '';
   @Input() logo: any;
   usuario: ISession | null;
   logoSrc = environment.logoSrc;
-  config!: IConfig;
+  config: IConfig;
   menub2c!: boolean;
+  isB2B: boolean;
   constructor(
     public currencyService: CurrencyService,
     private router: Router,
@@ -34,11 +35,12 @@ export class TopbarComponent implements OnInit {
     // Services V2
     private readonly sessionStorage: SessionStorageService,
     private readonly authStateSession: AuthStateServiceV2,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly sessionService: SessionService
   ) {
     this.config = this.configService.getConfig();
     this.usuario = this.sessionStorage.get();
-
+    this.isB2B = this.sessionService.isB2B();
     this.authStateSession.session$.subscribe((user) => {
       this.usuario = user;
     });

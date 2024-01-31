@@ -50,15 +50,15 @@
   <div
     class="topbar__container container d-flex align-items-center justify-content-center"
   >
-    @if (tipo === 'b2c') {
-    <div class="topbar__row">
-      <i class="fas fa-truck fa-lg me-2"></i>Por compras mayores a $60.000
-      despacho GRATIS
-    </div>
-    } @else{
+    @if (isB2B) {
     <div class="topbar__row">
       <i class="fas fa-truck fa-lg me-2"></i>
       Despacho GRATIS
+    </div>
+    } @else{
+    <div class="topbar__row">
+      <i class="fas fa-truck fa-lg me-2"></i>Por compras mayores a $60.000
+      despacho GRATIS
     </div>
     }
   </div>

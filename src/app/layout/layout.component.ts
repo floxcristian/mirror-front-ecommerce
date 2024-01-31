@@ -4,33 +4,26 @@ import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Params } from '@angular/router';
 // Services
 import { LocalStorageService } from '../core/modules/local-storage/local-storage.service';
-import { SessionService } from '@core/services-v2/session/session.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
 
 @Component({
   selector: 'app-layout',
-  templateUrl: './layout.component.html',
+  template: `<app-b2c />`,
 })
 export class LayoutComponent implements OnInit {
   fbclid: string | undefined = '';
   gclid: string = '';
   utm_campaign: string | undefined = '';
-  tipo: string = 'b2c';
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly localS: LocalStorageService,
-    @Inject(PLATFORM_ID) private platformId: Object,
-    // Services V2
-    private readonly sessionService: SessionService
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
     this.scrollTop();
     this.getQueryParams();
-    if (this.sessionService.isB2B()) {
-      this.tipo = 'b2b';
-    }
   }
 
   /**
