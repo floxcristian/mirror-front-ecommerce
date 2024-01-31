@@ -48,6 +48,7 @@ export class MapComponent implements OnInit, OnChanges {
   @Output() public clearAdress = new EventEmitter<any>();
   @Output() public setDireccion = new EventEmitter<any>();
   @ViewChild(GoogleMap, { static: false }) map!: GoogleMap;
+  @Input() coordinates!: google.maps.LatLngLiteral;
 
   autocomplete!: google.maps.places.Autocomplete;
   isMapLoaded!: boolean;
@@ -61,8 +62,13 @@ export class MapComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.scriptService.loadScript(environment.gmapScript).then(() => {
       this.buildMap();
-      this.geocodePosition();
       this.isMapLoaded = true;
+      if (this.coordinates) {
+        this.updateMapByCoordinates(this.coordinates);
+        this.showSearchBar = false;
+      } else {
+        this.geocodePosition();
+      }
     });
   }
 
@@ -192,4 +198,17 @@ export class MapComponent implements OnInit, OnChanges {
     this.searchElementRef.nativeElement.value = '';
     this.clearAdress.emit();
   }
+
+    /**
+   * Actualiza el mapa centrando en las coordenadas especificadas y coloca un marcador en esa ubicación.
+   * @param coordinates Objeto google.maps.LatLngLiteral que contiene las propiedades 'lat' y 'lng' para latitud y longitud.
+   * @return void No retorna ningún valor.
+   */
+    updateMapByCoordinates(coordinates: google.maps.LatLngLiteral): void {
+      const { lat, lng } = coordinates;
+      const newCenter: google.maps.LatLngLiteral = { lat, lng };
+      this.center = newCenter;
+      this.map.panTo(newCenter);
+      this.markerPositions = [newCenter];
+    }
 }
