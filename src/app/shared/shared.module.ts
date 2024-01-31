@@ -62,7 +62,6 @@ import { AngularEmailAutocompleteComponent } from './components/angular-email-au
 import { FiltroMagicoModule } from './components/filtro-magico/filtro-magico.module';
 import { ProductoSelectBusquedaComponent } from './components/producto-select-busqueda/producto-select-busqueda.component';
 import { AgregarListaProductosUnitariaModalComponent } from './components/agregar-lista-productos-unitaria-modal/agregar-lista-productos-unitaria-modal.component';
-import { MenuCategoriaComponent } from './components/menu-categoria/menu-categoria.component';
 import { ShareButtonComponent } from './components/share-button/share-button.component';
 import { ProductRatingComponent } from './components/product-rating/product-rating.component';
 import { AddCommentModalComponent } from './components/add-comment-modal/add-comment-modal.component';
@@ -125,7 +124,6 @@ const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
     AngularEmailAutocompleteComponent,
     ProductoSelectBusquedaComponent,
     AgregarListaProductosUnitariaModalComponent,
-    MenuCategoriaComponent,
     ShareButtonComponent,
     ProductRatingComponent,
     AddCommentModalComponent,
@@ -209,7 +207,6 @@ const BOOSTRAP_MODULES = [NgbPopoverModule, NgbNavModule];
     NgSelectModule,
     CarouselModule,
     FiltroMagicoModule,
-    MenuCategoriaComponent,
     BlockHeaderComponent,
     RelativeTimePipe,
   ],
