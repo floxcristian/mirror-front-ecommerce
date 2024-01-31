@@ -1,6 +1,9 @@
+// Angular
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+// Models
+import { IBlog } from '@core/models-v2/cms/blog-response.interface';
 // Services
 import { CmsService } from '@core/services-v2/cms.service';
 
@@ -10,66 +13,61 @@ import { CmsService } from '@core/services-v2/cms.service';
   styleUrls: ['./detail-news.component.scss'],
 })
 export class DetailNewsComponent implements OnInit {
-  noticia!: any; //IBlog;
+  post!: IBlog;
+  content!: SafeHtml;
+
   constructor(
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
-    private renderer:Renderer2,
-    //ServicesV2
-    private readonly cmsService:CmsService
+    private readonly renderer: Renderer2,
+    private readonly cmsService: CmsService
   ) {}
 
   ngOnInit(): void {
     const postId = this.route.snapshot.params['id'];
     this.cmsService.getPostDetail(postId).subscribe({
-      next: (res) => {
-        console.log('res: ', res);
-        this.noticia = res;
-        this.noticia.text = this.noticia.text.replace(
-          /<h4>/g,
-          `<h4 style="font-size:19px !important">`
-        );
-        this.noticia.text = this.generarIframe();
+      next: (post) => {
+        this.post = post;
+        this.content = this.formatHtmlContent(this.post.text);
       },
       error: (err) => {
         console.log(err);
       },
     });
   }
-  generarIframe() {
-    const embed = this.noticia.text;
-    const parentEmbed = this.stringToHTML(embed);
 
-    let oldIframe:any = parentEmbed.querySelectorAll('oembed')
-    oldIframe = Array.from(oldIframe);
-
-    for (const i in oldIframe) {
-      //Get the url from oembed tag
-      let url = oldIframe[i].getAttribute('url');
-      //Replace 'watch?v' with 'embed/'
-      url = url.replace('watch?v=', 'embed/');
-      url = url.split('&t=5');
-
-      //Create a iframe tag
-      const newIframe = this.renderer.createElement('iframe')
-      this.renderer.setAttribute(newIframe, 'width', '100%');
-      this.renderer.setAttribute(newIframe, 'height', '500px');
-      this.renderer.setAttribute(newIframe, 'allowFullScreen', '');
-      this.renderer.setAttribute(newIframe, 'frameBorder', '0');
-      if (url) {
-        this.renderer.setAttribute(newIframe, 'src', url[0]);
-      }
-      // replace oldIframe with newIframe
-      oldIframe[i].parentNode.replaceChild(newIframe, oldIframe[i]);
-    }
-
-    const contentToRender = parentEmbed.outerHTML;
-    return this.sanitizer.bypassSecurityTrustHtml(contentToRender);
+  private formatHtmlContent(html: string) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    let htmlContent = this.replaceOembedElements(doc);
+    return this.sanitizer.bypassSecurityTrustHtml(htmlContent);
   }
 
-  stringToHTML(str: string):HTMLElement {
-    const domContainer = this.renderer.createElement('span');
-    this.renderer.setProperty(domContainer,'innerHTML',str)
-    return domContainer;
+  /**
+   * Reemplazar elementos oembed por iframes.
+   * @param doc
+   * @returns
+   */
+  private replaceOembedElements(doc: Document): string {
+    const oembedElements = doc.querySelectorAll('oembed');
+    oembedElements.forEach((oembedElement) => {
+      // Obtener url válida para el iframe.
+      const url = oembedElement.getAttribute('url') || '';
+      const newUrl = url.replace('watch?v=', 'embed/').split('&t=')[0];
+
+      // Crear iframe y setear atributos.
+      const iframeElement = this.renderer.createElement('iframe');
+      this.renderer.setAttribute(iframeElement, 'src', newUrl);
+      this.renderer.setAttribute(iframeElement, 'width', '100%');
+      this.renderer.setAttribute(iframeElement, 'height', '500px');
+      this.renderer.setAttribute(iframeElement, 'allowFullScreen', '');
+      this.renderer.setAttribute(iframeElement, 'frameBorder', '0');
+
+      // Reemplazar el elemento oembed con el nuevo elemento iframe.
+      if (oembedElement.parentNode) {
+        oembedElement.parentNode.replaceChild(iframeElement, oembedElement);
+      }
+    });
+    return doc.body.innerHTML;
   }
 }
