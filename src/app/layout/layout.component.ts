@@ -1,5 +1,5 @@
 // Angular
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID, Renderer2 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Params } from '@angular/router';
 // Services
@@ -18,7 +18,8 @@ export class LayoutComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly localS: LocalStorageService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private renderer:Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -31,8 +32,10 @@ export class LayoutComponent implements OnInit {
    */
   scrollTop(): void {
     if (isPlatformBrowser(this.platformId)) {
-      document.body.scrollTop = 0; // Safari
-      document.documentElement.scrollTop = 0; // Other
+      const body_e = this.renderer.selectRootElement('body',true) // safari
+      this.renderer.setProperty(body_e,'scrollTop',0)
+      const html_e = this.renderer.selectRootElement('html',true) //other
+      this.renderer.setProperty(html_e,'scrollTop',0)
     }
   }
 
