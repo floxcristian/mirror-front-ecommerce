@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 // Libs
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 // Models
 import {
   IElement1,
@@ -38,7 +37,6 @@ export class ProductPageHomeComponent implements OnInit {
   refresh = false;
   refresh2 = false;
   cargando = true;
-  bsModalRef?: BsModalRef;
   producto_selecionado!: IElement1;
   index_seleccionado = 0;
   sPosition = 0;
@@ -47,7 +45,6 @@ export class ProductPageHomeComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private modalService: BsModalService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.screenWidth = isPlatformBrowser(this.platformId)
