@@ -18,7 +18,6 @@ export class DetailNewsComponent implements OnInit {
     //ServicesV2
     private readonly cmsService:CmsService
   ) {}
-  noticia: any = {};
 
   ngOnInit(): void {
     const postId = this.route.snapshot.params['id'];
