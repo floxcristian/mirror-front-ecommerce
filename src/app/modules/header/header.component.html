@@ -1,5 +1,5 @@
 <div class="site-header" *ngIf="Hidebar()">
-  <app-header-topbar logo="0"></app-header-topbar>
+  <app-header-topbar />
 
   <div
     class="d-flex search-group-bar align-items-center"
@@ -31,5 +31,5 @@
 </div>
 
 <div class="site-header" *ngIf="!Hidebar()">
-  <app-header-topbar logo="0" [desde]="getDesde()"></app-header-topbar>
+  <app-header-topbar [desde]="getDesde()" />
 </div>
