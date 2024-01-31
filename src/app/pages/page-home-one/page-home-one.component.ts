@@ -11,22 +11,13 @@ import { brandsB2c } from '../../../data/shop-brands-b2c';
 })
 export class PageHomeOneComponent implements OnInit {
   brandsB2c = brandsB2c;
-  innerWidth: number;
   marcas = false;
   galeria = false;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    this.innerWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-  }
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   ngOnInit(): void {
     this.cargaParcializada();
-  }
-
-  onResize(event: any) {
-    this.innerWidth = event.target.innerWidth;
   }
 
   cargaParcializada() {

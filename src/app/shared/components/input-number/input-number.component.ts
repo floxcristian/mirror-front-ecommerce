@@ -41,7 +41,6 @@ export class InputNumberComponent implements ControlValueAccessor {
     readonly: false,
   };
   saveTimer: any;
-  innerWidth!: number;
   @Output() quantity: EventEmitter<any> = new EventEmitter();
 
   @HostBinding('class.input-number') class = true;

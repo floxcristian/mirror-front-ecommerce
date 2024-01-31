@@ -1,13 +1,5 @@
 // Angular
-import {
-  AfterViewInit,
-  Component,
-  Inject,
-  Input,
-  PLATFORM_ID,
-} from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { HostListener } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { Router } from '@angular/router';
 // Env
 import { environment } from '@env/environment';
@@ -25,19 +17,8 @@ import { StorageKey } from '@core/storage/storage-keys.enum';
 })
 export class HeaderComponent implements AfterViewInit {
   logoSrc = environment.logoSrc;
-  innerWidth: any;
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    this.innerWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-  }
 
-  constructor(
-    private route: Router,
-    private localS: LocalStorageService,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
+  constructor(private route: Router, private localS: LocalStorageService) {
     const buscadorB2B = this.localS.get(StorageKey.buscadorB2B);
     if (!buscadorB2B) {
       const data: BuscadorB2B = {

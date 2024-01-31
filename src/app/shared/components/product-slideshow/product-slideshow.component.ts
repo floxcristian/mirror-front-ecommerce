@@ -1,14 +1,6 @@
 // Angular
-import {
-  Component,
-  OnInit,
-  Inject,
-  AfterViewInit,
-  OnDestroy,
-  PLATFORM_ID,
-} from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { isPlatformBrowser } from '@angular/common';
 // Libs
 import { ToastrService } from 'ngx-toastr';
 // Rxjs
@@ -46,7 +38,6 @@ export class ProductSlideshowComponent
   despachoCliente!: Subscription;
   layout = 'grid-lg';
   window = window;
-  innerWidth: number;
   carouselOptions: OwlOptions = {
     lazyLoad: true,
     items: 5,
@@ -74,7 +65,6 @@ export class ProductSlideshowComponent
   constructor(
     public toast: ToastrService,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
@@ -83,11 +73,7 @@ export class ProductSlideshowComponent
     private readonly geolocationStorage: GeolocationStorageService,
     private readonly customerPreferenceService: CustomerPreferenceService,
     private readonly customerAddressService: CustomerAddressService
-  ) {
-    this.innerWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-  }
+  ) {}
 
   ngOnInit() {
     this.ruta = this.router.url === '/inicio' ? 'home' : this.router.url;
@@ -147,10 +133,6 @@ export class ProductSlideshowComponent
     if (!isVacio(this.despachoCliente)) {
       this.despachoCliente.unsubscribe();
     }
-  }
-
-  onResize(event: any) {
-    this.innerWidth = event.target.innerWidth;
   }
 
   cargarHome() {
