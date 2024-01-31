@@ -109,13 +109,24 @@ export class CmsService {
   getPostDetail(postId: string): Observable<IBlog> {
     return this.http.get<IBlogResponse>(`${API_CMS}/blog/post/${postId}`).pipe(
       map(({ data }) => {
-        const formattedText = this.formatHtml(data.text);
-        return { ...data, text: formattedText };
+        const htmlContent = this.formatHtmlContent(data.text);
+        console.log('formattedHtmlContent: ', htmlContent);
+        return { ...data, text: htmlContent };
       })
     );
   }
 
-  private formatHtml(html: string): string {
+  private formatHtmlContent(html: string): string {
+    return this.formatH4(html);
+    //return this.formatOEmbed(content);
+  }
+
+  /**
+   * Reemplazar tags h4.
+   * @param html
+   * @returns
+   */
+  private formatH4(html: string): string {
     return html.replace(/<h4>/g, `<h4 style="font-size:19px !important">`);
   }
 }

@@ -1,10 +1,11 @@
 // Angular
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+// Models
+import { IBlog } from '@core/models-v2/cms/blog-response.interface';
 // Services
 import { CmsService } from '@core/services-v2/cms.service';
-import { IBlog } from '@core/models-v2/cms/blog-response.interface';
 
 @Component({
   selector: 'app-detail-news',
@@ -18,15 +19,16 @@ export class DetailNewsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
+    private readonly renderer: Renderer2,
     private readonly cmsService: CmsService
   ) {}
 
   ngOnInit(): void {
     const postId = this.route.snapshot.params['id'];
     this.cmsService.getPostDetail(postId).subscribe({
-      next: (res) => {
-        this.post = res;
-        this.content = this.getSafeHTML(this.post.text);
+      next: (post) => {
+        this.post = post;
+        this.content = this.formatHtmlContent(this.post.text);
       },
       error: (err) => {
         console.log(err);
@@ -34,54 +36,38 @@ export class DetailNewsComponent implements OnInit {
     });
   }
 
-  private getSafeHTML(html: string): SafeHtml {
-    const parentEmbed = this.createHtmlElement(html);
-    console.log('parentEmbed: ', parentEmbed);
-
-    // Obtiene iframes
-    let oldIframe: any = parentEmbed.querySelectorAll('oembed');
-    // Crear un array con esos iframes
-    oldIframe = Array.from(oldIframe);
-
-    for (const i in oldIframe) {
-      // Obtener el atributo url del tag oembed.
-      let url = oldIframe[i].getAttribute('url');
-      // Reemplazar 'watch?v' con 'embed/'.
-      url = url.replace('watch?v=', 'embed/');
-      url = url.split('&t=5');
-
-      // Crear un element html iframe y setear atributos.
-      const newIframe = document.createElement('iframe');
-      newIframe.setAttribute('width', '100%');
-      newIframe.setAttribute('height', '500px;');
-      newIframe.setAttribute('allowFullScreen', '');
-      newIframe.setAttribute('frameBorder', '0');
-      if (url) {
-        newIframe.setAttribute('src', url[0]);
-      }
-      // replace oldIframe with newIframe
-      oldIframe[i].parentNode.replaceChild(newIframe, oldIframe[i]);
-    }
-
-    const contentToRender = parentEmbed.outerHTML;
-    console.log('contentToRender: ', contentToRender);
-    // Obligatorio aplicarle el sanitizer.
-    return this.sanitizer.bypassSecurityTrustHtml(contentToRender);
+  private formatHtmlContent(html: string) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    let htmlContent = this.replaceOembedElements(doc);
+    return this.sanitizer.bypassSecurityTrustHtml(htmlContent);
   }
 
   /**
-   * Crear un span, a ese span insertar el html, y retornar el span creado.
-   * @param str
+   * Reemplazar elementos oembed por iframes.
+   * @param doc
    * @returns
    */
-  private createHtmlElement(html: string): HTMLSpanElement {
-    const domContainer = document.createElement('span');
-    domContainer.innerHTML = html;
-    return domContainer;
-  }
+  private replaceOembedElements(doc: Document): string {
+    const oembedElements = doc.querySelectorAll('oembed');
+    oembedElements.forEach((oembedElement) => {
+      // Obtener url válida para el iframe.
+      const url = oembedElement.getAttribute('url') || '';
+      const newUrl = url.replace('watch?v=', 'embed/').split('&t=')[0];
 
-  /**
-   * Reemplazar todos los elementos OEmbed a IFrame.
-   */
-  private replaceEmbedToIFrame() {}
+      // Crear iframe y setear atributos.
+      const iframeElement = this.renderer.createElement('iframe');
+      this.renderer.setAttribute(iframeElement, 'src', newUrl);
+      this.renderer.setAttribute(iframeElement, 'width', '100%');
+      this.renderer.setAttribute(iframeElement, 'height', '500px');
+      this.renderer.setAttribute(iframeElement, 'allowFullScreen', '');
+      this.renderer.setAttribute(iframeElement, 'frameBorder', '0');
+
+      // Reemplazar el elemento oembed con el nuevo elemento iframe.
+      if (oembedElement.parentNode) {
+        oembedElement.parentNode.replaceChild(iframeElement, oembedElement);
+      }
+    });
+    return doc.body.innerHTML;
+  }
 }
