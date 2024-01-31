@@ -101,9 +101,21 @@ export class CmsService {
     });
   }
 
+  /**
+   * Obtener post.
+   * @param postId
+   * @returns
+   */
   getPostDetail(postId: string): Observable<IBlog> {
-    return this.http
-      .get<IBlogResponse>(`${API_CMS}/blog/post/${postId}`)
-      .pipe(map((res) => res.data));
+    return this.http.get<IBlogResponse>(`${API_CMS}/blog/post/${postId}`).pipe(
+      map(({ data }) => {
+        const formattedText = this.formatHtml(data.text);
+        return { ...data, text: formattedText };
+      })
+    );
+  }
+
+  private formatHtml(html: string): string {
+    return html.replace(/<h4>/g, `<h4 style="font-size:19px !important">`);
   }
 }

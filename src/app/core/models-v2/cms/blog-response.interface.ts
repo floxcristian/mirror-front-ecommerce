@@ -11,7 +11,7 @@ export interface IBlog {
   image: string;
   title: string;
   titleDrop: string;
-  text?: string;
+  text: string;
   createdAt: string | null;
   updatedAt: string | null;
 }

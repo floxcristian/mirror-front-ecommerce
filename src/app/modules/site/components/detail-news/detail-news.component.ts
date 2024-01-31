@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 // Services
 import { CmsService } from '@core/services-v2/cms.service';
+import { IBlog } from '@core/models-v2/cms/blog-response.interface';
 
 @Component({
   selector: 'app-detail-news',
@@ -11,26 +12,21 @@ import { CmsService } from '@core/services-v2/cms.service';
   styleUrls: ['./detail-news.component.scss'],
 })
 export class DetailNewsComponent implements OnInit {
-  noticia!: any; //IBlog;
+  post!: IBlog;
+  content!: SafeHtml;
+
   constructor(
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
     private readonly cmsService: CmsService
-  ) {
-    console.log('blog detail');
-  }
+  ) {}
 
   ngOnInit(): void {
     const postId = this.route.snapshot.params['id'];
     this.cmsService.getPostDetail(postId).subscribe({
       next: (res) => {
-        console.log('res: ', res);
-        this.noticia = res;
-        this.noticia.text = this.noticia.text.replace(
-          /<h4>/g,
-          `<h4 style="font-size:19px !important">`
-        );
-        this.noticia.text = this.prueba(this.noticia.text);
+        this.post = res;
+        this.content = this.getSafeHTML(this.post.text);
       },
       error: (err) => {
         console.log(err);
@@ -38,23 +34,23 @@ export class DetailNewsComponent implements OnInit {
     });
   }
 
-  prueba(html: any): SafeHtml {
-    const embed = this.noticia.text;
+  private getSafeHTML(html: string): SafeHtml {
+    const parentEmbed = this.createHtmlElement(html);
+    console.log('parentEmbed: ', parentEmbed);
 
-    const parentEmbed = this.stringToHTML(embed);
-
+    // Obtiene iframes
     let oldIframe: any = parentEmbed.querySelectorAll('oembed');
+    // Crear un array con esos iframes
     oldIframe = Array.from(oldIframe);
 
     for (const i in oldIframe) {
-      //Get the url from oembed tag
+      // Obtener el atributo url del tag oembed.
       let url = oldIframe[i].getAttribute('url');
-      //let heigth = oldIframe;
-      //Replace 'watch?v' with 'embed/'
+      // Reemplazar 'watch?v' con 'embed/'.
       url = url.replace('watch?v=', 'embed/');
       url = url.split('&t=5');
 
-      //Create a iframe tag
+      // Crear un element html iframe y setear atributos.
       const newIframe = document.createElement('iframe');
       newIframe.setAttribute('width', '100%');
       newIframe.setAttribute('height', '500px;');
@@ -68,13 +64,24 @@ export class DetailNewsComponent implements OnInit {
     }
 
     const contentToRender = parentEmbed.outerHTML;
-    console.log(contentToRender);
+    console.log('contentToRender: ', contentToRender);
+    // Obligatorio aplicarle el sanitizer.
     return this.sanitizer.bypassSecurityTrustHtml(contentToRender);
   }
 
-  stringToHTML(str: any): HTMLSpanElement {
+  /**
+   * Crear un span, a ese span insertar el html, y retornar el span creado.
+   * @param str
+   * @returns
+   */
+  private createHtmlElement(html: string): HTMLSpanElement {
     const domContainer = document.createElement('span');
-    domContainer.innerHTML = str;
+    domContainer.innerHTML = html;
     return domContainer;
   }
+
+  /**
+   * Reemplazar todos los elementos OEmbed a IFrame.
+   */
+  private replaceEmbedToIFrame() {}
 }
