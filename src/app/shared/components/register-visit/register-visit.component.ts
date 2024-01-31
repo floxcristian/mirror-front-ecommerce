@@ -24,7 +24,6 @@ import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthApiService } from '@core/services-v2/auth/auth.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { CartService } from '@core/services-v2/cart.service';
-import { CustomerService } from '@core/services-v2/customer.service';
 import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';
 import { ConfigService } from '@core/config/config.service';
 import { DocumentValidator } from '@core/validators/document-form.validator';
@@ -56,11 +55,10 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private router: Router,
     // Services V2
-    private cartService: CartService,
+    private readonly cartService: CartService,
     private readonly sessionStorage: SessionStorageService,
     private readonly authService: AuthApiService,
     private readonly authStateService: AuthStateServiceV2,
-    private readonly customerService: CustomerService,
     private readonly customerBusinessLineService: CustomerBusinessLineApiService,
     private readonly configService: ConfigService
   ) {
@@ -123,9 +121,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
 
     const email = String(dataSave.email).toLowerCase();
     try {
-      const resp = await firstValueFrom(
-        this.customerService.checkEmail(email)
-      );
+      const resp = await firstValueFrom(this.authService.checkEmail(email));
       if (!resp.exists) {
         this.loadingForm = true;
 

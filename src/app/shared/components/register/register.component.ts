@@ -123,8 +123,22 @@ export class RegisterComponent implements OnInit {
         longitude: [null],
         reference: [''],
         departmentOrHouse: [''],
-        password: [, [Validators.required, Validators.minLength(6), Validators.maxLength(30)]],
-        confirmPassword: [, [Validators.required, Validators.minLength(6),Validators.maxLength(30)]],
+        password: [
+          ,
+          [
+            Validators.required,
+            Validators.minLength(6),
+            Validators.maxLength(30),
+          ],
+        ],
+        confirmPassword: [
+          ,
+          [
+            Validators.required,
+            Validators.minLength(6),
+            Validators.maxLength(30),
+          ],
+        ],
       },
       {
         validator: PasswordValidator.validate.bind(this),
@@ -300,7 +314,7 @@ export class RegisterComponent implements OnInit {
 
     if (this.userForm.controls['documentId'].status === 'VALID') {
       const documentId = input.value.replace(/\./g, '');
-      this.customerApiService.checkIfUserExists(documentId).subscribe({
+      this.authService.checkDocumentId(documentId).subscribe({
         next: (res) => {
           if (res.exists) {
             this.toastr.warning(

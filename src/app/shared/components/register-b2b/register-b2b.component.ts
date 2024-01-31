@@ -13,6 +13,7 @@ import { CustomerBusinessLineApiService } from '@core/services-v2/customer-busin
 import { ConfigService } from '@core/config/config.service';
 import { CustomerApiService } from '@core/services-v2/customer/customer-api.service';
 import { DocumentValidator } from '@core/validators/document-form.validator';
+import { AuthApiService } from '@core/services-v2/auth/auth.service';
 
 @Component({
   selector: 'app-register-b2b',
@@ -38,7 +39,8 @@ export class Registerb2bComponent implements OnInit {
     private readonly geolocationApiService: GeolocationApiService,
     private readonly customerBusinessLineApiService: CustomerBusinessLineApiService,
     private readonly configService: ConfigService,
-    private readonly customerApiService: CustomerApiService
+    private readonly customerApiService: CustomerApiService,
+    private readonly authService: AuthApiService
   ) {
     const { document, phoneCodes } = this.configService.getConfig();
     this.documentName = document.name;
@@ -115,7 +117,7 @@ export class Registerb2bComponent implements OnInit {
     } = this.userForm.value;
 
     this.customerApiService
-      .registerUserB2B({
+      .createUserB2B({
         email,
         firstName,
         lastName,
@@ -153,7 +155,7 @@ export class Registerb2bComponent implements OnInit {
 
     if (this.userForm.controls['documentId'].status === 'VALID') {
       const documentId = input.value.replace(/\./g, '');
-      this.customerApiService.checkIfUserExists(documentId).subscribe({
+      this.authService.checkDocumentId(documentId).subscribe({
         next: (res) => {
           if (res.exists) {
             this.toastr.warning(

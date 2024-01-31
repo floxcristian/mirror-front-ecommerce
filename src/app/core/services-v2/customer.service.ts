@@ -13,9 +13,7 @@ import {
   ICustomerCredit,
   ICustomerPriceListResponse,
 } from '@core/models-v2/customer/customer.interface';
-import { IExistsEmail } from '@core/models-v2/customer/exists-email.interface';
 
-const API_AUTH = `${environment.apiEcommerce}/api/v1/auth`;
 const API_CUSTOMER = `${environment.apiEcommerce}/api/v1/customer`;
 
 @Injectable({
@@ -23,35 +21,6 @@ const API_CUSTOMER = `${environment.apiEcommerce}/api/v1/customer`;
 })
 export class CustomerService {
   constructor(private http: HttpClient) {}
-
-  /**********************************************
-   * AUTH
-   **********************************************/
-  checkDocumentId(documentId: string) {
-    return this.http.get(`${API_AUTH}/check-document-id/${documentId}`);
-  }
-
-  checkEmail(email: string): Observable<IExistsEmail> {
-    return this.http.get<IExistsEmail>(`${API_AUTH}/check-email/${email}`);
-  }
-
-  checkUsername(username: string) {
-    return this.http.get(`${API_AUTH}/check-username/${username}`);
-  }
-
-  updatePassword(params: {
-    documentId: string;
-    username: string;
-    currentPassword: string;
-    newPassword: string;
-  }) {
-    const { documentId, username, currentPassword, newPassword } = params;
-    return this.http.put(`${API_AUTH}/${documentId}/password`, {
-      username,
-      newPassword,
-      actualPassword: currentPassword,
-    });
-  }
 
   updateProfile(params: {
     documentId: string;
@@ -68,10 +37,6 @@ export class CustomerService {
       phone,
     });
   }
-
-  /**********************************************
-   * CUSTOMER
-   **********************************************/
 
   getCustomerBlocked(documentId: string): Observable<ICustomerBlocked> {
     return this.http.get<ICustomerBlocked>(

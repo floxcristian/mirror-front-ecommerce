@@ -7,11 +7,9 @@ import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
 // Models
 import { ICustomerB2BParams } from './models/customer-b2b-request.interface';
-import { ICheckIfExists } from './models/check-if-exists-response.interface';
 import { ICustomerCreateParams } from './models/customer-create-params.interface';
 
 const API_CUSTOMER = `${environment.apiEcommerce}/api/v1/customer`;
-const API_AUTH = `${environment.apiEcommerce}/api/v1/auth`;
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +17,7 @@ const API_AUTH = `${environment.apiEcommerce}/api/v1/auth`;
 export class CustomerApiService {
   constructor(private http: HttpClient) {}
 
+  // FIXME: pasar esto a un utils
   /**
    * Formatea rut.
    * Esto debe hacerse a nivel de api.
@@ -106,7 +105,7 @@ export class CustomerApiService {
    * @param params
    * @returns
    */
-  registerUserB2B(params: ICustomerB2BParams): Observable<void> {
+  createUserB2B(params: ICustomerB2BParams): Observable<void> {
     const password = 'qwert1234';
     const documentType = environment.country.toUpperCase();
     const {
@@ -135,14 +134,5 @@ export class CustomerApiService {
         number: addressNumber,
       },
     });
-  }
-
-  /**
-   * Verifica si un usuario ya existe en base el identificador de documento.
-   */
-  checkIfUserExists(documentId: string): Observable<ICheckIfExists> {
-    return this.http.get<ICheckIfExists>(
-      `${API_AUTH}/check-document-id/${documentId}`
-    );
   }
 }

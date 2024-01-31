@@ -6,7 +6,6 @@ import { ActivatedRoute } from '@angular/router';
 // Libs
 import { ToastrService } from 'ngx-toastr';
 // Services
-import { CustomerService } from '@core/services-v2/customer.service';
 import { AuthApiService } from '@core/services-v2/auth/auth.service';
 
 @Component({
@@ -25,7 +24,6 @@ export class PageRecoveringChangeComponent {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private readonly customerService: CustomerService,
     private readonly authService: AuthApiService
   ) {}
 
@@ -38,7 +36,7 @@ export class PageRecoveringChangeComponent {
 
   checkIsValidEmail(email: string | null): void {
     if (!email) return;
-    this.customerService.checkEmail(email).subscribe({
+    this.authService.checkEmail(email).subscribe({
       next: ({ exists }) => (this.isValidEmail = exists),
     });
   }

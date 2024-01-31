@@ -3,9 +3,9 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PasswordValidator } from '../../validations/password';
-import { CustomerService } from '@core/services-v2/customer.service';
 import { IError } from '@core/models-v2/error/error.interface';
 import { SessionStorageService } from '@core/storage/session-storage.service';
+import { AuthApiService } from '@core/services-v2/auth/auth.service';
 
 @Component({
   selector: 'app-password-modal',
@@ -29,7 +29,7 @@ export class PasswordModalComponent implements OnInit {
     private toastr: ToastrService,
     // Services V2
     private readonly sessionStorage: SessionStorageService,
-    private readonly customerService: CustomerService
+    private readonly authService: AuthApiService
   ) {
     this.formPassword = this.fb.group(
       {
@@ -56,7 +56,7 @@ export class PasswordModalComponent implements OnInit {
       newPassword: data.pwd,
     };
 
-    this.customerService.updatePassword(request).subscribe({
+    this.authService.updatePassword(request).subscribe({
       next: (_) => {
         this.modalPasswordRef.hide();
         this.toastr.success('Contraseña actualizada con éxito');
