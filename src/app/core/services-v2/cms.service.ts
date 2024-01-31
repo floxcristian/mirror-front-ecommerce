@@ -22,6 +22,7 @@ import { IWorldResponse } from '@core/models-v2/cms/world-response.interface';
 // Environment
 import { environment } from '@env/environment';
 import { Observable, map } from 'rxjs';
+import { BlogService } from './blog/blog.service';
 
 const API_CMS = `${environment.apiEcommerce}/api/v1/cms`;
 
@@ -29,7 +30,10 @@ const API_CMS = `${environment.apiEcommerce}/api/v1/cms`;
   providedIn: 'root',
 })
 export class CmsService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private readonly blogService: BlogService
+  ) {}
 
   /**********************************************
    * CMS
@@ -109,8 +113,8 @@ export class CmsService {
   getPostDetail(postId: string): Observable<IBlog> {
     return this.http.get<IBlogResponse>(`${API_CMS}/blog/post/${postId}`).pipe(
       map(({ data }) => {
-        const htmlContent = this.formatHtmlContent(data.text);
-        console.log('formattedHtmlContent: ', htmlContent);
+        let htmlContent = this.formatHtmlContent(data.text);
+        htmlContent = this.blogService.formatHtmlContent(htmlContent);
         return { ...data, text: htmlContent };
       })
     );
