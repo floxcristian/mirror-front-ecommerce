@@ -1,6 +1,8 @@
+// Angular
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+// Services
 import { CmsService } from '@core/services-v2/cms.service';
 
 @Component({
@@ -9,31 +11,34 @@ import { CmsService } from '@core/services-v2/cms.service';
   styleUrls: ['./detail-news.component.scss'],
 })
 export class DetailNewsComponent implements OnInit {
+  noticia!: any; //IBlog;
   constructor(
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
-    //ServicesV2
-    private readonly cmsService:CmsService
-  ) {}
-  noticia: any = {};
+    private readonly cmsService: CmsService
+  ) {
+    console.log('blog detail');
+  }
 
-  ngOnInit() {
-    let pageId = this.route.snapshot.params['id'];
-    this.cmsService.getPostDetail(pageId).subscribe({
-      next:(res)=>{
-        this.noticia = res.data
-          this.noticia.text = this.noticia.text.replace(
-        /<h4>/g,
-        `<h4 style="font-size:19px !important">`
+  ngOnInit(): void {
+    const postId = this.route.snapshot.params['id'];
+    this.cmsService.getPostDetail(postId).subscribe({
+      next: (res) => {
+        console.log('res: ', res);
+        this.noticia = res;
+        this.noticia.text = this.noticia.text.replace(
+          /<h4>/g,
+          `<h4 style="font-size:19px !important">`
         );
         this.noticia.text = this.prueba(this.noticia.text);
       },
-      error:(err)=>{
-        console.log(err)
-      }
-    })
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
-  prueba(html: any) {
+
+  prueba(html: any): SafeHtml {
     const embed = this.noticia.text;
 
     const parentEmbed = this.stringToHTML(embed);
@@ -44,7 +49,7 @@ export class DetailNewsComponent implements OnInit {
     for (const i in oldIframe) {
       //Get the url from oembed tag
       let url = oldIframe[i].getAttribute('url');
-      let heigth = oldIframe;
+      //let heigth = oldIframe;
       //Replace 'watch?v' with 'embed/'
       url = url.replace('watch?v=', 'embed/');
       url = url.split('&t=5');
@@ -66,7 +71,8 @@ export class DetailNewsComponent implements OnInit {
     console.log(contentToRender);
     return this.sanitizer.bypassSecurityTrustHtml(contentToRender);
   }
-  stringToHTML(str: any) {
+
+  stringToHTML(str: any): HTMLSpanElement {
     const domContainer = document.createElement('span');
     domContainer.innerHTML = str;
     return domContainer;

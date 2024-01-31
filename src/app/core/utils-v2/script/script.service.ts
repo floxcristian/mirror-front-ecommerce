@@ -40,8 +40,6 @@ export class ScriptService {
       // TODO: yo aceptaría un parámetro para indicar si es async o defer.
       script.async = true;
       script.defer = true;
-
-      console.log('script: ', script);
       script.onload = () => {
         this.scripts[src] = { src, loaded: true };
         return resolve({ loaded: true, status: 'Loaded.' });

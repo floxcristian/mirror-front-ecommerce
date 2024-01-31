@@ -1,14 +1,10 @@
 // Angular
 import { NavigationEnd, Router } from '@angular/router';
-import {
-  isPlatformBrowser,
-  ViewportScroller
-} from '@angular/common';
+import { isPlatformBrowser, ViewportScroller } from '@angular/common';
 import {
   AfterViewInit,
   Component,
   Inject,
-  NgZone,
   OnInit,
   PLATFORM_ID,
   Renderer2,
@@ -52,7 +48,6 @@ export class AppComponent implements AfterViewInit, OnInit {
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     public router: Router,
-    private zone: NgZone,
     private scroller: ViewportScroller,
     private currency: CurrencyService,
     private seoService: SeoService,
@@ -62,7 +57,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     private readonly shoppingCartService: CartService,
     private readonly geolocationService: GeolocationServiceV2,
     private readonly scriptService: ScriptService,
-    private renderer: Renderer2
+    private readonly renderer: Renderer2
   ) {
     afterNextRender(() => {
       this.loadWebChat();
@@ -104,19 +99,19 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         if (event.url.includes('/carro-compra')) {
-          this.updateClasses('carrito')
+          this.updateClasses('carrito');
         } else if (event.url.includes('/catalogos')) {
-          this.updateClasses()
+          this.updateClasses();
         } else if (event.url.includes('/categoria')) {
-          this.updateClasses('categoria')
+          this.updateClasses('categoria');
         } else if (this.sessionService.isB2B()) {
-          this.updateClasses()
+          this.updateClasses();
         } else if (event.url.includes('/ficha')) {
-          this.updateClasses('pdp')
+          this.updateClasses('pdp');
         } else if (event.url.includes('/especial/')) {
-          this.updateClasses('home')
+          this.updateClasses('home');
         } else {
-          this.updateClasses('home')
+          this.updateClasses('home');
         }
         if (event.url.includes('/omni-forma-de-pago')) {
           this.isOmni = true;
@@ -145,15 +140,15 @@ export class AppComponent implements AfterViewInit, OnInit {
     });
   }
 
-  private updateClasses(nameClass?:string){
-    let arr = ['home','categoria','carrito','pdp']
-    const body = this.renderer.selectRootElement('body',true);
+  private updateClasses(nameClass?: string) {
+    let arr = ['home', 'categoria', 'carrito', 'pdp'];
+    const body = this.renderer.selectRootElement('body', true);
     //quitar clases
-    arr.forEach((x:string)=>{
-      this.renderer.removeClass(body,x)
-    })
+    arr.forEach((x: string) => {
+      this.renderer.removeClass(body, x);
+    });
     //agregar clase
-    if(nameClass) this.renderer.addClass(body,nameClass)
+    if (nameClass) this.renderer.addClass(body, nameClass);
   }
 
   ngAfterViewInit(): void {
@@ -181,20 +176,19 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.alert.show();
   }
 
-  loadWebChat() {
+  loadWebChat(): void {
     this.scriptService
       .loadScript(this.webChatScript)
-      .then((res) => {
-        console.log('cargar el script de chat exitosa');
-      })
+      .then(() => {})
       .catch((error) => {
         console.warn('Error al cargar el script de chat');
       });
   }
-  showChatButton() {
+
+  showChatButton(): void {
     const token = this.getChatToken(this.webChatScript);
     const tokenWithSuffix = token + '_startButtonContainer';
-    const element = this.renderer.selectRootElement(tokenWithSuffix,true)
+    const element = this.renderer.selectRootElement(tokenWithSuffix, true);
     if (element) {
       this.renderer.setStyle(element, 'display', 'block');
     } else {
@@ -205,7 +199,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   hideChatButton() {
     const token = this.getChatToken(this.webChatScript);
     const tokenWithSuffix = token + '_startButtonContainer';
-    const element = this.renderer.selectRootElement(tokenWithSuffix,true)
+    const element = this.renderer.selectRootElement(tokenWithSuffix, true);
     if (element) {
       this.renderer.setStyle(element, 'display', 'none');
     }

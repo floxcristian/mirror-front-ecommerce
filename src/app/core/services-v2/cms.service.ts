@@ -2,6 +2,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
+  IBlog,
   IBlogResponse,
   IBlogsResponse,
 } from '@core/models-v2/cms/blog-response.interface';
@@ -9,7 +10,10 @@ import { ICategorieResponse } from '@core/models-v2/cms/categories-response.inte
 import { ICustomHomePage } from '@core/models-v2/cms/customHomePage-response.interface';
 import { IHomePageResponse } from '@core/models-v2/cms/homePage-response.interface';
 import { ISliderResponse } from '@core/models-v2/cms/slider-reponse.interface';
-import { IPaginated, ISpecialResponse } from '@core/models-v2/cms/special-reponse.interface';
+import {
+  IPaginated,
+  ISpecialResponse,
+} from '@core/models-v2/cms/special-reponse.interface';
 import {
   IValueBox,
   IValueBoxResponse,
@@ -68,25 +72,23 @@ export class CmsService {
     });
   }
 
-  getSpecial(
-    special: string,
-  ): Observable<ISpecialResponse> {
+  getSpecial(special: string): Observable<ISpecialResponse> {
     return this.http.get<ISpecialResponse>(`${API_CMS}/special`, {
-      params: { special},
+      params: { special },
     });
   }
 
   getSpecialArticles(
-    id:string,
+    id: string,
     special: string,
     documentId: string,
     branchCode: string,
     location: string,
-    page:number = 1,
-    limit:number = 30
+    page: number = 1,
+    limit: number = 30
   ): Observable<IPaginated> {
     return this.http.get<IPaginated>(`${API_CMS}/special/${id}`, {
-      params: { special, documentId, branchCode, location , page ,limit},
+      params: { special, documentId, branchCode, location, page, limit },
     });
   }
 
@@ -99,7 +101,9 @@ export class CmsService {
     });
   }
 
-  getPostDetail(postId: string): Observable<IBlogResponse> {
-    return this.http.get<IBlogResponse>(`${API_CMS}/blog/post/${postId}`);
+  getPostDetail(postId: string): Observable<IBlog> {
+    return this.http
+      .get<IBlogResponse>(`${API_CMS}/blog/post/${postId}`)
+      .pipe(map((res) => res.data));
   }
 }
