@@ -1,5 +1,5 @@
 // Angular
-import { Component } from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 // Models
 import { IConfig } from '@core/config/config.interface';
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
@@ -17,6 +17,7 @@ import { environment } from '@env/environment';
   styleUrls: ['./page-stores.component.scss'],
 })
 export class PageStoresComponent {
+  @ViewChild('informacionTienda',{ static: true }) _informacionTienda!: ElementRef
   storesByZone: IZoneGroup[] = [];
   selectedStore!: IStore;
   config: IConfig;
@@ -43,7 +44,8 @@ export class PageStoresComponent {
     // Services V2
     private readonly geolocationService: GeolocationServiceV2,
     private readonly configService: ConfigService,
-    private readonly scriptService: ScriptService
+    private readonly scriptService: ScriptService,
+    private renderer:Renderer2
   ) {
     this.config = this.configService.getConfig();
   }
@@ -70,11 +72,9 @@ export class PageStoresComponent {
   showStoreDetail(store: IStore, focus: boolean = false): void {
     this.selectedStore = store;
     this.updatePosition(this.selectedStore);
-    // FIXME: usar viewchild y renderer2.
-    let x = document.querySelector('#informacionTienda');
     if (focus) {
-      if (x) {
-        x.scrollIntoView();
+      if (this._informacionTienda) {
+        this.renderer.selectRootElement(this._informacionTienda.nativeElement,true).scrollIntoView()
       }
     }
   }

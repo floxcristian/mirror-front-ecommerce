@@ -9,6 +9,7 @@ import {
   inject,
   Renderer2,
   ElementRef,
+  ViewChild,
 } from '@angular/core';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -65,6 +66,7 @@ declare let fbq: any;
   styleUrls: ['./page-product.component.scss'],
 })
 export class PageProductComponent implements OnInit {
+  @ViewChild('ancla') _ancla!: ElementRef
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
   product!: IArticleResponse;
   recommendedProducts: IArticleResponse[] = [];
@@ -350,33 +352,25 @@ export class PageProductComponent implements OnInit {
 
   abrirTabEvaluacion(): void {
     if (isPlatformBrowser(this.platformId)) {
-      // $('#descripcion-tab').removeClass('active');
-      // $('#detallesTecnicos-tab').removeClass('active');
-      // $('#evaluacion-tab').addClass('active');
-
-      // $('#descripcion').removeClass('active show');
-      // $('#detallesTecnicos').removeClass('active show');
-      // $('#evaluacion').addClass('active show');
-
       // $('#evaluacion').tab('show'); // este falta ver bien
-      this.removeClass('descripcion-tab', 'active');
       this.removeClass('detallesTecnicos-tab', 'active');
       this.addClass('evaluacion-tab', 'active');
 
-      this.removeClass('descripcion', 'active show');
-      this.removeClass('detallesTecnicos', 'active show');
-      this.addClass('evaluacion', 'active show');
+      this.removeClass('detallesTecnicos', 'active');
+      this.removeClass('detallesTecnicos', 'show');
+      this.addClass('evaluacion', 'active');
+      this.addClass('evaluacion', 'show');
     }
-    document.querySelector('#ancla')?.scrollIntoView();
+    this.renderer.selectRootElement(this._ancla.nativeElement,true).scrollIntoView()
   }
 
   private removeClass(elementId: string, className: string) {
-    const element = this.el.nativeElement.querySelector(`#${elementId}`);
+    const element = this.renderer.selectRootElement(`#${elementId}`,true)
     this.renderer.removeClass(element, className);
   }
 
   private addClass(elementId: string, className: string) {
-    const element = this.el.nativeElement.querySelector(`#${elementId}`);
+    const element = this.renderer.selectRootElement(`#${elementId}`,true)
     this.renderer.addClass(element, className);
   }
 
