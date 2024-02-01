@@ -8,7 +8,7 @@ import {
   HostListener,
   PLATFORM_ID,
 } from '@angular/core';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 // Models
 import { Link } from '../../../../shared/interfaces/link';
 // Services
@@ -50,7 +50,6 @@ export class ProductsViewComponent {
   url: string;
 
   constructor(
-    @Inject(DOCUMENT) document: any,
     @Inject(PLATFORM_ID) private platformId: Object,
     private readonly gtmService: GoogleTagManagerService,
     // Services V2

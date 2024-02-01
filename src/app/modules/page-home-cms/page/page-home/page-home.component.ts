@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -7,14 +7,16 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./page-home.component.scss'],
 })
 export class PageHomeComponent implements OnInit {
-  constructor(private readonly titleService: Title) {
+  constructor(private readonly titleService: Title, private renderer:Renderer2) {
     this.titleService.setTitle(
       'Implementos - Respuestos para Camiones, Buses y Remolque'
     );
   }
 
   ngOnInit() {
-    document.body.scrollTop = 0; // Safari
-    document.documentElement.scrollTop = 0; // Othe
+    const body_e = this.renderer.selectRootElement('body',true) // safari
+    this.renderer.setProperty(body_e,'scrollTop',0)
+    const html_e = this.renderer.selectRootElement('html',true) //other
+    this.renderer.setProperty(html_e,'scrollTop',0)
   }
 }

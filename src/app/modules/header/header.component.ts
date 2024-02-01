@@ -1,5 +1,5 @@
 // Angular
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 // Env
 import { environment } from '@env/environment';
@@ -17,8 +17,10 @@ import { StorageKey } from '@core/storage/storage-keys.enum';
 })
 export class HeaderComponent implements AfterViewInit {
   logoSrc = environment.logoSrc;
+  @ViewChild('sticky_header_b2c') sticky_b2c!: ElementRef
+  @ViewChild('sticky_header_b2c_nav') sticky_b2c_nav!:ElementRef
 
-  constructor(private route: Router, private localS: LocalStorageService) {
+  constructor(private route: Router, private localS: LocalStorageService, private renderer:Renderer2) {
     const buscadorB2B = this.localS.get(StorageKey.buscadorB2B);
     if (!buscadorB2B) {
       const data: BuscadorB2B = {
@@ -31,17 +33,15 @@ export class HeaderComponent implements AfterViewInit {
   }
   ngAfterViewInit(): void {
     /*  Sticky Header */
-    const header = document.getElementById('sticky_header_b2c');
-    const nav = document.getElementById('sticky_header_b2c_nav');
-    if (!isVacio(header) && !isVacio(nav)) {
-      const sticky = header?.offsetTop || 0;
+    if (!isVacio(this.sticky_b2c) && !isVacio(this.sticky_b2c_nav)) {
+      const sticky = this.sticky_b2c.nativeElement.offsetTop
       window.onscroll = () => {
         if (window.pageYOffset > sticky) {
-          header?.classList.add('sticky');
-          nav?.classList.add('sticky_nav');
+          this.renderer.addClass(this.sticky_b2c.nativeElement,'sticky')
+          this.renderer.addClass(this.sticky_b2c_nav.nativeElement,'sticky_nav')
         } else {
-          header?.classList.remove('sticky');
-          nav?.classList.remove('sticky_nav');
+          this.renderer.removeClass(this.sticky_b2c.nativeElement,'sticky')
+          this.renderer.removeClass(this.sticky_b2c_nav.nativeElement,'sticky_nav')
         }
       };
     }

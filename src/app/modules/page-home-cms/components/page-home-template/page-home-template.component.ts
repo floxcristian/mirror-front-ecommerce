@@ -1,5 +1,5 @@
 // Angular
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2 } from '@angular/core';
 // Rxjs
 import { Subscription, first } from 'rxjs';
 // Models
@@ -40,7 +40,8 @@ export class PageHomeTemplateComponent
     private readonly geolocationService: GeolocationServiceV2,
     private readonly geolocationStorage: GeolocationStorageService,
     private readonly customerPreferenceService: CustomerPreferenceService,
-    private readonly customerAddressService: CustomerAddressService
+    private readonly customerAddressService: CustomerAddressService,
+    private renderer:Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -140,8 +141,10 @@ export class PageHomeTemplateComponent
   }
 
   scrollToTop(): void {
-    document.body.scrollTop = 0; // Safari
-    document.documentElement.scrollTop = 0; // Other
+    const body_e = this.renderer.selectRootElement('body',true) // safari
+    this.renderer.setProperty(body_e,'scrollTop',0)
+    const html_e = this.renderer.selectRootElement('html',true) //other
+    this.renderer.setProperty(html_e,'scrollTop',0)
   }
 
   ngOnDestroy(): void {

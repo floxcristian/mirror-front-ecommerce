@@ -106,6 +106,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   @ViewChild('idArchivoInput') idArchivoInput!: ElementRef<HTMLInputElement>;
   @ViewChild('idArchivoInputMobile') idArchivoInputMobile!: ElementRef<HTMLInputElement>;
+  @ViewChild('openModalButton') openModalButton!: ElementRef;
   private destroy$: Subject<void> = new Subject();
   isInvoice!: boolean;
   items: any[] = [];
@@ -964,7 +965,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     );
     if (consultaStock.stockProblem && consultaStock.stockProblemLines) {
       this.productosSinStock = consultaStock.stockProblemLines;
-      document.getElementById('openModalButton')?.click();
+      this.renderer.selectRootElement(this.openModalButton.nativeElement).click()
     }
     return consultaStock.stockProblem;
   }

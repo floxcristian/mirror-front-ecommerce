@@ -1,5 +1,4 @@
-import { Component, OnInit, Inject, HostListener, Input } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { Component, OnInit, HostListener, Input, Renderer2 } from '@angular/core';
 @Component({
   selector: 'app-scroll-top',
   templateUrl: './scroll-top.component.html',
@@ -8,32 +7,35 @@ import { DOCUMENT } from '@angular/common';
 export class ScrollTopComponent implements OnInit {
   windowScrolled!: boolean;
   @Input() fast = false;
-  constructor(@Inject(DOCUMENT) private document: Document) {}
+  constructor(private renderer:Renderer2) {}
   @HostListener('window:scroll', [])
   onWindowScroll() {
+    const body_e = this.renderer.selectRootElement('body',true) // safari
+    const html_e = this.renderer.selectRootElement('html',true) //other
     if (
       window.pageYOffset ||
-      document.documentElement.scrollTop ||
-      document.body.scrollTop > 100
+      html_e.scrollTop ||
+      body_e.scrollTop > 100
     ) {
       this.windowScrolled = true;
     } else if (
       (this.windowScrolled && window.pageYOffset) ||
-      document.documentElement.scrollTop ||
-      document.body.scrollTop < 10
+      html_e.scrollTop ||
+      body_e.scrollTop < 10
     ) {
       this.windowScrolled = false;
     }
   }
   scrollToTop() {
+    const body_e = this.renderer.selectRootElement('body',true) // safari
+    const html_e = this.renderer.selectRootElement('html',true) //other
     if (this.fast) {
       window.scrollTo({ top: 0 });
-      document.body.scrollTop = 0; // Safari
-      document.documentElement.scrollTop = 0; // Othe
+      this.renderer.setProperty(body_e,'scrollTop',0)
+      this.renderer.setProperty(html_e,'scrollTop',0)
     } else {
       (function smoothscroll() {
-        var currentScroll =
-          document.documentElement.scrollTop || document.body.scrollTop;
+        let currentScroll = html_e.scrollTop || body_e.scrollTop
         if (currentScroll > 0) {
           window.requestAnimationFrame(smoothscroll);
           window.scrollTo(0, currentScroll - currentScroll / 8);
