@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { PageFlip, SizeType } from 'page-flip';
@@ -21,6 +21,7 @@ import { CartService } from '@core/services-v2/cart.service';
   styleUrls: ['./page-ver-catalogo-flip.component.scss'],
 })
 export class PageVerCatalogoFlipComponent implements OnInit {
+  @ViewChild('demoBookExample') _demoBookExample!:ElementRef<HTMLElement>
   pageFlip: any;
   pageTotal: number = 0;
   pageOrientation!: string;
@@ -509,7 +510,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       if (this.screenWidth <= 320 && this.screenWidth > 300) porcentaje = 7.0;
       let height = this.screenWidth * porcentaje;
       this.pageFlip = new PageFlip(
-        document.getElementById('demoBookExample') as HTMLElement,
+        this._demoBookExample.nativeElement,
         {
           width: this.screenWidth,
           height: height,
@@ -542,7 +543,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       }
 
       this.pageFlip = new PageFlip(
-        document.getElementById('demoBookExample') as HTMLElement,
+        this._demoBookExample.nativeElement,
         {
           width: numero,
           height: 950,
@@ -564,7 +565,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     }
     if (this.dispositivo === 'tablet') {
       this.pageFlip = new PageFlip(
-        document.getElementById('demoBookExample') as HTMLElement,
+        this._demoBookExample.nativeElement,
         {
           width: 650, //740
           height: 950, //940

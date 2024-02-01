@@ -19,6 +19,7 @@
     </div>
     <div
       class="flip-book"
+      #demoBookExample
       id="demoBookExample"
       [ngClass]="tags.length > 0 ? 'tags' : 'notags'"
     >
@@ -376,7 +377,7 @@
     </div>
 
     <div class="col-md-10 col-sm-10">
-      <div class="flip-book" id="demoBookExample" style="margin: 0 auto">
+      <div class="flip-book" #demoBookExample id="demoBookExample" style="margin: 0 auto">
         <!-- Portada -->
         <div
           class="page page-cover page-cover-top"
@@ -781,7 +782,7 @@
 </div>
 <div *ngIf="dispositivo === 'tablet'" class="tablet">
   <div class="row justify-content-center">
-    <div class="flip-book" id="demoBookExample">
+    <div class="flip-book" #demoBookExample id="demoBookExample">
       <!-- Portada -->
       <div
         class="page page-cover page-cover-top"

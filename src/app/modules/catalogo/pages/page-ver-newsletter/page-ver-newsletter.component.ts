@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FlipSetting, PageFlip, SizeType } from 'page-flip';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
@@ -12,6 +12,7 @@ import { CatalogService } from '@core/services-v2/catalog.service';
   styleUrls: ['./page-ver-newsletter.component.scss'],
 })
 export class PageVerNewsletterComponent implements OnInit {
+  @ViewChild('demoBookExample') _demoBookExample!:ElementRef<HTMLElement>
   cargandoCat!: boolean;
   pageFlip: any;
   array = ['02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
@@ -130,9 +131,6 @@ export class PageVerNewsletterComponent implements OnInit {
   loadFlip() {
     let duracion = 1000;
     if (this.dispositivo === 'smartphone') {
-      const htmlElement = document.getElementById(
-        'demoBookExample'
-      ) as HTMLElement;
       const pageFlipSettings: Partial<FlipSetting> = {
         width: 500,
         height: 707,
@@ -153,7 +151,7 @@ export class PageVerNewsletterComponent implements OnInit {
         startZIndex: 1,
       };
 
-      this.pageFlip = new PageFlip(htmlElement, pageFlipSettings);
+      this.pageFlip = new PageFlip(this._demoBookExample.nativeElement, pageFlipSettings);
     }
     if (this.dispositivo === 'web') {
       this.ObtenerTamanoPantalla();
@@ -184,15 +182,9 @@ export class PageVerNewsletterComponent implements OnInit {
         flippingTime: duracion,
         showPageCorners: false,
       };
-      const htmlElement = document.getElementById(
-        'demoBookExample'
-      ) as HTMLElement;
-      this.pageFlip = new PageFlip(htmlElement, pageFlipSettings);
+      this.pageFlip = new PageFlip(this._demoBookExample.nativeElement, pageFlipSettings);
     }
     if (this.dispositivo === 'tablet') {
-      const htmlElement = document.getElementById(
-        'demoBookExample'
-      ) as HTMLElement;
       const pageFlipSettings: Partial<FlipSetting> = {
         width: 550,
         height: 733,
@@ -206,7 +198,7 @@ export class PageVerNewsletterComponent implements OnInit {
         mobileScrollSupport: false,
         clickEventForward: true,
       };
-      this.pageFlip = new PageFlip(htmlElement, pageFlipSettings);
+      this.pageFlip = new PageFlip(this._demoBookExample.nativeElement, pageFlipSettings);
     }
     this.pageFlip.loadFromHTML(document.querySelectorAll('.page'));
     this.pageFlip.on('flip', (e: any) => {

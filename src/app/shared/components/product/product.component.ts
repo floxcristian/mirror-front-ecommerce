@@ -16,6 +16,7 @@ import {
   HostListener,
   DestroyRef,
   inject,
+  Renderer2,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -194,6 +195,7 @@ export class ProductComponent implements OnInit, OnChanges {
     private cd: ChangeDetectorRef,
     private fb: FormBuilder,
     private readonly gtmService: GoogleTagManagerService,
+    private renderer:Renderer2,
     // Services V2
     private cart: CartService,
     private readonly sessionService: SessionService,
@@ -466,12 +468,12 @@ export class ProductComponent implements OnInit, OnChanges {
    */
   openPhotoSwipe(event: MouseEvent, image: IProductImage): void {
     event.preventDefault();
-
+    const html_e = this.renderer.selectRootElement('html',true)
     const options = {
       getThumbBoundsFn: (index: any) => {
         const imageElement = this.imageElements.toArray()[index].nativeElement;
         const pageYScroll =
-          window.pageYOffset || document.documentElement.scrollTop;
+          window.pageYOffset || html_e.scrollTop;
         const rect = imageElement.getBoundingClientRect();
 
         return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };
