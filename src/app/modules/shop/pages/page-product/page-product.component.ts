@@ -10,6 +10,7 @@ import {
   Renderer2,
   ElementRef,
   ViewChild,
+  Input,
 } from '@angular/core';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -57,6 +58,7 @@ import { BreadcrumbUtils } from './services/breadcrumb-utils.service';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 import { CartV2Service } from '@core/services-v2/cart/cart.service';
 import { ProductPriceApiService } from '@core/services-v2/product-price/product-price.service';
+import { IReviewsResponse } from '@core/models-v2/article/review-response.interface';
 
 declare let fbq: any;
 
@@ -110,7 +112,7 @@ export class PageProductComponent implements OnInit {
   addingToCart!: boolean;
   preferenciaCliente!: ICustomerPreference;
   showNetPrice!: boolean;
-
+  evaluationSummary!: IReviewsResponse
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
@@ -461,4 +463,12 @@ export class PageProductComponent implements OnInit {
     //     }
     //   );
   }
+  /**
+   * Obtiene el resumen de evaluaciones del producto. Desde el componente de comentarios.
+   */
+  handleEvaluationSummary(value: IReviewsResponse) {
+   this.evaluationSummary = value;
+  }
+
+
 }

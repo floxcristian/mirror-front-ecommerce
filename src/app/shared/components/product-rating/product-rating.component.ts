@@ -2,9 +2,7 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   Output,
-  SimpleChanges,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -19,21 +17,29 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { ArticleService } from '@core/services-v2/article.service';
-import { ReviewSummary } from '@core/models-v2/article/review-response.interface';
+import {
+  IReviewsResponse,
+  ReviewSummary,
+} from '@core/models-v2/article/review-response.interface';
 
 @Component({
   selector: 'app-product-rating',
   templateUrl: './product-rating.component.html',
   styleUrls: ['./product-rating.component.scss'],
 })
-export class ProductRatingComponent implements OnChanges {
+export class ProductRatingComponent {
   @Input() producto!: IArticleResponse;
   @Output() comentarioGuardado: EventEmitter<boolean> = new EventEmitter();
   @Output() leerComentarios: EventEmitter<boolean> = new EventEmitter();
+  @Input() set evaluationSummary(value: IReviewsResponse) {
+    if (value) {
+      this.useEvaluationSummary(value);
+    }
+  }
 
   rating = 0;
   starWidth = 20;
-  anchoPintado = 0;
+  paintedWidth = 0;
 
   total = 0;
   resumen: ReviewSummary[] = [];
@@ -47,45 +53,45 @@ export class ProductRatingComponent implements OnChanges {
     private readonly articleService: ArticleService
   ) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.cargaResumen();
-  }
-
   cargaResumen() {
-    this.articleService
-      .getResumenComentarios(this.producto.sku)
-      .subscribe((resp: any) => {
+    this.articleService.getResumenComentarios(this.producto.sku).subscribe({
+      next: (resp: any) => {
         if (!resp.error) {
-          this.rating = 0;
           this.total = resp.total;
           this.resumen = resp.summary;
-
-          this.resumen = this.resumen.map((c) => {
-            c.percentage =
-              this.total > 0 ? (c.quantity * 100) / this.total : 0;
-            this.rating =
-              this.total > 0
-                ? this.rating + (c.stars * c.quantity) / this.total
-                : 0;
-            return c;
-          });
-          this.rating = Number(this.rating.toFixed(1));
-          this.pintaEstrellas(this.rating);
+          this.updateRatingAndStars();
         } else {
-          this.toastrService.error(resp.msg);
+          console.warn(resp.msg);
         }
-      });
+      },
+      error: (error) =>
+        console.warn('Error al cargar el resumen de comentarios'),
+    });
   }
 
-  pintaEstrellas(rating: number) {
-    const width = Math.max(0, Math.min(5, rating)) * this.starWidth;
+  useEvaluationSummary(summary: IReviewsResponse) {
+    this.total = summary.total;
+    this.resumen = summary.summary;
+    this.updateRatingAndStars();
+  }
 
-    this.anchoPintado = width;
+  updateRatingAndStars() {
+    this.rating = 0;
+    this.resumen.forEach((c) => {
+      c.percentage = this.total > 0 ? (c.quantity * 100) / this.total : 0;
+      this.rating += this.total > 0 ? (c.stars * c.quantity) / this.total : 0;
+    });
+    this.rating = Number(this.rating.toFixed(1));
+    this.paintStars(this.rating);
+  }
+
+  paintStars(rating: number) {
+    const width = Math.max(0, Math.min(5, rating)) * this.starWidth;
+    this.paintedWidth = width;
   }
 
   escribirComentario() {
     const usuario = this.sessionService.getSession();
-
     if (usuario.userRole !== 'temp') {
       const initialState = {
         producto: this.producto,

@@ -68,6 +68,7 @@ import { CartService } from '@core/services-v2/cart.service';
 // Modals
 import { ModalScalePriceComponent } from '../modal-scale-price/modal-scale-price.component';
 import { ConfigService } from '@core/config/config.service';
+import { IReviewsResponse } from '@core/models-v2/article/review-response.interface';
 
 @Component({
   selector: 'app-product',
@@ -97,7 +98,7 @@ export class ProductComponent implements OnInit, OnChanges {
     this.images = GalleryUtils.formatImageSlider(value);
     this.generateTags(this.product.metaTags);
   }
-
+  @Input() evaluationSummary!: IReviewsResponse;
   @Output() comentarioGuardado: EventEmitter<boolean> = new EventEmitter();
   @Output() leerComentarios: EventEmitter<boolean> = new EventEmitter();
   //codigo de slide vertical

@@ -149,7 +149,8 @@
             [producto]="product"
             (comentarioGuardado)="comentarioGuardado.emit(true)"
             (leerComentarios)="leerComentarios.emit(true)"
-          ></app-product-rating>
+            [evaluationSummary]="evaluationSummary"
+          />
         </div>
         <div class="d-flex justify-content-between">
           <h5 class="product__name mb-1">
@@ -763,10 +764,11 @@
           <div>
             <div class="d-flex justify-content-center">
               <app-product-rating
-                [producto]="product"
-                (comentarioGuardado)="comentarioGuardado.emit(true)"
-                (leerComentarios)="leerComentarios.emit(true)"
-              ></app-product-rating>
+              [producto]="product"
+              (comentarioGuardado)="comentarioGuardado.emit(true)"
+              (leerComentarios)="leerComentarios.emit(true)"
+              [evaluationSummary]="evaluationSummary"
+            />
             </div>
           </div>
 

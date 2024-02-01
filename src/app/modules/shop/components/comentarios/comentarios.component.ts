@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { AddCommentModalComponent } from '../../../../shared/components/add-comment-modal/add-comment-modal.component';
 import {
@@ -14,6 +14,7 @@ import { IArticleResponse } from '@core/models-v2/article/article-response.inter
 import { ArticleService } from '@core/services-v2/article.service';
 import { CommentSummary } from '@core/models-v2/article/article-comment.interface';
 import { IComment } from '@core/models-v2/article/comment.interface';
+import { IReviewsResponse } from '@core/models-v2/article/review-response.interface';
 
 @Component({
   selector: 'app-comentarios',
@@ -22,6 +23,8 @@ import { IComment } from '@core/models-v2/article/comment.interface';
 })
 export class ComentariosComponent implements OnChanges {
   @Input() producto!: IArticleResponse | undefined;
+  @Output() evaluationSummary: EventEmitter<IReviewsResponse> = new EventEmitter();
+
   rating = 0;
   starWidth = 25;
   anchoPintado = 0;
@@ -58,7 +61,7 @@ export class ComentariosComponent implements OnChanges {
             this.rating = 0;
             this.total = resp.total;
             this.resumen = resp.summary;
-
+            this.evaluationSummary.emit(resp);
             this.resumen = this.resumen.map((r: CommentSummary) => {
               r.percentage =
                 this.total > 0 ? (r.quantity * 100) / this.total : 0;
@@ -80,7 +83,6 @@ export class ComentariosComponent implements OnChanges {
         .getDetalleComentarios(this.producto.sku, this.orden)
         .subscribe({
           next: (resp) => {
-            console.log('getDetalles', resp.data);
             if (resp.data && resp.data.length) {
               this.comentarios = resp.data;
               this.slice = false;

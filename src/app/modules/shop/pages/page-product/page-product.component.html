@@ -36,7 +36,8 @@
         [stock]="stock"
         [recommendedProducts]="recommendedProducts"
         (leerComentarios)="abrirTabEvaluacion()"
-      ></app-product>
+        [evaluationSummary]="evaluationSummary"
+      />
 
       <div #ancla id="ancla"></div>
 
@@ -454,7 +455,8 @@
             <app-comentarios
               #comentarios
               [producto]="product"
-            ></app-comentarios>
+              (evaluationSummary)="handleEvaluationSummary($event)"
+              />
           </div>
         </div>
       </div>
@@ -864,10 +866,11 @@
               data-bs-parent="#accordionExample"
             >
               <div class="accordion-body">
-                <app-comentarios
-                  #comentariosMobile
-                  [producto]="product"
-                ></app-comentarios>
+                     <app-comentarios
+              #comentarios
+              [producto]="product"
+              (evaluationSummary)="handleEvaluationSummary($event)"
+              />
               </div>
             </div>
           </div>
