@@ -1,4 +1,4 @@
-export enum SHOPPING_CART_STATUS_TYPE {
+export enum ShoppingCartStatusType {
   OPEN = 'open',
   PENDING = 'pending',
   FINALIZED = 'finalized',

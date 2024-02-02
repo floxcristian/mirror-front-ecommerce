@@ -1,6 +1,5 @@
 // Angular
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 // Libs
 import { OwlOptions } from 'ngx-owl-carousel-o';
 // Models
@@ -30,10 +29,7 @@ export class BlockSlideshowComponent implements OnInit {
   };
   slides: ISlider[] = [];
 
-  constructor(
-    public sanitizer: DomSanitizer,
-    private readonly cmsService: CmsService
-  ) {}
+  constructor(private readonly cmsService: CmsService) {}
 
   ngOnInit(): void {
     this.cargarGaleria();
@@ -41,9 +37,7 @@ export class BlockSlideshowComponent implements OnInit {
 
   private cargarGaleria(): void {
     this.cmsService.getSliders().subscribe({
-      next: (res) => {
-        this.slides = res.data;
-      },
+      next: (res) => (this.slides = res.data),
       error: (err) => {
         console.error(err);
       },

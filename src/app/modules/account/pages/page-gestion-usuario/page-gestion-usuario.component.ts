@@ -1,12 +1,23 @@
-import { Component, OnInit, Inject, PLATFORM_ID, Renderer2, ElementRef, ViewChild } from '@angular/core';
-import { calculaIcono } from '../../../../shared/utils/utilidades';
-
-import { UsersService } from '../../service/users.service';
-import { ToastrService } from 'ngx-toastr';
-import { SessionService } from '@core/services-v2/session/session.service';
-import { ISession } from '@core/models-v2/auth/session.interface';
-import { SubAccountService } from '@core/services-v2/sub-account.service';
+// Angular
+import {
+  Component,
+  Inject,
+  PLATFORM_ID,
+  Renderer2,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { calculaIcono } from '../../../../shared/utils/utilidades';
+// Libs
+import { ToastrService } from 'ngx-toastr';
+// Models
+import { ISession } from '@core/models-v2/auth/session.interface';
+// Services
+import { UsersService } from '../../service/users.service';
+import { SessionService } from '@core/services-v2/session/session.service';
+import { SubAccountService } from '@core/services-v2/sub-account.service';
+
 export interface Archivo {
   archivo: File;
   nombre: string;
@@ -18,25 +29,25 @@ export interface Archivo {
   templateUrl: './page-gestion-usuario.component.html',
   styleUrls: ['./page-gestion-usuario.component.scss'],
 })
-export class PageGestionUsuarioComponent implements OnInit {
+export class PageGestionUsuarioComponent {
   @ViewChild('idArchivoInput') idArchivoInput!: ElementRef<HTMLInputElement>;
-  userSession!: ISession;
+  session!: ISession;
   nuevo: any = [];
   existe: any = [];
+  archivo!: Archivo | undefined;
+  idArchivo!: string;
+  isExcel: Boolean = false;
+
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private userService: UsersService,
     private toast: ToastrService,
-    private renderer:Renderer2,
+    private renderer: Renderer2,
     // Services V2
     private readonly sessionService: SessionService,
     private readonly subAccountService: SubAccountService
-  ) {}
-  archivo!: Archivo | undefined;
-  idArchivo!: string;
-  isExcel: Boolean = false;
-  ngOnInit() {
-    this.userSession = this.sessionService.getSession();
+  ) {
+    this.session = this.sessionService.getSession();
   }
 
   onFileChange(event: any): void {
@@ -54,7 +65,7 @@ export class PageGestionUsuarioComponent implements OnInit {
 
       this.archivo = aux;
       if (isPlatformBrowser(this.platformId)) {
-        this.renderer.setProperty(this.idArchivoInput,'value','')
+        this.renderer.setProperty(this.idArchivoInput, 'value', '');
       }
     }
   }
@@ -66,15 +77,10 @@ export class PageGestionUsuarioComponent implements OnInit {
       this.toast.error('Debe seleccionar un archivo Excel o PDF.');
       return;
     }
-    const data = {
-      file: this.archivo?.archivo,
-      id: this.userSession.documentId,
-      accion: 'guardar',
-    };
 
     await this.subAccountService
       .createSubAccountsFromExcel({
-        documentId: this.userSession.documentId,
+        documentId: this.session.documentId,
         file: this.archivo?.archivo!,
       })
       .subscribe({
@@ -106,11 +112,12 @@ export class PageGestionUsuarioComponent implements OnInit {
       data: {},
       delete: false,
       edit: false,
-      raiz: this.userSession,
+      raiz: this.session,
     };
     this.userService.activarModal(json);
   }
-  extensionValida(extension: string) {
+
+  extensionValida(extension: string): boolean {
     if (
       extension.toLowerCase() === 'xls' ||
       extension.toLowerCase() === 'xlsx'

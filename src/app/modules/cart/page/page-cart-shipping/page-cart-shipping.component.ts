@@ -61,7 +61,7 @@ import { GetLogisticPromiseRequest } from '@core/models-v2/requests/cart/logisti
 import { GetLogisticPromiseResponse } from '@core/models-v2/responses/logistic-promise-responses';
 import { IGuest } from '@core/models-v2/storage/guest.interface';
 import { GuestStorageService } from '@core/storage/guest-storage.service';
-import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
+import { DeliveryType } from '@core/enums/delivery-type.enum';
 import { environment } from '@env/environment';
 import { ICreateGuest } from '@core/models-v2/customer/create-guest.interface';
 import { CustomerService } from '@core/services-v2/customer.service';
@@ -964,7 +964,7 @@ export class PageCartShippingComponent implements OnInit {
     const request: GetLogisticPromiseRequest = {
       shoppingCartId: this.cartSession._id!.toString(),
       user: this.cartSession.user ?? '',
-      deliveryMode: DeliveryModeType.DELIVERY,
+      deliveryMode: DeliveryType.DELIVERY,
       destination: destination,
       addressId: address?.id ?? '',
       address: address?.address ?? '',
@@ -1260,7 +1260,7 @@ export class PageCartShippingComponent implements OnInit {
   async eliminarGrupo(index: any) {
     this.loadingShipping = true;
     this.loadingResumen = true;
-    console.log('inicio shipping',this.selectedShippingId)
+    console.log('inicio shipping', this.selectedShippingId);
     const resultado: any = this.addresses.find(
       (address) => address.id == this.selectedShippingId
     );
@@ -1291,8 +1291,8 @@ export class PageCartShippingComponent implements OnInit {
 
       this.obtieneDespachos();
       this.obtieneTiendas();
-      console.log('shipping',this.selectedShippingId)
-      console.log('addresses:', this.addresses)
+      console.log('shipping', this.selectedShippingId);
+      console.log('addresses:', this.addresses);
     });
   }
 

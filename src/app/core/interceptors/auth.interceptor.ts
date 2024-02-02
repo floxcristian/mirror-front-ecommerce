@@ -1,21 +1,23 @@
+// Angular
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
 } from '@angular/common/http';
+// Rxjs
 import { Observable, catchError, switchMap, throwError } from 'rxjs';
-import { isPlatformBrowser } from '@angular/common';
+// Env
+import { environment } from '@env/environment';
+// Services
 import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
 import { AuthApiService } from '@core/services-v2/auth/auth.service';
-var username: String = 'services';
-var password: String = '0.=j3D2ss1.w29-';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   authdata: any;
-  str = username + ':' + password;
 
   constructor(
     @Inject(PLATFORM_ID) private plataformaId: any,
@@ -38,7 +40,9 @@ export class AuthInterceptor implements HttpInterceptor {
       });
     } else {
       if (isPlatformBrowser(this.plataformaId)) {
-        this.authdata = window.btoa(username + ':' + password);
+        this.authdata = window.btoa(
+          environment.basicAuthUser + ':' + environment.basicAuthPass
+        );
       } else {
         this.authdata = 'c2VydmljZXM6MC49ajNEMnNzMS53Mjkt';
       }

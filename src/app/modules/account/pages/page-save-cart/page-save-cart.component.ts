@@ -14,7 +14,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { CartService } from '@core/services-v2/cart.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { SessionService } from '@core/services-v2/session/session.service';
-import { SHOPPING_CART_STATUS_TYPE } from '@core/enums/shopping-cart-status.enum';
+import { ShoppingCartStatusType } from '@core/enums/shopping-cart-status.enum';
 import {
   IOrderDetail,
   IOrderDetailResponse,
@@ -38,7 +38,7 @@ export class PageSaveCartComponent implements OnInit {
   carrosPorPagina = 8;
   showLoading = true;
   usuario!: ISession;
-  SHOPPING_CART_STATUS_TYPE = SHOPPING_CART_STATUS_TYPE;
+  ShoppingCartStatusType = ShoppingCartStatusType;
   constructor(
     public root: RootService,
     private localS: LocalStorageService,
@@ -55,7 +55,7 @@ export class PageSaveCartComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.usuario = this.sessionService.getSession(); //this.root.getDataSesionUsuario();
+    this.usuario = this.sessionService.getSession();
     if (!this.usuario.hasOwnProperty('username')) {
       this.usuario.username = this.usuario.email;
     }
@@ -64,7 +64,7 @@ export class PageSaveCartComponent implements OnInit {
 
   async updateCart(id: any, estado: any) {
     switch (estado) {
-      case SHOPPING_CART_STATUS_TYPE.DELETED:
+      case ShoppingCartStatusType.DELETED:
         const initialState: DataModal = {
           titulo: 'Confirmación',
           mensaje:
@@ -100,7 +100,7 @@ export class PageSaveCartComponent implements OnInit {
           }
         });
         break;
-      case SHOPPING_CART_STATUS_TYPE.OPEN:
+      case ShoppingCartStatusType.OPEN:
         const cartSession: IShoppingCart = this.localS.get('carroCompraB2B');
         try {
           // Si existe un carro con productos actualmente
@@ -125,7 +125,7 @@ export class PageSaveCartComponent implements OnInit {
                 await lastValueFrom(
                   this.cartService.setSaveCart(
                     cartSession._id,
-                    SHOPPING_CART_STATUS_TYPE.SAVED
+                    ShoppingCartStatusType.SAVED
                   )
                 );
               } else {
@@ -133,7 +133,7 @@ export class PageSaveCartComponent implements OnInit {
                 await lastValueFrom(
                   this.cartService.setSaveCart(
                     cartSession._id,
-                    SHOPPING_CART_STATUS_TYPE.DELETED
+                    ShoppingCartStatusType.DELETED
                   )
                 );
               }
@@ -206,7 +206,7 @@ export class PageSaveCartComponent implements OnInit {
     this.cartService
       .getOrderDetails({
         user: this.usuario.username ? this.usuario.username : '',
-        statuses: [SHOPPING_CART_STATUS_TYPE.SAVED],
+        statuses: [ShoppingCartStatusType.SAVED],
       })
       .subscribe((resp: IOrderDetailResponse) => {
         if (resp.data && resp.data.length > 0) {

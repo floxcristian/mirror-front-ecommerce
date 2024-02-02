@@ -77,7 +77,7 @@ import { CustomerAddressApiService } from '@core/services-v2/customer-address/cu
 import { PaymentMethodPurchaseOrderRequestService } from '@core/services-v2/payment-method-purchase-order-request.service';
 import { DocumentType } from '@core/enums/document-type.enum';
 import { CustomerService } from '@core/services-v2/customer.service';
-import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
+import { DeliveryType } from '@core/enums/delivery-type.enum';
 
 import { GuestStorageService } from '@core/storage/guest-storage.service';
 import { IGuest } from '@core/models-v2/storage/guest.interface';
@@ -103,9 +103,9 @@ export interface Archivo {
   styleUrls: ['./page-cart-payment-method.component.scss'],
 })
 export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
-
   @ViewChild('idArchivoInput') idArchivoInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('idArchivoInputMobile') idArchivoInputMobile!: ElementRef<HTMLInputElement>;
+  @ViewChild('idArchivoInputMobile')
+  idArchivoInputMobile!: ElementRef<HTMLInputElement>;
   @ViewChild('openModalButton') openModalButton!: ElementRef;
   private destroy$: Subject<void> = new Subject();
   isInvoice!: boolean;
@@ -190,7 +190,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private readonly gtmService: GoogleTagManagerService,
     @Inject(PLATFORM_ID) private platformId: Object,
-    private renderer:Renderer2,
+    private renderer: Renderer2,
     // Services V2
     private readonly sessionStorage: SessionStorageService,
     private readonly guestStorage: GuestStorageService,
@@ -474,7 +474,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     const shipment = this.cartSession.shipment;
     switch (shipment && shipment.deliveryMode) {
       case 'TIENDA':
-      case DeliveryModeType.PICKUP: //RETIRO EN TIENDA
+      case DeliveryType.PICKUP: //RETIRO EN TIENDA
         //se revisa si existe la informacion en el localstor  age desde el paso anterior
         this.tiendaRetiro = this.localS.get(StorageKey.tiendaRetiro);
 
@@ -484,7 +484,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         }
         break;
       case 'EXP': //DESPACHO DOMICILIO
-      case DeliveryModeType.DELIVERY:
+      case DeliveryType.DELIVERY:
       default:
         if (this.cartSession.customer?.documentId != '0') {
           //si está la informacion del cliente, se busca la direccion del usuario indicada en el despacho
@@ -634,8 +634,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     if (files.length) {
       this.archivo = this.cargaArchivo(files[0]);
       if (isPlatformBrowser(this.platformId)) {
-        this.renderer.setProperty(this.idArchivoInput,'value',null)
-        this.renderer.setProperty(this.idArchivoInputMobile,'value',null)
+        this.renderer.setProperty(this.idArchivoInput, 'value', null);
+        this.renderer.setProperty(this.idArchivoInputMobile, 'value', null);
       }
     }
   }
@@ -802,7 +802,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       invitado.cartId = this.cartSession._id || '';
       invitado.deliveryType =
         this.cartSession.shipment?.deliveryMode === 'VEN- DPCLI' ||
-        this.cartSession.shipment?.deliveryMode === DeliveryModeType.DELIVERY
+        this.cartSession.shipment?.deliveryMode === DeliveryType.DELIVERY
           ? 'DES'
           : 'RC';
       this.guestStorage.remove();
@@ -965,7 +965,9 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     );
     if (consultaStock.stockProblem && consultaStock.stockProblemLines) {
       this.productosSinStock = consultaStock.stockProblemLines;
-      this.renderer.selectRootElement(this.openModalButton.nativeElement).click()
+      this.renderer
+        .selectRootElement(this.openModalButton.nativeElement)
+        .click();
     }
     return consultaStock.stockProblem;
   }

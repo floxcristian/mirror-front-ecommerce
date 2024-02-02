@@ -1,9 +1,11 @@
+// Angular
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   Router,
 } from '@angular/router';
+// Services
 import { SessionService } from '@core/services-v2/session/session.service';
 import { MenuService } from '@core/services-v2/menu/menu.service';
 
@@ -11,25 +13,22 @@ import { MenuService } from '@core/services-v2/menu/menu.service';
 export class AuthGuard {
   constructor(
     private router: Router,
-    // Services V2
     private readonly sessionService: SessionService,
     private readonly menuService: MenuService
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const user = this.sessionService.getSession();
-    const links = this.menuService.get(user.userRole);
+    const { userRole } = this.sessionService.getSession();
+    const links = this.menuService.get(userRole);
 
-    const urls = links.map((x: any) => {
+    const urls = links.map((x) => {
       x.url.shift();
       return `/${x.url.join('/')}`;
     });
 
-    if (!urls.includes(state.url)) {
-      this.router.navigate(['/inicio']);
-      return false;
-    } else {
-      return true;
-    }
+    if (urls.includes(state.url)) return true;
+
+    this.router.navigate(['/inicio']);
+    return false;
   }
 }

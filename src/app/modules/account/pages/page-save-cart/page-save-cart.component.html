@@ -90,7 +90,7 @@
                       class="btn btn-sm btn-secondary me-2"
                       style="font-size: 12px"
                       (click)="
-                        updateCart(cart.id, SHOPPING_CART_STATUS_TYPE.OPEN)
+                        updateCart(cart.id, ShoppingCartStatusType.OPEN)
                       "
                     >
                       Activar
@@ -99,7 +99,7 @@
                       class="btn btn-sm btn-danger"
                       style="font-size: 12px"
                       (click)="
-                        updateCart(cart.id, SHOPPING_CART_STATUS_TYPE.DELETED)
+                        updateCart(cart.id, ShoppingCartStatusType.DELETED)
                       "
                     >
                       Eliminar
@@ -113,7 +113,7 @@
                       style="font-size: 12px"
                       title="Activar Carro"
                       (click)="
-                        updateCart(cart.id, SHOPPING_CART_STATUS_TYPE.OPEN)
+                        updateCart(cart.id, ShoppingCartStatusType.OPEN)
                       "
                     >
                       <i class="far fa-check-circle"></i>
@@ -123,7 +123,7 @@
                       style="font-size: 12px"
                       title="Borrar Carro"
                       (click)="
-                        updateCart(cart.id, SHOPPING_CART_STATUS_TYPE.DELETED)
+                        updateCart(cart.id, ShoppingCartStatusType.DELETED)
                       "
                     >
                       <i class="far fa-trash-alt"></i>

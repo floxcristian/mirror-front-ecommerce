@@ -6,7 +6,7 @@ import {
   IShoppingCartProduct,
   IShoppingCartTripDate,
 } from '@core/models-v2/cart/shopping-cart.interface';
-import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
+import { DeliveryType } from '@core/enums/delivery-type.enum';
 import { CartService } from '@core/services-v2/cart.service';
 import { GetLogisticPromiseRequest } from '@core/models-v2/requests/cart/logistic-promise-request';
 import { ToastrService } from 'ngx-toastr';
@@ -62,7 +62,7 @@ export class DetalleCarroProductosOcComponent implements OnInit {
 
   async calculateLogisticPromise() {
     const deliveryMode =
-      this.cart.shipment?.deliveryMode ?? DeliveryModeType.PICKUP;
+      this.cart.shipment?.deliveryMode ?? DeliveryType.PICKUP;
     const addressId = this.cart.shipment?.addressId ?? '';
     const { address, destination } = await this.getAddressAndDestination(
       deliveryMode,
@@ -140,7 +140,7 @@ export class DetalleCarroProductosOcComponent implements OnInit {
     addressId: string
   ): Promise<IAddressDestination> {
     const documentId = this.cart.customer?.documentId ?? '';
-    if (deliveryMode === DeliveryModeType.DELIVERY) {
+    if (deliveryMode === DeliveryType.DELIVERY) {
       const addresses = await firstValueFrom(
         this.customerAddressService.getDeliveryAddresses(documentId)
       );

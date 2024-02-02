@@ -32,13 +32,13 @@ import {
   IShoppingCartProduct,
   IShoppingCartTripDate,
 } from '@core/models-v2/cart/shopping-cart.interface';
-import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
+import { DeliveryType } from '@core/enums/delivery-type.enum';
 import { CustomerService } from '@core/services-v2/customer.service';
 import { CustomerAddressApiService } from '@core/services-v2/customer-address/customer-address-api.service';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
-import { SHOPPING_CART_STATUS_TYPE } from '@core/enums/shopping-cart-status.enum';
+import { ShoppingCartStatusType } from '@core/enums/shopping-cart-status.enum';
 import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
 import { ITotals } from '@core/models-v2/cart/totals.interface';
 import { ShippingService } from '@shared/interfaces/address';
@@ -137,7 +137,6 @@ export class PagesCartPaymentOcComponent implements OnInit {
   async ngOnInit() {
     const params = this.route.snapshot.queryParams;
     this.id = params['cart_id'] ? params['cart_id'] : params['cart-id'];
-    // this.user = this.localS.get('usuario');
     this.user = this.sessionStorage.get();
 
     let consulta = await firstValueFrom(this.cartService.getOneById(this.id));
@@ -148,8 +147,8 @@ export class PagesCartPaymentOcComponent implements OnInit {
     const status = this.cartSession.status ?? '';
     if (
       ![
-        SHOPPING_CART_STATUS_TYPE.OPEN.toString(),
-        SHOPPING_CART_STATUS_TYPE.PENDING.toString(),
+        ShoppingCartStatusType.OPEN.toString(),
+        ShoppingCartStatusType.PENDING.toString(),
       ].includes(status)
     ) {
       return;
@@ -159,7 +158,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
 
     this.productCart = this.cartSession.products;
     this.shippingType =
-      this.cartSession.shipment?.deliveryMode ?? DeliveryModeType.DELIVERY;
+      this.cartSession.shipment?.deliveryMode ?? DeliveryType.DELIVERY;
     await this.getDireccion();
     this.cartSession.products.map((producto) => {
       //asignando producto al carro
@@ -174,9 +173,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
 
   async getDireccion() {
     const documentId = this.cartSession.customer?.documentId ?? '';
-    if (
-      this.cartSession.shipment?.deliveryMode === DeliveryModeType.DELIVERY
-    ) {
+    if (this.cartSession.shipment?.deliveryMode === DeliveryType.DELIVERY) {
       const addresses = await firstValueFrom(
         this.customerAddressService.getDeliveryAddresses(documentId)
       );

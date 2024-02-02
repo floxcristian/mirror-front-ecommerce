@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
+import { DeliveryType } from '@core/enums/delivery-type.enum';
 import { IShoppingCartShipment } from '@core/models-v2/cart/shopping-cart.interface';
 import { ICustomerAddress } from '@core/models-v2/customer/customer.interface';
 import { IStore } from '@core/services-v2/geolocation/models/store.interface';
@@ -24,7 +24,7 @@ export class ResumenRetiroComponent implements OnInit {
     await this.direccion;
     await this.shippingType;
 
-    if (this.shippingType === DeliveryModeType.DELIVERY)
+    if (this.shippingType === DeliveryType.DELIVERY)
       this.tipo = 'Despacho a domicilio';
     else this.tipo = 'Retiro en tienda';
   }

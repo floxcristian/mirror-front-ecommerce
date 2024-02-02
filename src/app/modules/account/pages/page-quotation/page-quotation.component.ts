@@ -8,8 +8,6 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
-// Env
-import { environment } from '@env/environment';
 // Rxjs
 import { Subject } from 'rxjs';
 // Libs
@@ -24,7 +22,7 @@ import {
   IOrderDetail,
   IOrderDetailResponse,
 } from '@core/models-v2/cart/order-details.interface';
-import { SHOPPING_CART_STATUS_TYPE } from '@core/enums/shopping-cart-status.enum';
+import { ShoppingCartStatusType } from '@core/enums/shopping-cart-status.enum';
 // Services
 import { SessionService } from '@core/services-v2/session/session.service';
 import { CartService } from '@core/services-v2/cart.service';
@@ -88,8 +86,8 @@ export class PageQuotationComponent implements OnInit {
             user: that.usuario.username ? that.usuario.username : '',
             salesDocumentType: 1,
             statuses: [
-              SHOPPING_CART_STATUS_TYPE.GENERATED,
-              // SHOPPING_CART_STATUS_TYPE.FINALIZED,
+              ShoppingCartStatusType.GENERATED,
+              // ShoppingCartStatusType.FINALIZED,
             ],
             sort: `${that.columns[dataTablesParameters.order[0].column]}|${
               dataTablesParameters.order[0].dir

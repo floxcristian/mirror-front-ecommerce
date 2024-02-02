@@ -52,7 +52,7 @@ import {
 import { GetLogisticPromiseResponse } from '@core/models-v2/responses/logistic-promise-responses';
 import { TransferShoppingCartRequest } from '@core/models-v2/requests/cart/transfer-shopping-cart.request';
 import { ShoppingCartOmniStorageService } from '@core/storage/shopping-cart-omni-storage.service';
-import { DeliveryModeType } from '@core/enums/delivery-mode.enum';
+import { DeliveryType } from '@core/enums/delivery-type.enum';
 import { IProduct } from '@core/models-v2/oms/order.interface';
 import { IOrderDetailResponse } from '@core/models-v2/cart/order-details.interface';
 import { UserRoleType } from '@core/enums/user-role-type.enum';
@@ -256,10 +256,10 @@ export class CartService {
       let nombre = '';
       const isPickup =
         shipment.serviceType == 'TIENDA' ||
-        shipment.deliveryMode === DeliveryModeType.PICKUP;
+        shipment.deliveryMode === DeliveryType.PICKUP;
       const isDelivery =
         shipment.serviceType != 'TIENDA' ||
-        shipment.deliveryMode === DeliveryModeType.DELIVERY;
+        shipment.deliveryMode === DeliveryType.DELIVERY;
       if (isPickup) {
         if (this.cartTempData.groups && this.cartTempData.groups.length > 1) {
           //ver quien tiene la mayor fecha para el despacho
@@ -592,7 +592,7 @@ export class CartService {
         let nombre = '';
         if (
           this.CartData.shipment?.serviceType == 'TIENDA' ||
-          this.CartData.shipment?.deliveryMode === DeliveryModeType.PICKUP
+          this.CartData.shipment?.deliveryMode === DeliveryType.PICKUP
         ) {
           nombre =
             `Retiro en tienda ` +
@@ -854,10 +854,10 @@ export class CartService {
         let nombre = '';
         const isPickup =
           shipment.serviceType == 'TIENDA' ||
-          shipment.deliveryMode === DeliveryModeType.PICKUP;
+          shipment.deliveryMode === DeliveryType.PICKUP;
         const isDelivery =
           shipment.serviceType != 'TIENDA' ||
-          shipment.deliveryMode === DeliveryModeType.DELIVERY;
+          shipment.deliveryMode === DeliveryType.DELIVERY;
         if (isPickup) {
           const groups = this.cartTempData.groups ?? [];
           if (groups.length > 1) {

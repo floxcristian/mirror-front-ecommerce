@@ -1,4 +1,4 @@
-export enum DeliveryModeType {
+export enum DeliveryType {
   DELIVERY = 'delivery',
   PICKUP = 'pickup',
 }

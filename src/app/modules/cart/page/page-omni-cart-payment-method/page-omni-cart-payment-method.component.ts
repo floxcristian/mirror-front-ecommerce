@@ -15,7 +15,7 @@ import { IStore } from '@core/services-v2/geolocation/models/store.interface';
 // Services
 import { PaymentMethodOmniService } from '@core/services-v2/payment-method-omni.service';
 import { CartService } from '@core/services-v2/cart.service';
-import { SHOPPING_CART_STATUS_TYPE } from '@core/enums/shopping-cart-status.enum';
+import { ShoppingCartStatusType } from '@core/enums/shopping-cart-status.enum';
 
 @Component({
   selector: 'app-page-omni-cart-payment-method',
@@ -76,7 +76,7 @@ export class PageOmniCartPaymentMethodComponent implements OnInit {
         this.cartService.getOmniShoppingCart(this.id)
       );
       this.cartSession = resp.shoppingCart;
-      if (this.cartSession.status === SHOPPING_CART_STATUS_TYPE.OPEN) {
+      if (this.cartSession.status === ShoppingCartStatusType.OPEN) {
         this.shippingType = this.cartSession.shipment?.deliveryMode ?? '';
         this.productCart = this.cartSession.products;
         this.setDireccion(this.cartSession);

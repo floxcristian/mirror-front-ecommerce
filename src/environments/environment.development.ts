@@ -22,6 +22,8 @@ export const environment = {
     'https://dev.implementos.cl/carro-compra/omni-forma-de-pago',
   urlNotificaciones: 'https://dev-api.implementos.cl/api/notificaciones',
   apiEcommerce: 'https://dev-api.implementos.cl/ecommerce',
+  basicAuthUser: 'services',
+  basicAuthPass: '0.=j3D2ss1.w29-',
   imageUrl: 'https://images.implementos.cl',
   gmapScript:
     'https://maps.googleapis.com/maps/api/js?key=AIzaSyD_HuwF5F8X8fOSR_1Ai_hFT115caUq4vI&libraries=places&callback=Function.prototype',
