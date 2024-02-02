@@ -101,9 +101,9 @@ export class MapComponent implements OnInit, OnChanges {
       this.autocomplete.setFields(['address_component', 'geometry']);
       this.autocomplete.addListener('place_changed', () => {
         this.ngZone.run(() => {
-          let place: google.maps.places.PlaceResult =
+          const place: google.maps.places.PlaceResult =
             this.autocomplete.getPlace();
-          if (place.geometry === undefined || place.geometry === null) return;
+          if (!place.geometry) return;
           this.setDireccion.emit([
             place.address_components,
             place.geometry.location,
@@ -140,9 +140,9 @@ export class MapComponent implements OnInit, OnChanges {
       })
       .subscribe(({ status, results }) => {
         this.searchElementRef.nativeElement.value = this.storeAddress;
-        const { location } = results[0].geometry;
 
         if (status === google.maps.GeocoderStatus.OK) {
+          const { location } = results[0].geometry;
           const center: google.maps.LatLngLiteral = {
             lat: location.lat(),
             lng: location.lng(),
@@ -199,16 +199,16 @@ export class MapComponent implements OnInit, OnChanges {
     this.clearAdress.emit();
   }
 
-    /**
+  /**
    * Actualiza el mapa centrando en las coordenadas especificadas y coloca un marcador en esa ubicación.
    * @param coordinates Objeto google.maps.LatLngLiteral que contiene las propiedades 'lat' y 'lng' para latitud y longitud.
    * @return void No retorna ningún valor.
    */
-    updateMapByCoordinates(coordinates: google.maps.LatLngLiteral): void {
-      const { lat, lng } = coordinates;
-      const newCenter: google.maps.LatLngLiteral = { lat, lng };
-      this.center = newCenter;
-      this.map.panTo(newCenter);
-      this.markerPositions = [newCenter];
-    }
+  updateMapByCoordinates(coordinates: google.maps.LatLngLiteral): void {
+    const { lat, lng } = coordinates;
+    const newCenter: google.maps.LatLngLiteral = { lat, lng };
+    this.center = newCenter;
+    this.map.panTo(newCenter);
+    this.markerPositions = [newCenter];
+  }
 }
