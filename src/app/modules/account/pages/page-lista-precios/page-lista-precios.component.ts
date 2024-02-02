@@ -6,6 +6,7 @@ import { SessionService } from '@core/services-v2/session/session.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { CustomerService } from '@core/services-v2/customer.service';
 import { IArticlePrice } from '@core/models-v2/customer/customer.interface';
+import { environment } from '@env/environment';
 @Component({
   selector: 'app-page-lista-precios',
   templateUrl: './page-lista-precios.component.html',
@@ -26,7 +27,7 @@ export class PageListaPreciosComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
 
   showLoading = true;
-  IVA = 0.19;
+  IVA = environment.IVA;
 
   private localizacion$: Subject<any> = new Subject();
   readonly localizacionObs$: Observable<any> =

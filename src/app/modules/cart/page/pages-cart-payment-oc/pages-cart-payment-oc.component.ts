@@ -68,7 +68,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
   banners: Banner[] = [];
   verificar_oc = false;
   loadingText = '';
-  IVA = environment.IVA || 0.19;
+  IVA = environment.IVA;
   isVacio = isVacio;
   @Input() id: any;
   user!: ISession | null;
@@ -104,7 +104,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
 
   purchaseOrderId!: string;
   showresumen = true;
-  firstCharge:number = 0
+  firstCharge: number = 0;
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -335,8 +335,8 @@ export class PagesCartPaymentOcComponent implements OnInit {
 
   Ver_fecha(event: any) {
     this.fechas = event;
-    if(this.firstCharge === 0) this.showresumen = !this.showresumen
-    this.firstCharge++
+    if (this.firstCharge === 0) this.showresumen = !this.showresumen;
+    this.firstCharge++;
   }
   setSeleccionarEnvio(event: any, i: any) {
     if (this.cartSession && this.cartSession.groups) {

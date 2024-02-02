@@ -1,6 +1,6 @@
 export class ImageUtils {
   /**
-   * Obtiene imagen por defecto de un producto.
+   * Obtener imagen por defecto de un producto.
    * @returns
    */
   static getDefaultProductImage(): string {

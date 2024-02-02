@@ -55,7 +55,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
   banners: Banner[] = [];
   paso1!: boolean;
   showresumen = false;
-  IVA = environment.IVA || 0.19;
+  IVA = environment.IVA;
   isVacio = isVacio;
 
   recommendedProducts: IArticle[] = [];

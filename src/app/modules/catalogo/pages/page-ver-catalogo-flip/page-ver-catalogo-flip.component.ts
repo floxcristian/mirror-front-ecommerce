@@ -1,4 +1,11 @@
-import { Component, ElementRef, Inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { PageFlip, SizeType } from 'page-flip';
@@ -11,7 +18,12 @@ import { SessionService } from '@core/services-v2/session/session.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
 import { CatalogService } from '@core/services-v2/catalog.service';
-import { IBody, ICatalog, ILeftSide, IRightSide } from '@core/models-v2/catalog/catalog-response.interface';
+import {
+  IBody,
+  ICatalog,
+  ILeftSide,
+  IRightSide,
+} from '@core/models-v2/catalog/catalog-response.interface';
 import { MetaTag } from '@core/models-v2/article/article-response.interface';
 import { CartService } from '@core/services-v2/cart.service';
 
@@ -21,7 +33,7 @@ import { CartService } from '@core/services-v2/cart.service';
   styleUrls: ['./page-ver-catalogo-flip.component.scss'],
 })
 export class PageVerCatalogoFlipComponent implements OnInit {
-  @ViewChild('demoBookExample') _demoBookExample!:ElementRef<HTMLElement>
+  @ViewChild('demoBookExample') _demoBookExample!: ElementRef<HTMLElement>;
   pageFlip: any;
   pageTotal: number = 0;
   pageOrientation!: string;
@@ -40,16 +52,16 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   skus!: Array<any>;
   dispositivo!: string;
   iva = true;
-  IVA = environment.IVA || 0.19;
+  IVA = environment.IVA;
   paginasTemp: Array<any> = [];
   tipoCatalogo: string = '';
   tags: any[] = [];
-  rutCatalogo:string = '';
+  rutCatalogo: string = '';
   Generico = false;
   nombreCliente: string | null = '';
   folio: any;
   propuesta: any;
-  isLoadPrecio = false
+  isLoadPrecio = false;
   constructor(
     private localS: LocalStorageService,
     private router: Router,
@@ -61,7 +73,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     public cart: CartService,
     private readonly sessionService: SessionService,
     private readonly geolocationService: GeolocationServiceV2,
-    private readonly catalogService:CatalogService
+    private readonly catalogService: CatalogService
   ) {}
 
   getTags() {
@@ -69,44 +81,43 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(isPlatformBrowser(this.platformId)){
+    if (isPlatformBrowser(this.platformId)) {
       this.responsive
-      .observe([
-        Breakpoints.TabletPortrait,
-        Breakpoints.HandsetPortrait,
-        Breakpoints.WebPortrait,
-        Breakpoints.WebLandscape,
-        Breakpoints.Web,
-      ])
-      .subscribe((result) => {
-        this.pageTotal = 0;
-        this.paginas = [];
-        this.paginasMobile = [];
-        this.pageFlip = null;
-        const breakpoints = result.breakpoints;
-        if (breakpoints[Breakpoints.TabletPortrait]) {
-          this.dispositivo = 'tablet';
-        } else if (breakpoints[Breakpoints.HandsetPortrait]) {
-          this.dispositivo = 'smartphone';
-        } else if (
-          breakpoints[Breakpoints.WebLandscape] ||
-          breakpoints[Breakpoints.WebPortrait] ||
-          breakpoints[Breakpoints.Web]
-        ) {
-          this.dispositivo = 'web';
-        } else {
-          this.dispositivo = 'tablet';
-        }
-      });
-    this.validarParametros();
-    this.screenWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-    this.screenHeight = isPlatformBrowser(this.platformId)
-      ? window.innerHeight
-      : 900;
-    }
-    else console.log('not client')
+        .observe([
+          Breakpoints.TabletPortrait,
+          Breakpoints.HandsetPortrait,
+          Breakpoints.WebPortrait,
+          Breakpoints.WebLandscape,
+          Breakpoints.Web,
+        ])
+        .subscribe((result) => {
+          this.pageTotal = 0;
+          this.paginas = [];
+          this.paginasMobile = [];
+          this.pageFlip = null;
+          const breakpoints = result.breakpoints;
+          if (breakpoints[Breakpoints.TabletPortrait]) {
+            this.dispositivo = 'tablet';
+          } else if (breakpoints[Breakpoints.HandsetPortrait]) {
+            this.dispositivo = 'smartphone';
+          } else if (
+            breakpoints[Breakpoints.WebLandscape] ||
+            breakpoints[Breakpoints.WebPortrait] ||
+            breakpoints[Breakpoints.Web]
+          ) {
+            this.dispositivo = 'web';
+          } else {
+            this.dispositivo = 'tablet';
+          }
+        });
+      this.validarParametros();
+      this.screenWidth = isPlatformBrowser(this.platformId)
+        ? window.innerWidth
+        : 900;
+      this.screenHeight = isPlatformBrowser(this.platformId)
+        ? window.innerHeight
+        : 900;
+    } else console.log('not client');
   }
 
   async validarParametros() {
@@ -115,10 +126,13 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     let url = this.router.parseUrl(this.router.url);
     id = url.queryParams['id'];
 
-    if(id){
+    if (id) {
       this.catalogService.getCatalog(id).subscribe({
-        next:async(res)=>{
-          if(res.data.proposalNumber != 0) this.propuesta = await this.catalogService.getProposal(res.data.proposalNumber);
+        next: async (res) => {
+          if (res.data.proposalNumber != 0)
+            this.propuesta = await this.catalogService.getProposal(
+              res.data.proposalNumber
+            );
           this.tipoCatalogo = res.data.catalogType;
           this.folio = res.data.proposalNumber;
           this.nombreCliente = res.data.name;
@@ -145,20 +159,23 @@ export class PageVerCatalogoFlipComponent implements OnInit {
             }
           }, 1300);
         },
-        error:(err)=>{
+        error: (err) => {
           this.toast.error('Error, el catalogo no se encuentra disponible');
           this.router.navigate(['/', 'catalogos']);
           return;
-        }
-      })
-    }else{
+        },
+      });
+    } else {
       objeto = this.localS.get(StorageKey.catalogo);
       if (!objeto) {
         this.toast.error('Error, el catalogo no se encuentra disponible');
         this.router.navigate(['/', 'catalogos']);
         return;
       } else {
-        if(objeto.proposalNumber != 0) this.propuesta = await this.catalogService.getProposal(objeto.proposalNumber);
+        if (objeto.proposalNumber != 0)
+          this.propuesta = await this.catalogService.getProposal(
+            objeto.proposalNumber
+          );
         this.tipoCatalogo = objeto.catalogType;
         this.folio = objeto.proposalNumber;
         this.nombreCliente = objeto.name;
@@ -186,22 +203,22 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       }
     }
   }
-  generateTag(tags:MetaTag[] | undefined , code:string){
+  generateTag(tags: MetaTag[] | undefined, code: string) {
     if (tags) {
-      let index = tags.findIndex( (tag:MetaTag) => tag.code === code)
-      if(index === -1){
-        return 0
-      }else{
-        return this.isNumber(tags[index].value)
+      let index = tags.findIndex((tag: MetaTag) => tag.code === code);
+      if (index === -1) {
+        return 0;
+      } else {
+        return this.isNumber(tags[index].value);
       }
-    }else{
-      return 0
+    } else {
+      return 0;
     }
   }
 
-  isNumber(value:number | string){
-    if(typeof value === 'number') return value
-    else return 0
+  isNumber(value: number | string) {
+    if (typeof value === 'number') return value;
+    else return 0;
   }
   async establecerPrecio() {
     let user = this.sessionService.getSession();
@@ -223,9 +240,9 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     }
     if (!this.propuesta) {
       this.catalogService.getCatalogsProductPrices(params).subscribe({
-        next:(res)=>{
-          res.map((precio)=>{
-            this.catalogo.map((objeto:IBody) => {
+        next: (res) => {
+          res.map((precio) => {
+            this.catalogo.map((objeto: IBody) => {
               for (let objA of objeto.leftSide || []) {
                 if (objA.products.type == 'producto') {
                   if (this.tipoCatalogo == 'Automatico') {
@@ -235,7 +252,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
                       this.rutCatalogo != '0'
                     ) {
                       objA.products.precioEsp = precio.priceInfo.customerPrice;
-                      objA.products.precio =precio.priceInfo.commonPrice;
+                      objA.products.precio = precio.priceInfo.commonPrice;
                     } else if (
                       objA.products.product == precio.sku &&
                       this.rutCatalogo == '0'
@@ -244,10 +261,17 @@ export class PageVerCatalogoFlipComponent implements OnInit {
                       objA.products.precio = precio.priceInfo.commonPrice;
                     }
                     if (objA.products.product == precio.sku) {
-                      objA.products.precioEscala = precio.priceInfo.hasScalePrice;
+                      objA.products.precioEscala =
+                        precio.priceInfo.hasScalePrice;
                       objA.products.preciosScal = precio.priceInfo.scalePrice;
-                      objA.products.cyber = this.generateTag(precio.metaTags,'cyber');
-                      objA.products.cyberMonday = this.generateTag(precio.metaTags,'cyberMonday');
+                      objA.products.cyber = this.generateTag(
+                        precio.metaTags,
+                        'cyber'
+                      );
+                      objA.products.cyberMonday = this.generateTag(
+                        precio.metaTags,
+                        'cyberMonday'
+                      );
                     }
                   } else {
                     objA.products.rut = user.documentId;
@@ -265,10 +289,17 @@ export class PageVerCatalogoFlipComponent implements OnInit {
                       objA.products.precio = precio.priceInfo.commonPrice;
                     }
                     if (objA.products.product == precio.sku) {
-                      objA.products.precioEscala = precio.priceInfo.hasScalePrice;
+                      objA.products.precioEscala =
+                        precio.priceInfo.hasScalePrice;
                       objA.products.preciosScal = precio.priceInfo.scalePrice;
-                      objA.products.cyber = this.generateTag(precio.metaTags,'cyber');
-                      objA.products.cyberMonday = this.generateTag(precio.metaTags,'cyberMonday');;
+                      objA.products.cyber = this.generateTag(
+                        precio.metaTags,
+                        'cyber'
+                      );
+                      objA.products.cyberMonday = this.generateTag(
+                        precio.metaTags,
+                        'cyberMonday'
+                      );
                     }
                   }
                 }
@@ -291,10 +322,17 @@ export class PageVerCatalogoFlipComponent implements OnInit {
                       objB.products.precio = precio.priceInfo.commonPrice;
                     }
                     if (objB.products.product == precio.sku) {
-                      objB.products.precioEscala = precio.priceInfo.hasScalePrice;
-                      objB.products.preciosScal =precio.priceInfo.scalePrice;
-                      objB.products.cyber = this.generateTag(precio.metaTags,'cyber');
-                      objB.products.cyberMonday = this.generateTag(precio.metaTags,'cyberMonday');
+                      objB.products.precioEscala =
+                        precio.priceInfo.hasScalePrice;
+                      objB.products.preciosScal = precio.priceInfo.scalePrice;
+                      objB.products.cyber = this.generateTag(
+                        precio.metaTags,
+                        'cyber'
+                      );
+                      objB.products.cyberMonday = this.generateTag(
+                        precio.metaTags,
+                        'cyberMonday'
+                      );
                     }
                   } else {
                     objB.products.rut = user.documentId;
@@ -312,24 +350,31 @@ export class PageVerCatalogoFlipComponent implements OnInit {
                       objB.products.precio = precio.priceInfo.commonPrice;
                     }
                     if (objB.products.product == precio.sku) {
-                      objB.products.precioEscala = precio.priceInfo.hasScalePrice;
+                      objB.products.precioEscala =
+                        precio.priceInfo.hasScalePrice;
                       objB.products.preciosScal = precio.priceInfo.scalePrice;
-                      objB.products.cyber = this.generateTag(precio.metaTags,'cyber');
-                      objB.products.cyberMonday = this.generateTag(precio.metaTags,'cyberMonday');
+                      objB.products.cyber = this.generateTag(
+                        precio.metaTags,
+                        'cyber'
+                      );
+                      objB.products.cyberMonday = this.generateTag(
+                        precio.metaTags,
+                        'cyberMonday'
+                      );
                     }
                   }
                 }
               }
             });
-          })
-          this.armaCatalogo()
+          });
+          this.armaCatalogo();
         },
-        error:(err)=>{
-          console.log(err)
-        }
-      })
+        error: (err) => {
+          console.log(err);
+        },
+      });
     } else {
-      this.catalogo.map((objeto:IBody) => {
+      this.catalogo.map((objeto: IBody) => {
         for (let objA of objeto.leftSide || []) {
           let propuestaPrecio = this.propuesta.data.articles.find(
             (x: any) => x.sku == objA.products.product
@@ -338,7 +383,8 @@ export class PageVerCatalogoFlipComponent implements OnInit {
             objA.products.precioEsp = propuestaPrecio.price.customerPrice;
             objA.products.precio = propuestaPrecio.price.price;
             if (propuestaPrecio.agreement)
-              objA.products.cantidad = propuestaPrecio.agreement.minimumQuantity;
+              objA.products.cantidad =
+                propuestaPrecio.agreement.minimumQuantity;
           }
         }
         for (let objB of objeto.rightSide || []) {
@@ -349,16 +395,17 @@ export class PageVerCatalogoFlipComponent implements OnInit {
             objB.products.precioEsp = propuestaPrecio.price.customerPrice;
             objB.products.precio = propuestaPrecio.price.price;
             if (propuestaPrecio.agreement)
-              objB.products.cantidad = propuestaPrecio.agreement.minimumQuantity;
+              objB.products.cantidad =
+                propuestaPrecio.agreement.minimumQuantity;
           }
         }
       });
-      this.armaCatalogo()
+      this.armaCatalogo();
     }
   }
 
-  armaCatalogo(){
-    this.catalogo.map((pagina:IBody) => {
+  armaCatalogo() {
+    this.catalogo.map((pagina: IBody) => {
       //LADO A
       if (pagina.leftSide && pagina.leftSide[0]) {
         if (pagina.leftSide[0].type != 'portada') {
@@ -367,9 +414,14 @@ export class PageVerCatalogoFlipComponent implements OnInit {
           this.paginasTemp.push(pagina.leftSide);
         }
       } else {
-        if(pagina.leftSide){
+        if (pagina.leftSide) {
           pagina.leftSide[0] = {
-            products: { type: 'dinamico',attributes:[], precio:0 , precioEsp:0},
+            products: {
+              type: 'dinamico',
+              attributes: [],
+              precio: 0,
+              precioEsp: 0,
+            },
             type: 'dinamico',
             //FIXME: Revisar
             // titulo: undefined,
@@ -386,13 +438,18 @@ export class PageVerCatalogoFlipComponent implements OnInit {
           this.paginasTemp.push(pagina.rightSide);
         }
       } else {
-        if(pagina.rightSide){
+        if (pagina.rightSide) {
           pagina.rightSide[0] = {
-            products: { type: 'dinamico', attributes:[], precio:0 , precioEsp:0},
+            products: {
               type: 'dinamico',
-              //FIXME:  Revisar
-              // titulo: undefined,
-              tituloB: '',
+              attributes: [],
+              precio: 0,
+              precioEsp: 0,
+            },
+            type: 'dinamico',
+            //FIXME:  Revisar
+            // titulo: undefined,
+            tituloB: '',
           };
           this.paginas.push(pagina.rightSide);
         }
@@ -437,7 +494,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         ? (this.pageTotal = this.paginas.length + 2)
         : (this.pageTotal = 0);
     }
-    this.isLoadPrecio = true
+    this.isLoadPrecio = true;
   }
 
   agrupar(array: any, chunkSize: any) {
@@ -455,23 +512,31 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     for (let i = 0; i < objeto.body.length; i++) {
       let marcas = [];
       // LADO A
-        for (let x = 0; x < (objeto.body[i]?.leftSide as ILeftSide[]).length; x++) {
-          if ((objeto.body[i].leftSide[x].type) != 'portada') {
-            if (objeto.body[i].leftSide[x].products.attributes) {
-              if (objeto.body[i].leftSide[x].products.attributes[5].value) {
-                let marca =
-                  objeto.body[i].leftSide[x].products.attributes[5].value;
-                let existeEnArray = marcas.indexOf(marca);
-                if (existeEnArray == -1)
-                  marcas.push(
-                    objeto.body[i].leftSide[x].products.attributes[5].value
-                  );
-              }
+      for (
+        let x = 0;
+        x < (objeto.body[i]?.leftSide as ILeftSide[]).length;
+        x++
+      ) {
+        if (objeto.body[i].leftSide[x].type != 'portada') {
+          if (objeto.body[i].leftSide[x].products.attributes) {
+            if (objeto.body[i].leftSide[x].products.attributes[5].value) {
+              let marca =
+                objeto.body[i].leftSide[x].products.attributes[5].value;
+              let existeEnArray = marcas.indexOf(marca);
+              if (existeEnArray == -1)
+                marcas.push(
+                  objeto.body[i].leftSide[x].products.attributes[5].value
+                );
             }
           }
         }
+      }
       // LADO B
-      for (let z = 0; z < (objeto.body[i].rightSide as IRightSide[]).length; z++) {
+      for (
+        let z = 0;
+        z < (objeto.body[i].rightSide as IRightSide[]).length;
+        z++
+      ) {
         if (objeto.body[i].rightSide[z].type != 'portada') {
           if (objeto.body[i].rightSide[z].products.attributes) {
             if (objeto.body[i].rightSide[z].products.attributes[5].value) {
@@ -499,8 +564,8 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     }
   }
 
-  minimo:boolean = false;
-  medio:boolean = false;
+  minimo: boolean = false;
+  medio: boolean = false;
   loadFlip() {
     if (this.dispositivo === 'smartphone') {
       let porcentaje = 1.9;
@@ -509,26 +574,23 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       if (this.screenWidth <= 360 && this.screenWidth > 320) porcentaje = 6.2; //ok
       if (this.screenWidth <= 320 && this.screenWidth > 300) porcentaje = 7.0;
       let height = this.screenWidth * porcentaje;
-      this.pageFlip = new PageFlip(
-        this._demoBookExample.nativeElement,
-        {
-          width: this.screenWidth,
-          height: height,
-          maxWidth: this.screenWidth,
-          maxHeight: height * 1.1,
-          size: 'fixed' as SizeType,
-          minWidth: 315,
-          minHeight: 680,
-          maxShadowOpacity: 0.5,
-          disableFlipByClick: true,
-          flippingTime: 800,
-          clickEventForward: true,
-          showCover: true,
-          showPageCorners: true,
-          startZIndex: 5,
-          useMouseEvents: false,
-        }
-      );
+      this.pageFlip = new PageFlip(this._demoBookExample.nativeElement, {
+        width: this.screenWidth,
+        height: height,
+        maxWidth: this.screenWidth,
+        maxHeight: height * 1.1,
+        size: 'fixed' as SizeType,
+        minWidth: 315,
+        minHeight: 680,
+        maxShadowOpacity: 0.5,
+        disableFlipByClick: true,
+        flippingTime: 800,
+        clickEventForward: true,
+        showCover: true,
+        showPageCorners: true,
+        startZIndex: 5,
+        useMouseEvents: false,
+      });
     }
     if (this.dispositivo === 'web') {
       let numero;
@@ -542,48 +604,42 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         this.minimo = true;
       }
 
-      this.pageFlip = new PageFlip(
-        this._demoBookExample.nativeElement,
-        {
-          width: numero,
-          height: 950,
-          maxHeight: 940,
-          maxWidth: 650,
-          size: 'fixed' as SizeType,
-          minWidth: 315, //315
-          minHeight: 420, //420
-          maxShadowOpacity: 0.5,
-          disableFlipByClick: true,
-          useMouseEvents: true,
-          flippingTime: 800,
-          clickEventForward: true,
-          showCover: true,
-          showPageCorners: true,
-          startZIndex: 5,
-        }
-      );
+      this.pageFlip = new PageFlip(this._demoBookExample.nativeElement, {
+        width: numero,
+        height: 950,
+        maxHeight: 940,
+        maxWidth: 650,
+        size: 'fixed' as SizeType,
+        minWidth: 315, //315
+        minHeight: 420, //420
+        maxShadowOpacity: 0.5,
+        disableFlipByClick: true,
+        useMouseEvents: true,
+        flippingTime: 800,
+        clickEventForward: true,
+        showCover: true,
+        showPageCorners: true,
+        startZIndex: 5,
+      });
     }
     if (this.dispositivo === 'tablet') {
-      this.pageFlip = new PageFlip(
-        this._demoBookExample.nativeElement,
-        {
-          width: 650, //740
-          height: 950, //940
-          maxWidth: 650,
-          maxHeight: 950,
-          size: 'fixed' as SizeType,
-          minWidth: 650,
-          minHeight: 950,
-          maxShadowOpacity: 0.5,
-          disableFlipByClick: true,
-          flippingTime: 800,
-          clickEventForward: true,
-          showCover: true,
-          showPageCorners: true,
-          startZIndex: 5,
-          useMouseEvents: false,
-        }
-      );
+      this.pageFlip = new PageFlip(this._demoBookExample.nativeElement, {
+        width: 650, //740
+        height: 950, //940
+        maxWidth: 650,
+        maxHeight: 950,
+        size: 'fixed' as SizeType,
+        minWidth: 650,
+        minHeight: 950,
+        maxShadowOpacity: 0.5,
+        disableFlipByClick: true,
+        flippingTime: 800,
+        clickEventForward: true,
+        showCover: true,
+        showPageCorners: true,
+        startZIndex: 5,
+        useMouseEvents: false,
+      });
     }
     this.pageFlip.loadFromHTML(document.querySelectorAll('.page'));
     this.pageFlip.on('flip', (e: any) => {

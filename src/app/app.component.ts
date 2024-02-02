@@ -205,7 +205,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
   }
 
-  handleChatButtonVisibility() {
+  handleChatButtonVisibility(): void {
     const showChatRoutes = ['/ficha', '/especial/', '/home'];
     const hideChatRoutes = ['/carro-compra', '/catalogos', '/categoria'];
     const currentUrl = this.router.url;

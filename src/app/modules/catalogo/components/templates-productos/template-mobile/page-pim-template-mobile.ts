@@ -1,7 +1,14 @@
+// Angular
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+// Env
 import { environment } from '@env/environment';
+// Models
+import {
+  ILeftSide,
+  IRightSide,
+} from '@core/models-v2/catalog/catalog-response.interface';
+// Services
 import { isVacio } from '../../../../../shared/utils/utilidades';
-import { ILeftSide, IRightSide } from '@core/models-v2/catalog/catalog-response.interface';
 import { CartService } from '@core/services-v2/cart.service';
 
 @Component({
@@ -16,24 +23,23 @@ export class PagePimTemplateMobile implements OnInit {
   @Input() folio = null;
   preciosEscala: any[] = [];
   preciosLista: any[] = [];
-  addingToCart:boolean = false;
+  addingToCart: boolean = false;
   precioEspecial: boolean = false;
   precios: boolean = true;
   carro: boolean = true;
   imagen: boolean = true;
   noTieneIMGPreferida: boolean = false;
-  img:number = 1;
+  img: number = 1;
   esWeb: boolean = false;
   isVacio = isVacio;
-  IVA = environment.IVA || 0.19;
+  IVA = environment.IVA;
 
   constructor(
     private cd: ChangeDetectorRef,
-    //ServicesV2
-    private readonly cartService:CartService
-    ) {}
+    private readonly cartService: CartService
+  ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.comprobarIMGPreferida();
     switch (this.tipo) {
       case 'Vendedor':
@@ -72,7 +78,8 @@ export class PagePimTemplateMobile implements OnInit {
       //Precio normal con dto.
       if (
         this.plana.products.rut == '0' &&
-        (this.plana.products.precio || 0) > (this.plana.products.precioEsp || 0)
+        (this.plana.products.precio || 0) >
+          (this.plana.products.precioEsp || 0)
       ) {
         objPrecio.price = this.plana.products.precioEsp;
         this.precioEspecial = true;
@@ -130,10 +137,7 @@ export class PagePimTemplateMobile implements OnInit {
           }
         }
       }
-      if (
-        !this.plana.products.images[1] &&
-        this.plana.products.images[0]
-      ) {
+      if (!this.plana.products.images[1] && this.plana.products.images[0]) {
         for (let i = 0; i < this.plana.products.images[0].length; i++) {
           if (this.plana.products.images[0][i] == 1) {
             this.img = i + 1;
@@ -158,10 +162,9 @@ export class PagePimTemplateMobile implements OnInit {
     if (folio) window.open(link, '_blank');
   }
 
-  isString(value:any){
-    if(typeof value === 'string')
-    return value
-    else return ''
+  isString(value: any) {
+    if (typeof value === 'string') return value;
+    else return '';
   }
   addToCart(producto: any): void {
     producto.images = [
@@ -170,12 +173,12 @@ export class PagePimTemplateMobile implements OnInit {
       },
     ];
     if (this.addingToCart) {
-        return;
+      return;
     }
     this.addingToCart = true;
-    this.cartService.add(producto,1).finally(() =>{
-        this.addingToCart = false;
-        this.cd.markForCheck();
-    })
+    this.cartService.add(producto, 1).finally(() => {
+      this.addingToCart = false;
+      this.cd.markForCheck();
+    });
   }
 }

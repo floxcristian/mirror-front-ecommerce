@@ -7,7 +7,10 @@ import {
 } from '@angular/core';
 import { environment } from '@env/environment';
 import { isVacio } from '../../../../../shared/utils/utilidades';
-import { ILeftSide, IRightSide } from '@core/models-v2/catalog/catalog-response.interface';
+import {
+  ILeftSide,
+  IRightSide,
+} from '@core/models-v2/catalog/catalog-response.interface';
 import { CartService } from '@core/services-v2/cart.service';
 
 @Component({
@@ -30,12 +33,12 @@ export class PagePimTemplateS implements OnInit {
   carro: boolean = true;
   imagen: boolean = true;
   isVacio = isVacio;
-  IVA = environment.IVA || 0.19;
+  IVA = environment.IVA;
 
   constructor(
     private cd: ChangeDetectorRef,
     //ServicesV2
-    private readonly cartService:CartService
+    private readonly cartService: CartService
   ) {}
 
   ngOnInit() {
@@ -78,7 +81,8 @@ export class PagePimTemplateS implements OnInit {
       //Precio normal con dto.
       if (
         this.plana.products.rut == '0' &&
-        (this.plana.products.precio || 0) > (this.plana.products.precioEsp || 0)
+        (this.plana.products.precio || 0) >
+          (this.plana.products.precioEsp || 0)
       ) {
         this.precioAnterior = this.plana.products.precio;
         objPrecio.price = this.plana.products.precioEsp;
@@ -133,10 +137,9 @@ export class PagePimTemplateS implements OnInit {
   }
   ngOnChanges(changes: SimpleChanges): void {}
 
-  isString(value:any){
-    if(typeof value === 'string')
-    return value
-    else return ''
+  isString(value: any) {
+    if (typeof value === 'string') return value;
+    else return '';
   }
 
   addToCart(producto: any): void {
@@ -146,12 +149,12 @@ export class PagePimTemplateS implements OnInit {
       },
     ];
     if (this.addingToCart) {
-        return;
+      return;
     }
     this.addingToCart = true;
-    this.cartService.add(producto,1).finally(() =>{
-        this.addingToCart = false;
-        this.cd.markForCheck();
-    })
+    this.cartService.add(producto, 1).finally(() => {
+      this.addingToCart = false;
+      this.cd.markForCheck();
+    });
   }
 }
