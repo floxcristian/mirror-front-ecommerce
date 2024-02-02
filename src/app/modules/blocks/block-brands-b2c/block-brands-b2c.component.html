@@ -17,7 +17,7 @@
           }}{{ getParamTiendaOficial(item.brand) }}"
         >
           <div style="width: 100px; aspect-ratio: 17/4; position: relative">
-            <img [ngSrc]="item.image" alt="marcas" fill />
+            <img [ngSrc]="imageUrl + '/' + item.image" alt="marcas" fill />
           </div>
         </a>
       </ng-template>

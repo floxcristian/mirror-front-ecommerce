@@ -1,16 +1,11 @@
-@if(galeria){
 <app-block-slideshow />
-}
+
 <!-- Muestra todo el apartado de productos lista, -->
 <app-buttons-slideshow />
 <!-- Muestra el apartado de caja valor -->
 <app-product-slideshow />
 <app-page-home />
 
-@if(marcas){
 <div class="container bg-white" style="padding: 20px">
-  @if(marcas){
-  <app-block-brands-b2c [brands]="brandsB2c" />
-  }
+  <app-block-brands-b2c />
 </div>
-}

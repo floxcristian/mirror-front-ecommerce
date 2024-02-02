@@ -11,14 +11,9 @@ import { SharedModule } from '../../shared/shared.module';
 // Components
 import { BlockBrandsB2cComponent } from './block-brands-b2c/block-brands-b2c.component';
 import { BlockSlideshowComponent } from './block-slideshow/block-slideshow.component';
-import { BlockBrandsComponent } from './block-brands/block-brands.component';
 
 @NgModule({
-  declarations: [
-    BlockBrandsComponent,
-    BlockSlideshowComponent,
-    BlockBrandsB2cComponent,
-  ],
+  declarations: [BlockSlideshowComponent, BlockBrandsB2cComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -28,10 +23,6 @@ import { BlockBrandsComponent } from './block-brands/block-brands.component';
     CarouselModule.forRoot(),
     NgOptimizedImage,
   ],
-  exports: [
-    BlockBrandsComponent,
-    BlockSlideshowComponent,
-    BlockBrandsB2cComponent,
-  ],
+  exports: [BlockSlideshowComponent, BlockBrandsB2cComponent],
 })
 export class BlocksModule {}

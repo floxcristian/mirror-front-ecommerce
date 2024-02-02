@@ -1,4 +1,11 @@
-import { Component, Input } from '@angular/core';
+// Angular
+import { Component } from '@angular/core';
+// Env
+import { environment } from '@env/environment';
+// Constants
+import { BRANDS } from 'src/data/brands-images/brands-images';
+// Models
+import { IBrandImage } from 'src/data/brands-images/brand-image.interface';
 
 @Component({
   selector: 'app-block-brands-b2c',
@@ -6,7 +13,8 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./block-brands-b2c.component.scss'],
 })
 export class BlockBrandsB2cComponent {
-  @Input() brands: any[] = [];
+  imageUrl = environment.imageUrl;
+  brands: IBrandImage[] = BRANDS;
   carouselOptions = {
     items: 5,
     nav: false,
