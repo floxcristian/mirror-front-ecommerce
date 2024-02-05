@@ -1,8 +1,21 @@
-import { Component, ElementRef, Inject, OnInit, PLATFORM_ID, Renderer2, ViewChild } from '@angular/core';
+// Angular
+import { isPlatformBrowser } from '@angular/common';
+0;
+import {
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
+// Libs
 import { ToastrService } from 'ngx-toastr';
+import { v1 as uuidv1 } from 'uuid';
+// Models
 import { calculaIcono, isVacio } from '../../../../shared/utils/utilidades';
 import { CartData } from '../../../../shared/interfaces/cart-item';
-import { v1 as uuidv1 } from 'uuid';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
@@ -13,7 +26,8 @@ import {
   ISavedCart,
   IUploadResponse,
 } from '@core/models-v2/responses/file-upload.response';
-import { isPlatformBrowser } from '@angular/common';
+import { IConfig } from '@core/config/config.interface';
+import { ConfigService } from '@core/config/config.service';
 
 // declare var $: any;
 
@@ -30,7 +44,6 @@ export interface Archivo {
   styleUrls: ['./page-carga-masiva-prod.component.scss'],
 })
 export class PageCargaMasivaProdComponent implements OnInit {
-
   @ViewChild('idArchivoInput') idArchivoInput!: ElementRef<HTMLInputElement>;
   archivo!: Archivo | undefined;
 
@@ -51,17 +64,21 @@ export class PageCargaMasivaProdComponent implements OnInit {
   totalesDistintos = false;
   idArchivo!: string;
   isVacio = isVacio;
+  config: IConfig;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private localS: LocalStorageService,
     private toast: ToastrService,
-    private renderer:Renderer2,
+    private renderer: Renderer2,
     // ServicesV2
     private readonly sessionService: SessionService,
     private readonly cartService: CartService,
-    private readonly geolocationServiceV2: GeolocationServiceV2
-  ) {}
+    private readonly geolocationServiceV2: GeolocationServiceV2,
+    public readonly configService: ConfigService
+  ) {
+    this.config = this.configService.getConfig();
+  }
 
   ngOnInit() {
     this.idArchivo = uuidv1();
@@ -81,7 +98,11 @@ export class PageCargaMasivaProdComponent implements OnInit {
 
       this.archivo = aux;
       if (isPlatformBrowser(this.platformId)) {
-        this.renderer.setProperty(this.idArchivoInput.nativeElement, 'value', null);
+        this.renderer.setProperty(
+          this.idArchivoInput.nativeElement,
+          'value',
+          null
+        );
       }
     }
   }

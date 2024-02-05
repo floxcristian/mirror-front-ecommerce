@@ -22,6 +22,8 @@ import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 import { PaymentMethodType } from '@core/enums/payment-method.enum';
 import { CartTagService } from '@core/services-v2/cart-tag.service';
 import { PaymentMethodService } from '@core/services-v2/payment-method.service';
+import { ConfigService } from '@core/config/config.service';
+import { IConfig } from '@core/config/config.interface';
 declare let fbq: any;
 
 @Component({
@@ -48,6 +50,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
 
   verifyingPayment = false;
   maxVerifyTries = 30;
+  config: IConfig;
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -65,8 +68,10 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     private readonly sessionService: SessionService,
     private readonly cartService: CartService,
     private readonly paymentMethodService: PaymentMethodService,
-    private readonly cartTagService: CartTagService
+    private readonly cartTagService: CartTagService,
+    public readonly configService: ConfigService
   ) {
+    this.config = this.configService.getConfig();
     console.log('cart load desde PageCartOvSuccessComponent 1');
     this.cartService.load();
     this.screenWidth = isPlatformBrowser(this.platformId)

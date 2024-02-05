@@ -50,7 +50,7 @@
 
 <div align="center">
   <h3>
-  <a href="https://www.implementos.cl/inicio">
+  <a href="https://www.implementos.cl">
       Website
     </a>
     <span> | </span>

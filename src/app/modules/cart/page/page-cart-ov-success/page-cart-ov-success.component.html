@@ -53,10 +53,10 @@
           </div>
           <div class="col-12 mt-4 text-center">
             <h4 style="text-align: center; font-size: 22px">
-              Muchas gracias por visitar Implementos.cl
+              Muchas gracias por visitar {{ config.url }}
             </h4>
             <a
-              href="https://www.implementos.cl"
+              [href]="config.fullUrl"
               style="
                 text-align: center;
                 color: #118565;
@@ -118,10 +118,10 @@
         </div>
         <div class="col-12 mt-4 text-center">
           <h4 style="text-align: center; font-size: 22px; margin-bottom: 15px">
-            Muchas gracias por visitar Implementos.cl
+            Muchas gracias por visitar {{ config.url }}
           </h4>
           <a
-            href="https://www.implementos.cl"
+            [href]="config.fullUrl"
             style="
               text-align: center;
               color: #118565;
@@ -178,7 +178,7 @@
             Estamos validando la información para la entrega de sus productos.
             Le enviaremos una notificación con la confirmación de su compra.
           </p>
-          <p>Muchas gracias por visitar Implementos.cl</p>
+          <p>Muchas gracias por visitar {{ config.url }}</p>
 
           <a
             class="mt-3 link-primary"

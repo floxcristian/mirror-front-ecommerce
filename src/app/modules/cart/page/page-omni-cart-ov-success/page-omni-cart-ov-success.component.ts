@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { IConfig } from '@core/config/config.interface';
+import { ConfigService } from '@core/config/config.service';
 import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 import { CartService } from '@core/services-v2/cart.service';
 import { Subscription, firstValueFrom } from 'rxjs';
@@ -18,13 +20,16 @@ export class PageOmniCartOvSuccessComponent implements OnInit {
   showFolioMsj: boolean = false;
   carro: any = [];
   //fbclid: string;
+  config: IConfig;
 
   constructor(
     private route: ActivatedRoute,
     // Services V2
-    private readonly cartService: CartService
+    private readonly cartService: CartService,
+    public readonly configService: ConfigService
   ) {
     //Manejar respuesta desde metodos de pago.
+    this.config = this.configService.getConfig();
     this.SubscriptionQueryParams = this.route.queryParams.subscribe(
       (query) => {
         this.manejaRespuesta(query);

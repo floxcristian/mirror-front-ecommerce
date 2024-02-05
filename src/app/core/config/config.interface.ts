@@ -1,11 +1,19 @@
 export interface IConfig {
   country: string;
   url: string;
+  fullUrl: string;
+  shortUrl: string;
   document: IDocument;
   phoneCodes: IPhoneCodes;
   storesPage: IStoresPage;
   salesDebtPage: ISalesDebtPage;
   company: ICompany;
+  sampleFiles: ISampleFiles;
+}
+
+export interface ISampleFiles {
+  productUploadFile: string;
+  customerUploadFile: string;
 }
 
 export interface ICompany {

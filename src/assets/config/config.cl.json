@@ -38,6 +38,10 @@
       }
     ]
   },
+  "sampleFiles": {
+    "productUploadFile": "https://www.implementos.cl/downloads/base_carga_masiva.xlsx",
+    "customerUploadFile": "https://www.implementos.cl/downloads/compradorB2B.xlsx"
+  },
   "company": {
     "phone": "800 330 088",
     "whatsapp": "+569 32633571",

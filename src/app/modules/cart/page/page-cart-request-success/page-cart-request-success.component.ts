@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { IConfig } from '@core/config/config.interface';
+import { ConfigService } from '@core/config/config.service';
 
 @Component({
   selector: 'app-page-cart-request-success',
@@ -8,7 +10,12 @@ import { Router } from '@angular/router';
 })
 export class PageCartRequestSuccessComponent implements OnInit {
   count = 1;
-  constructor(private router: Router) {
+  config: IConfig;
+  constructor(
+    private router: Router,
+    public readonly configService: ConfigService
+  ) {
+    this.config = this.configService.getConfig();
     /*setTimeout(() => {
       this.router.navigate(['/inicio'])
     .then(() => {

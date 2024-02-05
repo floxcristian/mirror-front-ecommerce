@@ -32,6 +32,8 @@ import { ArticleService } from '@core/services-v2/article.service';
 import { IArticleResponse } from '@core/models-v2/article/article-response.interface';
 import { IArticle } from '@core/models-v2/cms/special-reponse.interface';
 import { GuestStorageService } from '@core/storage/guest-storage.service';
+import { ConfigService } from '@core/config/config.service';
+import { IConfig } from '@core/config/config.interface';
 
 interface Item {
   ProductCart: IShoppingCartProduct;
@@ -93,6 +95,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
     },
   };
   preferenciaCliente!: IPreference;
+  config: IConfig;
 
   constructor(
     private router: Router,
@@ -107,8 +110,10 @@ export class PageCartComponent implements OnInit, OnDestroy {
     public readonly shoppingCartService: CartService,
     private readonly customerPreferenceStorage: CustomerPreferenceStorageService,
     private readonly shoppingCartStorage: ShoppingCartStorageService,
-    private readonly geolocationService: GeolocationServiceV2
+    private readonly geolocationService: GeolocationServiceV2,
+    public readonly configService: ConfigService
   ) {
+    this.config = this.configService.getConfig();
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;

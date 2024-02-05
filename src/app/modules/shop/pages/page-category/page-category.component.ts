@@ -43,6 +43,8 @@ import { CustomerPreferenceService } from '@core/services-v2/customer-preference
 import { CustomerPreferencesStorageService } from '@core/storage/customer-preferences-storage.service';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 import { getOriginUrl } from './utils/util.service';
+import { ConfigService } from '@core/config/config.service';
+import { IConfig } from '@core/config/config.interface';
 
 @Component({
   selector: 'app-grid',
@@ -92,6 +94,7 @@ export class PageCategoryComponent implements OnInit {
   innerWidth: number;
   origen: string[] = [];
   banners!: IBanner | null;
+  config: IConfig;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -110,8 +113,10 @@ export class PageCategoryComponent implements OnInit {
     private readonly geolocationService: GeolocationServiceV2,
     private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
     private readonly customerPreferenceService: CustomerPreferenceService,
-    private readonly customerAddressService: CustomerAddressService
+    private readonly customerAddressService: CustomerAddressService,
+    private readonly configService: ConfigService
   ) {
+    this.config = this.configService.getConfig();
     this.session = this.sessionService.getSession();
     this.preferences = this.customerPreferenceStorage.get();
     /**
@@ -361,7 +366,7 @@ export class PageCategoryComponent implements OnInit {
               );
             } else {
               this.titleService.setTitle(
-                `Resultados de Búsqueda - implementos.cl`
+                `Resultados de Búsqueda - ${this.config.shortUrl}`
               );
             }
             if (isPlatformBrowser(this.platformId)) {

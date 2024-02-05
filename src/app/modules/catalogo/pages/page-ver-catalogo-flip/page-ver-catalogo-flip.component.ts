@@ -26,6 +26,8 @@ import {
 } from '@core/models-v2/catalog/catalog-response.interface';
 import { MetaTag } from '@core/models-v2/article/article-response.interface';
 import { CartService } from '@core/services-v2/cart.service';
+import { IConfig } from '@core/config/config.interface';
+import { ConfigService } from '@core/config/config.service';
 
 @Component({
   selector: 'app-page-ver-catalogo-flip',
@@ -62,6 +64,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
   folio: any;
   propuesta: any;
   isLoadPrecio = false;
+  config: IConfig;
   constructor(
     private localS: LocalStorageService,
     private router: Router,
@@ -73,8 +76,11 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     public cart: CartService,
     private readonly sessionService: SessionService,
     private readonly geolocationService: GeolocationServiceV2,
-    private readonly catalogService: CatalogService
-  ) {}
+    private readonly catalogService: CatalogService,
+    public readonly configService: ConfigService
+  ) {
+    this.config = this.configService.getConfig();
+  }
 
   getTags() {
     return this.localS.get('tags');

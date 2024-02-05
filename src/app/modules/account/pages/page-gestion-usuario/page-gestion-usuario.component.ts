@@ -17,6 +17,8 @@ import { ISession } from '@core/models-v2/auth/session.interface';
 import { UsersService } from '../../service/users.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { SubAccountService } from '@core/services-v2/sub-account.service';
+import { IConfig } from '@core/config/config.interface';
+import { ConfigService } from '@core/config/config.service';
 
 export interface Archivo {
   archivo: File;
@@ -37,6 +39,7 @@ export class PageGestionUsuarioComponent {
   archivo!: Archivo | undefined;
   idArchivo!: string;
   isExcel: Boolean = false;
+  config: IConfig;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -45,9 +48,11 @@ export class PageGestionUsuarioComponent {
     private renderer: Renderer2,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly subAccountService: SubAccountService
+    private readonly subAccountService: SubAccountService,
+    public readonly configService: ConfigService
   ) {
     this.session = this.sessionService.getSession();
+    this.config = this.configService.getConfig();
   }
 
   onFileChange(event: any): void {

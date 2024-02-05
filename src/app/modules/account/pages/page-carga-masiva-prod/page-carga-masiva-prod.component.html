@@ -11,10 +11,7 @@
       <div class="card-body">
         <p>
           Descargue el archivo excel de ejemplo (
-          <a
-            href="https://www.implementos.cl/downloads/base_carga_masiva.xlsx"
-            target="_blank"
-          >
+          <a [href]="config.sampleFiles.productUploadFile" target="_blank">
             <i class="far fa-file-excel text-success"></i> aquí</a
           >
           ) y complete la informacion, a continuación seleccione el archivo
@@ -210,7 +207,7 @@
             </div>
           </div>
         </div>
-        <div class="accordion mb-3 accordion-two ">
+        <div class="accordion mb-3 accordion-two">
           <div
             class="accordion-item"
             *ngIf="productosNoDisponibles.length > 0"
@@ -276,7 +273,7 @@
             </div>
           </div>
         </div>
-        <div class="accordion mb-3 accordion-tree ">
+        <div class="accordion mb-3 accordion-tree">
           <div class="accordion-item" *ngIf="productosNoCargados.length > 0">
             <h2 class="accordion-header" id="detalleResultadosNoCargado">
               <button

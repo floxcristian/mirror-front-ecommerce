@@ -27,6 +27,8 @@ export class ConfigService {
     const filePath = this.getFilePath(country);
     return this.http.get<IConfig>(filePath).pipe(
       map((res) => {
+        res.fullUrl = `https://${res.url}`;
+        res.shortUrl = res.url.replace(/^www\./, '');
         res.company.formattedWhatsapp = this.formatPhone(res.company.whatsapp);
         res.company.formattedPhone = this.formatPhone(res.company.phone);
         return res;

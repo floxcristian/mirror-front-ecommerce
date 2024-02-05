@@ -67,6 +67,8 @@ import { ICreateGuest } from '@core/models-v2/customer/create-guest.interface';
 import { CustomerService } from '@core/services-v2/customer.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
 import { IError } from '@core/models-v2/error/error.interface';
+import { ConfigService } from '@core/config/config.service';
+import { IConfig } from '@core/config/config.interface';
 
 export let browserRefresh = false;
 declare let dataLayer: any;
@@ -157,6 +159,7 @@ export class PageCartShippingComponent implements OnInit {
   direccionConfigurada!: ICustomerPreference;
 
   stores: IStore[] = [];
+  config: IConfig;
 
   constructor(
     private toast: ToastrService,
@@ -179,8 +182,10 @@ export class PageCartShippingComponent implements OnInit {
     private readonly shoppingCartStorage: ShoppingCartStorageService,
     private readonly receiveStorage: ReceiveStorageService,
     private readonly customerService: CustomerService,
-    private readonly customerAddressApiService: CustomerAddressApiService
+    private readonly customerAddressApiService: CustomerAddressApiService,
+    public readonly configService: ConfigService
   ) {
+    this.config = this.configService.getConfig();
     this.receiveStorage.set({} as IReceive);
     this.innerWidth = window.innerWidth;
 
