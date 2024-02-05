@@ -7,6 +7,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { CartService } from '@core/services-v2/cart.service';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-template-productos-vertical',
@@ -14,6 +15,8 @@ import { CartService } from '@core/services-v2/cart.service';
   styleUrls: ['./template-productos-vertical.component.scss'],
 })
 export class TemplateProductosVerticalComponent implements OnChanges {
+  readonly imageUrl: string = environment.imageUrl;
+
   @Input() objeto: any;
   @Input() innerWidth!: number;
   @Input() page: number = 0;
@@ -24,7 +27,6 @@ export class TemplateProductosVerticalComponent implements OnChanges {
 
   constructor(
     private cd: ChangeDetectorRef,
-    //ServicesV2
     private readonly cartService: CartService
   ) {}
 
@@ -33,13 +35,13 @@ export class TemplateProductosVerticalComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    let resto = this.page % 2;
+    const resto = this.page % 2;
     this.cambiarImg = resto == 0 ? false : true;
   }
 
   async addToCart(producto: any): Promise<void> {
     producto.images = {
-      '150': [`https://images.implementos.cl/img/250/${producto.sku}-1.jpg`],
+      '150': [`${this.imageUrl}/img/250/${producto.sku}-1.jpg`],
     };
     if (this.addingToCart) {
       return;

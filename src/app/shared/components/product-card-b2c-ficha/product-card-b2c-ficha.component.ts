@@ -38,6 +38,7 @@ import { MetaTag } from '@core/models-v2/article/article-response.interface';
   styleUrls: ['./product-card-b2c-ficha.component.scss'],
 })
 export class ProductCardB2cFichaComponent implements OnInit {
+  readonly IMAGE_URL: string = environment.imageUrl;
   IVA = environment.IVA;
   private destroy$: Subject<void> = new Subject();
   @Input() isOnProductPage!: boolean;
@@ -110,9 +111,11 @@ export class ProductCardB2cFichaComponent implements OnInit {
   generateTags(tags: MetaTag[] | undefined) {
     if (tags) {
       tags.forEach((tag: MetaTag) => {
-        if (tag.code === 'cyber') this.cyber = typeof tag.value === 'number' ? tag.value : 0;
+        if (tag.code === 'cyber')
+          this.cyber = typeof tag.value === 'number' ? tag.value : 0;
         else this.cyber = 0;
-        if (tag.code === 'cyberMonday') this.cyberMonday = typeof tag.value === 'number' ? tag.value : 0;
+        if (tag.code === 'cyberMonday')
+          this.cyberMonday = typeof tag.value === 'number' ? tag.value : 0;
         else this.cyberMonday = 0;
       });
     }
@@ -141,10 +144,7 @@ export class ProductCardB2cFichaComponent implements OnInit {
       this.productData.name,
       false
     );
-    let gimage: string =
-      'https://images.implementos.cl/img/watermarked/' +
-      this.productData.sku +
-      '-watermarked.jpg';
+    const gimage = `${this.IMAGE_URL}/img/watermarked/${this.productData.sku}-watermarked.jpg`;
     this.productData.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     this.productData.gimage =
       this.sanitizer.bypassSecurityTrustResourceUrl(gimage);

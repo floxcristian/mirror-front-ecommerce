@@ -1,6 +1,10 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ILeftSide, IRightSide } from '@core/models-v2/catalog/catalog-response.interface';
+import {
+  ILeftSide,
+  IRightSide,
+} from '@core/models-v2/catalog/catalog-response.interface';
 import { CartService } from '@core/services-v2/cart.service';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-template-m',
@@ -8,6 +12,7 @@ import { CartService } from '@core/services-v2/cart.service';
   styleUrls: ['./page-pim-template-m.scss'],
 })
 export class PagePimTemplateM implements OnInit {
+  readonly IMAGE_URL: string = environment.imageUrl;
   @Input() plana!: ILeftSide | IRightSide;
   @Input() tipo: string = '';
   preciosEscala: any[] = [];
@@ -19,9 +24,9 @@ export class PagePimTemplateM implements OnInit {
   precios: boolean = true;
   carro: boolean = true;
   imagen: boolean = true;
-  ordenImg1:number = 1;
-  ordenImg2:number = 2;
-  ordenImg3:number = 3;
+  ordenImg1: number = 1;
+  ordenImg2: number = 2;
+  ordenImg3: number = 3;
   visibleImg1: boolean = true;
   visibleImg2: boolean = true;
   visibleImg3: boolean = true;
@@ -29,7 +34,8 @@ export class PagePimTemplateM implements OnInit {
   constructor(
     private cd: ChangeDetectorRef,
     //ServicesV2
-    private readonly cartService:CartService) {}
+    private readonly cartService: CartService
+  ) {}
 
   ngOnInit() {
     this.ordenarIMG();
@@ -77,7 +83,8 @@ export class PagePimTemplateM implements OnInit {
       //Precio normal con dto.
       if (
         this.plana.products.rut == '0' &&
-        (this.plana.products.precio || 0) > (this.plana.products.precioEsp || 0)
+        (this.plana.products.precio || 0) >
+          (this.plana.products.precioEsp || 0)
       ) {
         objPrecio.price = this.plana.products.precio;
         this.precioEspecial = true;
@@ -199,26 +206,24 @@ export class PagePimTemplateM implements OnInit {
     }
   }
 
-  isString(value:any){
-    if(typeof value === 'string')
-    return value
-    else return ''
+  isString(value: any) {
+    if (typeof value === 'string') return value;
+    else return '';
   }
 
   addToCart(producto: any): void {
     producto.images = [
       {
-        150: [`https://images.implementos.cl/img/150/${producto.sku}-1.jpg`],
+        150: [`${this.IMAGE_URL}/img/150/${producto.sku}-1.jpg`],
       },
     ];
     if (this.addingToCart) {
-        return;
+      return;
     }
     this.addingToCart = true;
-    this.cartService.add(producto,1).finally(() =>{
-        this.addingToCart = false;
-        this.cd.markForCheck();
-    })
+    this.cartService.add(producto, 1).finally(() => {
+      this.addingToCart = false;
+      this.cd.markForCheck();
+    });
   }
-
 }

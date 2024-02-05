@@ -19,6 +19,7 @@ import { CartService } from '@core/services-v2/cart.service';
   styleUrls: ['./page-pim-template-s.scss'],
 })
 export class PagePimTemplateS implements OnInit {
+  readonly IMAGE_URL: string = environment.imageUrl;
   @Input() plana!: ILeftSide | IRightSide;
   @Input() tipo: string = '';
   @Input() iva: any = true;
@@ -145,7 +146,7 @@ export class PagePimTemplateS implements OnInit {
   addToCart(producto: any): void {
     producto.images = [
       {
-        150: [`https://images.implementos.cl/img/150/${producto.sku}-1.jpg`],
+        150: [`${this.IMAGE_URL}/img/150/${producto.sku}-1.jpg`],
       },
     ];
     if (this.addingToCart) {

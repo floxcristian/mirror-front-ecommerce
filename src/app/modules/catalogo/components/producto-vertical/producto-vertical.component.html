@@ -19,7 +19,7 @@
   <div class="div_img_cyber" *ngIf="producto.cyber == 0">
     <picture>
       <img
-        src="https://images.implementos.cl/uploads/cyber/cyber.webp"
+        [src]="imageUrl + '/uploads/cyber/cyber.webp'"
         class="img_escala"
         loading="lazy"
       />
@@ -28,7 +28,7 @@
   <div class="text-center">
     <img
       class="img-prod"
-      src="https://images.implementos.cl/img/250/{{ producto.sku }}-1.jpg"
+      [src]="imageUrl + '/img/250/{{ producto.sku }}-1.jpg'"
       onError="this.src='./assets/img/place-150x150.png'"
       alt="{{ producto.sku }}"
     />

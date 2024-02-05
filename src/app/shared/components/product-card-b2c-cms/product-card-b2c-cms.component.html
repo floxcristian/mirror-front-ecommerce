@@ -124,17 +124,14 @@
     </a>
   </div>
   <div class="product-card__info position-relative">
-    <div
-      class="product-card__badges-list-right"
-      *ngIf="cyberMonday > 0"
-    >
+    <div class="product-card__badges-list-right" *ngIf="cyberMonday > 0">
       <div
         class="badge_cyber float-end"
         style="position: absolute; top: -32px; right: 1px"
       >
         <picture>
           <img
-            src="https://images.implementos.cl/uploads/cyber/cyberMonday.webp"
+            [src]="IMAGE_URL + '/uploads/cyber/cyberMonday.webp'"
             class="me-1 mt-sm-1"
             style="width: 50px !important; height: 50px"
             alt="logo oferta"
@@ -144,7 +141,10 @@
     </div>
 
     <div class="product-card__badges-list-right" *ngIf="isOfficial">
-      <div class="badge_cyber float-end" style="position: absolute; top: -32px; right: 1px">
+      <div
+        class="badge_cyber float-end"
+        style="position: absolute; top: -32px; right: 1px"
+      >
         <picture>
           <img
             [src]="imageOEM | replace : 'png' : 'svg'"
@@ -166,7 +166,7 @@
       >
         <picture>
           <img
-            src="https://images.implementos.cl/uploads/cyber/cyber.webp"
+            [src]="IMAGE_URL + '/uploads/cyber/cyber.webp'"
             alt=""
             height="60px"
             width="60px"
@@ -341,9 +341,9 @@
   <ng-container
     *ngIf="
       productData.deliverySupply.deliveryLocation !== null &&
-      productData.deliverySupply.pickupLocation !== null  &&
+      productData.deliverySupply.pickupLocation !== null &&
       (productData.stockSummary.branchStock > 0 ||
-      productData.stockSummary.companyStock > 0 )
+        productData.stockSummary.companyStock > 0)
     "
   >
     <div

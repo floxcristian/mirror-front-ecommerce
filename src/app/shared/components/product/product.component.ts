@@ -70,6 +70,7 @@ import { CartService } from '@core/services-v2/cart.service';
 import { ModalScalePriceComponent } from '../modal-scale-price/modal-scale-price.component';
 import { ConfigService } from '@core/config/config.service';
 import { IReviewsResponse } from '@core/models-v2/article/review-response.interface';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-product',
@@ -77,6 +78,7 @@ import { IReviewsResponse } from '@core/models-v2/article/review-response.interf
   styleUrls: ['./product.component.scss'],
 })
 export class ProductComponent implements OnInit, OnChanges {
+  readonly IMAGE_URL: string = environment.imageUrl;
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
   @ViewChild('featuredCarousel', { read: CarouselComponent, static: false })
   featuredCarousel!: CarouselComponent;
@@ -195,7 +197,7 @@ export class ProductComponent implements OnInit, OnChanges {
     private cd: ChangeDetectorRef,
     private fb: FormBuilder,
     private readonly gtmService: GoogleTagManagerService,
-    private renderer:Renderer2,
+    private renderer: Renderer2,
     // Services V2
     private cart: CartService,
     private readonly sessionService: SessionService,
@@ -468,12 +470,11 @@ export class ProductComponent implements OnInit, OnChanges {
    */
   openPhotoSwipe(event: MouseEvent, image: IProductImage): void {
     event.preventDefault();
-    const html_e = this.renderer.selectRootElement('html',true)
+    const html_e = this.renderer.selectRootElement('html', true);
     const options = {
       getThumbBoundsFn: (index: any) => {
         const imageElement = this.imageElements.toArray()[index].nativeElement;
-        const pageYScroll =
-          window.pageYOffset || html_e.scrollTop;
+        const pageYScroll = window.pageYOffset || html_e.scrollTop;
         const rect = imageElement.getBoundingClientRect();
 
         return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };

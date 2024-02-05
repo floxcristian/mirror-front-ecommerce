@@ -36,7 +36,7 @@
         <div class="div_img_cyber">
           <picture>
             <img
-              src="https://images.implementos.cl/uploads/cyber/cyber.webp"
+              [src]="IMAGE_URL + '/uploads/cyber/cyber.webp'"
               style="margin-top: 70px !important"
               loading="lazy"
             />
@@ -62,7 +62,7 @@
       >
         <picture>
           <img
-            src="https://images.implementos.cl/uploads/cyber/cyber.webp"
+            [src]="IMAGE_URL + '/uploads/cyber/cyber.webp'"
             loading="lazy"
           />
         </picture>
@@ -70,7 +70,7 @@
 
       <img
         class="img-fluid"
-        src="https://images.implementos.cl/img/250/{{plana.products.product}}-{{img}}.jpg"
+        [src]="IMAGE_URL + '/img/250/' + plana.products.product + '-' + img + '.jpg'"
         onError="this.src='./assets/images/catalogo/place-150x150.png'"
         alt=""
       />
@@ -83,7 +83,7 @@
     >
       <img
         class="img-fluid3"
-        src="https://images.implementos.cl/img/250/{{plana.products.product}}-{{img}}.jpg"
+        [src]="IMAGE_URL + '/img/250/' + plana.products.product + '-' + img + '.jpg'"
         onError="this.src='./assets/images/catalogo/place-150x150.png'"
         alt=""
       />
@@ -113,8 +113,8 @@
       </div>
       <div class="nombre">
         <b
-          >{{ isString(plana.products.attributes[1].value) | slice:0:30 | capitalizeFirst
-          }}</b
+          >{{ isString(plana.products.attributes[1].value) | slice:0:30 |
+          capitalizeFirst }}</b
         >
       </div>
       <div
@@ -122,7 +122,8 @@
         style="font-size: 12px !important"
         *ngIf="folio"
       >
-        {{ isString(plana.products.attributes[2].value) | slice:0:50 | capitalizeFirst }}
+        {{ isString(plana.products.attributes[2].value) | slice:0:50 |
+        capitalizeFirst }}
       </div>
       <div class="sku" *ngIf="!folio">
         SKU {{ isString(plana.products.attributes[0].value) | uppercase }}
@@ -158,13 +159,15 @@
           {{ preciosLista[0].price | currencyFormat }} c/iva
         </div>
         <div class="col-12 col-sm-12 p-0 unidadNormal">
-          {{ preciosLista[1].fromQuantity }} a {{ preciosLista[1].toQuantity }} UN
+          {{ preciosLista[1].fromQuantity }} a {{ preciosLista[1].toQuantity }}
+          UN
         </div>
         <div class="col-12 col-sm-12 p-0 precioNormal pb-1">
           {{ preciosLista[1].price | currencyFormat }} c/iva
         </div>
         <div class="col-12 col-sm-12 p-0 unidadDestacado">
-          {{ preciosLista[2].fromQuantity }} {{ preciosLista[2].toQuantity }} UN
+          {{ preciosLista[2].fromQuantity }} {{ preciosLista[2].toQuantity }}
+          UN
         </div>
         <div class="col-12 col-sm-12 p-0 precioDestacado">
           {{ preciosLista[2].price | currencyFormat }} c/iva
@@ -207,7 +210,8 @@
           </em>
         </div>
         <div class="col-12 col-sm-12 p-0 unidadNormal">
-          {{ preciosLista[1].fromQuantity }} a {{ preciosLista[1].toQuantity }} UN
+          {{ preciosLista[1].fromQuantity }} a {{ preciosLista[1].toQuantity }}
+          UN
         </div>
         <div class="col-12 col-sm-12 p-0 precioNormal pb-1">
           {{ preciosLista[1].price | currencyFormat }}
@@ -220,7 +224,8 @@
           </em>
         </div>
         <div class="col-12 col-sm-12 p-0 unidadDestacado">
-          {{ preciosLista[2].fromQuantity }} {{ preciosLista[2].toQuantity }} UN
+          {{ preciosLista[2].fromQuantity }} {{ preciosLista[2].toQuantity }}
+          UN
         </div>
         <div class="col-12 col-sm-12 p-0 precioDestacado">
           {{ preciosLista[2].price | currencyFormat }}
@@ -257,7 +262,8 @@
           {{ preciosLista[0].price | currencyFormat }} c/iva
         </div>
         <div class="col-12 col-sm-12 p-0 unidadDestacado">
-          {{ preciosLista[1].fromQuantity }} {{ preciosLista[1].toQuantity }} UN
+          {{ preciosLista[1].fromQuantity }} {{ preciosLista[1].toQuantity }}
+          UN
         </div>
         <div class="col-12 col-sm-12 p-0 precioDestacado">
           {{ preciosLista[1].price | currencyFormat }} c/iva
@@ -300,7 +306,8 @@
           </em>
         </div>
         <div class="col-12 col-sm-12 p-0 unidadDestacado">
-          {{ preciosLista[1].fromQuantity }} {{ preciosLista[1].toQuantity }} UN
+          {{ preciosLista[1].fromQuantity }} {{ preciosLista[1].toQuantity }}
+          UN
         </div>
         <div class="col-12 col-sm-12 p-0 precioDestacado">
           {{ preciosLista[1].price | currencyFormat }} c/iva

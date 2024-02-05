@@ -44,7 +44,7 @@
               >
                 <picture *ngIf="cyberMonday > 0">
                   <img
-                    src="https://images.implementos.cl/uploads/cyber/cyberMonday.webp"
+                    [src]="IMAGE_URL + '/uploads/cyber/cyberMonday.webp'"
                     height="100px"
                     width="100px"
                     class="float-end"
@@ -61,7 +61,7 @@
 
                 <picture *ngIf="cyber > 0 && cyberMonday === 0">
                   <img
-                    src="https://images.implementos.cl/uploads/cyber/cyber.webp"
+                    [src]="IMAGE_URL + '/uploads/cyber/cyber.webp'"
                     alt=""
                     height="80px"
                     width="80px"
@@ -89,10 +89,10 @@
                   "
                 >
                   <img
-                    src="https://images.implementos.cl/marcas/small/{{
-                      product.brand
-                    }}.PNG"
-                    alt="{{ product.brand }}"
+                    [src]="
+                      IMAGE_URL + '/marcas/small/' + product.brand + '.png'
+                    "
+                    [alt]="product.brand"
                   />
                 </div>
               </div>
@@ -764,11 +764,11 @@
           <div>
             <div class="d-flex justify-content-center">
               <app-product-rating
-              [producto]="product"
-              (comentarioGuardado)="comentarioGuardado.emit(true)"
-              (leerComentarios)="leerComentarios.emit(true)"
-              [evaluationSummary]="evaluationSummary"
-            />
+                [producto]="product"
+                (comentarioGuardado)="comentarioGuardado.emit(true)"
+                (leerComentarios)="leerComentarios.emit(true)"
+                [evaluationSummary]="evaluationSummary"
+              />
             </div>
           </div>
 

@@ -35,6 +35,7 @@ import { ConfigService } from '@core/config/config.service';
   styleUrls: ['./page-ver-catalogo-flip.component.scss'],
 })
 export class PageVerCatalogoFlipComponent implements OnInit {
+  readonly IMAGE_URL: string = environment.imageUrl;
   @ViewChild('demoBookExample') _demoBookExample!: ElementRef<HTMLElement>;
   pageFlip: any;
   pageTotal: number = 0;

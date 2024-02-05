@@ -75,7 +75,10 @@
                 color: black;
               "
             >
-              <b>{{ isString(plana.products.attributes[1].value) | slice:0:32 }}</b>
+              <b
+                >{{ isString(plana.products.attributes[1].value) | slice:0:32
+                }}</b
+              >
             </div>
             <div
               class="col-md-12 p-0 mt-1"
@@ -87,14 +90,15 @@
                 color: black;
               "
             >
-              {{ isString(plana.products.attributes[2].value) | titlecase | slice:0:100
-              }}
+              {{ isString(plana.products.attributes[2].value) | titlecase |
+              slice:0:100 }}
             </div>
             <div
               class="col-md-12 p-0 mt-1"
               style="font-size: 14px; text-align: left; color: #000000"
             >
-              SKU {{ isString(plana.products.attributes[0].value) | uppercase }}
+              SKU {{ isString(plana.products.attributes[0].value) | uppercase
+              }}
             </div>
           </div>
 
@@ -110,7 +114,7 @@
               <div class="div_img_cyber_escala">
                 <picture>
                   <img
-                    src="https://images.implementos.cl/uploads/cyber/cyber.webp"
+                    [src]="IMAGE_URL + '/uploads/cyber/cyber.webp'"
                     style="width: 50px"
                     loading="lazy"
                   />
@@ -135,7 +139,7 @@
           >
             <picture>
               <img
-                src="https://images.implementos.cl/uploads/cyber/cyber.webp"
+                [src]="IMAGE_URL + '/uploads/cyber/cyber.webp'"
                 style="width: 50px"
                 loading="lazy"
               />
@@ -172,8 +176,8 @@
                     </tr>
                     <tr>
                       <td class="p-0 txtNormal">
-                        {{ preciosLista[1].fromQuantity }} a {{ preciosLista[1].toQuantity
-                        }} UN
+                        {{ preciosLista[1].fromQuantity }} a {{
+                        preciosLista[1].toQuantity }} UN
                       </td>
                       <td class="p-0 pull-right txtNormal">
                         {{ preciosLista[1].price | currencyFormat }} {{
@@ -182,8 +186,8 @@
                     </tr>
                     <tr>
                       <td class="p-0 txtNormal fw-bold">
-                        {{ preciosLista[2].fromQuantity }} {{ preciosLista[2].toQuantity }}
-                        UN
+                        {{ preciosLista[2].fromQuantity }} {{
+                        preciosLista[2].toQuantity }} UN
                       </td>
                       <td class="p-0 pull-right txtDestacado">
                         {{ preciosLista[2].price | currencyFormat }} {{
@@ -221,8 +225,8 @@
                     </tr>
                     <tr>
                       <td class="p-0 txtNormal">
-                        {{ preciosLista[1].fromQuantity }} a {{ preciosLista[1].toQuantity
-                        }} UN
+                        {{ preciosLista[1].fromQuantity }} a {{
+                        preciosLista[1].toQuantity }} UN
                       </td>
                       <td class="p-0 pull-right txtNormal">
                         {{ preciosLista[1].price | currencyFormat }} {{
@@ -231,8 +235,8 @@
                     </tr>
                     <tr>
                       <td class="p-0 txtNormal fw-bold">
-                        {{ preciosLista[2].fromQuantity }} {{ preciosLista[2].toQuantity }}
-                        UN
+                        {{ preciosLista[2].fromQuantity }} {{
+                        preciosLista[2].toQuantity }} UN
                       </td>
                       <td class="p-0 pull-right txtDestacado">
                         {{ preciosLista[2].price | currencyFormat }}
@@ -278,8 +282,8 @@
                     </tr>
                     <tr>
                       <td class="p-0 txtNormal fw-bold text-start">
-                        {{ preciosLista[1].fromQuantity }} {{ preciosLista[1].toQuantity }}
-                        UN
+                        {{ preciosLista[1].fromQuantity }} {{
+                        preciosLista[1].toQuantity }} UN
                       </td>
                       <td class="p-0 pull-right txtDestacado">
                         {{ preciosLista[1].price | currencyFormat }} {{
@@ -332,8 +336,8 @@
                     </tr>
                     <tr>
                       <td class="p-0 txtNormal fw-bold text-start">
-                        {{ preciosLista[1].fromQuantity }} {{ preciosLista[1].toQuantity }}
-                        UN
+                        {{ preciosLista[1].fromQuantity }} {{
+                        preciosLista[1].toQuantity }} UN
                       </td>
                       <td class="p-0 pull-right txtDestacado">
                         {{ preciosLista[1].price | currencyFormat }}
@@ -498,7 +502,7 @@
           <img
             *ngIf="plana.products.images[0][0] == 1"
             class="img-fluid"
-            src="https://images.implementos.cl/img/450/{{plana.products.product}}-1.jpg"
+            [src]="IMAGE_URL + '/img/450/' + plana.products.product + '-1.jpg'"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
@@ -506,7 +510,7 @@
           <img
             *ngIf="plana.products.images[0][1] == 1"
             class="img-fluid"
-            src="https://images.implementos.cl/img/450/{{plana.products.product}}-2.jpg"
+            [src]="IMAGE_URL + '/img/450/' + plana.products.product + '-2.jpg'"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
@@ -514,7 +518,7 @@
           <img
             *ngIf="plana.products.images[0][2] == 1"
             class="img-fluid"
-            src="https://images.implementos.cl/img/450/{{plana.products.product}}-3.jpg"
+            [src]="IMAGE_URL + '/img/450/' + plana.products.product + '-3.jpg'"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
@@ -529,7 +533,7 @@
           <img
             class="img-fluid"
             style="width: 11rem; height: 11rem"
-            src="https://images.implementos.cl/img/450/{{plana.products.product}}-1.jpg"
+            [src]="IMAGE_URL + '/img/450/' + plana.products.product + '-1.jpg'"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
@@ -620,7 +624,8 @@
               style="font-size: 10px; text-align: left; color: #000000"
             >
               <span>
-                {{ isString(plana.products.attributes[0].value) | uppercase }}</span
+                {{ isString(plana.products.attributes[0].value) | uppercase
+                }}</span
               >
             </div>
           </div>
@@ -678,7 +683,7 @@
 
                     <tr>
                       <td *ngIf="plana.products.cantidad" colspan="2">
-                        <span style="font-size: xx-small; color:#000000">
+                        <span style="font-size: xx-small; color: #000000">
                           *precio sujeto a la cantidad minima de
                           {{plana.products.cantidad}}</span
                         >
@@ -703,7 +708,7 @@
             *ngIf="plana.products.images[0][0] == 1"
             class="img-fluid"
             style="max-width: 70% !important; max-height: 130px"
-            src="https://images.implementos.cl/img/450/{{plana.products.product}}-1.jpg"
+            [src]="IMAGE_URL + '/img/450/' + plana.products.product + '-1.jpg'"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
@@ -712,7 +717,7 @@
             *ngIf="plana.products.images[0][1] == 1"
             class="img-fluid"
             style="max-width: 70% !important; max-height: 130px"
-            src="https://images.implementos.cl/img/450/{{plana.products.product}}-2.jpg"
+            [src]="IMAGE_URL + '/img/450/' + plana.products.product + '-2.jpg'"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
@@ -721,7 +726,7 @@
             *ngIf="plana.products.images[0][2] == 1"
             class="img-fluid"
             style="max-width: 70% !important; max-height: 130px"
-            src="https://images.implementos.cl/img/450/{{plana.products.product}}-3.jpg"
+            [src]="IMAGE_URL + '/img/450/' + plana.products.product + '-3.jpg'"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
@@ -735,7 +740,7 @@
           <img
             class="img-fluid"
             style="width: 11rem; height: 11rem"
-            src="https://images.implementos.cl/img/450/{{plana.products.product}}-1.jpg"
+            [src]="IMAGE_URL + '/img/450/' + plana.products.product + '-1.jpg'"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />

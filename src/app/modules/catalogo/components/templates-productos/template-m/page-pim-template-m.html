@@ -79,7 +79,9 @@
             line-height: 1;
           "
         >
-          <b>{{ isString(plana.products.attributes[1].value) | slice:0:45 }}</b>
+          <b
+            >{{ isString(plana.products.attributes[1].value) | slice:0:45 }}</b
+          >
         </div>
 
         <div
@@ -91,7 +93,8 @@
             color: black;
           "
         >
-          {{ isString(plana.products.attributes[2].value) | titlecase | slice:0:110 }}
+          {{ isString(plana.products.attributes[2].value) | titlecase |
+          slice:0:110 }}
         </div>
 
         <div
@@ -115,7 +118,7 @@
           <img
             class="img-fluid"
             width="150px"
-            src="https://images.implementos.cl/img/450/{{plana.products.product}}-{{ordenImg1}}.jpg"
+            [src]="IMAGE_URL + '/img/450/' + plana.products.product + '-' + ordenImg1 + '.jpg'"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
             alt=""
           />
@@ -125,7 +128,7 @@
           <img
             class="img-fluid"
             width="150px"
-            src="https://images.implementos.cl/img/450/{{plana.products.product}}-{{ordenImg2}}.jpg"
+            [src]="IMAGE_URL + '/img/450/' + plana.products.product + '-' + ordenImg2 + '.jpg'"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
           />
         </div>
@@ -134,7 +137,7 @@
           <img
             class="img-fluid"
             width="150px"
-            src="https://images.implementos.cl/img/450/{{plana.products.product}}-{{ordenImg3}}.jpg"
+            [src]="IMAGE_URL + '/img/450/' + plana.products.product + '-' + ordenImg3 + '.jpg'"
             onError="this.src='./assets/images/catalogo/place-150x150.png'"
           />
         </div>
@@ -167,7 +170,7 @@
           >
             <picture>
               <img
-                src="https://images.implementos.cl/uploads/cyber/cyber.webp"
+                [src]="IMAGE_URL + '/uploads/cyber/cyber.webp'"
                 style="width: 50px"
                 loading="lazy"
               />
@@ -204,7 +207,7 @@
       >
         <picture>
           <img
-            src="https://images.implementos.cl/uploads/cyber/cyber.webp"
+            [src]="IMAGE_URL + '/uploads/cyber/cyber.webp'"
             style="width: 50px"
             loading="lazy"
           />
@@ -238,8 +241,8 @@
                   </tr>
                   <tr>
                     <td class="p-0 txtNormal">
-                      {{ preciosLista[1].fromQuantity }} a {{ preciosLista[1].toQuantity }}
-                      UN
+                      {{ preciosLista[1].fromQuantity }} a {{
+                      preciosLista[1].toQuantity }} UN
                     </td>
                     <td class="p-0 pull-right txtNormal">
                       {{ preciosLista[1].price | currencyFormat }} c/iva
@@ -247,8 +250,8 @@
                   </tr>
                   <tr>
                     <td class="p-0 txtNormal fw-bold text-start">
-                      {{ preciosLista[2].fromQuantity }} {{ preciosLista[2].toQuantity }}
-                      UN
+                      {{ preciosLista[2].fromQuantity }} {{
+                      preciosLista[2].toQuantity }} UN
                     </td>
                     <td class="p-0 pull-right txtDestacado">
                       {{ preciosLista[2].price | currencyFormat }} c/iva
@@ -286,8 +289,8 @@
                   </tr>
                   <tr>
                     <td class="p-0 txtNormal fw-bold text-start">
-                      {{ preciosLista[1].fromQuantity }} {{ preciosLista[1].toQuantity }}
-                      UN
+                      {{ preciosLista[1].fromQuantity }} {{
+                      preciosLista[1].toQuantity }} UN
                     </td>
                     <td class="p-0 pull-right txtDestacado">
                       {{ preciosLista[1].price | currencyFormat }} c/iva

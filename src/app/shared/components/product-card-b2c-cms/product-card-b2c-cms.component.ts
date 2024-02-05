@@ -38,6 +38,7 @@ import { MetaTag } from '@core/models-v2/article/article-response.interface';
   styleUrls: ['./product-card-b2c-cms.component.scss'],
 })
 export class ProductCardB2cCmsComponent implements OnInit {
+  readonly IMAGE_URL: string = environment.imageUrl;
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
   @Input() home: boolean = false;
   @Input() cartClass!: boolean;
@@ -146,10 +147,7 @@ export class ProductCardB2cCmsComponent implements OnInit {
       this.productData.name,
       false
     );
-    let gimage: string =
-      'https://images.implementos.cl/img/watermarked/' +
-      this.productData.sku +
-      '-watermarked.jpg';
+    const gimage = `${this.IMAGE_URL}/img/watermarked/${this.productData.sku}-watermarked.jpg`;
     this.productData.url = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     this.productData.gimage =
       this.sanitizer.bypassSecurityTrustResourceUrl(gimage);

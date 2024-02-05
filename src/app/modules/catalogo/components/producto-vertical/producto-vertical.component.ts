@@ -1,17 +1,19 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { IAttribute } from '@core/models-v2/catalog/catalog-response.interface';
 import { IScalePrice } from '@core/models-v2/cms/special-reponse.interface';
+import { environment } from '@env/environment';
 
 interface IProductTemp {
   // preciosScal: IScalePrice[]
-  preciosScal: any[]
+
+  preciosScal: any[];
   precioEscala: boolean;
   precio: number;
   sku: string;
   rut: string;
   precioEsp: number;
   cyber: number;
-  cyberMonday:number;
+  cyberMonday: number;
   attributes: IAttribute[];
 }
 
@@ -25,6 +27,7 @@ export class ProductoVerticalComponent implements OnInit {
   @Output() agregarCarro: EventEmitter<any> = new EventEmitter();
   @Input() innerWidth!: number;
   @Input() tipoCatalogo!: string;
+  imageUrl = environment.imageUrl;
   precios: boolean = true;
   carro: boolean = true;
   constructor() {}
