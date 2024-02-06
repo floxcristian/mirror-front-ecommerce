@@ -23,6 +23,10 @@ export interface ICompany {
   formattedWhatsapp: string;
   address: string;
   email: string;
+  instagram: string;
+  facebook: string;
+  linkedin: string;
+  youtube: string;
 }
 
 export interface IPhoneCodes {

@@ -33,7 +33,7 @@
 
           <a
             class="me-1"
-            href="https://www.facebook.com/IMPLEMENTOSREPUESTOS/"
+            [href]="config.company.facebook"
             rel="noopener"
             target="_blank"
           >
@@ -45,7 +45,7 @@
           </a>
           <a
             class="me-2"
-            href="https://www.instagram.com/implementosrepuestos/"
+            [href]="config.company.instagram"
             target="_blank"
             rel="noopener"
           >
@@ -55,11 +55,7 @@
               alt="instagram"
             />
           </a>
-          <a
-            href="https://www.linkedin.com/company/epysa-implementos/about/"
-            target="_blank"
-            rel="noopener"
-          >
+          <a [href]="config.company.linkedin" target="_blank" rel="noopener">
             <img
               src="../../../../../assets/svg/19.svg"
               style="width: 40px; height: 40px"

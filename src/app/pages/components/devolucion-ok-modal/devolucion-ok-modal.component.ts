@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { IConfig } from '@core/config/config.interface';
+import { ConfigService } from '@core/config/config.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -6,8 +8,12 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   templateUrl: './devolucion-ok-modal.component.html',
   styleUrls: ['./devolucion-ok-modal.component.scss'],
 })
-export class DevolucionOkModalComponent implements OnInit {
-  constructor(public ModalRef: BsModalRef) {}
-
-  ngOnInit() {}
+export class DevolucionOkModalComponent {
+  readonly config: IConfig;
+  constructor(
+    public readonly ModalRef: BsModalRef,
+    public readonly configService: ConfigService
+  ) {
+    this.config = this.configService.getConfig();
+  }
 }
