@@ -597,3 +597,21 @@ a {
     background: #094cac;
   }
 }
+
+
+.image-link {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgb(138 127 127 / 50%);
+  color: white;
+  padding: 10px;
+  text-align: center;
+  border-radius: 38px;
+  font-size: s;
+}
+
+.image-link span {
+  margin-left: 5px;
+}
