@@ -9,12 +9,15 @@ import { IError } from '@core/models-v2/error/error.interface';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IContactPosition } from '@core/models-v2/customer/contact-position.interface';
 // Services
-import { getDomainsToAutocomplete } from './domains-autocomplete';
 import { CustomerContactService } from '@core/services-v2/customer-contact.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { DocumentValidator } from '@core/validators/document-form.validator';
 import { IConfig } from '@core/config/config.interface';
 import { ConfigService } from '@core/config/config.service';
+import {
+  IEmailDomainAutocomplete,
+  getEmailDomainsToAutocomplete,
+} from '@core/utils-v2/email/domains-autocomplete';
 
 @Component({
   selector: 'app-add-contact-modal',
@@ -26,7 +29,7 @@ export class AddContactModalComponent implements OnInit {
   @Output() respuesta = new EventEmitter<boolean>();
 
   formContacto!: FormGroup;
-  domains: any[] = [];
+  domains: IEmailDomainAutocomplete[] = [];
   cargos: IContactPosition[] = [];
   selectedPhoneCode: string;
   loadingForm = false;
@@ -48,7 +51,7 @@ export class AddContactModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.usuario = this.sessionService.getSession();
-    this.domains = getDomainsToAutocomplete();
+    this.domains = getEmailDomainsToAutocomplete();
     this.getCargos();
     this.formDefault();
   }

@@ -267,11 +267,10 @@ export class PageProfileComponent implements OnDestroy, OnInit {
     });
   }
 
-  respuesta(event: any) {
-    if (event) {
-      this.usuario = this.sessionService.getSession();
-      this.getDataClient();
-    }
+  respuesta(event: boolean): void {
+    if (!event) return;
+    this.usuario = this.sessionService.getSession();
+    this.getDataClient();
   }
 
   ngOnDestroy(): void {

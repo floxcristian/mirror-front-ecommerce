@@ -811,7 +811,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       active_khipu = true;
     }
 
-    if (this.paymentMethodActive == 'khipu' && active_khipu == true) {
+    if (this.paymentMethodActive == 'khipu' && active_khipu) {
       this.openModal();
     }
   }

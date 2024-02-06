@@ -11,19 +11,19 @@
   </button>
 </div>
 <div class="modal-body">
-  <form (ngSubmit)="editarPerfil()" [formGroup]="formPerfil">
+  <form (ngSubmit)="updateProfile()" [formGroup]="formProfile">
     <div class="row">
       <div class="mb-3 col-md-6">
         <label>nombre (*)</label>
-        <input type="text" class="form-control" formControlName="nombre" />
+        <input type="text" class="form-control" formControlName="firstName" />
       </div>
       <div class="mb-3 col-md-6">
         <label>apellido (*)</label>
-        <input type="text" class="form-control" formControlName="apellido" />
+        <input type="text" class="form-control" formControlName="lastName" />
       </div>
       <div class="mb-3 col-md-6">
         <label>correo de contacto (*)</label>
-        <input type="text" class="form-control" formControlName="correo" />
+        <input type="text" class="form-control" formControlName="email" />
       </div>
       <div class="col-md-6">
         <div class="mb-3">
@@ -35,7 +35,7 @@
               }}</span>
             </div>
             <input
-              formControlName="telefono"
+              formControlName="phone"
               type="text"
               class="form-control"
               placeholder="Teléfono*"
@@ -48,8 +48,8 @@
 
           <p
             *ngIf="
-              formPerfil.controls['telefono'].invalid &&
-              formPerfil.controls['telefono'].touched
+              formProfile.controls['phone'].invalid &&
+              formProfile.controls['phone'].touched
             "
             class="text-error-form-2"
           >
@@ -71,9 +71,9 @@
   </button>
   <button
     class="btn btn-secondary"
-    (click)="editarPerfil()"
+    (click)="updateProfile()"
     name="editarPerfil"
-    [disabled]="!formPerfil.valid"
+    [disabled]="!formProfile.valid"
   >
     Actualizar
   </button>

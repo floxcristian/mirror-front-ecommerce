@@ -18,9 +18,9 @@ import { IError } from '@core/models-v2/error/error.interface';
 import { IConfig } from '@core/config/config.interface';
 // Services
 import {
-  IDomainAutocomplete,
-  getDomainsToAutocomplete,
-} from './domains-autocomplete';
+  IEmailDomainAutocomplete,
+  getEmailDomainsToAutocomplete,
+} from '../../../core/utils-v2/email/domains-autocomplete';
 import { isVacio } from '../../utils/utilidades';
 import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete/angular-email-autocomplete.component';
 import { SessionService } from '@core/services-v2/session/session.service';
@@ -41,7 +41,7 @@ export class UpdateContactModalComponent implements OnInit {
   email!: AngularEmailAutocompleteComponent;
 
   formContacto!: FormGroup;
-  domains: IDomainAutocomplete[] = [];
+  domains: IEmailDomainAutocomplete[] = [];
   cargos: IContactPosition[] = [];
   selectedPhoneCode: string;
   loadingForm = false;
@@ -60,7 +60,7 @@ export class UpdateContactModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.domains = getDomainsToAutocomplete();
+    this.domains = getEmailDomainsToAutocomplete();
     this.getCargos();
     this.formDefault();
   }

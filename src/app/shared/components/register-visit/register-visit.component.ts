@@ -6,6 +6,7 @@ import {
   Output,
   EventEmitter,
   OnChanges,
+  ViewChild,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,7 +15,6 @@ import { ToastrService } from 'ngx-toastr';
 // Rxjs
 import { firstValueFrom } from 'rxjs';
 // Models
-import { ISession } from '@core/models-v2/auth/session.interface';
 import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
 import { IGuest } from '@core/models-v2/storage/guest.interface';
 import { IBusinessLine } from '@core/services-v2/customer-business-line/business-line.interface';
@@ -22,11 +22,15 @@ import { IConfig } from '@core/config/config.interface';
 // Services
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthApiService } from '@core/services-v2/auth/auth.service';
-import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { CartService } from '@core/services-v2/cart.service';
 import { CustomerBusinessLineApiService } from '@core/services-v2/customer-business-line/customer-business-line.api.service';
 import { ConfigService } from '@core/config/config.service';
 import { DocumentValidator } from '@core/validators/document-form.validator';
+import {
+  IEmailDomainAutocomplete,
+  getEmailDomainsToAutocomplete,
+} from '@core/utils-v2/email/domains-autocomplete';
+import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete/angular-email-autocomplete.component';
 
 @Component({
   selector: 'app-register-visit',
@@ -34,6 +38,8 @@ import { DocumentValidator } from '@core/validators/document-form.validator';
   styleUrls: ['./register-visit.component.scss'],
 })
 export class RegisterVisitComponent implements OnInit, OnChanges {
+  @ViewChild('emailValidate', { static: true })
+  email!: AngularEmailAutocompleteComponent;
   @Output() returnLoginEvent: EventEmitter<any> = new EventEmitter();
   @Input() linkLogin!: any;
   @Input() innerWidth!: number;
@@ -49,6 +55,8 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
   blockedForm = true;
   isValidRut = false;
   config: IConfig;
+  emailDomains: IEmailDomainAutocomplete[];
+  isValidDocumentId!: boolean;
 
   constructor(
     private toastr: ToastrService,
@@ -58,11 +66,11 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     private readonly cartService: CartService,
     private readonly sessionStorage: SessionStorageService,
     private readonly authService: AuthApiService,
-    private readonly authStateService: AuthStateServiceV2,
     private readonly customerBusinessLineService: CustomerBusinessLineApiService,
     private readonly configService: ConfigService
   ) {
     this.config = this.configService.getConfig();
+    this.emailDomains = getEmailDomainsToAutocomplete();
     this.selectedPhoneCode = this.config.phoneCodes.mobile.code;
     this.buildForm();
   }
@@ -80,8 +88,9 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
         nombre: this.invitado.firstName,
         apellido: this.invitado.lastName,
         telefono: this.invitado?.phone?.slice(-this.slices),
-        email: this.invitado.email,
+        //email: this.invitado.email,
       });
+      this.email.inputValue = this.invitado.email;
     }
   }
 
@@ -102,7 +111,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
       telefono: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
+      //email: ['', [Validators.required, Validators.email]],
     });
   }
 
@@ -116,35 +125,34 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     });
   }
 
-  async registerUser() {
+  async registerUser(inputEmail: AngularEmailAutocompleteComponent) {
+    const email = inputEmail.inputValue;
     const dataSave = { ...this.formVisita.value };
-
-    const email = String(dataSave.email).toLowerCase();
     try {
       const resp = await firstValueFrom(this.authService.checkEmail(email));
       if (!resp.exists) {
         this.loadingForm = true;
 
+        dataSave.email = email;
         dataSave.tipoCliente = 1;
         dataSave.telefono = this.selectedPhoneCode + dataSave.telefono;
-        const user = this.sessionStorage.get();
+        const session = this.sessionStorage.get();
 
         const guestUser = this.setUsuario(dataSave);
-        // FIXME: antes se usaba, y ahora??
-        // usuarioVisita._id = user._id;
-        if (user) {
+
+        if (session) {
           const guest: IGuest = {
             documentId: guestUser.documentId,
             firstName: guestUser.firstName,
             lastName: guestUser.lastName,
             phone: guestUser.phone,
-            email: guestUser.email,
+            email,
             street: '',
             number: '',
             commune: '',
           };
           await firstValueFrom(
-            this.cartService.setGuestUser(user.email, guest)
+            this.cartService.setGuestUser(session.email, guest)
           );
         }
 
@@ -160,7 +168,7 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     }
   }
 
-  setUsuario(formulario: any): IEcommerceUser {
+  private setUsuario(formulario: any): IEcommerceUser {
     return {
       active: true,
       avatar: '',
@@ -174,49 +182,6 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
       phone: formulario.telefono,
       userRole: 'temp',
     };
-  }
-
-  login(): void {
-    const user = this.sessionStorage.get();
-
-    let userIdOld: any = null;
-    if (user) {
-      userIdOld = user.email;
-    }
-
-    const dataLogin = {
-      username: this.formVisita.value.email,
-      password: this.formVisita.value.pwd,
-    };
-
-    this.authService.login(dataLogin.username, dataLogin.password).subscribe({
-      next: (res) => {
-        const iva = res.user.preferences.iva ?? true;
-        const data: ISession = {
-          ...res.user,
-          login_temp: false,
-          preferences: { iva },
-        };
-        this.sessionStorage.set(data);
-        this.authStateService.setSession(data);
-        if (userIdOld) {
-          this.cartService
-            .transferShoppingCart({
-              origin: userIdOld,
-              destination: data.email,
-            })
-            .subscribe(() => {
-              this.cartService.load();
-            });
-        } else {
-          this.cartService.load();
-        }
-        this.router.navigate(['/inicio']);
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      },
-    });
   }
 
   invoice() {
@@ -253,12 +218,12 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
       this.formVisita.get('nombre')?.enable();
       this.formVisita.get('apellido')?.enable();
       this.formVisita.get('telefono')?.enable();
-      this.formVisita.get('email')?.enable();
+      //this.formVisita.get('email')?.enable();
     } else {
       this.formVisita.get('nombre')?.disable();
       this.formVisita.get('apellido')?.disable();
       this.formVisita.get('telefono')?.disable();
-      this.formVisita.get('email')?.disable();
+      //this.formVisita.get('email')?.disable();
     }
   }
 

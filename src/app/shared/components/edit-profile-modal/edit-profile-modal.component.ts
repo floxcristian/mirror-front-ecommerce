@@ -1,17 +1,17 @@
 // Angular
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+// Libs
+import { BsModalRef } from 'ngx-bootstrap/modal';
 // Services
 import { SessionService } from '@core/services-v2/session/session.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
-import { isVacio } from '../../utils/utilidades';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
+import { IConfig } from '@core/config/config.interface';
 // Libs
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerService } from '@core/services-v2/customer.service';
-import { IConfig } from '@core/config/config.interface';
 import { ConfigService } from '@core/config/config.service';
 
 @Component({
@@ -21,9 +21,10 @@ import { ConfigService } from '@core/config/config.service';
 })
 export class EditProfileModalComponent {
   @Input() modalEditRef!: BsModalRef;
-  @Output() respuesta = new EventEmitter<any>();
-  formPerfil!: FormGroup;
-  user: ISession;
+  @Output() respuesta = new EventEmitter<boolean>();
+
+  formProfile!: FormGroup;
+  session: ISession;
   config: IConfig;
 
   constructor(
@@ -36,67 +37,50 @@ export class EditProfileModalComponent {
     private readonly configService: ConfigService
   ) {
     this.config = this.configService.getConfig();
-    this.buildForm();
-    this.user = this.sessionService.getSession();
-    this.cargarDatos();
+    this.session = this.sessionService.getSession();
+    this.buildForm(this.session);
   }
 
-  private buildForm(): void {
-    this.formPerfil = this.fb.group({
-      nombre: [null, [Validators.required]],
-      apellido: [null, [Validators.required]],
-      correo: [null, [Validators.required]],
-      telefono: [
-        null,
+  private buildForm({ firstName, lastName, phone, email }: ISession): void {
+    this.formProfile = this.fb.group({
+      firstName: [firstName, [Validators.required]],
+      lastName: [lastName, [Validators.required]],
+      email: [email, [Validators.required]],
+      phone: [
+        phone,
         [Validators.required, Validators.pattern('[1-9][0-9]{0,9}')],
       ],
     });
   }
 
-  cargarDatos(): void {
-    this.formPerfil.setValue({
-      nombre: this.user.firstName || '',
-      apellido: !isVacio(this.user.lastName) ? this.user.lastName : '',
-      telefono: !isVacio(this.user.phone) ? this.user.phone : '',
-      correo: !isVacio(this.user.email) ? this.user.email : '',
-    });
-  }
+  updateProfile(): void {
+    const { firstName, lastName, email, phone } = this.formProfile.value;
 
-  actualizaLocalStorage(params: {
-    firstName: string;
-    lastName: string;
-    phone: string;
-    email: string;
-  }) {
-    const user = this.sessionService.getSession();
-    user.firstName = params.firstName;
-    user.lastName = params.lastName;
-    user.phone = params.phone;
-    user.email = params.email;
-    this.sessionStorage.set(user);
-  }
-
-  async editarPerfil() {
-    const { nombre, apellido, telefono, correo } = this.formPerfil.value;
-    const parametros = {
-      documentId: this.user.documentId,
-      firstName: nombre,
-      lastName: apellido,
-      phone: telefono,
-      email: correo,
-    };
-
-    this.customerService.updateProfile(parametros).subscribe({
-      next: (_) => {
-        this.toastr.success('Se actualizo con exito los datos');
-        this.actualizaLocalStorage(parametros);
-        this.respuesta.emit(true);
-        this.modalEditRef.hide();
-      },
-      error: (_) => {
-        this.toastr.error('No se logro actualizar el perfil');
-        this.respuesta.emit(false);
-      },
-    });
+    this.customerService
+      .updateProfile({
+        documentId: this.session.documentId,
+        firstName,
+        lastName,
+        email,
+        phone,
+      })
+      .subscribe({
+        next: () => {
+          this.toastr.success('Se actualizo con exito los datos');
+          this.sessionStorage.set({
+            ...this.session,
+            firstName,
+            lastName,
+            phone,
+            email,
+          });
+          this.respuesta.emit(true);
+          this.modalEditRef.hide();
+        },
+        error: () => {
+          this.toastr.error('No se logro actualizar el perfil');
+          this.respuesta.emit(false);
+        },
+      });
   }
 }

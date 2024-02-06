@@ -16,7 +16,6 @@ import { IContactPosition } from '@core/services-v2/customer-contact/models/cont
 // Services
 import { PasswordValidator } from '../../validations/password';
 import { AngularEmailAutocompleteComponent } from '../angular-email-autocomplete/angular-email-autocomplete.component';
-import { getDomainsToAutocomplete } from './domains-autocomplete';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthApiService } from '@core/services-v2/auth/auth.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
@@ -29,6 +28,10 @@ import { CustomerApiService } from '@core/services-v2/customer/customer-api.serv
 import { SessionTokenStorageService } from '@core/storage/session-token-storage.service';
 import { GuestStorageService } from '@core/storage/guest-storage.service';
 import { DocumentValidator } from '@core/validators/document-form.validator';
+import {
+  IEmailDomainAutocomplete,
+  getEmailDomainsToAutocomplete,
+} from '@core/utils-v2/email/domains-autocomplete';
 
 @Component({
   selector: 'app-register',
@@ -50,7 +53,7 @@ export class RegisterComponent implements OnInit {
   checkBoxTerminos = false;
   checkBoxSuscribir = false;
   checkBoxEmpresa!: boolean;
-  domains: any[] = [];
+  domains: IEmailDomainAutocomplete[] = [];
   rut = '';
   cantMaxRut: number = 10;
   //
@@ -93,7 +96,7 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.getBusinessLines();
     this.getCities();
-    this.domains = getDomainsToAutocomplete();
+    this.domains = getEmailDomainsToAutocomplete();
     this.getContactPositions();
     this.formBlock(true);
   }
