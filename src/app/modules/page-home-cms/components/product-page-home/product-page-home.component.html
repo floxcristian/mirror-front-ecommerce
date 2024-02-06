@@ -63,7 +63,7 @@
               <a [href]="item.url">
                 <img
                   src="../../../../../assets/img/no-image-ficha.jpg"
-                  alt="no imgagen"
+                  alt="no imagen"
                   class="img-fluid-product"
               /></a>
             </div>
@@ -179,6 +179,11 @@
             class="img-fluid-product-mobile"
             alt="imagen"
           />
+          <a [href]="item.url" class="image-link">
+            <i class="bi bi-link-45deg"></i>
+            <i class="fa-solid fa-hand-back-point-up fw-normal fs-6 text-white"></i>
+            <span class="fw-normal fs-6">Ver más</span>
+          </a>
         </ng-template>
       </ng-container>
     </owl-carousel-o>
@@ -211,7 +216,7 @@
             [home]="true"
             [layout]="layout"
             [cartClass]="true"
-          ></app-product-card-b2c-cms>
+          />
         </ng-template>
       </ng-container>
     </owl-carousel-o>
