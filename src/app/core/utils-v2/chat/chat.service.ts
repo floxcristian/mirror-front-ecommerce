@@ -16,15 +16,45 @@ export class ChatService {
   /**
    * Cargar script de chat.
    */
-  loadChatScript() {}
+  loadChatScript() {
+    this.scriptService
+      .loadScript(this.webChatScript)
+      .then(() => {
+        return true;
+      })
+      .catch((error) => {
+        console.warn('Error al cargar el script de chat');
+        return false;
+      });
+  }
+  /**
+   * Obtiene el token del chat.
+   */
+   private getChatToken(): string {
+    const regex = /token=([^&]+)/;
+    const match = this.webChatScript.match(regex);
+    return match ? match[1] + '_startButtonContainer' : '';
+  }
 
   /**
    * Mostrar botón de chat.
    */
-  showChatButton() {}
-
+  showChatButton(): void {
+    const token = this.getChatToken();
+    const chatButtonContainer = document.getElementById(token);
+    if (chatButtonContainer) {
+      chatButtonContainer.style.display = 'block';
+    }
+  }
   /**
    * Ocultar botón de chat.
    */
-  hideChatButton() {}
+
+  hideChatButton() {
+    const token = this.getChatToken();
+    const chatButtonContainer = document.getElementById(token);
+    if (chatButtonContainer) {
+      chatButtonContainer.style.display = 'none';
+    }
+  }
 }

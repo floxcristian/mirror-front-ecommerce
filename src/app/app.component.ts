@@ -9,7 +9,6 @@ import {
   PLATFORM_ID,
   Renderer2,
   ViewChild,
-  afterNextRender,
 } from '@angular/core';
 // Libs
 import * as moment from 'moment';
@@ -24,9 +23,6 @@ import { CartService } from '@core/services-v2/cart.service';
 import { IShoppingCartProduct } from '@core/models-v2/cart/shopping-cart.interface';
 // Components
 import { AlertCartMinComponent } from './shared/components/alert-cart-min/alert-cart-min.component';
-import { ScriptService } from '@core/utils-v2/script/script.service';
-// ENV
-import { environment } from '@env/environment';
 @Component({
   selector: 'app-root',
   template: `
@@ -44,7 +40,6 @@ export class AppComponent implements AfterViewInit, OnInit {
   s: any;
   node: any;
   isOmni!: boolean;
-  private readonly webChatScript = environment.webChatScript;
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     public router: Router,
@@ -56,14 +51,8 @@ export class AppComponent implements AfterViewInit, OnInit {
     private readonly sessionService: SessionService,
     private readonly shoppingCartService: CartService,
     private readonly geolocationService: GeolocationServiceV2,
-    private readonly scriptService: ScriptService,
     private readonly renderer: Renderer2
-  ) {
-    afterNextRender(() => {
-      this.loadWebChat();
-      this.handleChatButtonVisibility();
-    });
-  }
+  ) {  }
 
   private setLastSession(): void {
     if (!this.sessionService.isB2B()) return;
@@ -133,8 +122,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     if (this.isOmni) return;
     this.geolocationService.selectedStore$.subscribe({
       next: () => {
-        // si es que la tienda seleccionada no cambia no se carga el carro.
-        console.log('selectedStore$ desde [AppComponent]====================');
         this.shoppingCartService.load();
       },
     });
@@ -161,11 +148,6 @@ export class AppComponent implements AfterViewInit, OnInit {
       console.log('setDefaultLocation desde app.component.ts');
       this.geolocationService.setDefaultLocation();
     }
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.handleChatButtonVisibility();
-      }
-    });
   }
 
   /**
@@ -176,49 +158,4 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.alert.show();
   }
 
-  loadWebChat(): void {
-    this.scriptService
-      .loadScript(this.webChatScript)
-      .then(() => {})
-      .catch((error) => {
-        console.warn('Error al cargar el script de chat');
-      });
-  }
-
-  showChatButton(): void {
-    const token = this.getChatToken(this.webChatScript);
-    const tokenWithSuffix = token + '_startButtonContainer';
-    const element = this.renderer.selectRootElement(tokenWithSuffix, true);
-    if (element) {
-      this.renderer.setStyle(element, 'display', 'block');
-    } else {
-      console.error('Elemento no encontrado:', tokenWithSuffix);
-    }
-  }
-
-  hideChatButton() {
-    const token = this.getChatToken(this.webChatScript);
-    const tokenWithSuffix = token + '_startButtonContainer';
-    const element = this.renderer.selectRootElement(tokenWithSuffix, true);
-    if (element) {
-      this.renderer.setStyle(element, 'display', 'none');
-    }
-  }
-
-  handleChatButtonVisibility(): void {
-    const showChatRoutes = ['/ficha', '/especial/', '/home'];
-    const hideChatRoutes = ['/carro-compra', '/catalogos', '/categoria'];
-    const currentUrl = this.router.url;
-    if (showChatRoutes.some((route) => currentUrl.includes(route))) {
-      this.showChatButton();
-    } else if (hideChatRoutes.some((route) => currentUrl.includes(route))) {
-      this.hideChatButton();
-    }
-  }
-
-  private getChatToken(url: string): string | null {
-    const regex = /token=([^&]+)/;
-    const match = url.match(regex);
-    return match ? match[1] : null;
-  }
 }

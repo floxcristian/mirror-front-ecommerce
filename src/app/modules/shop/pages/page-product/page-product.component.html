@@ -19,25 +19,25 @@
           No se encontro el producto.
         </div>
       </div>
-      <!-- <app-product
+           @if (product) {
+          <app-product
           [product]="product"
           [origen]="origen"
           [stock]="stock"
           [recommendedProducts]="recommendedProducts"
-          (comentarioGuardado)="
-            comentarios.cargaTodo(); comentariosMobile.cargaTodo()
-          "
           (leerComentarios)="abrirTabEvaluacion()"
-        ></app-product> -->
-      <app-product
-        *ngIf="product"
-        [product]="product"
-        [origen]="origen"
-        [stock]="stock"
-        [recommendedProducts]="recommendedProducts"
-        (leerComentarios)="abrirTabEvaluacion()"
-        [evaluationSummary]="evaluationSummary"
-      />
+          [evaluationSummary]="evaluationSummary"
+        />
+        }@else {
+         <div  class="d-flex justify-content-center align-items-center" style="height: 60vh;">
+           <div class="text-primary" role="status">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Cargando ...</span>
+            </div>
+           </div>
+         </div>
+         }
+
 
       <div #ancla id="ancla"></div>
 

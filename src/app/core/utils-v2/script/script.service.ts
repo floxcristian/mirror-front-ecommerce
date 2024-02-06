@@ -57,12 +57,11 @@ export class ScriptService {
    * Remover script del DOM.
    * @param id
    */
-  private removeScript(src: string): void {
-    const scripts = this.document.getElementsByTagName('script');
-    for (let i = scripts.length; i--; ) {
-      if (scripts[i].src === src) {
-        scripts[i].parentNode?.removeChild(scripts[i]);
-      }
+  removeScript(src: string) {
+    const scripts = Array.from(document.getElementsByTagName('script'));
+    const scriptToRemove = scripts.find(script => script.src.includes(src));
+    if (scriptToRemove && scriptToRemove.parentNode) {
+      scriptToRemove.parentNode.removeChild(scriptToRemove);
     }
   }
 }

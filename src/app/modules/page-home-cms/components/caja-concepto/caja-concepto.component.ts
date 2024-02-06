@@ -18,7 +18,7 @@ export class CajaConceptoComponent implements OnInit, OnDestroy {
     items: 1,
     nav: false,
     dots: true,
-    lazyLoad: false,
+    lazyLoad: true,
     loop: true,
     responsiveClass: true,
     autoplay: false,

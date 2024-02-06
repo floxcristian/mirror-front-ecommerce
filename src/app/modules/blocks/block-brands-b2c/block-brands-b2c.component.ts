@@ -22,6 +22,7 @@ export class BlockBrandsB2cComponent {
     loop: true,
     autoplay: true,
     autoplayTimeout: 4000,
+    lazyLoad: true,
     responsive: {
       1100: { items: 8 },
       920: { items: 8 },

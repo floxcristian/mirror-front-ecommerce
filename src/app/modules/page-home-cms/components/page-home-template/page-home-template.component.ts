@@ -1,5 +1,5 @@
 // Angular
-import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2, afterNextRender } from '@angular/core';
 // Rxjs
 import { Subscription, first } from 'rxjs';
 // Models
@@ -14,6 +14,7 @@ import { GeolocationStorageService } from '@core/storage/geolocation-storage.ser
 import { ICustomerPreference } from '@core/services-v2/customer-preference/models/customer-preference.interface';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
+import { ChatService } from '@core/utils-v2/chat/chat.service';
 @Component({
   selector: 'app-page-home-template',
   templateUrl: './page-home-template.component.html',
@@ -41,8 +42,13 @@ export class PageHomeTemplateComponent
     private readonly geolocationStorage: GeolocationStorageService,
     private readonly customerPreferenceService: CustomerPreferenceService,
     private readonly customerAddressService: CustomerAddressService,
-    private renderer:Renderer2
-  ) {}
+    private renderer:Renderer2,
+    public chatService: ChatService,
+  ) {
+    afterNextRender(() => {
+      this.chatService.loadChatScript();
+    });
+  }
 
   ngOnInit(): void {
     const storeSubscription = this.geolocationService.stores$
@@ -72,6 +78,7 @@ export class PageHomeTemplateComponent
       });
 
     this.subscription.add(storeSubscription);
+    this.chatService.showChatButton()
   }
 
   ngAfterViewInit(): void {
@@ -149,5 +156,6 @@ export class PageHomeTemplateComponent
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.chatService.hideChatButton();
   }
 }
