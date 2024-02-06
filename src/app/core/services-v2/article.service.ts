@@ -222,19 +222,25 @@ export class ArticleService {
       )
       .pipe(
         map((response) => {
-          const products = response.articles.map((product) => ({
-            ...product,
-            quantity: 1,
-          }));
-          const differences = response.comparison.map((product) => {
-            const keys = Object.keys(product);
-            const attributeKey = keys[0];
-            const values = product[attributeKey].map(
-              (attribute) => attribute.value
-            );
-            return { name: attributeKey, values };
-          });
-          return { products, differences };
+          if(response.comparison.length){
+            const products = response.articles.map((product) => ({
+              ...product,
+              quantity: 1,
+            }));
+            const differences = response.comparison.map((product) => {
+              const keys = Object.keys(product);
+              const attributeKey = keys[0];
+              const values = product[attributeKey].map(
+                (attribute) => attribute.value
+              );
+              return { name: attributeKey, values };
+            });
+            return { products, differences };
+          }else{
+            const products:any = []
+            const differences:any = []
+            return { products, differences}
+          }
         })
       );
   }
