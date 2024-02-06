@@ -59,6 +59,7 @@ import { CustomerAddressService } from '@core/services-v2/customer-address/custo
 import { CartV2Service } from '@core/services-v2/cart/cart.service';
 import { ProductPriceApiService } from '@core/services-v2/product-price/product-price.service';
 import { IReviewsResponse } from '@core/models-v2/article/review-response.interface';
+import { CartService } from '@core/services-v2/cart.service';
 
 declare let fbq: any;
 
@@ -133,7 +134,8 @@ export class PageProductComponent implements OnInit {
     private readonly customerPreferenceService: CustomerPreferenceService,
     private readonly customerAddressService: CustomerAddressService,
     private readonly productPriceApiService: ProductPriceApiService,
-    private readonly cartService: CartV2Service
+    private readonly cartService: CartV2Service,
+    private readonly cartApiService:CartService
   ) {
     this.carouselOptions = CarouselDesktopOptions;
     this.carrouselOptionsMobile = CarouselMobileOptions;
@@ -438,36 +440,26 @@ export class PageProductComponent implements OnInit {
     }
 
     this.addingToCart = true;
-    const origin: IShoppingCartProductOrigin = {
-      origin: this.origen[0] || '',
-      subOrigin: this.origen[1] || '',
-      section: this.origen[2] || '',
-      recommended: this.origen[3] || '',
-      sheet: true,
-      cyber: this.product.cyber || 0,
-    };
-    // this.cartApiService.add({ sku: product.sku })
-    // this.addcartPromise = this.cart
-    //   .add(producto, producto.cantidad)
-    //   .subscribe(
-    //     (r) => {},
-    //     (e) => {
-    //       this.toastr.warning(
-    //         'Ha ocurrido un error en el proceso',
-    //         'Información'
-    //       );
-    //       this.addingToCart = false;
-    //     },
-    //     () => {
-    //       this.addingToCart = false;
-    //     }
-    //   );
+    if(this.origen){
+      const origin: IShoppingCartProductOrigin = {
+        origin: this.origen[0] || '',
+        subOrigin: this.origen[1] || '',
+        section: this.origen[2] || '',
+        recommended: this.origen[3] || '',
+        sheet: true,
+        cyber: this.product.cyber || 0,
+      };
+      product.origin = origin
+    }
+    this.cartApiService.add(product, product.quantity).finally(() =>{
+      this.addingToCart = false
+    })
   }
   /**
    * Obtiene el resumen de evaluaciones del producto. Desde el componente de comentarios.
    */
   handleEvaluationSummary(value: IReviewsResponse) {
-   this.evaluationSummary = value;
+    this.evaluationSummary = value;
   }
 
 

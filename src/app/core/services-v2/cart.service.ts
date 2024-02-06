@@ -58,6 +58,7 @@ import { IOrderDetailResponse } from '@core/models-v2/cart/order-details.interfa
 import { UserRoleType } from '@core/enums/user-role-type.enum';
 import { IUploadResponse } from '@core/models-v2/responses/file-upload.response';
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
+import { IComparedProduct } from './product/models/formatted-product-compare-response.interface';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -148,7 +149,7 @@ export class CartService {
    * @returns
    */
   async add(
-    product: IArticle | IProduct, // sku, name, origin, images, quantity
+    product: IArticle | IProduct | IComparedProduct,   // sku, name, origin, images, quantity
     quantity: number
   ): Promise<IShoppingCart | undefined> {
     const { code: storeCode } = this.geolocationService.getSelectedStore();
