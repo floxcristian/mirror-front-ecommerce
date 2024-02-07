@@ -368,3 +368,7 @@ input[type='password'] {
 .fa-eye-slash {
   color: #000;
 }
+#passwordInput::-ms-reveal,
+#passwordInput::-ms-clear {
+  display: none;
+}
