@@ -774,7 +774,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       });
   }
 
-  setDocumentType(type: string) {
+  setDocumentType(type: string): void {
     this.documentType = type;
   }
 

@@ -1,23 +1,28 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-// import { LocalStorageService } from 'angular-2-local-storage';
+// Angular
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+// Libs
+import { BsModalService } from 'ngx-bootstrap/modal';
+// Rxjs
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { NavigationLink } from '../../../../../shared/interfaces/navigation-link';
-import { MenuCategoriasB2cService } from '../../../../../shared/services/menu-categorias-b2c.service';
-import { RootService } from '../../../../../shared/services/root.service';
-import { DropdownDirective } from '../../../../../shared/directives/dropdown.directive';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
-import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
+// Models
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
-import { ModalStoresComponent } from '../../modal-stores/modal-stores.component';
 import {
   ICategoryDetail,
   IChildren,
   ISecondLvl,
   IThirdLvl,
 } from '@core/models-v2/cms/categories-response.interface';
+// Components
+import { ModalStoresComponent } from '../../modal-stores/modal-stores.component';
+// Services
+import { NavigationLink } from '../../../../../shared/interfaces/navigation-link';
+import { MenuCategoriasB2cService } from '../../../../../shared/services/menu-categorias-b2c.service';
+import { RootService } from '../../../../../shared/services/root.service';
+import { DropdownDirective } from '../../../../../shared/directives/dropdown.directive';
+import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { CmsService } from '@core/services-v2/cms.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
 import { CartService } from '@core/services-v2/cart.service';
@@ -28,16 +33,16 @@ import { CartService } from '@core/services-v2/cart.service';
 })
 export class MenuCategoriaB2cMobileComponent implements OnInit {
   private destroy$: Subject<any> = new Subject();
-  items: NavigationLink[] = [];
-  items_oficial: NavigationLink[] = [];
-  isOpen = false;
-  tiendaSeleccionada!: ISelectedStore;
   private categoriaDetalle!: ICategoryDetail;
   private arrayCategorias: NavigationLink[] = [];
   private segundoNivel!: ISecondLvl;
   private categoriaDetalleOficial!: ICategoryDetail;
   private arrayCategoriasOficial: NavigationLink[] = [];
   private segundoNivelOficial!: ISecondLvl;
+  items: NavigationLink[] = [];
+  items_oficial: NavigationLink[] = [];
+  isOpen = false;
+  selectedStore!: ISelectedStore;
   categorias_oficial: IChildren[] = [
     {
       title: 'TIENDAS OFICIALES',
@@ -100,7 +105,7 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
     // Services V2
     private readonly geolocationService: GeolocationServiceV2,
     private readonly cmsService: CmsService,
-    private readonly cartService:CartService
+    private readonly cartService: CartService
   ) {
     this.obtieneCategorias();
   }
@@ -110,17 +115,13 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((isOpen) => (this.isOpen = isOpen));
 
-    console.log('getSelectedStore desde MenuCategoriaB2cMobileComponent');
-    this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    this.selectedStore = this.geolocationService.getSelectedStore();
 
     this.geolocationService.selectedStore$.subscribe({
-      next: (res) => {
-        console.log(
-          'selectedStore$ desde [MenuCategoriaB2cMobileComponent]===================='
-        );
-        this.tiendaSeleccionada = res;
+      next: (selectedStore) => {
+        this.selectedStore = selectedStore;
         this.cartService.calc();
-        if (res.isChangeToNearestStore) {
+        if (selectedStore.isChangeToNearestStore) {
           setTimeout(() => {
             if (this.menuTienda) this.menuTienda.open();
           }, 700);
@@ -134,12 +135,11 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
     this.destroy$.complete();
   }
 
-  obtieneCategorias() {
+  obtieneCategorias(): void {
     this.cmsService.getCategories().subscribe({
-      next: (res) => {
-        const categorias: IChildren[] = res.data;
-        this.sortCategories(categorias);
-        this.formatCategories(categorias);
+      next: (categories) => {
+        this.sortCategories(categories);
+        this.formatCategories(categories);
         this.formatCategories2(this.categorias_oficial);
       },
       error: (err) => {

@@ -102,12 +102,11 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  obtieneCategorias() {
+  obtieneCategorias(): void {
     this.cmsService.getCategories().subscribe({
-      next: (res) => {
-        const categorias: IChildren[] = res.data;
-        this.sortCategories(categorias);
-        this.formatCategories(categorias);
+      next: (categories) => {
+        this.sortCategories(categories);
+        this.formatCategories(categories);
         this.formatCategories2(this.categorias_oficial);
       },
       error: (err) => {

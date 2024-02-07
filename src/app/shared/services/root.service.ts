@@ -112,7 +112,7 @@ export class RootService {
   }
 
   hideModalRefBuscador() {
-    if (this.modalBuscador != null) {
+    if (this.modalBuscador) {
       this.modalBuscador.hide();
     }
   }

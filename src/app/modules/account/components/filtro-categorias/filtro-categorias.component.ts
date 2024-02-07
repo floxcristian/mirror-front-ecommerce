@@ -21,11 +21,9 @@ export class FiltroCategoriasComponent implements OnInit {
     this.obtenerCategorias();
   }
 
-  obtenerCategorias() {
+  obtenerCategorias(): void {
     this.cmsService.getCategories().subscribe({
-      next: (res) => {
-        this.categorias = res.data;
-      },
+      next: (categories) => (this.categorias = categories),
       error: (err) => {
         console.log(err);
       },

@@ -99,7 +99,7 @@ export class ModaluserComponent implements OnInit, OnDestroy {
     this.formUsuario.controls['userRole'].setValue(this.users.userRole);
   }
 
-  openModalCrear() {
+  openModalCrear(): void {
     this.formUsuario.controls['active'].setValue(true);
     this.modalRef = this.modalService.show(this.modalCrearUsuario, {
       backdrop: 'static',
@@ -107,13 +107,14 @@ export class ModaluserComponent implements OnInit, OnDestroy {
     });
   }
 
-  openModalEditar() {
+  openModalEditar(): void {
     this.modalRef = this.modalService.show(this.modalUsuario, {
       backdrop: 'static',
       keyboard: false,
     });
   }
-  openModalDelete() {
+
+  openModalDelete(): void {
     this.modalRef = this.modalService.show(this.modalEliminarUsuario, {
       backdrop: 'static',
       keyboard: false,

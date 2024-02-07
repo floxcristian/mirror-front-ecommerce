@@ -6,7 +6,10 @@ import {
   IBlogResponse,
   IBlogsResponse,
 } from '@core/models-v2/cms/blog-response.interface';
-import { ICategorieResponse } from '@core/models-v2/cms/categories-response.interface';
+import {
+  ICategorieResponse,
+  IChildren,
+} from '@core/models-v2/cms/categories-response.interface';
 import { ICustomHomePage } from '@core/models-v2/cms/customHomePage-response.interface';
 import { IHomePageResponse } from '@core/models-v2/cms/homePage-response.interface';
 import { ISliderResponse } from '@core/models-v2/cms/slider-reponse.interface';
@@ -38,8 +41,10 @@ export class CmsService {
   /**********************************************
    * CMS
    **********************************************/
-  getCategories(): Observable<ICategorieResponse> {
-    return this.http.get<ICategorieResponse>(`${API_CMS}/categories`);
+  getCategories(): Observable<IChildren[]> {
+    return this.http
+      .get<ICategorieResponse>(`${API_CMS}/categories`)
+      .pipe(map((res) => res.data));
   }
 
   getSliders(): Observable<ISliderResponse> {
