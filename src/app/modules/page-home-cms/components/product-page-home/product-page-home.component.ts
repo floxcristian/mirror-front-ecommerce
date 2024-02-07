@@ -17,6 +17,7 @@ import {
   IElement1,
   IElement2,
 } from '@core/models-v2/cms/homePage-response.interface';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 
 @Component({
   selector: 'app-product-page-home',
@@ -55,14 +56,13 @@ export class ProductPageHomeComponent implements OnInit {
       : 900;
     this.tamanho_layout();
   }
-  carouselOptions = {
+  carouselOptions : OwlOptions = {
     items: 5,
     nav: false,
     dots: true,
     loop: true,
     autoplay: false,
     lazyLoad: true,
-    responsiveClass: true,
     autoplayTimeout: 4000,
     responsive: {
       920: { items: 4 },
@@ -72,22 +72,21 @@ export class ProductPageHomeComponent implements OnInit {
       0: { items: 2 },
     },
   };
-  carouselOptions3 = {
+  carouselOptions3 : OwlOptions = {
     lazyLoad: true,
     nav: false,
-    autowidth: true,
-    responsiveClass: true,
+    autoWidth: true,
     startPosition: 0,
-    loop: true,
+    loop: false,
     items: 1,
     autoplay: false,
+    center:true,
   };
 
-  carouselOptions2 = {
-    lazyLoad: true,
+  carouselOptions2 : OwlOptions =  {
+    lazyLoad: false,
     nav: false,
-    autowidth: true,
-    responsiveClass: true,
+    autoWidth: true,
     loop: true,
     startPosition: 0,
     items: 1.4,
@@ -187,4 +186,16 @@ export class ProductPageHomeComponent implements OnInit {
     this.producto_selecionado = this._blockElements[index];
     this.index_seleccionado = index;
   }
+
+  moveToSlide(index: number): void {
+    this.refresh2 = true;
+    this.carouselOptions3 = { ...this.carouselOptions3, startPosition: index };
+    this.carouselOptions2 = { ...this.carouselOptions2, startPosition: index };
+    setTimeout(() => {
+      this.refresh2 = false;
+      this.producto_selecionado = this._blockElements[index];
+      this.index_seleccionado = index;
+    }, 10);
+  }
+
 }

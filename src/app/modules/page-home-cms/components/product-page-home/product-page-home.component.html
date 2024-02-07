@@ -1,19 +1,11 @@
-<div class="cargandoCent text-center" *ngIf="cargando">
-  <i
-    class="fak fa-implementos fa-bounce"
-    style="font-size: 48px; color: #0063b9"
-  ></i>
-  <div
-    class="fa-beat-fade"
-    style="
-      --fa-beat-fade-opacity: 0.67;
-      --fa-beat-fade-scale: 1.075;
-      color: #0063b9;
-    "
-  >
-    Cargando productos...
+@if(cargando){
+  <div class="cargandoCent text-center">
+    <i class="fak fa-implementos fa-bounce" style="font-size: 48px; color: #0063b9"></i>
+    <div class="fa-beat-fade" style="--fa-beat-fade-opacity: 0.67; --fa-beat-fade-scale: 1.075; color: #0063b9; ">
+      Cargando productos...
+    </div>
   </div>
-</div>
+}
 
 <!-- Start::navbar slideshow (lg+) -->
 <div *ngIf="!cargando && _blockElements" class="d-none d-lg-block">
@@ -127,11 +119,12 @@
       >
         <ng-template carouselSlide [id]="item.title">
           <div
+            (click)="moveToSlide(i)"
             [class.text-truncate]="item.title.length > 15"
             [class.select_active]="index_seleccionado == i"
             [class.select_inactive]="index_seleccionado != i"
           >
-            {{ item.title }}
+              {{ item.title }}
           </div>
         </ng-template>
       </ng-container>
