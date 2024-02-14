@@ -915,18 +915,18 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
             email: user.email,
           })
         );
-
-        let userCambio = this.sessionService.getSession();
-        // let userCambio: any = this.root.getDataSesionUsuario();
-        //userCambio._id = user.email;
-        userCambio.email = user.email;
-        userCambio.userRole = UserRoleType.B2C;
-        userCambio.documentId = user.documentId;
-        userCambio.login_temp = true;
-        userCambio.firstName = this.formVisita.value.nombre || '';
-        userCambio.lastName = this.formVisita.value.apellido || '';
-        this.sessionStorage.set(userCambio);
-        // this.localS.set('usuario', userCambio);
+        //* Esta informacion cambia el user
+        // let userCambio = this.sessionService.getSession();
+        // // let userCambio: any = this.root.getDataSesionUsuario();
+        // //userCambio._id = user.email;
+        // userCambio.email = user.email;
+        // userCambio.userRole = UserRoleType.B2C;
+        // userCambio.documentId = user.documentId;
+        // userCambio.login_temp = true;
+        // userCambio.firstName = this.formVisita.value.nombre || '';
+        // userCambio.lastName = this.formVisita.value.apellido || '';
+        // this.sessionStorage.set(userCambio);
+        // // this.localS.set('usuario', userCambio);
       } catch (e) {
         console.error(e);
         this.toastr.error('No puedo guardarse los datos del invitado');
