@@ -155,6 +155,7 @@
                         notFoundText="No se han encontrado giros"
                         [loading]="cargandoGiros"
                         [disabled]="cargandoGiros"
+                        [clearable]="false"
                       >
                         <ng-option
                           *ngFor="let document of documentOptions"
@@ -335,6 +336,7 @@
                         notFoundText="No se han encontrado giros"
                         [loading]="cargandoGiros"
                         [disabled]="cargandoGiros"
+                        [clearable]="false"
                       >
                         <ng-option
                           *ngFor="let document of documentOptions"
@@ -2210,6 +2212,10 @@
                       <ng-select
                         [(ngModel)]="selectedDocument"
                         placeholder="Seleccionar documento..."
+                        notFoundText="No se han encontrado giros"
+                        [loading]="cargandoGiros"
+                        [disabled]="cargandoGiros"
+                        [clearable]="false"
                       >
                         <ng-option
                           *ngFor="let document of documentOptions"

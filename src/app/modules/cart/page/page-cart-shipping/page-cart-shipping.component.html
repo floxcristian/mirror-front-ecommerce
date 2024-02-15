@@ -1092,7 +1092,7 @@
                 documentType != 'cotizacion' &&
                 userSession.userRole !== 'compradorb2c' &&
                 userSession.userRole !== 'b2c' &&
-                !invitado
+                userSession.userRole !== 'temp'
               "
             >
               <div class="col-12 text-end">
