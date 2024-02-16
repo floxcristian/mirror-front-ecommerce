@@ -256,9 +256,9 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
     if (this.isValidRut(rut ?? '')) {
       this.cargandoGiros = true;
-      this.customerBusinessLineApiService.getBusinessLines().subscribe({
-        next: (businessLines) => {
-          this.girosOptions = businessLines || [];
+      this.customerBusinessLineApiService.getLegalBusinessLines(rut).subscribe({
+        next: (res) => {
+          this.girosOptions = res.businessLines || [];
 
           if (this.girosOptions.length) {
             this.documentOptions = [
@@ -266,6 +266,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
               { id: InvoiceType.INVOICE, name: 'FACTURA' },
             ];
           } else {
+            this.toastr.info('No se han encontrado giros disponibles para su rut.');
             this.documentOptions = [
               { id: InvoiceType.RECEIPT, name: 'BOLETA' },
             ];
@@ -276,37 +277,10 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         },
         error: (e) => {
           console.error(e);
-          this.toastr.error('Ha ocurrido un error al obtener los giros.');
+          // this.toastr.error('Ha ocurrido un error al obtener los giros.');
           this.cargandoGiros = false;
         },
       });
-      this.customerBusinessLineApiService.getBusinessLines().subscribe(
-        (res: any) => {
-          this.girosOptions = res.giros || [];
-
-          if (this.girosOptions.length) {
-            this.documentOptions = [
-              { id: InvoiceType.RECEIPT, name: 'BOLETA' },
-              { id: InvoiceType.INVOICE, name: 'FACTURA' },
-            ];
-          } else {
-            this.documentOptions = [
-              { id: InvoiceType.RECEIPT, name: 'BOLETA' },
-            ];
-            this.selectedDocument = InvoiceType.RECEIPT;
-          }
-          /*if (!this.girosOptions.length) {
-            this.documentOptions = [{ id: 'BEL', name: 'BOLETA' }];
-            this.selectedDocument = 'BEL';
-          }*/
-
-          this.cargandoGiros = false;
-        },
-        (error) => {
-          this.toastr.error('Ha ocurrido un error al obtener los giros.');
-          this.cargandoGiros = false;
-        }
-      );
     } else {
       this.documentOptions = [{ id: InvoiceType.RECEIPT, name: 'BOLETA' }];
       this.selectedDocument = InvoiceType.RECEIPT;
