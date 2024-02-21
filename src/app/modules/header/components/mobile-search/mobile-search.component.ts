@@ -100,7 +100,8 @@ export class MobileSearchComponent implements OnInit {
           this.productosEncontrados = [];
         }
       });
-
+    this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
+    console.log('tienda:',this.tiendaSeleccionada)
     //Usuario
     this.usuario = this.sessionService.getSession();
     this.usuarioRef = this.authStateService.session$.subscribe((user) => {

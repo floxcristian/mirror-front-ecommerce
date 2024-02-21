@@ -78,7 +78,11 @@
                 >
                   <div class="item">
                     <a
-                      (click)="texto = sugerencias[0].suggestion"
+                      (click)="
+                        menuSearch.toggle();
+                        seleccionado = true;
+                        blurInput();
+                        texto = sugerencias[0].suggestion"
                       class="px-0"
                       [routerLink]="[
                         '/',
@@ -100,7 +104,11 @@
                 >
                   <div class="item">
                     <a
-                      (click)="texto = item.suggestion"
+                      (click)="
+                        menuSearch.toggle();
+                        seleccionado = true;
+                        blurInput();
+                        texto = item.suggestion"
                       [routerLink]="[
                         '/',
                         'inicio',
@@ -142,7 +150,7 @@
                     <a
                       [routerLink]="'/inicio/productos/' + textToSearch"
                       [queryParams]="{ filter_MARCA: item.brand }"
-                      (click)="modalRef.hide()"
+                      (click)="menuSearch.toggle(); blurInput(); seleccionado = false"
                     >
                       <div class="row">
                         <div class="col-8">
@@ -170,7 +178,7 @@
                   class="text-truncate"
                   *ngFor="let item of productosEncontrados | slice : 0 : 3"
                 >
-                  <a [routerLink]="item.url" (click)="modalRef.hide()">
+                  <a [routerLink]="item.url" (click)="menuSearch.toggle(); blurInput(); seleccionado = true">
                     <span>
                       <img
                         [src]="root.getUrlImagenMiniatura150(item)"
@@ -193,7 +201,7 @@
             >
               <div class="item">
                 <a
-                  (click)="modalRef.hide()"
+                  (click)="menuSearch.toggle(); blurInput(); seleccionado = false"
                   [routerLink]="['/', 'inicio', 'productos', textToSearch]"
                 >
                   <i
