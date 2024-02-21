@@ -26,6 +26,7 @@ import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.
 import { CmsService } from '@core/services-v2/cms.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
 import { CartService } from '@core/services-v2/cart.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-menu-categoria-b2c-mobile',
   templateUrl: './menu-categoria-b2c-mobile.component.html',
@@ -94,6 +95,13 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
           children: [],
           id: 1006,
         },
+        {
+          title : 'SCANIA',
+          products : 0,
+          url : '/scania/',
+          children : [],
+          id : 1007
+        }
       ],
     },
   ];
@@ -107,7 +115,8 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
     // Services V2
     private readonly geolocationService: GeolocationServiceV2,
     private readonly cmsService: CmsService,
-    private readonly cartService: CartService
+    private readonly cartService: CartService,
+    public readonly modalServices: NgbModal
   ) {
     this.selectedStore = this.geolocationService.getSelectedStore();
     this.obtieneCategorias();
@@ -227,7 +236,7 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
 
   showStores(): void {
     console.log('this.');
-    this.modalService.show(ModalStoresComponent);
+    this.modalServices.open(ModalStoresComponent,{size:'md'})
   }
 
   async validarCuenta() {

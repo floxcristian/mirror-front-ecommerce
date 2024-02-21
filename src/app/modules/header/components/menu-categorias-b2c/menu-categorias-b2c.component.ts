@@ -78,6 +78,13 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
           children: [],
           id: 1006,
         },
+        {
+          title : 'SCANIA',
+          products : 0,
+          url : '/scania/',
+          children : [],
+          id : 1007
+        }
       ],
     },
   ];
