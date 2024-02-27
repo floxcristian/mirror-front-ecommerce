@@ -105,7 +105,7 @@ export class PageListaPreciosComponent implements OnInit {
       searching: true,
       language: {
         url: '//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json',
-        processing: 'Cargando Ordenes de ventas..',
+        processing: 'Cargando Órdenes de ventas..',
       },
       ajax: (dataTablesParameters: any, callback) => {
         this.loadingData = true;
