@@ -233,7 +233,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   onBlur() {
-    this.obtenerGiros();
+    // this.obtenerGiros();
   }
 
   isValidRut(rut: string) {
@@ -413,7 +413,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         pagePath: window.location.href,
       });
     }
-    if (!this.userSession?.businessLine) {
+    if (!this.userSession?.businessLine && !this.guest) {
       this.obtenerGiros();
     }
   }
@@ -1255,7 +1255,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   setAddress(data: any[]): void {
     this.clearAddress();
-
+    console.log('info mapa:', data)
     if (this.getAddress(data[0], 'street_number')) {
       this.formDireccion.controls['calle'].enable();
 
@@ -1300,11 +1300,11 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   obtenerLocalidades(event: any) {
     const localidades: any[] = [];
     const comunaArr = event.id.split('@');
-    const comunas = this.coleccionComuna.filter(
-      (comuna) => comuna.comuna == comunaArr[0]
+    const comunas = this.cities.filter(
+      (comuna) => comuna.city == comunaArr[0]
     );
     comunas.map((comuna) =>
-      (comuna.localidades as any[]).map((localidad) =>
+      (comuna.localities as any[]).map((localidad) =>
         localidades.push(localidad)
       )
     );
@@ -1321,23 +1321,23 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   findCommune(nombre: string) {
-    if (nombre != '') {
-      nombre = this.quitarAcentos(nombre);
+    if (!nombre ) return '';
+    nombre = this.quitarAcentos(nombre);
 
-      var result = this.cities.find(
-        (item) => this.quitarAcentos(item.city) === nombre
-      );
+    var result = this.cities.find(
+      (item) => this.quitarAcentos(item.city) === nombre
+    );
 
-      if (result && result.id) {
-        this.obtenerLocalidades(result);
-        this.findComunaLozalizacion(result.city);
-        return result.id;
-      } else {
-        return '';
-      }
+    if (result && result.id) {
+      this.obtenerLocalidades(result);
+      this.findComunaLozalizacion(result.city);
+      return result.id;
     } else {
       return '';
     }
+    // } else {
+    //   return '';
+    // }
   }
 
   clearAddress(): void {
