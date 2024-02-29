@@ -98,9 +98,9 @@ export class GeolocationServiceV2 {
         this.geolocation = {
           isChangeToNearestStore: false,
           isSelectedByClient: false,
-          zone: '',
-          code: '',
-          city: '',
+          zone: 'San Bernardo',
+          code: 'SAN BRNRDO',
+          city: 'SAN BERNARDO',
         };
       }
     }
