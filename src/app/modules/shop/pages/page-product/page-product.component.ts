@@ -80,8 +80,8 @@ export class PageProductComponent implements OnInit {
 
   minItems = 5;
   stock: boolean = true;
-  user: ISession;
-  isB2B: boolean;
+  user!: ISession;
+  isB2B!: boolean;
   origen: string[] = [];
   innerWidth: number;
   window = window;
@@ -234,6 +234,7 @@ export class PageProductComponent implements OnInit {
   private getProductDetail(sku: string): void {
     const { documentId } = this.sessionService.getSession();
     const selectedStore = this.geolocationService.getSelectedStore();
+    console.log('hola store:',selectedStore)
     if (!selectedStore) {
       this.toastr.error(
         `Ha ocurrido un error al obtener información del producto.`

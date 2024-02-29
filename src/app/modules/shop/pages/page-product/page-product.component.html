@@ -19,7 +19,7 @@
           No se encontro el producto.
         </div>
       </div>
-           @if (product) {
+           @if (product && product.visible === 1) {
           <app-product
           [product]="product"
           [origen]="origen"
