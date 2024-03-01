@@ -233,14 +233,14 @@ export class RegisterVisitComponent implements OnInit, OnChanges {
     if (this.selectedPhoneCode === this.config.phoneCodes.mobile.code)
       this.formVisita.controls['telefono'].setValidators([
         Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(8),
+        Validators.minLength(this.config.phoneCodes.mobile.lengthRule),
+        Validators.maxLength(this.config.phoneCodes.mobile.lengthRule),
       ]);
     else
       this.formVisita.controls['telefono'].setValidators([
         Validators.required,
-        Validators.minLength(9),
-        Validators.maxLength(9),
+        Validators.minLength(this.config.phoneCodes.landline.lengthRule),
+        Validators.maxLength(this.config.phoneCodes.landline.lengthRule),
       ]);
 
     this.formVisita.get('telefono')?.updateValueAndValidity();
