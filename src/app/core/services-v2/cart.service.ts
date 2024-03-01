@@ -149,7 +149,7 @@ export class CartService {
    * @returns
    */
   async add(
-    product: IArticle | IProduct | IComparedProduct,   // sku, name, origin, images, quantity
+    product: IArticle | IProduct | IComparedProduct, // sku, name, origin, images, quantity
     quantity: number
   ): Promise<IShoppingCart | undefined> {
     const { code: storeCode } = this.geolocationService.getSelectedStore();
@@ -629,7 +629,10 @@ export class CartService {
       throw Error('Debe iniciar sesion para guardar el carro');
     }
 
-    return this.http.put<boolean>(`${API_CART}/${id}/status/${status}`, {});
+    return this.http.put<boolean>(
+      `${API_CART}/${id}/status/${status}`,
+      undefined
+    );
   }
 
   setNotificationContact(id: string, data: AddNotificacionContactRequest) {
@@ -812,7 +815,7 @@ export class CartService {
   }): Observable<IThanksForYourPurchase> {
     const { shoppingCartId } = params;
     const url = `${API_CART}/${shoppingCartId}/thanksForYourPurchase`;
-    return this.http.put<IThanksForYourPurchase>(url, {});
+    return this.http.put<IThanksForYourPurchase>(url, undefined);
   }
 
   generateQuotation(params: {
@@ -820,7 +823,7 @@ export class CartService {
   }): Observable<IShoppingCartDetail> {
     const { shoppingCartId } = params;
     const url = `${API_CART}/${shoppingCartId}/generate-quotation`;
-    return this.http.post<IShoppingCartDetail>(url, {});
+    return this.http.post<IShoppingCartDetail>(url, undefined);
   }
 
   /*********************************
