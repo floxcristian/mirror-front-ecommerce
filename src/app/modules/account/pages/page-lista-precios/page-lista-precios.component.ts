@@ -155,9 +155,8 @@ export class PageListaPreciosComponent implements OnInit {
 
   busquedaCategoria(event: any) {
     this.categoria = event;
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      console.log('event pa', event);
-      dtInstance.draw();
-    });
+    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) =>
+      dtInstance.draw()
+    );
   }
 }

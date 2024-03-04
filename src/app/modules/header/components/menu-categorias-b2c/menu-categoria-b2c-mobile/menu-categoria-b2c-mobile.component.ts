@@ -96,12 +96,12 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
           id: 1006,
         },
         {
-          title : 'SCANIA',
-          products : 0,
-          url : '/scania/',
-          children : [],
-          id : 1007
-        }
+          title: 'SCANIA',
+          products: 0,
+          url: '/scania/',
+          children: [],
+          id: 1007,
+        },
       ],
     },
   ];
@@ -236,7 +236,7 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
 
   showStores(): void {
     console.log('this.');
-    this.modalServices.open(ModalStoresComponent,{size:'md'})
+    this.modalServices.open(ModalStoresComponent, { size: 'md' });
   }
 
   async validarCuenta() {
@@ -277,6 +277,5 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
       this.arrayCategoriasOficial.push(this.categoriaDetalleOficial);
     }
     this.items_oficial = this.arrayCategoriasOficial;
-    console.log('items', this.items_oficial);
   }
 }
