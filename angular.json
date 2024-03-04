@@ -2,32 +2,30 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
-  "schematics": {
-    "@schematics/angular:component": {
-      "style": "scss"
-    }
-  },
   "projects": {
     "front-ecommerce": {
       "projectType": "application",
       "schematics": {
-        "styleext": "scss"
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
       },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/browser",
+            "outputPath": "dist/front-ecommerce",
             "index": {
               "input": "src/assets/config/index/index.cl.dev.html",
-              "output": "index.html"
+              "output": "src/index.html"
             },
-            "main": "src/main.ts",
+            "browser": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -41,13 +39,18 @@
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/datatables.net/js/jquery.dataTables.min.js"
-            ]
+            ],
+            "server": "src/main.server.ts",
+            "prerender": true,
+            "ssr": {
+              "entry": "server.ts"
+            }
           },
           "configurations": {
             "production": {
               "index": {
                 "input": "src/assets/config/index/index.cl.prod.html",
-                "output": "index.html"
+                "output": "src/index.html"
               },
               "budgets": [
                 {
@@ -66,14 +69,11 @@
             "development": {
               "index": {
                 "input": "src/assets/config/index/index.cl.dev.html",
-                "output": "index.html"
+                "output": "src/index.html"
               },
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -84,7 +84,7 @@
             "production-pe": {
               "index": {
                 "input": "src/assets/config/index/index.pe.prod.html",
-                "output": "index.html"
+                "output": "src/index.html"
               },
               "budgets": [
                 {
@@ -103,14 +103,11 @@
             "development-pe": {
               "index": {
                 "input": "src/assets/config/index/index.pe.dev.html",
-                "output": "index.html"
+                "output": "src/index.html"
               },
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -148,58 +145,6 @@
             "styles": ["src/styles.scss"],
             "scripts": []
           }
-        },
-        "server": {
-          "builder": "@angular-devkit/build-angular:server",
-          "options": {
-            "outputPath": "dist/server",
-            "main": "server.ts",
-            "tsConfig": "tsconfig.server.json"
-          },
-          "configurations": {
-            "production": {
-              "outputHashing": "media"
-            },
-            "development": {
-              "buildOptimizer": false,
-              "optimization": false,
-              "sourceMap": true,
-              "extractLicenses": false,
-              "vendorChunk": true
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "serve-ssr": {
-          "builder": "@angular-devkit/build-angular:ssr-dev-server",
-          "configurations": {
-            "development": {
-              "browserTarget": "front-ecommerce:build:development",
-              "serverTarget": "front-ecommerce:server:development"
-            },
-            "production": {
-              "browserTarget": "front-ecommerce:build:production",
-              "serverTarget": "front-ecommerce:server:production"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "prerender": {
-          "builder": "@angular-devkit/build-angular:prerender",
-          "options": {
-            "routes": ["/"]
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "front-ecommerce:build:production",
-              "serverTarget": "front-ecommerce:server:production"
-            },
-            "development": {
-              "browserTarget": "front-ecommerce:build:development",
-              "serverTarget": "front-ecommerce:server:development"
-            }
-          },
-          "defaultConfiguration": "production"
         }
       }
     }
