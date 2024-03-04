@@ -46,7 +46,7 @@ export class PageHomeTemplateComponent
     public chatService: ChatService,
   ) {
     afterNextRender(() => {
-      this.chatService.loadChatScript();
+      // this.chatService.loadChatScript();
     });
   }
 
