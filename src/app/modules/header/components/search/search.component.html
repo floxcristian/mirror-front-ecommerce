@@ -24,7 +24,6 @@
       #menuSearch="appDropdown"
     >
       <input
-        [(ngModel)]="textToSearch"
         (click)="menuSearch.open()"
         (keydown)="reset()"
         (keyup.enter)="buscar(); menuSearch.toggle(); blurInput()"
