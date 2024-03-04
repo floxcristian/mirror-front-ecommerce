@@ -79,7 +79,6 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
-    this.onResize(event);
   }
 
   async ngOnInit() {
