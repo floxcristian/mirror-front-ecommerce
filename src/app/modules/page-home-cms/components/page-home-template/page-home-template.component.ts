@@ -48,7 +48,7 @@ export class PageHomeTemplateComponent
     @Inject(PLATFORM_ID) private platformId: Object,
   ) {
     afterNextRender(() => {
-      // this.chatService.loadChatScript();
+      this.chatService.loadChatScript();
     });
   }
 
@@ -80,11 +80,9 @@ export class PageHomeTemplateComponent
       });
 
     this.subscription.add(storeSubscription);
-    // if(isPlatformBrowser(this.platformId)){
-    //   const token = this.chatService.getChatToken();
-    //   const chatButtonContainer = this.renderer.selectRootElement(`#${token}`,true) || null;
-    //   this.chatService.showChatButton(chatButtonContainer)
-    // }
+    if(isPlatformBrowser(this.platformId)){
+      this.chatService.showChatButton()
+    }
   }
 
   ngAfterViewInit(): void {
@@ -162,10 +160,8 @@ export class PageHomeTemplateComponent
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-    // if(isPlatformBrowser(this.platformId)){
-    //   const token = this.chatService.getChatToken();
-    //   const chatButtonContainer = this.renderer.selectRootElement(`#${token}`,true) || null;
-    //   this.chatService.hideChatButton(chatButtonContainer)
-    // }
+    if(isPlatformBrowser(this.platformId)){
+      this.chatService.hideChatButton()
+    }
   }
 }
