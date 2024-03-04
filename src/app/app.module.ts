@@ -24,6 +24,7 @@ import { LocalStorageService } from './core/modules/local-storage/local-storage.
 import { LocalStorageModule } from './core/modules/local-storage/local-storage.module';
 // SSR
 import { provideClientHydration } from '@angular/platform-browser';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
@@ -43,6 +44,7 @@ import { provideClientHydration } from '@angular/platform-browser';
   ],
   providers: [
     provideClientHydration(),
+    provideHttpClient(withFetch()),
     { provide: 'googleTagManagerId', useValue: 'GTM-M6TH726' },
     { provide: LOCALE_ID, useValue: 'CLP' },
 
