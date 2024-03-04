@@ -39,7 +39,6 @@ export class ButtonsSlideshowComponent implements OnInit {
     this.cmsService.getValueBoxes().subscribe({
       next: (valueBoxes) => {
         this.botones1 = valueBoxes;
-        console.log('valueBoxes: ', valueBoxes);
       },
       error: (err) => console.log(err),
     });
