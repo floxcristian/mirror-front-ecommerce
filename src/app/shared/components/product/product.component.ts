@@ -237,20 +237,23 @@ export class ProductComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.onChangeStore();
     this.setIsMobile();
-    window.onresize = () => this.setIsMobile();
+
     if (isPlatformBrowser(this.platformId)) {
+      window.onresize = () => this.setIsMobile();
+
       this.photoSwipe
         .load()
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe();
+
+      if (!this.sessionService.isB2B()) {
+        this.gtmService.pushTag({
+          event: 'productView',
+          pagePath: window.location.href,
+        });
+      }
     }
 
-    if (!this.sessionService.isB2B()) {
-      this.gtmService.pushTag({
-        event: 'productView',
-        pagePath: window.location.href,
-      });
-    }
     // Observable cuyo fin es saber cuando se presiona el boton agregar al carro utilizado para los dispositivos moviles.
     this.cart.onAddingmovilButton$
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -629,6 +632,8 @@ export class ProductComponent implements OnInit, OnChanges {
    * Métodos de responsive.
    *************************************************/
   setIsMobile(): void {
-    this.showMobile = window.innerWidth < this.puntoQuiebre;
+    if (isPlatformBrowser(this.platformId)) {
+      this.showMobile = window.innerWidth < this.puntoQuiebre;
+    }
   }
 }
