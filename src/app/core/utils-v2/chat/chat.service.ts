@@ -30,7 +30,7 @@ export class ChatService {
   /**
    * Obtiene el token del chat.
    */
-   private getChatToken(): string {
+  getChatToken(): string {
     const regex = /token=([^&]+)/;
     const match = this.webChatScript.match(regex);
     return match ? match[1] + '_startButtonContainer' : '';
@@ -39,9 +39,9 @@ export class ChatService {
   /**
    * Mostrar botón de chat.
    */
-  showChatButton(): void {
-    const token = this.getChatToken();
-    const chatButtonContainer = document.getElementById(token);
+  showChatButton(chatButtonContainer:HTMLElement | null): void {
+    // const token = this.getChatToken();
+    // const chatButtonContainer = document.getElementById(token);
     if (chatButtonContainer) {
       chatButtonContainer.style.display = 'block';
     }
@@ -50,9 +50,9 @@ export class ChatService {
    * Ocultar botón de chat.
    */
 
-  hideChatButton() {
-    const token = this.getChatToken();
-    const chatButtonContainer = document.getElementById(token);
+  hideChatButton(chatButtonContainer:HTMLElement | null): void {
+    // const token = this.getChatToken();
+    // const chatButtonContainer = document.getElementById(token);
     if (chatButtonContainer) {
       chatButtonContainer.style.display = 'none';
     }
