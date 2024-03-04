@@ -1,5 +1,5 @@
 // Angular
-import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2, afterNextRender } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2, afterNextRender, Inject, PLATFORM_ID } from '@angular/core';
 // Rxjs
 import { Subscription, first } from 'rxjs';
 // Models
@@ -15,6 +15,7 @@ import { ICustomerPreference } from '@core/services-v2/customer-preference/model
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
 import { CustomerAddressService } from '@core/services-v2/customer-address/customer-address.service';
 import { ChatService } from '@core/utils-v2/chat/chat.service';
+import { isPlatformBrowser } from '@angular/common';
 @Component({
   selector: 'app-page-home-template',
   templateUrl: './page-home-template.component.html',
@@ -44,9 +45,10 @@ export class PageHomeTemplateComponent
     private readonly customerAddressService: CustomerAddressService,
     private renderer:Renderer2,
     public chatService: ChatService,
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {
     afterNextRender(() => {
-      // this.chatService.loadChatScript();
+      this.chatService.loadChatScript();
     });
   }
 
@@ -78,7 +80,11 @@ export class PageHomeTemplateComponent
       });
 
     this.subscription.add(storeSubscription);
-    this.chatService.showChatButton()
+    if(isPlatformBrowser(this.platformId)){
+      const token = this.chatService.getChatToken();
+      const chatButtonContainer = this.renderer.selectRootElement(`#${token}`,true) || null;
+      this.chatService.showChatButton(chatButtonContainer)
+    }
   }
 
   ngAfterViewInit(): void {
@@ -156,6 +162,10 @@ export class PageHomeTemplateComponent
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-    this.chatService.hideChatButton();
+    if(isPlatformBrowser(this.platformId)){
+      const token = this.chatService.getChatToken();
+      const chatButtonContainer = this.renderer.selectRootElement(`#${token}`,true) || null;
+      this.chatService.showChatButton(chatButtonContainer)
+    }
   }
 }
