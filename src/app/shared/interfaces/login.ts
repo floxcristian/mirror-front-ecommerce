@@ -1,5 +1,5 @@
 import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
-import * as moment from 'moment';
+import moment from 'moment';
 
 /*
 export interface Login {

@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 // Libs
 import { ToastrService } from 'ngx-toastr';
-import * as moment from 'moment';
+import moment from 'moment';
 // Rxjs
 import { Subject, firstValueFrom, lastValueFrom } from 'rxjs';
 // Models
@@ -1181,7 +1181,6 @@ export class PageCartShippingComponent implements OnInit {
   }
 
   cambiarTienda(newStore: IStore): void {
-    console.log('cambiarTienda: ');
     this.geolocationService.setSelectedStore({
       zone: newStore.zone,
       code: newStore.code,

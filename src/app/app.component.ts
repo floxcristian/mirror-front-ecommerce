@@ -11,7 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 // Libs
-import * as moment from 'moment';
+import moment from 'moment';
 // Services
 import { CurrencyService } from './shared/services/currency.service';
 import { SeoService } from './shared/services/seo/seo.service';
@@ -52,7 +52,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     private readonly shoppingCartService: CartService,
     private readonly geolocationService: GeolocationServiceV2,
     private readonly renderer: Renderer2
-  ) {  }
+  ) {}
 
   private setLastSession(): void {
     if (!this.sessionService.isB2B()) return;
@@ -157,5 +157,4 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.alert.hide();
     this.alert.show();
   }
-
 }

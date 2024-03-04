@@ -17,7 +17,7 @@ import { HostListener } from '@angular/core';
 import { environment } from '@env/environment';
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { ToastrService } from 'ngx-toastr';
-import * as moment from 'moment';
+import moment from 'moment';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';

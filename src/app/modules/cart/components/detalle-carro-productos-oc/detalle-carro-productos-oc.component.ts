@@ -15,7 +15,7 @@ import { CustomerAddressApiService } from '@core/services-v2/customer-address/cu
 import { GeolocationApiService } from '@core/services-v2/geolocation/geolocation-api.service';
 import { ITotals } from '@core/models-v2/cart/totals.interface';
 import { ShippingService } from '@shared/interfaces/address';
-import * as moment from 'moment';
+import moment from 'moment';
 
 interface IAddressDestination {
   address: string;
