@@ -30,7 +30,6 @@
         (keyup.enter)="buscar(); menuSearch.toggle(); blurInput()"
         [formControl]="searchControl"
         class="search__input"
-        [disabled]="!areLoadedStores"
         name="search"
         placeholder="¿Qué buscas?"
         aria-label="Site search"

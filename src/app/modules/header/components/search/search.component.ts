@@ -113,6 +113,7 @@ export class SearchComponent implements OnInit, OnDestroy {
         next: () => {
           //console.log('stores desde el search component: ', stores);
           this.areLoadedStores = true;
+          this.searchControl.enable();
           console.log('tiendaSeleccionada 1');
           // Obtengo tienda seleccionada,
           // como aun espera a que acepte... se hace un setdefault
@@ -274,7 +275,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   private onChangeSearchInput(): void {
-    this.searchControl = new FormControl('');
+    this.searchControl = new FormControl({ value: '', disabled: true });
     this.searchControl.valueChanges
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((query) => {
