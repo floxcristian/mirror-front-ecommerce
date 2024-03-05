@@ -1,8 +1,9 @@
 // Angular
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 // Services
 import { isVacio } from '../../../../shared/utils/utilidades';
 import { CmsService } from '@core/services-v2/cms.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-slide-mundo',
@@ -36,16 +37,22 @@ export class SlideMundoComponent implements OnInit {
     },
   };
   slides: any[] = [];
-  constructor(private readonly cmsService: CmsService) {}
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private readonly cmsService: CmsService
+  ) {}
 
   ngOnInit() {
-    this.Carga_mundo();
+    if (isPlatformBrowser(this.platformId)) {
+      this.Carga_mundo();
+    }
   }
 
   async Carga_mundo() {
+    this.slides = [];
     this.cmsService.getWorlds().subscribe({
       next: (res) => {
-        this.slides = res.data;
+        this.slides = [...res.data];
         this.slides.forEach((item: any) => {
           this.style.push({
             cursor: 'pointer',
