@@ -1,5 +1,5 @@
 // Angular
-import { Component } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 // Services
 import { SessionStorageService } from '@core/storage/session-storage.service';
@@ -9,6 +9,7 @@ import { CustomerPreferencesStorageService } from '@core/storage/customer-prefer
 import { WishlistStorageService } from '@core/storage/wishlist-storage.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -25,6 +26,7 @@ export class PageLoginComponent {
     private readonly authStateService: AuthStateServiceV2,
     private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
     private readonly wishlistStorage: WishlistStorageService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     // Cerramos la sesion del usuario
     this.sessionStorage.remove();
@@ -36,7 +38,7 @@ export class PageLoginComponent {
     this.authStateService.setSession(null);
 
     this.router.navigate(['/inicio']).then(() => {
-      window.location.reload();
+      if (isPlatformBrowser(this.platformId)) window.location.reload();
     });
   }
 }

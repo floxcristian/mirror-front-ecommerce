@@ -79,7 +79,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     private readonly sessionService: SessionService,
     private readonly geolocationService: GeolocationServiceV2,
     private readonly catalogService: CatalogService,
-    public readonly configService: ConfigService,
+    public readonly configService: ConfigService
   ) {
     this.config = this.configService.getConfig();
   }
@@ -125,7 +125,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       this.screenHeight = isPlatformBrowser(this.platformId)
         ? window.innerHeight
         : 900;
-    } else console.log('not client');
+    }
   }
 
   async validarParametros() {
@@ -139,7 +139,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         next: async (res) => {
           if (res.data.proposalNumber != 0)
             this.propuesta = await this.catalogService.getProposal(
-              res.data.proposalNumber,
+              res.data.proposalNumber
             );
           this.tipoCatalogo = res.data.catalogType;
           this.folio = res.data.proposalNumber;
@@ -182,7 +182,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       } else {
         if (objeto.proposalNumber != 0)
           this.propuesta = await this.catalogService.getProposal(
-            objeto.proposalNumber,
+            objeto.proposalNumber
           );
         this.tipoCatalogo = objeto.catalogType;
         this.folio = objeto.proposalNumber;
@@ -274,11 +274,11 @@ export class PageVerCatalogoFlipComponent implements OnInit {
                       objA.products.preciosScal = precio.priceInfo.scalePrice;
                       objA.products.cyber = this.generateTag(
                         precio.metaTags,
-                        'cyber',
+                        'cyber'
                       );
                       objA.products.cyberMonday = this.generateTag(
                         precio.metaTags,
-                        'cyberMonday',
+                        'cyberMonday'
                       );
                     }
                   } else {
@@ -302,11 +302,11 @@ export class PageVerCatalogoFlipComponent implements OnInit {
                       objA.products.preciosScal = precio.priceInfo.scalePrice;
                       objA.products.cyber = this.generateTag(
                         precio.metaTags,
-                        'cyber',
+                        'cyber'
                       );
                       objA.products.cyberMonday = this.generateTag(
                         precio.metaTags,
-                        'cyberMonday',
+                        'cyberMonday'
                       );
                     }
                   }
@@ -335,11 +335,11 @@ export class PageVerCatalogoFlipComponent implements OnInit {
                       objB.products.preciosScal = precio.priceInfo.scalePrice;
                       objB.products.cyber = this.generateTag(
                         precio.metaTags,
-                        'cyber',
+                        'cyber'
                       );
                       objB.products.cyberMonday = this.generateTag(
                         precio.metaTags,
-                        'cyberMonday',
+                        'cyberMonday'
                       );
                     }
                   } else {
@@ -363,11 +363,11 @@ export class PageVerCatalogoFlipComponent implements OnInit {
                       objB.products.preciosScal = precio.priceInfo.scalePrice;
                       objB.products.cyber = this.generateTag(
                         precio.metaTags,
-                        'cyber',
+                        'cyber'
                       );
                       objB.products.cyberMonday = this.generateTag(
                         precio.metaTags,
-                        'cyberMonday',
+                        'cyberMonday'
                       );
                     }
                   }
@@ -385,7 +385,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       this.catalogo.map((objeto: IBody) => {
         for (let objA of objeto.leftSide || []) {
           let propuestaPrecio = this.propuesta.data.articles.find(
-            (x: any) => x.sku == objA.products.product,
+            (x: any) => x.sku == objA.products.product
           );
           if (propuestaPrecio) {
             objA.products.precioEsp = propuestaPrecio.price.customerPrice;
@@ -397,7 +397,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         }
         for (let objB of objeto.rightSide || []) {
           let propuestaPrecio = this.propuesta.data.articles.find(
-            (x: any) => x.sku == objB.products.product,
+            (x: any) => x.sku == objB.products.product
           );
           if (propuestaPrecio) {
             objB.products.precioEsp = propuestaPrecio.price.customerPrice;
@@ -533,7 +533,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
               let existeEnArray = marcas.indexOf(marca);
               if (existeEnArray == -1)
                 marcas.push(
-                  objeto.body[i].leftSide[x].products.attributes[5].value,
+                  objeto.body[i].leftSide[x].products.attributes[5].value
                 );
             }
           }
@@ -553,7 +553,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
               let existeEnArray = marcas.indexOf(marca);
               if (existeEnArray == -1)
                 marcas.push(
-                  objeto.body[i].rightSide[z].products.attributes[5].value,
+                  objeto.body[i].rightSide[z].products.attributes[5].value
                 );
             }
           }
@@ -699,7 +699,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
             };
           }
           return null;
-        }),
+        })
       ),
     ];
     this.tags = this.tags.filter((item) => item);

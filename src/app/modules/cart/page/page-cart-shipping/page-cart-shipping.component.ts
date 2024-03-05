@@ -4,9 +4,11 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectorRef,
+  Inject,
+  PLATFORM_ID,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { DatePipe, isPlatformBrowser } from '@angular/common';
 // Libs
 import { ToastrService } from 'ngx-toastr';
 import moment from 'moment';
@@ -183,11 +185,14 @@ export class PageCartShippingComponent implements OnInit {
     private readonly receiveStorage: ReceiveStorageService,
     private readonly customerService: CustomerService,
     private readonly customerAddressApiService: CustomerAddressApiService,
-    public readonly configService: ConfigService
+    public readonly configService: ConfigService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.config = this.configService.getConfig();
     this.receiveStorage.set({} as IReceive);
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
 
     this.tienda_actual = this.geolocationStorage.get();
   }

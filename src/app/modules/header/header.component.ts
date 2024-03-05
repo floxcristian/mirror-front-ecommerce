@@ -1,6 +1,5 @@
 // Angular
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   Renderer2,
@@ -22,7 +21,7 @@ import { LocalStorageService } from '@core/modules/local-storage/local-storage.s
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements AfterViewInit {
+export class HeaderComponent {
   logoSrc = environment.logoSrc;
   @ViewChild('sticky_header_b2c') sticky_b2c!: ElementRef;
   @ViewChild('sticky_header_b2c_nav') sticky_b2c_nav!: ElementRef;
@@ -30,7 +29,7 @@ export class HeaderComponent implements AfterViewInit {
   constructor(
     private route: Router,
     private localS: LocalStorageService,
-    private renderer: Renderer2,
+    private renderer: Renderer2
   ) {
     const buscadorB2B = this.localS.get(StorageKey.buscadorB2B);
     if (!buscadorB2B) {
@@ -44,33 +43,22 @@ export class HeaderComponent implements AfterViewInit {
   }
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    const sticky = this.sticky_b2c.nativeElement.offsetTop;
-    if (window.pageYOffset > sticky) {
-      this.renderer.addClass(this.sticky_b2c.nativeElement, 'sticky');
-      this.renderer.addClass(this.sticky_b2c_nav.nativeElement, 'sticky_nav');
-    } else {
-      this.renderer.removeClass(this.sticky_b2c.nativeElement, 'sticky');
-      this.renderer.removeClass(
-        this.sticky_b2c_nav.nativeElement,
-        'sticky_nav',
-      );
+    if (!isVacio(this.sticky_b2c) && !isVacio(this.sticky_b2c_nav)) {
+      const sticky = this.sticky_b2c.nativeElement.offsetTop;
+      if (window.pageYOffset > sticky) {
+        this.renderer.addClass(this.sticky_b2c.nativeElement, 'sticky');
+        this.renderer.addClass(
+          this.sticky_b2c_nav.nativeElement,
+          'sticky_nav'
+        );
+      } else {
+        this.renderer.removeClass(this.sticky_b2c.nativeElement, 'sticky');
+        this.renderer.removeClass(
+          this.sticky_b2c_nav.nativeElement,
+          'sticky_nav'
+        );
+      }
     }
-  }
-  ngAfterViewInit(): void {
-    /*  Sticky Header */
-    // if (!isVacio(this.sticky_b2c) && !isVacio(this.sticky_b2c_nav)) {
-    // const sticky = this.sticky_b2c.nativeElement.offsetTop
-    // window.onscroll = () => {
-    //   if (window.pageYOffset > sticky) {
-    //     this.renderer.addClass(this.sticky_b2c.nativeElement,'sticky')
-    //     this.renderer.addClass(this.sticky_b2c_nav.nativeElement,'sticky_nav')
-    //   } else {
-    //     this.renderer.removeClass(this.sticky_b2c.nativeElement,'sticky')
-    //     this.renderer.removeClass(this.sticky_b2c_nav.nativeElement,'sticky_nav')
-    //   }
-    // };
-    // }
-    /*para el header de nav*/
   }
 
   Hidebar() {

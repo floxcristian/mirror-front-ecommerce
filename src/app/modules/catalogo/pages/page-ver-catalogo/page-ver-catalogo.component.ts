@@ -41,7 +41,7 @@ export class PageVerCatalogoComponent implements OnInit {
     public cart: CartService,
     private readonly sessionService: SessionService,
     private readonly geolocationService: GeolocationServiceV2,
-    private readonly catalogService: CatalogService,
+    private readonly catalogService: CatalogService
   ) {
     this.page = 0;
     this.onResize();
@@ -49,7 +49,6 @@ export class PageVerCatalogoComponent implements OnInit {
 
   async ngOnInit() {
     if (isPlatformBrowser(this.platformId)) await this.validarParametros();
-    else console.log('not client');
   }
   async validarParametros() {
     let objeto: ICatalog | null = null;
@@ -132,7 +131,7 @@ export class PageVerCatalogoComponent implements OnInit {
                   producto.cyber = this.generateTag(precio.metaTags, 'cyber');
                   producto.cyberMonday = this.generateTag(
                     precio.metaTags,
-                    'cyberMonday',
+                    'cyberMonday'
                   );
                 }
               });
@@ -148,7 +147,7 @@ export class PageVerCatalogoComponent implements OnInit {
                 objeto.cyber = this.generateTag(precio.metaTags, 'cyber');
                 objeto.cyberMonday = this.generateTag(
                   precio.metaTags,
-                  'cyberMonday',
+                  'cyberMonday'
                 );
               }
             }
@@ -184,8 +183,8 @@ export class PageVerCatalogoComponent implements OnInit {
       Array.isArray(objeto.productos)
         ? objeto.productos.map((obj: any) => arrProd.push(obj))
         : objeto.productos
-          ? arrProd.push(objeto.productos)
-          : null;
+        ? arrProd.push(objeto.productos)
+        : null;
     });
 
     let inicio = 0;
@@ -223,7 +222,9 @@ export class PageVerCatalogoComponent implements OnInit {
   }
 
   onResize() {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+      ? window.innerWidth
+      : 900;
     this.objeto = this.catalogo[this.page];
   }
 }
