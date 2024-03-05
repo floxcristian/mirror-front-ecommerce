@@ -70,10 +70,8 @@ export class PageDevolucionesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('entro en devoluciones');
     this.route.queryParams.subscribe((params) => {
       this.data = params['data'];
-      console.log('data: ', this.data);
 
       if (!this.data) {
         this.router.navigate(['/', 'inicio']);

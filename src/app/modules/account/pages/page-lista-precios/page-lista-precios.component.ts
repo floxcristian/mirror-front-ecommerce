@@ -46,14 +46,11 @@ export class PageListaPreciosComponent implements OnInit {
     // Services V2
     private readonly sessionService: SessionService,
     private readonly geolocationService: GeolocationServiceV2,
-    private readonly customerService: CustomerService,
+    private readonly customerService: CustomerService
   ) {
     // cambio de sucursal
     this.geolocationService.selectedStore$.subscribe({
       next: () => {
-        console.log(
-          'selectedStore$ desde [PageListaPreciosComponent]====================',
-        );
         this.reDraw();
         this.buscarPrecios();
       },
@@ -100,7 +97,6 @@ export class PageListaPreciosComponent implements OnInit {
 
   async buscarPrecios() {
     this.showLoading = true;
-    console.log('getSelectedStore desde buscarPrecios');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const user = this.sessionService.getSession();
 
@@ -136,17 +132,16 @@ export class PageListaPreciosComponent implements OnInit {
           .getCustomerPriceList(user.documentId, params)
           .subscribe({
             next: async (res) => {
-              console.log('response customer price list', res);
               this.precios = res.data;
               this.precios = await Promise.all(
                 this.precios.map((p) => {
                   if (p.price > p.commonPrice) p.price = p.commonPrice;
                   p.priceBruto = Math.round(p.price / (1 + this.IVA));
                   p.commonPriceBruto = Math.round(
-                    p.commonPrice / (1 + this.IVA),
+                    p.commonPrice / (1 + this.IVA)
                   );
                   return { ...p };
-                }),
+                })
               );
               this.showLoading = false;
               this.loadingData = false;
@@ -167,7 +162,7 @@ export class PageListaPreciosComponent implements OnInit {
   busquedaCategoria(event: any) {
     this.categoria = event;
     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) =>
-      dtInstance.draw(),
+      dtInstance.draw()
     );
   }
 }

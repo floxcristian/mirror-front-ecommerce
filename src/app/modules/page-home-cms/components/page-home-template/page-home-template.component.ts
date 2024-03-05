@@ -54,7 +54,7 @@ export class PageHomeTemplateComponent
     private readonly customerAddressService: CustomerAddressService,
     private renderer: Renderer2,
     public chatService: ChatService,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     afterNextRender(() => {
       this.chatService.loadChatScript();
@@ -82,7 +82,6 @@ export class PageHomeTemplateComponent
               this.getHomePageItems();
             }
           } else {
-            console.log('cargarPage 2');
             this.getHomePageItems();
           }
         },
@@ -98,8 +97,6 @@ export class PageHomeTemplateComponent
     const selectedStoreSubscription =
       this.geolocationService.selectedStore$.subscribe({
         next: (location) => {
-          console.log('location: ', location);
-          console.log('cargarPage 3');
           this.getHomePageItems();
         },
       });
@@ -114,7 +111,7 @@ export class PageHomeTemplateComponent
             this.getHomePageItems();
           },
         });
-      },
+      }
     );
 
     this.subscription.add(sessionSubscription);
@@ -124,14 +121,13 @@ export class PageHomeTemplateComponent
         (customerAddress) => {
           this.preferenciasCliente.deliveryAddress = customerAddress;
           this.getHomePageItems();
-        },
+        }
       );
 
     this.subscription.add(customerAddressSubscription);
   }
 
   private getHomePageItems(): void {
-    console.log('getHomePageItems...');
     this.carga = true;
     const rut = this.user.documentId;
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();

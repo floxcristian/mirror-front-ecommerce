@@ -26,13 +26,12 @@ export class PageDownloadpdfComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private activatedRoute: ActivatedRoute,
     // Services V2
-    private readonly documentDownloadService: DocumentDownloadService,
+    private readonly documentDownloadService: DocumentDownloadService
   ) {}
 
   ngOnInit() {
     this.numero = this.activatedRoute.snapshot.queryParams['numero'];
     this.tipo = this.activatedRoute.snapshot.queryParams['tipo'];
-    console.log(this.tipo);
     if (this.tipo === 'factura') this.downloadFacturaPdf();
     else if (this.tipo === 'orden-compra') this.downloadOcPdf();
     else this.downloadOvPdf();
@@ -71,7 +70,7 @@ export class PageDownloadpdfComponent implements OnInit {
       .subscribe((response: any) => {
         var file3 = new Blob([response], { type: 'application/pdf' });
         this.pdfBase64 = this.sanitizer.bypassSecurityTrustResourceUrl(
-          window.URL.createObjectURL(file3),
+          window.URL.createObjectURL(file3)
         );
       });
   }
@@ -80,7 +79,6 @@ export class PageDownloadpdfComponent implements OnInit {
     // const numero = this.numero.split('-');
     const numero = 'BEL-69788'.split('-');
     if (numero.length < 2) {
-      console.log('Formato de número no válido');
       return;
     }
     const codigo = this.generarCodigo(numero[0], numero[1]);
@@ -104,7 +102,7 @@ export class PageDownloadpdfComponent implements OnInit {
 
   procesarRespuesta(data: { base64: string; filename: string }) {
     const sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-      data.base64 + '#toolbar=1&statusbar=1&navpanes=1',
+      data.base64 + '#toolbar=1&statusbar=1&navpanes=1'
     );
     this.pdfBase64 = sanitizedUrl;
   }

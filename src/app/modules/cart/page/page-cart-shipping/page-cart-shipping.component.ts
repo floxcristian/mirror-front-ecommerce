@@ -437,7 +437,6 @@ export class PageCartShippingComponent implements OnInit {
         this.TiendasCargadas = true;
 
         // Poner tienda seleccionada al comienzo de la lista.
-        console.log('getSelectedStore desde PageCartShippingComponent');
         const selectedStore = this.geolocationService.getSelectedStore();
         const tiendaActual = this.stores.find((store) => {
           return store.code === selectedStore.code /*selectedStore.codigo*/;
@@ -462,7 +461,6 @@ export class PageCartShippingComponent implements OnInit {
    * Obtiene retiro en tienda.
    */
   async obtieneRetiro(removeShipping = true) {
-    console.log('obtieneRetiro...');
     this.loadingShippingStore = true;
 
     this.fechas = [];
@@ -1181,7 +1179,6 @@ export class PageCartShippingComponent implements OnInit {
   }
 
   cambiarTienda(newStore: IStore): void {
-    console.log('cambiarTienda: ');
     this.geolocationService.setSelectedStore({
       zone: newStore.zone,
       code: newStore.code,
@@ -1265,7 +1262,6 @@ export class PageCartShippingComponent implements OnInit {
   async eliminarGrupo(index: any) {
     this.loadingShipping = true;
     this.loadingResumen = true;
-    console.log('inicio shipping', this.selectedShippingId);
     const resultado: any = this.addresses.find(
       (address) => address.id == this.selectedShippingId
     );
@@ -1296,14 +1292,11 @@ export class PageCartShippingComponent implements OnInit {
 
       this.obtieneDespachos();
       this.obtieneTiendas();
-      console.log('shipping', this.selectedShippingId);
-      console.log('addresses:', this.addresses);
     });
   }
 
   ver_fechas() {
     if (this.shippingDaysStore.length) {
-      console.log('xxx: ', this.shippingDaysStore);
       let menor = this.shippingDaysStore[0].fechas?.[0].fecha;
       let menor_fecha: any = new Date(menor);
       this.shippingDaysStore.map((item) => {

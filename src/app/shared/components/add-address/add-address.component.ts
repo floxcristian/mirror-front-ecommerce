@@ -31,7 +31,7 @@ export class AddAddressComponent implements OnInit {
   localidades!: any[];
   formDireccion: FormGroup;
   // tienda: any;
-  tienda:DireccionMap | null
+  tienda: DireccionMap | null;
   coleccionComuna!: any[];
   autocompletado: boolean = true;
   disableDireccion: boolean = true;
@@ -248,7 +248,7 @@ export class AddAddressComponent implements OnInit {
       location: localizacion,
       latitude: latitud,
       longitude: longitud,
-      departmentOrHouse: depto || "",
+      departmentOrHouse: depto || '',
       reference: referencia,
     };
 
@@ -309,7 +309,6 @@ export class AddAddressComponent implements OnInit {
   }
 
   geolocalizacion(event: any) {
-    console.log('geo:',event)
     this.formDireccion.controls['latitud'].setValue(event.lat);
     this.formDireccion.controls['longitud'].setValue(event.lng);
   }

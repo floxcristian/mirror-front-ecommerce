@@ -52,7 +52,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     private readonly shoppingCartService: CartService,
     private readonly geolocationService: GeolocationServiceV2,
     private readonly renderer: Renderer2
-  ) {  }
+  ) {}
 
   private setLastSession(): void {
     if (!this.sessionService.isB2B()) return;
@@ -145,7 +145,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     } else {
       // Esto se carga en el movil.
       // FIXME: tiene dependencia de stores que no se cargan en este caso.
-      console.log('setDefaultLocation desde app.component.ts');
       this.geolocationService.setDefaultLocation();
     }
   }
@@ -157,5 +156,4 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.alert.hide();
     this.alert.show();
   }
-
 }
