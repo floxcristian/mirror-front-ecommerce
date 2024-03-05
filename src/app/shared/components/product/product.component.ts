@@ -207,7 +207,7 @@ export class ProductComponent implements OnInit, OnChanges {
     private readonly wishlistStorage: WishlistStorageService,
     private readonly wishlistService: WishlistService,
     private readonly productPriceApiService: ProductPriceApiService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {
     this.config = this.configService.getConfig();
     this.carouselOptions = CarouselOptions;
@@ -237,20 +237,23 @@ export class ProductComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.onChangeStore();
     this.setIsMobile();
-    window.onresize = () => this.setIsMobile();
+
     if (isPlatformBrowser(this.platformId)) {
+      window.onresize = () => this.setIsMobile();
+
       this.photoSwipe
         .load()
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe();
+
+      if (!this.sessionService.isB2B()) {
+        this.gtmService.pushTag({
+          event: 'productView',
+          pagePath: window.location.href,
+        });
+      }
     }
 
-    if (!this.sessionService.isB2B()) {
-      this.gtmService.pushTag({
-        event: 'productView',
-        pagePath: window.location.href,
-      });
-    }
     // Observable cuyo fin es saber cuando se presiona el boton agregar al carro utilizado para los dispositivos moviles.
     this.cart.onAddingmovilButton$
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -326,7 +329,7 @@ export class ProductComponent implements OnInit, OnChanges {
     if (!usuario) {
       this.toast.warning(
         'Debe iniciar sesion para poder comprar',
-        'Información'
+        'Información',
       );
       return;
     }
@@ -390,7 +393,7 @@ export class ProductComponent implements OnInit, OnChanges {
           Validators.required,
           Validators.maxLength(50),
           Validators.pattern(
-            /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/
+            /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/,
           ),
         ],
       ],
@@ -398,13 +401,13 @@ export class ProductComponent implements OnInit, OnChanges {
     });
     if (this.session.userRole != 'temp') {
       this.formProductRequest.controls['customerName'].setValue(
-        this.session.firstName + ' ' + this.session.lastName
+        this.session.firstName + ' ' + this.session.lastName,
       );
       this.formProductRequest.controls['customerEmail'].setValue(
-        this.session.email
+        this.session.email,
       );
       this.formProductRequest.controls['customerPhone'].setValue(
-        this.session.phone
+        this.session.phone,
       );
     }
   }
@@ -421,7 +424,7 @@ export class ProductComponent implements OnInit, OnChanges {
     this.inventoryService.requestForStock(valor_formulario).subscribe({
       next: () => {
         this.toast.success(
-          'Mensaje enviado con éxito. Te contactaremos a la brevedad'
+          'Mensaje enviado con éxito. Te contactaremos a la brevedad',
         );
       },
       error: (err) => {
@@ -440,7 +443,7 @@ export class ProductComponent implements OnInit, OnChanges {
       this.product?.name
     } de SKU: ${this.product!.sku}. Para que me atienda un ejecutivo.`;
     window.open(
-      `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`
+      `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`,
     );
   }
 
@@ -510,7 +513,7 @@ export class ProductComponent implements OnInit, OnChanges {
     if (!wishlists.length) return;
     wishlists.forEach((wishlist) => {
       const isProductOnList = wishlist.articles.find(
-        (product) => product.sku === this.product.sku
+        (product) => product.sku === this.product.sku,
       );
       this.isProductOnList = isProductOnList ? true : false;
       if (isProductOnList) {
@@ -577,7 +580,7 @@ export class ProductComponent implements OnInit, OnChanges {
                   next: () => {
                     this.refreshProductWishlistsIds();
                     this.toast.success(
-                      `Se agregó a la lista ${defaultWishlist?.name}.`
+                      `Se agregó a la lista ${defaultWishlist?.name}.`,
                     );
                     this.cd.markForCheck();
                     this.defaultWishlist = defaultWishlist || null;
@@ -629,6 +632,8 @@ export class ProductComponent implements OnInit, OnChanges {
    * Métodos de responsive.
    *************************************************/
   setIsMobile(): void {
-    this.showMobile = window.innerWidth < this.puntoQuiebre;
+    if (isPlatformBrowser(this.platformId)) {
+      this.showMobile = window.innerWidth < this.puntoQuiebre;
+    }
   }
 }

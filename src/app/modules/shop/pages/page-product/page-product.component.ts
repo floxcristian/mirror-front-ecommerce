@@ -69,7 +69,7 @@ declare let fbq: any;
   styleUrls: ['./page-product.component.scss'],
 })
 export class PageProductComponent implements OnInit {
-  @ViewChild('ancla') _ancla!: ElementRef
+  @ViewChild('ancla') _ancla!: ElementRef;
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
   product!: IArticleResponse;
   recommendedProducts: IArticleResponse[] = [];
@@ -84,7 +84,6 @@ export class PageProductComponent implements OnInit {
   isB2B!: boolean;
   origen: string[] = [];
   innerWidth: number;
-  window = window;
 
   private paramsCategory!: ICategoryParams;
   breadcrumbs: IBreadcrumbItem[] = [];
@@ -113,7 +112,7 @@ export class PageProductComponent implements OnInit {
   addingToCart!: boolean;
   preferenciaCliente!: ICustomerPreference;
   showNetPrice!: boolean;
-  evaluationSummary!: IReviewsResponse
+  evaluationSummary!: IReviewsResponse;
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
@@ -135,7 +134,7 @@ export class PageProductComponent implements OnInit {
     private readonly customerAddressService: CustomerAddressService,
     private readonly productPriceApiService: ProductPriceApiService,
     private readonly cartService: CartV2Service,
-    private readonly cartApiService:CartService
+    private readonly cartApiService: CartService,
   ) {
     this.carouselOptions = CarouselDesktopOptions;
     this.carrouselOptionsMobile = CarouselMobileOptions;
@@ -225,7 +224,9 @@ export class PageProductComponent implements OnInit {
   }
 
   setIsMobile(): void {
-    this.showMobile = window.innerWidth < this.puntoQuiebre;
+    if (isPlatformBrowser(this.platformId)) {
+      this.showMobile = window.innerWidth < this.puntoQuiebre;
+    }
   }
 
   /**
@@ -236,7 +237,7 @@ export class PageProductComponent implements OnInit {
     const selectedStore = this.geolocationService.getSelectedStore();
     if (!selectedStore) {
       this.toastr.error(
-        `Ha ocurrido un error al obtener información del producto.`
+        `Ha ocurrido un error al obtener información del producto.`,
       );
       return;
     }
@@ -253,7 +254,7 @@ export class PageProductComponent implements OnInit {
       .subscribe((productDetail) => {
         if (!productDetail) {
           this.toastr.error(
-            `Ha ocurrido un error al obtener información del producto.`
+            `Ha ocurrido un error al obtener información del producto.`,
           );
           return;
         }
@@ -264,7 +265,7 @@ export class PageProductComponent implements OnInit {
         this.setMetaTag(this.product);
         this.breadcrumbs = BreadcrumbUtils.setBreadcrumbs(
           this.paramsCategory,
-          productDetail.name
+          productDetail.name,
         );
         // this.productFacebook(this.product);
       });
@@ -301,7 +302,7 @@ export class PageProductComponent implements OnInit {
 
     if (isPlatformServer(this.platformId)) {
       this.canonicalService.setCanonicalURL(
-        environment.canonical + this.router.url
+        environment.canonical + this.router.url,
       );
     }
   }
@@ -350,7 +351,7 @@ export class PageProductComponent implements OnInit {
         this.recommendedProducts = recommendedProducts;
         this.matriz = comparedProducts.products;
         this.comparacion = comparedProducts.differences;
-      }
+      },
     );
   }
 
@@ -365,16 +366,18 @@ export class PageProductComponent implements OnInit {
       this.addClass('evaluacion', 'active');
       this.addClass('evaluacion', 'show');
     }
-    this.renderer.selectRootElement(this._ancla.nativeElement,true).scrollIntoView()
+    this.renderer
+      .selectRootElement(this._ancla.nativeElement, true)
+      .scrollIntoView();
   }
 
   private removeClass(elementId: string, className: string) {
-    const element = this.renderer.selectRootElement(`#${elementId}`,true)
+    const element = this.renderer.selectRootElement(`#${elementId}`, true);
     this.renderer.removeClass(element, className);
   }
 
   private addClass(elementId: string, className: string) {
-    const element = this.renderer.selectRootElement(`#${elementId}`,true)
+    const element = this.renderer.selectRootElement(`#${elementId}`, true);
     this.renderer.addClass(element, className);
   }
 
@@ -402,7 +405,7 @@ export class PageProductComponent implements OnInit {
    */
   refreshComparedProductPrice(
     product: IComparedProduct,
-    inputAction?: INumberInputAction
+    inputAction?: INumberInputAction,
   ): void {
     if (!product.quantity) {
       product.quantity = 1;
@@ -434,13 +437,13 @@ export class PageProductComponent implements OnInit {
     if (!this.user) {
       this.toastr.warning(
         'Debe iniciar sesion para poder comprar',
-        'Información'
+        'Información',
       );
       return;
     }
 
     this.addingToCart = true;
-    if(this.origen){
+    if (this.origen) {
       const origin: IShoppingCartProductOrigin = {
         origin: this.origen[0] || '',
         subOrigin: this.origen[1] || '',
@@ -449,11 +452,11 @@ export class PageProductComponent implements OnInit {
         sheet: true,
         cyber: this.product.cyber || 0,
       };
-      product.origin = origin
+      product.origin = origin;
     }
-    this.cartApiService.add(product, product.quantity).finally(() =>{
-      this.addingToCart = false
-    })
+    this.cartApiService.add(product, product.quantity).finally(() => {
+      this.addingToCart = false;
+    });
   }
   /**
    * Obtiene el resumen de evaluaciones del producto. Desde el componente de comentarios.
@@ -461,6 +464,4 @@ export class PageProductComponent implements OnInit {
   handleEvaluationSummary(value: IReviewsResponse) {
     this.evaluationSummary = value;
   }
-
-
 }

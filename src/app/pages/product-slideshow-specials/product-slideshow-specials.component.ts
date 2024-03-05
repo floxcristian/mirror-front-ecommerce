@@ -74,12 +74,11 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
     private readonly geolocationStorage: GeolocationStorageService,
     private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
     private readonly customerPreferenceService: CustomerPreferenceService,
-    private readonly customerAddressService: CustomerAddressService
+    private readonly customerAddressService: CustomerAddressService,
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
       : 900;
-    this.onResize(event);
   }
 
   async ngOnInit() {
@@ -117,7 +116,7 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
         (customerAddress) => {
           this.preferenciaCliente.deliveryAddress = customerAddress;
           this.cargaEspeciales();
-        }
+        },
       );
   }
 
@@ -214,7 +213,7 @@ export class ProductSlideshowSpecialsComponent implements OnInit {
         documentId,
         sucursal,
         location,
-        this.currentPage
+        this.currentPage,
       )
       .subscribe({
         next: (res) => {
