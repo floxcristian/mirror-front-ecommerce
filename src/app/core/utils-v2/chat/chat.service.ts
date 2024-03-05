@@ -39,9 +39,9 @@ export class ChatService {
   /**
    * Mostrar botón de chat.
    */
-  showChatButton(chatButtonContainer:HTMLElement | null): void {
-    // const token = this.getChatToken();
-    // const chatButtonContainer = document.getElementById(token);
+  showChatButton(): void {
+    const token = this.getChatToken();
+    const chatButtonContainer = document.getElementById(token);
     if (chatButtonContainer) {
       chatButtonContainer.style.display = 'block';
     }
@@ -50,9 +50,9 @@ export class ChatService {
    * Ocultar botón de chat.
    */
 
-  hideChatButton(chatButtonContainer:HTMLElement | null): void {
-    // const token = this.getChatToken();
-    // const chatButtonContainer = document.getElementById(token);
+  hideChatButton(): void {
+    const token = this.getChatToken();
+    const chatButtonContainer = document.getElementById(token);
     if (chatButtonContainer) {
       chatButtonContainer.style.display = 'none';
     }

@@ -44,10 +44,10 @@ export class ProductsViewComponent {
   @Input() paramsCategory!: any;
 
   listItemPage: any[] = [];
-  location: String;
+  location!: String;
   selectedItem = this.limit;
-  innerWidth: number;
-  url: string;
+  innerWidth!: number;
+  url!: string;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -55,30 +55,31 @@ export class ProductsViewComponent {
     // Services V2
     private readonly sessionService: SessionService
   ) {
-    this.location = document.location.search;
-    this.url = window.location.href;
-
-    this.innerWidth = isPlatformBrowser(this.platformId)
-      ? window.innerWidth
-      : 900;
-    if (this.innerWidth < 1025) {
-      this.selectedItem = 12;
-      this.listItemPage = [
-        { id: 12, value: 12 },
-        { id: 24, value: 24 },
-        { id: 36, value: 36 },
-        { id: 48, value: 48 },
-        { id: 60, value: 60 },
-      ];
-    } else {
-      this.selectedItem = 15;
-      this.listItemPage = [
-        { id: 15, value: 15 },
-        { id: 30, value: 30 },
-        { id: 45, value: 45 },
-        { id: 60, value: 60 },
-        { id: 120, value: 120 },
-      ];
+    if (isPlatformBrowser(this.platformId)) {
+      this.location = document.location.search;
+      this.url = window.location.href;
+      this.innerWidth = isPlatformBrowser(this.platformId)
+        ? window.innerWidth
+        : 900;
+      if (this.innerWidth < 1025) {
+        this.selectedItem = 12;
+        this.listItemPage = [
+          { id: 12, value: 12 },
+          { id: 24, value: 24 },
+          { id: 36, value: 36 },
+          { id: 48, value: 48 },
+          { id: 60, value: 60 },
+        ];
+      } else {
+        this.selectedItem = 15;
+        this.listItemPage = [
+          { id: 15, value: 15 },
+          { id: 30, value: 30 },
+          { id: 45, value: 45 },
+          { id: 60, value: 60 },
+          { id: 120, value: 120 },
+        ];
+      }
     }
     this.isB2B = this.sessionService.isB2B();
   }
@@ -93,7 +94,7 @@ export class ProductsViewComponent {
   }
 
   ngOnChanges(): void {
-    this.url = window.location.href;
+    if (isPlatformBrowser(this.platformId)) this.url = window.location.href;
     if (this.textToSearch.includes('SKU:'))
       this.textToSearch = this.textToSearch.substring(
         4,
