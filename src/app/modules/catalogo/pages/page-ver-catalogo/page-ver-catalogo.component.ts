@@ -46,7 +46,6 @@ export class PageVerCatalogoComponent implements OnInit {
   async ngOnInit() {
     if (isPlatformBrowser(this.platformId))
     await this.validarParametros();
-    else console.log('not client')
   }
   async validarParametros() {
     let objeto:ICatalog | null = null;
@@ -215,7 +214,9 @@ export class PageVerCatalogoComponent implements OnInit {
   }
 
   onResize() {
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+    ? window.innerWidth
+    : 900;
     this.objeto = this.catalogo[this.page];
   }
 }

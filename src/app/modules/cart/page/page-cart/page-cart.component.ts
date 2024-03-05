@@ -227,7 +227,6 @@ export class PageCartComponent implements OnInit, OnDestroy {
     let respuesta: any = await this.shoppingCartService
       .setSaveCart(cartSession._id, 'saved')
       .toPromise();
-    console.log('cart load desde PageCartComponent');
     this.shoppingCartService.load();
     if (!respuesta.error) {
       this.toast.success('Carro guardado exitosamente');
@@ -247,7 +246,6 @@ export class PageCartComponent implements OnInit, OnDestroy {
       this.items.forEach((item) => {
         listaSku.push(item.ProductCart.sku);
       });
-      console.log(listaSku);
       if (this.user) {
         rut = this.user.documentId;
       }

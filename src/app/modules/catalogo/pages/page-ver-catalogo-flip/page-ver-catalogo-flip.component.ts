@@ -124,7 +124,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       this.screenHeight = isPlatformBrowser(this.platformId)
         ? window.innerHeight
         : 900;
-    } else console.log('not client');
+    }
   }
 
   async validarParametros() {
