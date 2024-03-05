@@ -33,6 +33,7 @@
               data-layout="grid-5-full"
               data-with-features="false"
             >
+              @if(obj.articles && obj.articles.length > 0) {
               <owl-carousel-o
                 class="carouselLista"
                 [options]="carouselOptions"
@@ -55,6 +56,7 @@
                   </ng-template>
                 </ng-container>
               </owl-carousel-o>
+              }
             </div>
           </div>
         </div>
