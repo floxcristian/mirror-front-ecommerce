@@ -16,12 +16,11 @@ export class SlideMundoComponent implements OnInit {
     lazyLoad: true,
     nav: false,
     dots: true,
-    loop: true,
+    loop: false,
     autoplay: false,
     responsiveClass: true,
     responsive: {
-      1024: { items: 3 },
-      0: { items: 1 },
+      0: { items: 3, loop: true },
     },
   };
 
@@ -29,11 +28,11 @@ export class SlideMundoComponent implements OnInit {
     lazyLoad: true,
     nav: false,
     dots: true,
-    loop: true,
+    loop: false,
     responsiveClass: true,
     autoplay: false,
     responsive: {
-      0: { items: 1 },
+      0: { items: 1, loop: true },
     },
   };
   slides: any[] = [];
