@@ -84,7 +84,6 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
   }
 
   clickCollapse(item: number): void {
-    console.log('clickCollapse: ', item);
     switch (item) {
       case 1:
         if (
@@ -146,7 +145,6 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
       })
       .subscribe({
         next: (res) => {
-          console.log('addProductsFromFileToWishlist [res]: ', res);
           this.productosCargados = res.registered;
           this.productosNoCargados = res.notFound;
 

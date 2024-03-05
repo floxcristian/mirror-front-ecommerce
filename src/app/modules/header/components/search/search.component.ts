@@ -111,13 +111,10 @@ export class SearchComponent implements OnInit, OnDestroy {
       .pipe(first((stores) => stores.length > 0))
       .subscribe({
         next: () => {
-          //console.log('stores desde el search component: ', stores);
           this.areLoadedStores = true;
-          console.log('tiendaSeleccionada 1');
           // Obtengo tienda seleccionada,
           // como aun espera a que acepte... se hace un setdefault
           this.selectedStore = this.geolocationService.getSelectedStore();
-          //console.log('tiendaSeleccionada: ', this.tiendaSeleccionada);
           this.onChangeStore();
         },
       });
@@ -292,7 +289,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   private onChangeStore(): void {
     this.geolocationService.selectedStore$.subscribe({
       next: (selectedStore) => {
-        console.log('tiendaSeleccionada 2');
         this.selectedStore = selectedStore;
         this.shoppingCartService.calc();
         if (selectedStore.isChangeToNearestStore) {

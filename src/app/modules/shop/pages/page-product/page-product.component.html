@@ -19,27 +19,27 @@
           No se encontro el producto.
         </div>
       </div>
-           @if (product && product.visible === 1) {
-          <app-product
-          [product]="product"
-          [origen]="origen"
-          [stock]="stock"
-          [recommendedProducts]="recommendedProducts"
-          (leerComentarios)="abrirTabEvaluacion()"
-          [evaluationSummary]="evaluationSummary"
-        />
-        }@else {
-         <div  class="d-flex justify-content-center align-items-center" style="height: 60vh;">
-           <div class="text-primary" role="status">
-            <div class="spinner-border" role="status">
-              <span class="sr-only">Cargando ...</span>
-            </div>
-           </div>
-         </div>
-         }
-
-
-      <div #ancla id="ancla"></div>
+      @if (product && product.visible === 1) {
+      <app-product
+        [product]="product"
+        [origen]="origen"
+        [stock]="stock"
+        [recommendedProducts]="recommendedProducts"
+        (leerComentarios)="abrirTabEvaluacion()"
+        [evaluationSummary]="evaluationSummary"
+      />
+      }@else {
+      <div
+        class="d-flex justify-content-center align-items-center"
+        style="height: 60vh"
+      >
+        <div class="text-primary" role="status">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Cargando ...</span>
+          </div>
+        </div>
+      </div>
+      }
 
       <div
         *ngIf="!showMobile && product?.visible === 1"
@@ -403,6 +403,8 @@
         <!-- Fin Recomendados de productos -->
         <hr />
 
+        <div #ancla id="ancla"></div>
+
         <ul
           class="nav mb-3 mt-5 justify-content-center justify-content-lg-start"
           id="myTab"
@@ -456,7 +458,7 @@
               #comentarios
               [producto]="product"
               (evaluationSummary)="handleEvaluationSummary($event)"
-              />
+            />
           </div>
         </div>
       </div>
@@ -495,7 +497,10 @@
               *ngIf="matriz.length > 1"
               style="overflow-x: scroll; border-radius: 0px; border: none"
             >
-              <table style="margin: auto; background-color: #fff" class="mb-3 mobile-table">
+              <table
+                style="margin: auto; background-color: #fff"
+                class="mb-3 mobile-table"
+              >
                 <tr style="background-color: #fff; border-top: 0px">
                   <td class="border-top-0 sticky"></td>
                   <td
@@ -866,11 +871,11 @@
               data-bs-parent="#accordionExample"
             >
               <div class="accordion-body">
-                     <app-comentarios
-              #comentarios
-              [producto]="product"
-              (evaluationSummary)="handleEvaluationSummary($event)"
-              />
+                <app-comentarios
+                  #comentarios
+                  [producto]="product"
+                  (evaluationSummary)="handleEvaluationSummary($event)"
+                />
               </div>
             </div>
           </div>

@@ -145,7 +145,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     } else {
       // Esto se carga en el movil.
       // FIXME: tiene dependencia de stores que no se cargan en este caso.
-
       this.geolocationService.setDefaultLocation();
     }
   }

@@ -116,7 +116,7 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
     private readonly geolocationService: GeolocationServiceV2,
     private readonly cmsService: CmsService,
     private readonly cartService: CartService,
-    public readonly modalServices: NgbModal,
+    public readonly modalServices: NgbModal
   ) {
     this.selectedStore = this.geolocationService.getSelectedStore();
     this.obtieneCategorias();
@@ -235,7 +235,6 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
   }
 
   showStores(): void {
-    console.log('this.');
     this.modalServices.open(ModalStoresComponent, { size: 'md' });
   }
 
@@ -271,7 +270,7 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
         const tercerNivel: IThirdLvl[] = [];
         this.segundoNivelOficial.items[0].items = tercerNivel;
         this.categoriaDetalleOficial.menu.push(
-          this.segundoNivelOficial.items[0],
+          this.segundoNivelOficial.items[0]
         );
       }
       this.arrayCategoriasOficial.push(this.categoriaDetalleOficial);

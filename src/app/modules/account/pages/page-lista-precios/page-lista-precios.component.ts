@@ -51,9 +51,6 @@ export class PageListaPreciosComponent implements OnInit {
     // cambio de sucursal
     this.geolocationService.selectedStore$.subscribe({
       next: () => {
-        console.log(
-          'selectedStore$ desde [PageListaPreciosComponent]===================='
-        );
         this.reDraw();
         this.buscarPrecios();
       },
@@ -100,7 +97,6 @@ export class PageListaPreciosComponent implements OnInit {
 
   async buscarPrecios() {
     this.showLoading = true;
-    console.log('getSelectedStore desde buscarPrecios');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const user = this.sessionService.getSession();
 
@@ -136,7 +132,6 @@ export class PageListaPreciosComponent implements OnInit {
           .getCustomerPriceList(user.documentId, params)
           .subscribe({
             next: async (res) => {
-              console.log('response customer price list', res);
               this.precios = res.data;
               this.precios = await Promise.all(
                 this.precios.map((p) => {

@@ -244,9 +244,7 @@ export class PageCartComponent implements OnInit, OnDestroy {
       let listaSku: string[] = [];
       let rut = '';
       let localidad = '';
-      console.log(this.items);
       this.items.forEach((item) => {
-        console.log(item);
         listaSku.push(item.ProductCart.sku);
       });
       console.log(listaSku);

@@ -69,10 +69,9 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     private readonly cartService: CartService,
     private readonly paymentMethodService: PaymentMethodService,
     private readonly cartTagService: CartTagService,
-    public readonly configService: ConfigService,
+    public readonly configService: ConfigService
   ) {
     this.config = this.configService.getConfig();
-    console.log('cart load desde PageCartOvSuccessComponent 1');
     this.cartService.load();
     this.screenWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -89,13 +88,12 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     this.SubscriptionQueryParams = this.route.queryParams.subscribe(
       (query) => {
         this.manejaRespuesta(query);
-      },
+      }
     );
   }
 
   ngOnInit(): void {
     this.gclid = this.localS.get(StorageKey.gclid);
-    console.log('cart load desde PageCartOvSuccessComponent 2');
     this.cartService.load();
   }
 
@@ -103,8 +101,8 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     let status = query.status
       ? query.status
       : query.payment_status
-        ? query.payment_status
-        : null;
+      ? query.payment_status
+      : null;
 
     this.proveedorPago = query.paymentMethod
       ? query.paymentMethod
@@ -132,7 +130,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     while (!done || count < this.maxVerifyTries) {
       try {
         const result = await firstValueFrom(
-          this.paymentMethodService.verifyPayment(url),
+          this.paymentMethodService.verifyPayment(url)
         );
         if (result.ok) {
           done = true;
@@ -202,7 +200,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
                     error: (e) => console.error(e),
                   });
               }
-            }),
+            })
           );
         },
         error: (e) => {
