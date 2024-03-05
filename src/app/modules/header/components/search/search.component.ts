@@ -159,7 +159,13 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.buscando = true;
   }
 
+  clearSearch() {
+    this.searchControl.setValue('');
+  }
+
   buscar() {
+    this.textToSearch = this.searchControl.value || '';
+
     this.gtmService.pushTag({
       event: 'search',
       busqueda: this.textToSearch,
