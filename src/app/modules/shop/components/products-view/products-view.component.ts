@@ -53,9 +53,9 @@ export class ProductsViewComponent {
     @Inject(PLATFORM_ID) private platformId: Object,
     private readonly gtmService: GoogleTagManagerService,
     // Services V2
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
   ) {
-    if(isPlatformBrowser(this.platformId)){
+    if (isPlatformBrowser(this.platformId)) {
       this.location = document.location.search;
       this.url = window.location.href;
       this.innerWidth = isPlatformBrowser(this.platformId)
@@ -94,11 +94,11 @@ export class ProductsViewComponent {
   }
 
   ngOnChanges(): void {
-    if(isPlatformBrowser(this.platformId)) this.url = window.location.href;
+    if (isPlatformBrowser(this.platformId)) this.url = window.location.href;
     if (this.textToSearch.includes('SKU:'))
       this.textToSearch = this.textToSearch.substring(
         4,
-        this.textToSearch.length
+        this.textToSearch.length,
       );
     if ((this.textToSearch?.length || 0) > 70)
       this.textToSearch = 'Búsqueda personalizada';

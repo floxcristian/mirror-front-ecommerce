@@ -1,5 +1,14 @@
 // Angular
-import { Component, OnInit, AfterViewInit, OnDestroy, Renderer2, afterNextRender, Inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  OnDestroy,
+  Renderer2,
+  afterNextRender,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
 // Rxjs
 import { Subscription, first } from 'rxjs';
 // Models
@@ -43,7 +52,7 @@ export class PageHomeTemplateComponent
     private readonly geolocationStorage: GeolocationStorageService,
     private readonly customerPreferenceService: CustomerPreferenceService,
     private readonly customerAddressService: CustomerAddressService,
-    private renderer:Renderer2,
+    private renderer: Renderer2,
     public chatService: ChatService,
     @Inject(PLATFORM_ID) private platformId: Object,
   ) {
@@ -80,8 +89,8 @@ export class PageHomeTemplateComponent
       });
 
     this.subscription.add(storeSubscription);
-    if(isPlatformBrowser(this.platformId)){
-      this.chatService.showChatButton()
+    if (isPlatformBrowser(this.platformId)) {
+      this.chatService.showChatButton();
     }
   }
 
@@ -105,7 +114,7 @@ export class PageHomeTemplateComponent
             this.getHomePageItems();
           },
         });
-      }
+      },
     );
 
     this.subscription.add(sessionSubscription);
@@ -115,7 +124,7 @@ export class PageHomeTemplateComponent
         (customerAddress) => {
           this.preferenciasCliente.deliveryAddress = customerAddress;
           this.getHomePageItems();
-        }
+        },
       );
 
     this.subscription.add(customerAddressSubscription);
@@ -152,16 +161,16 @@ export class PageHomeTemplateComponent
   }
 
   scrollToTop(): void {
-    const body_e = this.renderer.selectRootElement('body',true) // safari
-    this.renderer.setProperty(body_e,'scrollTop',0)
-    const html_e = this.renderer.selectRootElement('html',true) //other
-    this.renderer.setProperty(html_e,'scrollTop',0)
+    const body_e = this.renderer.selectRootElement('body', true); // safari
+    this.renderer.setProperty(body_e, 'scrollTop', 0);
+    const html_e = this.renderer.selectRootElement('html', true); //other
+    this.renderer.setProperty(html_e, 'scrollTop', 0);
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-    if(isPlatformBrowser(this.platformId)){
-      this.chatService.hideChatButton()
+    if (isPlatformBrowser(this.platformId)) {
+      this.chatService.hideChatButton();
     }
   }
 }

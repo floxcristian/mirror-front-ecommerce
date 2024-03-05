@@ -46,13 +46,13 @@ export class PageListaPreciosComponent implements OnInit {
     // Services V2
     private readonly sessionService: SessionService,
     private readonly geolocationService: GeolocationServiceV2,
-    private readonly customerService: CustomerService
+    private readonly customerService: CustomerService,
   ) {
     // cambio de sucursal
     this.geolocationService.selectedStore$.subscribe({
       next: () => {
         console.log(
-          'selectedStore$ desde [PageListaPreciosComponent]===================='
+          'selectedStore$ desde [PageListaPreciosComponent]====================',
         );
         this.reDraw();
         this.buscarPrecios();
@@ -143,10 +143,10 @@ export class PageListaPreciosComponent implements OnInit {
                   if (p.price > p.commonPrice) p.price = p.commonPrice;
                   p.priceBruto = Math.round(p.price / (1 + this.IVA));
                   p.commonPriceBruto = Math.round(
-                    p.commonPrice / (1 + this.IVA)
+                    p.commonPrice / (1 + this.IVA),
                   );
                   return { ...p };
-                })
+                }),
               );
               this.showLoading = false;
               this.loadingData = false;
@@ -166,9 +166,8 @@ export class PageListaPreciosComponent implements OnInit {
 
   busquedaCategoria(event: any) {
     this.categoria = event;
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      console.log('event pa', event);
-      dtInstance.draw();
-    });
+    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) =>
+      dtInstance.draw(),
+    );
   }
 }

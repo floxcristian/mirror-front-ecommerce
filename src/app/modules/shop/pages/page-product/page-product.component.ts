@@ -134,7 +134,7 @@ export class PageProductComponent implements OnInit {
     private readonly customerAddressService: CustomerAddressService,
     private readonly productPriceApiService: ProductPriceApiService,
     private readonly cartService: CartV2Service,
-    private readonly cartApiService: CartService
+    private readonly cartApiService: CartService,
   ) {
     this.carouselOptions = CarouselDesktopOptions;
     this.carrouselOptionsMobile = CarouselMobileOptions;
@@ -237,7 +237,7 @@ export class PageProductComponent implements OnInit {
     const selectedStore = this.geolocationService.getSelectedStore();
     if (!selectedStore) {
       this.toastr.error(
-        `Ha ocurrido un error al obtener información del producto.`
+        `Ha ocurrido un error al obtener información del producto.`,
       );
       return;
     }
@@ -254,7 +254,7 @@ export class PageProductComponent implements OnInit {
       .subscribe((productDetail) => {
         if (!productDetail) {
           this.toastr.error(
-            `Ha ocurrido un error al obtener información del producto.`
+            `Ha ocurrido un error al obtener información del producto.`,
           );
           return;
         }
@@ -265,7 +265,7 @@ export class PageProductComponent implements OnInit {
         this.setMetaTag(this.product);
         this.breadcrumbs = BreadcrumbUtils.setBreadcrumbs(
           this.paramsCategory,
-          productDetail.name
+          productDetail.name,
         );
         // this.productFacebook(this.product);
       });
@@ -302,7 +302,7 @@ export class PageProductComponent implements OnInit {
 
     if (isPlatformServer(this.platformId)) {
       this.canonicalService.setCanonicalURL(
-        environment.canonical + this.router.url
+        environment.canonical + this.router.url,
       );
     }
   }
@@ -351,7 +351,7 @@ export class PageProductComponent implements OnInit {
         this.recommendedProducts = recommendedProducts;
         this.matriz = comparedProducts.products;
         this.comparacion = comparedProducts.differences;
-      }
+      },
     );
   }
 
@@ -405,7 +405,7 @@ export class PageProductComponent implements OnInit {
    */
   refreshComparedProductPrice(
     product: IComparedProduct,
-    inputAction?: INumberInputAction
+    inputAction?: INumberInputAction,
   ): void {
     if (!product.quantity) {
       product.quantity = 1;
@@ -437,7 +437,7 @@ export class PageProductComponent implements OnInit {
     if (!this.user) {
       this.toastr.warning(
         'Debe iniciar sesion para poder comprar',
-        'Información'
+        'Información',
       );
       return;
     }
