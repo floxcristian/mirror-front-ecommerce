@@ -61,11 +61,11 @@ export class ProductRatingComponent {
           this.resumen = resp.summary;
           this.updateRatingAndStars();
         } else {
-          console.warn(resp.msg);
+          console.log(resp.msg);
         }
       },
       error: (error) =>
-        console.warn('Error al cargar el resumen de comentarios'),
+        console.log('Error al cargar el resumen de comentarios'),
     });
   }
 

@@ -90,7 +90,7 @@ export class ComentariosComponent implements OnChanges {
             }
           },
           error: (error) => {
-            console.warn('Error al obtener comentarios', error);
+            console.log('Error al obtener comentarios', error);
           },
         });
     }

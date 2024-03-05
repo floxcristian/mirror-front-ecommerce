@@ -80,14 +80,14 @@ export class PageDownloadpdfComponent implements OnInit {
     // const numero = this.numero.split('-');
     const numero = 'BEL-69788'.split('-');
     if (numero.length < 2) {
-      console.warn('Formato de número no válido');
+      console.log('Formato de número no válido');
       return;
     }
     const codigo = this.generarCodigo(numero[0], numero[1]);
     this.documentDownloadService.downloadFacturaPdf(codigo).subscribe({
       next: (data: any) => this.procesarRespuesta(data),
       error: (err) => {
-        console.warn('Error al descargar el PDF:', err);
+        console.log('Error al descargar el PDF:', err);
         this.noDocument = true;
       },
     });
