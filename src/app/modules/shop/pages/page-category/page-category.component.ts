@@ -137,7 +137,6 @@ export class PageCategoryComponent implements OnInit {
    */
   private onSessionChange(): void {
     this.authStateService.session$.subscribe((session) => {
-      console.log('[-] onSessionChange: ', session);
       this.filters = [];
       this.session = session;
       this.parametrosBusqueda.documentId = session.documentId;
@@ -157,7 +156,6 @@ export class PageCategoryComponent implements OnInit {
     this.customerAddressService.customerAddress$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((customerAddress) => {
-        console.log('[-] onCustomerAddressChange');
         this.filters = [];
         this.parametrosBusqueda.location = customerAddress?.city || '';
         this.preferences.deliveryAddress = customerAddress || null;
@@ -170,7 +168,6 @@ export class PageCategoryComponent implements OnInit {
    */
   private onSelectedStoreChange(): void {
     this.geolocationService.selectedStore$.subscribe(({ code }) => {
-      console.log('[-] onSelectedStoreChange');
       this.filters = [];
       this.parametrosBusqueda.branchCode = code || '';
       this.cargarCatalogoProductos(this.parametrosBusqueda, '');
@@ -182,7 +179,6 @@ export class PageCategoryComponent implements OnInit {
   ngOnInit(): void {
     let metadataCount = 0;
     this.route.queryParams.subscribe((query) => {
-      console.log('on queryParamsChange: ', query);
       this.filters = [];
       // Seteamos el origen del buscador
       this.setOrigenes();
@@ -246,7 +242,6 @@ export class PageCategoryComponent implements OnInit {
 
     this.route.params.subscribe((params) => {
       this.filters = [];
-      console.log('on routerParamsChange: ', params);
       if (
         params['busqueda'] &&
         params['metodo'] &&
@@ -269,7 +264,6 @@ export class PageCategoryComponent implements OnInit {
         }
 
         let parametros = {};
-        console.log('getSelectedStore desde PageCategoryComponent 1');
         const tiendaSeleccionada = this.geolocationService.getSelectedStore();
         const sucursal = tiendaSeleccionada.code;
         if (this.session.documentId === '0') {
@@ -319,7 +313,6 @@ export class PageCategoryComponent implements OnInit {
           this.textToSearch =
             params['busqueda'] === 'todos' ? '' : params['busqueda'];
           let parametros = {};
-          console.log('getSelectedStore desde PageCategoryComponent 2');
           const tiendaSeleccionada =
             this.geolocationService.getSelectedStore();
           if (this.session.documentId === '0') {
@@ -466,7 +459,6 @@ export class PageCategoryComponent implements OnInit {
 
     this.articleService.search(parametros).subscribe({
       next: (res) => {
-        console.log('articleService.search: ', parametros);
         this.SetProductos(res, scroll);
       },
       error: (err) => {
@@ -515,7 +507,6 @@ export class PageCategoryComponent implements OnInit {
       const user = this.sessionService.getSession();
       if (user) {
         const producto: IArticleResponse = productos[0];
-        console.log('getSelectedStore desde PageCategoryComponent 3');
         let tienda = this.geolocationService.getSelectedStore();
         let codigo = tienda.code || '';
         let params = {
@@ -882,9 +873,7 @@ export class PageCategoryComponent implements OnInit {
         this.origen = ['buscador', '', 'sinCategoria', ''];
       }
     }
-    console.log('origen: ', this.origen);
     const origin2 = getOriginUrl(this.route.snapshot);
-    console.log('origen2: ', origin2);
   }
 
   //Definicion de meta Información para optimización del SEO

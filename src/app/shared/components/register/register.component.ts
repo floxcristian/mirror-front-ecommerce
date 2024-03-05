@@ -312,7 +312,6 @@ export class RegisterComponent implements OnInit {
    * @param event
    */
   checkIfDocumentIdExists(event: Event): void {
-    console.log('checkIfDocumentIdExists...');
     const input = event.target as HTMLInputElement;
 
     if (this.userForm.controls['documentId'].status === 'VALID') {
@@ -335,7 +334,6 @@ export class RegisterComponent implements OnInit {
   }
 
   formBlock(force = false) {
-    console.log('formBlock...');
     /*if (force) {
       this.isValidDocumentId = true;
     }*/

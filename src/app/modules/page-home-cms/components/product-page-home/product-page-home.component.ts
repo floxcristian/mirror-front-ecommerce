@@ -29,7 +29,6 @@ export class ProductPageHomeComponent implements OnInit {
 
   @Input() set blockElements(value: IElement1[] | IElement2) {
     this._blockElements = value as IElement1[];
-    console.log('_blockElements: ', this._blockElements);
   }
   _blockElements: IElement1[] = [];
   layout = 'grid-lg';
@@ -168,7 +167,6 @@ export class ProductPageHomeComponent implements OnInit {
     });
     this.refresh = false;
     this.producto_selecionado = this._blockElements[index];
-    console.log('proget', this.producto_selecionado);
     this.index_seleccionado = index;
   }
 

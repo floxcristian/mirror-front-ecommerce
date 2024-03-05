@@ -70,7 +70,6 @@ export class AddressModalComponent implements OnInit {
   }
 
   set_direccion(data: any[]) {
-    console.log('data map',data)
     this.clearAddress();
 
     if (this.getAddressData(data[0], 'street_number')) {

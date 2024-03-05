@@ -54,7 +54,6 @@ export class DetalleTrakingOvComponent implements OnInit {
   async ver_recibo() {
     this.ecommerceDocumentService.getSalesOrderBackup({number:this.Ov}).subscribe({
       next:(res)=>{
-        console.log('asddas',res)
         this.recibo = res[0]
       },
       error:(err)=>{

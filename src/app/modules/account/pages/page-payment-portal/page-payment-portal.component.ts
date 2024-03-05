@@ -233,7 +233,6 @@ export class PagePaymentPortalComponent implements OnInit {
   }
 
   resetPayment() {
-    console.log('reset check')
     this.calcTotalSelected();
     this.paymentMsgSuccess = true;
     this.modalPaymentMethodsRef.hide();

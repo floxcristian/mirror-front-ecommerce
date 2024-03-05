@@ -309,7 +309,6 @@ export class AddAddressComponent implements OnInit {
   }
 
   geolocalizacion(event: any) {
-    console.log('geo:',event)
     this.formDireccion.controls['latitud'].setValue(event.lat);
     this.formDireccion.controls['longitud'].setValue(event.lng);
   }

@@ -31,7 +31,6 @@ export class TemplateProductosVerticalComponent implements OnChanges {
   ) {}
 
   ngOnInit(): void {
-    console.log('tipoCatalogo', this.tipoCatalogo);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

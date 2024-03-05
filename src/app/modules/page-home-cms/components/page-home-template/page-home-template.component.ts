@@ -82,7 +82,6 @@ export class PageHomeTemplateComponent
               this.getHomePageItems();
             }
           } else {
-            console.log('cargarPage 2');
             this.getHomePageItems();
           }
         },
@@ -98,8 +97,6 @@ export class PageHomeTemplateComponent
     const selectedStoreSubscription =
       this.geolocationService.selectedStore$.subscribe({
         next: (location) => {
-          console.log('location: ', location);
-          console.log('cargarPage 3');
           this.getHomePageItems();
         },
       });
@@ -131,7 +128,6 @@ export class PageHomeTemplateComponent
   }
 
   private getHomePageItems(): void {
-    console.log('getHomePageItems...');
     this.carga = true;
     const rut = this.user.documentId;
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();

@@ -235,7 +235,6 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
   }
 
   showStores(): void {
-    console.log('this.');
     this.modalServices.open(ModalStoresComponent, { size: 'md' });
   }
 

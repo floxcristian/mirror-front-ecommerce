@@ -205,7 +205,6 @@ export class PageProductComponent implements OnInit {
       // Seteamos el origen del ingreso a la ficha del producto.
       const origenHistory = this.cartService.getProductOrigin();
       this.origen = origenHistory.length ? origenHistory : ['link', ''];
-      console.log('origen: ', this.origen);
 
       this.root.hideModalRefBuscador();
       if (params['id']) {

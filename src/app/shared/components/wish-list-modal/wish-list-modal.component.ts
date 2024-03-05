@@ -153,7 +153,6 @@ export class WishListModalComponent implements OnInit {
    */
   closeModal(): void {
     const listas: NodeListOf<Element> = document.querySelectorAll('.listas');
-    console.log('listas: ', listas);
     let checked = false;
     listas.forEach((e: any) => {
       if (e.checked) {

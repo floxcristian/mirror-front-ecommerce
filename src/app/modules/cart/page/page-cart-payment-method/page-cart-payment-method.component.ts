@@ -1255,7 +1255,6 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   setAddress(data: any[]): void {
     this.clearAddress();
-    console.log('info mapa:', data)
     if (this.getAddress(data[0], 'street_number')) {
       this.formDireccion.controls['calle'].enable();
 
