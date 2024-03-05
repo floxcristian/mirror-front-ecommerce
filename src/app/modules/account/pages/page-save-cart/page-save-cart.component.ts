@@ -8,7 +8,6 @@ import {
   TipoModal,
 } from '../../../../shared/components/modal/modal.component';
 import { isVacio } from '../../../../shared/utils/utilidades';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { isPlatformBrowser } from '@angular/common';
 import { CartService } from '@core/services-v2/cart.service';
@@ -24,6 +23,7 @@ import {
   IShoppingCartProduct,
 } from '@core/models-v2/cart/shopping-cart.interface';
 import { lastValueFrom } from 'rxjs';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-page-save-cart',
@@ -47,7 +47,7 @@ export class PageSaveCartComponent implements OnInit {
     @Inject(PLATFORM_ID) private platformId: Object,
     // Services V2
     private cartService: CartService,
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -79,7 +79,7 @@ export class PageSaveCartComponent implements OnInit {
           if (res) {
             try {
               const respuesta: any = lastValueFrom(
-                await this.cartService.setSaveCart(id, estado)
+                await this.cartService.setSaveCart(id, estado),
               );
 
               if (respuesta) {
@@ -94,7 +94,7 @@ export class PageSaveCartComponent implements OnInit {
             } catch (e) {
               console.log(e);
               this.toast.error(
-                'Ocurrio un error al actualizar el estado del carro.'
+                'Ocurrio un error al actualizar el estado del carro.',
               );
             }
           }
@@ -117,7 +117,7 @@ export class PageSaveCartComponent implements OnInit {
             };
             const bsModalRef: BsModalRef = this.modalService.show(
               ModalComponent,
-              { initialState }
+              { initialState },
             );
             bsModalRef.content.event.subscribe(async (res: boolean) => {
               if (res) {
@@ -125,21 +125,21 @@ export class PageSaveCartComponent implements OnInit {
                 await lastValueFrom(
                   this.cartService.setSaveCart(
                     cartSession._id,
-                    ShoppingCartStatusType.SAVED
-                  )
+                    ShoppingCartStatusType.SAVED,
+                  ),
                 );
               } else {
                 // se elimina el carro actual
                 await lastValueFrom(
                   this.cartService.setSaveCart(
                     cartSession._id,
-                    ShoppingCartStatusType.DELETED
-                  )
+                    ShoppingCartStatusType.DELETED,
+                  ),
                 );
               }
 
               const respuesta: any = await lastValueFrom(
-                this.cartService.setSaveCart(id, estado)
+                this.cartService.setSaveCart(id, estado),
               );
 
               if (respuesta) {
@@ -154,7 +154,7 @@ export class PageSaveCartComponent implements OnInit {
             });
           } else {
             const respuesta: any = await lastValueFrom(
-              this.cartService.setSaveCart(id, estado)
+              this.cartService.setSaveCart(id, estado),
             );
 
             if (respuesta) {
@@ -170,7 +170,7 @@ export class PageSaveCartComponent implements OnInit {
         } catch (e) {
           console.log(e);
           this.toast.error(
-            'Ocurrio un error al actualizar el estado del carro.'
+            'Ocurrio un error al actualizar el estado del carro.',
           );
         }
         break;
@@ -211,7 +211,7 @@ export class PageSaveCartComponent implements OnInit {
       .subscribe((resp: IOrderDetailResponse) => {
         if (resp.data && resp.data.length > 0) {
           this.lstCart = resp.data.filter(
-            (cart: IOrderDetail) => cart.products.length > 0
+            (cart: IOrderDetail) => cart.products.length > 0,
           );
 
           this.paginaActual = resp.page;

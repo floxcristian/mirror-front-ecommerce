@@ -1,10 +1,11 @@
 import { Usuario } from './../../../../shared/interfaces/login';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { MenuService } from '@core/services-v2/menu/menu.service';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-mobile-header-account',
@@ -40,7 +41,7 @@ export class MobileHeaderAccountComponent implements OnInit {
     // Services V2
     private readonly sessionStorage: SessionStorageService,
     private readonly authStateService: AuthStateServiceV2,
-    private readonly menuService: MenuService
+    private readonly menuService: MenuService,
   ) {}
 
   ngOnInit() {

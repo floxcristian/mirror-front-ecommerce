@@ -55,7 +55,6 @@ import {
 
 import { AgregarCentroCostoComponent } from '../../components/agregar-centro-costo/agregar-centro-costo.component';
 
-import { DireccionMap } from 'src/app/shared/components/map/map.component';
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
@@ -88,6 +87,7 @@ import { CustomerBusinessLineApiService } from '@core/services-v2/customer-busin
 import { ConfigService } from '@core/config/config.service';
 import { IConfig } from '@core/config/config.interface';
 import { DocumentValidator } from '@core/validators/document-form.validator';
+import { DireccionMap } from '@shared/components/map/map.component';
 
 // declare const $: any;
 export interface Archivo {
@@ -204,7 +204,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     private readonly customerBusinessLineApiService: CustomerBusinessLineApiService,
     private readonly customerAddressService: CustomerAddressApiService,
     private readonly customerCostCenterService: CustomerCostCenterService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {
     this.config = this.configService.getConfig();
     this.innerWidth = isPlatformBrowser(this.platformId)
@@ -256,31 +256,35 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
     if (this.isValidRut(rut ?? '')) {
       this.cargandoGiros = true;
-      this.customerBusinessLineApiService.getLegalBusinessLines(rut).subscribe({
-        next: (res) => {
-          this.girosOptions = res.businessLines || [];
+      this.customerBusinessLineApiService
+        .getLegalBusinessLines(rut)
+        .subscribe({
+          next: (res) => {
+            this.girosOptions = res.businessLines || [];
 
-          if (this.girosOptions.length) {
-            this.documentOptions = [
-              { id: InvoiceType.RECEIPT, name: 'BOLETA' },
-              { id: InvoiceType.INVOICE, name: 'FACTURA' },
-            ];
-          } else {
-            this.toastr.info('No se han encontrado giros disponibles para su rut.');
-            this.documentOptions = [
-              { id: InvoiceType.RECEIPT, name: 'BOLETA' },
-            ];
-            this.selectedDocument = InvoiceType.RECEIPT;
-          }
+            if (this.girosOptions.length) {
+              this.documentOptions = [
+                { id: InvoiceType.RECEIPT, name: 'BOLETA' },
+                { id: InvoiceType.INVOICE, name: 'FACTURA' },
+              ];
+            } else {
+              this.toastr.info(
+                'No se han encontrado giros disponibles para su rut.',
+              );
+              this.documentOptions = [
+                { id: InvoiceType.RECEIPT, name: 'BOLETA' },
+              ];
+              this.selectedDocument = InvoiceType.RECEIPT;
+            }
 
-          this.cargandoGiros = false;
-        },
-        error: (e) => {
-          console.error(e);
-          // this.toastr.error('Ha ocurrido un error al obtener los giros.');
-          this.cargandoGiros = false;
-        },
-      });
+            this.cargandoGiros = false;
+          },
+          error: (e) => {
+            console.error(e);
+            // this.toastr.error('Ha ocurrido un error al obtener los giros.');
+            this.cargandoGiros = false;
+          },
+        });
     } else {
       this.documentOptions = [{ id: InvoiceType.RECEIPT, name: 'BOLETA' }];
       this.selectedDocument = InvoiceType.RECEIPT;
@@ -324,7 +328,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
           await this.updateReceive();
           this.setDireccionOrTiendaRetiro();
         }
-      }
+      },
     );
     this.subscriptions.add(subscription);
 
@@ -340,8 +344,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
               ProductCart: item,
               quantity: item.quantity,
             };
-          })
-        )
+          }),
+        ),
       )
       .subscribe((items) => {
         this.items = items;
@@ -435,7 +439,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
               phone: receive.phone ?? '',
             }
           : {},
-      })
+      }),
     );
     this.cartSession = shoppingCart;
   }
@@ -491,7 +495,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.geolocationApiService.getStores().subscribe({
       next: (data) => {
         this.tiendaRetiro = data.find(
-          (x) => x.id.toString() === recid.toString()
+          (x) => x.id.toString() === recid.toString(),
         );
         if (this.tiendaRetiro) {
           this.localS.set(StorageKey.tiendaRetiro, this.tiendaRetiro);
@@ -500,7 +504,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error(err);
         this.toastr.error(
-          'Ha ocurrido un error en servicio al obtener las direccion de la tienda'
+          'Ha ocurrido un error en servicio al obtener las direccion de la tienda',
         );
       },
     });
@@ -514,7 +518,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.customerAddressService.getDeliveryAddresses(documentId).subscribe({
       next: (addresses) => {
         const cartDeliveryAddress = addresses.find(
-          (address) => address.id === currentCartDeliveryAddress
+          (address) => address.id === currentCartDeliveryAddress,
         );
         if (cartDeliveryAddress) {
           this.direccionDespacho = cartDeliveryAddress;
@@ -522,7 +526,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       },
       error: () => {
         this.toastr.error(
-          'Ha ocurrido un error en servicio al obtener las direcciones'
+          'Ha ocurrido un error en servicio al obtener las direcciones',
         );
       },
     });
@@ -647,7 +651,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   private async finishPaymentOv(
-    paymentPurchaseOrder: IPaymentPurchaseOrder | null
+    paymentPurchaseOrder: IPaymentPurchaseOrder | null,
   ): Promise<void> {
     if (!paymentPurchaseOrder) {
       return;
@@ -837,7 +841,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     if (this.guest) {
       try {
         this.guest.documentId = this.getValidRutFormat(
-          this.guest.documentId ?? ''
+          this.guest.documentId ?? '',
         );
 
         const isValidAddress =
@@ -877,7 +881,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         };
 
         await firstValueFrom(
-          this.customerService.createGuest(createGuestRequest)
+          this.customerService.createGuest(createGuestRequest),
         );
 
         let user: IGuest = this.guest;
@@ -887,7 +891,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
             shoppingCartId: user.cartId ? user.cartId.toString() : '',
             documentId: user.documentId,
             email: user.email,
-          })
+          }),
         );
         //* Esta informacion cambia el user
         // let userCambio = this.sessionService.getSession();
@@ -935,7 +939,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     let consultaStock = await firstValueFrom(
       this.cartService.validateStock({
         shoppingCartId: this.cartSession._id!.toString(),
-      })
+      }),
     );
     if (consultaStock.stockProblem && consultaStock.stockProblemLines) {
       this.productosSinStock = consultaStock.stockProblemLines;
@@ -974,8 +978,8 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
         await firstValueFrom(
           this.customerCostCenterService.createCostCenter(
             costCenter,
-            documentId
-          )
+            documentId,
+          ),
         );
         this.centrosCosto = [...this.centrosCosto, costCenter];
         this.formOv.controls['costCenter'].setValue(costCenter.code);
@@ -983,7 +987,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       } catch (e) {
         console.error(e);
         this.toastr.error(
-          (e as IError)?.message ?? 'No se pudo crear el centro de costo'
+          (e as IError)?.message ?? 'No se pudo crear el centro de costo',
         );
         modal.hide();
       }
@@ -1228,7 +1232,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     this.formDireccion = this.fb.group({
       calle: new FormControl(
         { value: null, disabled: true },
-        { validators: [Validators.required] }
+        { validators: [Validators.required] },
       ),
       depto: new FormControl(null),
       numero: new FormControl(null),
@@ -1255,26 +1259,26 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   setAddress(data: any[]): void {
     this.clearAddress();
-    console.log('info mapa:', data)
+    console.log('info mapa:', data);
     if (this.getAddress(data[0], 'street_number')) {
       this.formDireccion.controls['calle'].enable();
 
       if (this.getAddress(data[0], 'locality')) {
         this.formDireccion.controls['comuna'].setValue(
-          this.findCommune(this.getAddress(data[0], 'locality'))
+          this.findCommune(this.getAddress(data[0], 'locality')),
         );
       } else {
         this.formDireccion.controls['comuna'].setValue(
           this.findCommune(
-            this.getAddress(data[0], 'administrative_area_level_3')
-          )
+            this.getAddress(data[0], 'administrative_area_level_3'),
+          ),
         );
       }
       this.formDireccion.controls['calle'].setValue(
-        this.getAddress(data[0], 'route')
+        this.getAddress(data[0], 'route'),
       );
       this.formDireccion.controls['numero'].setValue(
-        this.getAddress(data[0], 'street_number')
+        this.getAddress(data[0], 'street_number'),
       );
       this.formDireccion.controls['latitud'].setValue(data[1].lat);
       this.formDireccion.controls['longitud'].setValue(data[1].lng);
@@ -1301,12 +1305,12 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
     const localidades: any[] = [];
     const comunaArr = event.id.split('@');
     const comunas = this.cities.filter(
-      (comuna) => comuna.city == comunaArr[0]
+      (comuna) => comuna.city == comunaArr[0],
     );
     comunas.map((comuna) =>
       (comuna.localities as any[]).map((localidad) =>
-        localidades.push(localidad)
-      )
+        localidades.push(localidad),
+      ),
     );
     this.localidades = localidades;
   }
@@ -1321,11 +1325,11 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   findCommune(nombre: string) {
-    if (!nombre ) return '';
+    if (!nombre) return '';
     nombre = this.quitarAcentos(nombre);
 
     var result = this.cities.find(
-      (item) => this.quitarAcentos(item.city) === nombre
+      (item) => this.quitarAcentos(item.city) === nombre,
     );
 
     if (result && result.id) {
@@ -1384,7 +1388,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
       nombre = this.quitarAcentos(nombre);
 
       var result = this.localidades.find(
-        (data) => this.quitarAcentos(data.localidad) === nombre
+        (data) => this.quitarAcentos(data.localidad) === nombre,
       );
 
       if (result && result.localidad) {

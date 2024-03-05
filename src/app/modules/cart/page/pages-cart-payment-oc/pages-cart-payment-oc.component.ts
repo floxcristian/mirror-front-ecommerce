@@ -19,7 +19,6 @@ import { isVacio } from '../../../../shared/utils/utilidades';
 import { ToastrService } from 'ngx-toastr';
 import moment from 'moment';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { isPlatformBrowser } from '@angular/common';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
@@ -42,6 +41,7 @@ import { ShoppingCartStatusType } from '@core/enums/shopping-cart-status.enum';
 import { IEcommerceUser } from '@core/models-v2/auth/user.interface';
 import { ITotals } from '@core/models-v2/cart/totals.interface';
 import { ShippingService } from '@shared/interfaces/address';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-pages-cart-payment-oc',
@@ -127,7 +127,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
     private readonly customerAddressService: CustomerAddressApiService,
     private readonly geolocationApiService: GeolocationApiService,
     public readonly cartService: CartService,
-    private readonly paymentMethodPurchaseOrderRequestService: PaymentMethodPurchaseOrderRequestService
+    private readonly paymentMethodPurchaseOrderRequestService: PaymentMethodPurchaseOrderRequestService,
   ) {
     this.innerWidth = isPlatformBrowser(this.platformId)
       ? window.innerWidth
@@ -175,19 +175,19 @@ export class PagesCartPaymentOcComponent implements OnInit {
     const documentId = this.cartSession.customer?.documentId ?? '';
     if (this.cartSession.shipment?.deliveryMode === DeliveryType.DELIVERY) {
       const addresses = await firstValueFrom(
-        this.customerAddressService.getDeliveryAddresses(documentId)
+        this.customerAddressService.getDeliveryAddresses(documentId),
       );
       if (addresses.length) {
         this.direccion = addresses.find(
-          (item) => item.id == this.cartSession.shipment?.addressId
+          (item) => item.id == this.cartSession.shipment?.addressId,
         );
       }
     } else {
       const stores = await firstValueFrom(
-        this.geolocationApiService.getStores()
+        this.geolocationApiService.getStores(),
       );
       this.direccion = stores.find(
-        (item) => item.code == this.cartSession.branchCode
+        (item) => item.code == this.cartSession.branchCode,
       );
     }
   }
@@ -196,10 +196,10 @@ export class PagesCartPaymentOcComponent implements OnInit {
     if (!this.user?.login_temp) {
       const documetId = this.user?.documentId!;
       let consulta = await firstValueFrom(
-        this.customerService.getSupervisors(documetId)
+        this.customerService.getSupervisors(documetId),
       );
       this.usuario = consulta.users.filter(
-        (item) => item.username == this.user?.username
+        (item) => item.username == this.user?.username,
       );
       if (this.usuario.length == 0) {
         this.propietario = false;
@@ -278,7 +278,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
       const r = await firstValueFrom(
         this.paymentMethodPurchaseOrderRequestService.approve({
           shoppingCartId: this.cartSession._id!.toString(),
-        })
+        }),
       );
 
       this.purchaseOrderId = r._id.toString();
@@ -365,7 +365,7 @@ export class PagesCartPaymentOcComponent implements OnInit {
       error: (e) => {
         console.error(e);
         this.toastr.error(
-          'Ha ocurrido un error al rechazar la orden de venta'
+          'Ha ocurrido un error al rechazar la orden de venta',
         );
       },
     });

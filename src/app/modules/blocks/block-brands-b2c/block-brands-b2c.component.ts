@@ -3,9 +3,9 @@ import { Component } from '@angular/core';
 // Env
 import { environment } from '@env/environment';
 // Constants
-import { BRANDS } from 'src/data/brands-images/brands-images';
 // Models
-import { IBrandImage } from 'src/data/brands-images/brand-image.interface';
+import { BRANDS } from '../../../../data/brands-images/brands-images';
+import { IBrandImage } from '../../../../data/brands-images/brand-image.interface';
 
 @Component({
   selector: 'app-block-brands-b2c',

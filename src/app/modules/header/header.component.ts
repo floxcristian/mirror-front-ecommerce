@@ -1,5 +1,12 @@
 // Angular
-import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild, HostListener  } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Renderer2,
+  ViewChild,
+  HostListener,
+} from '@angular/core';
 import { Router } from '@angular/router';
 // Env
 import { environment } from '@env/environment';
@@ -7,8 +14,8 @@ import { environment } from '@env/environment';
 import { BuscadorB2B } from '../../shared/interfaces/buscadorB2B';
 // Services
 import { isVacio } from '../../shared/utils/utilidades';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-header',
@@ -17,10 +24,14 @@ import { StorageKey } from '@core/storage/storage-keys.enum';
 })
 export class HeaderComponent implements AfterViewInit {
   logoSrc = environment.logoSrc;
-  @ViewChild('sticky_header_b2c') sticky_b2c!: ElementRef
-  @ViewChild('sticky_header_b2c_nav') sticky_b2c_nav!:ElementRef
+  @ViewChild('sticky_header_b2c') sticky_b2c!: ElementRef;
+  @ViewChild('sticky_header_b2c_nav') sticky_b2c_nav!: ElementRef;
 
-  constructor(private route: Router, private localS: LocalStorageService, private renderer:Renderer2) {
+  constructor(
+    private route: Router,
+    private localS: LocalStorageService,
+    private renderer: Renderer2,
+  ) {
     const buscadorB2B = this.localS.get(StorageKey.buscadorB2B);
     if (!buscadorB2B) {
       const data: BuscadorB2B = {
@@ -32,29 +43,32 @@ export class HeaderComponent implements AfterViewInit {
     }
   }
   @HostListener('window:scroll', [])
-  onWindowScroll(){
-    const sticky = this.sticky_b2c.nativeElement.offsetTop
+  onWindowScroll() {
+    const sticky = this.sticky_b2c.nativeElement.offsetTop;
     if (window.pageYOffset > sticky) {
-      this.renderer.addClass(this.sticky_b2c.nativeElement,'sticky')
-      this.renderer.addClass(this.sticky_b2c_nav.nativeElement,'sticky_nav')
+      this.renderer.addClass(this.sticky_b2c.nativeElement, 'sticky');
+      this.renderer.addClass(this.sticky_b2c_nav.nativeElement, 'sticky_nav');
     } else {
-      this.renderer.removeClass(this.sticky_b2c.nativeElement,'sticky')
-      this.renderer.removeClass(this.sticky_b2c_nav.nativeElement,'sticky_nav')
+      this.renderer.removeClass(this.sticky_b2c.nativeElement, 'sticky');
+      this.renderer.removeClass(
+        this.sticky_b2c_nav.nativeElement,
+        'sticky_nav',
+      );
     }
-  };
+  }
   ngAfterViewInit(): void {
     /*  Sticky Header */
     // if (!isVacio(this.sticky_b2c) && !isVacio(this.sticky_b2c_nav)) {
-      // const sticky = this.sticky_b2c.nativeElement.offsetTop
-      // window.onscroll = () => {
-      //   if (window.pageYOffset > sticky) {
-      //     this.renderer.addClass(this.sticky_b2c.nativeElement,'sticky')
-      //     this.renderer.addClass(this.sticky_b2c_nav.nativeElement,'sticky_nav')
-      //   } else {
-      //     this.renderer.removeClass(this.sticky_b2c.nativeElement,'sticky')
-      //     this.renderer.removeClass(this.sticky_b2c_nav.nativeElement,'sticky_nav')
-      //   }
-      // };
+    // const sticky = this.sticky_b2c.nativeElement.offsetTop
+    // window.onscroll = () => {
+    //   if (window.pageYOffset > sticky) {
+    //     this.renderer.addClass(this.sticky_b2c.nativeElement,'sticky')
+    //     this.renderer.addClass(this.sticky_b2c_nav.nativeElement,'sticky_nav')
+    //   } else {
+    //     this.renderer.removeClass(this.sticky_b2c.nativeElement,'sticky')
+    //     this.renderer.removeClass(this.sticky_b2c_nav.nativeElement,'sticky_nav')
+    //   }
+    // };
     // }
     /*para el header de nav*/
   }

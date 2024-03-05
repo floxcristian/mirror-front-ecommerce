@@ -3,11 +3,11 @@ import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 // Models
 import { ISession } from '@core/models-v2/auth/session.interface';
 // Services
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { MenuService } from '@core/services-v2/menu/menu.service';
 import { CustomerPreferenceService } from '@core/services-v2/customer-preference/customer-preference.service';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-account',
@@ -42,7 +42,7 @@ export class AccountComponent implements OnInit {
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
     private readonly menuService: MenuService,
-    private readonly customerPreferenceService: CustomerPreferenceService
+    private readonly customerPreferenceService: CustomerPreferenceService,
   ) {}
 
   ngOnInit() {
@@ -60,7 +60,7 @@ export class AccountComponent implements OnInit {
 
       if (this.isB2B) {
         this.linkMiCuenta = this.linkMiCuenta.filter(
-          (l) => !this.linksOcultosB2B.includes(l.label)
+          (l) => !this.linksOcultosB2B.includes(l.label),
         );
       }
       this.fetchCustomerPreferences();
@@ -70,7 +70,7 @@ export class AccountComponent implements OnInit {
       this.linkMiCuenta = this.menuService.get(this.usuario.userRole);
       if (this.isB2B) {
         this.linkMiCuenta = this.linkMiCuenta.filter(
-          (l) => !this.linksOcultosB2B.includes(l.label)
+          (l) => !this.linksOcultosB2B.includes(l.label),
         );
       }
     }

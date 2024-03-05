@@ -12,7 +12,6 @@ import { isPlatformBrowser } from '@angular/common';
 // Rxjs
 import { Subscription, firstValueFrom } from 'rxjs';
 // Services
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
@@ -24,6 +23,7 @@ import { CartTagService } from '@core/services-v2/cart-tag.service';
 import { PaymentMethodService } from '@core/services-v2/payment-method.service';
 import { ConfigService } from '@core/config/config.service';
 import { IConfig } from '@core/config/config.interface';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 declare let fbq: any;
 
 @Component({
@@ -69,7 +69,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     private readonly cartService: CartService,
     private readonly paymentMethodService: PaymentMethodService,
     private readonly cartTagService: CartTagService,
-    public readonly configService: ConfigService
+    public readonly configService: ConfigService,
   ) {
     this.config = this.configService.getConfig();
     console.log('cart load desde PageCartOvSuccessComponent 1');
@@ -89,7 +89,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     this.SubscriptionQueryParams = this.route.queryParams.subscribe(
       (query) => {
         this.manejaRespuesta(query);
-      }
+      },
     );
   }
 
@@ -103,8 +103,8 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     let status = query.status
       ? query.status
       : query.payment_status
-      ? query.payment_status
-      : null;
+        ? query.payment_status
+        : null;
 
     this.proveedorPago = query.paymentMethod
       ? query.paymentMethod
@@ -132,7 +132,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
     while (!done || count < this.maxVerifyTries) {
       try {
         const result = await firstValueFrom(
-          this.paymentMethodService.verifyPayment(url)
+          this.paymentMethodService.verifyPayment(url),
         );
         if (result.ok) {
           done = true;
@@ -202,7 +202,7 @@ export class PageCartOvSuccessComponent implements OnInit, OnDestroy {
                     error: (e) => console.error(e),
                   });
               }
-            })
+            }),
           );
         },
         error: (e) => {

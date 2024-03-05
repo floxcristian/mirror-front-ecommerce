@@ -14,7 +14,6 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import {
@@ -29,6 +28,7 @@ import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { ISelectedStore } from '@core/services-v2/geolocation/models/geolocation.interface';
 import { CartService } from '@core/services-v2/cart.service';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-mobile-search',
@@ -84,7 +84,7 @@ export class MobileSearchComponent implements OnInit {
     private readonly articleService: ArticleService,
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
-    private readonly cartService: CartService
+    private readonly cartService: CartService,
   ) {}
 
   ngOnInit() {

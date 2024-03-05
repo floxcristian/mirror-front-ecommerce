@@ -14,8 +14,8 @@ import { Subject } from 'rxjs';
 import { DropdownDirective } from '../../../../shared/directives/dropdown.directive';
 import { environment } from '@env/environment';
 import { MenuCategoriasB2cService } from '../../../../shared/services/menu-categorias-b2c.service';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { CartService } from '@core/services-v2/cart.service';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-mobile-header',
@@ -77,5 +77,4 @@ export class MobileHeaderComponent implements OnInit, OnDestroy {
       return true;
     }
   }
-
 }

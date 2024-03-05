@@ -34,7 +34,6 @@ import { CapitalizeFirstPipe } from '../../../../shared/pipes/capitalize.pipe';
 import { RootService } from '../../../../shared/services/root.service';
 import { SeoService } from '../../../../shared/services/seo/seo.service';
 import { CanonicalService } from '../../../../shared/services/canonical.service';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
 import { ArticleService } from '@core/services-v2/article.service';
@@ -45,6 +44,7 @@ import { CustomerAddressService } from '@core/services-v2/customer-address/custo
 import { getOriginUrl } from './utils/util.service';
 import { ConfigService } from '@core/config/config.service';
 import { IConfig } from '@core/config/config.interface';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-grid',
@@ -114,7 +114,7 @@ export class PageCategoryComponent implements OnInit {
     private readonly customerPreferenceStorage: CustomerPreferencesStorageService,
     private readonly customerPreferenceService: CustomerPreferenceService,
     private readonly customerAddressService: CustomerAddressService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {
     this.config = this.configService.getConfig();
     this.session = this.sessionService.getSession();
@@ -230,7 +230,7 @@ export class PageCategoryComponent implements OnInit {
           this.route.snapshot.paramMap.get('busqueda') === 'todos')
       ) {
         const params: any = this.cleanFilterSearchParams(
-          this.parametrosBusqueda
+          this.parametrosBusqueda,
         );
 
         this.removableFilters = this.filterQuery;
@@ -307,7 +307,7 @@ export class PageCategoryComponent implements OnInit {
 
         this.cargarCatalogoProductos(
           this.parametrosBusqueda,
-          this.textToSearch + ' ' + category
+          this.textToSearch + ' ' + category,
         );
 
         // SEO
@@ -355,18 +355,18 @@ export class PageCategoryComponent implements OnInit {
 
           this.cargarCatalogoProductos(
             this.parametrosBusqueda,
-            this.textToSearch
+            this.textToSearch,
           );
 
           // SEO
           if (!metadataCount) {
             if (this.textToSearch.trim() !== '') {
               this.titleService.setTitle(
-                `Resultados Búsqueda de ${this.textToSearch}`
+                `Resultados Búsqueda de ${this.textToSearch}`,
               );
             } else {
               this.titleService.setTitle(
-                `Resultados de Búsqueda - ${this.config.shortUrl}`
+                `Resultados de Búsqueda - ${this.config.shortUrl}`,
               );
             }
             if (isPlatformBrowser(this.platformId)) {
@@ -374,12 +374,12 @@ export class PageCategoryComponent implements OnInit {
             }
             if (isPlatformServer(this.platformId)) {
               this.canonicalService.setCanonicalURL(
-                environment.canonical + this.router.url
+                environment.canonical + this.router.url,
               );
             }
             const kwds = this.textToSearch.replace(
               /(\b(\w{1,3})\b(\s|$))/g,
-              ''
+              '',
             );
 
             const meta = {
@@ -424,7 +424,7 @@ export class PageCategoryComponent implements OnInit {
   private cargarCatalogoProductos(
     parametros: any,
     texto: string,
-    scroll = false
+    scroll = false,
   ): void {
     this.parametrosBusqueda = parametros;
     this.removableCategory = [];
@@ -438,7 +438,7 @@ export class PageCategoryComponent implements OnInit {
     if (this.parametrosBusqueda.category !== '') {
       const cat = this.root.replaceAll(
         this.parametrosBusqueda?.category,
-        /-/g
+        /-/g,
       );
       this.removableCategory.push({
         value: this.parametrosBusqueda.category,
@@ -563,7 +563,7 @@ export class PageCategoryComponent implements OnInit {
    */
   private formatCategories(
     categorias: ICategoriesTree[],
-    levelFilter: number
+    levelFilter: number,
   ): void {
     const productoBuscado =
       this.parametrosBusqueda.word === ''
@@ -788,7 +788,7 @@ export class PageCategoryComponent implements OnInit {
     if (this.paramsCategory.firstCategory !== '') {
       const cat = this.root.replaceAll(
         this.paramsCategory.firstCategory,
-        /-/g
+        /-/g,
       );
       this.breadcrumbs.push({
         label: this.capitalize.transform(cat),
@@ -806,7 +806,7 @@ export class PageCategoryComponent implements OnInit {
     if (this.paramsCategory.secondCategory !== '') {
       const cat = this.root.replaceAll(
         this.paramsCategory.secondCategory,
-        /-/g
+        /-/g,
       );
       this.breadcrumbs.push({
         label: this.capitalize.transform(cat),
@@ -825,7 +825,7 @@ export class PageCategoryComponent implements OnInit {
     if (this.paramsCategory.thirdCategory !== '') {
       const cat = this.root.replaceAll(
         this.paramsCategory.thirdCategory,
-        /-/g
+        /-/g,
       );
       this.breadcrumbs.push({
         label: this.capitalize.transform(cat),
@@ -901,7 +901,7 @@ export class PageCategoryComponent implements OnInit {
     }
     if (isPlatformServer(this.platformId)) {
       this.canonicalService.setCanonicalURL(
-        environment.canonical + this.router.url
+        environment.canonical + this.router.url,
       );
     }
   }

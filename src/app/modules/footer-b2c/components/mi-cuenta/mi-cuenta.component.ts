@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-mi-cuenta',
@@ -26,7 +27,7 @@ export class MiCuentaComponent implements OnInit {
     private localStorage: LocalStorageService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly authStateService: AuthStateServiceV2
+    private readonly authStateService: AuthStateServiceV2,
   ) {}
 
   ngOnInit() {

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 
 import { CmsService } from '@core/services-v2/cms.service';
 import { IBlog } from '@core/models-v2/cms/blog-response.interface';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-page-blog',
@@ -17,7 +17,7 @@ export class PageBlogComponent implements OnInit {
   constructor(
     private localStorage: LocalStorageService,
     private router: Router,
-    private readonly csmService: CmsService
+    private readonly csmService: CmsService,
   ) {}
 
   ngOnInit() {

@@ -16,7 +16,6 @@ import { v1 as uuidv1 } from 'uuid';
 // Models
 import { calculaIcono, isVacio } from '../../../../shared/utils/utilidades';
 import { CartData } from '../../../../shared/interfaces/cart-item';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { ISession } from '@core/models-v2/auth/session.interface';
 // Import V2
@@ -28,6 +27,7 @@ import {
 } from '@core/models-v2/responses/file-upload.response';
 import { IConfig } from '@core/config/config.interface';
 import { ConfigService } from '@core/config/config.service';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 // declare var $: any;
 
@@ -75,7 +75,7 @@ export class PageCargaMasivaProdComponent implements OnInit {
     private readonly sessionService: SessionService,
     private readonly cartService: CartService,
     private readonly geolocationServiceV2: GeolocationServiceV2,
-    public readonly configService: ConfigService
+    public readonly configService: ConfigService,
   ) {
     this.config = this.configService.getConfig();
   }
@@ -101,7 +101,7 @@ export class PageCargaMasivaProdComponent implements OnInit {
         this.renderer.setProperty(
           this.idArchivoInput.nativeElement,
           'value',
-          null
+          null,
         );
       }
     }
@@ -166,7 +166,7 @@ export class PageCargaMasivaProdComponent implements OnInit {
 
     this.total = this.productosCargados.reduce(
       (acum: any, prod: any) => acum + prod.price * prod.quantity,
-      0
+      0,
     );
 
     if (

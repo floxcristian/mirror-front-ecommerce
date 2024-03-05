@@ -40,15 +40,16 @@ import { ModaluserComponent } from './components/modaluser/modaluser.component';
 import { FiltroCategoriasComponent } from './components/filtro-categorias/filtro-categorias.component';
 import { Modal_reciboComponent } from './components/modal_recibo/modal_recibo/modal_recibo.component';
 // Shared components (se deben pasar al account.module ya que solo se usan aquí)
-import { CardDashboardHorizontalBarChartComponent } from 'src/app/shared/components/card-dashboard-horizontal-bar-chart/card-dashboard-horizontal-bar-chart.component';
-import { CardDashboardLineChartComponent } from 'src/app/shared/components/card-dashboard-line-chart/card-dashboard-line-chart.component';
-import { PasswordModalComponent } from 'src/app/shared/components/password-modal/password-modal.component';
-import { EditProfileModalComponent } from 'src/app/shared/components/edit-profile-modal/edit-profile-modal.component';
-import { TrackingStepsComponent } from 'src/app/shared/components/tracking-steps/tracking-steps.component';
+
 import { AddressModalComponent } from '../../shared/components/address-modal/address-modal.component';
 import { CardDashboardComponent } from '../../shared/components/card-dashboard/card-dashboard.component';
 import { OrderDetailsComponent } from '../../shared/components/order-details/order-details.component';
 import { CardDashboardNoChartComponent } from '../../shared/components/card-dashboard-no-chart/card-dashboard-no-chart.component';
+import { EditProfileModalComponent } from '@shared/components/edit-profile-modal/edit-profile-modal.component';
+import { PasswordModalComponent } from '@shared/components/password-modal/password-modal.component';
+import { TrackingStepsComponent } from '@shared/components/tracking-steps/tracking-steps.component';
+import { CardDashboardLineChartComponent } from '@shared/components/card-dashboard-line-chart/card-dashboard-line-chart.component';
+import { CardDashboardHorizontalBarChartComponent } from '@shared/components/card-dashboard-horizontal-bar-chart/card-dashboard-horizontal-bar-chart.component';
 
 @NgModule({
   declarations: [

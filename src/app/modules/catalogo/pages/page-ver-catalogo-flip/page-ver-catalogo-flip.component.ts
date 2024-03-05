@@ -12,7 +12,7 @@ import { PageFlip, SizeType } from 'page-flip';
 import { RootService } from '../../../../shared/services/root.service';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { environment } from '@env/environment';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+
 import { isPlatformBrowser } from '@angular/common';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
@@ -28,6 +28,7 @@ import { MetaTag } from '@core/models-v2/article/article-response.interface';
 import { CartService } from '@core/services-v2/cart.service';
 import { IConfig } from '@core/config/config.interface';
 import { ConfigService } from '@core/config/config.service';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-page-ver-catalogo-flip',
@@ -78,7 +79,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
     private readonly sessionService: SessionService,
     private readonly geolocationService: GeolocationServiceV2,
     private readonly catalogService: CatalogService,
-    public readonly configService: ConfigService
+    public readonly configService: ConfigService,
   ) {
     this.config = this.configService.getConfig();
   }
@@ -138,7 +139,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         next: async (res) => {
           if (res.data.proposalNumber != 0)
             this.propuesta = await this.catalogService.getProposal(
-              res.data.proposalNumber
+              res.data.proposalNumber,
             );
           this.tipoCatalogo = res.data.catalogType;
           this.folio = res.data.proposalNumber;
@@ -181,7 +182,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       } else {
         if (objeto.proposalNumber != 0)
           this.propuesta = await this.catalogService.getProposal(
-            objeto.proposalNumber
+            objeto.proposalNumber,
           );
         this.tipoCatalogo = objeto.catalogType;
         this.folio = objeto.proposalNumber;
@@ -273,11 +274,11 @@ export class PageVerCatalogoFlipComponent implements OnInit {
                       objA.products.preciosScal = precio.priceInfo.scalePrice;
                       objA.products.cyber = this.generateTag(
                         precio.metaTags,
-                        'cyber'
+                        'cyber',
                       );
                       objA.products.cyberMonday = this.generateTag(
                         precio.metaTags,
-                        'cyberMonday'
+                        'cyberMonday',
                       );
                     }
                   } else {
@@ -301,11 +302,11 @@ export class PageVerCatalogoFlipComponent implements OnInit {
                       objA.products.preciosScal = precio.priceInfo.scalePrice;
                       objA.products.cyber = this.generateTag(
                         precio.metaTags,
-                        'cyber'
+                        'cyber',
                       );
                       objA.products.cyberMonday = this.generateTag(
                         precio.metaTags,
-                        'cyberMonday'
+                        'cyberMonday',
                       );
                     }
                   }
@@ -334,11 +335,11 @@ export class PageVerCatalogoFlipComponent implements OnInit {
                       objB.products.preciosScal = precio.priceInfo.scalePrice;
                       objB.products.cyber = this.generateTag(
                         precio.metaTags,
-                        'cyber'
+                        'cyber',
                       );
                       objB.products.cyberMonday = this.generateTag(
                         precio.metaTags,
-                        'cyberMonday'
+                        'cyberMonday',
                       );
                     }
                   } else {
@@ -362,11 +363,11 @@ export class PageVerCatalogoFlipComponent implements OnInit {
                       objB.products.preciosScal = precio.priceInfo.scalePrice;
                       objB.products.cyber = this.generateTag(
                         precio.metaTags,
-                        'cyber'
+                        'cyber',
                       );
                       objB.products.cyberMonday = this.generateTag(
                         precio.metaTags,
-                        'cyberMonday'
+                        'cyberMonday',
                       );
                     }
                   }
@@ -384,7 +385,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
       this.catalogo.map((objeto: IBody) => {
         for (let objA of objeto.leftSide || []) {
           let propuestaPrecio = this.propuesta.data.articles.find(
-            (x: any) => x.sku == objA.products.product
+            (x: any) => x.sku == objA.products.product,
           );
           if (propuestaPrecio) {
             objA.products.precioEsp = propuestaPrecio.price.customerPrice;
@@ -396,7 +397,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
         }
         for (let objB of objeto.rightSide || []) {
           let propuestaPrecio = this.propuesta.data.articles.find(
-            (x: any) => x.sku == objB.products.product
+            (x: any) => x.sku == objB.products.product,
           );
           if (propuestaPrecio) {
             objB.products.precioEsp = propuestaPrecio.price.customerPrice;
@@ -532,7 +533,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
               let existeEnArray = marcas.indexOf(marca);
               if (existeEnArray == -1)
                 marcas.push(
-                  objeto.body[i].leftSide[x].products.attributes[5].value
+                  objeto.body[i].leftSide[x].products.attributes[5].value,
                 );
             }
           }
@@ -552,7 +553,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
               let existeEnArray = marcas.indexOf(marca);
               if (existeEnArray == -1)
                 marcas.push(
-                  objeto.body[i].rightSide[z].products.attributes[5].value
+                  objeto.body[i].rightSide[z].products.attributes[5].value,
                 );
             }
           }
@@ -698,7 +699,7 @@ export class PageVerCatalogoFlipComponent implements OnInit {
             };
           }
           return null;
-        })
+        }),
       ),
     ];
     this.tags = this.tags.filter((item) => item);

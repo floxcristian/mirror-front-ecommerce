@@ -21,12 +21,12 @@ import { NavigationLink } from '../../../../../shared/interfaces/navigation-link
 import { MenuCategoriasB2cService } from '../../../../../shared/services/menu-categorias-b2c.service';
 import { RootService } from '../../../../../shared/services/root.service';
 import { DropdownDirective } from '../../../../../shared/directives/dropdown.directive';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { CmsService } from '@core/services-v2/cms.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
 import { CartService } from '@core/services-v2/cart.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 @Component({
   selector: 'app-menu-categoria-b2c-mobile',
   templateUrl: './menu-categoria-b2c-mobile.component.html',
@@ -116,7 +116,7 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
     private readonly geolocationService: GeolocationServiceV2,
     private readonly cmsService: CmsService,
     private readonly cartService: CartService,
-    public readonly modalServices: NgbModal
+    public readonly modalServices: NgbModal,
   ) {
     this.selectedStore = this.geolocationService.getSelectedStore();
     this.obtieneCategorias();
@@ -271,7 +271,7 @@ export class MenuCategoriaB2cMobileComponent implements OnInit {
         const tercerNivel: IThirdLvl[] = [];
         this.segundoNivelOficial.items[0].items = tercerNivel;
         this.categoriaDetalleOficial.menu.push(
-          this.segundoNivelOficial.items[0]
+          this.segundoNivelOficial.items[0],
         );
       }
       this.arrayCategoriasOficial.push(this.categoriaDetalleOficial);

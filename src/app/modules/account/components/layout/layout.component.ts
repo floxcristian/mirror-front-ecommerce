@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { SessionService } from '@core/services-v2/session/session.service';
 import { MenuService } from '@core/services-v2/menu/menu.service';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-layout',
@@ -22,7 +22,7 @@ export class LayoutComponent {
     private localS: LocalStorageService,
     // ServiciosV2
     private readonly sessionService: SessionService,
-    private readonly menuService: MenuService
+    private readonly menuService: MenuService,
   ) {
     const user = this.sessionService.getSession();
     this.links = this.menuService.get(user.userRole);

@@ -18,10 +18,7 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/front-ecommerce",
-            "index": {
-              "input": "src/assets/config/index/index.cl.dev.html",
-              "output": "src/index.html"
-            },
+            "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
@@ -48,72 +45,24 @@
           },
           "configurations": {
             "production": {
-              "index": {
-                "input": "src/assets/config/index/index.cl.prod.html",
-                "output": "src/index.html"
-              },
               "budgets": [
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "3mb"
+                  "maximumError": "1mb"
                 },
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "2kb",
-                  "maximumError": "10kb"
+                  "maximumError": "4kb"
                 }
               ],
               "outputHashing": "all"
             },
             "development": {
-              "index": {
-                "input": "src/assets/config/index/index.cl.dev.html",
-                "output": "src/index.html"
-              },
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
-                }
-              ]
-            },
-            "production-pe": {
-              "index": {
-                "input": "src/assets/config/index/index.pe.prod.html",
-                "output": "src/index.html"
-              },
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "3mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "10kb"
-                }
-              ],
-              "outputHashing": "all"
-            },
-            "development-pe": {
-              "index": {
-                "input": "src/assets/config/index/index.pe.dev.html",
-                "output": "src/index.html"
-              },
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
-                }
-              ]
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
@@ -141,6 +90,7 @@
           "options": {
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.scss"],
             "scripts": []
@@ -148,5 +98,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "e77df081-2af4-4c0f-b791-81d9950e8d38"
   }
 }

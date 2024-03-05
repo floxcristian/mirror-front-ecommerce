@@ -8,7 +8,6 @@ import { ToastrService } from 'ngx-toastr';
 import { ISession } from '@core/models-v2/auth/session.interface';
 import { IShoppingCart } from '@core/models-v2/cart/shopping-cart.interface';
 // Services
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
 import { AuthApiService } from '@core/services-v2/auth/auth.service';
 import { SessionStorageService } from '@core/storage/session-storage.service';
 import { AuthStateServiceV2 } from '@core/services-v2/session/auth-state.service';
@@ -17,6 +16,7 @@ import { WishlistService } from '@core/services-v2/wishlist/wishlist.service';
 import { GuestStorageService } from '@core/storage/guest-storage.service';
 import { CartService } from '@core/services-v2/cart.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-header-login',
@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
     private readonly sessionStorage: SessionStorageService,
     private readonly sessionTokenStorage: SessionTokenStorageService,
     private readonly wishlistService: WishlistService,
-    private readonly guestStorage: GuestStorageService
+    private readonly guestStorage: GuestStorageService,
   ) {
     this.buildLoginForm();
   }
@@ -80,7 +80,7 @@ export class LoginComponent implements OnInit {
     this.authService
       .login(
         this.form.get('username')?.value,
-        this.form.get('password')?.value
+        this.form.get('password')?.value,
       )
       .subscribe({
         next: (res) => {
@@ -109,12 +109,12 @@ export class LoginComponent implements OnInit {
                 (resp?.length || 0) > 0
                   ? this.router.navigate(['/carro-compra', 'resumen'])
                   : ['supervisor', 'comprador', 'buyer'].includes(
-                      res.user.userRole
-                    )
-                  ? this.router.navigate(['/inicio']).then(() => {
-                      window.location.reload();
-                    })
-                  : this.router.navigate([this.router.url]);
+                        res.user.userRole,
+                      )
+                    ? this.router.navigate(['/inicio']).then(() => {
+                        window.location.reload();
+                      })
+                    : this.router.navigate([this.router.url]);
               }
             });
           }
@@ -159,7 +159,7 @@ export class LoginComponent implements OnInit {
         error: (err) => {
           console.error(err);
           // this.toastr.error(err.message);
-          this.toastr.error('Credenciales inválidas')
+          this.toastr.error('Credenciales inválidas');
         },
       });
   }

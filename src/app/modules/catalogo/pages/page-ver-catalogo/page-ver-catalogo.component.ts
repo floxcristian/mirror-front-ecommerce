@@ -3,14 +3,18 @@ import { RootService } from '../../../../shared/services/root.service';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { LocalStorageService } from 'src/app/core/modules/local-storage/local-storage.service';
+
 import { SessionService } from '@core/services-v2/session/session.service';
 import { GeolocationServiceV2 } from '@core/services-v2/geolocation/geolocation.service';
 import { StorageKey } from '@core/storage/storage-keys.enum';
-import { IBody, ICatalog } from '@core/models-v2/catalog/catalog-response.interface';
+import {
+  IBody,
+  ICatalog,
+} from '@core/models-v2/catalog/catalog-response.interface';
 import { CatalogService } from '@core/services-v2/catalog.service';
 import { MetaTag } from '@core/models-v2/article/article-response.interface';
 import { CartService } from '@core/services-v2/cart.service';
+import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 @Component({
   selector: 'app-page-ver-catalogo',
   templateUrl: './page-ver-catalogo.component.html',
@@ -20,7 +24,7 @@ export class PageVerCatalogoComponent implements OnInit {
   catalogo: IBody[] = [];
   catalogoMovil: any = [];
   skus!: Array<string>;
-  objeto!:any;
+  objeto!: any;
   page: number;
   longitud!: number;
   hidden = true;
@@ -37,27 +41,26 @@ export class PageVerCatalogoComponent implements OnInit {
     public cart: CartService,
     private readonly sessionService: SessionService,
     private readonly geolocationService: GeolocationServiceV2,
-    private readonly catalogService:CatalogService
+    private readonly catalogService: CatalogService,
   ) {
     this.page = 0;
     this.onResize();
   }
 
   async ngOnInit() {
-    if (isPlatformBrowser(this.platformId))
-    await this.validarParametros();
-    else console.log('not client')
+    if (isPlatformBrowser(this.platformId)) await this.validarParametros();
+    else console.log('not client');
   }
   async validarParametros() {
-    let objeto:ICatalog | null = null;
-    let id :string | null = null;
+    let objeto: ICatalog | null = null;
+    let id: string | null = null;
     let url = this.router.parseUrl(this.router.url);
 
     id = url.queryParams['id'];
     if (id) {
       //llamada servicio para obtener catalogo por id
       this.catalogService.getCatalog(id).subscribe({
-        next:async(res)=>{
+        next: async (res) => {
           if (res.data.dynamic) {
             this.router.navigate(['/', 'catalogos', 'ver-catalogo-flip'], {
               queryParams: { id: id },
@@ -70,12 +73,12 @@ export class PageVerCatalogoComponent implements OnInit {
           this.objeto = this.catalogo[this.page];
           this.longitud = this.catalogo.length;
         },
-        error:(err)=>{
-          console.log(err)
+        error: (err) => {
+          console.log(err);
           this.toast.error('Error, el catalogo no se encuentra disponible');
           this.router.navigate(['/', 'catalogos']);
-        }
-      })
+        },
+      });
     } else {
       objeto = this.localS.get(StorageKey.catalogo);
       if (!objeto) {
@@ -114,7 +117,7 @@ export class PageVerCatalogoComponent implements OnInit {
     };
 
     this.catalogService.getCatalogsProductPrices(params).subscribe({
-      next:(res)=>{
+      next: (res) => {
         res.map((precio) => {
           this.cargandoCat = false;
           this.catalogo.map((objeto: any) => {
@@ -126,8 +129,11 @@ export class PageVerCatalogoComponent implements OnInit {
                   producto.precio = precio.priceInfo.commonPrice;
                   producto.precioEscala = precio.priceInfo.hasScalePrice;
                   producto.preciosScal = precio.priceInfo.scalePrice;
-                  producto.cyber = this.generateTag(precio.metaTags,'cyber');
-                  producto.cyberMonday = this.generateTag(precio.metaTags,'cyberMonday');
+                  producto.cyber = this.generateTag(precio.metaTags, 'cyber');
+                  producto.cyberMonday = this.generateTag(
+                    precio.metaTags,
+                    'cyberMonday',
+                  );
                 }
               });
             }
@@ -139,32 +145,34 @@ export class PageVerCatalogoComponent implements OnInit {
                 objeto.productos.precio = precio.priceInfo.commonPrice;
                 objeto.productos.precioEscala = precio.priceInfo.hasScalePrice;
                 objeto.productos.preciosScal = precio.priceInfo.scalePrice;
-                objeto.cyber = this.generateTag(precio.metaTags,'cyber');;
-                objeto.cyberMonday = this.generateTag(precio.metaTags,'cyberMonday');
+                objeto.cyber = this.generateTag(precio.metaTags, 'cyber');
+                objeto.cyberMonday = this.generateTag(
+                  precio.metaTags,
+                  'cyberMonday',
+                );
               }
             }
           });
         });
       },
-      error:(err)=>{
-        console.log(err)
-      }
-    })
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
-  generateTag(tags:MetaTag[] | undefined , code:string){
+  generateTag(tags: MetaTag[] | undefined, code: string) {
     if (tags) {
-      let index = tags.findIndex( (tag:MetaTag) => tag.code === code)
-      if(index === -1){
-        return 0
-      }else{
-        return tags[index].value
+      let index = tags.findIndex((tag: MetaTag) => tag.code === code);
+      if (index === -1) {
+        return 0;
+      } else {
+        return tags[index].value;
       }
-    }else{
-      return 0
+    } else {
+      return 0;
     }
   }
-
 
   objetoMovil() {
     let catalogoMovil = [];
@@ -176,8 +184,8 @@ export class PageVerCatalogoComponent implements OnInit {
       Array.isArray(objeto.productos)
         ? objeto.productos.map((obj: any) => arrProd.push(obj))
         : objeto.productos
-        ? arrProd.push(objeto.productos)
-        : null;
+          ? arrProd.push(objeto.productos)
+          : null;
     });
 
     let inicio = 0;
