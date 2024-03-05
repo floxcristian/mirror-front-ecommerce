@@ -6,7 +6,6 @@
       #menuSearch="appDropdown"
     >
       <input
-        [(ngModel)]="textToSearch"
         (click)="menuSearch.open()"
         (keydown)="reset()"
         (keyup.enter)="buscar(); menuSearch.toggle(); blurInput()"
@@ -25,7 +24,7 @@
         name="clear"
         type="button"
         class="search__button clear__button"
-        (click)="textToSearch = ''; blurInput()"
+        (click)="clearSearch(); blurInput()"
         [ngStyle]="{ 'z-index': isFocusedInput ? '1001' : 'unset' }"
       >
         <i class="fa-regular fa-xmark fa-lg"></i>
@@ -82,7 +81,8 @@
                         menuSearch.toggle();
                         seleccionado = true;
                         blurInput();
-                        texto = sugerencias[0].suggestion"
+                        texto = sugerencias[0].suggestion
+                      "
                       class="px-0"
                       [routerLink]="[
                         '/',
@@ -108,7 +108,8 @@
                         menuSearch.toggle();
                         seleccionado = true;
                         blurInput();
-                        texto = item.suggestion"
+                        texto = item.suggestion
+                      "
                       [routerLink]="[
                         '/',
                         'inicio',
@@ -150,7 +151,9 @@
                     <a
                       [routerLink]="'/inicio/productos/' + textToSearch"
                       [queryParams]="{ filter_MARCA: item.brand }"
-                      (click)="menuSearch.toggle(); blurInput(); seleccionado = false"
+                      (click)="
+                        menuSearch.toggle(); blurInput(); seleccionado = false
+                      "
                     >
                       <div class="row">
                         <div class="col-8">
@@ -178,7 +181,12 @@
                   class="text-truncate"
                   *ngFor="let item of productosEncontrados | slice : 0 : 3"
                 >
-                  <a [routerLink]="item.url" (click)="menuSearch.toggle(); blurInput(); seleccionado = true">
+                  <a
+                    [routerLink]="item.url"
+                    (click)="
+                      menuSearch.toggle(); blurInput(); seleccionado = true
+                    "
+                  >
                     <span>
                       <img
                         [src]="root.getUrlImagenMiniatura150(item)"
@@ -201,7 +209,9 @@
             >
               <div class="item">
                 <a
-                  (click)="menuSearch.toggle(); blurInput(); seleccionado = false"
+                  (click)="
+                    menuSearch.toggle(); blurInput(); seleccionado = false
+                  "
                   [routerLink]="['/', 'inicio', 'productos', textToSearch]"
                 >
                   <i

@@ -112,6 +112,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.areLoadedStores = true;
+          this.searchControl.enable();
           // Obtengo tienda seleccionada,
           // como aun espera a que acepte... se hace un setdefault
           this.selectedStore = this.geolocationService.getSelectedStore();
@@ -158,7 +159,13 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.buscando = true;
   }
 
+  clearSearch() {
+    this.searchControl.setValue('');
+  }
+
   buscar() {
+    this.textToSearch = this.searchControl.value || '';
+
     this.gtmService.pushTag({
       event: 'search',
       busqueda: this.textToSearch,
@@ -271,7 +278,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   private onChangeSearchInput(): void {
-    this.searchControl = new FormControl('');
+    this.searchControl = new FormControl({ value: '', disabled: true });
     this.searchControl.valueChanges
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((query) => {

@@ -62,7 +62,7 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
   ngOnInit() {
     this.usuario = this.sessionService.getSession();
     this.form = this.fb.group({
-      file: ['', Validators.required],
+      file: [{ value: '', disabled: false }, Validators.required],
     });
     this.seleccionandoLista = this.modo === 'lista';
     this.getWishlists();
@@ -137,6 +137,8 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
     }
 
     this.procesandoExcel = true;
+    this.form.get('file')?.disable();
+
     this.wishlistApiService
       .addProductsFromFileToWishlist({
         documentId: this.usuario.documentId,
@@ -175,6 +177,7 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
           }
 
           this.procesandoExcel = false;
+          this.form.get('file')?.enable();
           this.procesado = true;
           this.form.reset();
         },
@@ -183,6 +186,7 @@ export class AgregarListaProductosMasivaModalComponent implements OnInit {
             `Ha ocurrido un error al cargar los productos a la lista.`
           );
           this.procesandoExcel = false;
+          this.form.get('file')?.enable();
           this.form.reset();
         },
       });

@@ -130,7 +130,13 @@ export class MobileSearchComponent implements OnInit {
     this.buscando = true;
   }
 
+  clearSearch() {
+    this.searchControl.setValue('');
+  }
+
   buscar() {
+    this.textToSearch = this.searchControl.value || '';
+
     this.gtmService.pushTag({
       event: 'search',
       busqueda: this.textToSearch,
