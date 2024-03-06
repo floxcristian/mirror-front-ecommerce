@@ -147,15 +147,17 @@ export class PageCartComponent implements OnInit, OnDestroy {
         this.getRecommendedProductsList();
       });
 
-    _this.shoppingCartService.calc(true);
     setTimeout(() => {
       this.shoppingCartService.dropCartActive$.next(false);
     });
-    if (['supervisor', 'comprador'].includes(this.user?.userRole || '')) {
-      this.gtmService.pushTag({
-        event: 'cart',
-        pagePath: window.location.href,
-      });
+    if (isPlatformBrowser(this.platformId)) {
+      _this.shoppingCartService.calc(true);
+      if (['supervisor', 'comprador'].includes(this.user?.userRole || '')) {
+        this.gtmService.pushTag({
+          event: 'cart',
+          pagePath: window.location.href,
+        });
+      }
     }
   }
 

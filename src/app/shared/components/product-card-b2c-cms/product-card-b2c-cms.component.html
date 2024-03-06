@@ -444,15 +444,14 @@
         </ng-container>
         <ng-container
           *ngIf="
-            productData.deliverySupply.pickupIsToday !== null &&
+            productData.deliverySupply.pickupIsToday == null ||
             !productData.deliverySupply.pickupIsToday
           "
         >
           <div
             style="margin-top: 2px"
             *ngIf="
-              productData.deliverySupply.pickupDate &&
-                productData.deliverySupply.pickupDate == null;
+              productData.deliverySupply.pickupDate == null;
               else fechaEntregaRetiro
             "
           >

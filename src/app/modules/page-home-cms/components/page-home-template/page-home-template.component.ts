@@ -42,6 +42,7 @@ export class PageHomeTemplateComponent
 
   lastLoadKey: string = '';
   subscription: Subscription = new Subscription();
+  isMobile: boolean = false;
 
   constructor(
     // Services V2
@@ -57,7 +58,14 @@ export class PageHomeTemplateComponent
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     afterNextRender(() => {
-      this.chatService.loadChatScript();
+      if (isPlatformBrowser(platformId)) {
+        const userAgent = window.navigator.userAgent;
+        this.isMobile =
+          /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            userAgent
+          );
+        if (!this.isMobile) this.chatService.loadChatScript();
+      }
     });
   }
 

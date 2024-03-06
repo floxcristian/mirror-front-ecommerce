@@ -5,6 +5,7 @@ import {
   AfterViewInit,
   Component,
   Inject,
+  NgZone,
   OnInit,
   PLATFORM_ID,
   Renderer2,
@@ -43,6 +44,7 @@ export class AppComponent implements AfterViewInit, OnInit {
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     public router: Router,
+    private zone: NgZone,
     private scroller: ViewportScroller,
     private currency: CurrencyService,
     private seoService: SeoService,
@@ -141,12 +143,29 @@ export class AppComponent implements AfterViewInit, OnInit {
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.geolocationService.initGeolocation();
+      this.preloader();
       this.onChangeStore();
     } else {
       // Esto se carga en el movil.
       // FIXME: tiene dependencia de stores que no se cargan en este caso.
       this.geolocationService.setDefaultLocation();
     }
+  }
+
+  private preloader() {
+    this.zone.runOutsideAngular(() => {
+      setTimeout(() => {
+        const preloader = document.querySelector('.site-preloader');
+        if (preloader) {
+          preloader.addEventListener('transitionend', (event: any) => {
+            if (event.propertyName === 'opacity') {
+              preloader.remove();
+            }
+          });
+          preloader.classList.add('site-preloader__fade');
+        }
+      }, 300);
+    });
   }
 
   /**
