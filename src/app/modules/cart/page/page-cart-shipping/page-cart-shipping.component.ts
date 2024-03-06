@@ -245,16 +245,18 @@ export class PageCartShippingComponent implements OnInit {
         this.items = items;
       });
     //marcaje google tag
-    if (
-      this.userSession.userRole !== 'supervisor' &&
-      this.userSession.userRole !== 'comprador'
-    ) {
-      this.gtmService.pushTag({
-        event: 'shipping',
-        pagePath: window.location.href,
-      });
+    if(isPlatformBrowser(this.platformId)){
+      this.onSelect(null, 'retiro');
+      if (
+        this.userSession.userRole !== 'supervisor' &&
+        this.userSession.userRole !== 'comprador'
+      ) {
+        this.gtmService.pushTag({
+          event: 'shipping',
+          pagePath: window.location.href,
+        });
+      }
     }
-    this.onSelect(null, 'retiro');
   }
 
   ngAfterContentChecked(): void {
