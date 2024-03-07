@@ -1,5 +1,5 @@
 // Angular
-import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild, HostListener  } from '@angular/core';
 import { Router } from '@angular/router';
 // Env
 import { environment } from '@env/environment';
@@ -15,7 +15,7 @@ import { StorageKey } from '@core/storage/storage-keys.enum';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements AfterViewInit {
+export class HeaderComponent  {
   logoSrc = environment.logoSrc;
   @ViewChild('sticky_header_b2c') sticky_b2c!: ElementRef
   @ViewChild('sticky_header_b2c_nav') sticky_b2c_nav!:ElementRef
@@ -31,22 +31,19 @@ export class HeaderComponent implements AfterViewInit {
       this.localS.set(StorageKey.buscadorB2B, data);
     }
   }
-  ngAfterViewInit(): void {
-    /*  Sticky Header */
-    if (!isVacio(this.sticky_b2c) && !isVacio(this.sticky_b2c_nav)) {
+  @HostListener('window:scroll', [])
+  onWindowScroll(){
+    if (!isVacio(this.sticky_b2c) && !isVacio(this.sticky_b2c_nav)){
       const sticky = this.sticky_b2c.nativeElement.offsetTop
-      window.onscroll = () => {
-        if (window.pageYOffset > sticky) {
-          this.renderer.addClass(this.sticky_b2c.nativeElement,'sticky')
-          this.renderer.addClass(this.sticky_b2c_nav.nativeElement,'sticky_nav')
-        } else {
-          this.renderer.removeClass(this.sticky_b2c.nativeElement,'sticky')
-          this.renderer.removeClass(this.sticky_b2c_nav.nativeElement,'sticky_nav')
-        }
-      };
+      if (window.pageYOffset > sticky) {
+        this.renderer.addClass(this.sticky_b2c.nativeElement,'sticky')
+        this.renderer.addClass(this.sticky_b2c_nav.nativeElement,'sticky_nav')
+      } else {
+        this.renderer.removeClass(this.sticky_b2c.nativeElement,'sticky')
+        this.renderer.removeClass(this.sticky_b2c_nav.nativeElement,'sticky_nav')
+      }
     }
-    /*para el header de nav*/
-  }
+  };
 
   Hidebar() {
     let url = this.route.url;

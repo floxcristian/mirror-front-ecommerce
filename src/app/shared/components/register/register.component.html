@@ -91,9 +91,7 @@
                 <div class="input-group">
                   <input
                     formControlName="documentId"
-                    [(ngModel)]="rut"
                     class="form-control"
-                    [disabled]="isDisabledDocumentId"
                     [placeholder]="
                       isInvoice
                         ? config.document.name + ' Empresa*'
@@ -171,9 +169,7 @@
               <div class="input-group">
                 <input
                   formControlName="documentId"
-                  [(ngModel)]="rut"
                   class="form-control"
-                  [disabled]="isDisabledDocumentId"
                   [placeholder]="
                     isInvoice
                       ? config.document.name + ' Empresa*'

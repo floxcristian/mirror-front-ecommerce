@@ -140,8 +140,6 @@ export class MapComponent implements OnInit, OnChanges {
       })
       .subscribe(({ status, results }) => {
         this.searchElementRef.nativeElement.value = this.storeAddress;
-        console.log('status:',status)
-        console.log('resulst:',results)
         if (status === google.maps.GeocoderStatus.OK) {
           const { location } = results[0].geometry;
           const center: google.maps.LatLngLiteral = {

@@ -84,7 +84,7 @@ export class MobileSearchComponent implements OnInit {
     private readonly articleService: ArticleService,
     private readonly sessionService: SessionService,
     private readonly authStateService: AuthStateServiceV2,
-    private readonly cartService:CartService
+    private readonly cartService: CartService
   ) {}
 
   ngOnInit() {
@@ -101,7 +101,6 @@ export class MobileSearchComponent implements OnInit {
         }
       });
     this.tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    console.log('tienda:',this.tiendaSeleccionada)
     //Usuario
     this.usuario = this.sessionService.getSession();
     this.usuarioRef = this.authStateService.session$.subscribe((user) => {
@@ -131,7 +130,13 @@ export class MobileSearchComponent implements OnInit {
     this.buscando = true;
   }
 
+  clearSearch() {
+    this.searchControl.setValue('');
+  }
+
   buscar() {
+    this.textToSearch = this.searchControl.value || '';
+
     this.gtmService.pushTag({
       event: 'search',
       busqueda: this.textToSearch,

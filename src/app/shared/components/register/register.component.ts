@@ -54,7 +54,6 @@ export class RegisterComponent implements OnInit {
   checkBoxSuscribir = false;
   checkBoxEmpresa!: boolean;
   domains: IEmailDomainAutocomplete[] = [];
-  rut = '';
   cantMaxRut: number = 10;
   //
   selectedAddress!: { address: string; zone: string } | null;
@@ -105,7 +104,7 @@ export class RegisterComponent implements OnInit {
     this.userForm = this.fb.group(
       {
         documentId: [
-          null,
+          { value: null, disabled: true },
           [Validators.required, DocumentValidator.isValidDocumentId],
         ],
         contactDocumentId: [
@@ -312,7 +311,6 @@ export class RegisterComponent implements OnInit {
    * @param event
    */
   checkIfDocumentIdExists(event: Event): void {
-    console.log('checkIfDocumentIdExists...');
     const input = event.target as HTMLInputElement;
 
     if (this.userForm.controls['documentId'].status === 'VALID') {
@@ -335,14 +333,13 @@ export class RegisterComponent implements OnInit {
   }
 
   formBlock(force = false) {
-    console.log('formBlock...');
     /*if (force) {
       this.isValidDocumentId = true;
     }*/
 
     if (this.isValidDocumentId) {
       this.isDisabledDocumentId = true;
-      this.userForm.get('documentId')?.enable();
+      this.userForm.get('documentId')?.disable();
       this.userForm.get('contactDocumentId')?.enable();
       this.userForm.get('position')?.enable();
       this.userForm.get('firstName')?.enable();
@@ -414,7 +411,6 @@ export class RegisterComponent implements OnInit {
     this.formBlock();
     this.userForm.get('documentId')?.setValue(null);
     this.userForm.get('documentId')?.markAsUntouched();
-    this.rut = '';
   }
 
   /**

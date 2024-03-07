@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { AddCommentModalComponent } from '../../../../shared/components/add-comment-modal/add-comment-modal.component';
 import {
@@ -23,7 +30,8 @@ import { IReviewsResponse } from '@core/models-v2/article/review-response.interf
 })
 export class ComentariosComponent implements OnChanges {
   @Input() producto!: IArticleResponse | undefined;
-  @Output() evaluationSummary: EventEmitter<IReviewsResponse> = new EventEmitter();
+  @Output() evaluationSummary: EventEmitter<IReviewsResponse> =
+    new EventEmitter();
 
   rating = 0;
   starWidth = 25;
@@ -43,7 +51,7 @@ export class ComentariosComponent implements OnChanges {
     private toastrService: ToastrService,
     // Services V2
     private readonly sessionService: SessionService,
-    private readonly articleService: ArticleService
+    private readonly articleService: ArticleService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -90,7 +98,7 @@ export class ComentariosComponent implements OnChanges {
             }
           },
           error: (error) => {
-            console.warn('Error al obtener comentarios', error);
+            console.log('Error al obtener comentarios', error);
           },
         });
     }
@@ -115,7 +123,7 @@ export class ComentariosComponent implements OnChanges {
       };
       const bsModalRef: BsModalRef = this.modalService.show(
         AddCommentModalComponent,
-        { initialState, class: 'modal-comentario' }
+        { initialState, class: 'modal-comentario' },
       );
       bsModalRef.content.event.subscribe(async (res: any) => {
         if (res !== '') {

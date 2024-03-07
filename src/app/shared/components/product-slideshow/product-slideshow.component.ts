@@ -37,7 +37,6 @@ export class ProductSlideshowComponent
   preferenciasCliente!: ICustomerPreference;
   despachoCliente!: Subscription;
   layout = 'grid-lg';
-  window = window;
   carouselOptions: OwlOptions = {
     lazyLoad: true,
     items: 5,
@@ -138,7 +137,6 @@ export class ProductSlideshowComponent
   cargarHome() {
     this.cargando = true;
     const rut = this.user?.documentId || '0';
-    console.log('getSelectedStore desde ProductSlideshowComponent');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada.code;
     const localidad = !isVacio(this.preferenciasCliente?.deliveryAddress)
@@ -158,7 +156,6 @@ export class ProductSlideshowComponent
         .getCustomHomePage(rut, sucursal, localidad_limpia)
         .subscribe({
           next: (res) => {
-            // this.lstProductos = res.data;
             this.lstProductos = this.quitarElementos(res.data);
             this.cargando = false;
           },

@@ -79,12 +79,12 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
           id: 1006,
         },
         {
-          title : 'SCANIA',
-          products : 0,
-          url : '/scania/',
-          children : [],
-          id : 1007
-        }
+          title: 'SCANIA',
+          products: 0,
+          url: '/scania/',
+          children: [],
+          id: 1007,
+        },
       ],
     },
   ];
@@ -230,6 +230,5 @@ export class MenuCategoriasB2cComponent implements OnInit, OnDestroy {
       this.arrayCategoriasOficial.push(this.categoriaDetalleOficial);
     }
     this.items_oficial = this.arrayCategoriasOficial;
-    console.log('items', this.items_oficial);
   }
 }

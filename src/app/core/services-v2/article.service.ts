@@ -222,7 +222,7 @@ export class ArticleService {
       )
       .pipe(
         map((response) => {
-          if(response.comparison.length){
+          if (response.comparison.length) {
             const products = response.articles.map((product) => ({
               ...product,
               quantity: 1,
@@ -236,10 +236,10 @@ export class ArticleService {
               return { name: attributeKey, values };
             });
             return { products, differences };
-          }else{
-            const products:any = []
-            const differences:any = []
-            return { products, differences}
+          } else {
+            const products: any = [];
+            const differences: any = [];
+            return { products, differences };
           }
         })
       );
@@ -263,11 +263,11 @@ export class ArticleService {
   }
   getDetalleComentarios(
     sku: string,
-    orden?: string
+    sortKey?: string
   ): Observable<ICommentResponse> {
     let url = `${API_ARTICLE}/${sku}/evaluation-detail`;
-    if (orden) {
-      url += `?orden=${orden}`;
+    if (sortKey) {
+      url += `?sortKey=${sortKey}`;
     }
     return this.http.get<ICommentResponse>(url);
   }

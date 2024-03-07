@@ -372,6 +372,8 @@
                     data-with-features="false"
                   >
                     <div>
+                      @if (recommendedProducts && recommendedProducts.length >
+                      0) {
                       <owl-carousel-o
                         class="carouselCart"
                         [options]="carouselOptions"
@@ -393,6 +395,7 @@
                           </ng-template>
                         </ng-container>
                       </owl-carousel-o>
+                      }
                     </div>
                   </div>
                 </div>
@@ -428,6 +431,8 @@
                     data-with-features="false"
                   >
                     <div>
+                      @if (recommendedProducts && recommendedProducts.length >
+                      0) {
                       <owl-carousel-o
                         class="carouselCart"
                         [options]="carrouselOptionsMobile"
@@ -449,6 +454,7 @@
                           </ng-template>
                         </ng-container>
                       </owl-carousel-o>
+                      }
                     </div>
                   </div>
                 </div>

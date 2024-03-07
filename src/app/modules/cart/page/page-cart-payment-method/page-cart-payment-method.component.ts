@@ -256,31 +256,35 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
     if (this.isValidRut(rut ?? '')) {
       this.cargandoGiros = true;
-      this.customerBusinessLineApiService.getLegalBusinessLines(rut).subscribe({
-        next: (res) => {
-          this.girosOptions = res.businessLines || [];
+      this.customerBusinessLineApiService
+        .getLegalBusinessLines(rut)
+        .subscribe({
+          next: (res) => {
+            this.girosOptions = res.businessLines || [];
 
-          if (this.girosOptions.length) {
-            this.documentOptions = [
-              { id: InvoiceType.RECEIPT, name: 'BOLETA' },
-              { id: InvoiceType.INVOICE, name: 'FACTURA' },
-            ];
-          } else {
-            this.toastr.info('No se han encontrado giros disponibles para su rut.');
-            this.documentOptions = [
-              { id: InvoiceType.RECEIPT, name: 'BOLETA' },
-            ];
-            this.selectedDocument = InvoiceType.RECEIPT;
-          }
+            if (this.girosOptions.length) {
+              this.documentOptions = [
+                { id: InvoiceType.RECEIPT, name: 'BOLETA' },
+                { id: InvoiceType.INVOICE, name: 'FACTURA' },
+              ];
+            } else {
+              this.toastr.info(
+                'No se han encontrado giros disponibles para su rut.'
+              );
+              this.documentOptions = [
+                { id: InvoiceType.RECEIPT, name: 'BOLETA' },
+              ];
+              this.selectedDocument = InvoiceType.RECEIPT;
+            }
 
-          this.cargandoGiros = false;
-        },
-        error: (e) => {
-          console.error(e);
-          // this.toastr.error('Ha ocurrido un error al obtener los giros.');
-          this.cargandoGiros = false;
-        },
-      });
+            this.cargandoGiros = false;
+          },
+          error: (e) => {
+            console.error(e);
+            // this.toastr.error('Ha ocurrido un error al obtener los giros.');
+            this.cargandoGiros = false;
+          },
+        });
     } else {
       this.documentOptions = [{ id: InvoiceType.RECEIPT, name: 'BOLETA' }];
       this.selectedDocument = InvoiceType.RECEIPT;
@@ -1255,7 +1259,6 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
 
   setAddress(data: any[]): void {
     this.clearAddress();
-    console.log('info mapa:', data)
     if (this.getAddress(data[0], 'street_number')) {
       this.formDireccion.controls['calle'].enable();
 
@@ -1321,7 +1324,7 @@ export class PageCartPaymentMethodComponent implements OnInit, OnDestroy {
   }
 
   findCommune(nombre: string) {
-    if (!nombre ) return '';
+    if (!nombre) return '';
     nombre = this.quitarAcentos(nombre);
 
     var result = this.cities.find(

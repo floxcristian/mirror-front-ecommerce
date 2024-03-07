@@ -24,13 +24,11 @@
       #menuSearch="appDropdown"
     >
       <input
-        [(ngModel)]="textToSearch"
         (click)="menuSearch.open()"
         (keydown)="reset()"
         (keyup.enter)="buscar(); menuSearch.toggle(); blurInput()"
         [formControl]="searchControl"
         class="search__input"
-        [disabled]="!areLoadedStores"
         name="search"
         placeholder="¿Qué buscas?"
         aria-label="Site search"
@@ -47,7 +45,7 @@
         name="clear"
         type="button"
         class="search__button clear__button"
-        (click)="textToSearch = ''"
+        (click)="clearSearch()"
         [ngStyle]="{ 'z-index': isFocusedInput ? '1001' : 'unset' }"
       >
         <i class="fa-regular fa-xmark fa-lg"></i>

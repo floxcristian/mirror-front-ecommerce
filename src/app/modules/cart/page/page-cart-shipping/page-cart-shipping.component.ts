@@ -4,9 +4,11 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectorRef,
+  Inject,
+  PLATFORM_ID,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { DatePipe, isPlatformBrowser } from '@angular/common';
 // Libs
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
@@ -183,11 +185,14 @@ export class PageCartShippingComponent implements OnInit {
     private readonly receiveStorage: ReceiveStorageService,
     private readonly customerService: CustomerService,
     private readonly customerAddressApiService: CustomerAddressApiService,
-    public readonly configService: ConfigService
+    public readonly configService: ConfigService,
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {
     this.config = this.configService.getConfig();
     this.receiveStorage.set({} as IReceive);
-    this.innerWidth = window.innerWidth;
+    this.innerWidth = isPlatformBrowser(this.platformId)
+    ? window.innerWidth
+    : 900;;
 
     this.tienda_actual = this.geolocationStorage.get();
   }
@@ -240,16 +245,18 @@ export class PageCartShippingComponent implements OnInit {
         this.items = items;
       });
     //marcaje google tag
-    if (
-      this.userSession.userRole !== 'supervisor' &&
-      this.userSession.userRole !== 'comprador'
-    ) {
-      this.gtmService.pushTag({
-        event: 'shipping',
-        pagePath: window.location.href,
-      });
+    if(isPlatformBrowser(this.platformId)){
+      this.onSelect(null, 'retiro');
+      if (
+        this.userSession.userRole !== 'supervisor' &&
+        this.userSession.userRole !== 'comprador'
+      ) {
+        this.gtmService.pushTag({
+          event: 'shipping',
+          pagePath: window.location.href,
+        });
+      }
     }
-    this.onSelect(null, 'retiro');
   }
 
   ngAfterContentChecked(): void {
@@ -437,7 +444,6 @@ export class PageCartShippingComponent implements OnInit {
         this.TiendasCargadas = true;
 
         // Poner tienda seleccionada al comienzo de la lista.
-        console.log('getSelectedStore desde PageCartShippingComponent');
         const selectedStore = this.geolocationService.getSelectedStore();
         const tiendaActual = this.stores.find((store) => {
           return store.code === selectedStore.code /*selectedStore.codigo*/;
@@ -462,7 +468,6 @@ export class PageCartShippingComponent implements OnInit {
    * Obtiene retiro en tienda.
    */
   async obtieneRetiro(removeShipping = true) {
-    console.log('obtieneRetiro...');
     this.loadingShippingStore = true;
 
     this.fechas = [];
@@ -1181,7 +1186,6 @@ export class PageCartShippingComponent implements OnInit {
   }
 
   cambiarTienda(newStore: IStore): void {
-    console.log('cambiarTienda: ');
     this.geolocationService.setSelectedStore({
       zone: newStore.zone,
       code: newStore.code,
@@ -1265,7 +1269,6 @@ export class PageCartShippingComponent implements OnInit {
   async eliminarGrupo(index: any) {
     this.loadingShipping = true;
     this.loadingResumen = true;
-    console.log('inicio shipping', this.selectedShippingId);
     const resultado: any = this.addresses.find(
       (address) => address.id == this.selectedShippingId
     );
@@ -1296,14 +1299,11 @@ export class PageCartShippingComponent implements OnInit {
 
       this.obtieneDespachos();
       this.obtieneTiendas();
-      console.log('shipping', this.selectedShippingId);
-      console.log('addresses:', this.addresses);
     });
   }
 
   ver_fechas() {
     if (this.shippingDaysStore.length) {
-      console.log('xxx: ', this.shippingDaysStore);
       let menor = this.shippingDaysStore[0].fechas?.[0].fecha;
       let menor_fecha: any = new Date(menor);
       this.shippingDaysStore.map((item) => {
