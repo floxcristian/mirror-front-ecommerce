@@ -8,6 +8,7 @@ import { IStore } from './models/store.interface';
 // Services
 import { GeolocationStorageService } from '@core/storage/geolocation-storage.service';
 import { GeolocationApiService } from './geolocation-api.service';
+import { environment } from '@env/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -98,9 +99,9 @@ export class GeolocationServiceV2 {
         this.geolocation = {
           isChangeToNearestStore: false,
           isSelectedByClient: false,
-          zone: 'San Bernardo',
-          code: 'SAN BRNRDO',
-          city: 'SAN BERNARDO',
+          zone: environment.defaultBranch.zone,
+          code: environment.defaultBranch.code,
+          city: environment.defaultBranch.city,
         };
       }
     }

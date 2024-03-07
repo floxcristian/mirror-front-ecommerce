@@ -75,6 +75,7 @@ export class RegisterComponent implements OnInit {
    * Config variables
    ***********************************/
   config: IConfig;
+  maxPhone: number = 8;
 
   constructor(
     private toastr: ToastrService,
@@ -542,18 +543,21 @@ export class RegisterComponent implements OnInit {
   changePhoneCode(phoneCode: string): void {
     this.selectedPhoneCode = phoneCode;
 
-    if (this.selectedPhoneCode === this.config.phoneCodes.mobile.code)
+    if (this.selectedPhoneCode === this.config.phoneCodes.mobile.code) {
       this.commonForm.controls['phone'].setValidators([
         Validators.required,
         Validators.minLength(this.config.phoneCodes.mobile.lengthRule),
         Validators.maxLength(this.config.phoneCodes.mobile.lengthRule),
       ]);
-    else
+      this.maxPhone = this.config.phoneCodes.mobile.lengthRule;
+    } else {
       this.commonForm.controls['phone'].setValidators([
         Validators.required,
         Validators.minLength(this.config.phoneCodes.landline.lengthRule),
         Validators.maxLength(this.config.phoneCodes.landline.lengthRule),
       ]);
+      this.maxPhone = this.config.phoneCodes.landline.lengthRule;
+    }
     this.commonForm.get('phone')?.updateValueAndValidity();
   }
 

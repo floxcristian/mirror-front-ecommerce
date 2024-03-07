@@ -59,6 +59,7 @@ import { UserRoleType } from '@core/enums/user-role-type.enum';
 import { IUploadResponse } from '@core/models-v2/responses/file-upload.response';
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 import { IComparedProduct } from './product/models/formatted-product-compare-response.interface';
+import { DefaultBranch } from '@core/utils-v2/default-branch.service';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -215,7 +216,7 @@ export class CartService {
     // Sucursal
     console.log('getSelectedStore desde load');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.code;
+    const sucursal = DefaultBranch.getBranchCode(tiendaSeleccionada.code);
 
     this.http
       .get<IShoppingCart>(
