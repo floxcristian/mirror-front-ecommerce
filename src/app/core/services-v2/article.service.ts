@@ -16,6 +16,7 @@ import { environment } from '@env/environment';
 import { Observable, map } from 'rxjs';
 import { IProductCompareResponse } from './product/models/product-compare-response.interface';
 import { IFormmatedProductCompareResponse } from './product/models/formatted-product-compare-response.interface';
+import { DefaultBranch } from '@core/utils-v2/default-branch.service';
 
 const API_ARTICLE = `${environment.apiEcommerce}/api/v1/article`;
 
@@ -40,6 +41,8 @@ export class ArticleService {
     filters?: string;
     location?: string;
   }): Observable<ISearchResponse> {
+    params.branchCode = DefaultBranch.getBranchCode(params.branchCode);
+
     return this.http.get<ISearchResponse>(`${API_ARTICLE}/search`, {
       params,
     });
@@ -68,6 +71,8 @@ export class ArticleService {
     branchCode: string;
     location?: string;
   }): Observable<IArticleResponse> {
+    params.branchCode = DefaultBranch.getBranchCode(params.branchCode);
+
     const { sku, ..._params } = params;
     return this.http.get<IArticleResponse>(
       `${API_ARTICLE}/${sku}/data-sheet`,
@@ -83,6 +88,8 @@ export class ArticleService {
     skus: string[];
     location?: string;
   }): Observable<IArticleResponse[]> {
+    params.branchCode = DefaultBranch.getBranchCode(params.branchCode);
+
     return this.http.post<IArticleResponse[]>(
       `${API_ARTICLE}/data-sheets`,
       params
@@ -110,6 +117,8 @@ export class ArticleService {
     branchCode: string;
     location: string;
   }): Observable<IArticleResponse[]> {
+    params.branchCode = DefaultBranch.getBranchCode(params.branchCode);
+
     const { sku, ..._params } = params;
     return this.http.get<IArticleResponse[]>(
       `${API_ARTICLE}/suggestion/${sku}/article-matrix`,
@@ -130,6 +139,8 @@ export class ArticleService {
     branchCode: string;
     location: string;
   }): Observable<IArticleResponse[]> {
+    params.branchCode = DefaultBranch.getBranchCode(params.branchCode);
+
     const { sku, ..._params } = params;
     return this.http.get<IArticleResponse[]>(
       `${API_ARTICLE}/suggestion/${sku}/article-related`,
@@ -151,6 +162,8 @@ export class ArticleService {
     location: string;
     quantityToSuggest?: number;
   }): Observable<IArticleResponse[]> {
+    params.branchCode = DefaultBranch.getBranchCode(params.branchCode);
+
     const { sku, ..._params } = params;
     return this.http.get<IArticleResponse[]>(
       `${API_ARTICLE}/suggestion/${sku}/article-suggestions`,
@@ -170,6 +183,8 @@ export class ArticleService {
     quantityToSuggest: number;
     location: string;
   }): Observable<IArticleResponse[]> {
+    params.branchCode = DefaultBranch.getBranchCode(params.branchCode);
+
     let httpParams = new HttpParams();
     for (const sku of params.skus) {
       httpParams = httpParams.append('skus[]', sku);
@@ -195,6 +210,8 @@ export class ArticleService {
     random: number;
     randomMinProbability: number;
   }) {
+    params.branchCode = DefaultBranch.getBranchCode(params.branchCode);
+
     return this.http.get(
       `${API_ARTICLE}/suggestion/article-customer-suggestions`,
       {
@@ -213,6 +230,8 @@ export class ArticleService {
     documentId: string;
     branchCode: string;
   }): Observable<IFormmatedProductCompareResponse> {
+    params.branchCode = DefaultBranch.getBranchCode(params.branchCode);
+
     return this.http
       .get<IProductCompareResponse>(
         `${API_ARTICLE}/suggestion/article-compare-matrix`,

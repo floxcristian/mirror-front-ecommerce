@@ -59,6 +59,7 @@ import { UserRoleType } from '@core/enums/user-role-type.enum';
 import { IUploadResponse } from '@core/models-v2/responses/file-upload.response';
 import { LocalStorageService } from '@core/modules/local-storage/local-storage.service';
 import { IComparedProduct } from './product/models/formatted-product-compare-response.interface';
+import { DefaultBranch } from '@core/utils-v2/default-branch.service';
 
 const API_CART = `${environment.apiEcommerce}/api/v1/shopping-cart`;
 
@@ -193,7 +194,7 @@ export class CartService {
       this.save();
       this.calc();
     } catch (error) {
-      console.log('error', JSON.stringify(error));
+      // console.log('error', JSON.stringify(error));
       this.data.products = [];
     }
 
@@ -213,9 +214,8 @@ export class CartService {
     if (!usuario.hasOwnProperty('documentId')) usuario.documentId = '0';
 
     // Sucursal
-    console.log('getSelectedStore desde load');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
-    const sucursal = tiendaSeleccionada.code;
+    const sucursal = DefaultBranch.getBranchCode(tiendaSeleccionada.code);
 
     this.http
       .get<IShoppingCart>(
@@ -226,7 +226,7 @@ export class CartService {
           this.recalculateShoppingCart(response);
         },
         error: (error: any) => {
-          console.log('error', JSON.stringify(error));
+          // console.log('error', JSON.stringify(error));
           this.data.products = [];
           // if (error.errorCode !== 'SHOPPING_CART_NOT_FOUND') {
           //   this.toastrServise.error(error.message);
@@ -474,7 +474,6 @@ export class CartService {
 
   updateShipping(indexGroup: number, indexTripDate: number) {
     // Sucursal
-    console.log('getSelectedStore desde updateShipping');
 
     const usuario: ISession = this.sessionService.getSession();
 
@@ -573,7 +572,6 @@ export class CartService {
 
   saveCart(products: IShoppingCartProduct[]) {
     // Sucursal
-    console.log('getSelectedStore desde saveCart');
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada.code;
     const usuario = this.sessionService.getSession();

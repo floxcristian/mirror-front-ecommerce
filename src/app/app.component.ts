@@ -164,7 +164,7 @@ export class AppComponent implements AfterViewInit, OnInit {
           });
           preloader.classList.add('site-preloader__fade');
         }
-      }, 300);
+      }, 400);
     });
   }
 

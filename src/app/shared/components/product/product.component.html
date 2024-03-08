@@ -562,7 +562,10 @@
         <div class="row justify-content-start px-3 mb-1">
           <div style="color: #bbb">
             SKU {{ product.sku }}
-            <span class="ms-2" *ngIf="stock" style="color: #408b00"
+            <span
+              class="ms-2"
+              *ngIf="stock && isAvailable"
+              style="color: #408b00"
               ><strong>EN STOCK</strong></span
             >
             <span class="ms-2 text-danger" *ngIf="!stock"

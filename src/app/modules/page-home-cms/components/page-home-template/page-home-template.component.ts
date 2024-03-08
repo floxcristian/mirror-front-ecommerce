@@ -137,6 +137,7 @@ export class PageHomeTemplateComponent
 
   private getHomePageItems(): void {
     this.carga = true;
+    this.user = this.sessionService.getSession();
     const rut = this.user.documentId;
     const tiendaSeleccionada = this.geolocationService.getSelectedStore();
     const sucursal = tiendaSeleccionada.code;

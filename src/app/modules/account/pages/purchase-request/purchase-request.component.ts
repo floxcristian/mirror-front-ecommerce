@@ -24,12 +24,12 @@ export class PurchaseRequestComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   usuario!: ISession;
   orders!: IOrderDetail[];
-  title:string = '';
+  title: string = '';
   viewActive = 'list';
   orderId: string = '';
   order!: IOrderDetail;
-  loadingPage:boolean = false;
-  obsRefuse:string = '';
+  loadingPage: boolean = false;
+  obsRefuse: string = '';
 
   constructor(
     private router: Router,
@@ -156,11 +156,10 @@ export class PurchaseRequestComponent implements OnInit {
       .updateStatusShoppingCart(this.order.id, 'rejected', this.obsRefuse)
       .subscribe({
         next: (res) => {
-          console.log(res);
           this.loadingPage = false;
           this.toast.success('Solitud rechazada correctamente');
           this.modalRefuseRef.hide();
-          this.obsRefuse = ''
+          this.obsRefuse = '';
           this.loadData();
         },
         error: (err) => {
