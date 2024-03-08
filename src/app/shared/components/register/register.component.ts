@@ -42,14 +42,20 @@ export class RegisterComponent implements OnInit {
   @Input() innerWidth!: number;
 
   localidades!: ILocality[];
-  userForm!: FormGroup;
+
+  companyForm!: FormGroup;
+  personForm!: FormGroup;
+  addressForm!: FormGroup;
+
+  // userForm!: FormGroup;
   passwordFormGroup!: FormGroup;
+  commonForm!: FormGroup;
   isInvoice = true;
 
   autocompletado = true;
 
   disableAddress = true;
-  checkBoxPersona = false;
+  isPerson = false;
   checkBoxTerminos = false;
   checkBoxSuscribir = false;
   checkBoxEmpresa!: boolean;
@@ -69,6 +75,7 @@ export class RegisterComponent implements OnInit {
    * Config variables
    ***********************************/
   config: IConfig;
+  maxPhone: number = 8;
 
   constructor(
     private toastr: ToastrService,
@@ -89,7 +96,80 @@ export class RegisterComponent implements OnInit {
   ) {
     this.config = this.configService.getConfig();
     this.selectedPhoneCode = this.config.phoneCodes.mobile.code;
-    this.buildUserForm();
+    this.buildPersonForm();
+    this.buildCompanyForm();
+    this.buildCommonForm();
+    this.buildAddressForm();
+    //this.buildUserForm();
+  }
+
+  buildPersonForm(): void {
+    this.personForm = this.fb.group({
+      documentId: [
+        null,
+        [Validators.required, DocumentValidator.isValidDocumentId],
+      ],
+    });
+  }
+
+  buildCompanyForm(): void {
+    this.companyForm = this.fb.group({
+      documentId: [
+        null,
+        [Validators.required, DocumentValidator.isValidDocumentId],
+      ],
+      businessName: [null],
+      businessLine: [null],
+      contactDocumentId: [
+        null,
+        [Validators.required, DocumentValidator.isValidDocumentId],
+      ],
+      position: [null, Validators.required],
+    });
+  }
+
+  buildCommonForm(): void {
+    this.commonForm = this.fb.group(
+      {
+        firstName: [null, Validators.required],
+        lastName: [null, Validators.required],
+        phone: [null, [Validators.required]],
+        password: [
+          ,
+          [
+            Validators.required,
+            Validators.minLength(6),
+            Validators.maxLength(30),
+          ],
+        ],
+        confirmPassword: [
+          ,
+          [
+            Validators.required,
+            Validators.minLength(6),
+            Validators.maxLength(30),
+          ],
+        ],
+      },
+
+      {
+        validator: PasswordValidator.validate.bind(this),
+      }
+    );
+    this.changePhoneCode(this.selectedPhoneCode);
+  }
+
+  buildAddressForm(): void {
+    this.addressForm = this.fb.group({
+      street: [, Validators.required],
+      streetNumber: [null, Validators.required],
+      city: [null, Validators.required],
+      locality: [null],
+      latitude: [null],
+      longitude: [null],
+      reference: [''],
+      departmentOrHouse: [''],
+    });
   }
 
   ngOnInit(): void {
@@ -97,9 +177,10 @@ export class RegisterComponent implements OnInit {
     this.getCities();
     this.domains = getEmailDomainsToAutocomplete();
     this.getContactPositions();
-    this.formBlock(true);
+    //this.formBlock(true);
   }
 
+  /*
   private buildUserForm(): void {
     this.userForm = this.fb.group(
       {
@@ -146,8 +227,8 @@ export class RegisterComponent implements OnInit {
         validator: PasswordValidator.validate.bind(this),
       }
     );
-    this.changePhoneCode(this.selectedPhoneCode);
-  }
+    // this.changePhoneCode(this.selectedPhoneCode);
+  }*/
 
   /**
    * Obtener giros.
@@ -176,6 +257,28 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  getUserData(isPerson: boolean) {
+    if (isPerson) {
+      const { documentId } = this.personForm.value;
+      return { documentId };
+    } else {
+      const {
+        documentId,
+        businessName,
+        businessLine,
+        contactDocumentId,
+        position,
+      } = this.companyForm.value;
+      return {
+        documentId,
+        businessName,
+        businessLine,
+        contactDocumentId,
+        position,
+      };
+    }
+  }
+
   /**
    * Registrar usuario.
    * @param email
@@ -184,23 +287,22 @@ export class RegisterComponent implements OnInit {
     const email = inputEmail.inputValue;
     const {
       documentId,
-      firstName,
-      lastName,
-      businessLine,
       businessName,
-      password,
-      phone,
+      businessLine,
+      contactDocumentId,
       position,
+    } = this.getUserData(this.isPerson);
+    const { firstName, lastName, phone, password } = this.commonForm.value;
+    const {
       city,
       street,
       streetNumber,
       departmentOrHouse,
-      contactDocumentId,
       locality,
       reference,
       latitude,
       longitude,
-    } = this.userForm.value;
+    } = this.addressForm.value;
 
     this.isLoading = true;
     const user = this.sessionStorage.get();
@@ -264,8 +366,11 @@ export class RegisterComponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
+          console.log(err.error);
           this.isLoading = false;
-          this.toastr.error(`Ha ocurrido un error al registrar el usuario.`);
+          this.toastr.error(
+            err.message || `Ha ocurrido un error al registrar el usuario.`
+          );
         },
       });
   }
@@ -275,9 +380,11 @@ export class RegisterComponent implements OnInit {
    */
   changeUserType(): void {
     this.isInvoice = !this.isInvoice;
-    this.checkBoxPersona = !this.checkBoxPersona;
-    if (this.isInvoice) {
-      window.scrollTo({ top: 0 });
+    this.isPerson = !this.isPerson;
+    this.companyForm.reset();
+    this.personForm.reset();
+    /*if (this.isInvoice) {
+      // this.companyForm.reset();
       this.userForm.get('documentId')?.setValue(null);
       this.userForm.get('contactDocumentId')?.setValue(null);
       this.userForm
@@ -301,19 +408,19 @@ export class RegisterComponent implements OnInit {
       this.userForm.get('businessLine')?.clearValidators();
     }
 
-    this.userForm.markAsUntouched();
-    this.isValidDocumentId = false;
-    this.formBlock(true);
+    this.userForm.markAsUntouched();*/
+    //this.isValidDocumentId = false;
+    //this.formBlock(true);
   }
 
   /**
    * Verifica si el documento ingresado ya existe.
    * @param event
    */
-  checkIfDocumentIdExists(event: Event): void {
+  checkIfDocumentIdExists(form: FormGroup, event: Event): void {
     const input = event.target as HTMLInputElement;
 
-    if (this.userForm.controls['documentId'].status === 'VALID') {
+    if (form.controls['documentId'].status === 'VALID') {
       const documentId = input.value.replace(/\./g, '');
       this.authService.checkDocumentId(documentId).subscribe({
         next: (res) => {
@@ -323,19 +430,20 @@ export class RegisterComponent implements OnInit {
             );
           }
           this.isValidDocumentId = res.exists ? false : true;
-          this.formBlock();
+          //this.formBlock();
         },
       });
     } else {
       this.isValidDocumentId = false;
-      this.formBlock();
+      // this.formBlock();
     }
   }
 
+  /*
   formBlock(force = false) {
-    /*if (force) {
+    if (force) {
       this.isValidDocumentId = true;
-    }*/
+    }
 
     if (this.isValidDocumentId) {
       this.isDisabledDocumentId = true;
@@ -367,18 +475,14 @@ export class RegisterComponent implements OnInit {
       this.userForm.get('phone')?.disable();
       this.userForm.get('password')?.disable();
       this.userForm.get('confirmPassword')?.disable();
-      /*this.userForm.get('street')?.disable();
-      this.userForm.get('streetNumber')?.disable();
-      this.userForm.get('city')?.disable();
-      this.userForm.get('departmentOrHouse')?.disable();
-      this.userForm.get('reference')?.disable();*/
+
 
       if (this.isInvoice) {
         this.userForm.get('businessName')?.disable();
         this.userForm.get('businessLine')?.disable();
       }
     }
-  }
+  }*/
 
   quitarAcentos(cadena: string) {
     // Definimos los caracteres que queremos eliminar
@@ -406,11 +510,11 @@ export class RegisterComponent implements OnInit {
     return cadena;
   }
 
-  cleanDocumentId(): void {
+  cleanDocumentId(form: FormGroup): void {
     this.isValidDocumentId = false;
-    this.formBlock();
-    this.userForm.get('documentId')?.setValue(null);
-    this.userForm.get('documentId')?.markAsUntouched();
+    //this.formBlock();
+    form.get('documentId')?.setValue(null);
+    form.get('documentId')?.markAsUntouched();
   }
 
   /**
@@ -419,11 +523,11 @@ export class RegisterComponent implements OnInit {
   setSelectedAddress(): void {
     this.selectedAddress = null;
     if (
-      this.userForm.controls['street'].value &&
-      this.userForm.controls['city'].value &&
-      this.userForm.controls['streetNumber'].value
+      this.addressForm.controls['street'].value &&
+      this.addressForm.controls['city'].value &&
+      this.addressForm.controls['streetNumber'].value
     ) {
-      const { street, streetNumber, city, locality } = this.userForm.value;
+      const { street, streetNumber, city, locality } = this.addressForm.value;
       const splittedCity = city.split('@');
       this.selectedAddress = {
         address: `${street} ${streetNumber}`,
@@ -439,19 +543,22 @@ export class RegisterComponent implements OnInit {
   changePhoneCode(phoneCode: string): void {
     this.selectedPhoneCode = phoneCode;
 
-    if (this.selectedPhoneCode === this.config.phoneCodes.mobile.code)
-      this.userForm.controls['phone'].setValidators([
+    if (this.selectedPhoneCode === this.config.phoneCodes.mobile.code) {
+      this.commonForm.controls['phone'].setValidators([
         Validators.required,
         Validators.minLength(this.config.phoneCodes.mobile.lengthRule),
         Validators.maxLength(this.config.phoneCodes.mobile.lengthRule),
       ]);
-    else
-      this.userForm.controls['phone'].setValidators([
+      this.maxPhone = this.config.phoneCodes.mobile.lengthRule;
+    } else {
+      this.commonForm.controls['phone'].setValidators([
         Validators.required,
         Validators.minLength(this.config.phoneCodes.landline.lengthRule),
         Validators.maxLength(this.config.phoneCodes.landline.lengthRule),
       ]);
-    this.userForm.get('phone')?.updateValueAndValidity();
+      this.maxPhone = this.config.phoneCodes.landline.lengthRule;
+    }
+    this.commonForm.get('phone')?.updateValueAndValidity();
   }
 
   registrar(): void {
@@ -466,22 +573,22 @@ export class RegisterComponent implements OnInit {
    * Métodos utilizados por el mapa.
    ***********************************************/
   geolocalizacion(event: any): void {
-    this.userForm.controls['latitude'].setValue(event.lat);
-    this.userForm.controls['longitude'].setValue(event.lng);
+    this.addressForm.controls['latitude'].setValue(event.lat);
+    this.addressForm.controls['longitude'].setValue(event.lng);
   }
 
   /**
    * Limpiar campos asociados a dirección cuando se limpia el input desde el mapa.
    */
   cleanAddress(): void {
-    this.userForm.controls['city'].setValue(null);
-    this.userForm.controls['street'].setValue(null);
-    this.userForm.controls['streetNumber'].setValue(null);
-    this.userForm.controls['departmentOrHouse'].setValue('');
-    this.userForm.controls['reference'].setValue('');
-    this.userForm.controls['locality'].setValue(null);
-    this.userForm.controls['latitude'].setValue(null);
-    this.userForm.controls['longitude'].setValue(null);
+    this.addressForm.controls['city'].setValue(null);
+    this.addressForm.controls['street'].setValue(null);
+    this.addressForm.controls['streetNumber'].setValue(null);
+    this.addressForm.controls['departmentOrHouse'].setValue('');
+    this.addressForm.controls['reference'].setValue('');
+    this.addressForm.controls['locality'].setValue(null);
+    this.addressForm.controls['latitude'].setValue(null);
+    this.addressForm.controls['longitude'].setValue(null);
   }
 
   /**
@@ -501,19 +608,19 @@ export class RegisterComponent implements OnInit {
 
     if (locality) {
       const cityId = this.getSelectedCityId(locality);
-      this.userForm.controls['city'].setValue(cityId);
+      this.addressForm.controls['city'].setValue(cityId);
     } else {
       const locality = this.getAddressData(
         data[0],
         'administrative_area_level_3'
       );
       const cityId = this.getSelectedCityId(locality);
-      this.userForm.controls['city'].setValue(cityId);
+      this.addressForm.controls['city'].setValue(cityId);
     }
-    this.userForm.controls['street'].setValue(street);
-    this.userForm.controls['streetNumber'].setValue(streetNumber);
-    this.userForm.controls['latitude'].setValue(latitude);
-    this.userForm.controls['longitude'].setValue(longitude);
+    this.addressForm.controls['street'].setValue(street);
+    this.addressForm.controls['streetNumber'].setValue(streetNumber);
+    this.addressForm.controls['latitude'].setValue(latitude);
+    this.addressForm.controls['longitude'].setValue(longitude);
     this.setSelectedAddress();
   }
 
@@ -558,7 +665,7 @@ export class RegisterComponent implements OnInit {
       (item) => this.quitarAcentos(item.location) === city
     );
     if (itemLocality) {
-      this.userForm.controls['locality'].setValue(itemLocality.location);
+      this.addressForm.controls['locality'].setValue(itemLocality.location);
     }
   }
 }
