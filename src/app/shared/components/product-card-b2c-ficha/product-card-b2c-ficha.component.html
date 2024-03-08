@@ -299,8 +299,8 @@
   <!-- Momentaneo para ver "llega y retiro" -->
   <ng-container
     *ngIf="
-      productData.deliverySupply.deliveryLocation !== null &&
-      productData.deliverySupply.pickupLocation !== null &&
+      productData.deliverySupply?.deliveryLocation !== null &&
+      productData.deliverySupply?.pickupLocation !== null &&
       (productData.stockSummary.branchStock > 0 ||
         productData.stockSummary.companyStock > 0)
     "
@@ -313,8 +313,8 @@
         <div class="d-flex align-items-center">
           <ng-container
             *ngIf="
-              productData.deliverySupply.deliveryIsToday !== null &&
-              productData.deliverySupply.deliveryIsToday
+              productData.deliverySupply?.deliveryIsToday !== null &&
+              productData.deliverySupply?.deliveryIsToday
             "
           >
             <i class="fas fa-shipping-fast me-2"></i>
@@ -339,13 +339,13 @@
           </ng-container>
           <ng-container
             *ngIf="
-              productData.deliverySupply.deliveryIsToday == null ||
-              !productData.deliverySupply.deliveryIsToday
+              productData.deliverySupply?.deliveryIsToday == null ||
+              !productData.deliverySupply?.deliveryIsToday
             "
           >
             <div
               *ngIf="
-                productData.deliverySupply.deliveryDate == null;
+                productData.deliverySupply?.deliveryDate == null;
                 else fechaDelivery
               "
             >
@@ -365,7 +365,7 @@
                 "
                 >Llega
                 {{
-                  productData.deliverySupply.deliveryDate
+                  productData.deliverySupply?.deliveryDate
                     | date : 'dd/MM'
                     | uppercase
                 }}</i
@@ -375,8 +375,8 @@
         </div>
         <ng-container
           *ngIf="
-            productData.deliverySupply.pickupIsToday !== null &&
-            productData.deliverySupply.pickupIsToday
+            productData.deliverySupply?.pickupIsToday !== null &&
+            productData.deliverySupply?.pickupIsToday
           "
         >
           <div class="d-flex align-items-center">
@@ -403,14 +403,14 @@
         </ng-container>
         <ng-container
           *ngIf="
-            productData.deliverySupply.pickupIsToday == null ||
-            !productData.deliverySupply.pickupIsToday
+            productData.deliverySupply?.pickupIsToday == null ||
+            !productData.deliverySupply?.pickupIsToday
           "
         >
           <div
             style="margin-top: 2px"
             *ngIf="
-              productData.deliverySupply.pickupDate == null;
+              productData.deliverySupply?.pickupDate == null;
               else fechaEntregaRetiro
             "
           >
@@ -431,7 +431,7 @@
                 "
                 >Retira
                 {{
-                  productData.deliverySupply.pickupDate
+                  productData.deliverySupply?.pickupDate
                     | date : 'dd/MM'
                     | uppercase
                 }}</i
