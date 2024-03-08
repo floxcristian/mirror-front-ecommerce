@@ -421,7 +421,7 @@
                 [storeAddress]="selectedAddress?.address || ''"
                 [storeZone]="selectedAddress?.zone || ''"
                 (setDireccion)="setAddressFromMap($event)"
-                (geolocalizacion)="geolocalizacion($event)"
+                (geolocalizacion)="setMapPosition($event)"
                 [titulo]="
                   isPerson
                     ? 'Ingrese Dirección de Despacho'

@@ -32,6 +32,8 @@ import {
   IEmailDomainAutocomplete,
   getEmailDomainsToAutocomplete,
 } from '@core/utils-v2/email/domains-autocomplete';
+import { removeSpecialCharacters } from './utils';
+import { IMapPosition } from '../map/map-store.interface';
 
 @Component({
   selector: 'app-register',
@@ -41,15 +43,19 @@ import {
 export class RegisterComponent implements OnInit {
   @Input() innerWidth!: number;
 
-  localidades!: ILocality[];
-
+  // Forms
   companyForm!: FormGroup;
   personForm!: FormGroup;
+  commonForm!: FormGroup;
   addressForm!: FormGroup;
 
+  // Select options
+  localities!: ILocality[];
+  cities!: ICity[];
+  contactPositions!: IContactPosition[];
+  businessLines!: IBusinessLine[];
+
   // userForm!: FormGroup;
-  passwordFormGroup!: FormGroup;
-  commonForm!: FormGroup;
   isInvoice = true;
 
   autocompletado = true;
@@ -67,9 +73,6 @@ export class RegisterComponent implements OnInit {
   isValidDocumentId!: boolean;
   selectedPhoneCode: string;
   isLoading!: boolean;
-  businessLines!: IBusinessLine[];
-  cities!: ICity[];
-  contactPositions!: IContactPosition[];
 
   /**********************************
    * Config variables
@@ -96,14 +99,14 @@ export class RegisterComponent implements OnInit {
   ) {
     this.config = this.configService.getConfig();
     this.selectedPhoneCode = this.config.phoneCodes.mobile.code;
-    this.buildPersonForm();
     this.buildCompanyForm();
+    this.buildPersonForm();
     this.buildCommonForm();
     this.buildAddressForm();
     //this.buildUserForm();
   }
 
-  buildPersonForm(): void {
+  private buildPersonForm(): void {
     this.personForm = this.fb.group({
       documentId: [
         null,
@@ -112,7 +115,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  buildCompanyForm(): void {
+  private buildCompanyForm(): void {
     this.companyForm = this.fb.group({
       documentId: [
         null,
@@ -128,7 +131,20 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  buildCommonForm(): void {
+  private buildAddressForm(): void {
+    this.addressForm = this.fb.group({
+      street: [null, Validators.required],
+      streetNumber: [null, Validators.required],
+      city: [null, Validators.required],
+      locality: [null],
+      latitude: [null],
+      longitude: [null],
+      reference: [null],
+      departmentOrHouse: [null],
+    });
+  }
+
+  private buildCommonForm(): void {
     this.commonForm = this.fb.group(
       {
         firstName: [null, Validators.required],
@@ -151,25 +167,11 @@ export class RegisterComponent implements OnInit {
           ],
         ],
       },
-
       {
         validator: PasswordValidator.validate.bind(this),
       }
     );
     this.changePhoneCode(this.selectedPhoneCode);
-  }
-
-  buildAddressForm(): void {
-    this.addressForm = this.fb.group({
-      street: [, Validators.required],
-      streetNumber: [null, Validators.required],
-      city: [null, Validators.required],
-      locality: [null],
-      latitude: [null],
-      longitude: [null],
-      reference: [''],
-      departmentOrHouse: [''],
-    });
   }
 
   ngOnInit(): void {
@@ -257,7 +259,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  getUserData(isPerson: boolean) {
+  private getUserData(isPerson: boolean) {
     if (isPerson) {
       const { documentId } = this.personForm.value;
       return { documentId };
@@ -484,32 +486,10 @@ export class RegisterComponent implements OnInit {
     }
   }*/
 
-  quitarAcentos(cadena: string) {
-    // Definimos los caracteres que queremos eliminar
-    const specialChars = '!@#$^&%*()+=-[]/{}|:<>?,.';
-
-    // Los eliminamos todos
-    for (let i = 0; i < specialChars.length; i++) {
-      cadena = cadena.replace(new RegExp('\\' + specialChars[i], 'gi'), '');
-    }
-
-    // Lo queremos devolver limpio en minusculas
-    cadena = cadena.toLowerCase();
-
-    // Quitamos espacios y los sustituimos por _ porque nos gusta mas asi
-    cadena = cadena.replace(/ /g, '_');
-
-    // Quitamos acentos y "ñ". Fijate en que va sin comillas el primer parametro
-    cadena = cadena.replace(/á/gi, 'a');
-    cadena = cadena.replace(/é/gi, 'e');
-    cadena = cadena.replace(/í/gi, 'i');
-    cadena = cadena.replace(/ó/gi, 'o');
-    cadena = cadena.replace(/ú/gi, 'u');
-    cadena = cadena.replace(/ñ/gi, 'n');
-
-    return cadena;
-  }
-
+  /**
+   * Eliminar rut del formulario.
+   * @param form
+   */
   cleanDocumentId(form: FormGroup): void {
     this.isValidDocumentId = false;
     //this.formBlock();
@@ -572,23 +552,22 @@ export class RegisterComponent implements OnInit {
   /************************************************
    * Métodos utilizados por el mapa.
    ***********************************************/
-  geolocalizacion(event: any): void {
-    this.addressForm.controls['latitude'].setValue(event.lat);
-    this.addressForm.controls['longitude'].setValue(event.lng);
+  /**
+   * Establecer la posición actual en el mapa.
+   * @param event
+   */
+  setMapPosition({ lat, lng }: IMapPosition): void {
+    this.addressForm.patchValue({
+      latitude: lat,
+      longitude: lng,
+    });
   }
 
   /**
    * Limpiar campos asociados a dirección cuando se limpia el input desde el mapa.
    */
   cleanAddress(): void {
-    this.addressForm.controls['city'].setValue(null);
-    this.addressForm.controls['street'].setValue(null);
-    this.addressForm.controls['streetNumber'].setValue(null);
-    this.addressForm.controls['departmentOrHouse'].setValue('');
-    this.addressForm.controls['reference'].setValue('');
-    this.addressForm.controls['locality'].setValue(null);
-    this.addressForm.controls['latitude'].setValue(null);
-    this.addressForm.controls['longitude'].setValue(null);
+    this.addressForm.reset();
   }
 
   /**
@@ -617,10 +596,12 @@ export class RegisterComponent implements OnInit {
       const cityId = this.getSelectedCityId(locality);
       this.addressForm.controls['city'].setValue(cityId);
     }
-    this.addressForm.controls['street'].setValue(street);
-    this.addressForm.controls['streetNumber'].setValue(streetNumber);
-    this.addressForm.controls['latitude'].setValue(latitude);
-    this.addressForm.controls['longitude'].setValue(longitude);
+    this.addressForm.patchValue({
+      street,
+      streetNumber,
+      latitude,
+      longitude,
+    });
     this.setSelectedAddress();
   }
 
@@ -644,25 +625,25 @@ export class RegisterComponent implements OnInit {
    */
   private getSelectedCityId(city: string): string {
     if (!city) return '';
-    const formattedCity = this.quitarAcentos(city);
+    const formattedCity = removeSpecialCharacters(city);
     const itemCity = this.cities.find(
-      (item) => this.quitarAcentos(item.city) === formattedCity
+      (item) => removeSpecialCharacters(item.city) === formattedCity
     );
     if (!itemCity) return '';
-    this.localidades = itemCity.localities;
+    this.localities = itemCity.localities;
     this.setLocality(formattedCity);
     return itemCity.id;
   }
 
   /**
-   * Setear localidad.
+   * Setear localidad en el formulario.
    * @param city
    * @returns
    */
   private setLocality(city: string): void {
     if (!city) return;
-    const itemLocality = this.localidades.find(
-      (item) => this.quitarAcentos(item.location) === city
+    const itemLocality = this.localities.find(
+      (item) => removeSpecialCharacters(item.location) === city
     );
     if (itemLocality) {
       this.addressForm.controls['locality'].setValue(itemLocality.location);
